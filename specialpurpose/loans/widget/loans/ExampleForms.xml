@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="FindExamples" type="single" target="FindExample" default-entity-name="Example">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="exampleId" title="${uiLabelMap.ExampleExampleId}"><text-find/></field>
+        <field name="exampleName" title="${uiLabelMap.CommonName}"><text-find/></field>
+        <field name="exampleTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${description}" key-field-name="exampleTypeId" entity-name="ExampleType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${description}" key-field-name="statusId" entity-name="ExampleStatusItem"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+
+    <form name="ListExamples" type="list" list-name="listIt" paginate-target="FindExample" default-entity-name="Example" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="exampleCtx"/>
+                <field-map field-name="entityName" value="Example"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <alt-row-style use-when="&quot;EXST_APPROVED&quot;.equals(statusId)" style="Validate"/>
+        <alt-row-style use-when="&quot;EXST_CANCELLED&quot;.equals(statusId)" style="Warn"/>
+        <field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${exampleId}" target="EditExample">
+                <parameter param-name="exampleId"/>
+            </hyperlink>
+        </field>
+        <field name="exampleName" title="${uiLabelMap.CommonName}" sort-field="true"><display/></field>
+        <field name="exampleTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="ExampleType"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}" sort-field="true"><display/></field>
+    </form>
+
+    <!-- Typically, this extended form wouldn't be necessary. The parent form (ListExamples) would
+        have these attributes.
+         For the Ajax example we want all example entities listed, so the we use the entity-condition
+         instead of the performFind service. -->
+    <form name="ListExamplesAjax" extends="ListExamples" type="list" paginate-target="authview/findExampleAjax">
+        <actions>
+            <entity-condition entity-name="Example"><order-by field-name="exampleName"/></entity-condition>
+        </actions>
+        <field name="exampleName" title="${uiLabelMap.CommonName}" id-name="exampleName">
+            <display>
+                <in-place-editor url="/example/control/updateExample" cancel-control="button" saving-text="Updating..." text-between-controls=" ">
+                    <simple-editor/>
+                    <field-map field-name="exampleId" from-field="exampleId"/>
+                    <field-map field-name="statusId"  from-field="statusId"/>
+                </in-place-editor>
+            </display>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}" id-name="description">
+            <display>
+                <in-place-editor url="/example/control/updateExample" cancel-control="button" saving-text="Updating..." text-between-controls=" ">
+                    <simple-editor/>
+                    <field-map field-name="exampleId" from-field="exampleId"/>
+                    <field-map field-name="statusId"  from-field="statusId"/>
+                </in-place-editor>
+            </display>
+        </field>
+        <on-event-update-area event-type="paginate" area-id="ListExamplesAjax" area-target="ListExampleFormOnly"/>
+    </form>
+
+    <form name="EditExample" type="single" target="updateExample" title="" default-map-name="example" default-entity-name="Example">
+        <actions>
+            <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" from-field="example.statusId"/>
+            </entity-one>
+        </actions>
+        <alt-target use-when="example==null" target="createExample"/>
+        <auto-fields-service service-name="updateExample"/>
+        <field use-when="example!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="example==null @and exampleId==null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><ignored/></field>
+        <field use-when="example==null @and exampleId!=null" name="exampleId" title="${uiLabelMap.ExampleExampleId}"><display description="${uiLabelMap.CommonCannotBeFound}: [${exampleId}]" also-hidden="false"/></field>
+        <field name="exampleTypeId" title="${uiLabelMap.CommonType}" id-name="exampleTypeId" widget-style="required">
+            <drop-down allow-empty="false">
+                <!-- this is a neat feature, but not good for the type because the user would have to know the possible types in order to enter at least the first letter, so leaving it out by default; just uncomment to enable: <auto-complete/> -->
+                <entity-options entity-name="ExampleType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId"  use-when="example==null" title="${uiLabelMap.CommonStatus}" widget-style="required">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ExampleStatusItem" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="statusId" use-when="example!=null" title="${uiLabelMap.CommonStatus}" widget-style="required">
+            <drop-down allow-empty="false" current-description="${currentStatus.description}">
+                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
+                    <entity-constraint name="statusId" env-name="example.statusId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="exampleName" required-field="true" widget-style="required"></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"/>
+        <field name="longDescription" title="${uiLabelMap.ExampleLongDescription}"/>
+        <field name="anotherText">
+            <drop-down allow-empty="true">
+                <option key="Explicit Option" description="${uiLabelMap.ExampleExplicitOption}"/>
+                <entity-options entity-name="ExampleType" description="${description}" key-field-name="exampleTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="displayAnotherText" use-when="example!=null @and example.get(&quot;anotherText&quot;)!=null">
+            <display description="${example.anotherText}"/>
+        </field>
+        <field name="submitButton" use-when="example==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="example!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+
+    <!-- Typically, this extended form wouldn't be necessary. The parent form (EditExample) would
+        have these settings. -->
+    <form name="EditExampleBackgroundSubmit" type="single" extends="EditExample" target="updateExampleAjax">
+        <alt-target use-when="example==null" target="createExampleAjax"/>
+        <field name="statusId" use-when="example==null" title="${uiLabelMap.CommonStatus}" id-name="statusId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ExampleStatusItem" description="${description}"/>
+            </drop-down>
+        </field>
+        <on-event-update-area event-type="submit" area-id="ListExamplesAjax" area-target="ListExampleFormOnly"/>
+        <!--on-event-update-area event-type="submit" area-id="EditExampleAjax" area-target="CreateExampleFormOnly"/--><!-- JLR: this does not seem to be useful -->
+    </form>
+
+    <!-- ExampleItem -->
+    <form name="ListExampleItems" type="list"  list-name="exampleItems"  target="updateExampleItem">
+        <actions>
+            <entity-condition entity-name="ExampleItem">
+                <condition-expr field-name="exampleId" from-field="exampleId"/>
+                <order-by field-name="exampleItemSeqId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateExampleItem"/>
+        <field name="exampleId"><hidden/></field>
+        <field name="exampleItemSeqId" title="${uiLabelMap.CommonItem}"><display/></field>
+        <field name="description"><text size="30"/></field>
+        <field name="amountUomId" title="${uiLabelMap.CommonUom}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <entity-order-by field-name="typeDescription"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="deleteExampleItem" description="${uiLabelMap.CommonDelete}" also-hidden="false" confirmation-message="${uiLabelMap.CommonConfirmDelete}" image-location="${iconsLocation}/delete.png">
+                <parameter param-name="exampleId"/>
+                <parameter param-name="exampleItemSeqId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="AddExampleItem" type="single" target="createExampleItem" title="">
+        <auto-fields-service service-name="createExampleItem"/>
+        <field name="exampleId"><hidden/></field>
+        <field name="exampleItemSeqId"><ignored/><!-- this will be auto-sequenced --></field>
+        <field name="amountUomId" title="${uiLabelMap.CommonUom}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <entity-order-by field-name="typeDescription"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button" request-confirmation="true"/></field>
+    </form>
+
+    <!-- ExampleFeatureAppl -->
+    <form name="ListExampleFeatureAppls" type="list"  list-name="exampleFeatureAppls"  target="example_updateExampleFeatureAppl">
+        <actions>
+            <entity-condition entity-name="ExampleFeatureAppl">
+                <condition-expr field-name="exampleId" from-field="exampleId"/>
+                <order-by field-name="sequenceNum"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateExampleFeatureAppl"/>
+        <field name="exampleId"><hidden/></field>
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}">
+            <display-entity entity-name="ExampleFeature" description="${description}">
+                <sub-hyperlink target="EditExampleFeature" description="${exampleFeatureId}" link-style="buttontext">
+                    <parameter param-name="exampleFeatureId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate"><display/></field>
+        <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ExampleFeatureApplType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="example_deleteExampleFeatureAppl" description="${uiLabelMap.CommonDelete}" also-hidden="false" image-location="${iconsLocation}/delete.png">
+                <parameter param-name="exampleId"/>
+                <parameter param-name="exampleFeatureId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="AddExampleFeatureAppl" type="single" target="example_createExampleFeatureAppl" title="">
+        <auto-fields-service service-name="createExampleFeatureAppl"/>
+        <field name="exampleId"><hidden/></field>
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}">
+            <lookup target-form-name="LookupExampleFeature"/>
+        </field>
+        <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ExampleFeatureApplType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Sacco Loans, Accounts and Applications -->
+    <!-- New Savings Product -->
+     <form name="NewSavingsProduct" type="single" target="createSavingsProduct"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="productContext">
+        
+        <field name="saccoProductId"><hidden/></field>
+        <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
+        
+        
+        <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
+        <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="code" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+
+      	<field name="minBalanceAmt" title="Minimum Balance" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="minSavingsAmt" title="Minimum Savings Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+     
+     	<!-- field name="productType"  title="Product Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Account" description="Account"/>
+                <option key="Loan" description="Loan"/>
+            </drop-down>
+        </field -->
+        
+        <field name="perYearWithdrawals"  title="Per Year Withdrawals" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        <field name="noofWithdrawals" title="No Of Withdrawals" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="minNoofPeople" title="Minimum No of People" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="percentInterestPerMonthAmt" title="Percentage Interest Per month" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+         <field name="allowPercentageDiscountonBankCheque"  title="Allow Percentage Discount on Cheque Book" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        <field name="percentageDiscountonBankChequeAmt" title="Percentage Discount on Cheque Book Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+ 		<field name="minimumPeriodMonths" title="Minimum Period (Months)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+ 		
+ 		<field name="allowLedgerFees"  title="Allow Ledger Fees?" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+ 		
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <!-- New Loan Product -->
+    <form name="NewLoanProduct" type="single" target="createLoanProduct"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="productContext">
+        
+        <field name="saccoProductId"><hidden/></field>
+        <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
+        
+        
+        <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
+        <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="code" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+      	<field name="maxAmt" title="Maximum Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      	<field name="maxRepaymentPeriod" title="Maximum Repayment Period" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      	<field name="maxMultipleofSavings" title="Maximum Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      	<field name="maxMultipleofSavings"  title="Is Multiple of Savings?" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+      	<field name="multipleCount" title="Multiple Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      	<field name="maxPercentageofNetSalary" title="Percentage of Net Salary" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="retainBosaDeposit"  title="Retain Bosa Deposit?" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        <field name="retainBosaDepositAmt" title="Bosa Deposit Amount Retained" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+         <field name="maxIsPercentageOfMemberSalary"  title="Is Maximum Amount Percentage of Net Salary?" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        <field name="percentageOfMemberSalaryAmt" title="Percentage of Net Salary" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+  
+        <field name="salaryPointShouldbeFosa"  title="Should Salary Point be FOSA?" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+
+        <field name="paymentsProcessDeductsfromMonthly"  title="Should Payment Process Deduct From Monthly Salary?" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+
+        <field name="paymentsProcessDeductsfromBonus"  title="Should Payment Process Deduct From Bonus" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listAccountProduct" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAccountProduct" paginate-target="findSaccoProduct"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SaccoProduct">
+            	<condition-expr field-name="productType" operator="equals" value="Account"/>
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateSaccoProduct"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="name"> <text></text> </field>
+        <field name="code"><text/></field>
+        <field name="minBalanceAmt"><text></text></field>
+        <field name="minSavingsAmt"><text></text></field>
+        
+        <field name="perYearWithdrawals"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        
+        <field name="noofWithdrawals"><text></text></field>
+        <field name="minNoofPeople"><text></text></field>
+        <field name="percentInterestPerMonthAmt"><text></text></field>
+        <field name="allowPercentageDiscountonBankCheque"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        <field name="percentageDiscountonBankChequeAmt"><text></text></field>
+        <field name="minimumPeriodMonths"><text></text></field>
+        <field name="allowLedgerFees"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteAccountProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="saccoProductId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listLoanProduct" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanProduct" paginate-target="findSaccoProduct"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SaccoProduct">
+            	<condition-expr field-name="productType" operator="equals" value="Loan"/>
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateSaccoProduct"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="name"> <text></text> </field>
+        <field name="code"><text/></field>
+        <field name="maxAmt"><text/></field>
+        <field name="maxRepaymentPeriod"><text/></field>
+        
+        <field name="maxMultipleofSavings"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        <field name="multipleCount"><text/></field>
+        <field name="maxPercentageofNetSalary"><text/></field>
+        <field name="retainBosaDeposit"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        <field name="retainBosaDepositAmt"><text/></field>
+        <field name="maxIsPercentageOfMemberSalary"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        <field name="percentageOfMemberSalaryAmt"><text/></field>
+        <field name="salaryPointShouldbeFosa"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        <field name="paymentsProcessDeductsfromMonthly"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        <field name="paymentsProcessDeductsfromBonus"><drop-down allow-empty="true"><option key="Y" description="Yes"/>
+                <option key="N" description="No"/></drop-down></field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="saccoProductId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Loan Application -->
+    <form name="NewLoanApplication" type="single" target="createLoanApplication"
+        focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="applicationContext">
+        
+        <actions>
+            <entity-condition entity-name="Member" list="membersList">
+            </entity-condition>
+             <entity-condition entity-name="SaccoProduct" list="productsList">
+             	 <condition-expr field-name="productType" operator="equals" value="Loan"/>
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <!--entity-condition entity-name="LoanSecurity" list="loanSecurityList">
+            </entity-condition -->
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+        
+        <field name="partyId" title="Member" event="onchange" action="javascript:var field=document.getElementsByName('partyId')[0].value; var tmp=field.value;alert(field);return false;">
+            <drop-down allow-empty="true">
+                <list-options list-name="membersList" key-name="partyId" description="${firstName} ${lastName}" />
+            </drop-down>
+        </field>
+       <field name="firstName" title="First Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="middleName" title="Middle Name"><text size="30" maxlength="60"/></field>
+       <field name="lastName" title="Last Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       
+       <field name="idNumber" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="memberType" title="Member Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="memberNumber" title="Member Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="mobileNumber" title="Mobile Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="saccoProductId" title="Loan Type">
+            <drop-down allow-empty="true">
+                <list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/>
+            </drop-down>
+        </field>
+
+       <field name="percentInterestPerMonthAmt" title="Interest Rate (Per Month)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="maxRepaymentPeriod" title="Maximum Repayment Period" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="loanamt" title="Loan Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="selectedRepaymentPeriod" title="Repayment Period" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+
+
+       <field name="paymentMethodTypeId" title="Payment Method">
+            <drop-down allow-empty="true">
+                <list-options list-name="paymentMethodsList" key-name="paymentMethodTypeId" description="${description}"/>
+            </drop-down>
+       </field>
+       
+       <!--  field name="loanSecurityId" title="Security">
+            <drop-down allow-empty="true">
+                <list-options list-name="loanSecurityList" key-name="loanSecurityId" description="${security}"/>
+            </drop-down>
+       </field -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listLoanApplications" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanApplication" paginate-target="findLoanApplication"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanApplication">
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="partyId" title="Member">
+            <drop-down allow-empty="true">
+                <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
+                    <!-- entity-order-by field-name="description"/ -->
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- field name="firstName"> <text></text> </field>
+        <field name="middleName"> <text></text> </field>
+        <field name="lastName"> <text></text> </field -->
+        <field name="saccoProductId" title="Loan Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${name} ${code}" entity-name="SaccoProduct">
+                    <!-- entity-order-by field-name="description"/ -->
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="loanamt"><text></text></field>
+        <field name="percentInterestPerMonthAmt"><text/></field>
+        <field name="maxRepaymentPeriod"><text></text></field>
+        
+        <field name="selectedRepaymentPeriod"><text></text></field>
+        
+        <field name="paymentMethodTypeId" title="Payment Method">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PaymentMethodType">
+                    <!-- entity-order-by field-name="description"/ -->
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <!-- field name="loanSecurityId" title="LoanSecurity">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PaymentMethodType" -->
+                    <!-- entity-order-by field-name="description"/ -->
+                <!--  /entity-options>
+            </drop-down>
+        </field -->
+        
+
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteAccountProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="saccoProductId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+</forms>
