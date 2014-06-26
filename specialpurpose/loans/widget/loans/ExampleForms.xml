@@ -522,34 +522,30 @@ under the License.
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
         <field name="partyId" title="Member">
-            <drop-down allow-empty="true">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+            <!--  drop-down allow-empty="true">
                 <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
-                    <!-- entity-order-by field-name="description"/ -->
                 </entity-options>
-            </drop-down>
+            </drop-down -->
         </field>
         <!-- field name="firstName"> <text></text> </field>
         <field name="middleName"> <text></text> </field>
         <field name="lastName"> <text></text> </field -->
         <field name="saccoProductId" title="Loan Type">
-            <drop-down allow-empty="true">
+        	<display-entity description="${name} ${code}" entity-name="SaccoProduct" also-hidden="false"></display-entity>
+            <!-- drop-down allow-empty="true">
                 <entity-options description="${name} ${code}" entity-name="SaccoProduct">
-                    <!-- entity-order-by field-name="description"/ -->
                 </entity-options>
-            </drop-down>
+            </drop-down -->
         </field>
-        <field name="loanamt"><text></text></field>
-        <field name="percentInterestPerMonthAmt"><text/></field>
-        <field name="maxRepaymentPeriod"><text></text></field>
+        <field name="loanamt"><display also-hidden="false"/></field>
+        <field name="percentInterestPerMonthAmt"><display also-hidden="false"/></field>
+        <field name="maxRepaymentPeriod"><display also-hidden="false"/></field>
         
-        <field name="selectedRepaymentPeriod"><text></text></field>
+        <field name="selectedRepaymentPeriod"><display also-hidden="false"/></field>
         
         <field name="paymentMethodTypeId" title="Payment Method">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="PaymentMethodType">
-                    <!-- entity-order-by field-name="description"/ -->
-                </entity-options>
-            </drop-down>
+        	<display-entity  description="${description}" entity-name="PaymentMethodType"></display-entity>
         </field>
         
         <!-- field name="loanSecurityId" title="LoanSecurity">
@@ -566,6 +562,6 @@ under the License.
                 <parameter param-name="saccoProductId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
 </forms>
