@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+        
+         <simple-method method-name="createSavingsProduct" short-description="Create Savings Product">
+        <make-value entity-name="SaccoProduct" value-field="newEntity"/>
+        <!-- sequenced-id sequence-name="saccoProductSequence" field="newEntity.saccoProductId"/ -->
+        <!-- sequenced-id sequence-name="saccoProduct" field="saccoProductId"/>
+        <set from-field="saccoProductId" field="newEntity.saccoProductId"/ -->
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="saccoProduct" field="saccoProductId"/>
+        <!-- set from-field="saccoProductId" field="newEntity.saccoProductId"/ -->
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- entity-one entity-name="SaccoProduct" value-field="saccoProduct" auto-field-map="true"/ -->
+        
+        <sequenced-id sequence-name="SaccoProduct" field="saccoProductId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="saccoProductId" field="newEntity.saccoProductId"/>
+        <set field="newEntity.productType" value="Account"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="createLoanProduct" short-description="Create Loan Product">
+        <make-value entity-name="SaccoProduct" value-field="newEntity"/>
+        
+        <sequenced-id sequence-name="saccoProduct" field="saccoProductId"/>
+        <set from-field="saccoProductId" field="newEntity.saccoProductId"/>
+        
+        <!-- sequenced-id sequence-name="saccoProductSequence" field="newEntity.saccoProductId"/ -->
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <!-- sequenced-id sequence-name="saccoProduct" field="saccoProductId"/>
+        <set from-field="saccoProductId" field="newEntity.saccoProductId"/ -->
+        <!-- entity-one entity-name="SaccoProduct" value-field="saccoProduct" auto-field-map="true"/ -->
+        
+        <sequenced-id sequence-name="SaccoProduct" field="saccoProductId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="saccoProductId" field="newEntity.saccoProductId"/>
+        <set field="newEntity.productType" value="Loan"/>
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+	<simple-method method-name="getSaccoMember" short-description="Get Sacco Member" login-required="false">
+    	<set field="partyId" from-field="parameters.partyId"/>
+    	<!--  entity-one entity-name="Member" value-field="member"/ -->
+    	<entity-one value-field="memberContext" entity-name="Member"></entity-one>
+    </simple-method>
+    
+    <simple-method method-name="updateSaccoProduct" short-description="Update Sacco Product">
+        <entity-one entity-name="SaccoProduct" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteSaccoProduct" short-description="Delete Sacco Product">
+        <entity-one entity-name="SaccoProduct" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="updateAccountProduct" short-description="Update Sacco Product">
+        <entity-one entity-name="SaccoProduct" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+	
+	<simple-method method-name="updateLoanProduct" short-description="Update Sacco Product">
+        <entity-one entity-name="SaccoProduct" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Loan Application Methods -->
+    <simple-method method-name="createLoanApplication" short-description="Create Loan Application">
+        <make-value entity-name="LoanApplication" value-field="newEntity"/>
+        
+        <!-- sequenced-id sequence-name="loanApplication" field="loanApplicationId"/ >
+        <set from-field="loanApplicationId" field="newEntity.loanApplicationId"/ -->
+        
+        <!-- sequenced-id sequence-name="saccoProductSequence" field="newEntity.saccoProductId"/ -->
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <!-- sequenced-id sequence-name="saccoProduct" field="saccoProductId"/>
+        <set from-field="saccoProductId" field="newEntity.saccoProductId"/ -->
+        <!-- entity-one entity-name="SaccoProduct" value-field="saccoProduct" auto-field-map="true"/ -->
+        
+        <sequenced-id sequence-name="LoanApplication" field="loanApplicationId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanApplicationId" field="newEntity.loanApplicationId"/>
+        <set field="entity.loanStatus" value="DRAFT"/>
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateLoanApplication" short-description="Update Loan Application">
+        <entity-one entity-name="LoanApplication" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanApplication" short-description="Delete Loan Application">
+        <entity-one entity-name="LoanApplication" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+</simple-methods>
