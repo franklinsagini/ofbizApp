@@ -25,14 +25,7 @@ under the License.
 </div>
 <!-- footer -->
 <div id="footer">
-    <!-- div class="poweredBy"><span>Powered by <a href="http://ofbiz.apache.org" class="noicon">OFBiz</a></span><span>Copyright 2001-${nowTimestamp?string("yyyy")} <a href="http://www.apache.org" class="noicon">The Apache Software Foundation - www.apache.org</a></span><span><#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" /></span></div -->
-    <div class="poweredBy">
-    	<p>
-     <div class="tabletext"><a href="http://vergeinteractive.co.ke/corporate/" class="tabletext">Verge Sacco Solution</a> 3.0. <br/>
-      Verge Sacco is a product of <a href="http://vergeinteractive.co.ke/corporate/">Verge Interactive Limited.</a></div>
-    </div>
-    </p>
-    </div>
+    <div class="poweredBy"><span>Powered by <a href="http://ofbiz.apache.org" class="noicon">OFBiz</a></span><span>Copyright 2001-${nowTimestamp?string("yyyy")} <a href="http://www.apache.org" class="noicon">The Apache Software Foundation - www.apache.org</a></span><span><#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" /></span></div>
 
 </div>
 <!-- footer -->

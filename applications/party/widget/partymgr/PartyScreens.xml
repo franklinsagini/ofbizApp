@@ -53,39 +53,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
-    <!-- List Sacco Members -->
-    <screen name="listsaccomembers">
-        <section>
-            <actions>
-                <set field="titleProperty" value="List Sacco Members"/>
-                <set field="headerItem" value="find"/>
-                <set field="tabButtonItem" value="findparty"/>
-
-                <service service-name="listSaccoMembers" auto-field-map="parameters"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for PARTYMGR, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
 
     <!-- Party Profile Screens -->
 
@@ -845,42 +812,6 @@ under the License.
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
                                 <screenlet title="${uiLabelMap.PartyCreateNewEmployee}">
                                     <include-form name="NewUser" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-     <!-- Create New Member -->
-    <screen name="NewMember">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PartyCreateNewMember"/>
-                <set field="headerItem" value="find"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="createMember"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
-                <set field="partyId" from-field="parameters.partyId"/>
-                
-                <entity-one entity-name="Member" value-field="memberContext"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PartyCreateNewMember}">
-                                    <include-form name="NewMember" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>

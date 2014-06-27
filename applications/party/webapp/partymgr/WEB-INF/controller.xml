@@ -1262,25 +1262,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProfileEditUserLoginSecurityGroups"/>
     </request-map>
-    
-    <!-- Member -->
-	<request-map uri="NewMember"><security https="true" auth="true"/>
-    	<event type="simple" path="component://party/script/org/ofbiz/party/user/UserEvents.xml" invoke="getSaccoMember"/>
-    	<response name="success" type="view" value="NewMember"/>
-    </request-map>
-    <request-map uri="createMember">
-        <security https="true" auth="true"/>
-        <event type="simple" path="component://party/script/org/ofbiz/party/user/UserEvents.xml" invoke="createSaccoMember"/>
-        <!-- response name="success" type="view" value="listsaccomembers"/ -->
-        <response name="success" type="request-redirect-noparam" value="listsaccomembers"></response>
-        <!-- response name="success" type="view" value="NewMember"/ -->
-        <response name="error" type="view" value="NewMember"/>
-    </request-map>
-    
-        <request-map uri="listsaccomembers">
-    <security https="true" auth="true"/>
-    <response name="success" type="view" value="listsaccomembers"/>
-    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -1414,8 +1396,5 @@ under the License.
     <!-- GeoLocation-->
     <view-map name="addGeoLocation" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditGeoLocation"/>
 
-	<!-- Member -->
-	<view-map name="NewMember" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewMember"/>
-	<view-map name="listsaccomembers" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#listsaccomembers"/>
     <!-- end of view mappings -->
 </site-conf>
