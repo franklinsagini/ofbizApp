@@ -1408,4 +1408,326 @@ under the License.
         </section>
     </screen>
     
+    <!-- Member Profile -->
+    <screen name="viewmemberprofile">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-empty field="partyId"/>
+                                    <not><if-empty field="parameters.telno"/></not>
+                                </and>
+                            </condition>
+                            <actions>
+                                <service service-name="findPartyFromTelephone" auto-field-map="true" result-map="telnoMap"/>
+                                <entity-one entity-name="Party" value-field="party">
+                                    <field-map field-name="partyId" from-field="telnoMap.partyId"/>
+                                </entity-one>
+                                <set field="parameters.partyId" from-field="party.partyId"/>
+                            </actions>
+                            <widgets/>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-empty field="partyId"/>
+                                    <not><if-empty field="parameters.email"/></not>
+                                </and>
+                            </condition>
+                            <actions>
+                                <service service-name="findPartyFromEmailAddress" result-map="emailMap">
+                                    <field-map field-name="address" from-field="parameters.email"/>
+                                </service>
+                                <entity-one entity-name="Party" value-field="party">
+                                    <field-map field-name="partyId" from-field="emailMap.partyId"/>
+                                </entity-one>
+                                <set field="parameters.partyId" from-field="party.partyId"/>
+                            </actions>
+                            <widgets/>
+                        </section>
+                        <section>
+                            <condition>
+                                <not><if-empty field="party"/></not>
+                            </condition>
+                            <widgets>
+                                <!-- section>
+                                    <condition>
+                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar button-style-2">
+                                            <link target="viewmemberprofile" text="${uiLabelMap.PartyHideOld}">
+                                                <parameter param-name="partyId" from-field="party.partyId"/>
+                                            </link>
+                                        </container>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container style="button-bar button-style-2">
+                                            <link target="viewmemberprofile" text="${uiLabelMap.PartyShowOld}">
+                                                <parameter param-name="partyId" from-field="party.partyId"/>
+                                                <parameter param-name="SHOW_OLD" value="true"/>
+                                            </link>
+                                        </container>
+                                    </fail-widgets>
+                                </section -->
+                                <section>
+                                    <widgets>
+                                        <include-portal-page id="PartyProfile"/>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Member Details -->
+    
+    
+    <screen name="relationships">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="New Relationship">
+                            <include-form name="relationship" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- employmentDetails -->
+    <screen name="employmentDetails">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Add Employment">
+                            <include-form name="employmentDetails" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- businessDetails -->
+        <screen name="businessDetails">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Add Business Detail">
+                            <include-form name="businessDetails" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- memberContribution -->
+    <screen name="memberContribution">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="New Contribution">
+                            <include-form name="memberContribution" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Member Account -->
+    <screen name="memberAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Add Account">
+                            <include-form name="memberAccount" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Member Referee -->
+    <screen name="memberReferee">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Add Referee">
+                            <include-form name="memberReferee" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- memberNominee -->
+    <screen name="memberNominee">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="New Nominee">
+                            <include-form name="memberNominee" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- termsAndConditions -->
+    <screen name="termsAndConditions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="New Terms and Conditions">
+                            <include-form name="termsAndConditions" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- sourceOfFunds -->
+    <screen name="sourceOfFunds">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="New Source of Fund">
+                            <include-form name="sourceOfFunds" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- employers -->
+    <screen name="employers">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Relationship"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Relationship"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="New Employer">
+                            <include-form name="employers" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

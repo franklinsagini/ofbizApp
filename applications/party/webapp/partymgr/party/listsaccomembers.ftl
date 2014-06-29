@@ -261,7 +261,7 @@ under the License.
             <td class="button-col align-float">
             	<a href="<@ofbizUrl>NewMember?partyId=${partyRow.partyId}</@ofbizUrl>">Edit </a> 
             	<a href="<@ofbizUrl>NewMember?partyId=${partyRow.partyId}</@ofbizUrl>">Delete </a> 
-              <a href="<@ofbizUrl>NewMember?partyId=${partyRow.partyId}</@ofbizUrl>">${uiLabelMap.CommonDetails}</a>
+              <a href="<@ofbizUrl>viewmemberprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${uiLabelMap.CommonDetails}</a>
               <#-- #if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
                   <form name= "searchorders_o_${rowCount}" method= "post" action= "/ordermgr/control/searchorders">
                     <input type= "hidden" name= "lookupFlag" value= "Y" />
