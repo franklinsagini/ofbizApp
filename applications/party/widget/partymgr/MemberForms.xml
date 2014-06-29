@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        
+	<form name="relationship" type="single" target="relationship"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table">
+        <!-- auto-fields-service service-name="createUserLogin"/ -->
+        <field name="relationshipId"><hidden/></field>
+        <field name="active"><hidden/></field>
+        <field name="name" title="Name"><text/></field>
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+      
+    </form>
+    
+    <form name="employmentDetails" type="single" target="employmentDetails"
+        focus-field-name="employerId" header-row-style="header-row" default-table-style="basic-table">
+        
+        <actions>
+            <entity-condition entity-name="Employer" list="employerList">
+            </entity-condition>
+              <entity-condition entity-name="SourceOfFund" list="sourceOfFundList">
+            </entity-condition>
+            <!--entity-condition entity-name="LoanSecurity" list="loanSecurityList">
+            </entity-condition -->
+        </actions>
+        
+        <!--  auto-fields-service service-name="createUserLogin"/ -->
+        <field name="employmentDetailsId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        
+         <field name="employerId" title="Employer" >
+            <drop-down allow-empty="true">
+                <list-options list-name="employerList" key-name="employerId" description="${name}" />
+            </drop-down>
+        </field>
+        
+        <field name="department"><text></text></field>
+        <field name="worstation"><text></text></field>
+        <field name="sourceOfFundId" title="Source Of Fund" >
+            <drop-down allow-empty="true">
+                <list-options list-name="sourceOfFundList" key-name="sourceOfFundId" description="${name}" />
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <!--  field name="cancelLink" title=" " widget-style="smallSubmit">
+            <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="employmentDetailsId"/>
+            </hyperlink>
+        </field -->
+    </form>
+    
+    <form name="businessDetails" type="single" target="businessDetails"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table">
+        <!--  auto-fields-service service-name="createUserLogin"/ -->
+        <actions>
+              <entity-condition entity-name="SourceOfFund" list="sourceOfFundList">
+            </entity-condition>
+            <!--entity-condition entity-name="LoanSecurity" list="loanSecurityList">
+            </entity-condition -->
+        </actions>
+        
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        
+        <field name="name"><text/></field>
+        <field name="address"><text/></field>
+        <field name="natureOfBusiness"><text/></field>
+         <field name="sourceOfFundId" title="Source Of Fund" >
+            <drop-down allow-empty="true">
+                <list-options list-name="sourceOfFundList" key-name="sourceOfFundId" description="${name}" />
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <!-- field name="cancelLink" title=" " widget-style="smallSubmit">
+            <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="businessDetailsId"/>
+            </hyperlink>
+        </field -->
+    </form>
+    
+    <form name="memberContribution" type="single" target="memberContribution"
+        focus-field-name="contributionAmt" header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service service-name="createUserLogin"/ -->
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        <field name="contributionAmt"><text/></field>
+        
+        <field name="paymentMethodTypeId" title="Payment Method" >
+            <drop-down allow-empty="true">
+                <list-options list-name="paymentMethodsList" key-name="paymentMethodTypeId" description="${description}" />
+            </drop-down>
+        </field>
+        <field name="contributionEffectiveDate"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <!--  >field name="cancelLink" title=" " widget-style="smallSubmit">
+            <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field -->
+    </form>
+    
+    <form name="memberAccount" type="single" target="memberAccount"
+        focus-field-name="userLoginId" header-row-style="header-row" default-table-style="basic-table">
+        
+         <actions>
+             <entity-condition entity-name="SaccoProduct" list="productsList">
+             	 <condition-expr field-name="productType" operator="equals" value="Account"/>
+            </entity-condition>
+        </actions>
+        <!--  auto-fields-service service-name="createUserLogin"/ -->
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        <field name="saccoProductId" title="Account">
+            <drop-down allow-empty="true">
+                <list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <!-- field name="cancelLink" title=" " widget-style="smallSubmit">
+            <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field -->
+    </form>
+    
+    <form name="memberReferee" type="single" target="memberReferee"
+        focus-field-name="refreeId" header-row-style="header-row" default-table-style="basic-table">
+        <!-- auto-fields-service service-name="createUserLogin"/ -->
+        <actions>
+            <entity-condition entity-name="Member" list="membersList">
+            </entity-condition>
+        </actions>
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        
+        
+        <field name="refreeId" title="Referee">
+            <drop-down allow-empty="true">
+                <list-options list-name="membersList" key-name="partyId" description="${firstName} ${lastName}" />
+            </drop-down>
+        </field>
+       <field name="memberNo" title="Member No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+
+       <field name="payrollNo" title="Payroll No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="memberNominee" type="single" target="memberNominee"
+        focus-field-name="firstName" header-row-style="header-row" default-table-style="basic-table">
+        <!-- auto-fields-service service-name="createUserLogin"/ -->
+        <actions>
+            <entity-condition entity-name="Relationship" list="relationshipList">
+            </entity-condition>
+        </actions>
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        <field name="firstName"  title="First Name"><text/></field>
+        <field name="middleName" title="Middle Name"><text/></field>
+        <field name="lastName"  title="Last Name"><text/></field>
+        <field name="idNumber"  title="ID No"><text/></field>
+        <field name="passportNumber" title="Passport No"><text/></field>
+        <field name="postalAddress"  title="Postal Address"><textarea/></field>
+        <field name="telephoneNumber" title="Telephone No"><text/></field>
+        <field name="mobilePhone" title="Mobile Phone"><text/></field>
+        <field name="relationshipId" title="Relationship">
+            <drop-down allow-empty="true">
+                <list-options list-name="relationshipList" key-name="relationshipId" description="${name}" />
+            </drop-down>
+        </field>
+        <field name="isAdministrator" title="Is Administrator">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="Y" description="${uiLabelMap.CommonY}"/>
+                <option key="N" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+        <field name="percentage" title="Percentage"><text/></field>
+        <field name="independentwitnessnames" title="Independent Witness Names"><text/></field>
+        <field name="independentwitnessidno" title="Independent Witness ID No"><text/></field>
+        <field name="witnessmobileno" title="Witness Mobile No"><text/></field>
+         <field name="witnesspostaladdress" title="Witness Postal Address"><textarea/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="termsAndConditions" type="single" target="termsAndConditions"
+        focus-field-name="acceptTermsAndConditions" header-row-style="header-row" default-table-style="basic-table">
+        <!-- auto-fields-service service-name="createUserLogin"/ -->
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        <field name="acceptTermsAndConditions">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="Y" description="${uiLabelMap.CommonY}"/>
+                <option key="N" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+        <field name="dateAccepted"><date-time/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        
+    </form>
+    
+    <form name="sourceOfFunds" type="single" target="sourceOfFunds"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table">
+        <!--  auto-fields-service service-name="createUserLogin"/ -->
+        <field name="partyId"><hidden/></field>
+        <field name="sourceOfFundId"><hidden/></field>
+        
+        <field name="enabled"><hidden/></field>
+        <field name="name"><text/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        
+    </form>
+    
+    <form name="employers" type="single" target="employers"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table">
+        <!-- auto-fields-service service-name="createUserLogin"/ -->
+        <field name="employerId"><hidden/></field>
+        <field name="active"><hidden/></field>
+        <field name="name" title="Name"><text/></field>
+        <field name="address" title="Address"><textarea/></field>
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+      
+    </form>
+    
+    
+    
+    
+    
+    
+</forms>
