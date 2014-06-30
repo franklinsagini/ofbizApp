@@ -23,7 +23,7 @@ under the License.
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
     <description>Accounting Manager Module Site Configuration File</description>
-    
+
     <!-- Events to run on every request before security (chains exempt) -->
     <!--
     <preprocessor>
@@ -36,12 +36,58 @@ under the License.
     </postprocessor>
     -->
 
+    <!-- Imprest Request Mappings -->
+
+            <!-- Request Mappings -->
+    <request-map uri="imprestType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="imprestType"/>
+    </request-map>
+
+    <request-map uri="FindImprestType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindImprestType"/>
+    </request-map>
+
+    <request-map uri="CreateNewImprestType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewImprestType"/>
+    </request-map>
+
+    <request-map uri="createImprestType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createImprestType"/>
+        <response name="success" type="view" value="EditImprestType"/>
+        <response name="error" type="view" value="EditImprestType"/>
+    </request-map>
+
+    <request-map uri="EditImprestType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditImprestType"/>
+    </request-map>
+
+    <request-map uri="updateImprestType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateImprestType"/>
+        <response name="success" type="view" value="EditImprestType"/>
+        <response name="error" type="view" value="EditImprestType"/>
+    </request-map>
+
+
+    <request-map uri="deleteImprestType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteImprestType"/>
+        <response name="success" type="view" value="FindImprestType"/>
+        <response name="error" type="view" value="FindImprestType"/>
+    </request-map>
+
+
     <!-- Request Mappings -->
     <request-map uri="view">
         <security https="true" auth="false"/>
         <response name="success" type="request" value="main"/>
     </request-map>
-    
+
     <request-map uri="main">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
@@ -753,7 +799,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListGlAccountOrgCsv"/>
     </request-map>
-    
+
     <!-- Import export -->
     <request-map uri="ImportExport">
         <security https="true" auth="true"/>
@@ -1140,7 +1186,7 @@ under the License.
         <response name="success" type="view" value="EditFixedAssetMaintOrders"/>
         <response name="error" type="view" value="EditFixedAssetMaintOrders"/>
     </request-map>
-    
+
     <!-- =============== Budget mapping =================-->
     <request-map uri="ListBudgets"><security https="true" auth="true"/><response name="success" type="view" value="ListBudgets"/></request-map>
     <request-map uri="BudgetSearchResults"><security https="true" auth="false"/><response name="success" type="view" value="BudgetSearchResults"/></request-map>
@@ -1209,7 +1255,7 @@ under the License.
         <response name="success" type="view" value="BudgetReviews"/>
         <response name="error" type="view" value="BudgetReviews"/>
     </request-map>
-    
+
     <!-- =============== Agreement mapping =================-->
     <request-map uri="FindAgreement"><security https="true" auth="true"/><response name="success" type="view" value="FindAgreement"/></request-map>
     <request-map uri="cancelAgreement">
@@ -2569,7 +2615,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CommissionRun"/>
     </request-map>
-    
+
     <request-map uri="processCommissionRun">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCommissionInvoices"/>
@@ -2664,6 +2710,13 @@ under the License.
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
+
+    <!-- Imprest Vew Mappings -->
+    <view-map name="imprestType" type="screen" page="component://accounting/widget/ImprestScreens.xml#imprestType"/>
+    <view-map name="FindImprestType" type="screen" page="component://accounting/widget/ImprestScreens.xml#FindImprestType"/>
+    <view-map name="CreateNewImprestType" type="screen" page="component://accounting/widget/ImprestScreens.xml#CreateImprestType"/>
+    <view-map name="EditImprestType" type="screen" page="component://accounting/widget/ImprestScreens.xml#EditImprestType"/>
+
 
     <!-- BillingAccount -->
     <view-map name="FindBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#FindBillingAccount"/>
