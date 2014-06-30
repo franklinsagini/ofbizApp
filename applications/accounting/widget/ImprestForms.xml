@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+    <form   name="ListImprestTypes"
+            type="list"
+            list-name="imprestTypes"
+            paginate-target="FindImprestType"
+            odd-row-style="alternate-row"
+            header-row-style="header-row-2"
+            default-table-style="basic-table hover-bar">
+
+        <actions>
+            <entity-condition entity-name="ImprestType">
+                <order-by field-name="imprestTypeId"/>
+            </entity-condition>
+        </actions>
+
+        <field name="imprestTypeId" title="Imprest ID" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${imprestTypeId}" target="EditImprestType">
+                <parameter param-name="imprestTypeId"/>
+            </hyperlink>
+        </field>
+
+        <field name="description" title="Imprest Description">
+            <display/>
+        </field>
+
+        <field name="remove" title="Actions" widget-style="buttontext">
+            <hyperlink target="deleteImprestType" description="${uiLabelMap.CommonDelete}">
+                <parameter param-name="imprestTypeId" value="imprestTypeId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+
+    <form   name="CreateImprestType"
+            type="single"
+            target="createImprestType"
+            default-map-name="imprestType">
+
+        <field position="1" name="imprestTypeId" title="Imprest ID" widget-style="required" tooltip="Required">
+            <text size="20" maxlength="20"/>
+        </field>
+        <field position="1" name="description" title="Imprest Description">
+            <text size="60" maxlength="250"/>
+        </field>
+        <field position="1" name="submitButton" title="${uiLabelMap.CommonSave}">
+            <submit button-type="button"/>
+        </field>
+        <field name="cancelLink" title=" " widget-style="smallSubmit">
+            <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form   name="EditImprestType"
+            type="single"
+            target="updateImprestType"
+            default-map-name="vergeImprestType">
+        <field name="imprestTypeId" title="Imprest ID" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display/>
+        </field>
+
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <text size="60" maxlength="250"/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+
+
+
+    <!-- Invoice forms -->
+    <form name="FindImprest" type="single" target="findImprest" title="Find and list imprests"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="imprestId"><text-find ignore-case="true"/></field>
+        <field name="description"><text-find ignore-case="true"/></field>
+        <field position="1" name="invoiceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="InvoiceType"/>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
+        <field name="invoiceDate"><date-find type="date"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+
+
+    <form name="CreateImprest" type="single" target="createImprest"
+        header-row-style="header-row" default-table-style="basic-table">
+
+        <field position="1" name="docNumber" title="Document No.">
+            <text size="10" maxlength="30"/>
+        </field>
+        <field position="2" name="imprestDate" title="Imprest Date">
+            <date-time/>
+        </field>
+        <field position="1" name="partyId" parameter-name="partyId" title="Requester">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field position="2" name="partyIdDep" title="Department" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyRoleNameDetail" key-field-name="partyId" description="${groupName}">
+                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                </entity-options>
+                <option key="null" description="${uiLabelMap.HumanResEmplPartyIdFromNotSpecified}"/>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdApprov" parameter-name="partyIdApprov" title="Approved By">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field position="2" name="approvDate" title="Approval Date">
+            <date-time/>
+        </field>
+        <field name="amount" title="Amount">
+            <text/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form   name="EditImprest"
+            type="single"
+            target="updateImprestType"
+            default-map-name="vergeImprestType">
+
+        <field position="1" name="docNumber" title="Document No.">
+            <text size="10" maxlength="30"/>
+        </field>
+        <field position="2" name="imprestDate" title="Imprest Date">
+            <date-time/>
+        </field>
+        <field position="1" name="partyId" parameter-name="partyId" title="Requester">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field position="2" name="partyIdDep" title="Department" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyRoleNameDetail" key-field-name="partyId" description="${groupName}">
+                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                </entity-options>
+                <option key="null" description="${uiLabelMap.HumanResEmplPartyIdFromNotSpecified}"/>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdApprov" parameter-name="partyIdApprov" title="Approved By">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field position="2" name="approvDate" title="Approval Date">
+            <date-time/>
+        </field>
+        <field name="amount" title="Amount">
+            <text/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+</forms>

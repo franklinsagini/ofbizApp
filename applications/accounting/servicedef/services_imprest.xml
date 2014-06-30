@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>VergeImprest Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="createImprestType" engine="entity-auto" invoke="create" default-entity-name="ImprestType" auth="true">
+        <description>Create an VergeImprestType</description>
+        <permission-service service-name="securityPermissionCheck" main-action="CREATE"/>
+        <attribute name="imprestTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="updateImprestType" engine="entity-auto" invoke="update" default-entity-name="ImprestType" auth="true">
+        <description>Update a VergeImprestType</description>
+        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
+        <attribute name="imprestTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteImprestType" engine="entity-auto" invoke="delete" default-entity-name="ImprestType" auth="true">
+        <description>Delete a VergeImprestType</description>
+        <permission-service service-name="securityPermissionCheck" main-action="DELETE"/>
+        <attribute name="imprestTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+
+
+
+    <service name="createImprest" engine="simple" default-entity-name="Imprest"
+        location="component://accounting/script/org/ofbiz/accounting/imprest/ImprestServices.xml" invoke="createImprest">
+        <description>Create Imprest Record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="imprestId" mode="IN" optional="false"/>
+        <override name="statusId" mode = "IN" optional="false"/>
+        <override name="partyId" mode = "IN" optional="false"/>
+        <override name="description" allow-html="safe"/>
+    </service>
+
+    <service name="updateImprest" engine="entity-auto" invoke="update" default-entity-name="Imprest" auth="true">
+        <description>Update a VergeImprestType</description>
+        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
+        <attribute name="imprestId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteImprest" engine="entity-auto" invoke="delete" default-entity-name="Imprest" auth="true">
+        <description>Delete a VergeImprestType</description>
+        <permission-service service-name="securityPermissionCheck" main-action="DELETE"/>
+        <attribute name="imprestId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+
+
+</services>
