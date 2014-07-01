@@ -106,6 +106,91 @@ under the License.
         </#list>
       </script>
     </#if>
+    
+    <!-- Add the jQuery for adding content to a form-->
+     <script type="text/javascript">
+   jQuery(document).ready(function(){
+
+
+   jQuery('select[name="refreeId"]').change(function(){
+		 /** var memberId = jQuery('select[name="partyId"]').val;
+         alert(memberId); **/
+         var refreeId = this.value;
+         var reqUrl = '/loans/control/memberdetails';
+         sendAjaxRequest(reqUrl, refreeId);
+         
+         
+
+        });
+        
+        
+		    jQuery('select[name="saccoProductId"]').change(function(){
+		 /** var saccoProductId = jQuery('select[name="saccoProductId"]').val;
+         alert(saccoProductId); **/
+         var saccoProductId = this.value;
+         var reqUrl = '/loans/control/loandetails';
+         populateLoanDetails(reqUrl, saccoProductId);
+         
+         
+
+        });
+     });
+     
+     
+     
+
+  function sendAjaxRequest(reqUrl, memberId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'memberId': memberId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+     			//alert(' ID No, Member Type, Member Number, Mobile No for '+memberId);
+				//alert(data.firstName);
+				 $('input[name="payrollNo"]').val(data.payrollNo);
+				 $('input[name="memberNo"]').val(data.memberNo);
+              //You handle the response here like displaying in required div etc. 
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+
+
+    });
+    }
+    /** 
+    	Populate Loan Details
+    **/
+     function populateLoanDetails(reqUrl, saccoProductId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'saccoProductId': saccoProductId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+     			//alert(' ID No, Member Type, Member Number, Mobile No for '+memberId);
+				//alert(data.firstName);
+				 $('input[name="percentInterestPerMonthAmt"]').val(data.percentInterestPerMonthAmt);
+				 $('input[name="maxRepaymentPeriod"]').val(data.maxRepaymentPeriod);
+				 $('input[name="loanamt"]').val(data.loanamt);
+				// $('input[name="selectedRepaymentPeriod"]').val(data.selectedRepaymentPeriod);
+              //You handle the response here like displaying in required div etc. 
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+
+
+    });
+
+   }
+    
+   </script>
 </head>
 <#if layoutSettings.headerImageLinkUrl?exists>
   <#assign logoLinkURL = "${layoutSettings.headerImageLinkUrl}">

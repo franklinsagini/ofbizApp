@@ -249,7 +249,276 @@ under the License.
     </form>
     
     
+    <!-- Member Details Listing -->
+    <!-- Relationships List -->
+    <form name="listRelationships" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateRelationships" paginate-target="findRelationships"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="Relationship">
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="name"><display also-hidden="false"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteRelationships" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="relationshipId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
     
+    <!--  employmentDetails List-->
+	
+	<form name="listEmploymentDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmploymentDetails" paginate-target="findRelationships"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="EmploymentDetails">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            	<!--  condition-expr field-name="partyId"  operator="equals" value="" / -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="employmentDetailsId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+            <!--  drop-down allow-empty="true">
+                <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
+                </entity-options>
+            </drop-down -->
+        </field>
+        <field name="employerId" title="Employer">
+        	<display-entity description="${name}" entity-name="Employer" also-hidden="false" ></display-entity>
+        </field>
+        <field name="department"><display also-hidden="false"/></field>
+        <field name="worstation"><display also-hidden="false"/></field>
+        <field name="sourceOfFundId" title="Source Of Fund">
+        	<display-entity description="${name}" entity-name="SourceOfFund" also-hidden="false" ></display-entity>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteEmploymentDetails" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="employmentDetailsId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <!-- a href="<@ofbizUrl>employmentDetails?partyId=${partyId}</@ofbizUrl>">Edit </a -->
+        <field name="submitButton" title="${uiLabelMap.CommonEdit}"><hyperlink target="employmentDetails?partyId=${partyId}" description="Edit"></hyperlink></field>
+    </form>
+ <!--  businessDetails List-->
+	<form name="listBusinessDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBusinessDetails" paginate-target="findBusinessDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="BusinessDetails">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+          </field>
+        <field name="name"><display also-hidden="false"/></field>
+        <field name="address"><display also-hidden="false"/></field>
+        <field name="natureOfBusiness"><display also-hidden="false"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteBusinessDetails" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="businessDetailsId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+	
+<!--  memberContribution List-->
+	<form name="listMemberContribution" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberContribution" paginate-target="findMemberContribution"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberContribution">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+          </field>
+          <field name="contributionAmt"><display also-hidden="false"/></field>
+        <field name="paymentMethodTypeId" title="Payment Method">
+        	<display-entity description="${description}" entity-name="PaymentMethodType" also-hidden="false" ></display-entity>
+          </field>
+          <field name="contributionEffectiveDate"><display also-hidden="false"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMemberContribution" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberContributionId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+	
+<!--  memberAccount List-->
+	
+	<form name="listMemberAccount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberAccount" paginate-target="findMemberAccount"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberAccount">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+         <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+          </field>
+        <field name="saccoProductId" title="Account">
+        	<display-entity description="${name} - ${code} " entity-name="SaccoProduct" also-hidden="false" ></display-entity>
+          </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMemberAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberAccountId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+	
+<!--  memberReferee List-->
+	<form name="listMemberReferee" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberReferee" paginate-target="findMemberReferee"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberReferee">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+          </field>
+          <field name="refreeId" title="Referee">
+        	<display-entity key-field-name="partyId" description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+          </field>
+        <field name="memberNo"><display also-hidden="false"/></field>
+        <field name="payrollNo"><display also-hidden="false"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMemberReferee" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberRefereeId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+	
+<!--  memberNominee List-->
+	<form name="listMemberNominee" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberNominee" paginate-target="findMemberNominee"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberNominee">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+          </field>
+        <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="middleName" title="Middle Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+        <field name="idNumber" title="ID No"><display also-hidden="false"/></field>
+        <field name="passportNumber" title="Passport No."><display also-hidden="false"/></field>
+        <field name="postalAddress" title="Postal Address"><display also-hidden="false"/></field>
+        <field name="telephoneNumber" title="Telephone No."><display also-hidden="false"/></field>
+        <field name="mobilePhone" title="Mobile Phone."><display also-hidden="false"/></field>
+        <field name="relationshipId" title="Relationship">
+        	<display-entity description="${name}" entity-name="Relationship" also-hidden="false" ></display-entity>
+          </field>
+        <field name="isAdministrator" title="Is Administrator"><display also-hidden="false"/></field>
+        <field name="percentage" title="Percentage"><display also-hidden="false"/></field>
+        <field name="independentwitnessnames" title="Independent Witness Names"><display also-hidden="false"/></field>
+	    <field name="independentwitnessidno" title="Independent Witness ID No."><display also-hidden="false"/></field>
+     	<field name="witnessmobileno" title="Independent Witness Mobile No."><display also-hidden="false"/></field>
+     	<field name="witnesspostaladdress" title="Independent Witness Postal Address"><display also-hidden="false"/></field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMemberNominee" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberNomineeId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+<!--  termsAndConditions List-->
+	<form name="listTermsAndConditions" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTermsAndConditions" paginate-target="findTermsAndConditions"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TermsAndConditions">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+          </field>
+        <field name="acceptTermsAndConditions"><display also-hidden="false"/></field>
+         <field name="dateAccepted"><display also-hidden="false"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTermsAndConditions" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="termsAndConditionsId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+	
+<!--  sourceOfFunds List-->
+	<form name="listSourceOfFunds" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSourceOfFunds" paginate-target="findSourceOfFunds"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SourceOfFund">
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="name"><display also-hidden="false"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteSourceOfFunds" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="sourceOfFundId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+	
+<!--  employers List-->
+	<form name="listEmployer" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployers" paginate-target="findEmployers"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="Employer">
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="name"><display also-hidden="false"/></field>
+         <field name="address"><display also-hidden="false"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteEmployers" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="employerId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
     
     
     

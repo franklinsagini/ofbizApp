@@ -1433,11 +1433,32 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <!-- Business Details -->
+    <service name="createBusinessDetails" engine="simple" default-entity-name="BusinessDetails"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createBusinessDetails" auth="true">
+        <description>Create Business Details</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <service name="updateBusinessDetails" engine="simple" default-entity-name="BusinessDetails"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="updateBusinessDetails" auth="true">
+        <description>Update BusinessDetails</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteBusinessDetails" engine="simple" default-entity-name="BusinessDetails"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="deleteEmploymentDetails" auth="true">
+        <description>Delete BusinessDetails</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
   	
   	<!-- Employment Details -->
-  	
-	
-	
   	<service name="createEmploymentDetails" engine="simple" default-entity-name="EmploymentDetails"
              location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createEmploymentDetails" auth="true">
         <description>Create Relationship</description>
@@ -1462,9 +1483,6 @@ under the License.
     </service>
     
     <!-- memberContribution  -->
-	
-	
-	
 	<service name="createMemberContribution" engine="simple" default-entity-name="MemberContribution"
              location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createMemberContribution" auth="true">
         <description>Create MemberContribution</description>
@@ -1599,7 +1617,7 @@ under the License.
 	
 	
 	
-	<service name="createSourceOfFunds" engine="simple" default-entity-name="SourceOfFunds"
+	<service name="createSourceOfFunds" engine="simple" default-entity-name="SourceOfFund"
              location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createSourceOfFunds" auth="true">
         <description>Create Source of Funds</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
