@@ -243,7 +243,7 @@ under the License.
 		
 		<field name="paymentMethodTypeId" type="id-ne"></field>
 		
-		<field name="loanSecurityId" type="id-ne"></field>
+		<field name="loanSecurityId" type="id"></field>
 		
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
@@ -260,4 +260,89 @@ under the License.
         <key-map field-name="loanSecurityId"/>
       </relation>
 	</entity>
+	
+	<!-- Loan Application Security -->
+	<entity entity-name="LoanApplicationSecurity" package-name="org.ofbiz.loans"
+		title="Loan Application Security Entity">
+		<field name="loanApplicationSecurityId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="loanSecurityId" type="id"></field>
+		
+		<prim-key field="loanApplicationSecurityId"/>
+		<relation type="one" fk-name="LOANSECURITY_FK" rel-entity-name="LoanSecurity">
+        	<key-map field-name="loanSecurityId"/>
+      	</relation>
+      	<relation type="one" fk-name="LOANAPPLICATION_FK" rel-entity-name="LoanApplication">
+       		<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
+	<!-- Loan Application Collateral -->
+	<entity entity-name="LoanApplicationCallateral" package-name="org.ofbiz.loans"
+		title="Loan Application Collateral Entity">
+		<field name="loanApplicationCallateralId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="collateralValue" type="fixed-point"></field>
+		<field name="valuingAgency" type="name"></field>
+		<field name="collateralType" type="name"></field>
+		<field name="collateralSerialNo" type="name"></field>
+		<field name="collateralOwner" type="name"></field>
+		<field name="collateralStatus" type="name"></field>
+		<field name="propotionofloanamt" type="fixed-point"></field>
+		<prim-key field="loanApplicationCallateralId"/>
+		<relation type="one" fk-name="COLLATERAL_LOANAPPLICATION_FK" rel-entity-name="LoanApplication">
+       		<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
+	<!-- Collateral Document -->
+	<entity entity-name="CollateralDocument" package-name="org.ofbiz.loans"
+		title="Collateral Document Entity">
+		<field name="collateralDocumentId" type="id-ne"></field>
+		<field name="loanApplicationCallateralId" type="id"></field>
+		<prim-key field="collateralDocumentId"/>
+		<relation type="one" fk-name="COLLATERAL_FK" rel-entity-name="LoanApplicationCallateral">
+       		<key-map field-name="loanApplicationCallateralId"/>
+      	</relation>
+	</entity>
+	
+	<!-- Loan Guarantors -->
+	<entity entity-name="MemberStation" package-name="org.ofbiz.loans"
+		title="Member Station Entity">
+		<field name="memberStationId" type="id-ne"></field>
+		<field name="name" type="name"></field>
+		<prim-key field="memberStationId"/>
+	</entity>
+	
+	<!-- Loan Guarantors -->
+	<entity entity-name="LoanGuarantor" package-name="org.ofbiz.loans"
+		title="Loan Guarantor Entity">
+		<field name="loanGuarantorId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="guarantorId" type="id"></field>
+		<field name="memberNo" type="name"></field>
+		<field name="payrolNo" type="name"></field>
+		<field name="depositamt" type="fixed-point"></field>
+		<field name="currentStationId" type="id"></field>
+		<prim-key field="loanGuarantorId"/>
+		<relation type="one" fk-name="GUARANTOR_LOANAPPLICATION_FK" rel-entity-name="LoanApplication">
+       		<key-map field-name="loanApplicationId"/>
+      	</relation>
+      	<relation type="one" fk-name="GUARANTOR_MEMBER_FK" rel-entity-name="Member">
+       		<key-map field-name="guarantorId" rel-field-name="partyId" />
+      	</relation>
+      	<relation type="one" fk-name="GUARANTOR_MEMBERSTATION_FK" rel-entity-name="MemberStation">
+       		<key-map field-name="currentStationId" rel-field-name="memberStationId" />
+      	</relation>
+	</entity>
+	
+	<!-- Loan Status -->
+	<entity entity-name="LoanStatus" package-name="org.ofbiz.loans"
+		title="Loan Status Entity">
+		<field name="loanStatusId" type="id-ne"></field>
+		<field name="name" type="name"></field>
+	</entity>
+	
+	
+	
 </entitymodel>
