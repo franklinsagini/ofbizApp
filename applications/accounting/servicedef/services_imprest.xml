@@ -27,6 +27,27 @@
     </service>
 
 
+    <service name="createImprest" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/imprest/ImprestServices.xml" invoke="createImprest" auth="true">
+        <description>Create an imprest header record</description>
+        <permission-service service-name="commonGenericPermission" main-action="CREATE"/>
+        <implements service="interfaceDataSource"/>
+    </service>
+
+    <service name="updateImprest" engine="simple"
+            location="component://bakery/script/org/verge/bakery/BakeryServices.xml" invoke="updateImprest" auth="true">
+        <description>Update an imprest header record</description>
+        <permission-service service-name="commonGenericPermission" main-action="UPDATE"/>
+        <implements service="interfaceDataSource"/>
+    </service>
+
+    <service name="deleteDataSource" engine="simple"
+            location="component://bakery/script/org/verge/bakery/BakeryServices.xml" invoke="deleteDataSource" auth="true">
+        <description>Delete a DataSource record</description>
+        <permission-service service-name="commonGenericPermission" main-action="DELETE"/>
+        <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
+    </service>
+
 
     <service name="createImprest" engine="simple" default-entity-name="Imprest"
         location="component://accounting/script/org/ofbiz/accounting/imprest/ImprestServices.xml" invoke="createImprest">

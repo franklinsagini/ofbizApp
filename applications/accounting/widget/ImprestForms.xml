@@ -22,175 +22,180 @@ under the License.
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
 
-    <form   name="ListImprestTypes"
-            type="list"
-            list-name="imprestTypes"
-            paginate-target="FindImprestType"
-            odd-row-style="alternate-row"
-            header-row-style="header-row-2"
-            default-table-style="basic-table hover-bar">
+    <form name="FindImprestTypes" type="single" target="FindImprest" default-entity-name="SaccoImpresType">
+
+        <field name="noConditionFind">
+            <hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done -->
+        </field>
+
+        <field name="saccoImprestTypeId" title="Imprest Type ID">
+            <text-find/>
+        </field>
+
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <text-find/>
+        </field>
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+
+    </form>
+
+    <form name="ListImprestTypes" type="list" list-name="listIt" paginate-target="FindImprestType" default-entity-name="SaccoImpresType"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 
         <actions>
-            <entity-condition entity-name="ImprestType">
-                <order-by field-name="imprestTypeId"/>
-            </entity-condition>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="imprestTypeCtx"/>
+                <field-map field-name="entityName" value="ImprestType"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
         </actions>
 
-        <field name="imprestTypeId" title="Imprest ID" widget-style="buttontext">
+        <field name="imprestTypeId" title="Imprest Type" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${imprestTypeId}" target="EditImprestType">
                 <parameter param-name="imprestTypeId"/>
             </hyperlink>
         </field>
-
-        <field name="description" title="Imprest Description">
+        <field name="description" title="${uiLabelMap.CommonDescription}">
             <display/>
-        </field>
-
-        <field name="remove" title="Actions" widget-style="buttontext">
-            <hyperlink target="deleteImprestType" description="${uiLabelMap.CommonDelete}">
-                <parameter param-name="imprestTypeId" value="imprestTypeId"/>
-            </hyperlink>
         </field>
     </form>
 
+    <form name="EditImprestType" type="single" target="updateImprestType" title="" default-map-name="impresttype" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="impresttype==null" target="createImprestType"/>
 
-    <form   name="CreateImprestType"
-            type="single"
-            target="createImprestType"
-            default-map-name="imprestType">
+        <!-- imprestTypeId Field -->
+        <field use-when="impresttype!=null" name="imprestTypeId" title="${uiLabelMap.imprestTypeId}" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display/>
+        </field>
+        <field use-when="impresttype==null&amp;&amp;imprestTypeId==null" name="imprestTypeId" title="${uiLabelMap.imprestTypeId}">
+            <text/>
+        </field>
+        <field use-when="impresttype==null&amp;&amp;imprestTypeId!=null" name="imprestTypeId" title="${uiLabelMap.imprestTypeId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${imprestTypeId}]">
+            <display/>
+        </field>
 
-        <field position="1" name="imprestTypeId" title="Imprest ID" widget-style="required" tooltip="Required">
-            <text size="20" maxlength="20"/>
+
+        <!-- description Field -->
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <text/>
         </field>
-        <field position="1" name="description" title="Imprest Description">
-            <text size="60" maxlength="250"/>
+
+        <!-- submitButton -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+            <submit button-type="text-link"/>
         </field>
-        <field position="1" name="submitButton" title="${uiLabelMap.CommonSave}">
-            <submit button-type="button"/>
-        </field>
-        <field name="cancelLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
-                <parameter param-name="partyId"/>
-            </hyperlink>
-        </field>
+        <!-- <field name="DONE_PAGE"><hidden value="${donePage}"/></field> -->
+        <!-- <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
     </form>
 
-    <form   name="EditImprestType"
-            type="single"
-            target="updateImprestType"
-            default-map-name="vergeImprestType">
-        <field name="imprestTypeId" title="Imprest ID" tooltip="${uiLabelMap.CommonNotModifRecreat}">
-            <display/>
+    <form name="FindImprest" type="single" target="FindImprest" default-entity-name="Imprest">
+
+        <field name="noConditionFind">
+            <hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done -->
+        </field>
+
+        <field name="imprestId" title="Imprest ID">
+            <text-find/>
+        </field>
+
+        <field name="docNumber" title="Doc No.">
+            <text-find/>
+        </field>
+
+        <field name="imprestTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ImprestType"/>
+            </drop-down>
+        </field>
+
+        <field name="amount">
+            <text/>
         </field>
 
         <field name="description" title="${uiLabelMap.CommonDescription}">
-            <text size="60" maxlength="250"/>
+            <text-find/>
         </field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}">
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+
     </form>
 
+    <form name="ListImprests" type="list" list-name="listIt" paginate-target="FindImprest" default-entity-name="Imprest"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="imprestCtx"/>
+                <field-map field-name="entityName" value="Imprest"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
 
-
-    <!-- Invoice forms -->
-    <form name="FindImprest" type="single" target="findImprest" title="Find and list imprests"
-        header-row-style="header-row" default-table-style="basic-table">
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="imprestId"><text-find ignore-case="true"/></field>
-        <field name="description"><text-find ignore-case="true"/></field>
-        <field position="1" name="invoiceTypeId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="InvoiceType"/>
-            </drop-down>
+        <field name="imprestId" title="Imprest Type" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${imprestId}" target="EditImprestType">
+                <parameter param-name="imprestId"/>
+            </hyperlink>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
-                </entity-options>
-            </drop-down>
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <display/>
         </field>
-        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
-        <field name="invoiceDate"><date-find type="date"/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+    <form name="EditImprest" type="single" target="updateImprest" title="" default-map-name="imprest" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="imprest==null" target="createImprest"/>
 
-
-    <form name="CreateImprest" type="single" target="createImprest"
-        header-row-style="header-row" default-table-style="basic-table">
-
-        <field position="1" name="docNumber" title="Document No.">
-            <text size="10" maxlength="30"/>
+        <!-- imprestId Field -->
+        <field use-when="imprest!=null" name="imprestId" title="${uiLabelMap.imprestId}" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display/>
         </field>
-        <field position="2" name="imprestDate" title="Imprest Date">
-            <date-time/>
-        </field>
-        <field position="1" name="partyId" parameter-name="partyId" title="Requester">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-        <field position="2" name="partyIdDep" title="Department" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="PartyRoleNameDetail" key-field-name="partyId" description="${groupName}">
-                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
-                </entity-options>
-                <option key="null" description="${uiLabelMap.HumanResEmplPartyIdFromNotSpecified}"/>
-            </drop-down>
-        </field>
-        <field position="1" name="partyIdApprov" parameter-name="partyIdApprov" title="Approved By">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-        <field position="2" name="approvDate" title="Approval Date">
-            <date-time/>
-        </field>
-        <field name="amount" title="Amount">
+        <field use-when="imprest==null&amp;&amp;imprestId==null" name="imprestId" title="${uiLabelMap.imprestId}">
             <text/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit">
-            <submit button-type="button"/>
+        <field use-when="imprest==null&amp;&amp;imprestId!=null" name="imprestId" title="${uiLabelMap.imprestId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${imprestId}]">
+            <display/>
         </field>
-    </form>
 
-    <form   name="EditImprest"
-            type="single"
-            target="updateImprestType"
-            default-map-name="vergeImprestType">
-
-        <field position="1" name="docNumber" title="Document No.">
-            <text size="10" maxlength="30"/>
-        </field>
-        <field position="2" name="imprestDate" title="Imprest Date">
+        <field name="imprestDate" title="Creation Date">
             <date-time/>
         </field>
-        <field position="1" name="partyId" parameter-name="partyId" title="Requester">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-        <field position="2" name="partyIdDep" title="Department" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="PartyRoleNameDetail" key-field-name="partyId" description="${groupName}">
-                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
-                </entity-options>
-                <option key="null" description="${uiLabelMap.HumanResEmplPartyIdFromNotSpecified}"/>
-            </drop-down>
-        </field>
-        <field position="1" name="partyIdApprov" parameter-name="partyIdApprov" title="Approved By">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-        <field position="2" name="approvDate" title="Approval Date">
-            <date-time/>
-        </field>
-        <field name="amount" title="Amount">
+
+        <field name="docNumber" title="Document No.">
             <text/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit">
-            <submit button-type="button"/>
+
+        <field name="amount" >
+            <text size="10"/>
         </field>
+
+
+        <field use-when="imprest==null" name="partyId">
+            <lookup target-form-name="LookupPartyName" default-value="${userLogin.partyId}"/>
+        </field>
+
+        <field name="imprestTypeId" title="Imprest Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ImprestType"/>
+            </drop-down>
+        </field>
+
+        <!-- description Field -->
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <text/>
+        </field>
+
+        <!-- submitButton -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+        <!-- <field name="DONE_PAGE"><hidden value="${donePage}"/></field> -->
+        <!-- <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
     </form>
 
 </forms>
