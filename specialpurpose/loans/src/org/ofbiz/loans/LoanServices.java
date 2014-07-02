@@ -113,6 +113,9 @@ public class LoanServices {
 			result.put("memberType", member.get("memberType"));
 			result.put("memberNumber", member.get("memberNumber"));
 			result.put("mobileNumber", member.get("mobileNumber"));
+			
+			result.put("payrollNo", member.get("payrollNumber"));
+			result.put("memberNo", member.get("memberNumber"));
 		} else {
 			System.out.println("######## Member details not found #### ");
 		}
