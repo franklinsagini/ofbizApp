@@ -40,7 +40,7 @@ under the License.
 <div class="screenlet">
   <div class="screenlet-title-bar">
     <#if applicationsList?has_content>
-      <ul>
+      <!-- ul>
         <#if hideFields == "Y">
           <li class="collapsed"><a href="<@ofbizUrl>loanapplicationslist?hideFields=N${paramList}</@ofbizUrl>" title="${uiLabelMap.CommonShowLookupFields}">&nbsp;</a></li>
         <#else>
@@ -59,7 +59,7 @@ under the License.
             <li class="disabled">${uiLabelMap.CommonPrevious}</li>
           </#if>
         </#if>
-      </ul>
+      </ul -->
       <br class="clear"/>
     </#if>
   </div>
@@ -103,12 +103,6 @@ under the License.
           <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
             <td><a href="<@ofbizUrl>viewapplicationprofile?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${loanType.name} ${loanType.code}</a></td>
            
-            <!-- if partyType?exists>
-              
-              <td><if partyType.description?exists>${partyType.get("description", locale)}<else>???</if></td>
-           < else>
-            <td></td><td></td>
-           </ -->
             <td>${applicationRow.memberNumber?if_exists}</td>
           	<td>${applicationRow.mobileNumber?if_exists}</td>
           	<td>${applicationRow.loanamt?if_exists}</td>
