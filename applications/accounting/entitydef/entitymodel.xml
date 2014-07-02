@@ -56,6 +56,7 @@ under the License.
       <field name="amount" type="currency-amount"></field>
       <field name="imprestTypeId" type="id"></field>
       <field name="description" type="description"></field>
+      <field name="statusId" type="id-ne"></field>
       <prim-key field="imprestId"/>
       <relation type="one" fk-name="IMPREST_IMPTYP" rel-entity-name="ImprestType">
         <key-map field-name="imprestTypeId"/>
@@ -63,8 +64,8 @@ under the License.
       <relation type="one" fk-name="IMPREST_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="IMPRST_CURNCY" title="Currency" rel-entity-name="Uom">  <!-- title strictly speaking not necessary here but nice for consistency -->
-        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      <relation type="one" fk-name="IMP_STTS" rel-entity-name="StatusItem">
+          <key-map field-name="statusId"/>
       </relation>
     </entity>
 

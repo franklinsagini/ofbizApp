@@ -38,6 +38,15 @@ under the License.
     <!-- org.ofbiz.accounting.reports -->
     <!-- ========================================================= -->
 
+    <view-entity entity-name="ImprestStatusItem" package-name="org.ofbiz.accounting.reports">
+        <member-entity entity-alias="SI" entity-name="StatusItem"/>
+        <alias-all entity-alias="SI"/>
+        <entity-condition>
+            <condition-expr entity-alias="SI" field-name="statusTypeId" operator="equals" value="IMPR_STTS"/>
+            <order-by field-name="sequenceId"/>
+        </entity-condition>
+    </view-entity>
+
     <view-entity entity-name="InvoiceItemProductSummary" package-name="org.ofbiz.accounting.reports">
         <member-entity entity-alias="INV" entity-name="Invoice"/>
         <member-entity entity-alias="INITM" entity-name="InvoiceItem"/>
@@ -77,7 +86,7 @@ under the License.
             <key-map field-name="productId"/>
         </view-link>
     </view-entity>
-    
+
     <view-entity entity-name="InvoiceExport" package-name="org.ofbiz.accounting.reports">
         <member-entity entity-alias="INV" entity-name="Invoice"/>
         <member-entity entity-alias="ITM" entity-name="InvoiceItem"/>

@@ -21,27 +21,27 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <!-- Imprest methods -->
-    <simple-method method-name="createImprest" short-description="Create an Imprest">
+
+
+    <simple-method method-name="createImprest" short-description="createImprest">
+        <now-timestamp field="nowTimestamp"/>
         <make-value value-field="newEntity" entity-name="Imprest"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set from-field="nowTimestamp" field="parameters.imprestDate"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
 
-    <simple-method method-name="updateDataSource" short-description="Update an Imprest">
-        <make-value entity-name="Imprest" value-field="lookupPKMap"/>
-        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-        <find-by-primary-key entity-name="Imprest" map="lookupPKMap" value-field="lookedUpValue"/>
+    <simple-method method-name="updateImprest" short-description="update imprest">
+        <entity-one entity-name="Imprest" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
-
-    <simple-method method-name="deleteDataSource" short-description="Delete an DataSource">
-        <make-value entity-name="DataSource" value-field="lookupPKMap"/>
-        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-        <find-by-primary-key entity-name="DataSource" map="lookupPKMap" value-field="lookedUpValue"/>
+    <simple-method method-name="deleteImprest" short-description="delete imprest">
+        <entity-one entity-name="Imprest" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+
 
 </simple-methods>

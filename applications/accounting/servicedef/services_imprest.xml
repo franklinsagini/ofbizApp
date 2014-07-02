@@ -34,44 +34,26 @@
         <implements service="interfaceDataSource"/>
     </service>
 
+    <service name="createImprest" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/imprest/ImprestServices.xml" invoke="createImprest" auth="true">
+        <description>Create an imprest header record</description>
+        <permission-service service-name="partyBasePermissionCheck" main-action="CREATE"/>
+        <auto-attributes entity-name="Imprest" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="Imprest" include="nonpk" mode="IN" optional="true"/>
+        <override name="statusId" optional="false"/>
+    </service>
     <service name="updateImprest" engine="simple"
-            location="component://bakery/script/org/verge/bakery/BakeryServices.xml" invoke="updateImprest" auth="true">
-        <description>Update an imprest header record</description>
-        <permission-service service-name="commonGenericPermission" main-action="UPDATE"/>
-        <implements service="interfaceDataSource"/>
+            location="component://accounting/script/org/ofbiz/accounting/imprest/ImprestServices.xml" invoke="updateImprest" auth="true">
+        <description>Update Imprest Information</description>
+        <permission-service service-name="partyBasePermissionCheck" main-action="UPDATE"/>
+        <auto-attributes entity-name="Imprest" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="Imprest" include="nonpk" mode="IN" optional="true"/>
     </service>
-
-    <service name="deleteDataSource" engine="simple"
-            location="component://bakery/script/org/verge/bakery/BakeryServices.xml" invoke="deleteDataSource" auth="true">
-        <description>Delete a DataSource record</description>
-        <permission-service service-name="commonGenericPermission" main-action="DELETE"/>
-        <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
-    </service>
-
-
-    <service name="createImprest" engine="simple" default-entity-name="Imprest"
-        location="component://accounting/script/org/ofbiz/accounting/imprest/ImprestServices.xml" invoke="createImprest">
-        <description>Create Imprest Record</description>
-        <auto-attributes mode="INOUT" include="pk" optional="true"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="imprestId" mode="IN" optional="false"/>
-        <override name="statusId" mode = "IN" optional="false"/>
-        <override name="partyId" mode = "IN" optional="false"/>
-        <override name="description" allow-html="safe"/>
-    </service>
-
-    <service name="updateImprest" engine="entity-auto" invoke="update" default-entity-name="Imprest" auth="true">
-        <description>Update a VergeImprestType</description>
-        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
-        <attribute name="imprestId" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-    </service>
-
-    <service name="deleteImprest" engine="entity-auto" invoke="delete" default-entity-name="Imprest" auth="true">
-        <description>Delete a VergeImprestType</description>
-        <permission-service service-name="securityPermissionCheck" main-action="DELETE"/>
-        <attribute name="imprestId" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
+    <service name="deleteImprest" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/imprest/ImprestServices.xml" invoke="deleteImprest" auth="true">
+        <description>Remove Imprest Information</description>
+        <permission-service service-name="partyBasePermissionCheck" main-action="DELETE"/>
+        <auto-attributes entity-name="Imprest" include="pk" mode="IN" optional="false"/>
     </service>
 
 

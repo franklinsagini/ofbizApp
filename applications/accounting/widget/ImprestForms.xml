@@ -139,17 +139,28 @@ under the License.
         </actions>
 
         <field name="imprestId" title="Imprest Type" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${imprestId}" target="EditImprestType">
+            <hyperlink also-hidden="false" description="${imprestId}" target="EditImprest">
                 <parameter param-name="imprestId"/>
             </hyperlink>
         </field>
-        <field name="description" title="${uiLabelMap.CommonDescription}">
+        <field name="docNumber" title="Doc Number">
+            <display/>
+        </field>
+        <field name="partyId" title="Created By">
+            <display/>
+        </field>
+        <field name="imprestDate" title="Created On">
             <display/>
         </field>
     </form>
 
     <form name="EditImprest" type="single" target="updateImprest" title="" default-map-name="imprest" header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="imprest==null" target="createImprest"/>
+        <actions>
+            <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" from-field="imprest.statusId"/>
+            </entity-one>
+        </actions>
 
         <!-- imprestId Field -->
         <field use-when="imprest!=null" name="imprestId" title="${uiLabelMap.imprestId}" tooltip="${uiLabelMap.CommonNotModifRecreat}">
@@ -162,8 +173,22 @@ under the License.
             <display/>
         </field>
 
-        <field name="imprestDate" title="Creation Date">
-            <date-time/>
+        <field name="statusId"  use-when="imprest==null" title="${uiLabelMap.CommonStatus}" widget-style="required">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ImprestStatusItem" description="${statusCode}"/>
+            </drop-down>
+        </field>
+
+        <field name="statusId" use-when="imprest!=null" title="${uiLabelMap.CommonStatus}" widget-style="required">
+            <drop-down allow-empty="false" current-description="${currentStatus.statusCode}">
+                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${statusCode})">
+                    <entity-constraint name="statusId" env-name="imprest.statusId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <field use-when="imprest!=null" name="imprestDate" title="Creation Date">
+            <display/>
         </field>
 
         <field name="docNumber" title="Document No.">
@@ -191,11 +216,13 @@ under the License.
         </field>
 
         <!-- submitButton -->
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+        <field use-when="imprest==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
             <submit button-type="text-link"/>
         </field>
-        <!-- <field name="DONE_PAGE"><hidden value="${donePage}"/></field> -->
-        <!-- <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
+        <field use-when="imprest!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+
     </form>
 
 </forms>
