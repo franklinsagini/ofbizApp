@@ -50,6 +50,13 @@
                 </#if>
               </#list>
 	</select></td></tr>
+	<tr><td>Status</td><td><select name="loanStatusId">
+ 		<#list loanStatusList as loanStatus>
+              	<#if ((loanStatus.name)?exists)>
+                <option value="${loanStatus.loanStatusId}">${loanStatus.name} </option>
+                </#if>
+              </#list>
+	</select></td></tr>
   	<tr><td><input type="submit" value="   Save   " /></td><td></td></tr>
   </table>
     

@@ -348,7 +348,73 @@ under the License.
     </response>
     </request-map>
     
+    <!-- Loan Security and Loan Status Request Map -->
     
+    <request-map uri="NewLoanSecurity">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewLoanSecurity" />
+	</request-map>
+	
+	<request-map uri="NewLoanStatus">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewLoanStatus" />
+	</request-map>
+	
+	
+	<request-map uri="createLoanSecurity">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanSecurity" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanStatus"></response>
+		<response name="error" type="view" value="NewLoanStatus" />
+	</request-map>
+
+	<request-map uri="createLoanStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanStatus" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanStatus"></response>
+		<response name="error" type="view" value="NewLoanStatus" />
+	</request-map>
+	
+	<request-map uri="updateLoanSecurity">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanSecurity" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanSecurity"></response>
+		<response name="error" type="view" value="NewLoanSecurity" />
+	</request-map>
+	
+	<request-map uri="deleteLoanSecurity">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLoanSecurity" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanSecurity"></response>
+		<response name="error" type="view" value="NewLoanSecurity" />
+	</request-map>
+	
+	
+	<request-map uri="updateLoanStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanStatus" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanStatus"></response>
+		<response name="error" type="view" value="NewLoanStatus" />
+	</request-map>
+	
+	<request-map uri="deleteLoanStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLoanStatus" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanStatus"></response>
+		<response name="error" type="view" value="NewLoanStatus" />
+	</request-map>
+    
+    <request-map uri="loanapplicationslist">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanapplicationslist"
+			save-current-view="true" />
+	</request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -400,6 +466,17 @@ under the License.
 		
 	<view-map name="loanapplication" type="screen"
 		page="component://loans/widget/loans/ExampleScreens.xml#NewLoanApplication" />
+		
+	<!-- Loan Security and Loan Status Views-->
+	<view-map name="NewLoanSecurity" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#NewLoanSecurity" />
+	<view-map name="NewLoanStatus" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#NewLoanStatus" />
+		
+		<!-- loanapplicationslist -->
+	<view-map name="loanapplicationslist" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#loanapplicationslist" />
+		
     <!-- Supported Content Types -->
     <!--
         text/html

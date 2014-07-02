@@ -123,4 +123,62 @@ under the License.
         <entity-one entity-name="LoanApplication" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+    
+    <!-- Loan Security and Loan Status -->
+    <simple-method method-name="createLoanSecurity" short-description="Create Loan Security">
+        <make-value entity-name="LoanSecurity" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanSecurity" field="loanSecurityId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanSecurityId" field="newEntity.loanSecurityId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+	
+	
+	
+	<simple-method method-name="createLoanStatus" short-description="Create Loan Status">
+        <make-value entity-name="LoanStatus" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanStatus" field="loanStatusId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanStatusId" field="newEntity.loanStatusId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanSecurity" short-description="Update Loan Security">
+        <entity-one entity-name="LoanSecurity" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanSecurity" short-description="Delete Loan Security">
+        <entity-one entity-name="LoanSecurity" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+	
+	
+	 <simple-method method-name="updateLoanStatus" short-description="Update Loan Status">
+        <entity-one entity-name="LoanStatus" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanStatus" short-description="Delete Loan Status">
+        <entity-one entity-name="LoanStatus" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+     <simple-method method-name="listLoanApplications" short-description="Get Loan Applications">
+        <!-- entity-one entity-name="LoanStatus" value-field="lookedUpValue"/ -->
+        <!-- remove-value value-field="lookedUpValue"/ -->
+        <entity-condition list="applicationsList" entity-name="LoanApplication"></entity-condition>
+    </simple-method>
+    
 </simple-methods>
