@@ -118,6 +118,7 @@ under the License.
             <widgets>
                  <decorator-screen name="CommonImprestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+
                         <screenlet title="${uiLabelMap.ImprestType}">
                             <include-form name="EditImprestType" location="component://accounting/widget/ImprestForms.xml"/>
                         </screenlet>
@@ -178,9 +179,28 @@ under the License.
             <widgets>
                  <decorator-screen name="CommonImprestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <include-menu name="ImprestSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <screenlet title="Edit Imprest">
                             <include-form name="EditImprest" location="component://accounting/widget/ImprestForms.xml"/>
                         </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditImprestItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditExampleItems"/>
+                <set field="tabButtonItem" value="EditImprestItems"/>
+                <set field="imprestId" from-field="parameters.imprestId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonImprestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListImprestItems" location="component://accounting/widget/ImprestForms.xml"/>
+                        <include-form name="AddImprestItem" location="component://accounting/widget/ImprestForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

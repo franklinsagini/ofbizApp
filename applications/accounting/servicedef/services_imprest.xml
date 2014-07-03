@@ -55,6 +55,26 @@
         <permission-service service-name="partyBasePermissionCheck" main-action="DELETE"/>
         <auto-attributes entity-name="Imprest" include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- Imprest Lines  -->
+    <service name="createImprestItem" default-entity-name="ImprestItem" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ImprestItem</description>
+        <permission-service service-name="exampleGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="imprestItemSeqId" mode="OUT"/> <!-- make this OUT rather than IN, we will automatically generate the next sub-sequence ID -->
+        <override name="description" optional="false"/>
+    </service>
+    <service name="updateImprestItem" default-entity-name="ImprestItem" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ImprestItem</description>
+        <permission-service service-name="exampleGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteImprestItem" default-entity-name="ImprestItem" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ImprestItem</description>
+        <permission-service service-name="exampleGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 
 
 </services>

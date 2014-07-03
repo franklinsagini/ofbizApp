@@ -105,6 +105,37 @@ under the License.
         <response name="error" type="view" value="EditImprest"/>
     </request-map>
 
+     <request-map uri="EditImprestItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditImprestItems"/>
+    </request-map>
+
+    <!-- Imprest Lines Requests -->
+    <request-map uri="createImprestItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createImprestItem"/>
+        <response name="success" type="request-redirect" value="EditImprestItems">
+            <redirect-parameter name="imprestId"/>
+        </response>
+        <response name="error" type="view" value="EditImprestItems"/>
+    </request-map>
+    <request-map uri="updateImprestItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateImprestItem"/>
+        <response name="success" type="request-redirect" value="EditImprestItems">
+            <redirect-parameter name="imprestId"/>
+        </response>
+        <response name="error" type="view" value="EditImprestItems"/>
+    </request-map>
+    <request-map uri="deleteImprestItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteImprestItem"/>
+        <response name="success" type="request-redirect" value="EditImprestItems">
+            <redirect-parameter name="imprestId"/>
+        </response>
+        <response name="error" type="view" value="EditImprestItems"/>
+    </request-map>
+
 
     <!-- Request Mappings -->
     <request-map uri="view">
@@ -2743,6 +2774,7 @@ under the License.
     <view-map name="FindImprest" type="screen" page="component://accounting/widget/ImprestScreens.xml#FindImprest"/>
     <view-map name="EditImprestType" type="screen" page="component://accounting/widget/ImprestScreens.xml#EditImprestType"/>
     <view-map name="EditImprest" type="screen" page="component://accounting/widget/ImprestScreens.xml#EditImprest"/>
+    <view-map name="EditImprestItems" type="screen" page="component://accounting/widget/ImprestScreens.xml#EditImprestItems"/>
 
 
     <!-- BillingAccount -->
