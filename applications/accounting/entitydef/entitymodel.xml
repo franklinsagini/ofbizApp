@@ -78,6 +78,18 @@ under the License.
         <prim-key field="imprestTypeId"/>
     </entity>
 
+    <entity entity-name="ImprestItem" package-name="org.ofbiz.accounting.imprest" title="Imprest Item Entity">
+      <field name="imprestId" type="id-ne"></field>
+      <field name="imprestItemSeqId" type="id-ne"><description>secondary sequenced ID</description></field>
+      <field name="description" type="description"></field>
+      <field name="amount" type="floating-point"></field>
+      <prim-key field="imprestId"/>
+      <prim-key field="imprestItemSeqId"/>
+      <relation type="one" fk-name="IMPRIT_IMPR" rel-entity-name="Imprest">
+        <key-map field-name="imprestId"/>
+      </relation>
+    </entity>
+
 
 
 

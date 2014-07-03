@@ -152,6 +152,9 @@ under the License.
         <field name="imprestDate" title="Created On">
             <display/>
         </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true">
+            <display-entity entity-name="StatusItem" description="${statusCode}"/>
+        </field>
     </form>
 
     <form name="EditImprest" type="single" target="updateImprest" title="" default-map-name="imprest" header-row-style="header-row" default-table-style="basic-table">
@@ -223,6 +226,33 @@ under the License.
             <submit button-type="text-link"/>
         </field>
 
+    </form>
+    <!-- IMPREST ITEMS FORMS -->
+    <form name="ListImprestItems" type="list"  list-name="imprestItems"  target="updateImprestItem">
+        <actions>
+            <entity-condition entity-name="ImprestItem">
+                <condition-expr field-name="imprestId" from-field="imprestId"/>
+                <order-by field-name="imprestItemSeqId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateImprestItem"/>
+        <field name="imprestId"><hidden/></field>
+        <field name="imprestItemSeqId" title="${uiLabelMap.CommonItem}"><display/></field>
+        <field name="description"><text size="30"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="deleteImprestItem" description="${uiLabelMap.CommonDelete}" also-hidden="false" confirmation-message="${uiLabelMap.CommonConfirmDelete}" image-location="${iconsLocation}/delete.png">
+                <parameter param-name="imprestId"/>
+                <parameter param-name="imprestItemSeqId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="AddImprestItem" type="single" target="createImprestItem" title="">
+        <auto-fields-service service-name="createImprestItem"/>
+        <field name="imprestId"><hidden/></field>
+        <field name="imprestItemSeqId"><ignored/><!-- this will be auto-sequenced --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button" request-confirmation="true"/></field>
     </form>
 
 </forms>
