@@ -183,4 +183,81 @@ under the License.
         <entity-condition list="applicationsList" entity-name="LoanApplication"></entity-condition>
     </simple-method>
     
+    <!-- Save LoanApplicationSecurity , LoanApplicationCollateral , LoanApplicationGuarantor -->
+    <!-- createLoanApplicationSecurity -->
+    <simple-method method-name="createLoanApplicationSecurity" short-description="Create Loan Application Security">
+        <make-value entity-name="LoanApplicationSecurity" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanApplicationSecurity" field="loanApplicationSecurityId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanApplicationSecurityId" field="newEntity.loanApplicationSecurityId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateLoanApplicationSecurity" short-description="Update Loan Application Security">
+        <entity-one entity-name="LoanApplicationSecurity" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanApplicationSecurity" short-description="Delete Loan Application Security">
+        <entity-one entity-name="LoanApplicationSecurity" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- createLoanApplicationCollateral -->
+
+
+    <simple-method method-name="createLoanApplicationCollateral" short-description="Create Loan Application Collateral">
+        <make-value entity-name="LoanApplicationCallateral" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanApplicationCallateral" field="loanApplicationCallateralId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanApplicationCallateralId" field="newEntity.loanApplicationCallateralId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateLoanApplicationCollateral" short-description="Update Loan Application Collateral">
+        <entity-one entity-name="LoanApplicationCallateral" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanApplicationCollateral" short-description="Delete Loan Application Collateral">
+        <entity-one entity-name="LoanApplicationCallateral" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
+
+
+<!-- Loan Application Guarantor Starts Here -->
+<simple-method method-name="createLoanApplicationGuarantor" short-description="Create Loan Application Guarantor">
+        <make-value entity-name="LoanGuarantor" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanGuarantor" field="loanGuarantorId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanGuarantorId" field="newEntity.loanGuarantorId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateLoanApplicationGuarantor" short-description="Update Loan Application Guarantor">
+        <entity-one entity-name="LoanGuarantor" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanApplicationGuarantor" short-description="Delete Loan Application Guarantor">
+        <entity-one entity-name="LoanGuarantor" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

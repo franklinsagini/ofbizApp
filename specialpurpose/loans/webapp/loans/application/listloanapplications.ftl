@@ -111,7 +111,7 @@ under the License.
             <td class="button-col align-float">
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Edit </a> 
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Delete </a> 
-              <a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${uiLabelMap.CommonDetails}</a>
+              <a href="<@ofbizUrl>viewapplicationprofile?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${uiLabelMap.CommonDetails}</a>
               <#-- #if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
                   <form name= "searchorders_o_${rowCount}" method= "post" action= "/ordermgr/control/searchorders">
                     <input type= "hidden" name= "lookupFlag" value= "Y" />
