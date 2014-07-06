@@ -23,7 +23,7 @@ under the License.
 
     
     
-    <!-- New Loan Security -->
+    <!-- New Payroll Element -->
     <form name="NewPayrollElement" type="single" target="createPayrollElement"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollElementContext">
         
@@ -145,13 +145,13 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
     
-    <form name="listPayrollElements" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanSecurity" paginate-target="findLoanSecurity"
+    <form name="listPayrollElements" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollElement" paginate-target="PayrollElement"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollElement">
             </entity-condition>
         </actions>
-        <!-- auto-fields-service default-field-type="hidden" service-name="updatePayrollElement"/-->
+        <auto-fields-service default-field-type="hidden" service-name="updatePayrollElement"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
@@ -164,6 +164,89 @@ under the License.
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- New Bank -->
+    <form name="NewBankDetails" type="single" target="createBankDetails"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="bankDetailsContext">
+        
+        <field name="bankDetailsId"><hidden/></field>
+        <field name="bankName" title="Bank Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listBankDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankDetails" paginate-target="BankDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="BankDetails">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateBankDetails"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="bankName"> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteBankDetails" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="bankDetailsId"/>
+            </hyperlink>
+        </field>
+        <field name="addBranch" title="Add Branch" widget-style="buttontext">
+            <hyperlink target="bankbranch" description="Add Branch" also-hidden="false">
+                <parameter param-name="bankDetailsId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- New Bank Branch-->
+    <form name="NewBankBranch" type="single" target="createBankBranch"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="bankBranchContext">
+        
+        <actions>
+        	<entity-condition entity-name="BankDetails" list="bankList"></entity-condition>
+        	<set field="bankDetailsId" from-field="bankDetailsId"/>
+        </actions>
+
+        <field name="bankDetailsId" parameter-name="bankDetailsId"><hidden/></field>
+        <field name="bankBranchId"><hidden/></field>
+        <field name="branchName" title="Bank Branch" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="swiftCode" title="Swift Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="branchNo" title="Branch No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="location" title="Location" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listBankBranch" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankBranch" paginate-target="BankBranch"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="BankBranch">
+            	<condition-expr field-name="bankDetailsId" from-field="bankDetailsId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateBankBranch"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <!-- field name="bankDetailsId" title="Bank">
+        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
+        </field -->
+        <field name="bankDetailsId"> <hidden/> </field>
+        <field name="branchName"> <text></text> </field>
+        <field name="swiftCode"> <text></text> </field>
+        <field name="branchNo"> <text></text> </field>
+        <field name="location"> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteBankBranch" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="bankBranchId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
    

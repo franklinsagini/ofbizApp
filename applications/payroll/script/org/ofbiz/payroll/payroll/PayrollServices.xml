@@ -45,4 +45,52 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- Bank Details Starts Here -->
+	<simple-method method-name="createBankDetails" short-description="Add Bank Details">
+        <make-value entity-name="BankDetails" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="BankDetails" field="bankDetailsId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="bankDetailsId" field="newEntity.bankDetailsId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateBankDetails" short-description="Update Bank Details">
+        <entity-one entity-name="BankDetails" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteBankDetails" short-description="Delete Bank Details">
+        <entity-one entity-name="BankDetails" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Bank Branch Starts Here -->
+	<simple-method method-name="createBankBranch" short-description="Add Bank Branch">
+        <make-value entity-name="BankBranch" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="BankBranch" field="bankBranchId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="bankBranchId" field="newEntity.bankBranchId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateBankBranch" short-description="Update Bank Branch">
+        <entity-one entity-name="BankBranch" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteBankBranch" short-description="Delete Bank Branch">
+        <entity-one entity-name="BankBranch" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

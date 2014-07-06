@@ -93,18 +93,17 @@ under the License.
          <entity entity-name="BankDetails" package-name="org.ofbiz.payroll" title="Bank Details Entity">
         <field name="bankDetailsId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="bankName" type="name"></field>
-        <field name="location" type="name"></field>
-        <field name="hasBalance" type="indicator"></field>
         <prim-key field="bankDetailsId"/>
         
     	</entity>
     	
-    	<entity entity-name="BankBranchDetails" package-name="org.ofbiz.payroll" title="Bank Branch Entity">
+    	<entity entity-name="BankBranch" package-name="org.ofbiz.payroll" title="Bank Branch Entity">
         <field name="bankBranchId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="bankDetailsId" type="id"></field>
-        <field name="name" type="name"></field>
+        <field name="branchName" type="name"></field>
         <field name="swiftCode" type="name"></field>
         <field name="branchNo" type="name"></field>
+        <field name="location" type="name"></field>
         <prim-key field="bankBranchId"/>
         <relation type="one" fk-name="branch_bank" rel-entity-name="BankDetails">
             <key-map field-name="bankDetailsId"/>
@@ -125,7 +124,7 @@ under the License.
         <relation type="one" fk-name="paypoint_bank" rel-entity-name="BankDetails">
             <key-map field-name="bankDetailsId"/>
         </relation>
-        <relation type="one" fk-name="paypoint_branch" rel-entity-name="BankBranchDetails">
+        <relation type="one" fk-name="paypoint_branch" rel-entity-name="BankBranch">
             <key-map field-name="bankBranchId"/>
         </relation>
         <relation type="one" fk-name="paypoint_party" rel-entity-name="Party">

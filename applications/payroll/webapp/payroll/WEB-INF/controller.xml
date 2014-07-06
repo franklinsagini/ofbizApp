@@ -55,8 +55,7 @@ under the License.
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="payrollelements"
 			save-home-view="true" />
-	</request-map>
-	
+	</request-map>	
 	
 	<!-- Payroll Element -->
 	<request-map uri="createPayrollElement">
@@ -89,6 +88,100 @@ under the License.
 		<response name="error" type="view" value="payrollelements" />
 	</request-map>
 	
+	<request-map uri="bankdetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="bankdetails"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Bank Details -->
+	<request-map uri="createBankDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createBankDetails" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="bankdetails">
+			</response>
+		<response name="error" type="view" value="bankdetails" />
+	</request-map>
+	
+	<request-map uri="updateBankDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateBankDetails" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="bankdetails">
+			</response>
+		<response name="error" type="view" value="bankdetails" />
+	</request-map>
+	
+	<request-map uri="deleteBankDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteBankDetails" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="bankdetails">
+			</response>
+		<response name="error" type="view" value="bankdetails" />
+	</request-map>
+	
+	<request-map uri="bankbranch">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="bankbranch"
+			save-home-view="true">
+				<redirect-parameter name="bankDetailsId"/>
+			</response>
+	</request-map>
+	
+	<!-- request-map uri="addBranch">
+		<security https="true" auth="true" />
+		<response name="success" type="request-redirect" value="bankbranch"
+			save-home-view="true">
+				<redirect-parameter name="bankDetailsId"/>
+			</response>
+	</request-map -->
+	
+	<!-- Create Bank Branch -->
+	<request-map uri="createBankBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createBankBranch" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="bankbranch">
+				<redirect-parameter name="bankDetailsId"/>
+			</response>
+		<response name="error" type="view" value="bankbranch" />
+	</request-map>
+	
+	<request-map uri="updateBankBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateBankBranch" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="bankbranch">
+			<redirect-parameter name="bankDetailsId"/>
+			</response>
+		<response name="error" type="view" value="bankbranch" />
+	</request-map>
+	
+	<request-map uri="deleteBankBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteBankDetails" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="bankbranch">
+			<redirect-parameter name="bankDetailsId"/>
+			</response>
+		<response name="error" type="view" value="bankbranch" />
+	</request-map>
+	
+	
+	<request-map uri="staffpaypoints">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="paypoints"
+			save-home-view="true" />
+	</request-map>
+	
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -98,6 +191,10 @@ under the License.
 
 	<!-- Payroll -->
 	<view-map name="payrollelements" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollElement"/>
+	<view-map name="bankdetails" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewBankDetails"/>
+	<view-map name="bankbranch" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewBankBranch"/>
+	<view-map name="paypoints" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayPoint"/>
+	
 		
     <!-- Supported Content Types -->
     <!--
