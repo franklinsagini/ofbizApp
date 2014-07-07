@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <version>1.0</version>
+    <default-resource-name>PayrollEntityLabels</default-resource-name>
+
+    <!-- ========================================================= -->
+    <!-- ======================== Data Model ===================== -->
+    <!-- The modules in this file are as follows:                  -->
+    <!--  - org.ofbiz.example.example -->
+    <!--  - org.ofbiz.example.feature -->
+    <!-- ========================================================= -->
+
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.example.example -->
+    <!-- ========================================================= -->
+
+    <entity entity-name="PayrollElement" package-name="org.ofbiz.payroll" title="Payroll Element Entity">
+        <field name="payrollElementId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="name" type="name"></field>
+        <field name="elementType" type="name"></field>
+        <field name="hasBalance" type="indicator"></field>
+        <field name="relief" type="indicator"></field>
+        <field name="cummulative" type="indicator"></field>
+        <field name="employercontribution" type="indicator"></field>
+        <field name="systemcontrolled" type="name"></field>
+        <field name="taxable" type="indicator"></field>
+        <field name="employertax" type="indicator"></field>
+        <field name="benefit" type="name"></field> <!-- Cash Benefit or Non Cash Benefit -->
+        <field name="insurancecontribution" type="indicator"></field>
+        <field name="hasRelief" type="indicator"></field>
+        <field name="recurrent" type="indicator"></field>
+        <field name="hasInterest" type="indicator"></field>
+        <field name="isfixed" type="indicator"></field>
+        <field name="interestamount" type="currency-amount"></field>
+        <field name="interestrate" type="numeric"></field>
+        <field name="interestfrequency" type="name"></field>
+        <field name="payslipdisplay" type="indicator"></field>
+        <field name="isbold" type="indicator"></field>
+        
+        
+        <prim-key field="payrollElementId"/>
+        <!-- relation type="one" fk-name="EXMPL_TYP" rel-entity-name="ExampleType">
+            <key-map field-name="exampleTypeId"/>
+        </relation>
+        <relation type="one" fk-name="EXMPL_STTS" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation -->
+    </entity>
+    
+     <entity entity-name="JobGrade" package-name="org.ofbiz.payroll" title="Job Grade Entity">
+        <field name="jobGradeId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="name" type="name"></field>
+        <prim-key field="jobGradeId"/>
+        </entity>
+    
+     <entity entity-name="SalaryScale" package-name="org.ofbiz.payroll" title="Salary Scale Entity">
+        <field name="salaryScaleId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="jobGradeId" type="id"></field>
+        <field name="minAmount" type="currency-amount"></field>
+        <field name="maxAmount" type="currency-amount"></field>
+        <prim-key field="salaryScaleId"/>
+        <relation type="one" fk-name="salary_Jobgrade" rel-entity-name="JobGrade">
+            <key-map field-name="jobGradeId"/>
+        </relation>
+        
+        </entity>
+        
+         <entity entity-name="BankDetails" package-name="org.ofbiz.payroll" title="Bank Details Entity">
+        <field name="bankDetailsId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="bankName" type="name"></field>
+        <prim-key field="bankDetailsId"/>
+        
+    	</entity>
+    	
+    	<entity entity-name="BankBranch" package-name="org.ofbiz.payroll" title="Bank Branch Entity">
+        <field name="bankBranchId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="bankDetailsId" type="id"></field>
+        <field name="branchName" type="name"></field>
+        <field name="swiftCode" type="name"></field>
+        <field name="branchNo" type="name"></field>
+        <field name="location" type="name"></field>
+        <prim-key field="bankBranchId"/>
+        <relation type="one" fk-name="branch_bank" rel-entity-name="BankDetails">
+            <key-map field-name="bankDetailsId"/>
+        </relation>
+        </entity>
+        
+        <entity entity-name="StaffPaypoints" package-name="org.ofbiz.payroll" title="Staff Paypoints Entity">
+        <field name="payPointId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id"></field>
+        <field name="staffNo" type="name"></field>
+        <field name="staffName" type="name"></field>        
+        <field name="bankDetailsId" type="id"></field>
+        <field name="bankBranchId" type="id"></field>       
+        <field name="accountName" type="name"></field>
+        <field name="accountNumber" type="name"></field>
+        <field name="payMode" type="name"></field> <!-- EFT or Cheque -->
+        <prim-key field="payPointId"/>
+        <relation type="one" fk-name="paypoint_bank" rel-entity-name="BankDetails">
+            <key-map field-name="bankDetailsId"/>
+        </relation>
+        <relation type="one" fk-name="paypoint_branch" rel-entity-name="BankBranch">
+            <key-map field-name="bankBranchId"/>
+        </relation>
+        <relation type="one" fk-name="paypoint_party" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        </entity>
+        
+        <entity entity-name="PayrollPeriod" package-name="org.ofbiz.payroll" title="Payroll Period Entity">
+        <field name="payrollPeriodId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="name" type="name"></field>
+        <field name="startDate" type="date-time"></field>
+        <field name="endDate" type="date-time"></field>
+        <prim-key field="payrollPeriodId"/>
+        </entity>
+        
+        <entity entity-name="PayrollManagement" package-name="org.ofbiz.payroll" title="Payroll Management Entity">
+        <field name="payrollManagementId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id"></field>
+        <field name="staffNo" type="name"></field>
+        <field name="staffName" type="name"></field>
+        <field name="payrollPeriodId" type="id"></field>
+        <field name="payrollElementId" type="id"></field>
+        <field name="amount" type="currency-amount"></field> 
+        <field name="balance" type="currency-amount"></field> 
+        <field name="recurrencyExpiry" type="date-time"></field>     
+         <prim-key field="payrollManagementId"/>
+        <relation type="one" fk-name="management_period" rel-entity-name="PayrollPeriod">
+            <key-map field-name="payrollPeriodId"/>
+        </relation>
+        <relation type="one" fk-name="management_element" rel-entity-name="PayrollElement">
+            <key-map field-name="payrollElementId"/>
+        </relation>
+        <relation type="one" fk-name="management_party" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        </entity>        
+        
+	
+</entitymodel>
