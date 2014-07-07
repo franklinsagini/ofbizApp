@@ -215,6 +215,87 @@ under the License.
 			</response>
 		<response name="error" type="view" value="paypoint" />
 	</request-map>
+
+	
+	<request-map uri="payrollyear">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="payrollyear"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Payroll Year -->
+	<request-map uri="createPayrollYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPayrollYear" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="payrollyear">
+			</response>
+		<response name="error" type="view" value="payrollyear" />
+	</request-map>
+	
+	<request-map uri="updatePayrollYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePayrollYear" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="payrollyear">
+			</response>
+		<response name="error" type="view" value="payrollyear" />
+	</request-map>
+	
+	<request-map uri="deletePayrollYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePayrollYear" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="payrollyear">
+			</response>
+		<response name="error" type="view" value="payrollyear" />
+	</request-map>
+	
+	<request-map uri="payrollperiod">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="payrollperiod"
+			save-home-view="true">
+				<redirect-parameter name="payrollYearId"/>
+			</response>
+	</request-map>
+
+	
+	<!-- Create Payroll Period -->
+	<request-map uri="createPayrollPeriod">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPayrollPeriod" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="payrollperiod">
+				<redirect-parameter name="payrollYearId"/>
+			</response>
+		<response name="error" type="view" value="payrollperiod" />
+	</request-map>
+	
+	<request-map uri="updatePayrollPeriod">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePayrollPeriod" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="payrollperiod">
+			<redirect-parameter name="payrollYearId"/>
+			</response>
+		<response name="error" type="view" value="payrollperiod" />
+	</request-map>
+	
+	<request-map uri="deletePayrollPeriod">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePayrollPeriod" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="payrollperiod">
+			<redirect-parameter name="payrollYearId"/>
+			</response>
+		<response name="error" type="view" value="payrollperiod" />
+	</request-map>
 	
     <!-- end of request mappings -->
 
@@ -228,6 +309,9 @@ under the License.
 	<view-map name="bankdetails" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewBankDetails"/>
 	<view-map name="bankbranch" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewBankBranch"/>
 	<view-map name="paypoint" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayPoint"/>
+	<view-map name="payrollyear" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollYear"/>
+	<view-map name="payrollperiod" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollPeriod"/>
+	
 	
 		
     <!-- Supported Content Types -->

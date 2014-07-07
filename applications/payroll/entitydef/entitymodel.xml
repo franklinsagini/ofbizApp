@@ -130,14 +130,29 @@ under the License.
         <relation type="one" fk-name="paypoint_party" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
+        </entity>        
+        
+        <entity entity-name="PayrollYear" package-name="org.ofbiz.payroll" title="Payroll Year Entity">
+        <field name="payrollYearId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="name" type="name"></field>
+       <field name="currentyear" type="indicator"></field>
+        <field name="startDate" type="date-time"></field>
+        <field name="endDate" type="date-time"></field>
+        <prim-key field="payrollYearId"/>
         </entity>
         
         <entity entity-name="PayrollPeriod" package-name="org.ofbiz.payroll" title="Payroll Period Entity">
         <field name="payrollPeriodId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="payrollYearId" type="id"></field>
+       <field name="sequence_no" type="numeric"></field>
        <field name="name" type="name"></field>
+       <field name="currentperiod" type="indicator"></field>
         <field name="startDate" type="date-time"></field>
         <field name="endDate" type="date-time"></field>
         <prim-key field="payrollPeriodId"/>
+        <relation type="one" fk-name="period_year" rel-entity-name="PayrollYear">
+            <key-map field-name="payrollYearId"/>
+        </relation>
         </entity>
         
         <entity entity-name="PayrollManagement" package-name="org.ofbiz.payroll" title="Payroll Management Entity">

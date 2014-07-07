@@ -200,6 +200,100 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <!-- Payroll Year -->    
+    <screen name="NewPayrollYear">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Payroll Year"/>
+                <set field="headerItem" value="payrollyear"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPayrollYear"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PayrollYear" value-field="payrollYearContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Payroll Year">
+                                    <include-form name="NewPayrollYear" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Payroll Year">
+                        			<include-form name="listPayrollYears" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+        <!-- Payroll Period -->    
+    <screen name="NewPayrollPeriod">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Payroll Period"/>
+                <set field="headerItem" value="payrollperiod"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPayrollPeriod"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="payrollYearId" from-field="parameters.payrollYearId"/>
+                
+                <entity-one entity-name="PayrollPeriod" value-field="payrollPeriodContext"/>
+                <entity-one value-field="year" entity-name="PayrollYear">
+                	<field-map field-name="payrollYearId" from-field="payrollYearId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Period for ${year.name}">
+                                    <include-form name="NewPayrollPeriod" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Payroll Period List">
+                        			<include-form name="listPayrollPeriod" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
     
 </screens>

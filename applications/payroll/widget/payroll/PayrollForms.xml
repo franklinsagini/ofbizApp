@@ -326,6 +326,104 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
-   
+    
+   <!-- New Payroll Year -->
+    <form name="NewPayrollYear" type="single" target="createPayrollYear"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollYearContext">
+        
+        <field name="payrollYearId"><hidden/></field>
+        <field name="name" title="Year" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="currentyear"  title="Current Year" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="startDate"><date-time/></field> 
+        <field name="endDate"><date-time/></field>         
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPayrollYears" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollYear" paginate-target="PayrollYear"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PayrollYear">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updatePayrollYear"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="name"> <text></text> </field>
+        <field name="currentyear" title="Current Year"> <text></text> </field>
+        <field name="startDate"><display/></field>
+        <field name="endDate"><display/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePayrollYear" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="payrollYearId"/>
+            </hyperlink>
+        </field>
+        <field name="managePeriods" title="Manage Periods" widget-style="buttontext">
+            <hyperlink target="payrollperiod" description="Manage Periods" also-hidden="false">
+                <parameter param-name="payrollYearId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- New Payroll Period-->
+    <form name="NewPayrollPeriod" type="single" target="createPayrollPeriod"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollPeriodContext">
+        
+        <actions>
+        	<entity-condition entity-name="PayrollYear" list="yearList"></entity-condition>
+        	<set field="payrollYearId" from-field="payrollYearId"/>
+        </actions>
+
+        <field name="payrollYearId" parameter-name="payrollYearId"><hidden/></field>
+        <field name="payrollPeriodId"><hidden/></field>        
+        <field name="sequence_no" title="Sequence No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="name" title="Payroll Period" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="currentperiod"  title="Current Period" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="startDate"><date-time/></field> 
+        <field name="endDate"><date-time/></field>
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPayrollPeriod" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollPeriod" paginate-target="PayrollPeriod"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PayrollPeriod">
+            	<condition-expr field-name="payrollYearId" from-field="payrollYearId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updatePayrollPeriod"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <!-- field name="bankDetailsId" title="Bank">
+        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
+        </field -->
+        <field name="payrollYearId"> <hidden/> </field>
+        <field name="sequence_no" title="Sequence No"> <display also-hidden="false"/> </field>
+        <field name="name"> <text></text> </field>
+        <field name="currentperiod" title="Current Period"> <text></text> </field>
+        <field name="startDate"><display/></field>
+        <field name="endDate"><display/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePayrollPeriod" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="payrollPeriodId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
    
 </forms>

@@ -117,4 +117,53 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- Payroll Year Starts Here -->
+	<simple-method method-name="createPayrollYear" short-description="Add Payroll Year">
+        <make-value entity-name="PayrollYear" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PayrollYear" field="payrollYearId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="payrollYearId" field="newEntity.payrollYearId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePayrollYear" short-description="Update Payroll Year">
+        <entity-one entity-name="PayrollYear" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePayrollYear" short-description="Delete Payroll Year">
+        <entity-one entity-name="PayrollYear" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Payroll Period Starts Here -->
+	<simple-method method-name="createPayrollPeriod" short-description="Add Payroll Period">
+        <make-value entity-name="PayrollPeriod" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PayrollPeriod" field="payrollPeriodId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="payrollPeriodId" field="newEntity.payrollPeriodId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePayrollPeriod" short-description="Update Payroll Period">
+        <entity-one entity-name="PayrollPeriod" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePayrollPeriod" short-description="Delete Payroll Period">
+        <entity-one entity-name="PayrollPeriod" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    
 </simple-methods>
