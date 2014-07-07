@@ -344,6 +344,41 @@ under the License.
 		<prim-key field="loanStatusId"/>
 	</entity>
 	
+	<entity entity-name="MemberAccountDetails" package-name="org.ofbiz.loans"
+		title="MemberAccountDetails Entity">
+		<field name="memberAccountDetailsId" type="id-ne"></field>
+		<field name="partyId" type="id"></field>
+		<field name="openingBalanceDate" type="date-time"></field>
+		<field name="memberAccountPayableId" type="id"></field>
+		<field name="apOpeningBalance" type="fixed-point"></field>
+		<field name="savingsOpeningBalance" type="fixed-point"></field>
+		<prim-key field="memberAccountDetailsId"/>
+		<relation type="one" fk-name="MEMBERACCDETAILS_ACC" title="Parent" rel-entity-name="GlAccount">
+        <key-map field-name="memberAccountPayableId" rel-field-name="glAccountId"/>
+      </relation>
+      
+       <relation type="one" fk-name="ACCOUNTDETAILS_MEMBER" rel-entity-name="Member">
+        <key-map field-name="partyId"/>
+      </relation>
+	</entity>
+	
+	<entity entity-name="MemberShare" package-name="org.ofbiz.loans"
+		title="MemberShare Entity">
+		<field name="memberShareId" type="id-ne"></field>
+		<field name="partyId" type="id"></field>
+		<field name="shareAccountId" type="id"></field>
+		<field name="noOfShares" type="numeric"></field>
+		<field name="openingBalance" type="fixed-point"></field>
+		<prim-key field="memberShareId"/>
+		<relation type="one" fk-name="MEMBERSHARE_ACC" title="Parent" rel-entity-name="GlAccount">
+        <key-map field-name="shareAccountId" rel-field-name="glAccountId"/>
+      </relation>
+      
+       <relation type="one" fk-name="MEMBERSHARE_MEMBER" rel-entity-name="Member">
+        <key-map field-name="partyId"/>
+      </relation>
+	</entity>
+	
 	
 	
 </entitymodel>
