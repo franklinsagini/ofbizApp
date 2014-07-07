@@ -245,6 +245,16 @@ under the License.
 				
 		<field name="loanStatusId" type="id"></field>
 		
+		<!-- Extra Loan Fields -->
+		<field name="loanDuration" type="numeric"></field>
+		<field name="loanStartDate" type="date-time"></field>
+		<field name="outstandingBalance" type="fixed-point"></field>
+		<field name="principalDue" type="fixed-point"></field>
+		<field name="interestDue" type="fixed-point"></field>
+		<field name="panaltyInterestDue" type="fixed-point"></field>
+		<field name="monthlyRepayment" type="fixed-point"></field>
+		<field name="nextInstallmentDate" type="date-time"></field>
+		
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
@@ -342,6 +352,41 @@ under the License.
 		<field name="loanStatusId" type="id-ne"></field>
 		<field name="name" type="name"></field>
 		<prim-key field="loanStatusId"/>
+	</entity>
+	
+	<entity entity-name="MemberAccountDetails" package-name="org.ofbiz.loans"
+		title="MemberAccountDetails Entity">
+		<field name="memberAccountDetailsId" type="id-ne"></field>
+		<field name="partyId" type="id"></field>
+		<field name="openingBalanceDate" type="date-time"></field>
+		<field name="memberAccountPayableId" type="id"></field>
+		<field name="apOpeningBalance" type="fixed-point"></field>
+		<field name="savingsOpeningBalance" type="fixed-point"></field>
+		<prim-key field="memberAccountDetailsId"/>
+		<relation type="one" fk-name="MEMBERACCDETAILS_ACC" title="Parent" rel-entity-name="GlAccount">
+        <key-map field-name="memberAccountPayableId" rel-field-name="glAccountId"/>
+      </relation>
+      
+       <relation type="one" fk-name="ACCOUNTDETAILS_MEMBER" rel-entity-name="Member">
+        <key-map field-name="partyId"/>
+      </relation>
+	</entity>
+	
+	<entity entity-name="MemberShare" package-name="org.ofbiz.loans"
+		title="MemberShare Entity">
+		<field name="memberShareId" type="id-ne"></field>
+		<field name="partyId" type="id"></field>
+		<field name="shareAccountId" type="id"></field>
+		<field name="noOfShares" type="numeric"></field>
+		<field name="openingBalance" type="fixed-point"></field>
+		<prim-key field="memberShareId"/>
+		<relation type="one" fk-name="MEMBERSHARE_ACC" title="Parent" rel-entity-name="GlAccount">
+        <key-map field-name="shareAccountId" rel-field-name="glAccountId"/>
+      </relation>
+      
+       <relation type="one" fk-name="MEMBERSHARE_MEMBER" rel-entity-name="Member">
+        <key-map field-name="partyId"/>
+      </relation>
 	</entity>
 	
 	

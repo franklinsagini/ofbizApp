@@ -3034,10 +3034,19 @@ under the License.
     	<field name="citizenship" type="very-short"></field>
     	<field name="membershipofOtherSacco" type="indicator"></field>
     	
+    	<field name="joinDate" type="date"></field>
+    	<field name="registrationFee" type="fixed-point"></field>
+    	<field name="paidAmount" type="fixed-point"></field>
+    	<field name="finAccountId" type="id"></field>
+    	
     	<prim-key field="partyId"/>
       	<relation type="one" fk-name="MEMBER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+      
+      <relation type="one" fk-name="MEMBER_FNACT" rel-entity-name="FinAccount">
+            <key-map field-name="finAccountId"/>
+       </relation>
     </entity>
     
     <!-- County -->

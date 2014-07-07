@@ -2321,6 +2321,7 @@ public class PartyServices {
 		// Get Next Member Number
 		memberNumber = delegator.getNextSeqId("Member");
 
+		
 		member = delegator.makeValue("Member", UtilMisc.toMap("partyId",
 				partyId, "memberNumber", memberNumber));
 		member.setNonPKFields(context);
