@@ -93,4 +93,28 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- Pay Point Starts Here -->
+	<simple-method method-name="createPayPoint" short-description="Add Pay Point">
+        <make-value entity-name="PayPoint" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PayPoint" field="payPointId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="payPointId" field="newEntity.payPointId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePayPoint" short-description="Update Pay Point">
+        <entity-one entity-name="PayPoint" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePayPoint" short-description="Delete Pay Point">
+        <entity-one entity-name="PayPoint" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

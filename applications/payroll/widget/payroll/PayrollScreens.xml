@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="Payroll Element"/>
-                <set field="headerItem" value="payrollelement"/>
+                <set field="headerItem" value="payrollelements"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createPayrollElement"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -162,14 +162,14 @@ under the License.
     <section>
             <actions>
                 <set field="titleProperty" value="Pay Points"/>
-                <set field="headerItem" value="payrollelement"/>
+                <set field="headerItem" value="paypoint"/>
                 <set field="displayPassword" value="Y"/>
-                <set field="target" value="createPayrollElement"/>
+                <set field="target" value="createPayPoint"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
-                <entity-one entity-name="PayrollElement" value-field="payrollElementContext"/>
+                <entity-one entity-name="PayPoint" value-field="payPointContext"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -179,8 +179,8 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="New Payroll Element">
-                                    <include-form name="NewPayrollElement" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                <screenlet title="New Pay Point">
+                                    <include-form name="NewPayPoint" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -190,8 +190,8 @@ under the License.
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Elements List">
-                        			<include-form name="listPayrollElements" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		<screenlet title="Pay Points List">
+                        			<include-form name="listPayPoints" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

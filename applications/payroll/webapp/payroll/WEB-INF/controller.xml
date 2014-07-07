@@ -176,10 +176,44 @@ under the License.
 	</request-map>
 	
 	
-	<request-map uri="staffpaypoints">
+	<request-map uri="paypoint">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="paypoints"
+		<response name="success" type="view" value="paypoint"
 			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Paypoints -->
+	<request-map uri="createPayPoint">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPayPoint" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="paypoint">
+				<!-- redirect-parameter name="bankDetailsId"/-->
+			</response>
+		<response name="error" type="view" value="paypoint" />
+	</request-map>
+	
+	<request-map uri="updatePayPoint">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePayPoint" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="paypoint">
+			<!-- redirect-parameter name="bankDetailsId"/-->
+			</response>
+		<response name="error" type="view" value="paypoint" />
+	</request-map>
+	
+	<request-map uri="deletePayPoint">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePayPoint" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="paypoint">
+			<!-- redirect-parameter name="bankDetailsId"/-->
+			</response>
+		<response name="error" type="view" value="paypoint" />
 	</request-map>
 	
     <!-- end of request mappings -->
@@ -193,7 +227,7 @@ under the License.
 	<view-map name="payrollelements" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollElement"/>
 	<view-map name="bankdetails" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewBankDetails"/>
 	<view-map name="bankbranch" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewBankBranch"/>
-	<view-map name="paypoints" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayPoint"/>
+	<view-map name="paypoint" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayPoint"/>
 	
 		
     <!-- Supported Content Types -->

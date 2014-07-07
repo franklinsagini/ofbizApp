@@ -97,5 +97,30 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
+    <!-- Pay Points -->
+    <service name="createPayPoint" engine="simple" default-entity-name="PayPoint"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="createPayPoint" auth="true">
+        <description>New Paypoint</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updatePayPoint" engine="simple" default-entity-name="PayPoint"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="updatePayPoint" auth="true">
+        <description>Update Paypoint</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deletePayPoint" engine="simple" default-entity-name="PayPoint"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="deletePayPoint" auth="true">
+        <description>Delete Paypoint</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
     
 </services>
