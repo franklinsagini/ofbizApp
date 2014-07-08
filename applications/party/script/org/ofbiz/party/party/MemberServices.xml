@@ -278,4 +278,76 @@
         <entity-one entity-name="Employer" value-field="employer"/>
         <remove-value value-field="employer"/>
     </simple-method>
+    
+    <!--  openingBalance     -->
+    <simple-method method-name="createOpeningBalance" short-description="Create Opening Balance">
+        <make-value entity-name="MemberAccountDetails" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="MemberAccountDetails" field="memberAccountDetailsId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="memberAccountDetailsId" field="newEntity.memberAccountDetailsId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateOpeningBalance" short-description="Update MemberAccountDetails">
+        <entity-one entity-name="MemberAccountDetails" value-field="memberAccountDetails"/>
+        <set-nonpk-fields value-field="memberAccountDetails" map="parameters"/>
+        <store-value value-field="memberAccountDetails"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteOpeningBalance" short-description="Delete MemberAccountDetails">
+        <entity-one entity-name="MemberAccountDetails" value-field="memberAccountDetails"/>
+        <remove-value value-field="memberAccountDetails"/>
+    </simple-method>
+    
+     <!-- memberLoanBalance -->
+     <simple-method method-name="createLoanBalance" short-description="Create LoanApplication">
+        <make-value entity-name="LoanApplication" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanApplication" field="loanApplicationId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanApplicationId" field="newEntity.loanApplicationId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateLoanBalance" short-description="Update LoanApplication">
+        <entity-one entity-name="LoanApplication" value-field="loanApplication"/>
+        <set-nonpk-fields value-field="loanApplication" map="parameters"/>
+        <store-value value-field="loanApplication"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanBalance" short-description="Delete LoanApplication">
+        <entity-one entity-name="LoanApplication" value-field="loanApplication"/>
+        <remove-value value-field="loanApplication"/>
+    </simple-method>
+     <!-- memberShareBalance -->
+     <simple-method method-name="createShareBalance" short-description="Create Share Balance">
+        <make-value entity-name="MemberShare" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="Employer" field="employerId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="employerId" field="newEntity.employerId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateShareBalance" short-description="Update Share Balance">
+        <entity-one entity-name="MemberShare" value-field="memberShare"/>
+        <set-nonpk-fields value-field="memberShare" map="parameters"/>
+        <store-value value-field="memberShare"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteShareBalance" short-description="Delete Employer">
+        <entity-one entity-name="MemberShare" value-field="memberShare"/>
+        <remove-value value-field="memberShare"/>
+    </simple-method>
 </simple-methods>

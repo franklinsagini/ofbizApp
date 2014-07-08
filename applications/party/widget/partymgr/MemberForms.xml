@@ -520,6 +520,146 @@ under the License.
         <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
     
+    <!-- openingBalance -->
+    <form name="openingBalance" type="single" target="createOpeningBalance"
+        focus-field-name="openingBalanceDate" header-row-style="header-row" default-table-style="basic-table">
+        
+        <actions>
+            <entity-condition entity-name="MemberAccountDetails" list="accountDetailsList">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            </entity-condition>
+            
+            <entity-condition entity-name="GlAccount" list="accountsList">
+            </entity-condition>
+              
+            <!--entity-condition entity-name="LoanSecurity" list="loanSecurityList">
+            </entity-condition -->
+        </actions>
+        
+        <!--  auto-fields-service service-name="createUserLogin"/ -->
+        <field name="memberAccountDetailsId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        
+         <field name="openingBalanceDate" title="Opening Bal Date"><date-time/></field>
+         
+         <field name="memberAccountPayableId" title="Member AP" >
+            <drop-down allow-empty="true">
+                <list-options list-name="accountsList" key-name="glAccountId" description="${accountName} - ${accountCode}" />
+            </drop-down>
+        </field>
+         <field name="apOpeningBalance" title="AP Opening Balance"> <text></text> </field>
+         <field name="savingsOpeningBalance" title="Savings Opening Balance"> <text></text> </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <!--  field name="cancelLink" title=" " widget-style="smallSubmit">
+            <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="employmentDetailsId"/>
+            </hyperlink>
+        </field -->
+    </form>
+    
+    <form name="listOpeningBalance" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateOpeningBalance" paginate-target="findAccountDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberAccountDetails">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="memberAccountDetailsId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+            <!--  drop-down allow-empty="true">
+                <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
+                </entity-options>
+            </drop-down -->
+        </field>
+        
+        <field name="openingBalanceDate"><display also-hidden="false"/></field>
+        
+        <field name="memberAccountPayableId" title="Account Payable">
+        	<display-entity description="${accountName} ${accountCode}" key-field-name="glAccountId" entity-name="GlAccount" also-hidden="false" ></display-entity>
+        </field>
+        
+        <field name="apOpeningBalance"><display also-hidden="false"/></field>
+        <field name="savingsOpeningBalance"><display also-hidden="false"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteOpeningBalance" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberAccountDetailsId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <!-- a href="<@ofbizUrl>employmentDetails?partyId=${partyId}</@ofbizUrl>">Edit </a -->
+        <field name="submitButton" title="${uiLabelMap.CommonEdit}"><hyperlink target="openingBalance?partyId=${partyId}" description="Edit"></hyperlink></field>
+    </form>
+    <!-- memberLoanBalance -->
+    <!-- memberShareBalance -->
+    <form name="memberShareBalance" type="single" target="createShareBalance"
+        focus-field-name="shareAccountId" header-row-style="header-row" default-table-style="basic-table">
+        
+        <actions>
+            
+            <entity-condition entity-name="GlAccount" list="accountsList">
+            </entity-condition>
+              
+            <!--entity-condition entity-name="LoanSecurity" list="loanSecurityList">
+            </entity-condition -->
+        </actions>
+        
+        <!--  auto-fields-service service-name="createUserLogin"/ -->
+        <field name="memberShareId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="enabled"><hidden/></field>
+        
+        <field name="shareAccountId" title="Share Account" >
+            <drop-down allow-empty="true">
+                <list-options list-name="accountsList" key-name="glAccountId" description="${accountName} - ${accountCode}" />
+            </drop-down>
+        </field>
+        
+        <field name="sharePrice" title="Share Price"><text/></field>
+        <field name="noOfShares" title="No Of Shares"><text/></field>
+       <field name="openingBalance" title="Opening Balance"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listMemberShareBalance" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateShareBalance" paginate-target="findMemberShare"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberShare">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="memberShareId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+            <!--  drop-down allow-empty="true">
+                <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
+                </entity-options>
+            </drop-down -->
+        </field>
+        
+        <field name="sharePrice"><display also-hidden="false"/></field>
+        <field name="noOfShares"><display also-hidden="false"/></field>
+        
+        <field name="shareAccountId" title="Share Account">
+        	<display-entity description="${accountName} ${accountCode}" entity-name="GlAccount" also-hidden="false" ></display-entity>
+        </field>
+        
+        <field name="openingBalance"><display also-hidden="false"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteShareBalance" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberShareId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <!-- a href="<@ofbizUrl>employmentDetails?partyId=${partyId}</@ofbizUrl>">Edit </a -->
+        <field name="submitButton" title="${uiLabelMap.CommonEdit}"><hyperlink target="memberShareBalance?partyId=${partyId}" description="Edit"></hyperlink></field>
+    </form>
+    
     
     
 </forms>

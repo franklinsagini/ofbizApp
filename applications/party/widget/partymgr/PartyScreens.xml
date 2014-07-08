@@ -1849,4 +1849,107 @@ under the License.
         </section>
     </screen>
     
+   <!-- openingBalance -->
+   <screen name="openingBalance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Account Details (Opening Balance)"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="Account Details"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    		<widgets>
+                    		<screenlet title="Add Account Details">
+                            	<include-form name="openingBalance" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        	</screenlet>
+                    		</widgets>
+                    	</section>
+                    	 <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Account Details List">
+                        			<include-form name="listOpeningBalance" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <!-- memberLoanBalance -->
+   <screen name="memberLoanBalance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Loans"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="New Loan"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    		<widgets>
+                    		<screenlet title="Add Loan">
+                            	<include-form name="memberLoanBalance" location="component://loans/widget/loans/LoanForms.xml"/>
+                        	</screenlet>
+                    		</widgets>
+                    	</section>
+                    	 <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Loans (Opening Balances)">
+                        			<include-form name="listMemberLoanBalance" location="component://loans/widget/loans/LoanForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <!-- memberShareBalance -->
+   <screen name="memberShareBalance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Shares"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="Shares"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    		<widgets>
+                    		<screenlet title="Add Shares">
+                            	<include-form name="memberShareBalance" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        	</screenlet>
+                    		</widgets>
+                    	</section>
+                    	 <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Member Share List">
+                        			<include-form name="listMemberShareBalance" location="component://party/widget/partymgr/MemberForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>
