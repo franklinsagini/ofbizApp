@@ -212,5 +212,110 @@ under the License.
         </field>
     </form>
     
+    <!-- Loan Application - the opening balance are entered here -->
+     <!-- Loan Application -->
+    <form name="memberLoanBalance" type="single" target="createLoanBalance"
+        focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanBalanceContext">
+        
+        <actions>
+             <entity-condition entity-name="SaccoProduct" list="productsList">
+             	 <condition-expr field-name="productType" operator="equals" value="Loan"/>
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            
+            <set field="isOpeningBalance" value="Y"/>
+            <!--entity-condition entity-name="LoanSecurity" list="loanSecurityList">
+            </entity-condition -->
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+        <field name="LoanNo" title="Loan No."><text size="30" maxlength="60"/></field>
+        <field name="partyId" parameter-name="partyId"><hidden/></field>
+        <field name="saccoProductId" title="Loan Type">
+            <drop-down allow-empty="true">
+                <list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/>
+            </drop-down>
+        </field>
+        <field name="loanDuration" title="Loan Duration (Months)"><text size="30" maxlength="60"/></field>
+        <field name="loanStartDate" title="Loan Start Date"><date-time/></field>
+        <field name="outstandingBalance" title="Outstanding Balance"><text size="30" maxlength="60"/></field>
+        <field name="principalDue" title="Principal Amt Due"><text size="30" maxlength="60"/></field>
+        <field name="interestDue" title="Interest Due"><text size="30" maxlength="60"/></field>
+        <field name="panaltyInterestDue" title="Interest Due"><text size="30" maxlength="60"/></field>
+        <field name="monthlyRepayment" title="Monthly Repayment"><text size="30" maxlength="60"/></field>
+        <field name="nextInstallmentDate" title="Next Installment Date"><date-time/></field>
+        <field name="isOpeningBalance" ><hidden/></field>
+        
+
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listMemberLoanBalance" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanBalance" paginate-target="memberLoanBalance"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanApplication">
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+                <condition-expr field-name="isOpeningBalance" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="loanNo"><display also-hidden="false"/></field>
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+            <!--  drop-down allow-empty="true">
+                <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
+                </entity-options>
+            </drop-down -->
+        </field>
+        <!-- field name="firstName"> <text></text> </field>
+        <field name="middleName"> <text></text> </field>
+        <field name="lastName"> <text></text> </field -->
+        <field name="saccoProductId" title="Loan Type">
+        	<display-entity description="${name} ${code}" entity-name="SaccoProduct" also-hidden="false"></display-entity>
+            <!-- drop-down allow-empty="true">
+                <entity-options description="${name} ${code}" entity-name="SaccoProduct">
+                </entity-options>
+            </drop-down -->
+        </field>
+        <field name="loanDuration"><display also-hidden="false"/></field>
+        <field name="loanStartDate"><display also-hidden="false"/></field>
+        <field name="outstandingBalance"><display also-hidden="false"/></field>
+        
+        <field name="principalDue"><display also-hidden="false"/></field>
+        <field name="interestDue"><display also-hidden="false"/></field>
+        <field name="panaltyInterestDue"><display also-hidden="false"/></field>
+        
+        <field name="monthlyRepayment"><display also-hidden="false"/></field>
+        <field name="nextInstallmentDate"><display also-hidden="false"/></field>
+        
+        
+        
+        <!-- field name="loanSecurityId" title="LoanSecurity">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PaymentMethodType" -->
+                    <!-- entity-order-by field-name="description"/ -->
+                <!--  /entity-options>
+            </drop-down>
+        </field -->
+        
+
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanBalance" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanApplicationId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+    
    
 </forms>

@@ -16,12 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-<#assign selected = headerItem?default("void")>
+ <#-- h2>${uiLabelMap.ExampleApplication}</h2 -->
+<#-- #assign selected = headerItem?default("void")>
 <div id="app-navigation">
   <ul>
     <li>
-      <!-- h2>${uiLabelMap.ExampleApplication}</h2 -->
+     
       <h2>Loans Management</h2>
       <ul>
       <#if userLogin?has_content>
@@ -42,4 +42,37 @@ under the License.
     </li>
   </ul>
   <br class="clear" />
-</div>
+</div -->
+ <script type="text/javascript">
+   jQuery(document).ready(function(){
+
+
+   jQuery('select[name="bankDetailsId"]').change(function(){
+         var bankDetailsId = this.value;
+         var reqUrl = '/payroll/control/brancheslist';
+         bankBranches(reqUrl, bankDetailsId);
+        });
+     });
+     
+      function bankBranches(reqUrl, bankDetailsId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'bankDetailsId': bankDetailsId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+				var options =  jQuery('select[name="bankBranchId"]');
+				options.empty();
+				options.append($("<option />").val('').text('Please select branch ..'));
+				$.each(data, function(item, itemvalue) {
+				    options.append($("<option />").val(item).text(itemvalue));
+				});
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+    });
+    }
+</script>
