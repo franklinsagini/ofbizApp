@@ -48,17 +48,10 @@ under the License.
 
 
    jQuery('select[name="bankDetailsId"]').change(function(){
-		 /** var memberId = jQuery('select[name="partyId"]').val;
-         alert(memberId); **/
-         
          var bankDetailsId = this.value;
          var reqUrl = '/payroll/control/brancheslist';
          bankBranches(reqUrl, bankDetailsId);
-         
-         
-
         });
-        
      });
      
       function bankBranches(reqUrl, bankDetailsId){
@@ -80,11 +73,6 @@ under the License.
 
               alert("Some error occurred while processing the request");
               }
-
-
     });
     }
-     
-     
-     
-     </script>
+</script>
