@@ -332,9 +332,9 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="Employer" field="employerId"/>
+        <sequenced-id sequence-name="MemberShare" field="memberShareId"/>
         <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="employerId" field="newEntity.employerId"/>
+        <set from-field="memberShareId" field="newEntity.memberShareId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -346,8 +346,33 @@
         <store-value value-field="memberShare"/>
     </simple-method>
     
-    <simple-method method-name="deleteShareBalance" short-description="Delete Employer">
+    <simple-method method-name="deleteShareBalance" short-description="Delete Share Balance">
         <entity-one entity-name="MemberShare" value-field="memberShare"/>
         <remove-value value-field="memberShare"/>
+    </simple-method>
+    
+    <!-- Account Status -->
+     <simple-method method-name="createAccountStatus" short-description="Create Account Status">
+        <make-value entity-name="AccountStatus" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="AccountStatus" field="accountStatusId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="accountStatusId" field="newEntity.accountStatusId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateAccountStatus" short-description="Update Account Status">
+        <entity-one entity-name="AccountStatus" value-field="accountStatus"/>
+        <set-nonpk-fields value-field="accountStatus" map="parameters"/>
+        <store-value value-field="accountStatus"/>
+    </simple-method>
+    
+    <simple-method method-name="deletAccountStatus" short-description="Delete Account Status">
+        <entity-one entity-name="AccountStatus" value-field="accountStatus"/>
+        <remove-value value-field="accountStatus"/>
     </simple-method>
 </simple-methods>

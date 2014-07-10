@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <!-- Share Setup -->
+     <screen name="NewShareSetup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="NewShareSetup"/>
+                <set field="headerItem" value="shareSetup"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createShareSetup"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="ShareSetup" value-field="shareSetupContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="ShareSetup">
+                                    <include-form name="NewShareSetup" location="component://sharemanagement/widget/sharemanagement/ShareForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="ShareSetup List">
+                        			<include-form name="listShareSetup" location="component://sharemanagement/widget/sharemanagement/ShareForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- MemberShareDeposit -->
+      <screen name="NewMemberShareDeposit">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Member Share Deposit"/>
+                <set field="headerItem" value="memberShareDeposit"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createMemberShareDeposit"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="MemberShareDeposit" value-field="memberShareDepositContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Share Deposit">
+                                    <include-form name="NewMemberShareDeposit" location="component://sharemanagement/widget/sharemanagement/ShareForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Share Deposit List">
+                        			<include-form name="listMemberShareDeposit" location="component://sharemanagement/widget/sharemanagement/ShareForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      
+      <!-- MemberShareTransfer    TOSELF, TOANOTHERMEMBER, TOSACCO-->
+        <screen name="NewMemberShareTransfer">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Share Transfer"/>
+                <set field="headerItem" value="memberShareTransfer"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createMemberShareTransfer"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="MemberShareTransfer" value-field="memberShareTransferContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Share Transfer">
+                                    <include-form name="NewMemberShareTransfer" location="component://sharemanagement/widget/sharemanagement/ShareForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Share Transfer List">
+                        			<include-form name="listMemberShareTransfer" location="component://sharemanagement/widget/sharemanagement/ShareForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+       
+       <!-- MemberShareTransactions -->
+         <screen name="NewMemberShareTransactions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Share Transactions"/>
+                <set field="headerItem" value="shareSetup"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="memberShareTransactions"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="MemberShareTransactions" value-field="memberShareTransactionsContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Share Transactions">
+                                    <include-form name="NewMemberShareTransactions" location="component://sharemanagement/widget/sharemanagement/ShareForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Share Transactions List">
+                        			<include-form name="listMemberShareTransactions" location="component://sharemanagement/widget/sharemanagement/ShareForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    
+</screens>

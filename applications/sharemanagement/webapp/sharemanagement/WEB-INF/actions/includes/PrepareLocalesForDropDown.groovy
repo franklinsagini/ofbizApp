@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -16,16 +15,8 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
--->
+*/
 
-<project name="OFBiz Applications Build" default="build" basedir=".">
-    <filelist id="application-builds" dir="applications"
-        files="content/build.xml,party/build.xml,
-               workeffort/build.xml,product/build.xml,marketing/build.xml,
-               order/build.xml,manufacturing/build.xml,
-               accounting/build.xml,
-    		   payroll/build.xml,
-    		   sharemanagement/build.xml,
-               securityext/build.xml, humanres/build.xml"/>
-
-</project>
+def localeMap = []
+org.ofbiz.base.util.UtilMisc.availableLocales().each { localeMap.add(localeId:it.toString()) };
+parameters.localeList = localeMap;

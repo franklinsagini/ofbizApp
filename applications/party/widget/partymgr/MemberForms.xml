@@ -125,19 +125,39 @@ under the License.
     </form>
     
     <form name="memberAccount" type="single" target="createMemberAccount"
-        focus-field-name="userLoginId" header-row-style="header-row" default-table-style="basic-table">
+        focus-field-name="accountNo" header-row-style="header-row" default-table-style="basic-table">
         
          <actions>
              <entity-condition entity-name="SaccoProduct" list="productsList">
              	 <condition-expr field-name="productType" operator="equals" value="Account"/>
+             	 <order-by field-name="saccoProductId" />
             </entity-condition>
+            
+            <entity-condition entity-name="AccountStatus" list="accountStatusList">
+            	<order-by field-name="accountStatusId"/>
+            </entity-condition>
+            
+            <entity-one entity-name="Member" value-field="member">
+            	<field-map field-name="partyId" from-field="parameters.partyId"/>
+            </entity-one>
+            
+            <set field="accountName" value="${member.firstName} ${member.middleName} ${member.lastName}"/>
+            
         </actions>
         <!--  auto-fields-service service-name="createUserLogin"/ -->
         <field name="partyId"><hidden/></field>
         <field name="enabled"><hidden/></field>
+        <field name="accountNo"><text default-value="5-02-"></text></field>
+        <field name="accountName"><text></text></field>
         <field name="saccoProductId" title="Account">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
                 <list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/>
+            </drop-down>
+        </field>
+        
+        <field name="accountStatusId" title="Account Status">
+            <drop-down allow-empty="false">
+                <list-options list-name="accountStatusList" key-name="accountStatusId" description="${name}"/>
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
@@ -372,18 +392,30 @@ under the License.
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
-         <field name="partyId" title="Member">
-        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
-          </field>
-        <field name="saccoProductId" title="Account">
-        	<display-entity description="${name} - ${code} " entity-name="SaccoProduct" also-hidden="false" ></display-entity>
-          </field>
+         <field name="accountNo" title="Account No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+         <field name="accountName" title="Account Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <!-- field name="saccoProductId" title="Account">
+        	<display-entity description="${name} - ${code} " entity-name="SaccoProduct" also-hidden="true"></display-entity>
+          </field -->
+          <field name="saccoProductId" title="Account">
+            <drop-down allow-empty="false">
+                <!-- list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/ -->
+                <entity-options description="${name} - ${code}" entity-name="SaccoProduct"></entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="accountStatusId" title="Account Status">
+            <drop-down allow-empty="false">
+                <!-- list-options list-name="accountStatusList" key-name="accountStatusId" description="${name}"/ -->
+                <entity-options description="${name}" entity-name="AccountStatus"></entity-options>
+            </drop-down>
+        </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteMemberAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="memberAccountId"/>
             </hyperlink>
         </field>
-        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 	
 <!--  memberReferee List-->
@@ -660,6 +692,41 @@ under the License.
         <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
         <!-- a href="<@ofbizUrl>employmentDetails?partyId=${partyId}</@ofbizUrl>">Edit </a -->
         <field name="submitButton" title="${uiLabelMap.CommonEdit}"><hyperlink target="memberShareBalance?partyId=${partyId}" description="Edit"></hyperlink></field>
+    </form>
+    
+    <!-- Account Status -->
+    <form name="accountStatus" type="single" target="createAccountStatus"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table">
+        <!-- auto-fields-service service-name="createUserLogin"/ -->
+        <actions>
+        	<set field="partyId" from-field="parameters.partyId"/>
+        </actions>
+        
+        <field name="accountStatusId"><hidden/></field>
+        <field name="active"><hidden/></field>
+        <field name="name" title="Name"><text/></field>
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+      
+    </form>
+    
+    <form name="listAccountStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAccountStatus" paginate-target="accountStatus"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="AccountStatus">
+            	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+                <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+                <!-- order-by field-name="saccoProductId"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="name"><display also-hidden="false"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteRelationships" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="accountStatusId"/>
+            </hyperlink>
+        </field>
+        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
     
     

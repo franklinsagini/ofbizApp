@@ -1738,4 +1738,28 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <!-- Account Status -->
+     <service name="createAccountStatus" engine="simple" default-entity-name="AccountStatus"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createAccountStatus" auth="true">
+        <description>Create Account Status</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <service name="updateAccountStatus" engine="simple" default-entity-name="AccountStatus"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="updateAccountStatus" auth="true">
+        <description>Update Account Status</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deletAccountStatus" engine="simple" default-entity-name="AccountStatus"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="deletAccountStatus" auth="true">
+        <description>Delete Account Status</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 </services>
