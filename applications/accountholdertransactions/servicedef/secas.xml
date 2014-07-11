@@ -18,15 +18,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz Applications Build" default="build" basedir=".">
-    <filelist id="application-builds" dir="applications"
-        files="content/build.xml,party/build.xml,
-               workeffort/build.xml,product/build.xml,marketing/build.xml,
-               order/build.xml,manufacturing/build.xml,
-               accounting/build.xml,
-    		   payroll/build.xml,
-    		   sharemanagement/build.xml,
-    	       accountholdertransactions/build.xml,
-               securityext/build.xml, humanres/build.xml"/>
-
-</project>
+<service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
+    <eca service="createExample" event="return">
+        <action service="createExampleStatus" mode="sync"/>
+    </eca>
+    <!-- FIXME: This ECA assumes the updateExample service was called with a statusId parameter.
+         The condition should be improved to check for statusId being not empty. -->
+    <!--
+    <eca service="updateExample" event="return">
+        <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
+        <action service="createExampleStatus" mode="sync"/>
+    </eca>
+    -->
+</service-eca>
