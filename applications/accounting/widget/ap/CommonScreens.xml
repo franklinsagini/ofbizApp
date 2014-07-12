@@ -142,7 +142,90 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
+    <screen name="findVendorType">
+        <section>
+            <actions>
+                <set field="titleProperty" value="findVendorType"/>
+                <set field="headerItem" value="Find Vendor Types"/>
+                <set field="imprestTypeCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindApPaymentGroups" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPaymentGroup" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="findVendorType">
+        <section>
+            <actions>
+                <set field="headerItem" value="findVendorTypes"/>
+                <set field="titleProperty" value="Find Vendor Types"/>
+                <set field="vendorTypeCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="EditVendorType" text="New Vendor Type" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindVendorTypes" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListVendorTypes" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditVendorType">
+        <section>
+            <actions>
+                <set field="headerItem" value="findVendorTypes"/>
+                <set field="tabButtonItem" value="EditVendorType"/>
+                <set field="vendorTypeId" from-field="parameters.vendorTypeId"/>
+                <entity-one entity-name="VendorType" value-field="vendorType"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Edit Vendor Type">
+                            <include-form name="EditVendorType" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
@@ -189,7 +272,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="CommonPaymentGroupDecorator">
         <section>
             <actions>

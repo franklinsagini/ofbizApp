@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="CommonImprestDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="imprest"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="ImprestTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                            <condition>
+                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <!-- <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                                <container style="leftclear">
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="paymentId"/></not>
+                                        </condition>
+                                        <widgets>
+                                        <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
+                                        </widgets>
+                                    </section>
+                                </container>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="FindImprestType">
+        <section>
+            <actions>
+                <set field="headerItem" value="ExampleFeature"/>
+                <set field="titleProperty" value="Find Imprest Types"/>
+                <set field="imprestTypeCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonImprestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="EditImprestType" text="New Imprest Type" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindImprestTypes" location="component://saccoimprest/widget/SurrendarableForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListImprestTypes" location="component://saccoimprest/widget/SurrendarableForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditImprestType">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditExampleFeature"/>
+                <set field="tabButtonItem" value="EditImprestType"/>
+                <set field="imprestTypeId" from-field="parameters.imprestTypeId"/>
+                <entity-one entity-name="ImprestType" value-field="impresttype"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonImprestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <screenlet title="${uiLabelMap.ImprestType}">
+                            <include-form name="EditImprestType" location="component://saccoimprest/widget/SurrendarableForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="FindImprest">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Surrender Imprest"/>
+                <set field="imprestCtx" from-field="parameters"/>
+                <set field="headerItem" value="surrenderableImprest"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSurrendarImprestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="EditImprest" text="New Imprest" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindImprest" location="component://saccoimprest/widget/SurrendarableForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListImprests" location="component://saccoimprest/widget/SurrendarableForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditImprest">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Imprest"/>
+                <set field="tabButtonItem" value="EditImprest"/>
+                <set field="imprestId" from-field="parameters.imprestId"/>
+                <entity-one entity-name="Imprest" value-field="imprest"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonSurrendarImprestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="ImprestSubTabBar" location="component://saccoimprest/widget/SaccoImprestMenus.xml"/>
+                        <screenlet title="Edit Imprest">
+                            <include-form name="EditImprest" location="component://saccoimprest/widget/SurrendarableForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditImprestItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditExampleItems"/>
+                <set field="tabButtonItem" value="EditImprestItems"/>
+                <set field="imprestId" from-field="parameters.imprestId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSurrendarImprestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="ImprestSubTabBar" location="component://saccoimprest/widget/SaccoImprestMenus.xml"/>
+                        <screenlet title="Imprest Lines For ">
+                            <include-form name="ListImprestItems" location="component://saccoimprest/widget/SurrendarableForms.xml"/>
+                        </screenlet>
+                        <screenlet title="Add Imprest Line">
+                            <include-form name="AddImprestItem" location="component://saccoimprest/widget/SurrendarableForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

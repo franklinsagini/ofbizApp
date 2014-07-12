@@ -198,21 +198,21 @@ under the License.
         </iterate>
         <field-to-result field="geos"/>
     </simple-method>
-    
+
     <!-- PartyIdentification methods -->
     <simple-method method-name="createPartyIdentifications" short-description="create mass party identification with association between vale and type">
         <set field="partyIdentCtx.partyId" from-field="parameters.partyId"/>
         <iterate-map key="key" value="value" map="parameters.identifications">
             <entity-one value-field="identificationType" entity-name="PartyIdentificationType" use-cache="true">
-                <field-map field-name="partyIdentificationTypeId" from-field="value"/>              
-            </entity-one>          
-            <if-not-empty field="identificationType">   
-                <set field="idValue" value="${parameters.identifications.${identificationType.partyIdentificationTypeId}}"/>          
+                <field-map field-name="partyIdentificationTypeId" from-field="value"/>
+            </entity-one>
+            <if-not-empty field="identificationType">
+                <set field="idValue" value="${parameters.identifications.${identificationType.partyIdentificationTypeId}}"/>
                 <if-not-empty field="idValue">
                     <set field="partyIdentCtx.partyIdentificationTypeId" from-field="identificationType.partyIdentificationTypeId"/>
                     <set field="partyIdentCtx.idValue" from-field="idValue"/>
                     <call-service service-name="createPartyIdentification" in-map-name="partyIdentCtx"/>
-                </if-not-empty> 
+                </if-not-empty>
             </if-not-empty>
         </iterate-map>
     </simple-method>
@@ -261,13 +261,28 @@ under the License.
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
+    <simple-method method-name="createVendorType" short-description="createVendorType">
+        <make-value value-field="newEntity" entity-name="VendorType"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
     <simple-method method-name="updateVendor" short-description="updateVendor">
         <entity-one entity-name="Vendor" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
+    <simple-method method-name="updateVendorType" short-description="updateVendorType">
+        <entity-one entity-name="VendorType" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
     <simple-method method-name="deleteVendor" short-description="deleteVendor">
         <entity-one entity-name="Vendor" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteVendorType" short-description="deleteVendorType">
+        <entity-one entity-name="VendorType" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
@@ -696,7 +711,7 @@ under the License.
                 <field-map field-name="partyId" from-field="parameters.partyId"/>
                 <field-map field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
             </entity-and>
-        </if-empty> 
+        </if-empty>
         <!-- any other electronic address -->
         <if-empty field="emailAddresses">
             <entity-and entity-name="PartyAndContactMech" list="emailAddresses" filter-by-date="true">
@@ -936,10 +951,10 @@ under the License.
         <set field="relMap.partyIdTo" from-field="parameters.contactPartyId"/>
         <set field="relMap.roleTypeIdTo" value="CONTACT"/>
         <set field="relMap.partyRelationshipTypeId" value="EMPLOYMENT"/>
-        <set field="relMap.comments" from-field="parameters.comments"/> 
+        <set field="relMap.comments" from-field="parameters.comments"/>
         <call-service service-name="createPartyRelationship" in-map-name="relMap"/>
     </simple-method>
-    
+
     <simple-method method-name="createPartyCarrierAccount" short-description="Create PartyCarrierAccount">
         <make-value entity-name="PartyCarrierAccount" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -1069,7 +1084,7 @@ under the License.
         <call-map-processor xml-resource="component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml"
                 processor-name="emailAddress" in-map-name="parameters" out-map-name="emailAddressInMap"/>
         <check-errors/>
-        
+
         <!-- create person  -->
         <call-service service-name="createPerson" in-map-name="personInMap">
             <result-to-field result-name="partyId"/>
@@ -1126,7 +1141,7 @@ under the License.
             <field-to-result result-name="description" field="roleType.description" />
         </if-not-empty>
     </simple-method>
-    
+
     <!-- send account activated email notification -->
     <simple-method method-name="sendAccountActivatedEmailNotification" short-description="Notification email on account activated" login-required="false">
         <map-to-map map="parameters" to-map="bodyParameters"/>
