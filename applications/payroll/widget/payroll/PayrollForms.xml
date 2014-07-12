@@ -298,17 +298,25 @@ under the License.
         
         <form name="listPayPoints" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayPoint" paginate-target="PayPoint"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-        	<entity-one entity-name="PayPoint"></entity-one>
+        <!-- actions>
+        	<entity-condition entity-name="PayPoint" list="payPointList" ></entity-condition>
             <entity-condition entity-name="BankDetails">
-            	<!-- condition-expr field-name="bankDetailsId" from-field="bankDetailsId"/ -->
             </entity-condition>
             <entity-condition entity-name="BankBranch">
-            	<!-- condition-expr field-name="bankBranchId" from-field="bankBranchId"/-->
-            	
             </entity-condition>
+        </actions -->
+        <actions>
+        	
+        	
+        	 <entity-condition entity-name="PayPoint"></entity-condition>
+        	<entity-condition entity-name="BankDetails" list="bankList">
+            </entity-condition>
+            <entity-condition entity-name="BankBranch" list="branchList">
+            </entity-condition>
+           
+             
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updatePayPoint"/>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updatePayPoint"/ -->
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
@@ -324,7 +332,7 @@ under the License.
         </field>
         <field name="bankBranchId" title="Bank Branch">
        		<drop-down allow-empty="true">
-      	 		<list-options list-name="bankBranchList" key-name="bankBranchId" description="${branchName}"/>
+      	 		<list-options list-name="branchList" key-name="bankBranchId" description="${branchName}"/>
        	 	</drop-down>        	
         </field>
         <field name="accountName" title="Account Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
