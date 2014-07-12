@@ -304,6 +304,86 @@ under the License.
 		<response name="success" type="none">
     </response>
     </request-map>
+    
+	<request-map uri="staffpayroll">
+	<security https="true" auth="true" />
+	<response name="success" type="view" value="staffpayroll"
+		save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Staff Payroll -->
+	<request-map uri="createStaffPayroll">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStaffPayroll" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="staffpayroll">
+			</response>
+		<response name="error" type="view" value="staffpayroll" />
+	</request-map>
+	
+	<request-map uri="updateStaffPayroll">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStaffPayroll" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="staffpayroll">
+			</response>
+		<response name="error" type="view" value="staffpayroll" />
+	</request-map>
+	
+	<request-map uri="deleteStaffPayroll">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffPayroll" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="staffpayroll">
+			</response>
+		<response name="error" type="view" value="staffpayroll" />
+	</request-map>
+	
+	<request-map uri="staffpayrollelements">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="staffpayrollelements"
+			save-home-view="true">
+				<redirect-parameter name="staffPayrollId"/>
+			</response>
+	</request-map>
+
+	
+	<!-- Create Staff Payroll Elements -->
+	<request-map uri="createStaffPayrollElements">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStaffPayrollElements" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="staffpayrollelements">
+				<redirect-parameter name="staffPayrollId"/>
+			</response>
+		<response name="error" type="view" value="staffpayrollelements" />
+	</request-map>
+	
+	<request-map uri="updateStaffPayrollElements">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStaffPayrollElements" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="staffpayrollelements">
+			<redirect-parameter name="staffPayrollId"/>
+			</response>
+		<response name="error" type="view" value="staffpayrollelements" />
+	</request-map>
+	
+	<request-map uri="deleteStaffPayrollElements">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffPayrollElements" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="staffpayrollelements">
+			<redirect-parameter name="staffPayrollId"/>
+			</response>
+		<response name="error" type="view" value="staffpayrollelements" />
+	</request-map>
 	
     <!-- end of request mappings -->
 
@@ -319,6 +399,8 @@ under the License.
 	<view-map name="paypoint" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayPoint"/>
 	<view-map name="payrollyear" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollYear"/>
 	<view-map name="payrollperiod" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollPeriod"/>
+	<view-map name="staffpayroll" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStaffPayroll"/>
+	<view-map name="staffpayrollelements" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStaffPayrollElements"/>
 	
 	
 		
