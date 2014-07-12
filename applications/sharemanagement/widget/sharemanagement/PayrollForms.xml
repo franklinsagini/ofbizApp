@@ -265,13 +265,21 @@ under the License.
         	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
         	<set field="bankBranchId" from-field="bankBranchId"/>
         	
+        	<entity-condition entity-name="Person" list="personList">
+        		
+        	</entity-condition>
+        	
         	
         </actions>
         
         <field name="payPointId"><hidden/></field>
-        <field name="partyId" parameter-name="partyId"><hidden/></field>
-        <field name="staffNo" title="Staff No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="20"/></field>
-        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <!-- field name="staffNo" title="Staff No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="20"/></field>
+        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="bankDetailsId" title="Bank">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="bankList" key-name="bankDetailsId" description="${bankName}"/>
@@ -310,9 +318,13 @@ under the License.
         <!-- field name="bankDetailsId" title="Bank">
         	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
         </field -->
-        <field name="partyId"> <hidden/> </field>
-        <field name="staffNo"> <display also-hidden="false"/> </field>
-        <field name="staffName"> <display also-hidden="false"/> </field>
+        <field name="partyId" parameter-name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <!-- field name="staffNo"> <display also-hidden="false"/> </field>
+        <field name="staffName"> <display also-hidden="false"/> </field -->
         <field name="bankDetailsId" title="Bank"> <text></text> </field>
         <field name="bankBranchId" title="Bank Branch"> <text></text> </field>
         <field name="accountName"> <text></text> </field>
