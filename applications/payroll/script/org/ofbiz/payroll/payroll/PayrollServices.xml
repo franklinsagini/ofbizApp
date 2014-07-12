@@ -21,7 +21,7 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-<!-- Payrol Elements Starts Here -->
+<!-- Payroll Elements Starts Here -->
 <simple-method method-name="createPayrollElement" short-description="Create Payroll Element">
         <make-value entity-name="PayrollElement" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -162,6 +162,54 @@ under the License.
     
     <simple-method method-name="deletePayrollPeriod" short-description="Delete Payroll Period">
         <entity-one entity-name="PayrollPeriod" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Staff Payroll Management Starts Here -->
+	<simple-method method-name="createStaffPayroll" short-description="Add Staff Payroll">
+        <make-value entity-name="StaffPayroll" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="StaffPayroll" field="staffPayrollId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="staffPayrollId" field="newEntity.staffPayrollId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateStaffPayroll" short-description="Update Staff Payroll">
+        <entity-one entity-name="StaffPayroll" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteStaffPayroll" short-description="Delete Staff Payroll">
+        <entity-one entity-name="StaffPayroll" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Staff Payroll Elements Starts Here -->
+	<simple-method method-name="createStaffPayrollElements" short-description="Add Staff Payroll Element">
+        <make-value entity-name="StaffPayrollElements" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="StaffPayrollElements" field="staffPayrollElementsId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="staffPayrollElementsId" field="newEntity.staffPayrollElementsId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateStaffPayrollElements" short-description="Update Staff Payroll Element">
+        <entity-one entity-name="StaffPayrollElements" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteStaffPayrollElements" short-description="Delete Staff Payroll Element">
+        <entity-one entity-name="StaffPayrollElements" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     

@@ -121,8 +121,8 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
-    --------------------------------------
+
+
     <!-- Payroll Year -->
     <service name="createPayrollYear" engine="simple" default-entity-name="PayrollYear"
              location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="createPayrollYear" auth="true">
@@ -167,6 +167,55 @@ under the License.
     <service name="deletePayrollPeriod" engine="simple" default-entity-name="PayrollPeriod"
              location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="deletePayrollPeriod" auth="true">
         <description>Delete Payroll Period</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <!-- Staff Payroll Management -->
+    <service name="createStaffPayroll" engine="simple" default-entity-name="StaffPayroll"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="createStaffPayroll" auth="true">
+        <description>New Staff Payroll</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateStaffPayroll" engine="simple" default-entity-name="StaffPayroll"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="updateStaffPayroll" auth="true">
+        <description>Update Staff Payroll</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteStaffPayroll" engine="simple" default-entity-name="StaffPayroll"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="deleteStaffPayroll" auth="true">
+        <description>Delete Staff Payroll</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+    <!-- Staff Payroll Elements -->
+    <service name="createStaffPayrollElements" engine="simple" default-entity-name="StaffPayrollElements"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="createStaffPayrollElements" auth="true">
+        <description>New Staff Payroll Element</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateStaffPayrollElements" engine="simple" default-entity-name="StaffPayrollElements"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="updateStaffPayrollElements" auth="true">
+        <description>Update Staff Payroll Element</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteStaffPayrollElements" engine="simple" default-entity-name="StaffPayrollElements"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="deleteStaffPayrollElements" auth="true">
+        <description>Delete Staff Payroll Element</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>

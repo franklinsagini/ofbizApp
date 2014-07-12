@@ -425,5 +425,121 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+    
+       <!-- New Staff Payroll -->
+    <form name="NewStaffPayroll" type="single" target="createStaffPayroll"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffPayrollContext">
+        
+        <actions>
+        	<entity-condition entity-name="Party" list="partyList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+
+        	<entity-condition entity-name="PayrollPeriod" list="periodList"></entity-condition>
+        	<set field="payrollPeriodId" from-field="payrollPeriodId"/>
+        	
+        </actions>
+        
+        <field name="staffPayrollId"><hidden/></field>
+        <field name="partyId" parameter-name="partyId"><hidden/></field>
+        <field name="payrollPeriodId" title="Payroll Period">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="periodList" key-name="payrollPeriodId" description="${name}"/>
+       	 </drop-down>
+        </field>
+        <field name="staffNo" title="Staff No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="closed"  title="Closed" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listStaffPayroll" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffPayroll" paginate-target="StaffPayroll"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StaffPayroll">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStaffPayroll"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="payrollPeriodId" title="Payroll Period"> <text></text> </field>
+        <field name="staffNo"> <text></text> </field>
+        <field name="staffName"> <text></text> </field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStaffPayroll" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="staffPayrollId"/>
+            </hyperlink>
+        </field>
+        <field name="addpayrollelements" title="Add Payroll Elements" widget-style="buttontext">
+            <hyperlink target="staffpayrollelements" description="Add Payroll Elements" also-hidden="false">
+                <parameter param-name="staffPayrollId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- New Staff Payroll Elements-->
+    <form name="NewStaffPayrollElements" type="single" target="createStaffPayrollElements"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffPayrollElementsContext">
+        
+        <actions>
+        	<entity-condition entity-name="StaffPayroll" list="staffPayrollList"></entity-condition>
+        	<set field="staffPayrollId" from-field="staffPayrollId"/>
+        	
+        	<entity-condition entity-name="PayrollElement" list="payrollElementList"></entity-condition>
+        	<set field="payrollElementId" from-field="payrollElementId"/>
+        	
+        </actions>
+
+        <field name="staffPayrollElementsId"><hidden/></field>
+        <field name="staffPayrollId" parameter-name="staffPayrollId"><hidden/></field>
+        <field name="payrollElementId" title="Payroll Element">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="payrollElementList" key-name="payrollElementId" description="${name}"/>
+       	 </drop-down>
+       	 </field>                
+        <field name="amount" title="Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="balance" title="Balance" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="recurrencyExpiry"><date-time/></field> 
+        
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listStaffPayrollElements" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffPayrollElements" paginate-target="StaffPayrollElements"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StaffPayrollElements">
+            	<condition-expr field-name="staffPayrollId" from-field="staffPayrollId"/>
+            </entity-condition>
+
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStaffPayrollElements"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <!-- field name="bankDetailsId" title="Bank">
+        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
+        </field -->
+        <field name="payrollYearId"> <hidden/> </field>
+        <field name="payrollElementId" title="Payroll Element"> <text></text> </field>
+        <field name="amount"> <text></text> </field>
+        <field name="balance"> <text></text> </field>
+        <field name="recurrencyExpiry"><display/></field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStaffPayrollElements" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="staffPayrollElementsId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
    
 </forms>

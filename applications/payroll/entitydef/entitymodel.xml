@@ -155,25 +155,32 @@ under the License.
         </relation>
         </entity>
         
-        <entity entity-name="PayrollManagement" package-name="org.ofbiz.payroll" title="Payroll Management Entity">
-        <field name="payrollManagementId" type="id-ne"><description>primary sequenced ID</description></field>
+        <entity entity-name="StaffPayroll" package-name="org.ofbiz.payroll" title="Staff Payroll Management Entity">
+        <field name="staffPayrollId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="payrollPeriodId" type="id"></field>
         <field name="partyId" type="id"></field>
         <field name="staffNo" type="name"></field>
         <field name="staffName" type="name"></field>
-        <field name="payrollPeriodId" type="id"></field>
+       <field name="closed" type="indicator"></field>
+        <prim-key field="staffPayrollId"/>
+        <relation type="one" fk-name="management_period" rel-entity-name="PayrollPeriod">
+            <key-map field-name="payrollPeriodId"/>
+        </relation>
+        </entity>
+        
+        <entity entity-name="StaffPayrollElements" package-name="org.ofbiz.payroll" title="Staff Payroll Elements Entity">
+        <field name="staffPayrollElementsId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="staffPayrollId" type="id"></field>
         <field name="payrollElementId" type="id"></field>
         <field name="amount" type="currency-amount"></field> 
         <field name="balance" type="currency-amount"></field> 
         <field name="recurrencyExpiry" type="date-time"></field>     
-         <prim-key field="payrollManagementId"/>
-        <relation type="one" fk-name="management_period" rel-entity-name="PayrollPeriod">
-            <key-map field-name="payrollPeriodId"/>
+        <prim-key field="staffPayrollElementsId"/>
+        <relation type="one" fk-name="payrollelements_period" rel-entity-name="StaffPayroll">
+            <key-map field-name="staffPayrollId"/>
         </relation>
         <relation type="one" fk-name="management_element" rel-entity-name="PayrollElement">
             <key-map field-name="payrollElementId"/>
-        </relation>
-        <relation type="one" fk-name="management_party" rel-entity-name="Party">
-            <key-map field-name="partyId"/>
         </relation>
         </entity>        
         
