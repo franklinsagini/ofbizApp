@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    
+    
+    <!-- New Loan Security -->
+    <form name="NewLoanSecurity" type="single" target="createLoanSecurity"
+        focus-field-name="description" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
+        
+        <field name="loanSecurityId"><hidden/></field>
+        <field name="description" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listLoanSecurity" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanSecurity" paginate-target="findLoanSecurity"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanSecurity">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanSecurity"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="description"> <display also-hidden="false"/> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanSecurity" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanSecurityId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Loan Status -->
+    <form name="NewLoanStatus" type="single" target="createLoanStatus"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusContext">
+        
+        <field name="loanStatusId"><hidden/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listLoanStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanStatus" paginate-target="findLoanStatus"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanStatus">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanStatus"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="name"> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+     <form name="ViewLoanApplicationDetails" type="single" default-map-name="lookupLoanApplication">
+        <!--  field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field-->
+        <field name="loanApplicationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+        </field>
+        <field name="saccoProductId" title="Loan Type"><display description="${lookupLoanType.name} - ${lookupLoanType.code}"/></field>
+        <!-- field name="comments" title="${uiLabelMap.PartyComments}"><display/></field -->
+        <field name="loanamt" title="Amount"><display also-hidden="false"/></field>
+        <field name="percentInterestPerMonthAmt" title="Interest Rate"><display also-hidden="false"/></field>
+        <field name="selectedRepaymentPeriod" title="Repayment Period"><display also-hidden="false"/></field>
+        <field name="paymentMethodTypeId" title="Payment Method">
+        	<display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${lookupPaymentMethodType.description}"/>
+        </field>
+        <!-- field name="externalId"><display/></field -->
+        <field name="loanStatusId"><display-entity entity-name="LoanStatus" key-field-name="loanStatusId" description="${lookupLoanStatus.name}"/></field>
+    </form>
+    
+    <!--Loan Application Security -->
+    <form name="NewLoanApplicationSecurity" type="single" target="createLoanApplicationSecurity"
+        focus-field-name="loanSecurityId" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanApplicationSecurityContext">
+        
+        <actions>
+        	<entity-condition entity-name="LoanSecurity" list="loanSecurityList">
+            </entity-condition>
+        </actions>
+        
+        <field name="loanApplicationSecurityId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <field name="loanSecurityId" title="Security">
+        	<drop-down allow-empty="true">
+                <list-options list-name="loanSecurityList"   key-name="loanSecurityId" description="${description}"/>
+            </drop-down>
+        </field>
+        <!--  field name="loanSecurityId" title="Security">
+        	<drop-down allow-empty="true">
+                <list-options list-name="loanSecurityList" key-name="loanSecurityId" description="${description}"/>
+            </drop-down>
+        </field -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="ViewLoanSecurityList" type="list" list-name="loanApplicationSecurityList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        
+        <field name="loanSecurityId" title="Security">
+        	<display-entity description="${description}" entity-name="LoanSecurity" also-hidden="false"></display-entity>
+        </field>
+    </form>
+    
+    <!-- Loan Application Collateral-->
+    <form name="NewCollateral" type="single" target="createLoanApplicationCollateral"
+        focus-field-name="collateralValue" header-row-style="header-row" default-table-style="basic-table" default-entity-name="LoanApplicationCallateral" default-map-name="loanApplicationCallateralContext">
+  
+        
+        <field name="loanApplicationCallateralId" ><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <field name="collateralValue" title="Collateral Value"><text size="30" maxlength="60"/></field>
+        <field name="valuingAgency" title="Valuing Agency"><text size="30" maxlength="60"/></field>
+        <field name="collateralType" title="Type"><text size="30" maxlength="60"/></field>
+        <field name="collateralSerialNo" title="Seraila No."><text size="30" maxlength="60"/></field>
+        <field name="collateralOwner" title="Owner"><text size="30" maxlength="60"/></field>
+        <field name="collateralStatus"  title="Status" >
+            <drop-down allow-empty="true">
+                <option key="Free" description="Free"/>
+                <option key="Tied" description="Tied"/>
+            </drop-down>
+        </field>
+        <field name="propotionofloanamt" title="Proportion of Loan Amount"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="ViewLoanCollateralList" type="list" list-name="loanApplicationCallateralList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="collateralValue" title="Collateral Value"><display also-hidden="false"/></field>
+        <field name="valuingAgency" title="Valuing Agency"><display also-hidden="false"/></field>
+        <field name="collateralType" title="Collateral Type"><display also-hidden="false"/></field>
+        <field name="collateralSerialNo" title="Serial No."><display also-hidden="false"/></field>
+        <field name="collateralOwner" title="Owner"><display also-hidden="false"/></field>
+        <field name="collateralStatus" title="Status"><display also-hidden="false"/></field>
+    </form>
+    
+    <!-- Loan Application Guarantor -->
+    
+        <form name="NewGuarantor" type="single" target="createLoanApplicationGuarantor"
+        focus-field-name="guarantorId" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanApplicationGuarantorContext">
+        
+        <actions>
+        	<entity-condition entity-name="Member" list="memberList">
+            </entity-condition>
+            
+            <entity-condition entity-name="MemberStation" list="memberStationsList"></entity-condition>
+        </actions>
+        
+        <field name="loanGuarantorId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <field name="guarantorId" title="Guarantor">
+        	<drop-down allow-empty="true">
+                <list-options list-name="memberList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="memberNo" title="Member No."><text size="30" maxlength="60"/></field>
+        <field name="payrolNo" title="Payrol No."><text size="30" maxlength="60"/></field>
+        <field name="depositamt" title="Deposit Amount"><text size="30" maxlength="60"/></field>
+        <field name="collateralSerialNo" title="Seraila No."><text size="30" maxlength="60"/></field>
+        <field name="collateralSerialNo" title="Seraila No."><text size="30" maxlength="60"/></field>
+        
+        <field name="currentStationId" title="Current Station">
+        	<drop-down allow-empty="true">
+                <list-options list-name="memberStationsList"   key-name="memberStationId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="ViewLoanGuarantorsList" type="list" list-name="loanGuarantorsList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        
+        <field name="guarantorId" title="Guarantor">
+                <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
+        </field>
+        
+        <field name="memberNo" title="Member No."><display also-hidden="false"/></field>
+        <field name="payrolNo" title="Payrol No."><display also-hidden="false"/></field>
+        <field name="depositamt" title="Deposit Amount"><display also-hidden="false"/></field>
+        <field name="collateralSerialNo" title="Seraila No."><display also-hidden="false"/></field>
+        <field name="collateralSerialNo" title="Seraila No."><display also-hidden="false"/></field>
+        <field name="currentStationId" title="Current Station">
+        	 <display-entity entity-name="MemberStation" key-field-name="memberStationId"  description="${name}" also-hidden="false"/>
+        </field>
+    </form>
+    
+   
+</forms>

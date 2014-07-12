@@ -1594,20 +1594,48 @@
 		<response name="success" type="view" value="employers"
 			save-current-view="true" />
 	</request-map>
-	
+
+	<request-map uri="openingBalance">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="openingBalance"
+			save-current-view="true" />
+	</request-map>
+
+	<request-map uri="memberLoanBalance">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberLoanBalance"
+			save-current-view="true" />
+	</request-map>
+
+
+	<request-map uri="memberShareBalance">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberShareBalance"
+			save-current-view="true" />
+	</request-map>
+
+	<request-map uri="accountStatus">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="accountStatus"
+			save-current-view="true" />
+	</request-map>
+
+
+
+
+
 	<!-- Member Details Starts Here -->
 	<!-- CRUD for relationships -->
 	<request-map uri="createRelationships">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createRelationships" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="relationships">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="relationships">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="relationships" />
 	</request-map>
-	
+
 	<request-map uri="updateRelationships">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateRelationships" />
@@ -1616,7 +1644,7 @@
 			value="relationships"></response>
 		<response name="error" type="view" value="relationships" />
 	</request-map>
-	
+
 	<request-map uri="deleteRelationships">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteRelationships" />
@@ -1625,24 +1653,23 @@
 			value="relationships"></response>
 		<response name="error" type="view" value="relationships" />
 	</request-map>
-	
-	
-	
-	
-	
+
+
+
+
+
 	<!-- CRUD for employers -->
-	
+
 	<request-map uri="createEmployers">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createEmployers" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="employers">
-				<redirect-parameter name="partyId"/> 	
-			</response>
+		<response name="success" type="request-redirect" value="employers">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="employers" />
 	</request-map>
-	
+
 	<request-map uri="updateEmployers">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateEmployers" />
@@ -1651,7 +1678,7 @@
 			value="employers"></response>
 		<response name="error" type="view" value="employers" />
 	</request-map>
-	
+
 	<request-map uri="deleteEmployers">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteEmployers" />
@@ -1660,20 +1687,21 @@
 			value="employers"></response>
 		<response name="error" type="view" value="employers" />
 	</request-map>
-	
+
+
+
 	<!-- CRUD for employmentDetails -->
 
-		<request-map uri="createEmploymentDetails">
+	<request-map uri="createEmploymentDetails">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createEmploymentDetails" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="employmentDetails">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="employmentDetails">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="employmentDetails" />
 	</request-map>
-	
+
 	<request-map uri="updateEmploymentDetails">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateEmploymentDetails" />
@@ -1682,7 +1710,7 @@
 			value="employmentDetails"></response>
 		<response name="error" type="view" value="employmentDetails" />
 	</request-map>
-	
+
 	<request-map uri="deleteEmploymentDetails">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteEmploymentDetails" />
@@ -1691,21 +1719,20 @@
 			value="employmentDetails"></response>
 		<response name="error" type="view" value="employmentDetails" />
 	</request-map>
-<!-- CRUD for businessDetails -->
-	
-	
-	
+	<!-- CRUD for businessDetails -->
+
+
+
 	<request-map uri="createBusinessDetails">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createBusinessDetails" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="businessDetails">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="businessDetails">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="businessDetails" />
 	</request-map>
-	
+
 	<request-map uri="updateBusinessDetails">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateBusinessDetails" />
@@ -1714,7 +1741,7 @@
 			value="businessDetails"></response>
 		<response name="error" type="view" value="businessDetails" />
 	</request-map>
-	
+
 	<request-map uri="deleteBusinessDetails">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteBusinessDetails" />
@@ -1723,22 +1750,21 @@
 			value="businessDetails"></response>
 		<response name="error" type="view" value="businessDetails" />
 	</request-map>
-	
-<!-- CRUD for memberContribution -->
-	
-	
-	
+
+	<!-- CRUD for memberContribution -->
+
+
+
 	<request-map uri="createMemberContribution">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createMemberContribution" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="memberContribution">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="memberContribution">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="memberContribution" />
 	</request-map>
-	
+
 	<request-map uri="updateMemberContribution">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateMemberContribution" />
@@ -1747,7 +1773,7 @@
 			value="memberContribution"></response>
 		<response name="error" type="view" value="memberContribution" />
 	</request-map>
-	
+
 	<request-map uri="deleteMemberContribution">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteMemberContribution" />
@@ -1756,22 +1782,21 @@
 			value="memberContribution"></response>
 		<response name="error" type="view" value="memberContribution" />
 	</request-map>
-	
-<!-- CRUD for memberAccount -->
-	
-	
-	
+
+	<!-- CRUD for memberAccount -->
+
+
+
 	<request-map uri="createMemberAccount">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createMemberAccount" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="memberAccount">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="memberAccount" />
 	</request-map>
-	
+
 	<request-map uri="updateMemberAccount">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateMemberAccount" />
@@ -1780,7 +1805,7 @@
 			value="memberAccount"></response>
 		<response name="error" type="view" value="memberAccount" />
 	</request-map>
-	
+
 	<request-map uri="deleteMemberAccount">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteMemberAccount" />
@@ -1789,22 +1814,21 @@
 			value="memberAccount"></response>
 		<response name="error" type="view" value="memberAccount" />
 	</request-map>
-	
-<!-- CRUD for memberReferee -->
-	
-	
-	
+
+	<!-- CRUD for memberReferee -->
+
+
+
 	<request-map uri="createMemberReferee">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createMemberReferee" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="memberReferee">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="memberReferee">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="memberReferee" />
 	</request-map>
-	
+
 	<request-map uri="updateMemberReferee">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateMemberReferee" />
@@ -1813,7 +1837,7 @@
 			value="memberReferee"></response>
 		<response name="error" type="view" value="memberReferee" />
 	</request-map>
-	
+
 	<request-map uri="deleteMemberReferee">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteMemberReferee" />
@@ -1822,19 +1846,18 @@
 			value="memberReferee"></response>
 		<response name="error" type="view" value="memberReferee" />
 	</request-map>
-	
-<!-- CRUD for memberNominee -->
+
+	<!-- CRUD for memberNominee -->
 	<request-map uri="createMemberNominee">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createMemberNominee" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="memberNominee">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="memberNominee">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="memberNominee" />
 	</request-map>
-	
+
 	<request-map uri="updateMemberNominee">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateMemberNominee" />
@@ -1843,7 +1866,7 @@
 			value="memberNominee"></response>
 		<response name="error" type="view" value="memberNominee" />
 	</request-map>
-	
+
 	<request-map uri="deleteEmployers">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteEmployers" />
@@ -1852,18 +1875,17 @@
 			value="deleteMemberNominee"></response>
 		<response name="error" type="view" value="deleteMemberNominee" />
 	</request-map>
-<!-- CRUD for termsAndConditions -->
+	<!-- CRUD for termsAndConditions -->
 	<request-map uri="createTermsAndConditions">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createTermsAndConditions" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="termsAndConditions">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="termsAndConditions">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="termsAndConditions" />
 	</request-map>
-	
+
 	<request-map uri="updateTermsAndConditions">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateTermsAndConditions" />
@@ -1872,7 +1894,7 @@
 			value="termsAndConditions"></response>
 		<response name="error" type="view" value="termsAndConditions" />
 	</request-map>
-	
+
 	<request-map uri="deleteTermsAndConditions">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteTermsAndConditions" />
@@ -1881,26 +1903,24 @@
 			value="termsAndConditions"></response>
 		<response name="error" type="view" value="termsAndConditions" />
 	</request-map>
-	
-<!-- CRUD for sourceOfFunds -->
-	
-	
-	
+
+	<!-- CRUD for sourceOfFunds -->
+
+
+
 	<request-map uri="createSourceOfFunds">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createSourceOfFunds" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<!--  response name="success" type="request-redirect-noparam"
-			value="sourceOfFunds"></response -->
-		<response name="success" type="request-redirect"
-			value="sourceOfFunds">
-			<redirect-parameter name="partyId"/> 	
+		<!-- response name="success" type="request-redirect-noparam" value="sourceOfFunds"></response -->
+		<response name="success" type="request-redirect" value="sourceOfFunds">
+			<redirect-parameter name="partyId" />
 		</response>
-		
-			
+
+
 		<response name="error" type="view" value="sourceOfFunds" />
 	</request-map>
-	
+
 	<request-map uri="updateSourceOfFunds">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateSourceOfFunds" />
@@ -1909,7 +1929,7 @@
 			value="sourceOfFunds"></response>
 		<response name="error" type="view" value="sourceOfFunds" />
 	</request-map>
-	
+
 	<request-map uri="deleteSourceOfFunds">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteSourceOfFunds" />
@@ -1918,7 +1938,116 @@
 			value="sourceOfFunds"></response>
 		<response name="error" type="view" value="sourceOfFunds" />
 	</request-map>
-	
+
+	<!-- CRUD openingBalance -->
+
+	<request-map uri="createOpeningBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createOpeningBalance" />
+		<response name="success" type="request-redirect" value="openingBalance">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="openingBalance" />
+	</request-map>
+
+	<request-map uri="updateOpeningBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateOpeningBalance" />
+		<response name="success" type="request-redirect-noparam"
+			value="openingBalance"></response>
+		<response name="error" type="view" value="openingBalance" />
+	</request-map>
+
+	<request-map uri="deleteOpeningBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteOpeningBalance" />
+		<response name="success" type="request-redirect-noparam"
+			value="openingBalance"></response>
+		<response name="error" type="view" value="openingBalance" />
+	</request-map>
+
+	<!-- CRUD for memberLoanBalance -->
+	<request-map uri="createLoanBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanBalance" />
+		<response name="success" type="request-redirect" value="memberLoanBalance">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="memberLoanBalance" />
+	</request-map>
+
+	<request-map uri="updateLoanBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanBalance" />
+		<response name="success" type="request-redirect-noparam"
+			value="memberLoanBalance"></response>
+		<response name="error" type="view" value="memberLoanBalance" />
+	</request-map>
+
+	<request-map uri="deleteLoanBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLoanBalance" />
+		<response name="success" type="request-redirect-noparam"
+			value="memberLoanBalance"></response>
+		<response name="error" type="view" value="memberLoanBalance" />
+	</request-map>
+
+
+	<!-- CRUD for memberShareBalance -->
+	<request-map uri="createShareBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createShareBalance" />
+		<response name="success" type="request-redirect" value="memberShareBalance">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="memberShareBalance" />
+	</request-map>
+
+	<request-map uri="updateShareBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateShareBalance" />
+		<response name="success" type="request-redirect-noparam"
+			value="memberShareBalance"></response>
+		<response name="error" type="view" value="memberShareBalance" />
+	</request-map>
+
+	<request-map uri="deleteShareBalance">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteShareBalance" />
+		<response name="success" type="request-redirect-noparam"
+			value="memberShareBalance"></response>
+		<response name="error" type="view" value="memberShareBalance" />
+	</request-map>
+
+	<!-- CRUD Account Status -->
+
+	<request-map uri="createAccountStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createAccountStatus" />
+		<response name="success" type="request-redirect" value="accountStatus">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="accountStatus" />
+	</request-map>
+
+	<request-map uri="updateAccountStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateAccountStatus" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="accountStatus"></response>
+		<response name="error" type="view" value="accountStatus" />
+	</request-map>
+
+	<request-map uri="deletAccountStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteAccountStatus" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="accountStatus"></response>
+		<response name="error" type="view" value="accountStatus" />
+	</request-map>
+
 
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
@@ -2164,13 +2293,13 @@
 	<!-- Member Details -->
 	<view-map name="relationships" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#relationships" />
-		
+
 	<view-map name="employmentDetails" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#employmentDetails" />
-		
+
 	<view-map name="businessDetails" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#businessDetails" />
-		
+
 	<view-map name="memberContribution" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberContribution" />
 	<view-map name="memberAccount" type="screen"
@@ -2179,18 +2308,30 @@
 		page="component://party/widget/partymgr/PartyScreens.xml#memberReferee" />
 	<view-map name="memberNominee" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberNominee" />
-		
+
 	<view-map name="termsAndConditions" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#termsAndConditions" />
-		
+
 	<view-map name="sourceOfFunds" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#sourceOfFunds" />
-		
+
 	<view-map name="employers" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#employers" />
-		
-		
 
-	
+	<view-map name="openingBalance" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#openingBalance" />
+
+	<view-map name="memberLoanBalance" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberLoanBalance" />
+
+	<view-map name="memberShareBalance" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberShareBalance" />
+		
+	<view-map name="accountStatus" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#accountStatus" />
+
+
+
+
 	<!-- end of view mappings -->
 </site-conf>

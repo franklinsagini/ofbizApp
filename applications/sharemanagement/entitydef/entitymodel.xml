@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <version>1.0</version>
+    <default-resource-name>ShareEntityLabels</default-resource-name>
+
+    <!-- ========================================================= -->
+    <!-- ======================== Data Model ===================== -->
+    <!-- The modules in this file are as follows:                  -->
+    <!--  - org.ofbiz.example.example -->
+    <!--  - org.ofbiz.example.feature -->
+    <!-- ========================================================= -->
+
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.sharemanagement 
+    	Entities
+    	
+    	ShareSetup
+    	MemberShareDeposit
+    	MemberShareTransfer
+    	MemberShareTransactions
+    -->
+    	
+    <!-- ========================================================= -->
+    
+    <entity entity-name="ShareSetup" package-name="org.ofbiz.sharemanagement" title="ShareSetup Entity">
+        <field name="shareSetupId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="active" type="indicator"></field>
+        <field name="sharePrice" type="currency-amount"></field>
+        <field name="shareAccountId" type="id"></field>
+        <prim-key field="shareSetupId"/>
+        
+        <relation type="one" fk-name="MEMBERSHAREDEPOSIT_FINACCT" rel-entity-name="FinAccount">
+            <key-map field-name="shareAccountId" rel-field-name="finAccountId"/>
+        </relation>
+    </entity>
+
+    <entity entity-name="MemberShareDeposit" package-name="org.ofbiz.sharemanagement" title="Member Share Deposit Entity">
+        <field name="memberShareDepositId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="active" type="indicator"></field>
+        <field name="partyId" type="id"></field>
+        <field name="noOfShares" type="numeric"></field>
+        <field name="sharePrice" type="currency-amount"></field>
+        <field name="valueOfShares" type="currency-amount"></field>
+        <field name="amountInWords" type="name"></field>
+        <field name="modeOfPaymentsId" type="id"></field>
+        
+        <field name="deductibleAmount" type="fixed-point"></field>
+        
+        <field name="active" type="indicator"></field>
+        <field name="shareAccountId" type="id"></field>
+        
+        
+        <prim-key field="memberShareDepositId"/>
+        <!-- relation type="one" fk-name="MEMBERSHAREDEPOSIT_FINACCT" rel-entity-name="FinAccount">
+            <key-map field-name="shareAccountId" rel-field-name="finAccountId"/>
+        </relation -->
+        <relation type="one" fk-name="MEMBERSHAREDEPOSIT_FINACCT" title="Parent" rel-entity-name="GlAccount">
+        <key-map field-name="shareAccountId" rel-field-name="glAccountId"/>
+      </relation>
+        
+        <relation type="one" fk-name="MEMBERSHAREDEPOSIT_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId" />
+        </relation>
+        
+        <relation type="one" fk-name="MEMBERSHAREDEP_PMETH_TP" rel-entity-name="PaymentMethodType">
+        <key-map field-name="modeOfPaymentsId" rel-field-name="paymentMethodTypeId"/>
+      </relation>
+    </entity>
+    
+     <entity entity-name="MemberShareTransfer" package-name="org.ofbiz.sharemanagement" title="Member Share Transfer Entity">
+        <field name="memberShareTransferId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="active" type="indicator"></field>
+        <field name="transferType" type="name"></field> <!-- TOSELF, TOANOTHERMEMBER, TOSACCO -->
+        <field name="fromMemberId" type="id"></field>
+        <field name="toMemberId" type="id"></field>
+        <field name="fromAccountId" type="id"></field>
+        <field name="toAccountId" type="id"></field>
+        <field name="transferAmt" type="currency-amount"></field>
+        <field name="comment" type="name"></field>
+        <field name="approvedBy" type="id"></field>
+        <prim-key field="memberShareTransferId"/>
+        
+        <relation type="one" fk-name="MEMBERSHARTRANSFRO_FINACCT" title="FROMACC" rel-entity-name="GlAccount">
+        	<key-map field-name="fromAccountId" rel-field-name="glAccountId"/>
+      	</relation>
+      	 <relation type="one" fk-name="MEMBERSHARTRANSTO_FINACCT" title="TOACC" rel-entity-name="GlAccount">
+        <key-map field-name="toAccountId" rel-field-name="glAccountId"/>
+      </relation>
+      
+       <relation type="one" fk-name="MEMBERSHARETRATO_MEMBER" rel-entity-name="Member">
+            <key-map field-name="fromMemberId" rel-field-name="partyId" />
+        </relation>
+        
+         <relation type="one" fk-name="MEMBERSHARTRATO_MEMBER" rel-entity-name="Member">
+            <key-map field-name="toMemberId" rel-field-name="partyId" />
+        </relation>
+        
+         <relation type="one" fk-name="MEMBERSHARTRAAPPROVEBY_MEMBER" rel-entity-name="Member">
+            <key-map field-name="approvedBy" rel-field-name="partyId" />
+        </relation>
+     </entity>
+    
+     <entity entity-name="MemberShareTransactions" package-name="org.ofbiz.sharemanagement" title="Member Share Transactions Entity">
+        <field name="memberShareTransactionsId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="active" type="indicator"></field>
+        <field name="partyId" type="id"></field>
+        <field name="creditAmt" type="currency-amount"></field>
+        <field name="debitAmt" type="currency-amount"></field>
+        <field name="comments" type="name"></field>
+        <field name="sourceDocumentName" type="name"></field> <!-- DEPOSIT, TOSELF, TOANOTHERMEMBER, TOSACCO -->
+        <field name="transactionType" type="name"></field> <!-- IN, OUT -->
+        <field name="sourceDocumentId" type="id"></field>
+        <field name="addedBy" type="id"></field>
+        <field name="glAccountId" type="id"></field>
+        
+        <prim-key field="memberShareTransactionsId"/>
+        <relation type="one" fk-name="SHARETRANSAC_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        
+        <relation type="one" fk-name="SHARETRANSADDEDBY_MEMBER" rel-entity-name="Member">
+            <key-map field-name="addedBy" rel-field-name="partyId"/>
+        </relation>
+        
+         <relation type="one" fk-name="MEMBERSHARTRANSACC_FINACCT" title="TOACC" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+        
+        </entity>
+</entitymodel>

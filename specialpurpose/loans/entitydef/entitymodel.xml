@@ -188,6 +188,8 @@ under the License.
 		<field name="paymentsProcessDeductsfromBonus" type="name"></field>
 		
 		<field name="loanStatus" type="name"></field>
+		
+		<field name="minimumPeriodToEligibility" type="numeric"></field>
 
 		<prim-key field="saccoProductId" />
 
@@ -214,9 +216,11 @@ under the License.
 
 	<!-- -org.ofbiz.loans -->
 	<entity entity-name="LoanApplication" package-name="org.ofbiz.loans"
-		title="Loan Application Entity">
+		title="Loan Application Entity" sequence-bank-size="1">
 		<field name="loanApplicationId" type="id-ne"></field>
 		
+		<field name="loanNo" type="name"></field>
+		<field name="loanNoSeq" type="name"></field>
 		<field name="partyId" type="id-ne"></field>
 	  
 		<field name="firstName" type="name"></field>
@@ -254,6 +258,8 @@ under the License.
 		<field name="panaltyInterestDue" type="fixed-point"></field>
 		<field name="monthlyRepayment" type="fixed-point"></field>
 		<field name="nextInstallmentDate" type="date-time"></field>
+		
+		<field name="isOpeningBalance" type="name"></field>
 		
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
@@ -359,12 +365,14 @@ under the License.
 		<field name="memberAccountDetailsId" type="id-ne"></field>
 		<field name="partyId" type="id"></field>
 		<field name="openingBalanceDate" type="date-time"></field>
-		<field name="memberAccountPayableId" type="id"></field>
+		<!-- field name="memberAccountPayableId" type="id"></field -->
+		<field name="glAccountId" type="id"></field>
+		
 		<field name="apOpeningBalance" type="fixed-point"></field>
 		<field name="savingsOpeningBalance" type="fixed-point"></field>
 		<prim-key field="memberAccountDetailsId"/>
 		<relation type="one" fk-name="MEMBERACCDETAILS_ACC" title="Parent" rel-entity-name="GlAccount">
-        <key-map field-name="memberAccountPayableId" rel-field-name="glAccountId"/>
+        	<key-map field-name="memberAccountPayableId" rel-field-name="glAccountId"/>
       </relation>
       
        <relation type="one" fk-name="ACCOUNTDETAILS_MEMBER" rel-entity-name="Member">
@@ -377,6 +385,7 @@ under the License.
 		<field name="memberShareId" type="id-ne"></field>
 		<field name="partyId" type="id"></field>
 		<field name="shareAccountId" type="id"></field>
+		<field name="sharePrice" type="fixed-point"></field>
 		<field name="noOfShares" type="numeric"></field>
 		<field name="openingBalance" type="fixed-point"></field>
 		<prim-key field="memberShareId"/>

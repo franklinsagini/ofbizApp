@@ -3153,11 +3153,21 @@ under the License.
       </relation>
     </entity>
     
+    <!-- Account Status -->
+    <entity entity-name="AccountStatus" package-name="org.ofbiz.party.party" title="Account Status Entity">
+     		<field name="accountStatusId" type="id-ne"></field>
+     		<field name="name" type="name"></field>
+			<prim-key field="accountStatusId"/>
+     </entity>
+    
     <!-- Member Account -->
      <entity entity-name="MemberAccount" package-name="org.ofbiz.party.party" title="MemberAccount Entity">
      		<field name="memberAccountId" type="id-ne"></field>
      		<field name="partyId" type="id"></field>
 			<field name="saccoProductId" type="id"></field>
+			<field name="accountNo" type="name"></field>
+			<field name="accountName" type="name"></field>
+			<field name="accountStatusId" type="id"></field>
 			
 			<prim-key field="memberAccountId"/>
     	
@@ -3171,6 +3181,10 @@ under the License.
       
       <relation type="one" fk-name="MEMBERACCOUNT_SACCOPRODUCT" rel-entity-name="SaccoProduct">
             <key-map field-name="saccoProductId"/>
+        </relation>
+        
+        <relation type="one" fk-name="MEMBERACCOUNT_AccountStatus" rel-entity-name="AccountStatus">
+            <key-map field-name="accountStatusId"/>
         </relation>
      </entity>
      

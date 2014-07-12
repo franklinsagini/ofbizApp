@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	
+		<!-- Share Setup -->
+	<form name="NewShareSetup" type="single" target="createShareSetup"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="shareSetupContext">
+        
+        <actions>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition>
+        </actions>
+        <field name="shareSetupId"><hidden/></field>
+		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
+        <field name="sharePrice" title="Share Price" ><text></text></field>
+        <field name="shareAccountId" title="Share Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+        
+      <form name="listShareSetup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateShareSetup" paginate-target="shareSetup"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ShareSetup">
+            	<condition-expr field-name="active" value="Y"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateShareSetup"/>
+ 		<field name="active"  title="Active" >
+            <drop-down allow-empty="false">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        <field name="sharePrice" title="Share Price"> <text></text> </field>
+        <field name="shareAccountId" title="Share Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteShareSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="shareSetupId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- MemberShareDeposit -->
+    <form name="NewMemberShareDeposit" type="single" target="createMemberShareDeposit"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="memberShareDepositContext">
+        
+        <actions>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	<entity-one entity-name="ShareSetup" value-field="shareSetup">
+        		<field-map field-name="active" value="Y"/>
+        	</entity-one>
+        	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
+        </actions>
+        <field name="memberShareDepositId"><hidden/></field>
+		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
+		<field name="noOfShares" title="No Of Shares" ><text></text></field>
+        <field name="sharePrice" title="Share Price" ><text default-value="${shareSetup.sharePrice}"></text></field>
+       <field name="amountInWords" title="Amount In Words" ><text></text></field>
+        <field name="modeOfPaymentsId" title="Model Of Payment">
+        	<drop-down>
+        		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="deductibleAmount" title="Deductible Amount" ><text></text></field>
+        <field name="shareAccountId" title="Share Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+        
+      <form name="listMemberShareDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberShareDeposit" paginate-target="memberShareDeposit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberShareDeposit">
+            	<condition-expr field-name="active" value="Y"/>
+            </entity-condition>
+            <entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	<entity-one entity-name="ShareSetup" value-field="shareSetup">
+        		<field-map field-name="active" value="Y"/>
+        	</entity-one>
+        	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateShareSetup"/>
+ 		<field name="active"  title="Active" >
+            <drop-down allow-empty="false">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        <field name="noOfShares" title="No Of Shares" ><text></text></field>
+        <field name="sharePrice" title="Share Price" ><text default-value="${shareSetup.sharePrice}"></text></field>
+       <field name="amountInWords" title="Amount In Words" ><text></text></field>
+        <field name="modeOfPaymentsId" title="Model Of Payment">
+        	<drop-down>
+        		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="deductibleAmount" title="Deductible Amount" ><text></text></field>
+        <field name="shareAccountId" title="Share Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMemberShareDeposit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberShareDepositId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+		<!-- MemberShareTransfer -->
+	<form name="NewMemberShareTransfer" type="single" target="createMemberShareTransfer"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="memberShareTransferContext">
+        
+        <actions>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        </actions>
+        <field name="memberShareTransferId"><hidden/></field>
+		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
+		 <field name="transferType"  title="Transfer Type" >
+            <drop-down allow-empty="false">
+                <option key="TOSELF" description="To SELF"/>
+                <option key="TOANOTHERMEMBER" description="To Another Member"/>
+                <option key="TOSACCO" description="To Sacco"/>
+            </drop-down>
+        </field>
+        <field name="fromMemberId" title="From">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="toMemberId" title="To" position="2">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="fromAccountId" title="From Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        
+        <field name="toAccountId" title="To Account" position="2">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        
+        <field name="transferAmt" title="Share Price" ><text></text></field>
+        <field name="comment" title="Comment"><textarea/></field>
+       <field name="approvedBy" title="Approved By" >
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+        
+      <form name="listMemberShareTransfer" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberShareTransfer" paginate-target="memberShareTransfer"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberShareTransfer">
+            	<condition-expr field-name="active" value="Y"/>
+            </entity-condition>
+            <entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateMemberShareTransfer"/>
+ 		<field name="active"  title="Active" >
+            <drop-down allow-empty="false">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+         <field name="transferType"  title="Transfer Type" >
+            <drop-down allow-empty="false">
+                <option key="TOSELF" description="To SELF"/>
+                <option key="TOANOTHERMEMBER" description="To Another Member"/>
+                <option key="TOSACCO" description="To Sacco"/>
+            </drop-down>
+        </field>
+        <field name="fromMemberId" title="From">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="toMemberId" title="To">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="fromAccountId" title="From Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        
+        <field name="toAccountId" title="To Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        
+        <field name="transferAmt" title="Share Price" ><text></text></field>
+        <field name="comment" title="Comment"><textarea/></field>
+       <field name="approvedBy" title="Approved By" >
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMemberShareTransfer" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberShareTransferId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+		<!-- MemberShareTransaction -->
+	<form name="NewMemberShareTransactions" type="single" target="createMemberShareTransactions"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="memberShareTransactionsContext">
+        
+        <actions>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        </actions>
+        <field name="memberShareTransactionsId"><hidden/></field>
+        
+		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
+		<field name="partyId" title="Member">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="creditAmt" title="Credit Amount" ><text></text></field>
+        <field name="debitAmt" title="Debit Amount" ><text></text></field>
+        <field name="comments" title="Comments" ><textarea/></field>
+        <field name="sourceDocumentName"  title="Source Document" >
+            <drop-down allow-empty="false">
+                <option key="DEPOSIT" description="Deposit"/>
+                <option key="TOSELF" description="To SELF"/>
+                <option key="TOANOTHERMEMBER" description="To Another Member"/>
+                <option key="TOSACCO" description="To Sacco"/>
+            </drop-down>
+        </field>
+        <field name="transactionType"  title="Transaction Type" >
+            <drop-down allow-empty="false">
+                <option key="IN" description="IN"/>
+                <option key="OUT" description="OUT"/>
+            </drop-down>
+        </field>
+       <field name="sourceDocumentId" title="Source Document ID" ><text></text></field> 
+       <field name="addedBy" title="Added By">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="glAccountId" title="Share Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+        
+      <form name="listMemberShareTransactions" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberShareTransactions" paginate-target="memberShareTransactions"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberShareTransactions">
+            	<condition-expr field-name="active" value="Y"/>
+            </entity-condition>
+            <entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateMemberShareTransactions"/>
+ 		<field name="active"  title="Active" >
+            <drop-down allow-empty="false">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        <field name="partyId" title="Member">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="creditAmt" title="Credit Amount" ><text></text></field>
+        <field name="debitAmt" title="Debit Amount" ><text></text></field>
+        <field name="comments" title="Comments" ><textarea/></field>
+        <field name="sourceDocumentName"  title="Source Document" >
+            <drop-down allow-empty="false">
+                <option key="DEPOSIT" description="Deposit"/>
+                <option key="TOSELF" description="To SELF"/>
+                <option key="TOANOTHERMEMBER" description="To Another Member"/>
+                <option key="TOSACCO" description="To Sacco"/>
+            </drop-down>
+        </field>
+        <field name="transactionType"  title="Transaction Type" >
+            <drop-down allow-empty="false">
+                <option key="IN" description="IN"/>
+                <option key="OUT" description="OUT"/>
+            </drop-down>
+        </field>
+       <field name="sourceDocumentId" title="Source Document ID" ><text></text></field> 
+       <field name="addedBy" title="Added By">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="glAccountId" title="Share Account">
+        	<drop-down>
+        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
+        	</drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMemberShareTransactions" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberShareTransactionsId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+
+</forms>
