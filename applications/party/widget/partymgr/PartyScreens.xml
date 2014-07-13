@@ -1986,5 +1986,84 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="memberAttachments">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Add Attachments - Photo,ID and Signature"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="Add Attachments - Photo,ID and Signature"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="photourl" value="N"/>
+                <set field="idfronturl" value="N"/>
+                <set field="idbackurl" value="N"/>
+                <set field="signatureurl" value="N"/>
+                <entity-one entity-name="Member" value-field="member"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/attachments/EditMemberAttachment.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonMemberDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    
+                    	<section>
+                    		 <widgets>
+                                       
+                                    </widgets>
+                    	</section>
+                    	<section>
+                    		<widgets>
+                    			<screenlet title="Add Photo">
+                    				<platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/attachments/addMemberPhoto.ftl"/></html>
+                            </platform-specific>
+                            		<!-- include-form name="memberPhoto" location="component://party/widget/partymgr/MemberForms.xml"/ -->
+                            		<image src="${member.photourl}" url-mode="content" alt="Member Photo" style="cssImgStandard"/>
+                                        <label style="h1">Member Photo</label>
+                        		</screenlet>
+                    		</widgets>
+                    	</section>
+                    	
+                        <section>
+                    		<widgets>
+                    			<screenlet title="Add ID Front">
+                            		<platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/attachments/addMemberIDFront.ftl"/></html>
+                            </platform-specific>
+                            <image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard"/>
+                                        <label style="h1">ID Front</label>
+                        		</screenlet>
+                    		</widgets>
+                    	</section>
+                    	
+                
+                    	<section>
+                    		<widgets>
+                    			<screenlet title="Add ID Back">
+                            		<platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/attachments/addMemberIDBack.ftl"/></html>
+                            </platform-specific>
+                            	<image src="${member.idbackurl}" url-mode="content" alt="ID Back" style="cssImgStandard"/>
+                                        <label style="h1">ID Back</label>
+                        		</screenlet>
+                    		</widgets>
+                    	</section>
+                    	
+                    	<section>
+                    		<widgets>
+                    			<screenlet title="Add Signature">
+                            		<platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/attachments/addMemberSignature.ftl"/></html>
+                            </platform-specific>
+                            <image src="${member.signatureurl}" url-mode="content" alt="Signature" style="cssImgStandard"/>
+                                        <label style="h1">Member Signature</label>
+                        		</screenlet>
+                    		</widgets>
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
 </screens>

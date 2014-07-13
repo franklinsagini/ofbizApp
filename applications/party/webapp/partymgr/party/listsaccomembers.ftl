@@ -235,7 +235,9 @@ under the License.
         <#list partyList as partyRow>
           <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
           <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            <td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td>
+          
+            <!-- td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td -->
+            <td><a href="<@ofbizUrl>memberAttachments?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td>
            
             <#if partyType?exists>
               <!-- td>
