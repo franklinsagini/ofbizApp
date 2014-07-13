@@ -21,8 +21,117 @@
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
-    
+    <request-map uri="main">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+    <request-map uri="imprestType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="imprestType"/>
+    </request-map>
+
+    <request-map uri="FindImprestType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindImprestType"/>
+    </request-map>
+
+    <request-map uri="CreateNewImprestType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewImprestType"/>
+    </request-map>
+
+    <request-map uri="createImprestType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createImprestType"/>
+        <response name="success" type="view" value="EditImprestType"/>
+        <response name="error" type="view" value="EditImprestType"/>
+    </request-map>
+
+    <request-map uri="EditImprestType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditImprestType"/>
+    </request-map>
+
+    <request-map uri="updateImprestType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateImprestType"/>
+        <response name="success" type="view" value="EditImprestType"/>
+        <response name="error" type="view" value="EditImprestType"/>
+    </request-map>
+
+
+    <request-map uri="deleteImprestType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteImprestType"/>
+        <response name="success" type="view" value="FindImprestType"/>
+        <response name="error" type="view" value="FindImprestType"/>
+    </request-map>
+
+    <request-map uri="FindImprest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindImprest"/>
+    </request-map>
+
+    <request-map uri="EditImprest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditImprest"/>
+    </request-map>
+
+    <request-map uri="createImprest">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createImprest"/>
+        <response name="success" type="view" value="EditImprest"/>
+        <response name="error" type="view" value="EditImprest"/>
+    </request-map>
+
+    <request-map uri="updateImprest">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateImprest"/>
+        <response name="success" type="view" value="EditImprest"/>
+        <response name="error" type="view" value="EditImprest"/>
+    </request-map>
+
+     <request-map uri="EditImprestItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditImprestItems"/>
+    </request-map>
+
+    <!-- Imprest Lines Requests -->
+    <request-map uri="createImprestItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createImprestItem"/>
+        <response name="success" type="request-redirect" value="EditImprestItems">
+            <redirect-parameter name="imprestId"/>
+        </response>
+        <response name="error" type="view" value="EditImprestItems"/>
+    </request-map>
+    <request-map uri="updateImprestItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateImprestItem"/>
+        <response name="success" type="request-redirect" value="EditImprestItems">
+            <redirect-parameter name="imprestId"/>
+        </response>
+        <response name="error" type="view" value="EditImprestItems"/>
+    </request-map>
+    <request-map uri="deleteImprestItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteImprestItem"/>
+        <response name="success" type="request-redirect" value="EditImprestItems">
+            <redirect-parameter name="imprestId"/>
+        </response>
+        <response name="error" type="view" value="EditImprestItems"/>
+    </request-map>
+
+
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://saccoimprest/widget/SaccoImprestScreens.xml#main"/>
+ <!-- Imprest Vew Mappings -->
+    <view-map name="imprestType" type="screen" page="component://saccoimprest/widget/SurrendarableScreens.xml#imprestType"/>
+    <view-map name="FindImprestType" type="screen" page="component://saccoimprest/widget/SurrendarableScreens.xml#FindImprestType"/>
+    <view-map name="CreateNewImprestType" type="screen" page="component://saccoimprest/widget/SurrendarableScreens.xml#CreateImprestType"/>
+    <view-map name="EditImprestType" type="screen" page="component://saccoimprest/widget/SurrendarableScreens.xml#EditImprestType"/>
+    <view-map name="FindImprest" type="screen" page="component://saccoimprest/widget/SurrendarableScreens.xml#FindImprest"/>
+    <view-map name="EditImprestType" type="screen" page="component://saccoimprest/widget/SurrendarableScreens.xml#EditImprestType"/>
+    <view-map name="EditImprest" type="screen" page="component://saccoimprest/widget/SurrendarableScreens.xml#EditImprest"/>
+    <view-map name="EditImprestItems" type="screen" page="component://saccoimprest/widget/SurrendarableScreens.xml#EditImprestItems"/>
 </site-conf>

@@ -397,8 +397,8 @@ under the License.
         <key-map field-name="agreementTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="AgreementWorkEffortApplic" 
-            package-name="org.ofbiz.party.agreement" 
+    <entity entity-name="AgreementWorkEffortApplic"
+            package-name="org.ofbiz.party.agreement"
             title="Agreement WorkEffort Application Entity">
         <field name="agreementId" type="id-ne"></field>
         <field name="agreementItemSeqId" type="id-ne"></field>
@@ -1683,7 +1683,7 @@ under the License.
       <key-map field-name="partyId"/>
     </view-link>
   </view-entity>
-  
+
      <entity entity-name="PartyIdentification"
             package-name="org.ofbiz.party.party"
             title="Party Identification Entity">
@@ -1701,7 +1701,7 @@ under the License.
       <index name="PARTY_ID_VALIDX" unique="false">
           <index-field name="idValue"/>
       </index>
-    </entity> 
+    </entity>
     <view-entity entity-name="PartyIdentificationAndParty"
                 package-name="org.ofbiz.party.party"
                 title="PartyIdentification and Party View Entity">
@@ -1731,7 +1731,7 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="partyIdentificationTypeId"/>
       </relation>
     </entity>
-  
+
     <entity entity-name="PartyGeoPoint"
         package-name="org.ofbiz.party.party"
         title="Party Geo Location with history">
@@ -2838,6 +2838,15 @@ under the License.
         <key-map field-name="roleTypeId" rel-field-name="roleTypeIdValidTo"/>
       </relation>
     </entity>
+
+    <entity entity-name="VendorType"
+            package-name="org.ofbiz.party.party"
+            title="Vendor Type Entity">
+        <field name="vendorTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="vendorTypeId"/>
+    </entity>
+
     <entity entity-name="Vendor"
             package-name="org.ofbiz.party.party"
             title="Vendor Entity">
@@ -2846,9 +2855,13 @@ under the License.
       <field name="manifestCompanyTitle" type="name"></field>
       <field name="manifestLogoUrl" type="url"></field>
       <field name="manifestPolicies" type="very-long"></field>
+      <field name="vendorTypeId" type="id-ne"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="VENDOR_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="VENDOR_TYPE" rel-entity-name="VendorType">
+        <key-map field-name="vendorTypeId"/>
       </relation>
     </entity>
     <extend-entity entity-name="CustomTimePeriod">
@@ -3033,7 +3046,7 @@ under the License.
     	<field name="countryOfResidence" type="very-short"></field>
     	<field name="citizenship" type="very-short"></field>
     	<field name="membershipofOtherSacco" type="indicator"></field>
-    	
+
     	<field name="joinDate" type="date"></field>
     	<field name="registrationFee" type="fixed-point"></field>
     	<field name="paidAmount" type="fixed-point"></field>
@@ -3049,33 +3062,33 @@ under the License.
       	<relation type="one" fk-name="MEMBER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      
+
       <relation type="one" fk-name="MEMBER_FNACT" rel-entity-name="FinAccount">
             <key-map field-name="finAccountId"/>
        </relation>
     </entity>
-    
+
     <!-- County -->
     <entity entity-name="County" package-name="org.ofbiz.party.party" title="Member County">
     	<field name="countyId" type="id-ne"></field>
     	<field name="name" type="name"></field>
     	<prim-key field="countyId"/>
     </entity>
-    
+
     <!-- Member Attachments -->
     <entity entity-name="MemberAttachment" package-name="org.ofbiz.party.party" title="Member Attachment">
     	<field name="memberAttachmentId" type="id-ne"></field>
     	<field name="partyId" type="id"></field>
     	<field name="name" type="name"></field>
     	<field name="isactive" type="indicator"></field>
-    	
+
     	<!-- Add attachment field -->
     	<prim-key field="memberAttachmentId"/>
     	<relation type="one" fk-name="ATTACHMENT_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
     </entity>
-    
+
     <!-- Source Of Fund -->
      <entity entity-name="SourceOfFund" package-name="org.ofbiz.party.party" title="Source of Fund Entity">
     	<field name="sourceOfFundId" type="id-ne"></field>
@@ -3083,9 +3096,9 @@ under the License.
     	<field name="isactive" type="indicator"></field>
     	<prim-key field="sourceOfFundId"/>
     </entity>
-    
+
     <!-- Employer -->
-    
+
      <entity entity-name="Employer" package-name="org.ofbiz.party.party" title="Employer Entity">
     	<field name="employerId" type="id-ne"></field>
     	<field name="name" type="name"></field>
@@ -3093,52 +3106,52 @@ under the License.
     	<field name="isactive" type="indicator"></field>
     	<prim-key field="employerId"/>
     </entity>
-    
+
     <!-- Employee Details -->
     <entity entity-name="EmploymentDetails" package-name="org.ofbiz.party.party" title="Employee Details">
     	<field name="employmentDetailsId" type="id-ne"></field>
     	<field name="partyId" type="id"></field>
     	<field name="employerId" type="id"></field>
-    	
+
     	<field name="department" type="name"></field>
-    	
+
     	<field name="worstation" type="name"></field>
     	<field name="sourceOfFundId" type="id"></field>
     	<prim-key field="employmentDetailsId"/>
     	<relation type="one" fk-name="EMPLOYMENTDETAILS_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
-        
+
         <relation type="one" fk-name="EMPLOYMENTDETAILS_SOURCEOFFUND" rel-entity-name="SourceOfFund">
             <key-map field-name="sourceOfFundId"/>
         </relation>
-        
+
         <relation type="one" fk-name="EMPLOYMENTDETAILS_EMPLOYER" rel-entity-name="Employer">
             <key-map field-name="employerId"/>
         </relation>
     </entity>
-    
+
     <!-- Business Details -->
     <entity entity-name="BusinessDetails" package-name="org.ofbiz.party.party" title="BusinessDetails Entity">
     	<field name="businessDetailsId" type="id-ne"></field>
     	<field name="partyId" type="id"></field>
-    	
+
     	<field name="name" type="name"></field>
     	<field name="address" type="name"></field>
     	<field name="natureOfBusiness" type="name"></field>
     	<field name="sourceOfFundId" type="id"></field>
-    	
+
     	<prim-key field="businessDetailsId"/>
-    	
+
     	<relation type="one" fk-name="BUSINESSDETAILS_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
-        
+
         <relation type="one" fk-name="BUSINESSDETAIL_SOURCEOFFUND" rel-entity-name="SourceOfFund">
             <key-map field-name="sourceOfFundId"/>
         </relation>
     </entity>
-    
+
     <!-- Member Contributio -->
      <entity entity-name="MemberContribution" package-name="org.ofbiz.party.party" title="MemberContribution Entity">
     	<field name="memberContributionId" type="id-ne"></field>
@@ -3146,26 +3159,26 @@ under the License.
     	<field name="contributionAmt" type="fixed-point"></field>
     	<field name="paymentMethodTypeId" type="id"></field>
     	<field name="contributionEffectiveDate" type="date"></field>
-    	
-    	
+
+
     	<prim-key field="memberContributionId"/>
-    	
+
     	<relation type="one" fk-name="MEMBERCONTRIBUTION_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
-        
+
         <relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
     </entity>
-    
+
     <!-- Account Status -->
     <entity entity-name="AccountStatus" package-name="org.ofbiz.party.party" title="Account Status Entity">
      		<field name="accountStatusId" type="id-ne"></field>
      		<field name="name" type="name"></field>
 			<prim-key field="accountStatusId"/>
      </entity>
-    
+
     <!-- Member Account -->
      <entity entity-name="MemberAccount" package-name="org.ofbiz.party.party" title="MemberAccount Entity">
      		<field name="memberAccountId" type="id-ne"></field>
@@ -3174,26 +3187,26 @@ under the License.
 			<field name="accountNo" type="name"></field>
 			<field name="accountName" type="name"></field>
 			<field name="accountStatusId" type="id"></field>
-			
+
 			<prim-key field="memberAccountId"/>
-    	
+
     	<relation type="one" fk-name="MEMBERACCOUNT_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
-        
+
         <relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
-      
+
       <relation type="one" fk-name="MEMBERACCOUNT_SACCOPRODUCT" rel-entity-name="SaccoProduct">
             <key-map field-name="saccoProductId"/>
         </relation>
-        
+
         <relation type="one" fk-name="MEMBERACCOUNT_AccountStatus" rel-entity-name="AccountStatus">
             <key-map field-name="accountStatusId"/>
         </relation>
      </entity>
-     
+
      <!-- MemberReferee -->
      <entity entity-name="MemberReferee" package-name="org.ofbiz.party.party" title="MemberReferee Entity">
      		<field name="memberRefereeId" type="id-ne"></field>
@@ -3201,25 +3214,25 @@ under the License.
      		<field name="refreeId" type="id"></field>
      		<field name="memberNo" type="name"></field>
      		<field name="payrollNo" type="name"></field>
-     		
+
      		<prim-key field="memberRefereeId"/>
-     		
+
      		 <relation type="one" fk-name="MEMBEREFEREE_MEMBER" rel-entity-name="Member">
         		<key-map field-name="partyId" />
       		</relation>
-      		
+
       		<relation type="one" fk-name="MEMBEREFEREE_REF_MEMBER" rel-entity-name="Member">
         		<key-map field-name="refreeId" rel-field-name="partyId" />
       		</relation>
      </entity>
-     
+
      <!-- Relationship -->
      <entity entity-name="Relationship" package-name="org.ofbiz.party.party" title="Relationship Entity">
      		<field name="relationshipId" type="id-ne"></field>
      		<field name="name" type="name"></field>
      		<prim-key field="relationshipId"/>
      </entity>
-    
+
     <!-- Member Nominee -->
     <entity entity-name="MemberNominee" package-name="org.ofbiz.party.party" title="MemberNominee Entity">
      		<field name="memberNomineeId" type="id-ne"></field>
@@ -3239,14 +3252,14 @@ under the License.
      		<field name="independentwitnessidno" type="name"></field>
      		<field name="witnessmobileno" type="name"></field>
      		<field name="witnesspostaladdress" type="name"></field>
-     		
+
      		<prim-key field="memberNomineeId"/>
-     		
+
      		<relation type="one" fk-name="MEMBERNOMINEE_RELATIONSHIP" rel-entity-name="Relationship">
         		<key-map field-name="relationshipId" />
       		</relation>
      </entity>
-     
+
      <!-- Terms and Conditions -->
      <entity entity-name="TermsAndConditions" package-name="org.ofbiz.party.party" title="TermsAndConditions Entity">
      		<field name="termsAndConditionsId" type="id-ne"></field>
@@ -3255,6 +3268,6 @@ under the License.
      		<field name="dateAccepted" type="date"></field>
      		<prim-key field="termsAndConditionsId"/>
      </entity>
-     
-     
+
+
 </entitymodel>

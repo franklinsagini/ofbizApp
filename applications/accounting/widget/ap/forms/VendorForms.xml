@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ListVendors" type="list" list-name="listIt" paginate-target="findVendors" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
@@ -37,7 +37,9 @@ under the License.
         </field>
         <field name="manifestCompanyName" title="${uiLabelMap.PartyManifestCompanyName}"><display/></field>
         <field name="manifestCompanyTitle" title="${uiLabelMap.PartyManifestCompanyTitle}"><display/></field>
-        <field name="manifestLogoUrl" title="${uiLabelMap.PartyManifestLogoUrl}"><display/></field>
+        <field name="vendorTypeId" title="${uiLabelMap.vendorTypeId}">
+             <display-entity entity-name="VendorType" description="${description}"/>
+        </field>
         <field name="manifestPolicies" title="${uiLabelMap.PartyManifestPolicies}"><display/></field>
     </form>
     <form name="EditVendor" type="single" target="updateVendor" title="" default-map-name="vendor">
@@ -56,6 +58,11 @@ under the License.
         <field use-when="partyId!=null&amp;&amp;vendor!=null" name="manifestLogoUrl" title="${uiLabelMap.PartyManifestLogoUrl}"><text default-value="${parameters.manifestLogoUrl}"/></field>
         <field use-when="partyId==null" name="manifestPolicies" title="${uiLabelMap.PartyManifestPolicies}"><text/></field>
         <field use-when="partyId!=null&amp;&amp;vendor!=null" name="manifestPolicies" title="${uiLabelMap.PartyManifestPolicies}"><text default-value="${parameters.manifestPolicies}"/></field>
+        <field name="vendorTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="VendorType"/>
+            </drop-down>
+        </field>
         <field name="submitButton" use-when="partyId==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
         <field name="submitButton" use-when="partyId!=null&amp;&amp;vendor!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
@@ -66,6 +73,13 @@ under the License.
         <field name="manifestCompanyTitle" title="${uiLabelMap.PartyManifestCompanyTitle}" parameter-name="manifestCompanyTitle"><text-find size="25"></text-find></field>
         <field name="manifestLogoUrl" title="${uiLabelMap.PartyManifestLogoUrl}" parameter-name="manifestLogoUrl"><text-find size="25"></text-find></field>
         <field name="manifestPolicies" title="${uiLabelMap.PartyManifestPolicies}" parameter-name="manifestPolicies"><text-find size="25"></text-find></field>
+        <field name="vendorTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${description}" key-field-name="vendorTypeId" entity-name="VendorType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
@@ -82,4 +96,90 @@ under the License.
     <form name="FindApPaymentGroups" target="FindApPaymentGroups" extends="FindPaymentGroup" extends-resource="component://accounting/widget/PaymentGroupForms.xml">
         <field name="paymentGroupTypeId"><hidden value="CHECK_RUN"/></field>
     </form>
+
+   <form
+        name="FindVendorTypes"
+        type="single"
+        target="FindVendorTypes"
+        default-entity-name="VendorType">
+
+        <field name="noConditionFind">
+            <hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done -->
+        </field>
+
+        <field name="vendorTypeId" title="Vendor Type ID">
+            <text-find/>
+        </field>
+
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <text-find/>
+        </field>
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+
+    </form>
+
+    <form
+        name="ListVendorTypes"
+        type="list"
+        list-name="listIt"
+        paginate-target="FindVendorTypes"
+        default-entity-name="VendorType"
+        separate-columns="true"
+        odd-row-style="alternate-row"
+        header-row-style="header-row-2"
+        default-table-style="basic-table hover-bar">
+
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="vendorTypeCtx"/>
+                <field-map field-name="entityName" value="VendorType"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+
+        <field name="vendorTypeId" title="Vendor Type" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${vendorTypeId}" target="EditVendorType">
+                <parameter param-name="vendorTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <display/>
+        </field>
+    </form>
+
+
+ <form name="EditVendorType" type="single" target="updateVendorType" title="" default-map-name="vendorType" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="vendorType==null" target="createVendorType"/>
+
+
+        <!-- imprestId Field -->
+        <field use-when="vendorType!=null" name="vendorTypeId" title="${uiLabelMap.imprestId}" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display/>
+        </field>
+        <field use-when="vendorType==null&amp;&amp;vendorTypeId==null" name="vendorTypeId" title="${uiLabelMap.vendorTypeId}">
+            <text size="20" maxlength="20"/>
+        </field>
+        <field use-when="vendorType==null&amp;&amp;vendorTypeId!=null" name="vendorTypeId" title="${uiLabelMap.vendorTypeId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${imprestId}]">
+            <display/>
+        </field>
+
+        <!-- description Field -->
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+           <text size="60" maxlength="250"/>
+        </field>
+
+        <!-- submitButton -->
+        <field use-when="vendorType==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+        <field use-when="vendorType!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+
+    </form>
+
 </forms>
