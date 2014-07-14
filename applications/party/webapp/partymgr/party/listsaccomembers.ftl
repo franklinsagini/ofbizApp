@@ -209,9 +209,9 @@ under the License.
         </table>
       </form -->
     </div>
-    <script language="JavaScript" type="text/javascript">
+    <!-- script language="JavaScript" type="text/javascript">
       document.lookupparty.partyId.focus();
-    </script>
+    </script -->
 
   <#if partyList?exists>
     <#if hideFields != "Y">

@@ -511,11 +511,11 @@ under the License.
         <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
         <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
         <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
-        <field name="firstName" title="${uiLabelMap.MemberFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="firstName" title="${uiLabelMap.MemberFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="middleName" title="${uiLabelMap.MemberMiddleName}"><text size="30" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.MemberFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         
-        <field name="lastName" title="${uiLabelMap.MemberLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="lastName" title="${uiLabelMap.MemberLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
         <!-- field name="salutation" title="${uiLabelMap.MemberSalutation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
         <field name="salutation"  title="${uiLabelMap.MemberSalutation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -531,13 +531,13 @@ under the License.
         </field>
         <!--  field name="MEMBER_GENDER" title="${uiLabelMap.MemberGender}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="gender"  title="${uiLabelMap.MemberGender}" tooltip="${uiLabelMap.CommonRequired}">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
                 <option key="M" description="${uiLabelMap.CommonMale}"/>
                 <option key="F" description="${uiLabelMap.CommonFemale}"/>
             </drop-down>
         </field>
-        <field name="maritalStatus" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
-            <drop-down allow-empty="true">
+        <field name="maritalStatus" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
                 <option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}"/>
                 <option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}"/>
                 <option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}"/>
@@ -585,7 +585,7 @@ under the License.
         </field>
        
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-       <field name="memberNumber" title="${uiLabelMap.MemberNumber}"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="memberNumber" title="${uiLabelMap.MemberNumber}"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60" disabled="true" default-value="**GENERATED**"/></field>
        <field name="mobileNumber" title="${uiLabelMap.MemberMobileNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
        <field name="birthDate" title="${uiLabelMap.MemberBirthDate}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time type="date"/></field>
        <field name="permanentAddress" title="${uiLabelMap.MemberPermanentAddress}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea cols="30"/></field>
@@ -593,6 +593,14 @@ under the License.
        
        <!-- field name="MEMBER_COUNTRY_OF_RESIDENCE" title="${uiLabelMap.MemberCountryOfResidence}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
        <field name="countryOfResidence" title="${uiLabelMap.MemberCountryOfResidence}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultCountryGeoId}">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoId}: ${geoName}">
+                    <entity-constraint name="geoTypeId" value="COUNTRY"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="country" title="Country" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="${defaultCountryGeoId}">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoId}: ${geoName}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>
@@ -614,8 +622,8 @@ under the License.
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
 
-       <field name="joinDate" title="Date Joined" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time/></field>
-       <field name="registrationFee" title="Registration Fee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+       <field name="joinDate" title="Date Joined" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time type="date"/></field>
+       <field name="registrationFee" title="Registration Fee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text></text></field>
        <field name="paidAmount" title="Paid Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"  position="2"><text/></field>
 		
 		<field name="finAccountId" title="Bank Account">
