@@ -751,7 +751,7 @@ under the License.
         <relation type="one" fk-name="COM_EVNT_RESENUM" rel-entity-name="Enumeration">
             <key-map field-name="reasonEnumId" rel-field-name="enumId"/>
         </relation>
-        <index name="COMMEVT_MSG_ID" unique="true">
+        <index name="COMMEVT_MSG_ID" unique="false">
             <index-field name="messageId"/>
         </index>
     </entity>
@@ -1044,7 +1044,7 @@ under the License.
         <field name="verifyHash" type="value"></field>
         <field name="expireDate" type="date-time"></field>
         <prim-key field="emailAddress"/>
-        <index name="EMAIL_VERIFY_HASH" unique="true">
+        <index name="EMAIL_VERIFY_HASH" unique="false">
             <index-field name="verifyHash"/>
         </index>
     </entity>
@@ -2760,7 +2760,7 @@ under the License.
       <index name="LAST_NAME_IDX">
         <index-field name="lastName"/>
       </index>
-      <index name="CARD_ID_IDX" unique="true">
+      <index name="CARD_ID_IDX" unique="false">
         <index-field name="cardId"/>
       </index>
     </entity>
@@ -3053,6 +3053,8 @@ under the License.
     	<field name="paidAmount" type="fixed-point"></field>
     	<field name="finAccountId" type="id"></field>
     	
+    	<field name="branchId" type="id"></field>
+    	
     	<!-- Images -->
     	<field name="photourl" type="name"></field>
     	<field name="idfronturl" type="name"></field>
@@ -3063,6 +3065,14 @@ under the License.
       	<relation type="one" fk-name="MEMBER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+      
+      <relation type="one" fk-name="MEMBER_PARTYGROUP" rel-entity-name="PartyGroup">
+            <key-map field-name="branchId" rel-field-name="partyId"/>
+        </relation>
+      
+      <relation type="one" fk-name="EMPLOYMENTDETAILS_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
 
       <relation type="one" fk-name="MEMBER_FNACT" rel-entity-name="FinAccount">
             <key-map field-name="finAccountId"/>

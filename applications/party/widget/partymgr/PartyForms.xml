@@ -506,6 +506,9 @@ under the License.
         	<entity-condition entity-name="FinAccount" list="accountList">
         		<order-by field-name="finAccountName"/>
         	</entity-condition>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        	</entity-condition>
         </actions>
         <field name="partyId"><hidden/></field>
         <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
@@ -626,9 +629,14 @@ under the License.
        <field name="registrationFee" title="Registration Fee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text></text></field>
        <field name="paidAmount" title="Paid Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"  position="2"><text/></field>
 		
-		<field name="finAccountId" title="Bank Account">
+		<!-- field name="finAccountId" title="Bank Account">
             <drop-down allow-empty="true" >
                 <list-options list-name="accountList" key-name="finAccountId"  description="${finAccountName}" />
+            </drop-down>
+        </field -->
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
        
