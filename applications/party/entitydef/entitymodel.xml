@@ -1522,7 +1522,7 @@ under the License.
     </entity>
     <entity entity-name="Party"
             package-name="org.ofbiz.party.party"
-            title="Party Entity">
+            title="Party Entity" sequence-bank-size="1">
       <field name="partyId" type="id-ne"></field>
       <field name="partyTypeId" type="id-ne"></field>
       <field name="externalId" type="id"></field>
@@ -3018,7 +3018,7 @@ under the License.
     </view-entity>
     <!-- Sacco Member Entity -->
     <!-- Member Entity and Related Entities -->
-    <entity entity-name="Member" package-name="org.ofbiz.party.party" title="Member Entity">
+    <entity entity-name="Member" package-name="org.ofbiz.party.party" title="Member Entity" sequence-bank-size="1">
     	<field name="partyId" type="id-ne"></field>
     	<field name="firstName" type="name"></field>
     	<field name="middleName" type="name"></field>
@@ -3044,14 +3044,21 @@ under the License.
     	<field name="permanentAddress" type="name"></field>
     	<field name="currentAddress" type="name"></field>
     	<field name="countryOfResidence" type="very-short"></field>
+    	<field name="country" type="very-short"></field>
     	<field name="citizenship" type="very-short"></field>
     	<field name="membershipofOtherSacco" type="indicator"></field>
-
+		
     	<field name="joinDate" type="date"></field>
     	<field name="registrationFee" type="fixed-point"></field>
     	<field name="paidAmount" type="fixed-point"></field>
     	<field name="finAccountId" type="id"></field>
-
+    	
+    	<!-- Images -->
+    	<field name="photourl" type="name"></field>
+    	<field name="idfronturl" type="name"></field>
+    	<field name="idbackurl" type="name"></field>
+    	<field name="signatureurl" type="name"></field>
+    	
     	<prim-key field="partyId"/>
       	<relation type="one" fk-name="MEMBER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>

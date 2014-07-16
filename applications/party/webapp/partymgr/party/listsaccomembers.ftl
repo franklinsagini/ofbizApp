@@ -209,9 +209,9 @@ under the License.
         </table>
       </form -->
     </div>
-    <script language="JavaScript" type="text/javascript">
+    <!-- script language="JavaScript" type="text/javascript">
       document.lookupparty.partyId.focus();
-    </script>
+    </script -->
 
   <#if partyList?exists>
     <#if hideFields != "Y">
@@ -235,7 +235,9 @@ under the License.
         <#list partyList as partyRow>
           <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
           <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            <td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td>
+          
+            <!-- td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td -->
+            <td><a href="<@ofbizUrl>memberAttachments?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td>
            
             <#if partyType?exists>
               <!-- td>
