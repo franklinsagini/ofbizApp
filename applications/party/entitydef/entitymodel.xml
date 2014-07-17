@@ -3302,6 +3302,32 @@ under the License.
      		<field name="dateAccepted" type="date"></field>
      		<prim-key field="termsAndConditionsId"/>
      </entity>
+     
+     <entity entity-name="MemberStatusLog"
+            package-name="org.ofbiz.party.party"
+            title="MemberStatusLog Entity">
+           
+      <field name="memberStatusLogId" type="id-ne"></field>
+      
+      <field name="isActive" type="indicator"></field>
+      <field name="createdBy" type="id"></field>
+      <field name="updatedBy" type="id"></field>
+      <field name="branchId" type="name"></field>
+      
+      <field name="partyId" type="id"></field>
+      <field name="memberStatus" type="name"></field>
+      <field name="comment" type="name"></field>
+      
+      
+      <prim-key field="memberStatusLogId"/>
+      <relation type="one" fk-name="MemberStatusLog_MEMBER" rel-entity-name="Member">
+        <key-map field-name="partyId"/>
+      </relation>
+      
+      <relation type="one" fk-name="MemberStatusLog_MEMBER" rel-entity-name="PartyGroup">
+        <key-map field-name="branchId" rel-field-name="partyId"/>
+      </relation>
+    </entity>
 
 
 </entitymodel>

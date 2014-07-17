@@ -375,4 +375,75 @@
         <entity-one entity-name="AccountStatus" value-field="accountStatus"/>
         <remove-value value-field="accountStatus"/>
     </simple-method>
+    
+    <!-- Approve Member -->
+    <simple-method method-name="createApproveMemberLog" short-description="Create Member Status Log">
+        <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="MemberStatusLog" field="memberStatusLogId"/>
+        <set from-field="memberStatusLogId" field="newEntity.memberStatusLogId"/>
+        <set value="ACTIVE" field="newEntity.memberStatus"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        
+        <set field="partyId" from-field="newEntity.partyId"/>
+        <entity-one entity-name="Member" value-field="member">
+        	 <field-map field-name="partyId" from-field="partyId"/>
+        </entity-one>
+        <set value="ACTIVE" field="member.memberStatus"/>
+        <store-value value-field="member"/>
+    </simple-method>
+    
+    <simple-method method-name="updateApproveMemberLog" short-description="Update Member Status Log">
+        <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
+        <set-nonpk-fields value-field="memberStatusLog" map="parameters"/>
+        <store-value value-field="memberStatusLog"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteApproveMemberLog" short-description="Delete Member Status Log">
+        <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
+        <remove-value value-field="memberStatusLog"/>
+    </simple-method>
+    
+    <!-- Reject Member -->
+    <simple-method method-name="createRejectMemberLog" short-description="Create Member Status Log">
+        <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="MemberStatusLog" field="memberStatusLogId"/>
+        <set from-field="memberStatusLogId" field="newEntity.memberStatusLogId"/>
+        <set value="REJECTED" field="newEntity.memberStatus"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        
+        <set field="partyId" from-field="newEntity.partyId"/>
+        <entity-one entity-name="Member" value-field="member">
+        	 <field-map field-name="partyId" from-field="partyId"/>
+        </entity-one>
+        <set value="REJECTED" field="member.memberStatus"/>
+        <store-value value-field="member"/>
+        
+    </simple-method>
+    
+    <simple-method method-name="updateRejectMemberLog" short-description="Update Member Status Log">
+        <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
+        <set-nonpk-fields value-field="memberStatusLog" map="parameters"/>
+        <store-value value-field="memberStatusLog"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteRejectMemberLog" short-description="Delete Member Status Log">
+        <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
+        <remove-value value-field="memberStatusLog"/>
+    </simple-method>
 </simple-methods>
