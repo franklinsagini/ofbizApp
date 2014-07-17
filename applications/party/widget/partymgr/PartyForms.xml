@@ -124,6 +124,12 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="isBranch" title="Is Branch">
+        	<drop-down allow-empty="false">
+        		<option key="N" description="NO"/>
+        		<option key="Y" description="YES"/>
+        	</drop-down>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -371,7 +377,7 @@ under the License.
     <form name="AddPartyRate" type="single" target="updatePartyRate"
         focus-field-name="rateTypeId" header-row-style="header-row" default-table-style="basic-table">
         <actions>
-            <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
             <set field="periodTypeId" value="RATE_HOUR"/>
         </actions>
         <field name="partyId"><hidden/></field>
@@ -508,7 +514,14 @@ under the License.
         	</entity-condition>
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
+        	
+        	<entity-one entity-name="PartyGroup" value-field="branch">
+        		<field-map field-name="partyId" from-field="userLogin.partyId"/>
+        	</entity-one>
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
         </actions>
         <field name="partyId"><hidden/></field>
         <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
@@ -635,10 +648,18 @@ under the License.
             </drop-down>
         </field -->
         <field name="branchId" title="Branch">
-            <drop-down allow-empty="true" >
+            <drop-down allow-empty="false" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
+        
+         <field name="stationId" title="Station">
+            <drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down>
+        </field>
+        
+        <field name="memberStatus"><text default-value="NEW" disabled="true"></text></field>
        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>

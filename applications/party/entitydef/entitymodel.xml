@@ -2020,6 +2020,7 @@ under the License.
       <field name="numEmployees" type="numeric"></field>
       <field name="tickerSymbol" type="very-short"></field>
       <field name="comments" type="comment"></field>
+      <field name="isBranch" type="indicator"></field>
       <field name="logoImageUrl" type="url"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PARTY_GRP_PARTY" rel-entity-name="Party">
@@ -3020,6 +3021,12 @@ under the License.
     <!-- Member Entity and Related Entities -->
     <entity entity-name="Member" package-name="org.ofbiz.party.party" title="Member Entity" sequence-bank-size="1">
     	<field name="partyId" type="id-ne"></field>
+    	
+    	<field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="name"></field>
+        <field name="updatedBy" type="name"></field>
+        <field name="branchId" type="name"></field>
+    	
     	<field name="firstName" type="name"></field>
     	<field name="middleName" type="name"></field>
     	<field name="lastName" type="name"></field>
@@ -3053,13 +3060,25 @@ under the License.
     	<field name="paidAmount" type="fixed-point"></field>
     	<field name="finAccountId" type="id"></field>
     	
-    	<field name="branchId" type="id"></field>
-    	
     	<!-- Images -->
     	<field name="photourl" type="name"></field>
     	<field name="idfronturl" type="name"></field>
     	<field name="idbackurl" type="name"></field>
     	<field name="signatureurl" type="name"></field>
+    	
+    	<field name="stationId" type="id"></field>
+    	
+    	<!-- 
+    		NEW
+    		ACTIVE
+    		INACTIVE
+    		REJECTED
+    		WITHDRAWN
+    		DEAD
+    	 -->
+    	<field name="memberStatus" type="name"></field> 
+    	
+    	
     	
     	<prim-key field="partyId"/>
       	<relation type="one" fk-name="MEMBER_PARTY" rel-entity-name="Party">
@@ -3077,6 +3096,10 @@ under the License.
       <relation type="one" fk-name="MEMBER_FNACT" rel-entity-name="FinAccount">
             <key-map field-name="finAccountId"/>
        </relation>
+       
+       <relation type="one" fk-name="MEMBER_STATION" rel-entity-name="Station">
+            <key-map field-name="stationId"/>
+        </relation>
     </entity>
 
     <!-- County -->

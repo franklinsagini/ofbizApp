@@ -439,6 +439,8 @@ under the License.
     	<set field="require_email" value="false"/>
         <set field="require_phone" value="false"/>
         <set field="parameters.email" from-field="emailAddress"/>
+        <set field="isActive" value="Y"/>
+        <set field="createdBy" from-field="userLogin.userLoginId"/>
         <!-- set field="parameters.email" value="jodonya@gmail.com"/-->
         <set field="email" from-field="emailAddress"/>
         
@@ -482,6 +484,8 @@ under the License.
                <process field="registrationFee"><convert type="BigDecimal"> <fail-message message="Not a Big Decimal"/></convert></process>
                <process field="paidAmount" > <convert type="BigDecimal"> <fail-message message="Not Big Decimal"/> </convert></process>
                <process field="branchId"><copy to-field="branchId"/></process>
+               <process field="stationId"><copy to-field="stationId"/></process>
+               <process field="memberStatus"><copy to-field="memberStatus"/></process>
             </simple-map-processor>
         </call-map-processor>
 
@@ -510,6 +514,12 @@ under the License.
         <set from-field="visit.visitId" field="partyDataSource.visitId"/>
         
         <set field="memberContext.email" from-field="email"/>
+        <set field="memberContext.isActive" value="Y"/>
+        <set field="memberContext.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="memberContext.updatedBy" from-field="userLogin.userLoginId"/>
+        <set field="memberContext.memberStatus" from-field="NEW"/>
+        
+        
         
 
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
