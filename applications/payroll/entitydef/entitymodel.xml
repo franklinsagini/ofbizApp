@@ -182,7 +182,25 @@ under the License.
         <relation type="one" fk-name="management_element" rel-entity-name="PayrollElement">
             <key-map field-name="payrollElementId"/>
         </relation>
-        </entity>        
+        </entity> 
         
+        <!-- The Stations Entity -->
+        <entity entity-name="Station" package-name="org.ofbiz.payroll" title="Station Entity">
+        	<field name="stationId" type="id-ne"><description>primary sequenced ID</description></field>
+        	<field name="isActive" type="indicator"></field>
+        	<field name="createdBy" type="name"></field>
+        	<field name="updatedBy" type="name"></field>
+        	<field name="branchId" type="name"></field>
+        	
+        	<field name="stationNumber" type="name"></field>
+        	
+       		<field name="name" type="name"></field>
+        	<field name="employerId" type="id"></field>
+           
+        	<prim-key field="stationId"/>
+        	<relation type="one" fk-name="station_employer" rel-entity-name="Employer">
+            	<key-map field-name="employerId"/>
+        	</relation>
+        </entity>   
 	
 </entitymodel>

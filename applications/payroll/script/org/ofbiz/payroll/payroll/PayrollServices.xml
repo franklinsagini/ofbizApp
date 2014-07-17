@@ -213,5 +213,33 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- Create Station -->
+    <simple-method method-name="createStation" short-description="Add Station">
+        <make-value entity-name="Station" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="Station" field="stationId"/>
+        <set from-field="stationId" field="newEntity.stationId"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateStation" short-description="Update Station">
+        <entity-one entity-name="Station" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="lookedUpValue.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteStation" short-description="Delete Station">
+        <entity-one entity-name="Station" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
     
 </simple-methods>

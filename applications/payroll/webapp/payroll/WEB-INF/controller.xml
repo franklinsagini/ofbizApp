@@ -385,6 +385,44 @@ under the License.
 		<response name="error" type="view" value="staffpayrollelements" />
 	</request-map>
 	
+	<!-- Station -->
+	<request-map uri="station">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="station"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Station -->
+	<request-map uri="createStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+	
+	<request-map uri="updateStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+	
+	<request-map uri="deleteStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+	
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -401,6 +439,7 @@ under the License.
 	<view-map name="payrollperiod" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollPeriod"/>
 	<view-map name="staffpayroll" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStaffPayroll"/>
 	<view-map name="staffpayrollelements" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStaffPayrollElements"/>
+	<view-map name="station" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStation"/>
 	
 	
 		
