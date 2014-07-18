@@ -517,24 +517,27 @@ under the License.
         
         <set field="memberContext.email" from-field="email"/>
         
-        <if-empty field="parameters.isActive">
-            <set field="memberContext.isActive" value="Y"/>
-        </if-empty>
+       
         
-        <if-empty field="parameters.memberStatus">
-            <set field="memberContext.memberStatus" value="NEW"/>
-        </if-empty>
-        
-        <if-empty field="parameters.createdBy">
+        <if-empty field="parameters.partyId">
             <set field="memberContext.createdBy" from-field="userLogin.userLoginId"/>
+            <set field="memberContext.memberStatus" value="NEW"/>
+            <set field="memberContext.isActive" value="Y"/>
+            <sequenced-id sequence-name="MemberNo" field="memberContext.memberNumber"/>
         <else>
+        	<set field="partyId" from-field="parameters.partyId"/>
+        	<entity-one value-field="currentMember" entity-name="Member">
+        		<field-map field-name="partyId" from-field="partyId"/>
+        	</entity-one>
            <set field="memberContext.updatedBy" from-field="userLogin.userLoginId"/>
+           <set field="memberContext.createdBy" from-field="currentMember.createdBy"/>
+            <set field="memberContext.memberStatus" from-field="currentMember.memberStatus"/>
+            <set field="memberContext.isActive" from-field="currentMember.isActive"/>
+            <set field="memberContext.memberNumber" from-field="currentMember.memberNumber"/>
         </else>
         </if-empty>
         
-        <if-empty field="parameters.memberNumber">
-        	<sequenced-id sequence-name="MemberNo" field="memberContext.memberNumber"/>
-        </if-empty>
+       
         
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <!-- check-errors/ -->

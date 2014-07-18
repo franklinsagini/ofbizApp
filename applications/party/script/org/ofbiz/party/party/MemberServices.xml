@@ -446,4 +446,38 @@
         <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
         <remove-value value-field="memberStatusLog"/>
     </simple-method>
+    
+    <!-- Change Member Status -->
+    <simple-method method-name="createChangeMemberStatus" short-description="Create Change Member Status">
+        <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="MemberStatusLog" field="memberStatusLogId"/>
+        <set from-field="memberStatusLogId" field="newEntity.memberStatusLogId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        
+        <set field="partyId" from-field="newEntity.partyId"/>
+        <entity-one entity-name="Member" value-field="member">
+        	 <field-map field-name="partyId" from-field="partyId"/>
+        </entity-one>
+        <set from-field="newEntity.memberStatus" field="member.memberStatus"/>
+        <store-value value-field="member"/>
+    </simple-method>
+    
+    <simple-method method-name="updateChangeMemberStatus" short-description="Update Change Member Status">
+        <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
+        <set-nonpk-fields value-field="memberStatusLog" map="parameters"/>
+        <store-value value-field="memberStatusLog"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteChangeMemberStatus" short-description="Delete Change Member Status">
+        <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
+        <remove-value value-field="memberStatusLog"/>
+    </simple-method>
 </simple-methods>

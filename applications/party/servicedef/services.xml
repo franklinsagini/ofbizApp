@@ -1842,4 +1842,27 @@ under the License.
         <description>Delete MemberStatusLog</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <!-- Change Member Status -->
+    <service name="createChangeMemberStatus" engine="simple" default-entity-name="MemberStatusLog"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createChangeMemberStatus" auth="true">
+        <description>Create MemberStatusLog</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="comment" mode="IN" optional="false"></override>
+    </service>
+
+     <service name="updateChangeMemberStatus" engine="simple" default-entity-name="MemberStatusLog"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="updateChangeMemberStatus" auth="true">
+        <description>Update MemberStatusLog</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="comment" mode="IN" optional="false"></override>
+    </service>
+
+    <service name="deleteChangeMemberStatus" engine="simple" default-entity-name="MemberStatusLog"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="deleteChangeMemberStatus" auth="true">
+        <description>Delete MemberStatusLog</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 </services>

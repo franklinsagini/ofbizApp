@@ -1553,4 +1553,121 @@ under the License.
         <field name="comment" title="Comment"><display></display></field>
     </form>
     
+    <!-- Active Members -->
+    <form name="FindMemberActive" type="single" target="activemembers" default-entity-name="Member">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field>
+        <field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    <form name="activemembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="BankBranch"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="Member">
+        		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+        
+        
+        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+        
+       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+   
+       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+	     <field name="stationId" title="Station">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+        
+        <field name="memberStatus"><display also-hidden="false"></display></field>
+        
+        <field name="Edit">
+        	<hyperlink target="NewMember?partyId=${partyId}" description="Edit Member"></hyperlink>
+        </field>
+        
+        <field name="Change Member Status">
+        	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
+        </field>
+        
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
+        </field>
+     </form>
+     
+     <!-- Change Member Status -->
+     <form name="ChangeMemberStatus" type="single" target="createChangeMemberStatus"
+        focus-field-name="comment" header-row-style="header-row"  default-table-style="basic-table" default-map-name="memberStatusLogContext">
+        <field name="memberStatusLogId"><hidden/></field>
+        <field name="partyId" parameter-name="partyId"><hidden/></field>
+        <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
+        <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
+        <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
+        <field name="memberStatus" title="Member Status">
+        	<drop-down>
+        		<option key="ACTIVE" description="ACTIVE"/>
+        		<option key="SEMI-ACTIVE" description="SEMI-ACTIVE"/>
+        		<option key="INACTIVE" description="INACTIVE"/>
+        		<option key="WITHDRAWN" description="WITHDRAWN"/>
+        		<option key="REJECTED" description="REJECTED"/>
+        	</drop-down>
+        </field>
+        <field name="comment" title="Comments"><textarea/></field>
+       
+       
+        <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listChangeMemberStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberStatus" paginate-target="changeMemberStatus"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="MemberStatusLog">
+        		<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateApproveMemberLog"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <!-- field name="bankDetailsId" title="Bank">
+        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
+        </field -->
+        <field name="createdBy" title="ChangedBy"><display also-hidden="false"></display></field>
+        <field name="memberStatus" title="Status"><display also-hidden="false"></display></field>
+        <field name="comment" title="Comment"><display></display></field>
+        <field name="createdStamp" title="When"><display also-hidden="false"></display></field>
+    </form>
+    
 </forms>
