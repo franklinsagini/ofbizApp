@@ -444,6 +444,8 @@ under the License.
         <!-- set field="parameters.email" value="jodonya@gmail.com"/-->
         <set field="email" from-field="emailAddress"/>
         
+        
+        
         <now-timestamp field="nowStamp"/>
 
         <!-- Create the Member -->
@@ -514,14 +516,26 @@ under the License.
         <set from-field="visit.visitId" field="partyDataSource.visitId"/>
         
         <set field="memberContext.email" from-field="email"/>
-        <set field="memberContext.isActive" value="Y"/>
-        <set field="memberContext.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="memberContext.updatedBy" from-field="userLogin.userLoginId"/>
-        <set field="memberContext.memberStatus" from-field="NEW"/>
         
+        <if-empty field="parameters.isActive">
+            <set field="memberContext.isActive" value="Y"/>
+        </if-empty>
         
+        <if-empty field="parameters.memberStatus">
+            <set field="memberContext.memberStatus" value="NEW"/>
+        </if-empty>
         
-
+        <if-empty field="parameters.createdBy">
+            <set field="memberContext.createdBy" from-field="userLogin.userLoginId"/>
+        <else>
+           <set field="memberContext.updatedBy" from-field="userLogin.userLoginId"/>
+        </else>
+        </if-empty>
+        
+        <if-empty field="parameters.memberNumber">
+        	<sequenced-id sequence-name="MemberNo" field="memberContext.memberNumber"/>
+        </if-empty>
+        
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <!-- check-errors/ -->
 		<!--  set-service-fields service-name="createMember" map="parameters" to-map="memberContext"/ -->
