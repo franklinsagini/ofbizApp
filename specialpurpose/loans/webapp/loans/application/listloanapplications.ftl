@@ -106,7 +106,7 @@ under the License.
             <td>${applicationRow.memberNumber?if_exists}</td>
           	<td>${applicationRow.mobileNumber?if_exists}</td>
           	<td>${applicationRow.loanamt?if_exists}</td>
-          	<td>${loanStatus.name?if_exists}</td>
+          	<td>${applicationRow.applicationStatus?if_exists}</td>
           	<td>${applicationRow.selectedRepaymentPeriod?if_exists}</td>
             <td class="button-col align-float">
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Edit </a> 

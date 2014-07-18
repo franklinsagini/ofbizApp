@@ -317,5 +317,146 @@ under the License.
         <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
     
+    <!-- Loan Processing Forms -->
+    <!-- 
+    	reviewLoan
+    	listReviewLoan
+     -->
+     <form name="reviewLoan" type="single" target="createReviewLoan"
+        focus-field-name="comment" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        
+        <field name="loanStatusLogId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        
+        <field name="applicationStatus" title="Status" ><text size="30" maxlength="60" default-value="REVIEWED"/></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="submitButton" title="Post Review" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listReviewLoan" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateReviewLoan" paginate-target="loanStatusLog"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanStatusLog">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateReviewLoan"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="createdBy"><display also-hidden="false"></display> </field>
+        <field name="applicationStatus"><display also-hidden="false"></display>  </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteReviewLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusLogId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+     
+     <!-- 
+    	appraiseLoan
+    	listAppraiseLoan
+     -->
+     <form name="appraiseLoan" type="single" target="createAppraiseLoan"
+        focus-field-name="comment" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        
+        <field name="loanStatusLogId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <field name="applicationStatus" title="Status"><text size="30" maxlength="60" default-value="APPRAISED"/></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="submitButton" title="Post Appraisal" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listAppraiseLoan" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAppraiseLoan" paginate-target="loanStatusLog"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanStatusLog">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateReviewLoan"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="createdBy"><display also-hidden="false"></display> </field>
+        <field name="applicationStatus"><display also-hidden="false"></display>  </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteAppraiseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusLogId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+     
+     <!-- 
+    	approveLoan
+    	listApproveLoan
+     -->
+     <form name="approveLoan" type="single" target="createApproveLoan"
+        focus-field-name="comment" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        
+        <field name="loanStatusLogId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <field name="applicationStatus" title="Status"><text size="30" maxlength="60" default-value="APPROVED" /></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="submitButton" title="Post Approval" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listApproveLoan" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateApproveLoan" paginate-target="loanStatusLog"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanStatusLog">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateApproveLoan"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="createdBy"><display also-hidden="false"></display> </field>
+        <field name="applicationStatus"><display also-hidden="false"></display>  </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteApproveLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusLogId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+     <!-- 
+    	disburseLoan
+    	listDisburseLoan
+     -->
+    
+     <form name="disburseLoan" type="single" target="createDisburseLoan"
+        focus-field-name="comment" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        
+        <field name="loanStatusLogId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <field name="applicationStatus" title="Status"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listDisburseLoan" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDisburseLoan" paginate-target="loanStatusLog"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanStatusLog">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateDisburseLoan"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="createdBy"><display also-hidden="false"></display> </field>
+        <field name="applicationStatus"><display also-hidden="false"></display>  </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteDisburseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusLogId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
    
 </forms>
