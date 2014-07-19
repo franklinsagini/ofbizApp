@@ -49,7 +49,7 @@ under the License.
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
-
+	<request-map uri="FindLoanApplication"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanApplication"/></request-map>
     <!-- Example Requests -->
     <request-map uri="FindExample"><security https="true" auth="true"/><response name="success" type="view" value="FindExample"/></request-map>
     <request-map uri="EditExample"><security https="true" auth="true"/><response name="success" type="view" value="EditExample"/></request-map>
@@ -525,6 +525,165 @@ under the License.
 			</response>
 		<response name="error" type="view" value="viewapplicationprofile" />
 	</request-map>
+	
+
+
+
+	<!-- ReviewLoan CRUD  -->
+	
+	<request-map uri="createReviewLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createReviewLoan" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="reviewLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="reviewLoan" />
+	</request-map>
+	
+	<request-map uri="updateReviewLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateReviewLoan" />
+		<response name="success" type="request-redirect"
+			value="reviewLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="reviewLoan" />
+	</request-map>
+	
+	<request-map uri="deleteReviewLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteReviewLoan" />
+		<response name="success" type="request-redirect"
+			value="reviewLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="reviewLoan" />
+	</request-map>
+
+
+	<!-- AppraiseLoan CRUD  -->
+	
+
+	<request-map uri="createAppraiseLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createAppraiseLoan" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="appraiseLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="appraiseLoan" />
+	</request-map>
+	
+	<request-map uri="updateAppraiseLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateAppraiseLoan" />
+		<response name="success" type="request-redirect"
+			value="appraiseLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="appraiseLoan" />
+	</request-map>
+	
+	<request-map uri="deleteAppraiseLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteAppraiseLoan" />
+		<response name="success" type="request-redirect"
+			value="appraiseLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="appraiseLoan" />
+	</request-map>
+	<!-- ApproveLoan CRUD  -->
+	<request-map uri="createApproveLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createApproveLoan" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="approveLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="approveLoan" />
+	</request-map>
+	
+	<request-map uri="updateApproveLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateApproveLoan" />
+		<response name="success" type="request-redirect"
+			value="approveLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="approveLoan" />
+	</request-map>
+	
+	<request-map uri="deleteApproveLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteApproveLoan" />
+		<response name="success" type="request-redirect"
+			value="approveLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="approveLoan" />
+	</request-map>
+	
+	<!-- DisburseLoan CRUD  -->
+	<request-map uri="createDisburseLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createDisburseLoan" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="disburseLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="disburseLoan" />
+	</request-map>
+	
+	<request-map uri="updateDisburseLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateDisburseLoan" />
+		<response name="success" type="request-redirect"
+			value="disburseLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="disburseLoan" />
+	</request-map>
+	
+	<request-map uri="deleteDisburseLoan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteDisburseLoan" />
+		<response name="success" type="request-redirect"
+			value="disburseLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="disburseLoan" />
+	</request-map>
+	
+	<!-- Loan Processing -->
+	<request-map uri="reviewLoan">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="reviewLoan"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="appraiseLoan">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="appraiseLoan"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="approveLoan">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="approveLoan"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="disburseLoan">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="disburseLoan"
+			save-home-view="true" />
+	</request-map>
 	<!-- End Loan Applications Guarantor -->
 	
     <!-- end of request mappings -->
@@ -533,8 +692,6 @@ under the License.
     <!--  view-map name="main" type="screen" page="component://loans/widget/loans/CommonScreens.xml#main"/ -->
     <view-map name="main" type="screen" page="component://loans/widget/loans/LoanScreens.xml#loanapplicationslist"/>
     
-
-    <view-map name="FindExample" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#FindExample"/>
     <view-map name="EditExample" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#EditExample"/>
     <view-map name="EditExampleLayer" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#EditExampleLayer"/>
     <view-map name="EditExampleItems" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#EditExampleItems"/>
@@ -593,6 +750,24 @@ under the License.
 		
 	<view-map name="viewapplicationprofile" type="screen"
 		page="component://loans/widget/loans/LoanScreens.xml#viewapplicationprofile" />
+		
+		
+	<!-- Loan Processing -->
+		<view-map name="reviewLoan" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#reviewLoan" />
+		
+		<view-map name="appraiseLoan" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#appraiseLoan" />
+		
+		<view-map name="approveLoan" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#approveLoan" />
+		
+		<view-map name="disburseLoan" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#disburseLoan" />
+		
+		
+    <view-map name="FindLoanApplication" type="screen" page="component://loans/widget/loans/LoanScreens.xml#FindLoanApplication"/>
+		
 		
     <!-- Supported Content Types -->
     <!--

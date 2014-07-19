@@ -158,7 +158,7 @@ under the License.
     <!-- End Creating Loan Account -->
     
     <!-- Start Create Loan Application -->
-    <simple-method method-name="createLoanApplication" short-description="Loan Application" login-required="false">
+    <simple-method method-name="createLoanApplication" short-description="Loan Application" login-required="true">
     	<set field="parameters.roleTypeId" value="MEMBER"/>
     	<set field="require_email" value="false"/>
         <set field="require_phone" value="false"/>
@@ -181,6 +181,25 @@ under the License.
         <!-- check-errors/ -->
 		<!--  set-service-fields service-name="createMember" map="parameters" to-map="memberContext"/ -->
 		<set-service-fields service-name="createLoanApplication" to-map="applicationContext" map="parameters"/>
+		
+		<if-empty field="parameters.loanApplicationId">
+            <set field="applicationContext.createdBy" from-field="userLogin.userLoginId"/>
+            <set field="applicationContext.applicationStatus" value="NEW"/>
+            <set field="applicationContext.isActive" value="Y"/>
+            <sequenced-id field="applicationContext.loanNo" sequence-name="LoanNumber" stagger-max="1" />
+            
+        <else>
+        	<set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+        	<entity-one value-field="currentApplication" entity-name="LoanApplication">
+        		<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        	</entity-one>
+           <set field="applicationContext.updatedBy" from-field="userLogin.userLoginId"/>
+           <set field="applicationContext.createdBy" from-field="currentApplication.createdBy"/>
+            <set field="applicationContext.applicationStatus" from-field="currentApplication.applicationStatus"/>
+            <set field="applicationContext.isActive" from-field="currentApplication.isActive"/>
+            <set field="applicationContext.loanNo" from-field="currentApplication.loanNo"/>
+        </else>
+        </if-empty>
         <call-service service-name="createLoanApplication" in-map-name="applicationContext">
             <result-to-field result-name="loanApplicationId" field="tempMap.loanApplicationId"/>
            <result-to-field result-name="loanApplicationId" field="loanApplicationId"/>
@@ -188,7 +207,6 @@ under the License.
 
         <!-- now that we have the partyId, put it where it needs to go... -->
         <set field="applicationContext.loanApplicationId" from-field="tempMap.loanApplicationId"/>
-        
     </simple-method>
     <!-- End Create Loan Application -->
 

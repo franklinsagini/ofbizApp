@@ -270,8 +270,13 @@ under the License.
         
         <field name="payPointId"><hidden/></field>
         <field name="partyId" parameter-name="partyId"><hidden/></field>
-        <field name="staffNo" title="Staff No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="20"/></field>
-        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <!-- field name="staffNo" title="Staff No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="20"/></field>
+        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+         <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
         <field name="bankDetailsId" title="Bank">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="bankList" key-name="bankDetailsId" description="${bankName}"/>
@@ -323,8 +328,13 @@ under the License.
         <!-- field name="bankDetailsId" title="Bank">
         	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
         </field -->
-        <field name="staffNo" title="Staff No." ><text size="30" maxlength="20"/></field>
-        <field name="staffName" title="Staff Name" ><text size="30" maxlength="60"/></field>
+        <!-- field name="staffNo" title="Staff No." ><text size="30" maxlength="20"/></field>
+        <field name="staffName" title="Staff Name" ><text size="30" maxlength="60"/></field -->
+         <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
         <field name="bankDetailsId" title="Bank">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="bankList" key-name="bankDetailsId" description="${bankName}"/>
@@ -575,6 +585,53 @@ under the License.
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteStaffPayrollElements" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="staffPayrollElementsId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- Stations -->
+    <form name="NewStation" type="single" target="createStation"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="bankBranchContext">
+        
+
+        <field name="stationId"><hidden/></field>
+        <field name="stationNumber" title="Station No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="employerId" title="Employer" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <drop-down allow-empty="true">
+        	<list-options key-name="employerId" list-name="employerList"  description="${name}"/>
+        </drop-down>
+        </field>
+        
+        
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+      <form name="listStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="BankBranch"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="Station"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStation"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <!-- field name="bankDetailsId" title="Bank">
+        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
+        </field -->
+        <field name="stationNumber" title="Station No"><text size="30" maxlength="60"/></field>
+        <field name="name" title="Name"><text size="30" maxlength="60"/></field>
+        <field name="employerId" title="Employer">
+        <drop-down allow-empty="true">
+        	<list-options key-name="employerId" list-name="employerList"  description="${name}"/>
+        </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStation" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="stationId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>

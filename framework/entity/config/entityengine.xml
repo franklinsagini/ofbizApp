@@ -54,7 +54,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false">
         <!-- group-map group-name="org.ofbiz" datasource-name="localderby"/ -->
 		
-		<group-map group-name="org.ofbiz" datasource-name="localpostgres"/>
+		<!--  group-map group-name="org.ofbiz" datasource-name="localpostgres"/ -->
+		<group-map group-name="org.ofbiz" datasource-name="localmssql"/>
+		
         <group-map group-name="org.ofbiz.olap" datasource-name="localderbyolap"/>
         <group-map group-name="org.ofbiz.tenant" datasource-name="localderbytenant"/>
     </delegator>
@@ -703,7 +705,34 @@ access. For a detailed description see the core/docs/entityconfig.html file.
      b. If using an old version of the driver, beware of this resource leak:
       http://support.microsoft.com/kb/820773/
     -->
-    <datasource name="localmssql"
+        <datasource name="localmssql"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            schema-name="dbo"
+            field-type-name="mssql"
+            check-on-start="true"
+            add-missing-on-start="true"
+            join-style="ansi"
+            alias-view-columns="false"
+            use-fk-initially-deferred="false">
+        <read-data reader-name="tenant"/>
+        <read-data reader-name="seed"/>
+        <read-data reader-name="seed-initial"/>
+        <read-data reader-name="demo"/>
+        <read-data reader-name="ext"/>
+        <read-data reader-name="ext-test"/>
+        <read-data reader-name="ext-demo"/>
+        <inline-jdbc
+                jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                jdbc-uri="jdbc:sqlserver://localhost:1433;databaseName=vergesacco;SelectMethod=cursor;"
+                jdbc-username="vergeuser"
+                jdbc-password="vergeuser2014"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="250"
+                time-between-eviction-runs-millis="600000"/>
+        
+    </datasource>
+    <!-- datasource name="localmssql"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             schema-name="dbo"
             field-type-name="mssql"
@@ -728,8 +757,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 pool-minsize="2"
                 pool-maxsize="250"
                 time-between-eviction-runs-millis="600000"/>
-        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localmssql" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
-    </datasource>
+        
+    </datasource -->
+    <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localmssql" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
 
     <datasource name="localp6spy"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"

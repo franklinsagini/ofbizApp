@@ -219,6 +219,10 @@ under the License.
 		title="Loan Application Entity" sequence-bank-size="1">
 		<field name="loanApplicationId" type="id-ne"></field>
 		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
 		<field name="loanNo" type="name"></field>
 		<field name="loanNoSeq" type="name"></field>
 		<field name="partyId" type="id-ne"></field>
@@ -260,6 +264,8 @@ under the License.
 		<field name="nextInstallmentDate" type="date-time"></field>
 		
 		<field name="isOpeningBalance" type="name"></field>
+		
+		<field name="applicationStatus" type="name"></field>
 		
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
@@ -395,6 +401,38 @@ under the License.
       
        <relation type="one" fk-name="MEMBERSHARE_MEMBER" rel-entity-name="Member">
         <key-map field-name="partyId"/>
+      </relation>
+	</entity>
+	
+	<entity entity-name="LoanStatusLog" package-name="org.ofbiz.loans"
+		title="LoanStatusLog Entity">
+		<field name="loanStatusLogId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="applicationStatus" type="name"></field>
+		<field name="comment" type="name"></field>
+		
+		<field name="branchId" type="name"></field>
+		
+		<prim-key field="loanStatusLogId"/>
+		<!-- relation type="one" fk-name="LoanStatusLog_MemberCreate" title="Parent" rel-entity-name="Member">
+        <key-map field-name="createdBy" rel-field-name="partyId"/>
+      </relation>
+      
+      <relation type="one" fk-name="LoanStatusLog_MemberUpdate" title="Parent" rel-entity-name="Member">
+        <key-map field-name="updatedBy" rel-field-name="partyId"/>
+      </relation -->
+      
+       <relation type="one" fk-name="LoanStatusLog_LoanApp" rel-entity-name="LoanApplication">
+        <key-map field-name="loanApplicationId"/>
+      </relation>
+      
+      <relation type="one" fk-name="LoanStatusLog_branch" rel-entity-name="PartyGroup">
+        <key-map field-name="branchId" rel-field-name="partyId"/>
       </relation>
 	</entity>
 	

@@ -168,7 +168,8 @@ under the License.
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+                <entity-condition entity-name="Person" list="personList">
+        		</entity-condition>
                 <entity-one entity-name="PayPoint" value-field="payPointContext"/>
             </actions>
             <widgets>
@@ -377,6 +378,55 @@ under the License.
                         	<widgets>
                         		<screenlet title="Staff Payroll Element List">
                         			<include-form name="listStaffPayrollElements" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- New Station -->
+    <screen name="NewStation">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Station"/>
+                <set field="headerItem" value="station"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createStation"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="stationId" from-field="parameters.stationId"/>
+                
+                <entity-one entity-name="Station" value-field="stationContext"/>
+                <entity-condition list="employerList" entity-name="Employer">
+                	<order-by field-name="name"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Station">
+                                    <include-form name="NewStation" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Stations List">
+                        			<include-form name="listStations" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

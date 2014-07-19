@@ -130,6 +130,7 @@ under the License.
         <key-map field-name="attrName"/>
       </relation>
     </entity>
+
     <entity entity-name="BudgetItem"
             package-name="org.ofbiz.accounting.budget"
             title="Budget Item Entity">
@@ -139,6 +140,7 @@ under the License.
       <field name="amount" type="currency-amount"></field>
       <field name="purpose" type="long-varchar"></field>
       <field name="justification" type="long-varchar"></field>
+      <field name="glAccountId" type="id"></field>
       <prim-key field="budgetId"/>
       <prim-key field="budgetItemSeqId"/>
       <relation type="one" fk-name="BDGTITM_TO_BDGT" rel-entity-name="Budget">
@@ -150,7 +152,11 @@ under the License.
       <relation type="many" rel-entity-name="BudgetItemTypeAttr">
         <key-map field-name="budgetItemTypeId"/>
       </relation>
+      <relation type="one" fk-name="BUDG_ITM_GLAC" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
+    </relation>
     </entity>
+
     <entity entity-name="BudgetItemAttribute"
             package-name="org.ofbiz.accounting.budget"
             title="Budget Item Attribute Entity">
@@ -2116,7 +2122,7 @@ under the License.
       <relation type="one" fk-name="GLACCT_PAR" title="Parent" rel-entity-name="GlAccount">
         <key-map field-name="parentGlAccountId" rel-field-name="glAccountId"/>
       </relation>
-      <index name="GLACCT_UNQCD" unique="true">
+      <index name="GLACCT_UNQCD" unique="false">
         <index-field name="accountCode"/>
       </index>
     </entity>

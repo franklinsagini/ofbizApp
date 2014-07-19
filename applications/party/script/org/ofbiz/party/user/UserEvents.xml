@@ -434,76 +434,60 @@ under the License.
     
     
     <!-- START Creating a member starts here -->
-    	<simple-method method-name="createSaccoMember" short-description="Create Sacco Member" login-required="false">
+    	<simple-method method-name="createSaccoMember" short-description="Create Sacco Member" login-required="true">
     	<set field="parameters.roleTypeId" value="MEMBER"/>
     	<set field="require_email" value="false"/>
         <set field="require_phone" value="false"/>
         <set field="parameters.email" from-field="emailAddress"/>
+        <set field="isActive" value="Y"/>
+        <set field="createdBy" from-field="userLogin.userLoginId"/>
         <!-- set field="parameters.email" value="jodonya@gmail.com"/-->
         <set field="email" from-field="emailAddress"/>
-        <!--  set field="FIRSTNAME" from-field="firstName"/>
-        <set field="MIDDLENAME" from-field="middleName"/>
-        <set field="LASTNAME" from-field="lastName"/>
-        <set field="SALUTATION" from-field="salutation"/>
-        <set field="GENDER" from-field="gender"/>
-        <set field="MARITALSTATUS" from-field="maritalStatus"/>
-        <set field="IDNUMBER" from-field="idNumber"/>
-        <set field="PINNUMBER" from-field="pinNumber"/>
-        <set field="PASSPORTNUMBER" from-field="passportNumber"/>
-        <set field="PHYSICALADDRESS" from-field="physicalAddress"/>
-        <set field="POSTALADDRESS" from-field="postalAddress"/>
-        <set field="MEMBERCLASS" from-field="memberClass"/>
-        <set field="MEMBERTYPE" from-field="memberType"/>
-        <set field="EMPLOYEENUMBER" from-field="employeeNumber"/>
-        <set field="EMPLOYEETYPE" from-field="employeeType"/>
-        <set field="PAYROLLNUMBER" from-field="payrollNumber"/>
-        <set field="MEMBERNUMBER" from-field="memberNumber"/>
-        <set field="MOBILENUMBER" from-field="mobileNumber"/>
-        <set field="DATEOFBIRTH" from-field="birthDate"/>
-        <set field="PERMANENTADDRESS" from-field="permanentAddress"/>
-        <set field="CURRENTADDRESS" from-field="currentAddress"/>
-        <set field="COUNTRYOFRESIDENCE" from-field="countryOfResidence"/>
-        <set field="CITIZENSHIP" from-field="citizenship"/>
-        <set field="MEMBERSHIPOFOTHERSACCO" from-field="membershipofOtherSacco"/ -->
+        
+        
+        
         <now-timestamp field="nowStamp"/>
 
         <!-- Create the Member -->
         <call-map-processor in-map-name="parameters" out-map-name="memberContext">
             <simple-map-processor name="newMember">
-                <process field="firstName"><copy to-field="firstName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty></process>
+                <!-- process field="firstName"><copy to-field="firstName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty></process>
                 <process field="middleName"><copy to-field="middleName"/></process>
-                <process field="lastName"><copy to-field="lastName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty></process>
-                <!-- process field="SALUTATION"><copy to-field="salutation"/></process>
-                <process field="GENDER"><copy to-field="gender"/></process>
-                <process field="MARITALSTATUS"><copy to-field="maritalStatus"/></process>
-                <process field="IDNUMBER"><copy to-field="idNumber"/></process>
-                <process field="PINNUMBER"><copy to-field="pinNumber"/></process>
-                <process field="PASSPORTNUMBER"><copy to-field="passportNumber"/></process>
-                <process field="EMAIL"><copy to-field="email"/></process>
-                <process field="PHYSICALADDRESS"><copy to-field="physicalAddress"/></process>
-                <process field="POSTALADDRESS"><copy to-field="postalAddress"/></process>
-                <process field="MEMBERCLASS"><copy to-field="memberClass"/></process>
-                <process field="MEMBERTYPE"><copy to-field="memberType"/></process>
-                <process field="EMPLOYEENUMBER"><copy to-field="employeeNumber"/></process>
-                <process field="EMPLOYEETYPE"><copy to-field="employeeType"/></process>
-                <process field="PAYROLLNUMBER"><copy to-field="payrollNumber"/></process>
-                <process field="MEMBERNUMBER"><copy to-field="memberNumber"/></process>
-                <process field="MOBILENUMBER"><copy to-field="mobileNumber"/></process>
-                <process field="DATEOFBIRTH"><copy to-field="birthDate"/><not-empty><fail-property resource="PartyUiLabels" property="PartyBirthDateMissingError"/></not-empty></process>
-                <process field="PERMANENTADDRESS"><copy to-field="permanentAddress"/></process>
-                <process field="CURRENTADDRESS"><copy to-field="currentAddress"/></process>
-                <process field="COUNTRYOFRESIDENCE"><copy to-field="countryOfResidence"/></process>
-                <process field="CITIZENSHIP"><copy to-field="citizenship"/></process>
-                <process field="MEMBERSHIPOFOTHERSACCO"><copy to-field="membershipofOtherSacco"/></process -->
-                <!-- process field="birthdate"><copy to-field="birthDate"/><not-empty><fail-property resource="PartyUiLabels" property="PartyBirthDateMissingError"/></not-empty></process -->
-                                                                                
-                <!-- process field="USER_MIDDLE_NAME"><copy to-field="middleName"/></process>
-                <process field="USER_LAST_NAME"><copy to-field="lastName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty></process>
-                <process field="USER_TITLE"><copy to-field="personalTitle"/></process>
-                <process field="USER_SUFFIX"><copy to-field="suffix"/></process>
-                <process field="USER_BIRTHDATE"><convert type="Date" to-field="birthDate"><fail-property resource="PartyUiLabels" property="PartyBirthDateMissingError"/></convert></process>
-                <process field="USER_DECEASEDDATE"><convert type="Date" to-field="deceasedDate"><fail-property resource="PartyUiLabels" property="PartyDeceasedDateMissingError"/></convert></process>
-                <process field="USER_GENDER"><copy to-field="gender"/></process -->
+                <process field="lastName"><copy to-field="lastName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty></process -->
+               <process field="partyId"><copy to-field="partyId"/></process>
+               <process field="firstName"><copy to-field="firstName"/></process>
+               <process field="middleName"><copy to-field="middleName"/></process>
+               <process field="lastName"><copy to-field="lastName"/></process>
+               <process field="salutation"><copy to-field="salutation"/></process>
+               <process field="gender"><copy to-field="gender"/></process>
+               <process field="maritalStatus"><copy to-field="maritalStatus"/></process>
+               <process field="idNumber"><copy to-field="idNumber"/></process>
+               <process field="pinNumber"><copy to-field="pinNumber"/></process>
+               <process field="passportNumber"><copy to-field="passportNumber"/></process>
+               <process field="email"><copy to-field="email"/></process>
+               <process field="emailAddress"><copy to-field="emailAddress"/></process>
+               <process field="physicalAddress"><copy to-field="physicalAddress"/></process>
+               <process field="postalAddress"><copy to-field="postalAddress"/></process>
+               <process field="memberClass"><copy to-field="memberClass"/></process>
+               <process field="memberType"><copy to-field="memberType"/></process>
+               <process field="employeeNumber"><copy to-field="employeeNumber"/></process>
+               <process field="employeeType"><copy to-field="employeeType"/></process>
+               <process field="payrollNumber"><copy to-field="payrollNumber"/></process>
+               <process field="memberNumber"><copy to-field="memberNumber"/></process>
+               <process field="mobileNumber"><copy to-field="mobileNumber"/></process>
+               <process field="birthDate"><convert type="Date"><fail-message message="Not a Valid Date"/></convert></process>
+               <process field="permanentAddress"><copy to-field="permanentAddress"/></process>
+               <process field="currentAddress"><copy to-field="currentAddress"/></process>
+               <process field="countryOfResidence"><copy to-field="countryOfResidence"/></process>
+               <process field="country"><copy to-field="country"/></process>
+               <process field="citizenship"><copy to-field="citizenship"/></process>
+               <process field="membershipofOtherSacco"><copy to-field="membershipofOtherSacco"/></process>
+               <process field="joinDate"><convert type="Date"> <fail-message message="Not a Date"/></convert></process>
+               <process field="registrationFee"><convert type="BigDecimal"> <fail-message message="Not a Big Decimal"/></convert></process>
+               <process field="paidAmount" > <convert type="BigDecimal"> <fail-message message="Not Big Decimal"/> </convert></process>
+               <process field="branchId"><copy to-field="branchId"/></process>
+               <process field="stationId"><copy to-field="stationId"/></process>
+               <process field="memberStatus"><copy to-field="memberStatus"/></process>
             </simple-map-processor>
         </call-map-processor>
 
@@ -533,28 +517,38 @@ under the License.
         
         <set field="memberContext.email" from-field="email"/>
         
-
+       
+        
+        <if-empty field="parameters.partyId">
+            <set field="memberContext.createdBy" from-field="userLogin.userLoginId"/>
+            <set field="memberContext.memberStatus" value="NEW"/>
+            <set field="memberContext.isActive" value="Y"/>
+            <sequenced-id sequence-name="MemberNo" field="memberContext.memberNumber"/>
+        <else>
+        	<set field="partyId" from-field="parameters.partyId"/>
+        	<entity-one value-field="currentMember" entity-name="Member">
+        		<field-map field-name="partyId" from-field="partyId"/>
+        	</entity-one>
+           <set field="memberContext.updatedBy" from-field="userLogin.userLoginId"/>
+           <set field="memberContext.createdBy" from-field="currentMember.createdBy"/>
+            <set field="memberContext.memberStatus" from-field="currentMember.memberStatus"/>
+            <set field="memberContext.isActive" from-field="currentMember.isActive"/>
+            <set field="memberContext.memberNumber" from-field="currentMember.memberNumber"/>
+        </else>
+        </if-empty>
+        
+       
+        
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <!-- check-errors/ -->
 		<!--  set-service-fields service-name="createMember" map="parameters" to-map="memberContext"/ -->
-		<set-service-fields service-name="createSaccoMember" to-map="memberContext" map="parameters"/>
+		<!--  set-service-fields service-name="createSaccoMember" to-map="memberContext" map="parameters"/ -->
         <call-service service-name="createSaccoMember" in-map-name="memberContext">
+        	
             <result-to-field result-name="partyId" field="tempMap.partyId"/>
            <result-to-field result-name="partyId" field="partyId"/>
         </call-service>
-
-        <!-- now that we have the partyId, put it where it needs to go... -->
-        <!--  set field="partyDataSource.partyId" from-field="tempMap.partyId"/ -->
         <set field="memberContext.partyId" from-field="tempMap.partyId"/>
-        <!-- set field="partyRoleContext.partyId" from-field="tempMap.partyId"/ -->
-        
-
-        
-
-        <!--  create-value value-field="partyDataSource"/ -->
-        <!-- call-service service-name="createPartyRole" in-map-name="partyRoleContext"/ -->
-
-
     </simple-method>
     <!-- END Creating a member ends here -->
 

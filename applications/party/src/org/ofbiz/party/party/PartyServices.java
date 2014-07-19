@@ -2653,6 +2653,12 @@ public class PartyServices {
 						dynamicView.addMemberEntity("ME", "Member");
 						dynamicView.addAlias("ME", "firstName");
 						dynamicView.addAlias("ME", "lastName");
+						dynamicView.addAlias("ME", "memberNumber");
+						dynamicView.addAlias("ME", "payrollNumber");
+						dynamicView.addAlias("ME", "gender");
+						dynamicView.addAlias("ME", "idNumber");
+						dynamicView.addAlias("ME", "stationId");
+						dynamicView.addAlias("ME", "memberStatus");
 						dynamicView.addAlias("ME", "emailAddress");
 						dynamicView.addAlias("ME", "partyId");
 						dynamicView.addViewLink("PT", "ME", Boolean.FALSE,
@@ -2661,9 +2667,18 @@ public class PartyServices {
 						fieldsToSelect.add("firstName");
 						fieldsToSelect.add("lastName");
 						fieldsToSelect.add("emailAddress");
+						
+						fieldsToSelect.add("memberNumber");
+						fieldsToSelect.add("payrollNumber");
+						fieldsToSelect.add("gender");
+						fieldsToSelect.add("idNumber");
+						fieldsToSelect.add("stationId");
+						fieldsToSelect.add("memberStatus");
+						fieldsToSelect.add("emailAddress");
+						fieldsToSelect.add("partyId");
+						
 
-						orderBy.add("firstName");
-						orderBy.add("lastName");
+						orderBy.add("partyId");
 					}
 
 					// ----

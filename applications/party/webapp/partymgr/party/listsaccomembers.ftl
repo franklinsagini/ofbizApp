@@ -209,9 +209,9 @@ under the License.
         </table>
       </form -->
     </div>
-    <script language="JavaScript" type="text/javascript">
+    <!-- script language="JavaScript" type="text/javascript">
       document.lookupparty.partyId.focus();
-    </script>
+    </script -->
 
   <#if partyList?exists>
     <#if hideFields != "Y">
@@ -223,11 +223,17 @@ under the License.
     <#if partyList?has_content>
       <table class="basic-table hover-bar" cellspacing="0">
         <tr class="header-row-2">
-          <td>${uiLabelMap.PartyPartyId}</td>
-          <td>${uiLabelMap.PartyType}</td>
+          <#--  td>${uiLabelMap.PartyPartyId}</td>
+          <td>${uiLabelMap.PartyType}</td  -->
+          <td>Member No.</td>
+          <td>Payroll No.</td>
           <td>First Name</td>
           <td>Last Name</td>
-          <td>Email</td>
+          <td>Gender</td>
+          <td>ID No.</td>
+          <td>Station</td>
+          <td>Status</td>
+          <td>Phone No.</td>
           <td>&nbsp;</td>
         </tr>
         <#assign alt_row = false>
@@ -235,9 +241,11 @@ under the License.
         <#list partyList as partyRow>
           <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
           <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            <td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td>
+          
+            <!-- td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td -->
+            <#-- td><a href="<@ofbizUrl>memberAttachments?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></td>
            
-            <#if partyType?exists>
+            <#if partyType?exists -->
               <!-- td>
                   <#if partyType.partyTypeId?has_content && partyType.partyTypeId=="PERSON">
                        <#assign partyRelateCom = delegator.findByAnd("PartyRelationship", {"partyIdTo", partyRow.partyId,"roleTypeIdFrom","ACCOUNT","roleTypeIdTo","CONTACT"})>
@@ -251,12 +259,19 @@ under the License.
                        </#if>
                   </#if>
               </td -->
-              <td><#if partyType.description?exists>${partyType.get("description", locale)}<#else>???</#if></td>
+              <#-- td><#if partyType.description?exists>${partyType.get("description", locale)}<#else>???</#if></td>
            <#else>
             <td></td><td></td>
-           </#if>
+           </#if -->
+           <td>${partyRow.memberNumber?if_exists}</td>
+           <td>${partyRow.payrollNumber?if_exists}</td>
             <td>${partyRow.firstName?if_exists}</td>
           	<td>${partyRow.lastName?if_exists}</td>
+          	<td>${partyRow.gender?if_exists}</td>
+          	<td>${partyRow.idNumber?if_exists}</td>
+          	<#-- assign station = partyRow.getRelatedOne("Station")?if_exists -->
+          	<td>${partyRow.stationId?if_exists}</td>
+          	<td>${partyRow.memberStatus?if_exists}</td>
           	<td>${partyRow.emailAddress?if_exists}</td>
             <td class="button-col align-float">
             	<a href="<@ofbizUrl>NewMember?partyId=${partyRow.partyId}</@ofbizUrl>">Edit </a> 
