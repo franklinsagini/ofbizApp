@@ -6,8 +6,10 @@
   <table>
   
   	<tr><td></td><td><input type="hidden" name="loanApplicationId" /></td></tr>
-  	<tr><td>Member</td><td>
   	<#if applicationContext?exists>
+  	<tr><td>Loan No.</td><td><input type="text" name="loanNo" value="${applicationContext.loanNo?if_exists}" readonly /></td></tr>
+  	<tr><td>Member</td><td>
+  	
   	<!-- select>
  		<option value="1000">Japheth Odonya</option>
   		<option value="1002">Philemon Samoei</option>
@@ -53,7 +55,7 @@
                 </#if>
               </#list>
 	</select></td></tr>
-	<tr><td>Status</td><td><select name="loanStatusId">
+	<!-- tr><td>Status</td><td><select name="loanStatusId">
 		<#assign aloanStatus = applicationContext.getRelatedOne("LoanStatus")?if_exists>
 		<option value="${applicationContext.loanStatusId?if_exists}">${aloanStatus.name?if_exists}</option>
  		<#list loanStatusList as loanStatus>
@@ -61,10 +63,21 @@
                 <option value="${loanStatus.loanStatusId}">${loanStatus.name} </option>
                 </#if>
               </#list>
-	</select></td></tr>
+	</select></td></tr -->
+	<tr><td>Status</td>
+           <td>
+           <select name="applicationStatus" >
+           <option value="${applicationContext.applicationStatus?if_exists}">${applicationContext.applicationStatus?if_exists}</option>
+           <option value="REVIEWED">REVIEWED</option>
+           <option value="APPRAISED">APPRAISED</option>
+           <option value="APPROVED">APPROVED</option>
+           <option value="DISBURSED">DISBURSED</option>
+           </select>
+           </td></tr> 
 	
 	<#else>
-	
+	<tr><td>Loan No.</td><td><input type="text" name="loanNo" value="**GENERATED**" readonly /></td></tr>
+  	<tr><td>Member</td><td>
 	  <select name="partyId">
 	    	  <option value="">Select member ...</option>
               <#list membersList as member>
@@ -105,7 +118,11 @@
                 </#if>
               </#list>
 	</select></td></tr>
-	<tr><td>Status</td><td><input type="text" name="applicationStatus" value="NEW" readonly /></td></tr>
+	<#-- if applicationContext?exists -->
+               
+        <#-- else -->
+     <tr><td>Status</td><td><input type="text" name="applicationStatus" value="NEW" readonly /></td></tr>
+     <#-- /#if -->
 	<!-- option value="">Select Status</option -->
 	<#-- tr><td>Status</td><td><select name="loanStatusId">
 		
