@@ -489,15 +489,18 @@ under the License.
         <actions>
             <entity-condition entity-name="StaffPayroll">
             </entity-condition>
-            <!--entity-condition entity-name="StaffPayroll">
-            	<condition-expr field-name="payrollPeriodId" from-field="payrollPeriodId"/>
-            </entity-condition-->
+           <entity-condition entity-name="PayrollPeriod" list="periodList">
+            </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStaffPayroll"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
-        <field name="payrollPeriodId" title="Payroll Period"> <text></text> </field>
+        <field name="payrollPeriodId" title="Payroll Period"> 
+        	<drop-down>
+        		<list-options key-name="payrollPeriodId" list-name="periodList" description="${name}"/>
+        	</drop-down>
+         </field>
         <field name="staffNo"> <text></text> </field>
         <field name="staffName"> <text></text> </field>
        
@@ -546,7 +549,9 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StaffPayrollElements">
-            	<condition-expr field-name="staffPayrollId" from-field="staffPayrollId"/>
+            	<condition-expr field-name="staffPayrollId" operator="equals" from-field="staffPayrollId"/>
+            </entity-condition>
+            <entity-condition entity-name="PayrollElement" list="payrollElementList">
             </entity-condition>
 
         </actions>
@@ -558,7 +563,11 @@ under the License.
         	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
         </field -->
         <field name="payrollYearId"> <hidden/> </field>
-        <field name="payrollElementId" title="Payroll Element"> <text></text> </field>
+        <field name="payrollElementId" title="Payroll Element"> 
+        	<drop-down>
+        		<list-options key-name="payrollElementId" list-name="payrollElementList" description="${name}"/>
+        	</drop-down>
+        </field>
         <field name="amount"> <text></text> </field>
         <field name="balance"> <text></text> </field>
         <field name="recurrencyExpiry"><date-time/></field>

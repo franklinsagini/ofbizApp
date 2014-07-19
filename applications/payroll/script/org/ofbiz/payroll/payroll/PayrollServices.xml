@@ -182,6 +182,8 @@ under the License.
         <entity-one entity-name="StaffPayroll" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
+        
+        
     </simple-method>
     
     <simple-method method-name="deleteStaffPayroll" short-description="Delete Staff Payroll">
@@ -198,6 +200,8 @@ under the License.
         <sequenced-id sequence-name="StaffPayrollElements" field="staffPayrollElementsId"/>
         <now-timestamp field="newEntity.createdDate"/>
         <set from-field="staffPayrollElementsId" field="newEntity.staffPayrollElementsId"/>
+        
+        <set  value="N" field="newEntity.valueChanged"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -205,6 +209,7 @@ under the License.
     <simple-method method-name="updateStaffPayrollElements" short-description="Update Staff Payroll Element">
         <entity-one entity-name="StaffPayrollElements" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+         <set value="Y" field="newEntity.valueChanged"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     
