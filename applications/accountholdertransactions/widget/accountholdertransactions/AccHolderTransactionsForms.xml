@@ -81,7 +81,9 @@ under the License.
 	default-table-style="basic-table" default-map-name="cashDepositContext">
         
         <actions>
-        	
+        	<entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
         	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
         </actions>
         <field name="cashDepositId"><hidden/></field>
@@ -155,7 +157,7 @@ under the License.
 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		<field name="partyId" title="Member">
         	<drop-down>
-        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field>
         <field name="chequeNo" title="Cheque No"><text></text></field>
@@ -351,12 +353,12 @@ under the License.
 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		<field name="partyId" title="Member">
         	<drop-down>
-        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field>
         <field name="memberAccountId" title="Member Account">
         	<drop-down allow-empty="false">
-        		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${AccountNo}"/>
+        		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${accountNo}"/>
         	</drop-down>
         </field>
         <field name="accountNo" title="Account No"><text></text></field>
@@ -458,7 +460,7 @@ under the License.
 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		<field name="partyId" title="Member">
         	<drop-down>
-        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field>
         <field name="memberNo" title="Member No"><text></text></field>
@@ -499,7 +501,7 @@ under the License.
 		 
 		 <field name="memberAccountId" title="Member Account">
 		 	<drop-down>
-		 		<list-options key-name="" list-name="memberAccountList" description="${accountName} - ${AccountNo}"/>
+		 		<list-options key-name="" list-name="memberAccountList" description="${accountName} - ${accountNo}"/>
 		 	</drop-down>
 		 </field>
 		 
@@ -629,7 +631,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="ChequeType">
-            	<condition-expr field-name="active" value="Y"/>
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChequeType"/>

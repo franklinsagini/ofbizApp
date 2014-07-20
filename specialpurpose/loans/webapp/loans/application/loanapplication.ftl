@@ -46,6 +46,14 @@
 	<tr><td>Loan Amount</td><td><input type="text" name="loanamt" value="${applicationContext.loanamt?if_exists}" /></td></tr>
 	<tr><td>Repayment Period</td><td><input type="text" name="selectedRepaymentPeriod" value="${applicationContext.selectedRepaymentPeriod?if_exists}" /></td></tr>
 	
+	<tr><td>Loan Purpose</td><td><textarea name="purpose">${applicationContext.purpose?if_exists}</textarea></td></tr>
+	<tr><td>Deduction Type</td><td><select name="deductionType">
+				<option value="${applicationContext.deductionType?if_exists}">${applicationContext.deductionType?if_exists}</option>
+				<option value="REDUCING BALANCE">REDUCING BALANCE</option>
+				<option value="STRAIGHT LINE">STRAIGHT LINE</option>	
+			</select>
+	</td></tr>
+	
 	<tr><td>Payment Method</td><td><select name="paymentMethodTypeId">
 		<#assign apaymentMethod = applicationContext.getRelatedOne("PaymentMethodType")?if_exists>
 		<option value="${applicationContext.paymentMethodTypeId?if_exists}">${apaymentMethod.description?if_exists}</option>
@@ -110,6 +118,12 @@
 	<tr><td>Loan Amount</td><td><input type="text" name="loanamt" value="" /></td></tr>
 	<tr><td>Repayment Period</td><td><input type="text" name="selectedRepaymentPeriod" value="" /></td></tr>
 	
+	<tr><td>Loan Purpose</td><td><textarea name="purpose"></textarea></td></tr>
+	<tr><td>Deduction Type</td><td><select name="deductionType">
+				<option value="REDUCING BALANCE">REDUCING BALANCE</option>
+				<option value="STRAIGHT LINE">STRAIGHT LINE</option>	
+			</select>
+	</td></tr>
 	<tr><td>Payment Method</td><td><select name="paymentMethodTypeId">
 		<option value="">Select payment method</option>
  		<#list paymentMethodsList as paymentMethod>
