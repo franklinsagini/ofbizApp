@@ -263,17 +263,72 @@ under the License.
     <form name="AddEmplLeaveType" type="single" target="createEmplLeaveType" default-map-name="emplLeaveType"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createEmplLeaveType" default-field-type="hidden"/>
-        <field name="leaveTypeId"><text/></field>
+        <field name="leaveTypeId" title="Leave Type"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="days" title="Days" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="daytype"  title="Day Specification" >
+            <drop-down allow-empty="false">
+                <option key="workdays" description="Work Days"/>
+                <option key="calendardays" description="Calendar Days"/>
+            </drop-down>
+        </field>
+        <field name="gender"  title="Gender" >
+            <drop-down allow-empty="true">
+                <option key="M" description="Male"/>
+                <option key="F" description="Female"/>
+            </drop-down>
+        </field>
+        <field name="isforwarded"  title="Can Be Forwarded" >
+            <drop-down allow-empty="false">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+         <field name="forwardmax" title="Max Days Forwarded" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="noticeperiod" title="Notice Period (Days)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="validity" title="Validity (Months)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="isallocated"  title="Allocated" >
+            <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        <field name="isencashable"  title="Encashable" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="isaccrued"  title="Accrued" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="accrualRate" title="Accrual Rate" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="hasbalance"  title="Has Balance" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="allowoverflow"  title="Allow Overflow" >
+            <drop-down allow-empty="true">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
+        
     <form name="ListEmplLeaveTypes" type="multi" title="" target="updateEmplLeaveType"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="EmplLeaveType"><order-by field-name="leaveTypeId"/></entity-condition>
         </actions>
         <auto-fields-service service-name="updateEmplLeaveType" default-field-type="hidden"/>
-        <field name="leaveTypeId"><display/></field>
+        <field name="leaveTypeId" title="Leave Type"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmplLeaveType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
