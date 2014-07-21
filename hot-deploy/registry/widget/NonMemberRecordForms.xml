@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+
+
+	<form name="FindNonMemberRecord" type="single" target="FindNonMemberRecord"
+		default-entity-name="NonMemberRecord">
+
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+
+		<field name="EntryNumber" title="Entry Number">
+			<text-find />
+		</field>
+
+		<field name="VolumeNumber" title="Volume Number">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
+
+	<form name="ListNonMemberRecord" type="list" list-name="listIt"
+		paginate-target="FindNonMemberRecord" default-entity-name="NonMemberRecord"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="NonMemberRecordCtx" />
+				<field-map field-name="entityName" value="NonMemberRecord" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<field name="EntryNumber" title="Entry Number" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="${EntryNumber}"
+				target="EditNonMemberRecord">
+				<parameter param-name="EntryNumber" />
+			</hyperlink>
+		</field>
+		<field name="ObjectName" title="Object Name">
+			<display />
+		</field>
+		<field name="VolumeNumber" title="Volume Number">
+			<display />
+		</field>
+		<field name="SecurityLevel" title="Security Level">
+			<display />
+		</field>
+		</form>
+
+		<form name="EditNonMemberRecord" type="single" target="updateNonMemberRecord"
+			title="" default-map-name="nonmemberrecordmap" default-entity-name="NonMemberRecord"
+			header-row-style="header-row" default-table-style="basic-table">
+
+
+			<alt-target use-when="nonmemberrecordmap==null" target="createNonMemberRecord" />
+
+			<!-- retentionScheduleID Field -->
+			<field use-when="nonmemberrecordmap!=null" name="EntryNumber"
+				title="Non Member Record" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+				<display />
+			</field>
+			<field use-when="nonmemberrecordmap==null&amp;&amp;EntryNumber==null"
+				name="EntryNumber" title="Entry Number">
+				<text />
+			</field>
+			<field use-when="nonmemberrecordmap==null&amp;&amp;EntryNumber!=null"
+				name="EntryNumber" title="${uiLabelMap.EntryNumber}"
+				tooltip="${uiLabelMap.CommonCannotBeFound}: [${EntryNumber}]">
+				<display />
+			</field>
+			<!-- description Field -->
+			<field name="ObjectName" title="Object Name">
+				<text />
+			</field>
+
+			<!-- description Field -->
+			<field name="VolumeNumber" title="Volume Number">
+				<text />
+			</field>
+			<field name="SecurityLevel" title="Security Level">
+				<drop-down allow-empty="false">
+					<option key="General" description="General" />
+					<option key="Restricted" description="Restricted" />
+					<option key="Confidential" description="Confidential" />
+					<option key="Top Secret" description="Top Secret" />
+				</drop-down>
+			</field>
+
+			<!-- submitButton -->
+			<field use-when="nonmemberrecordmap==null" name="submitButton"
+				title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+				<submit button-type="text-link" />
+			</field>
+			<field use-when="nonmemberrecordmap!=null" name="updateButton"
+				title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+				<submit button-type="text-link" />
+			</field>
+		</form>
+</forms>

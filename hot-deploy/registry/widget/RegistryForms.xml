@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+
+
+	<form name="FindNonMemberRecord" type="single" target="FindNonMemberRecord"
+		default-entity-name="NonMemberRecord">
+
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+
+		<field name="EntryNumber" title="Entry Number">
+			<text-find />
+		</field>
+
+		<field name="VolumeNumber" title="Volume Number">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
+
+	<form name="ListEmployers" type="list" list-name="listIt"
+		paginate-target="FindEmployer" default-entity-name="Employer"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="employerCtx" />
+				<field-map field-name="entityName" value="Employer" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+
+		<field name="employerId" title="Employer Id" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="${employerId}"
+				target="EditEmployer">
+				<parameter param-name="employerId" />
+			</hyperlink>
+		</field>
+		<field name="employerName" title="Name">
+			<display />
+		</field>
+	</form>
+
+
+	<form name="EditEmployer" type="single" target="updateEmployer"
+		title="" default-map-name="Employer" header-row-style="header-row"
+		default-table-style="basic-table">
+		<alt-target use-when="employer==null" target="createEmployer" />
+
+		<!-- employerId Field -->
+		<field use-when="employer!=null" name="employerId" title="${uiLabelMap.employerId}"
+			tooltip="${uiLabelMap.CommonNotModifRecreat}">
+			<display />
+		</field>
+		<field use-when="employer==null&amp;&amp;employerId==null" name="employerId"
+			title="${uiLabelMap.employerId}">
+			<text />
+		</field>
+		<field use-when="employer==null&amp;&amp;employerId!=null" name="employerId"
+			title="${uiLabelMap.employerId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${employerId}]">
+			<display />
+		</field>
+
+
+		<!-- description Field -->
+		<field name="employerName" title="Name">
+			<text />
+		</field>
+
+		<!-- submitButton -->
+		<field use-when="employer==null" name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+		<field use-when="employer!=null" name="updateButton"
+			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+	</form>
+
+</forms>

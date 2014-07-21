@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+	<description>Registry Services</description>
+	<vendor></vendor>
+	<version>1.0</version>
+
+	<service name="noSyntaxError" engine="interface">
+		<description>
+			Dummy service to prevent empty files and syntax error - Remove when the
+			1st real service will be added here
+		</description>
+	</service>
+
+	<service name="createEmployer" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/RegistryServices.xml"
+		invoke="createEmployer" auth="true">
+		<description>Create an imprest header record</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="CREATE" />
+		<auto-attributes entity-name="Employer" include="pk"
+			mode="IN" optional="false" />
+		<auto-attributes entity-name="Employer" include="nonpk"
+			mode="IN" optional="true" />
+		<override name="statusId" optional="false" />
+	</service>
+
+	<service name="createRetentionSchedule" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/RetentionScheduleServices.xml"
+		invoke="createRetentionSchedule" auth="true">
+		<description>Create an imprest header record</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="CREATE" />
+		<auto-attributes entity-name="DocumentRetentionSchedule"
+			include="pk" mode="IN" optional="false" />
+		<auto-attributes entity-name="DocumentRetentionSchedule"
+			include="nonpk" mode="IN" optional="true" />
+		<override name="Folio" optional="false" />
+		<override name="retentionScheduleName" optional="false" />
+		<override name="retentionScheduleStatus" optional="false" />
+	</service>
+	<service name="updateRetentionSchedule" default-entity-name="DocumentRetentionSchedule"
+		engine="entity-auto" invoke="update" auth="true">
+		<description>Update a Document Retention Schedule</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+
+	<service name="createNonMemberRecord" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/NonMemberRecordServices.xml"
+		invoke="createNonMemberRecord" auth="true">
+		<description>Create an imprest header record</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="CREATE" />
+		<auto-attributes entity-name="NonMemberRecord"
+			include="pk" mode="IN" optional="false" />
+		<auto-attributes entity-name="NonMemberRecord"
+			include="nonpk" mode="IN" optional="true" />
+		<override name="ObjectName" optional="false" />
+		<override name="VolumeNumber" optional="false" />
+		<override name="SecurityLevel" optional="false" />
+	</service>
+	<service name="updateNonMemberRecord" default-entity-name="NonMemberRecord"
+		engine="entity-auto" invoke="update" auth="true">
+		<description>Update a Document Retention Schedule</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+</services>
