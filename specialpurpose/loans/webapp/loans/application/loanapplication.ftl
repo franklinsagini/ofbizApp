@@ -6,8 +6,10 @@
   <table>
   
   	<tr><td></td><td><input type="hidden" name="loanApplicationId" /></td></tr>
-  	<tr><td>Member</td><td>
   	<#if applicationContext?exists>
+  	<tr><td>Loan No.</td><td><input type="text" name="loanNo" value="${applicationContext.loanNo?if_exists}" readonly /></td></tr>
+  	<tr><td>Member</td><td>
+  	
   	<!-- select>
  		<option value="1000">Japheth Odonya</option>
   		<option value="1002">Philemon Samoei</option>
@@ -44,6 +46,14 @@
 	<tr><td>Loan Amount</td><td><input type="text" name="loanamt" value="${applicationContext.loanamt?if_exists}" /></td></tr>
 	<tr><td>Repayment Period</td><td><input type="text" name="selectedRepaymentPeriod" value="${applicationContext.selectedRepaymentPeriod?if_exists}" /></td></tr>
 	
+	<tr><td>Loan Purpose</td><td><textarea name="purpose">${applicationContext.purpose?if_exists}</textarea></td></tr>
+	<tr><td>Deduction Type</td><td><select name="deductionType">
+				<option value="${applicationContext.deductionType?if_exists}">${applicationContext.deductionType?if_exists}</option>
+				<option value="REDUCING BALANCE">REDUCING BALANCE</option>
+				<option value="STRAIGHT LINE">STRAIGHT LINE</option>	
+			</select>
+	</td></tr>
+	
 	<tr><td>Payment Method</td><td><select name="paymentMethodTypeId">
 		<#assign apaymentMethod = applicationContext.getRelatedOne("PaymentMethodType")?if_exists>
 		<option value="${applicationContext.paymentMethodTypeId?if_exists}">${apaymentMethod.description?if_exists}</option>
@@ -53,7 +63,7 @@
                 </#if>
               </#list>
 	</select></td></tr>
-	<tr><td>Status</td><td><select name="loanStatusId">
+	<!-- tr><td>Status</td><td><select name="loanStatusId">
 		<#assign aloanStatus = applicationContext.getRelatedOne("LoanStatus")?if_exists>
 		<option value="${applicationContext.loanStatusId?if_exists}">${aloanStatus.name?if_exists}</option>
  		<#list loanStatusList as loanStatus>
@@ -61,10 +71,21 @@
                 <option value="${loanStatus.loanStatusId}">${loanStatus.name} </option>
                 </#if>
               </#list>
-	</select></td></tr>
+	</select></td></tr -->
+	<tr><td>Status</td>
+           <td>
+           <select name="applicationStatus" >
+           <option value="${applicationContext.applicationStatus?if_exists}">${applicationContext.applicationStatus?if_exists}</option>
+           <option value="REVIEWED">REVIEWED</option>
+           <option value="APPRAISED">APPRAISED</option>
+           <option value="APPROVED">APPROVED</option>
+           <option value="DISBURSED">DISBURSED</option>
+           </select>
+           </td></tr> 
 	
 	<#else>
-	
+	<tr><td>Loan No.</td><td><input type="text" name="loanNo" value="**GENERATED**" readonly /></td></tr>
+  	<tr><td>Member</td><td>
 	  <select name="partyId">
 	    	  <option value="">Select member ...</option>
               <#list membersList as member>
@@ -97,6 +118,12 @@
 	<tr><td>Loan Amount</td><td><input type="text" name="loanamt" value="" /></td></tr>
 	<tr><td>Repayment Period</td><td><input type="text" name="selectedRepaymentPeriod" value="" /></td></tr>
 	
+	<tr><td>Loan Purpose</td><td><textarea name="purpose"></textarea></td></tr>
+	<tr><td>Deduction Type</td><td><select name="deductionType">
+				<option value="REDUCING BALANCE">REDUCING BALANCE</option>
+				<option value="STRAIGHT LINE">STRAIGHT LINE</option>	
+			</select>
+	</td></tr>
 	<tr><td>Payment Method</td><td><select name="paymentMethodTypeId">
 		<option value="">Select payment method</option>
  		<#list paymentMethodsList as paymentMethod>
@@ -105,14 +132,20 @@
                 </#if>
               </#list>
 	</select></td></tr>
-	<tr><td>Status</td><td><select name="loanStatusId">
-		<!-- option value="">Select Status</option -->
+	<#-- if applicationContext?exists -->
+               
+        <#-- else -->
+     <tr><td>Status</td><td><input type="text" name="applicationStatus" value="NEW" readonly /></td></tr>
+     <#-- /#if -->
+	<!-- option value="">Select Status</option -->
+	<#-- tr><td>Status</td><td><select name="loanStatusId">
+		
  		<#list loanStatusList as loanStatus>
               	<#if ((loanStatus.name)?exists)>
                 <option value="${loanStatus.loanStatusId}">${loanStatus.name} </option>
                 </#if>
               </#list>
-	</select></td></tr>
+	</select></td></tr -->
 	</#if>
   	<tr><td><input type="submit" value="   Save   " /></td><td></td></tr>
   </table>

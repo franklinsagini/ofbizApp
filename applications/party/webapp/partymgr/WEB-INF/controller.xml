@@ -1545,6 +1545,11 @@
 		<response name="success" type="view" value="reviewmembers" />
 	</request-map>
 	
+	<request-map uri="activemembers">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="activemembers" />
+	</request-map>
+	
 	<request-map uri="ApproveMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="ApproveMember" />
@@ -1553,6 +1558,11 @@
 	<request-map uri="RejectMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="RejectMember" />
+	</request-map>
+	
+	<request-map uri="ChangeMemberStatus">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="ChangeMemberStatus" />
 	</request-map>
 	
 	<!-- end of request mappings -->
@@ -2143,6 +2153,34 @@
 			value="RejectMember"></response>
 		<response name="error" type="view" value="RejectMember" />
 	</request-map>
+	
+	<!-- CRUD for Change Member Status -->
+	<request-map uri="createChangeMemberStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChangeMemberStatus" />
+		<response name="success" type="request-redirect" value="ChangeMemberStatus">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="ChangeMemberStatus" />
+	</request-map>
+
+	<request-map uri="updateChangeMemberStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateChangeMemberStatus" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="ChangeMemberStatus"></response>
+		<response name="error" type="view" value="ChangeMemberStatus" />
+	</request-map>
+
+	<request-map uri="deleteChangeMemberStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteChangeMemberStatus" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="ChangeMemberStatus"></response>
+		<response name="error" type="view" value="ChangeMemberStatus" />
+	</request-map>
 
 
 	<!-- View Mappings -->
@@ -2386,11 +2424,18 @@
 	
 	<view-map name="reviewmembers" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />	
+		
+	<view-map name="activemembers" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#activemembers" />	
+		
 	<view-map name="ApproveMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#ApproveMember" />
 		
 	<view-map name="RejectMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#RejectMember" />	
+		
+	<view-map name="ChangeMemberStatus" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#ChangeMemberStatus" />
 		
 		
 	<view-map name="viewmemberprofile" type="screen"

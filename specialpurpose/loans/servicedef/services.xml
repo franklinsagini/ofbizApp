@@ -335,5 +335,112 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+    <!-- Loan Processing 
+    	ReviewLoan
+		AppraiseLoan
+		ApproveLoan
+		DisburseLoan
+     -->
+     <!-- ReviewLoan  -->
+     <service name="createReviewLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createReviewLoan" auth="true">
+        <description>Create Loan Review</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="applicationStatus" mode="IN" optional="false"></override>
+        <override name="comment" mode="IN" optional="false"></override>
+    </service>
+    
+    <service name="updateReviewLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateReviewLoan" auth="true">
+        <description>Loan Update</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteReviewLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="deleteReviewLoan" auth="true">
+        <description>Delete Loan Application Guarantor</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+     <!-- AppraiseLoan -->
+     <service name="createAppraiseLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createAppraiseLoan" auth="true">
+        <description>Create Loan Appraisal</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="applicationStatus" mode="IN" optional="false"></override>
+        <override name="comment" mode="IN" optional="false"></override>
+    </service>
+    
+    <service name="updateAppraiseLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateAppraiseLoan" auth="true">
+        <description>Update a Loan Appraisal</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteAppraiseLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="deleteAppraiseLoan" auth="true">
+        <description>Delete Loan Appraisal</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+     <!-- ApproveLoan -->
+     <service name="createApproveLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createApproveLoan" auth="true">
+        <description>Create Loan Approval</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="applicationStatus" mode="IN" optional="false"></override>
+        <override name="comment" mode="IN" optional="false"></override>
+    </service>
+    
+    <service name="updateApproveLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateApproveLoan" auth="true">
+        <description>Update a Loan Approval</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteApproveLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="deleteApproveLoan" auth="true">
+        <description>Delete Loan Approval</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+     <!-- DisburseLoan -->
+     <service name="createDisburseLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createDisburseLoan" auth="true">
+        <description>Create Loan Disbursement</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="applicationStatus" mode="IN" optional="false"></override>
+        <override name="comment" mode="IN" optional="false"></override>
+    </service>
+    
+    <service name="updateDisburseLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateDisburseLoan" auth="true">
+        <description>Update a Loan Disbursement</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteDisburseLoan" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="deleteDisburseLoan" auth="true">
+        <description>Delete Loan Disbursement</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
     
 </services>

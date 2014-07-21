@@ -237,7 +237,7 @@ under the License.
 
 
 <!-- Loan Application Guarantor Starts Here -->
-<simple-method method-name="createLoanApplicationGuarantor" short-description="Create Loan Application Guarantor">
+	<simple-method method-name="createLoanApplicationGuarantor" short-description="Create Loan Application Guarantor">
         <make-value entity-name="LoanGuarantor" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -258,6 +258,134 @@ under the License.
     <simple-method method-name="deleteLoanApplicationGuarantor" short-description="Delete Loan Application Guarantor">
         <entity-one entity-name="LoanGuarantor" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- 
+    	ReviewLoan
+		AppraiseLoan
+		ApproveLoan
+		DisburseLoan
+     -->
+     <!-- ReviewLoan -->
+     <simple-method method-name="createReviewLoan" short-description="Create Loan Review">
+        <make-value entity-name="LoanStatusLog" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanStatusLog" field="loanStatusLogId"/>
+        <set from-field="loanStatusLogId" field="newEntity.loanStatusLogId"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        
+        <set field="loanApplicationId" from-field="newEntity.loanApplicationId"/>
+        <entity-one entity-name="LoanApplication" value-field="loanApplication">
+        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
+        <store-value value-field="loanApplication"/>
+    </simple-method>
+    
+    <simple-method method-name="updateReviewLoan" short-description="Update Review Loan">
+        <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
+        <set-nonpk-fields value-field="loanStatusLog" map="parameters"/>
+        <store-value value-field="loanStatusLog"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteReviewLoan" short-description="Delete Loan Review">
+        <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
+        <remove-value value-field="loanStatusLog"/>
+    </simple-method>
+     
+     <!-- AppraiseLoan -->
+     <simple-method method-name="createAppraiseLoan" short-description="Create Loan Appraisal">
+        <make-value entity-name="LoanStatusLog" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanStatusLog" field="loanStatusLogId"/>
+        <set from-field="loanStatusLogId" field="newEntity.loanStatusLogId"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        
+        <set field="loanApplicationId" from-field="newEntity.loanApplicationId"/>
+        <entity-one entity-name="LoanApplication" value-field="loanApplication">
+        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
+        <store-value value-field="loanApplication"/>
+    </simple-method>
+    
+    <simple-method method-name="updateAppraiseLoan" short-description="Update Loan Appraisal">
+        <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
+        <set-nonpk-fields value-field="loanStatusLog" map="parameters"/>
+        <store-value value-field="loanStatusLog"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteAppraiseLoan" short-description="Delete Loan Appraisal">
+        <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
+        <remove-value value-field="loanStatusLog"/>
+    </simple-method>
+     <!-- ApproveLoan -->
+     <simple-method method-name="createApproveLoan" short-description="Create Loan Approval">
+        <make-value entity-name="LoanStatusLog" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanStatusLog" field="loanStatusLogId"/>
+        <set from-field="loanStatusLogId" field="newEntity.loanStatusLogId"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        
+        <set field="loanApplicationId" from-field="newEntity.loanApplicationId"/>
+        <entity-one entity-name="LoanApplication" value-field="loanApplication">
+        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
+        <store-value value-field="loanApplication"/>
+    </simple-method>
+    
+    <simple-method method-name="updateApproveLoan" short-description="Update Loan Approval">
+        <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
+        <set-nonpk-fields value-field="loanStatusLog" map="parameters"/>
+        <store-value value-field="loanStatusLog"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteApproveLoan" short-description="Delete Loan Approval">
+        <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
+        <remove-value value-field="loanStatusLog"/>
+    </simple-method>
+     <!-- DisburseLoan -->
+     <simple-method method-name="createDisburseLoan" short-description="Create Loan Disbursement">
+        <make-value entity-name="LoanStatusLog" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanStatusLog" field="loanStatusLogId"/>
+        <set from-field="loanStatusLogId" field="newEntity.loanStatusLogId"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        
+        <set field="loanApplicationId" from-field="newEntity.loanApplicationId"/>
+        <entity-one entity-name="LoanApplication" value-field="loanApplication">
+        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
+        <store-value value-field="loanApplication"/>
+    </simple-method>
+    
+    <simple-method method-name="updateDisburseLoan" short-description="Update Loan Disbursement">
+        <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
+        <set-nonpk-fields value-field="loanStatusLog" map="parameters"/>
+        <store-value value-field="loanStatusLog"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteDisburseLoan" short-description="Delete Loan Disbursement">
+        <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
+        <remove-value value-field="loanStatusLog"/>
     </simple-method>
     
 </simple-methods>

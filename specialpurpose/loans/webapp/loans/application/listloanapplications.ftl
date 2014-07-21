@@ -40,7 +40,7 @@ under the License.
 <div class="screenlet">
   <div class="screenlet-title-bar">
     <#if applicationsList?has_content>
-      <!-- ul>
+      <#-- ul>
         <#if hideFields == "Y">
           <li class="collapsed"><a href="<@ofbizUrl>loanapplicationslist?hideFields=N${paramList}</@ofbizUrl>" title="${uiLabelMap.CommonShowLookupFields}">&nbsp;</a></li>
         <#else>
@@ -87,6 +87,7 @@ under the License.
     <#if applicationsList?has_content>
       <table class="basic-table hover-bar" cellspacing="0">
         <tr class="header-row-2">
+          <td>Loan No</td>
           <td>Loan Type</td>
           <td>Member No</td>
           <td>Mobile No</td>
@@ -101,12 +102,13 @@ under the License.
           <#assign loanType = applicationRow.getRelatedOne("SaccoProduct")?if_exists>
           <#assign loanStatus = applicationRow.getRelatedOne("LoanStatus")?if_exists>
           <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+          	<td><a href="<@ofbizUrl>viewapplicationprofile?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${applicationRow.loanNo?if_exists}</a></td>
             <td><a href="<@ofbizUrl>viewapplicationprofile?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${loanType.name} ${loanType.code}</a></td>
            
             <td>${applicationRow.memberNumber?if_exists}</td>
           	<td>${applicationRow.mobileNumber?if_exists}</td>
           	<td>${applicationRow.loanamt?if_exists}</td>
-          	<td>${loanStatus.name?if_exists}</td>
+          	<td>${applicationRow.applicationStatus?if_exists}</td>
           	<td>${applicationRow.selectedRepaymentPeriod?if_exists}</td>
             <td class="button-col align-float">
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Edit </a> 

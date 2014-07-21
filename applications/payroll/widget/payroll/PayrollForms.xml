@@ -499,12 +499,18 @@ under the License.
         <actions>
             <entity-condition entity-name="StaffPayroll">
             </entity-condition>
+           <entity-condition entity-name="PayrollPeriod" list="periodList">
+            </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStaffPayroll"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
-        <field name="payrollPeriodId" title="Payroll Period"> <text></text> </field>
+        <field name="payrollPeriodId" title="Payroll Period"> 
+        	<drop-down>
+        		<list-options key-name="payrollPeriodId" list-name="periodList" description="${name}"/>
+        	</drop-down>
+         </field>
         <field name="staffNo"> <text></text> </field>
         <field name="staffName"> <text></text> </field>
        
@@ -553,7 +559,9 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StaffPayrollElements">
-            	<condition-expr field-name="staffPayrollId" from-field="staffPayrollId"/>
+            	<condition-expr field-name="staffPayrollId" operator="equals" from-field="staffPayrollId"/>
+            </entity-condition>
+            <entity-condition entity-name="PayrollElement" list="payrollElementList">
             </entity-condition>
 
         </actions>
@@ -565,7 +573,11 @@ under the License.
         	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
         </field -->
         <field name="payrollYearId"> <hidden/> </field>
-        <field name="payrollElementId" title="Payroll Element"> <text></text> </field>
+        <field name="payrollElementId" title="Payroll Element"> 
+        	<drop-down>
+        		<list-options key-name="payrollElementId" list-name="payrollElementList" description="${name}"/>
+        	</drop-down>
+        </field>
         <field name="amount"> <text></text> </field>
         <field name="balance"> <text></text> </field>
         <field name="recurrencyExpiry"><date-time/></field>
@@ -623,6 +635,144 @@ under the License.
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+ 
+    <!-- New Payroll Constants -->
+    <form name="NewPayrollConstants" type="single" target="createPayrollConstants"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollConstantsContext">
+        
+        <field name="payrollConstantsId"><hidden/></field>
+        <field name="disability_relief" title="Diability Relief" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="lowInterstRate" title="Low Interest Benefit Rate (%)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="pension_maxContibution" title="Maximum Pension Contribution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="insuranceReliefmax" title="Maximum Insurance Relief" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="insuranceReliefRate" title="Insurance Relief Rate (%)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listPayrollConstants" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollConstants" paginate-target="PayrollConstants"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PayrollConstants">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updatePayrollConstants"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="disability_relief" title="Diability Relief"> <display also-hidden="false"/> </field>
+        <field name="lowInterstRate" title="Low Interest Benefit Rate (%)"> <display also-hidden="false"/> </field>
+        <field name="pension_maxContibution" title="Maximum Pension Contribution"> <display also-hidden="false"/> </field>
+        <field name="insuranceReliefmax" title="Maximum Insurance Relief"> <display also-hidden="false"/> </field>
+        <field name="insuranceReliefRate" title="Insurance Relief Rate (%)"> <display also-hidden="false"/> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePayrollConstants" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="payrollConstantsId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- PAYE Table -->
+    <form name="NewPAYETable" type="single" target="createPAYETable"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payeTableContext">
+        
+        <field name="payeTableId"><hidden/></field>
+        <field name="lowerbracket" title="Lower Bracket" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="upperbracket" title="Upper Bracket" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="percentage" title="Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="amount" title="Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listPAYETable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePAYETable" paginate-target="PAYETable"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PAYETable">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updatePAYETable"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="lowerbracket" title="Lower Bracket"> <display also-hidden="false"/> </field>
+        <field name="upperbracket" title="Upper Bracket"> <display also-hidden="false"/> </field>
+        <field name="percentage" title="Percentage"> <display also-hidden="false"/> </field>
+        <field name="amount" title="Amount"> <display also-hidden="false"/> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePAYETable" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="payeTableId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- NHIF Table -->
+    <form name="NewNHIFTable" type="single" target="createNHIFTable"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="nhifTableContext">
+        
+        <field name="nhifTableId"><hidden/></field>
+        <field name="lowerbracket" title="Lower Bracket" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="upperbracket" title="Upper Bracket" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="contribution" title="Contribution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listNHIFTable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNHIFTable" paginate-target="NHIFTable"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="NHIFTable">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateNHIFTable"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="lowerbracket" title="Lower Bracket"> <display also-hidden="false"/> </field>
+        <field name="upperbracket" title="Upper Bracket"> <display also-hidden="false"/> </field>
+        <field name="contribution" title="Contribution"> <display also-hidden="false"/> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteNHIFTable" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="nhifTableId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- NSSF Table -->
+    <form name="NewNSSFTable" type="single" target="createNSSFTable"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="nssfTableContext">
+        
+        <field name="nssfTableId"><hidden/></field>
+        <field name="tiername" title="Tier" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="upperbracket" title="Upper Bracket" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="percentage" title="Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listNSSFTable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNSSFTable" paginate-target="NSSFTable"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="NSSFTable">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateNSSFTable"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="tiername" title="Tier"> <display also-hidden="false"/> </field>
+        <field name="upperbracket" title="Upper Bracket"> <display also-hidden="false"/> </field>
+        <field name="percentage" title="Percentage"> <display also-hidden="false"/> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteNSSFTable" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="nssfTableId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
    
 </forms>

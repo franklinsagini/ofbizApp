@@ -174,7 +174,8 @@ under the License.
         <field name="payrollElementId" type="id"></field>
         <field name="amount" type="currency-amount"></field> 
         <field name="balance" type="currency-amount"></field> 
-        <field name="recurrencyExpiry" type="date-time"></field>     
+        <field name="recurrencyExpiry" type="date-time"></field>
+        <field name="valueChanged" type="indicator"></field>     
         <prim-key field="staffPayrollElementsId"/>
         <relation type="one" fk-name="payrollelements_period" rel-entity-name="StaffPayroll">
             <key-map field-name="staffPayrollId"/>
@@ -201,6 +202,45 @@ under the License.
         	<relation type="one" fk-name="station_employer" rel-entity-name="Employer">
             	<key-map field-name="employerId"/>
         	</relation>
-        </entity>   
+        </entity>
+        
+        <entity entity-name="PayrollConstants" package-name="org.ofbiz.payroll" title="Payroll Constants Entity">
+	        <field name="payrollConstantsId" type="id-ne"><description>primary sequenced ID</description></field>
+	        <field name="disability_relief" type="currency-amount"></field>
+	        <field name="lowInterstRate" type="numeric"></field> 
+	        <field name="pension_maxContibution" type="currency-amount"></field> 
+	        <field name="insuranceReliefmax" type="currency-amount"></field>
+	        <field name="insuranceReliefRate" type="numeric"></field>
+	        <prim-key field="payrollConstantsId"/>
+        </entity>
+        
+         <entity entity-name="PAYETable" package-name="org.ofbiz.payroll" title="PAYE Table Entity">
+	        <field name="payeTableId" type="id-ne"><description>primary sequenced ID</description></field>
+	        <field name="lowerbracket" type="currency-amount"></field>
+	        <field name="upperbracket" type="currency-amount"></field>
+	        <field name="percentage" type="numeric"></field> 
+	        <field name="amount" type="currency-amount"></field> 
+	        <prim-key field="payeTableId"/>
+        </entity>
+        
+        <entity entity-name="NHIFTable" package-name="org.ofbiz.payroll" title="NHIF Table Entity">
+	        <field name="nhifTableId" type="id-ne"><description>primary sequenced ID</description></field>
+	        <field name="lowerbracket" type="currency-amount"></field>
+	        <field name="upperbracket" type="currency-amount"></field>
+	        <field name="contribution" type="currency-amount"></field> 
+	        <prim-key field="nhifTableId"/>
+        </entity>
+        
+        <entity entity-name="NSSFTable" package-name="org.ofbiz.payroll" title="NSSF Table Entity">
+	        <field name="nssfTableId" type="id-ne"><description>primary sequenced ID</description></field>
+	        <field name="tiername" type="currency-amount"></field>
+	        <field name="upperbracket" type="currency-amount"></field>
+	        <field name="percentage" type="numeric"></field> 
+	        <prim-key field="nssfTableId"/>
+        </entity>
+        
+        
+        
+            
 	
 </entitymodel>
