@@ -39,6 +39,25 @@ under the License.
             <link target="FindQuote"/>
         </menu-item>
 
+        <menu-item name="purchaseorder" title="${uiLabelMap.OrderPurchaseOrder}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_CREATE"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_CREATE"/>
+                </or>
+            </condition>
+            <link target="purchaseorder" link-type="anchor"/>
+        </menu-item>
+        <menu-item name="salesorder" title="${uiLabelMap.OrderSalesOrder}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_CREATE"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_CREATE"/>
+                </or>
+            </condition>
+            <link target="salesorder" link-type="anchor"/>
+        </menu-item>
+
         <menu-item name="orderlist" title="${uiLabelMap.OrderOrderList}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>

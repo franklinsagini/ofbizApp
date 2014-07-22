@@ -24,7 +24,7 @@ under the License.
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
     <include location="component://content/webapp/content/WEB-INF/controller.xml"/>
     <description>Order Manager Module Site Configuration File</description>
-    
+
     <!-- event handlers -->
     <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/>
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
@@ -264,7 +264,7 @@ under the License.
         <event type="service" invoke="quickShipEntireOrder"/>
         <response name="success" type="request-redirect" value="orderview"><redirect-parameter name="orderId"/></response>
         <response name="error" type="view" value="orderview"/>
-    </request-map>    
+    </request-map>
     <request-map uri="createQuoteTerm">
         <security https="true" auth="true"/>
         <event type="service" invoke="createQuoteTerm"/>
@@ -304,7 +304,7 @@ under the License.
             <redirect-parameter name="description"/>
             <redirect-parameter name="termValue"/>
         </response>
-    </request-map>    
+    </request-map>
     <request-map uri="updateQuoteTerm">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateQuoteTerm"/>
@@ -435,6 +435,15 @@ under the License.
         <response name="error" type="view" value="orderview"/>
     </request-map>
 
+    <!-- Purchase Order Requests -->
+    <request-map uri="purchaseorder">
+        <security https="true" auth="true"/>
+        <response name="purchaseorder" type="view" value="purchaseorder"/>
+        <response name="error" type="view" value="purchaseorder"/>
+    </request-map>
+
+
+    <!-- Sales Order Requests -->
     <!-- Order Entry Requests -->
     <request-map uri="orderentry">
         <security https="true" auth="true"/>
@@ -1278,7 +1287,7 @@ under the License.
     <request-map uri="ViewRequest"><security https="true" auth="true"/><response name="success" type="view" value="ViewRequest"/></request-map>
     <request-map uri="EditRequest"><security https="true" auth="true"/><response name="success" type="view" value="EditRequest"/></request-map>
     <request-map uri="EditRequestCustomer"><security https="true" auth="true"/><response name="success" type="view" value="EditRequestCustomer"/></request-map>
-    
+
     <!-- CustRequest Content -->
     <request-map uri="EditCustRequestContent">
         <security https="true" auth="true"/>
@@ -1718,7 +1727,7 @@ under the License.
         <response name="success" type="view" value="returnhead"/>
         <response name="error" type="view" value="returnhead"/>
     </request-map>
-    
+
     <request-map uri="updateShippingMethodAndCharges">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateShippingMethodAndCharges"/>
@@ -1776,7 +1785,7 @@ under the License.
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupProductCategory"/>
     </request-map>
-    
+
     <request-map uri="ReturnHistory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ReturnHistory"/>
@@ -1813,7 +1822,7 @@ under the License.
         <security auth="true" https="true"/>
         <response name="success" type="view" value="ProductUomDropDownOnly" save-last-view="true"/>
     </request-map>
-    
+
     <request-map uri="ListQuoteTerms">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="ListQuoteTerms" save-last-view="true"/>
@@ -1826,7 +1835,7 @@ under the License.
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditQuoteTermItem" save-last-view="true"/>
     </request-map>
-    
+
     <!-- Split Shipment Requests -->
     <request-map uri="splitship">
         <security https="true" auth="true"/>
