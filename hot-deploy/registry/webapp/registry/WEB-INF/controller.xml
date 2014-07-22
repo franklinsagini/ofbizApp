@@ -92,6 +92,33 @@
 		</response>
 		<response name="error" type="view" value="EditRetentionSchedule" />
 	</request-map>
+	
+		<request-map uri="RegistryFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="RegistryFile" />
+	</request-map>
+	<request-map uri="FindRegistryFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindRegistryFile" />
+	</request-map>
+	<request-map uri="EditRegistryFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditRegistryFile" />
+	</request-map>
+	<request-map uri="createRegistryFile">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createRegistryFile" />
+		<response name="success" type="view" value="EditRegistryFile" />
+		<response name="error" type="view" value="EditRegistryFile" />
+	</request-map>
+	<request-map uri="updateRegistryFile">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateRegistryFile" />
+		<response name="success" type="request-redirect" value="EditRegistryFile">
+			<redirect-parameter name="registryFileId" />
+		</response>
+		<response name="error" type="view" value="EditRegistryFile" />
+	</request-map>
 
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
@@ -117,6 +144,12 @@
 	<view-map name="EditNonMemberRecord" type="screen"
 		page="component://registry/widget/NonMemberRecordScreens.xml#EditNonMemberRecord" />
 
+	<view-map name="RegistryFile" type="screen"
+		page="component://registry/widget/RegistryFileScreens.xml#RegistryFile" />
+	<view-map name="FindRegistryFile" type="screen"
+		page="component://registry/widget/RegistryFileScreens.xml#FindRegistryFile" />
+	<view-map name="EditRegistryFile" type="screen"
+		page="component://registry/widget/RegistryFileScreens.xml#EditRegistryFile" />
 
 
 </site-conf>

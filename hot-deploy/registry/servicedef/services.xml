@@ -70,4 +70,21 @@
 		<auto-attributes include="pk" mode="IN" optional="false" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />
 	</service>
+
+	<!-- Registry file services -->
+	<service name="createRegistryFile" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/RegistryFileServices.xml"
+		invoke="createRegistryFile" auth="true">
+		<description>Create Registry file header record</description>
+		<auto-attributes entity-name="RegistryFile" include="pk"mode="IN" optional="false" />
+		<auto-attributes entity-name="RegistryFile" include="nonpk" mode="IN" optional="true" />
+	</service>
+	<service name="updateRegistryFile" default-entity-name="RegistryFile"
+		engine="simple" location="component://registry/script/org/ofbiz/registry/RegistryFileServices.xml" invoke="update" auth="true">
+		<description>Update a Document Retention Schedule</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
 </services>
