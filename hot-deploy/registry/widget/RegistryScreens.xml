@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+	<screen name="main">
+		<section>
+			<actions>
+				<set field="headerItem" value="main" /><!-- this highlights the selected 
+					menu-item with name "main" -->
+			</actions>
+			<widgets>
+				<decorator-screen name="RegistryCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<label style="h3" text="Welcome to Registry Application" />
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="Employers">
+		<section>
+			<actions>
+				<set field="headerItem" value="employer" />
+				<set field="titleProperty" value="Find Employers" />
+				<set field="employerCtx" from-field="parameters" />
+			</actions>
+			<widgets>
+				<decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<if-has-permission permission="REGISTRY" action="_VIEW" />
+							</condition>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="menu-bar">
+										<container style="button-bar">
+											<link target="EditEmployer" text="New Employer" style="buttontext create" />
+										</container>
+									</decorator-section>
+									<decorator-section name="search-options">
+										<include-form name="FindEmployer" location="component://registry/widget/RegistryForms.xml" />
+									</decorator-section>
+									<decorator-section name="search-results">
+										<include-form name="ListEmployers" location="component://registry/widget/RegistryForms.xml" />
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.ExampleViewPermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	
+<screen name="FindEmployers">
+		<section>
+			<actions>
+				<set field="headerItem" value="employer" />
+				<set field="titleProperty" value="Find Employers" />
+				<set field="employerCtx" from-field="parameters" />
+			</actions>
+			<widgets>
+				<decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<if-has-permission permission="REGISTRY" action="_VIEW" />
+							</condition>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="menu-bar">
+										<container style="button-bar">
+											<link target="EditEmployer" text="New Employer" style="buttontext create" />
+										</container>
+									</decorator-section>
+									<decorator-section name="search-results">
+										<include-form name="ListEmployers" location="component://registry/widget/RegistryForms.xml" />
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.ExampleViewPermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="EditEmployer">
+        <section>
+            <actions>
+                <set field="titleProperty" value="EditEmployer"/>
+                <set field="headerItem" value="employer" />
+              <!--  <set field="tabButtonItem" value="EditEmployer"/>  -->
+                 <set field="employerId" from-field="parameters.employerId"/> 
+                <entity-one entity-name="Employer" value-field="employer"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Edit Employer">
+                            <include-form name="EditEmployer" location="component://registry/widget/RegistryForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>
