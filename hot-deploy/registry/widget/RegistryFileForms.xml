@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+
+
+	<form name="FindRegistryFile" type="single" target="FindRegistryFile"
+		default-entity-name="RegistryFile">
+
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+
+		<field name="registryFileId" title="registry File Id">
+			<text-find />
+		</field>
+		<field name="createdBy" title="created By">
+			<text-find />
+		</field>
+		<field name="updatedBy" title="updated By">
+			<text-find />
+		</field>
+		<field name="isActive" title="is Active">
+			<text-find />
+		</field>
+		<field name="documentName" title="document Name">
+			<text-find />
+		</field>
+		<field name="custodian" title="custodian">
+			<text-find />
+		</field>
+		<field name="requester" title="requester">
+			<text-find />
+		</field>
+		<field name="requestDate" title="request Date">
+			<date-find/>
+		</field>
+		<field name="reason" title="reason">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
+
+	<form name="ListRegistryFile" type="list" list-name="listIt"
+		paginate-target="FindRegistryFile" default-entity-name="RegistryFile"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="RegistryFileCtx" />
+				<field-map field-name="entityName" value="RegistryFile" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<field name="registryFileId" title="registry File Id"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="${registryFileId}"
+				target="EditRegistryFile">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field>
+		<field name="createdBy" title="created By">
+			<display />
+		</field>
+		<field name="updatedBy" title="updated By">
+			<display />
+		</field>
+		<field name="isActive" title="is Active">
+			<display />
+		</field>
+		<field name="documentName" title="document Name">
+			<display />
+		</field>
+		<field name="custodian" title="custodian">
+			<display />
+		</field>
+		<field name="requester" title="requester">
+			<display />
+		</field>
+		<field name="requestDate" title="request Date">
+			<display />
+		</field>
+		<field name="reason" title="reason">
+			<display />
+		</field>
+	</form>
+
+	<form name="EditRegistryFile" type="single" target="updateRegistryFile"
+		title="" default-map-name="registryfilemap" default-entity-name="RegistryFile"
+		header-row-style="header-row" default-table-style="basic-table">
+
+
+		<alt-target use-when="registryfilemap==null" target="createRegistryFile" />
+
+		<!-- retentionScheduleID Field -->
+		<field use-when="registryfilemap!=null" name="registryFileId"
+			title="Registry File" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+			<display />
+		</field>
+		<field use-when="registryfilemap==null&amp;&amp;registryFileId==null"
+			name="registryFileId" title="registry File Id">
+			<text />
+		</field>
+		<field use-when="registryfilemap==null&amp;&amp;registryFileId!=null"
+			name="registryFileId" title="${uiLabelMap.registryFileId}"
+			tooltip="${uiLabelMap.CommonCannotBeFound}: [${registryFileId}]">
+			<text />
+		</field>
+		<field name="documentName" title="document Name">
+			<text />
+		</field>
+		<field name="custodian" title="custodian">
+			<text />
+		</field>
+		<field name="requester" title="requester">
+			<text />
+		</field>
+		<field name="requestDate" title="request Date">
+			<date-time/>
+		</field>
+		<field name="reason" title="reason">
+			<text />
+		</field>
+
+		<!-- submitButton -->
+		<field use-when="registryfilemap==null" name="submitButton"
+			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+		<field use-when="registryfilemap!=null" name="updateButton"
+			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+	</form>
+</forms>
