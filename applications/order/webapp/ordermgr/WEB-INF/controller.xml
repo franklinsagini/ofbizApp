@@ -436,10 +436,10 @@ under the License.
     </request-map>
 
     <!-- Purchase Order Requests -->
-    <request-map uri="purchaseorder">
+    <request-map uri="FindPurchaseOrders">
         <security https="true" auth="true"/>
-        <response name="purchaseorder" type="view" value="purchaseorder"/>
-        <response name="error" type="view" value="purchaseorder"/>
+        <response name="success" type="view" value="FindPurchaseOrders"/>
+        <response name="error" type="view" value="FindPurchaseOrders"/>
     </request-map>
 
 
@@ -453,6 +453,10 @@ under the License.
         <response name="cart" type="view" value="showcart"/>
         <response name="error" type="view" value="checkinits"/>
     </request-map>
+
+
+
+
     <request-map uri="initorderentry">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="initializeOrderEntry"/>
@@ -1891,6 +1895,8 @@ under the License.
     <view-map name="LookupProductCategory" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductCategory"/>
 
     <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#Main"/>
+
+    <view-map name="FindPurchaseOrders" type="screen" page="component://order/widget/ordermgr/PurchaseOrderScreens.xml#FindPurchaseOrders"/>
 
     <view-map name="orderstats" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderStats"/>
     <view-map name="findorders" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
