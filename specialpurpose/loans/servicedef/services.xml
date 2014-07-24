@@ -128,15 +128,32 @@ under the License.
     </service>
     
     <!-- Loans Management -->
-    <service name="createSavingsProduct" engine="simple" default-entity-name="SaccoProduct"
-             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createSavingsProduct" auth="true">
+    
+    <!-- Account Product Start -->
+    <service name="createAccountProduct" engine="simple" default-entity-name="AccountProduct"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createAccountProduct" auth="true">
         <description>Create Account Product</description>
-        <!-- permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
-     <service name="createLoanProduct" engine="simple" default-entity-name="SaccoProduct"
+     <service name="updateAccountProduct" engine="simple" default-entity-name="AccountProduct"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateAccountProduct" auth="true">
+        <description>Update AccountProduct</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteAccountProduct" engine="simple" default-entity-name="AccountProduct"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="deleteAccountProduct" auth="true">
+        <description>Delete AccountProduct</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <!-- Account Product End -->
+    
+    <!-- Loan Product Start -->
+    <service name="createLoanProduct" engine="simple" default-entity-name="LoanProduct"
              location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createLoanProduct" auth="true">
         <description>Create Loan Product</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
@@ -144,36 +161,24 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
-     <service name="updateSaccoProduct" engine="simple" default-entity-name="SaccoProduct"
-             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateSaccoProduct" auth="true">
-        <description>Update a SaccoProduct</description>
-        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
-
-    <service name="deleteSaccoProduct" engine="simple" default-entity-name="SaccoProduct"
-             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="deleteSaccoProduct" auth="true">
-        <description>Delete Sacco Product</description>
-        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-    </service>
+   
     
-    <service name="updateAccountProduct" engine="simple" default-entity-name="SaccoProduct"
-             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateAccountProduct" auth="true">
-        <description>Update a Account Product</description>
+    <service name="updateLoanProduct" engine="simple" default-entity-name="LoanProduct"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateLoanProduct" auth="true">
+        <description>Update a Loan Product</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 	
-	<service name="updateLoanProduct" engine="simple" default-entity-name="SaccoProduct"
-             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateLoanProduct" auth="true">
-        <description>Update a Account Product</description>
-        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+	<service name="deleteLoanProduct" engine="simple" default-entity-name="LoanProduct"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="deleteLoanProduct" auth="true">
+        <description>Delete LoanProduct</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    <!-- Loan Product End -->
+     
     
     <!-- Loan Application -->
     <service name="createLoanApplication" engine="simple" default-entity-name="LoanApplication"
