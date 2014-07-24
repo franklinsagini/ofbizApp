@@ -472,41 +472,46 @@ under the License.
         </actions>
         
         <field name="loanApplicationId"><hidden/></field>
-        
-        <field name="partyId" title="Member" event="onchange" action="javascript:var field=document.getElementsByName('partyId')[0].value; var tmp=field.value;alert(field);return false;">
+        <field name="loanNo" title="Loan No."><text default-value="**GENERATED**" disabled="true"></text></field>
+        <!-- field name="partyId" title="Member" event="onchange" action="javascript:var field=document.getElementsByName('partyId')[0].value; var tmp=field.value;alert(field);return false;">
+            <drop-down allow-empty="true">
+                <list-options list-name="membersList" key-name="partyId" description="${firstName} ${lastName}" />
+            </drop-down>
+        </field -->
+        <field name="partyId" title="Member" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="membersList" key-name="partyId" description="${firstName} ${lastName}" />
             </drop-down>
         </field>
-       <field name="firstName" title="First Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="firstName" title="First Name" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="middleName" title="Middle Name"><text size="30" maxlength="60"/></field>
-       <field name="lastName" title="Last Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="lastName" title="Last Name" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        
-       <field name="idNumber" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-       <field name="memberType" title="Member Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-       <field name="memberNumber" title="Member Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-       <field name="mobileNumber" title="Mobile Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="idNumber" title="ID Number" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="memberType" title="Member Type" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="memberNumber" title="Member Number" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="mobileNumber" title="Mobile Number" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
-        <field name="saccoProductId" title="Loan Type">
+        <field name="saccoProductId" title="Loan Type"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/>
             </drop-down>
         </field>
 
-       <field name="percentInterestPerMonthAmt" title="Interest Rate (Per Month)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-       <field name="maxRepaymentPeriod" title="Maximum Repayment Period" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-       <field name="loanamt" title="Loan Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-       <field name="selectedRepaymentPeriod" title="Repayment Period" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="percentInterestPerMonthAmt" title="Interest Rate (Per Month)" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="maxRepaymentPeriod" title="Maximum Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="loanamt" title="Loan Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="selectedRepaymentPeriod" title="Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
 
 
-       <field name="paymentMethodTypeId" title="Payment Method">
+       <field name="paymentMethodTypeId" title="Payment Method" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="paymentMethodsList" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
        </field>
        
        
-       <field name="loanStatusId" title="Status">
+       <field name="loanStatusId" title="Status" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="loanStatusList" key-name="loanStatusId" description="${name}"/>
             </drop-down>
@@ -517,7 +522,7 @@ under the License.
                 <list-options list-name="loanSecurityList" key-name="loanSecurityId" description="${security}"/>
             </drop-down>
        </field -->
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
   
     <form name="FindLoanApplications" type="single" target="FindLoanApplication" default-entity-name="LoanApplication">
