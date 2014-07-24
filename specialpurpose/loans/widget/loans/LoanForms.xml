@@ -468,22 +468,22 @@ under the License.
         <field name="name" title="Name"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="code" title="Code" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
 
-      	<field name="minBalanceAmt" title="Minimum Balance" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+      	<field name="minBalanceAmt" title="Minimum Balance"><text size="30" maxlength="60"/></field>
         
-        <field name="minSavingsAmt" title="Minimum Savings Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="minSavingsAmt" title="Minimum Savings Amount"><text size="30" maxlength="60"/></field>
         
-        <field name="minInterestEarningAmt" title="Minimum Interest Earning Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="minInterestEarningAmt" title="Minimum Interest Earning Amount"><text size="30" maxlength="60"/></field>
         
-        <field name="minInterestPercentageAboveSavingsAcct" title="Minimum % Above Savings Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="minInterestPercentageAboveSavingsAcct" title="Minimum % Above Savings Amount"><text size="30" maxlength="60"/></field>
      
-     	<field name="discountOnBankersCheque"  title="Discount on Bankers Cheque ?" widget-style="required" required-field="true">
+     	<field name="discountOnBankersCheque"  title="Discount on Bankers Cheque ?" >
             <drop-down allow-empty="true">
                 <option key="Yes" description="Yes"/>
                 <option key="No" description="No"/>
             </drop-down>
         </field>
-        <field name="bankersChequePercentageDiscAmt" title="Bankers Cheque Discount Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
-     	<field name="limitPerYearWithdrawals"  title="Limit Per Year Withdrawals?" widget-style="required" required-field="true">
+        <field name="bankersChequePercentageDiscAmt" title="Bankers Cheque Discount Amount"><text size="30" maxlength="60"/></field>
+     	<field name="limitPerYearWithdrawals"  title="Limit Per Year Withdrawals?">
             <drop-down allow-empty="false">
             	<option key="No" description="No"/>
                 <option key="Yes" description="Yes"/>
@@ -610,7 +610,7 @@ under the License.
         
         <field name="minimumPeriodToEligibility" title="Minimum Period To Eligibility (Months)" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
  		
-        <field name="saveLoanProduct" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button" /></field>
+        <field name="saveLoanProduct" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit  button-type="button" /></field>
     </form>
     
    <form name="listAccountProduct" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAccountProduct" paginate-target="accountProduct"
@@ -619,16 +619,21 @@ under the License.
             <entity-condition entity-name="AccountProduct">
             </entity-condition>
         </actions>
-        <!-- auto-fields-service default-field-type="hidden" service-name="updateAccountProduct"/ -->
+        <auto-fields-service default-field-type="hidden" service-name="updateAccountProduct"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
+        <field name="accountProductId"><hidden/></field>
         <field name="name"> <text></text> </field>
         <field name="code"><text/></field>
         <field name="minBalanceAmt"><text></text></field>
         <field name="minSavingsAmt"><text></text></field>
         <field name="minInterestEarningAmt"><text></text></field>
         <field name="interestPerMonth"><text></text></field>
+        
+        <field name="Edit Account">
+        	<hyperlink target="AccountProduct?accountProductId=${accountProductId}" description="Edit Account"></hyperlink>
+        </field>
         
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteAccountProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -648,6 +653,7 @@ under the License.
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
+        <field name="loanProductId"><hidden/></field>
         <field name="name"> <text></text> </field>
         <field name="code"><text/></field>
         <field name="maxRepaymentPeriod"><text/></field>
@@ -656,6 +662,9 @@ under the License.
          <field name="minimumAmt"><text/></field>
         <field name="maximumAmt"><text/></field>
         
+        <field name="Edit Loan">
+        	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
+        </field>
         
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">

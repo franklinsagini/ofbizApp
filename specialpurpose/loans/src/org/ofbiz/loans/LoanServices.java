@@ -23,22 +23,22 @@ public class LoanServices {
 	public static String getLoanDetails(HttpServletRequest request, HttpServletResponse response){
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		String saccoProductId = (String) request.getParameter("saccoProductId");
-		GenericValue saccoProduct = null;
+		String loanProductId = (String) request.getParameter("loanProductId");
+		GenericValue loanProduct = null;
 		
 		//SaccoProduct
 		try {
-			saccoProduct = delegator.findOne("SaccoProduct", UtilMisc.toMap("saccoProductId", saccoProductId), false);
+			loanProduct = delegator.findOne("LoanProduct", UtilMisc.toMap("loanProductId", loanProductId), false);
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "Cannot Get Product Details";
 		}
 		
-		if (saccoProduct != null) {
-			result.put("percentInterestPerMonthAmt", saccoProduct.get("percentInterestPerMonthAmt"));
-			result.put("maxRepaymentPeriod", saccoProduct.get("maxRepaymentPeriod"));
-			result.put("loanamt", saccoProduct.get("maxAmt"));
+		if (loanProduct != null) {
+			result.put("interestRatePM", loanProduct.get("interestRatePM"));
+			result.put("maxRepaymentPeriod", loanProduct.get("maxRepaymentPeriod"));
+			result.put("maximumAmt", loanProduct.get("maximumAmt"));
 			//result.put("selectedRepaymentPeriod", saccoProduct.get("selectedRepaymentPeriod"));
 		} else {
 			System.out.println("######## Product details not found #### ");

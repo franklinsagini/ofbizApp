@@ -327,15 +327,17 @@ under the License.
 		
 		
 		<!-- Loan Type -->
-		<field name="saccoProductId" type="id-ne"></field>
+		<field name="loanProductId" type="id-ne"></field>
 		
-		<field name="percentInterestPerMonthAmt" type="fixed-point"></field>
+		<field name="interestPerMonthAmt" type="fixed-point"></field>
 
 		<field name="maxRepaymentPeriod" type="numeric"></field>
 		
-		<field name="loanamt" type="fixed-point"></field>
+		<field name="repaymentPeriod" type="numeric"></field>
 		
-		<field name="selectedRepaymentPeriod" type="numeric"></field>
+		<field name="maxLoanAmt" type="fixed-point"></field>
+		
+		<field name="loanAmt" type="fixed-point"></field>
 		
 		<field name="paymentMethodTypeId" type="id-ne"></field>
 				
@@ -366,8 +368,8 @@ under the License.
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
-      <relation type="one" fk-name="SACCO_PRODUCT_FK" rel-entity-name="SaccoProduct">
-        <key-map field-name="saccoProductId"/>
+      <relation type="one" fk-name="LOAN_PRODUCT_FK" rel-entity-name="LoanProduct">
+        <key-map field-name="loanProductId"/>
       </relation>
       <relation type="one" fk-name="MEMBER_FK" rel-entity-name="Member">
         <key-map field-name="partyId"/>

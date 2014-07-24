@@ -14,12 +14,12 @@
         });
         
         
-        jQuery('select[name="saccoProductId"]').change(function(){
-		 /** var saccoProductId = jQuery('select[name="saccoProductId"]').val;
-         alert(saccoProductId); **/
-         var saccoProductId = this.value;
+        jQuery('select[name="loanProductId"]').change(function(){
+		 /** var loanProductId = jQuery('select[name="loanProductId"]').val;
+         alert(loanProductId); **/
+         var loanProductId = this.value;
          var reqUrl = '/loans/control/loandetails';
-         populateLoanDetails(reqUrl, saccoProductId);
+         populateLoanDetails(reqUrl, loanProductId);
          
          
 
@@ -59,19 +59,19 @@
     /** 
     	Populate Loan Details
     **/
-     function populateLoanDetails(reqUrl, saccoProductId){
+     function populateLoanDetails(reqUrl, loanProductId){
     jQuery.ajax({
 
      url    : reqUrl,
      type   : 'GET',
-     data   : {'saccoProductId': saccoProductId}, //here you can pass the parameters to  
+     data   : {'loanProductId': loanProductId}, //here you can pass the parameters to  
                                                    //the request if any.
      success : function(data){
      			//alert(' ID No, Member Type, Member Number, Mobile No for '+memberId);
 				//alert(data.firstName);
-				 $('input[name="percentInterestPerMonthAmt"]').val(data.percentInterestPerMonthAmt);
+				 $('input[name="interestRatePM"]').val(data.interestRatePM);
 				 $('input[name="maxRepaymentPeriod"]').val(data.maxRepaymentPeriod);
-				 $('input[name="loanamt"]').val(data.loanamt);
+				 $('input[name="maximumAmt"]').val(data.maximumAmt);
 				// $('input[name="selectedRepaymentPeriod"]').val(data.selectedRepaymentPeriod);
               //You handle the response here like displaying in required div etc. 
                },
