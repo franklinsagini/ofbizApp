@@ -28,19 +28,12 @@
 		<field name="documentName" title="document Name">
 			<text-find />
 		</field>
+		<field name="description" title="Description">
+			<text-find />
+		</field>
 		<field name="custodian" title="custodian">
 			<text-find />
 		</field>
-		<field name="requester" title="requester">
-			<text-find />
-		</field>
-		<field name="requestDate" title="request Date">
-			<date-find/>
-		</field>
-		<field name="reason" title="reason">
-			<text-find />
-		</field>
-
 		<field name="searchButton" title="${uiLabelMap.CommonFind}"
 			widget-style="smallSubmit">
 			<submit button-type="button" />
@@ -62,37 +55,30 @@
 				<field-map field-name="viewSize" from-field="viewSize" />
 			</service>
 		</actions>
-		<field name="registryFileId" title="registry File Id"
+		<field name="registryFileId" title="Registry File"
 			widget-style="buttontext">
 			<hyperlink also-hidden="false" description="${registryFileId}"
 				target="EditRegistryFile">
 				<parameter param-name="registryFileId" />
 			</hyperlink>
 		</field>
-		<field name="createdBy" title="created By">
+		<field name="documentName" title="Document Name">
 			<display />
 		</field>
-		<field name="updatedBy" title="updated By">
+		<field name="description" title="Description">
 			<display />
 		</field>
-		<field name="isActive" title="is Active">
+		<field name="custodian" title="Custodian">
 			<display />
 		</field>
-		<field name="documentName" title="document Name">
-			<display />
+		<field name="registryFileIds" title="Registry File"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Request"
+				target="EditFileRequest">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
 		</field>
-		<field name="custodian" title="custodian">
-			<display />
-		</field>
-		<field name="requester" title="requester">
-			<display />
-		</field>
-		<field name="requestDate" title="request Date">
-			<display />
-		</field>
-		<field name="reason" title="reason">
-			<display />
-		</field>
+
 	</form>
 
 	<form name="EditRegistryFile" type="single" target="updateRegistryFile"
@@ -109,28 +95,32 @@
 		</field>
 		<field use-when="registryfilemap==null&amp;&amp;registryFileId==null"
 			name="registryFileId" title="registry File Id">
-			<text />
+			<hidden />
 		</field>
 		<field use-when="registryfilemap==null&amp;&amp;registryFileId!=null"
 			name="registryFileId" title="${uiLabelMap.registryFileId}"
 			tooltip="${uiLabelMap.CommonCannotBeFound}: [${registryFileId}]">
+			<hidden />
+		</field>
+		<field name="documentName" title="Document Name">
 			<text />
 		</field>
-		<field name="documentName" title="document Name">
-			<text />
+		<field name="description" title="Description">
+			<textarea />
 		</field>
-		<field name="custodian" title="custodian">
-			<text />
+		<field name="custodian" title="Custodian">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${partyId}"
+					key-field-name="partyId" entity-name="PartyRoleNameDetail">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="EMPLOYEE"  />
+						
+					<entity-order-by field-name="description" />
+				</entity-options>
+			</drop-down>
 		</field>
-		<field name="requester" title="requester">
-			<text />
-		</field>
-		<field name="requestDate" title="request Date">
-			<date-time/>
-		</field>
-		<field name="reason" title="reason">
-			<text />
-		</field>
+		<!-- <field name="requester" title="requester"> <text /> </field> <field 
+			name="requestDate" title="request Date"> <date-time /> </field> -->
 
 		<!-- submitButton -->
 		<field use-when="registryfilemap==null" name="submitButton"

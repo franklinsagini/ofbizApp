@@ -12,29 +12,33 @@
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
-	<!-- RegistryFile methods -->
 
-	<simple-method method-name="createRegistryFile"
-		short-description="Create Registry File">
-		<make-value value-field="newEntity" entity-name="RegistryFile" />
+	<!-- -->
+	<simple-method method-name="createIssueFile"
+		short-description="Create Issue File">
+		<make-value value-field="newEntity" entity-name="IssueFile" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-	
-		<sequenced-id sequence-name="RegistryFileSequence" field="registryFileId" />
-		<set from-field="registryFileId" field="newEntity.registryFileId" />
-		<set field="newEntity.isActive" value="Y" />
-		<set field="newEntity.fileStatus" value="AVAILABLE" />
-		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<sequenced-id sequence-name="IssueFileSequence" field="issueFileId" />
+		<set from-field="issueFileId" field="newEntity.issueFileId" />
+		<set field="issuedBy" from-field="userLogin.userLoginId"/>
 		<create-value value-field="newEntity" />
-	</simple-method>
 
-	<simple-method method-name="updateRegistryFile"
-		short-description="Update Registry File">
-		<entity-one entity-name="RegistryFile" value-field="registryFileId" />
-		<set-nonpk-fields value-field="RegistryFile" map="parameters" />
-		<set field="RegistryFile.updatedBy" from-field="userLogin.userLoginId" />
+		<set field="registryFileId" from="newEntity.registryFileId" />
+		<entity-one value-field="registryFileId" entity-name="RegistryFile">
+			<field-map field-name="registryFileId" from-field="registryFileId" />
+		</entity-one>
+		<set field="RegistryFile.fileStatus" value="ISSUED" />
 		<store-value value-field="registryFileId" />
 	</simple-method>
+	<simple-method method-name="updateIssueFile"
+		short-description="Update Issue File">
+		<entity-one entity-name="IssueFile" value-field="IssueFile" />
+		<set-nonpk-fields value-field="IssueFile" map="parameters" />
+		<set field="IssueFile.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="IssueFile" />
+	</simple-method>
+
 
 
 </simple-methods>
