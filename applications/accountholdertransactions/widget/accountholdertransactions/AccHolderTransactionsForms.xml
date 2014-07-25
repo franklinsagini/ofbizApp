@@ -33,6 +33,10 @@ under the License.
         	<entity-condition entity-name="Member" list="memberList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
+        	
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            </entity-condition>
         </actions>
         <field name="cashWithdrawalId"><hidden/></field>
 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
@@ -41,6 +45,11 @@ under the License.
         	<drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
+        </field>
+         <field name="memberAccountId" title="Member Account" >
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
         </field>
         <field name="slipNumber" title="SLIP Number"><text></text></field>
         <field name="cashAmount" title="Cash Amount"><text></text></field>
@@ -85,6 +94,9 @@ under the License.
         		<order-by field-name="firstName"/>
         	</entity-condition>
         	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            </entity-condition>
         </actions>
         <field name="cashDepositId"><hidden/></field>
 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
@@ -92,6 +104,11 @@ under the License.
         	<drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
+        </field>
+        <field name="memberAccountId" title="Member Account" >
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
         </field>
         <field name="slipNumber" title="SLIP Number"><text></text></field>
         <field name="cashAmount" title="Cash Amount"><text></text></field>
@@ -152,6 +169,9 @@ under the License.
         	<entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            </entity-condition>
         </actions>
         <field name="chequeWithdrawalId"><hidden/></field>
 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
@@ -159,6 +179,11 @@ under the License.
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
+        </field>
+        <field name="memberAccountId" title="Member Account" >
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
         </field>
         <field name="chequeNo" title="Cheque No"><text></text></field>
         <field name="payee" title="Payee"><text></text></field>
@@ -214,6 +239,9 @@ under the License.
         	<entity-condition entity-name="FinAccount" list="accountList">
         		<order-by field-name="finAccountName"/>
         	</entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            </entity-condition>
         </actions>
         <field name="chequeDepositId"><hidden/></field>
         
@@ -221,6 +249,11 @@ under the License.
 		<field name="partyId" title="Member">
         	<drop-down allow-empty="true">
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="memberAccountId" title="Member Account" >
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down>
         </field>
         <field name="internalexternal" title="Internal / External">
@@ -462,6 +495,11 @@ under the License.
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
+        </field>
+        <field name="memberAccountId" title="Member Account" >
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
         </field>
         <field name="memberNo" title="Member No"><text></text></field>
         <field name="payrollNo" title="Payroll No"><text></text></field>
