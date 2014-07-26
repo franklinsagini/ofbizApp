@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
+import org.apache.log4j.Logger;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -21,6 +22,9 @@ import org.ofbiz.webapp.event.EventHandlerException;
 import com.google.gson.Gson;
 
 public class AccHolderTransactionServices {
+	
+	private static Logger log = Logger.getLogger(AccHolderTransactionServices.class);
+	
 	public static String getBranches(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
@@ -187,7 +191,7 @@ public class AccHolderTransactionServices {
 		// Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String memberAccountId = (String) request
 				.getParameter("memberAccountId");
-
+		log.info(" ######### The Member Account is #########"+memberAccountId);
 		// Get Opening Balance
 		bdOpeningBalance = calculateOpeningBalance(memberAccountId, delegator);
 		// Get Total Deposits
@@ -198,7 +202,8 @@ public class AccHolderTransactionServices {
 
 		// Available Amount = Total Opening Account + Total Deposits - Total
 		// Withdrawals
-		result.put("availableAmount", bdOpeningBalance.add(bdTotalDeposit).subtract(bdTotalWithdrawal));
+		BigDecimal bdAvailableAmount = bdOpeningBalance.add(bdTotalDeposit).subtract(bdTotalWithdrawal);
+		result.put("availableAmount", bdAvailableAmount);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -243,6 +248,7 @@ public class AccHolderTransactionServices {
 	private static BigDecimal calculateOpeningBalance(String memberAccountId,
 			Delegator delegator) {
 		List<GenericValue> openingBalanceELI = null;
+		
 
 		try {
 			openingBalanceELI = delegator.findList("MemberAccountDetails",
@@ -255,12 +261,13 @@ public class AccHolderTransactionServices {
 
 		if (openingBalanceELI == null) {
 			// result.put("", "No Member Accounts");
+			log.info(" ######### This member has no Opening Balance #########"+memberAccountId);
 			return BigDecimal.ZERO;
 		}
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : openingBalanceELI) {
-			bdBalance.add(genericValue.getBigDecimal("savingsOpeningBalance"));
+			bdBalance = bdBalance.add(genericValue.getBigDecimal("savingsOpeningBalance"));
 		}
 		return bdBalance;
 	}
@@ -280,12 +287,13 @@ public class AccHolderTransactionServices {
 
 		if (cashDepositELI == null) {
 			// result.put("", "No Member Accounts");
+			log.info(" ######### This member has Cash Deposit #########"+memberAccountId);
 			return BigDecimal.ZERO;
 		}
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : cashDepositELI) {
-			bdBalance.add(genericValue.getBigDecimal("cashAmount"));
+			bdBalance = bdBalance.add(genericValue.getBigDecimal("cashAmount"));
 		}
 		return bdBalance;
 	}
@@ -305,12 +313,13 @@ public class AccHolderTransactionServices {
 
 		if (cashWithdrawalELI == null) {
 			// result.put("", "No Member Accounts");
+			log.info(" ######### This member has Cash Withdrawal #########"+memberAccountId);
 			return BigDecimal.ZERO;
 		}
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : cashWithdrawalELI) {
-			bdBalance.add(genericValue.getBigDecimal("cashAmount"));
+			bdBalance = bdBalance.add(genericValue.getBigDecimal("cashAmount"));
 		}
 		return bdBalance;
 	}
