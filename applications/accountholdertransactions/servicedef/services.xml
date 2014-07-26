@@ -20,33 +20,36 @@ under the License.
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
-    <description>Share Management Services</description>
+    <description>AccountHolder Transactions Services</description>
     <vendor>Verge Interactive</vendor>
     <version>1.0</version>
 
     <!-- CashWithdrawal -->
-    <service name="createCashWithdrawal" engine="simple" default-entity-name="CashWithdrawal"
+    <service name="createCashWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createCashWithdrawal" auth="true">
         <description>Create CashWithdrawal</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="cashAmount" optional="false"></override>
+        <override name="partyId" optional="false"></override>
+        <override name="memberAccountId" optional="false"></override>
+        <override name="transactionAmount" optional="false"></override>
         <override name="slipNumber" optional="false"></override>
     </service>
     
-    <service name="updateCashWithdrawal" engine="simple" default-entity-name="CashWithdrawal"
+    <service name="updateCashWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateCashWithdrawal" auth="true">
         <description>Update CashWithdrawal</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+        <override name="partyId" optional="false"></override>
+        <override name="memberAccountId" optional="false"></override>
         <override name="cashAmount" optional="false"></override>
         <override name="slipNumber" optional="false"></override>
     </service>
 
-    <service name="deleteCashWithdrawal" engine="simple" default-entity-name="CashWithdrawal"
+    <service name="deleteCashWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="deleteCashWithdrawal" auth="true">
         <description>Delete CashWithdrawal</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->

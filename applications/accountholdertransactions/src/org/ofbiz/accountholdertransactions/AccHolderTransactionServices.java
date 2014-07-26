@@ -13,18 +13,23 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
 
 public class AccHolderTransactionServices {
-	
-	private static Logger log = Logger.getLogger(AccHolderTransactionServices.class);
-	
+
+	private static Logger log = Logger
+			.getLogger(AccHolderTransactionServices.class);
+
 	public static String getBranches(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
@@ -191,7 +196,7 @@ public class AccHolderTransactionServices {
 		// Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String memberAccountId = (String) request
 				.getParameter("memberAccountId");
-		log.info(" ######### The Member Account is #########"+memberAccountId);
+		log.info(" ######### The Member Account is #########" + memberAccountId);
 		// Get Opening Balance
 		bdOpeningBalance = calculateOpeningBalance(memberAccountId, delegator);
 		// Get Total Deposits
@@ -202,9 +207,10 @@ public class AccHolderTransactionServices {
 
 		// Available Amount = Total Opening Account + Total Deposits - Total
 		// Withdrawals
-		BigDecimal bdAvailableAmount = bdOpeningBalance.add(bdTotalDeposit).subtract(bdTotalWithdrawal);
+		BigDecimal bdAvailableAmount = bdOpeningBalance.add(bdTotalDeposit)
+				.subtract(bdTotalWithdrawal);
 		result.put("availableAmount", bdAvailableAmount);
-		
+
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
 
@@ -242,13 +248,11 @@ public class AccHolderTransactionServices {
 	}
 
 	/***
-	 * @author jodonya
-	 * Calculates the Opening Balance
+	 * @author jodonya Calculates the Opening Balance
 	 * */
 	private static BigDecimal calculateOpeningBalance(String memberAccountId,
 			Delegator delegator) {
 		List<GenericValue> openingBalanceELI = null;
-		
 
 		try {
 			openingBalanceELI = delegator.findList("MemberAccountDetails",
@@ -261,25 +265,41 @@ public class AccHolderTransactionServices {
 
 		if (openingBalanceELI == null) {
 			// result.put("", "No Member Accounts");
-			log.info(" ######### This member has no Opening Balance #########"+memberAccountId);
+			log.info(" ######### This member has no Opening Balance #########"
+					+ memberAccountId);
 			return BigDecimal.ZERO;
 		}
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : openingBalanceELI) {
-			bdBalance = bdBalance.add(genericValue.getBigDecimal("savingsOpeningBalance"));
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("savingsOpeningBalance"));
 		}
 		return bdBalance;
 	}
 
-	private static BigDecimal calculateTotalCashDeposits(String memberAccountId,
-			Delegator delegator) {
+	private static BigDecimal calculateTotalCashDeposits(
+			String memberAccountId, Delegator delegator) {
 		List<GenericValue> cashDepositELI = null;
 
+		// Conditions
+		// EntityConditionList<EntityCondition> transactionConditions =
+		// EntityCondition.makeCond
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"memberAccountId", EntityOperator.EQUALS,
+						memberAccountId), EntityCondition
+						.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHDEPOSIT")),
+						EntityOperator.AND);
+
 		try {
-			cashDepositELI = delegator.findList("CashDeposit",
-					EntityCondition.makeCondition("memberAccountId",
-							memberAccountId), null, null, null, false);
+			// cashDepositELI = delegator.findList("AccountTransaction",
+			// EntityCondition.makeCondition("memberAccountId",
+			// memberAccountId), null, null, null, false);
+
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -287,33 +307,41 @@ public class AccHolderTransactionServices {
 
 		if (cashDepositELI == null) {
 			// result.put("", "No Member Accounts");
-			log.info(" ######### This member has Cash Deposit #########"+memberAccountId);
+			log.info(" ######### This member has Cash Deposit #########"
+					+ memberAccountId);
 			return BigDecimal.ZERO;
 		}
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : cashDepositELI) {
-			bdBalance = bdBalance.add(genericValue.getBigDecimal("cashAmount"));
+			bdBalance = bdBalance.add(genericValue.getBigDecimal("transactionAmount"));
 		}
 		return bdBalance;
 	}
 
-	private static BigDecimal calculateTotalCashWithdrawals(String memberAccountId,
-			Delegator delegator) {
+	private static BigDecimal calculateTotalCashWithdrawals(
+			String memberAccountId, Delegator delegator) {
 		List<GenericValue> cashWithdrawalELI = null;
+		
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"memberAccountId", EntityOperator.EQUALS,
+						memberAccountId), EntityCondition
+						.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHWITHDRAWAL")),
+						EntityOperator.AND);
 
 		try {
-			cashWithdrawalELI = delegator.findList("CashWithdrawal",
-					EntityCondition.makeCondition("memberAccountId",
-							memberAccountId), null, null, null, false);
+			cashWithdrawalELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
 
 		if (cashWithdrawalELI == null) {
-			// result.put("", "No Member Accounts");
-			log.info(" ######### This member has Cash Withdrawal #########"+memberAccountId);
+			log.info(" ######### This member has Cash Withdrawal #########"
+					+ memberAccountId);
 			return BigDecimal.ZERO;
 		}
 
