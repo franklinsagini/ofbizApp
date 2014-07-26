@@ -283,6 +283,21 @@ under the License.
 		<response name="error" type="view" value="chequeType" />
 	</request-map>
 	
+	<request-map uri="accountslist">
+    	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+    	<event type="java" path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" invoke="getMemberAccounts" />
+		<response name="success" type="none">
+    </response>
+    </request-map>
+    
+    <request-map uri="availableamount">
+    	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+    	<event type="java" path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" invoke="getAccountTotalBalance" />
+		<response name="success" type="none">
+    </response>
+    </request-map>
+    
+	
     <!-- end of request mappings -->
 
     <!-- View Mappings -->

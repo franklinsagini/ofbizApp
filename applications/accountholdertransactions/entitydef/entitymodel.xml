@@ -55,6 +55,7 @@ under the License.
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
         <field name="partyId" type="id"></field>
+        <field name="memberAccountId" type="id"></field>
         <field name="slipNumber" type="name"></field>
         <field name="cashAmount" type="currency-amount"></field>
         <field name="availableAmount" type="currency-amount"></field>
@@ -64,6 +65,10 @@ under the License.
         <relation type="one" fk-name="CASHWITHDRAWAL_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
+        
+        <relation fk-name="CASHWIDTHDRAWAL_MEMBERACC" rel-entity-name="MemberAccount" type="one">
+        	<key-map field-name="memberAccountId"/>
+        </relation>
     </entity>
 
     <entity entity-name="CashDeposit" package-name="org.ofbiz.accountholdertransactions" title="CashDeposit Entity">
@@ -72,6 +77,7 @@ under the License.
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
         <field name="partyId" type="id"></field>
+        <field name="memberAccountId" type="id"></field>
         <field name="slipNumber" type="name"></field>
         <field name="cashAmount" type="currency-amount"></field>
         
@@ -87,6 +93,9 @@ under the License.
         
         <relation type="one" fk-name="CASHDEPOSIT_PMT" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
+      </relation>
+      <relation fk-name="CASHDEPOSIT_MEMBERACC" rel-entity-name="MemberAccount" type="one">
+      	<key-map field-name="memberAccountId"/>
       </relation>
     </entity>
     
@@ -106,12 +115,16 @@ under the License.
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
          <field name="partyId" type="id"></field>
+         <field name="memberAccountId" type="id"></field>
         <field name="chequeNo" type="name"></field>
         <field name="payee" type="name"></field>
         <field name="chequeAmount" type="currency-amount"></field>
         <prim-key field="chequeWithdrawalId"/>
         <relation type="one" fk-name="CHEQUEWITHDRAWAL_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
+        </relation>
+        <relation fk-name="CHEQUEWITHDRAWAL_MEMBERACC" rel-entity-name="MemberAccount" type="one">
+        	<key-map field-name="memberAccountId"/>
         </relation>
     </entity>
     
@@ -124,6 +137,7 @@ under the License.
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
          <field name="partyId" type="id"></field>
+         <field name="memberAccountId" type="id"></field>
          <field name="internalexternal" type="name"></field> <!-- INTERNAL or EXTERNAL -->
          
          
@@ -157,6 +171,10 @@ under the License.
         </relation>
         <relation type="one" fk-name="CHEQUEDEPOSIT_BANKBRANCH" rel-entity-name="BankBranch">
             <key-map field-name="bankBranchId"/>
+        </relation>
+        
+        <relation fk-name="CHEQUEDEPOSIT_MEMBERACC" rel-entity-name="MemberAccount" type="one">
+        	<key-map field-name="memberAccountId"/>
         </relation>
     </entity>
     
@@ -196,8 +214,8 @@ under the License.
             <key-map field-name="loanApplicationId"/>
         </relation>
         
-         <relation type="one" fk-name="LOANREPAYMENT_SACCOPRODUCT" rel-entity-name="SaccoProduct">
-            <key-map field-name="loanTypeId" rel-field-name="saccoProductId"/>
+         <relation type="one" fk-name="LOANREPAYMENT_LOANPRODUCT" rel-entity-name="LoanProduct">
+            <key-map field-name="loanTypeId" rel-field-name="loanProductId"/>
         </relation>
     </entity>
     

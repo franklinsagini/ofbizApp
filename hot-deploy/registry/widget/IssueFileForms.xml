@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="FindIssueFile" type="single" target="FindIssueFile"
+		default-entity-name="IssueFile">
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="issueFileId" title="Issue File Id">
+			<text-find />
+		</field>
+		<field name="fileRequestId" title="document Name">
+			<text-find />
+		</field>
+		<field name="issuedBy" title="Issued By"> <text /> 
+		</field> 
+		<field 
+			name="issuedDate" title="Issued Date"> <date-time /> 
+		</field>
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+
+	<form name="ListIssueFile" type="list" list-name="listIt"
+		paginate-target="FindIssueFile" default-entity-name="IssueFile"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="IssueFileCtx" />
+				<field-map field-name="entityName" value="IssueFile" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<field name="issueFileId" title="issue File Id"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="${issueFileId}"
+				target="EditIssueFile">
+				<parameter param-name="issueFileId" />
+			</hyperlink>
+		</field>
+		<field name="fileRequestId" title="document Name">
+			<display />
+		</field>
+	</form>
+
+	<form name="EditIssueFile" type="single" target="updateIssueFile"
+		title="" default-map-name="issuefilemap" default-entity-name="IssueFile"
+		header-row-style="header-row" default-table-style="basic-table">
+		<alt-target use-when="issuefilemap==null" target="createIssueFile" />
+		<!-- issueFileId Field -->
+		<field use-when="issuefilemap!=null" name="issueFileId"
+			title="File request" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+			<display />
+		</field>
+		<field use-when="issuefilemap==null&amp;&amp;issueFileId==null"
+			name="issueFileId" title="registry File Id">
+			<hidden />
+		</field>
+		<field use-when="issuefilemap==null&amp;&amp;issueFileId!=null"
+			name="issueFileId" title="${uiLabelMap.issueFileId}"
+			tooltip="${uiLabelMap.CommonCannotBeFound}: [${issueFileId}]">
+			<hidden />
+		</field>
+		<field name="fileRequestId" title="document">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${documentName}"
+					key-field-name="registryFileId" entity-name="RegistryFile">
+					
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="issuedBy" title="Issued By"> <text /> </field> 
+		<field 
+			name="issuedDate" title="Issued Date"> <date-time /> 
+		</field>
+		<!-- submitButton -->
+		<field use-when="issuefilemap==null" name="submitButton"
+			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+		<field use-when="issuefilemap!=null" name="updateButton"
+			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+	</form>
+</forms>

@@ -20,6 +20,95 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <!-- AccountProduct -->
+    <screen name="AccountProduct">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Account"/>
+                <set field="headerItem" value="AccountProduct"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createAccountProduct"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="accountProductId" from-field="parameters.accountProductId"/>
+                
+                <entity-one entity-name="AccountProduct" value-field="accountContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Account">
+                                    <include-form name="AccountProduct" location="component://loans/widget/loans/LoanForms.xml"/>
+                                </screenlet>
+                                
+                                
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                            
+                        </section>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Products List">
+                        			<include-form name="listAccountProduct" location="component://loans/widget/loans/LoanForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- LoanProduct -->
+    <screen name="LoanProduct">
+        <section>
+            <actions>
+                <set field="titleProperty" value="New Loan Product"/>
+                <set field="headerItem" value="LoanProduct"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanProduct"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanProductId" from-field="parameters.loanProductId"/>
+                
+                <entity-one entity-name="LoanProduct" value-field="loanContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Loan Product">
+                                    <include-form name="LoanProduct" location="component://loans/widget/loans/LoanForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Products List">
+                        			<include-form name="listLoanProduct" location="component://loans/widget/loans/LoanForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <!-- Loan Security -->
      <screen name="NewLoanSecurity">
         <section>

@@ -84,6 +84,7 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="find" title="${uiLabelMap.CommonFind}">
             <link target="findInvoices"/>
         </menu-item>
+
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
             <condition>
                 <not><if-empty field="invoice.invoiceId"/></not>
@@ -228,7 +229,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     </or>
                 </and>
             </condition>
-            <link target="setInvoiceStatus">
+            <link target="setInvoiceStatus" request-confirmation="true" confirmation-message="You want to change status to APPROVED of invoice number ${invoice.statusId}?">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
                 <parameter param-name="statusId" value="INVOICE_APPROVED"/>
             </link>
@@ -244,7 +245,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     </or>
                 </and>
             </condition>
-            <link target="setInvoiceStatus">
+            <link target="setInvoiceStatus" request-confirmation="true" confirmation-message="You want to change status to RECEIVED of invoice number ${invoice.statusId}?">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
                 <parameter param-name="statusId" value="INVOICE_RECEIVED"/>
             </link>
@@ -264,7 +265,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     </and>
                 </or>
             </condition>
-            <link target="setInvoiceStatus">
+            <link target="setInvoiceStatus" request-confirmation="true" confirmation-message="You want to change status to SENT of invoice number ${invoice.statusId}?">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
                 <parameter param-name="statusId" value="INVOICE_SENT"/>
             </link>
@@ -281,7 +282,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     </or>
                 </and>
             </condition>
-            <link target="setInvoiceStatus">
+            <link target="setInvoiceStatus" request-confirmation="true" confirmation-message="You want to change status to READY FOR POSTING of invoice number ${invoice.statusId}?">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
                 <parameter param-name="statusId" value="INVOICE_READY"/>
             </link>
@@ -295,7 +296,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     </or>
                 </and>
             </condition>
-            <link target="setInvoiceStatus">
+            <link target="setInvoiceStatus" request-confirmation="true" confirmation-message="You want to change status to PAID of invoice number ${invoice.statusId}?">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
                 <parameter param-name="statusId" value="INVOICE_PAID"/>
             </link>
@@ -513,7 +514,7 @@ http://www.apache.org/licenses/LICENSE-2.0
                     </and>
                 </and>
             </condition>
-            <link target="voidPayment">
+            <link target="voidPayment" request-confirmation="true" confirmation-message="You want to void this payment number ${payment.paymentId}?">
                 <parameter param-name="paymentId" from-field="payment.paymentId"/>
             </link>
         </menu-item>

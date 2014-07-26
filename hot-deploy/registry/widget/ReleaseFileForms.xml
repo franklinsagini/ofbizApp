@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="FindReleaseFile" type="single" target="FindReleaseFile"
+		default-entity-name="ReleaseFile">
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="releaseFileId" title="released File Id">
+			<text-find />
+		</field>
+		<field name="issueFileId" title="document Name">
+			<text-find />
+		</field>
+		<field name="releasedBy" title="released By"> <text /> 
+		</field> 
+		<field 
+			name="releaseDate" title="Release Date"> <date-time /> 
+		</field>
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+
+	<form name="ListReleaseFile" type="list" list-name="listIt"
+		paginate-target="FindReleaseFile" default-entity-name="ReleaseFile"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="ReleaseFileCtx" />
+				<field-map field-name="entityName" value="ReleaseFile" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<field name="releaseFileId" title="Release File Id"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="${releaseFileId}"
+				target="EditReleaseFile">
+				<parameter param-name="releaseFileId" />
+			</hyperlink>
+		</field>
+		<field name="issueFileId" title="document Name">
+			<display />
+		</field>
+		<field name="releasedBy" title="released By"> <display/> 
+		</field> 
+		<field 
+			name="releaseDate" title="release Date"> <display /> 
+		</field>
+	</form>
+
+	<form name="EditReleaseFile" type="single" target="updateReleaseFile"
+		title="" default-map-name="releasefilemap" default-entity-name="ReleaseFile"
+		header-row-style="header-row" default-table-style="basic-table">
+		<alt-target use-when="releasefilemap==null" target="createReleaseFile" />
+		<!-- releaseFileId Field -->
+		<field use-when="releasefilemap!=null" name="releaseFileId"
+			title="File request" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+			<display />
+		</field>
+		<field use-when="releasefilemap==null&amp;&amp;releaseFileId==null"
+			name="releaseFileId" title="registry File Id">
+			<hidden />
+		</field>
+		<field use-when="releasefilemap==null&amp;&amp;releaseFileId!=null"
+			name="releaseFileId" title="${uiLabelMap.releaseFileId}"
+			tooltip="${uiLabelMap.CommonCannotBeFound}: [${releaseFileId}]">
+			<hidden />
+		</field>
+		<field name="registryFileId" title="Document">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${documentName}"
+					key-field-name="registryFileId" entity-name="RegistryFile">
+					<entity-constraint name="fileStatus" operator="equals" value="ISSUED"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field 
+			name="releaseDate" title="Release Date"> <date-time /> 
+		</field>
+		<!-- submitButton<field name="releasedBy" title="released By"> <text /> 
+		</field>  -->
+		<field use-when="releasefilemap==null" name="submitButton"
+			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+		<field use-when="releasefilemap!=null" name="updateButton"
+			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+	</form>
+</forms>

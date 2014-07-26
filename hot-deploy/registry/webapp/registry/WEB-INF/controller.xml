@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+	<!-- The controller elements that are common to all OFBiz components can 
+		be found in the following xml file. A component can override the elements 
+		found in the common-controller.xml file. -->
+	<include location="component://common/webcommon/WEB-INF/common-controller.xml" />
+
+	<description>Registry Component Site Configuration File</description>
+
+	<!-- Events to run on every request before security (chains exempt) -->
+	<!-- <preprocessor> </preprocessor> -->
+	<!-- Events to run on every request after all other processing (chains exempt) -->
+	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" 
+		invoke="test"/> </postprocessor> -->
+
+	<!-- Request Mappings -->
+	<request-map uri="main">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="main" />
+	</request-map>
+	<request-map uri="employers">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="employers" />
+	</request-map>
+	<request-map uri="FindEmployer">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindEmployer" />
+	</request-map>
+	<request-map uri="EditEmployer">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditEmployer" />
+	</request-map>
+	<request-map uri="createEmployer">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createEmployer" />
+		<response name="success" type="view" value="employers" />
+		<response name="error" type="view" value="EditEmployer" />
+	</request-map>
+
+	<!-- retentionSchedule -->
+	<request-map uri="retentionSchedule">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="retentionSchedule" />
+	</request-map>
+	<request-map uri="findRetentionSchedule">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="findRetentionSchedule" />
+	</request-map>
+	<request-map uri="EditRetentionSchedule">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditRetentionSchedule" />
+	</request-map>
+	<request-map uri="createRetentionSchedule">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createRetentionSchedule" />
+		<response name="success" type="view" value="EditRetentionSchedule" />
+		<response name="error" type="view" value="EditRetentionSchedule" />
+	</request-map>
+	<request-map uri="updateRetentionSchedule">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateRetentionSchedule" />
+		<response name="success" type="request-redirect" value="EditRetentionSchedule">
+			<redirect-parameter name="retentionScheduleID" />
+		</response>
+		<response name="error" type="view" value="EditRetentionSchedule" />
+	</request-map>
+
+	<!--  NonMemberRecord  -->
+	<request-map uri="NonMemberRecord">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NonMemberRecord" />
+	</request-map>
+	<request-map uri="FindNonMemberRecord">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindNonMemberRecord" />
+	</request-map>
+	<request-map uri="EditNonMemberRecord">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditNonMemberRecord" />
+	</request-map>
+	<request-map uri="createNonMemberRecord">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createNonMemberRecord" />
+		<response name="success" type="view" value="EditNonMemberRecord" />
+		<response name="error" type="view" value="EditNonMemberRecord" />
+	</request-map>
+	<request-map uri="updateNonMemberRecord">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateNonMemberRecord" />
+		<response name="success" type="request-redirect" value="EditNonMemberRecord">
+			<redirect-parameter name="EntryNumber" />
+		</response>
+		<response name="error" type="view" value="EditRetentionSchedule" />
+	</request-map>
+
+	<!-- RegistryFile -->	
+	<request-map uri="RegistryFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="RegistryFile" />
+	</request-map>
+	<request-map uri="FindRegistryFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindRegistryFile" />
+	</request-map>
+	<request-map uri="EditRegistryFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditRegistryFile" />
+	</request-map>
+	<request-map uri="createRegistryFile">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createRegistryFile" />
+		<response name="success" type="view" value="EditRegistryFile" />
+		<response name="error" type="view" value="EditRegistryFile" />
+	</request-map>
+	<request-map uri="updateRegistryFile">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateRegistryFile" />
+		<response name="success" type="request-redirect" value="EditRegistryFile">
+			<redirect-parameter name="registryFileId" />
+		</response>
+		<response name="error" type="view" value="EditRegistryFile" />
+	</request-map>
+
+	<!-- FileRequest -->
+	<request-map uri="FileRequest">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FileRequest" />
+	</request-map>
+	<request-map uri="FindFileRequest">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindFileRequest" />
+	</request-map>
+	<request-map uri="EditFileRequest">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditFileRequest" />
+	</request-map>
+	<request-map uri="createFileRequest">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createFileRequest" />
+		<response name="success" type="view" value="EditFileRequest" />
+		<response name="error" type="view" value="EditFileRequest" />
+	</request-map>
+	<request-map uri="updateFileRequest">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateFileRequest" />
+		<response name="success" type="request-redirect" value="EditFileRequest">
+			<redirect-parameter name="fileRequestId" />
+		</response>
+		<response name="error" type="view" value="EditFileRequest" />
+	</request-map>
+
+	<!-- IssueFile -->
+	<request-map uri="IssueFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="IssueFile" />
+	</request-map>
+	<request-map uri="FindIssueFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindIssueFile" />
+	</request-map>
+	<request-map uri="EditIssueFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditIssueFile" />
+	</request-map>
+	<request-map uri="createIssueFile">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createIssueFile" />
+		<response name="success" type="view" value="EditIssueFile" />
+		<response name="error" type="view" value="EditIssueFile" />
+	</request-map>
+	<request-map uri="updateIssueFile">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateIssueFile" />
+		<response name="success" type="request-redirect" value="EditIssueFile">
+			<redirect-parameter name="issueFileId" />
+		</response>
+		<response name="error" type="view" value="EditIssueFile" />
+	</request-map>
+
+	<!-- ReleaseFile -->
+	<request-map uri="ReleaseFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="ReleaseFile" />
+	</request-map>
+	<request-map uri="FindReleaseFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindReleaseFile" />
+	</request-map>
+	<request-map uri="EditReleaseFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditReleaseFile" />
+	</request-map>
+	<request-map uri="createReleaseFile">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createReleaseFile" />
+		<response name="success" type="view" value="EditReleaseFile" />
+		<response name="error" type="view" value="EditReleaseFile" />
+	</request-map>
+	<request-map uri="updateReleaseFile">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateReleaseFile" />
+		<response name="success" type="request-redirect" value="EditReleaseFile">
+			<redirect-parameter name="releaseFileId" />
+		</response>
+		<response name="error" type="view" value="EditReleaseFile" />
+	</request-map>
+	<!--                   -->
+	<!-- View Mappings -->
+	<view-map name="main" type="screen"
+		page="component://registry/widget/RegistryScreens.xml#main" />
+	<view-map name="employers" type="screen"
+		page="component://registry/widget/RegistryScreens.xml#Employers" />
+	<view-map name="FindEmployer" type="screen"
+		page="component://registry/widget/RegistryScreens.xml#FindEmployers" />
+	<view-map name="EditEmployer" type="screen"
+		page="component://registry/widget/RegistryScreens.xml#EditEmployer" />
+
+	<!--      -->
+	<view-map name="retentionSchedule" type="screen"
+		page="component://registry/widget/RetentionScheduleScreens.xml#retentionschedules" />
+	<view-map name="EditRetentionSchedule" type="screen"
+		page="component://registry/widget/RetentionScheduleScreens.xml#EditRetentionSchedule" />
+	<view-map name="findRetentionSchedule" type="screen"
+		page="component://registry/widget/RetentionScheduleScreens.xml#FindRetentionSchedule" />
+
+	<!--   -->
+	<view-map name="NonMemberRecord" type="screen"
+		page="component://registry/widget/NonMemberRecordScreens.xml#NonMemberRecord" />
+	<view-map name="FindNonMemberRecord" type="screen"
+		page="component://registry/widget/NonMemberRecordScreens.xml#FindNonMemberRecord" />
+	<view-map name="EditNonMemberRecord" type="screen"
+		page="component://registry/widget/NonMemberRecordScreens.xml#EditNonMemberRecord" />
+
+	<!--  -->
+	<view-map name="RegistryFile" type="screen"
+		page="component://registry/widget/RegistryFileScreens.xml#RegistryFile" />
+	<view-map name="FindRegistryFile" type="screen"
+		page="component://registry/widget/RegistryFileScreens.xml#FindRegistryFile" />
+	<view-map name="EditRegistryFile" type="screen"
+		page="component://registry/widget/RegistryFileScreens.xml#EditRegistryFile" />
+
+	<!--     -->
+	<view-map name="FileRequest" type="screen"
+		page="component://registry/widget/FileRequestScreens.xml#FileRequest" />
+	<view-map name="FindFileRequest" type="screen"
+		page="component://registry/widget/FileRequestScreens.xml#FindFileRequest" />
+	<view-map name="EditFileRequest" type="screen"
+		page="component://registry/widget/FileRequestScreens.xml#EditFileRequest" />
+		
+	<!--    -->
+	<view-map name="IssueFile" type="screen"
+		page="component://registry/widget/IssueFileScreens.xml#IssueFile" />
+	<view-map name="FindIssueFile" type="screen"
+		page="component://registry/widget/IssueFileScreens.xml#FindIssueFile" />
+	<view-map name="EditIssueFile" type="screen"
+		page="component://registry/widget/IssueFileScreens.xml#EditIssueFile" />
+	
+	<!--    -->
+	<view-map name="ReleaseFile" type="screen"
+		page="component://registry/widget/ReleaseFileScreens.xml#ReleaseFile" />
+	<view-map name="FindReleaseFile" type="screen"
+		page="component://registry/widget/ReleaseFileScreens.xml#FindReleaseFile" />
+	<view-map name="EditReleaseFile" type="screen"
+		page="component://registry/widget/ReleaseFileScreens.xml#EditReleaseFile" />
+
+</site-conf>

@@ -21,6 +21,75 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
         
+        <!--  Account Product Start -->
+        <simple-method method-name="createAccountProduct" short-description="Create Account Product">
+        <make-value entity-name="AccountProduct" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="AccountProduct" field="accountProductId"/>
+        <set from-field="accountProductId" field="newEntity.accountProductId"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        <!-- set field="accountProd" from-field="newEntity.loanApplicationId"/>
+        <entity-one entity-name="LoanApplication" value-field="loanApplication">
+        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
+        <store-value value-field="loanApplication"/ -->
+    </simple-method>
+    
+    <simple-method method-name="updateAccountProduct" short-description="Update Account Product">
+        <entity-one entity-name="AccountProduct" value-field="accountProduct"/>
+        <set-nonpk-fields value-field="accountProduct" map="parameters"/>
+        <set field="accountProduct.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="accountProduct"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteAccountProduct" short-description="Delete Account Product">
+        <entity-one entity-name="AccountProduct" value-field="accountProduct"/>
+        <set field="accountProduct.isActive" value="N"/>
+        <set field="accountProduct.updatedBy" from-field="userLogin.userLoginId"/>
+        <!-- remove-value value-field="accountProduct"/ -->
+        <store-value value-field="accountProduct"/>
+    </simple-method>
+        <!--  Account Product End -->
+        
+        <!-- Loan Product Start -->
+        <simple-method method-name="createLoanProduct" short-description="Create Loan Product">
+        <make-value entity-name="LoanProduct" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanProduct" field="loanProductId"/>
+        <set from-field="loanProductId" field="newEntity.loanProductId"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+        <!-- set field="accountProd" from-field="newEntity.loanApplicationId"/>
+        <entity-one entity-name="LoanApplication" value-field="loanApplication">
+        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
+        <store-value value-field="loanApplication"/ -->
+    </simple-method>
+    
+    <simple-method method-name="updateLoanProduct" short-description="Update Loan Product">
+        <entity-one entity-name="LoanProduct" value-field="loanProduct"/>
+        <set-nonpk-fields value-field="loanProduct" map="parameters"/>
+        <set field="loanProduct.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="loanProduct"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanProduct" short-description="Delete Loan Product">
+        <entity-one entity-name="LoanProduct" value-field="loanProduct"/>
+        <set field="loanProduct.isActive" value="N"/>
+        <set field="loanProduct.updatedBy" from-field="userLogin.userLoginId"/>
+        <!-- remove-value value-field="accountProduct"/ -->
+        <store-value value-field="loanProduct"/>
+    </simple-method>
+        <!-- Loan Product End -->
          <simple-method method-name="createSavingsProduct" short-description="Create Savings Product">
         <make-value entity-name="SaccoProduct" value-field="newEntity"/>
         <!-- sequenced-id sequence-name="saccoProductSequence" field="newEntity.saccoProductId"/ -->
@@ -39,7 +108,7 @@ under the License.
         <create-value value-field="newEntity"/>
     </simple-method>
     
-    <simple-method method-name="createLoanProduct" short-description="Create Loan Product">
+    <simple-method method-name="createLoanProducts" short-description="Create Loan Product">
         <make-value entity-name="SaccoProduct" value-field="newEntity"/>
         
         <sequenced-id sequence-name="saccoProduct" field="saccoProductId"/>
@@ -78,7 +147,7 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
-    <simple-method method-name="updateAccountProduct" short-description="Update Sacco Product">
+    <!-- simple-method method-name="updateAccountProduct" short-description="Update Sacco Product">
         <entity-one entity-name="SaccoProduct" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
@@ -88,7 +157,7 @@ under the License.
         <entity-one entity-name="SaccoProduct" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
-    </simple-method>
+    </simple-method -->
     
     <!-- Loan Application Methods -->
     <simple-method method-name="createLoanApplication" short-description="Create Loan Application">

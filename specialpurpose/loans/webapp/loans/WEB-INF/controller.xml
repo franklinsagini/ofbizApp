@@ -251,34 +251,17 @@ under the License.
 
 	<request-map uri="createLoanProduct">
 		<security https="true" auth="true" />
-		<event type="simple"
-			path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createLoanProduct" />
-		<!-- response name="success" type="view" value="loanproductsetup"/ -->
+		<event type="service" invoke="createLoanProduct" />
 		<response name="success" type="request-redirect-noparam"
-			value="loanproductsetup"></response>
-		<response name="error" type="view" value="loanproductsetup" />
+			value="LoanProduct"></response>
 	</request-map>
-	
-
-	
-	
-
-	<request-map uri="updateAccountProduct">
-		<security https="true" auth="true" />
-		<event type="service" invoke="updateAccountProduct" />
-		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
-			value="savingsproductsetup"></response>
-		<response name="error" type="view" value="savingsproductsetup" />
-	</request-map>
-
-	<request-map uri="updateLoanProduct">
+		<request-map uri="updateLoanProduct">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateLoanProduct" />
 		<!-- response name="success" type="view" value="loanproductsetup" / -->
 		<response name="success" type="request-redirect-noparam"
-			value="loanproductsetup"></response>
-		<response name="error" type="view" value="loanproductsetup" />
+			value="LoanProduct"></response>
+		<response name="error" type="view" value="LoanProduct" />
 	</request-map>
 
 	<request-map uri="deleteLoanProduct">
@@ -286,19 +269,36 @@ under the License.
 		<event type="service" invoke="deleteSaccoProduct" />
 		<!-- response name="success" type="view" value="FindPartySkills"/ -->
 		<response name="success" type="request-redirect-noparam"
-			value="loanproductsetup"></response>
+			value="LoanProduct"></response>
 	</request-map>
+
+	
+	
+	<request-map uri="createAccountProduct">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createAccountProduct" />
+		<response name="success" type="request-redirect-noparam"
+			value="AccountProduct"></response>
+	</request-map>
+	<request-map uri="updateAccountProduct">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateAccountProduct" />
+		<response name="success" type="request-redirect-noparam"
+			value="AccountProduct"></response>
+		<response name="error" type="view" value="AccountProduct" />
+	</request-map>
+
+
 
 	<request-map uri="deleteAccountProduct">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteSaccoProduct" />
-		<!-- response name="success" type="view" value="FindPartySkills"/ -->
 		<response name="success" type="request-redirect-noparam"
 			value="savingsproductsetup"></response>
 	</request-map>
 	
 	<!-- Loan Application -->
-		<request-map uri="loanapplication">
+	<request-map uri="loanapplication">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="loanapplication" />
 	</request-map>
@@ -686,6 +686,18 @@ under the License.
 	</request-map>
 	<!-- End Loan Applications Guarantor -->
 	
+	<!-- Account Product -->
+	<request-map uri="AccountProduct">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="AccountProduct" />
+	</request-map>
+	
+	<!-- Loan Product -->
+	<request-map uri="LoanProduct">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LoanProduct" />
+	</request-map>
+	
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -769,6 +781,10 @@ under the License.
     <view-map name="FindLoanApplication" type="screen" page="component://loans/widget/loans/LoanScreens.xml#FindLoanApplication"/>
 		
 		
+		<view-map name="AccountProduct" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#AccountProduct" />
+		<view-map name="LoanProduct" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#LoanProduct" />
     <!-- Supported Content Types -->
     <!--
         text/html

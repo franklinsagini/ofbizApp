@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+	<form name="FindRetentionSchedule" type="single" target="findRetentionSchedule"
+		default-entity-name="DocumentRetentionSchedule">
+
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+
+		<field name="retentionScheduleID" title="Retention Schedule ID">
+			<text-find />
+		</field>
+
+		<field name="Folio" title="Folio">
+			<text-find />
+		</field>
+
+		<field name="retentionScheduleName" title="Retention ScheduleID Name">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
+
+
+	<form name="ListRetentionSchedule" type="list" list-name="listIt"
+		paginate-target="FindRetentionSchedule" default-entity-name="DocumentRetentionSchedule"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="retentionScheduleCtx" />
+				<field-map field-name="entityName" value="DocumentRetentionSchedule" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+
+		<field name="retentionScheduleID" title="Employer Id"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="${retentionScheduleID}"
+				target="EditRetentionSchedule">
+				<parameter param-name="retentionScheduleID" />
+			</hyperlink>
+		</field>
+
+		<field name="Folio" title="Folio">
+			<display />
+		</field>
+
+		<field name="retentionScheduleName" title="retention Schedule Name">
+			<display />
+		</field>
+		<field name="retentionScheduleStatus" title="Status">
+			<display />
+		</field>
+	</form>
+
+	<form name="EditRetentionSchedule" type="single" target="updateRetentionSchedule"
+		title="" default-map-name="documentretentionschedule"
+		default-entity-name="DocumentRetentionSchedule" header-row-style="header-row"
+		default-table-style="basic-table">
+
+
+		<alt-target use-when="documentretentionschedule==null"
+			target="createRetentionSchedule" />
+
+		<!-- retentionScheduleID Field -->
+		<field use-when="documentretentionschedule!=null" name="retentionScheduleID"
+			title="Retention Schedules ID" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+			<display />
+		</field>
+		<field
+			use-when="documentretentionschedule==null&amp;&amp;retentionScheduleID==null"
+			name="retentionScheduleID" title="Retention Schedule ID">
+			<text />
+		</field>
+		<field
+			use-when="documentretentionschedule==null&amp;&amp;retentionScheduleID!=null"
+			name="retentionScheduleID" title="${uiLabelMap.retentionScheduleID}"
+			tooltip="${uiLabelMap.CommonCannotBeFound}: [${retentionScheduleID}]">
+			<display />
+		</field>
+		<!-- description Field -->
+		<field name="Folio" title="Folio">
+			<text />
+		</field>
+
+		<!-- description Field -->
+		<field name="retentionScheduleName" title="Name">
+			<text />
+		</field>
+		<field name="retentionScheduleStatus" title="Status">
+			<drop-down allow-empty="true" current-description="">
+				<option key="Active" description="Active" />
+				<option key="Semi-Active" description="Semi-Active" />
+				<option key="Inactive" description="Inactive" />
+				<option key="Non-Active" description="Non-Active" />
+				<entity-options description="${description}"
+					key-field-name="RetentionScheduleStatus" entity-name="DocumentRetentionSchedule">
+					<entity-order-by field-name="description" />
+				</entity-options>
+			</drop-down>
+		</field>
+
+		<!-- submitButton -->
+		<field use-when="documentretentionschedule==null" name="submitButton"
+			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+		<field use-when="documentretentionschedule!=null" name="updateButton"
+			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+	</form>
+</forms>
