@@ -220,6 +220,86 @@
         <field name="fromDate"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
+    <!-- Staff Leave Balance Form -->
+    <form name="NewStaffLeaveBalances" type="single" target="createStaffLeaveBalances"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffLeaveBalanacesContext">
+        
+        <actions>
+        	<entity-condition entity-name="Party" list="partyList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+
+        	<entity-condition entity-name="EmplLeaveType" list="leaveTypeList"></entity-condition>
+        	<set field="leaveTypeId" from-field="leaveTypeId"/>
+        	        	
+        </actions>
+        
+        <field name="staffLeaveBalancesId"><hidden/></field>
+        <field name="partyId" parameter-name="partyId"><hidden/></field>
+        <!-- field name="staffNo" title="Staff No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="20"/></field>
+        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+         <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <field name="leaveTypeId" title="Leave Type">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="leaveTypeList" key-name="leaveTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="allocated" title="Days Allocated" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="bbf" title="Balance Brought Forward" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="taken" title="Days Taken" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="accrued" title="Days Accrued" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="balance" title="Balance" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listStaffLeaveBalances" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffLeaveBalances" paginate-target="StaffLeaveBalances"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <!-- actions>
+        	<entity-condition entity-name="PayPoint" list="payPointList" ></entity-condition>
+            <entity-condition entity-name="BankDetails">
+            </entity-condition>
+            <entity-condition entity-name="BankBranch">
+            </entity-condition>
+        </actions -->
+        <actions>
+        	
+        	
+        	 <entity-condition entity-name="StaffLeaveBalances"></entity-condition>
+        	<entity-condition entity-name="EmplLeaveType" list="leaveTypeList">
+            </entity-condition>
+             
+        </actions>
+
+         <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <field name="leaveTypeId" title="Leave Type">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="leaveTypeList" key-name="leaveTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="allocated" title="Days Allocated"><text size="30" maxlength="60"/></field>
+        <field name="bbf" title="Balance Brought Forward"><text size="30" maxlength="60"/></field>
+        <field name="taken" title="Days Taken"><text size="30" maxlength="60"/></field>
+        <field name="accrued" title="Days Accrued."><text size="30" maxlength="60"/></field>
+        <field name="balance" title="Balance"><text size="30" maxlength="60"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStaffLeaveBalances" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="staffLeaveBalancesId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
     <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">
         <field name="company" entry-name="employment.partyIdFrom">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">

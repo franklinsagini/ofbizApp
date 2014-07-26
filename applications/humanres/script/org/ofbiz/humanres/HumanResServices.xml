@@ -697,6 +697,30 @@
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
+
+    <simple-method method-name="createStaffLeaveBalances" short-description="Create Staff Leave Balances">
+        <make-value entity-name="StaffLeaveBalances" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.staffLeaveBalancesId">
+            <sequenced-id sequence-name="StaffLeaveBalances" field="newEntity.staffLeaveBalancesId"/>
+        </if-empty>
+        <field-to-result field="newEntity.staffLeaveBalancesId" result-name="staffLeaveBalancesId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateStaffLeaveBalances" short-description="Update Staff Leave Balances">
+        <entity-one entity-name="StaffLeaveBalances" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteStaffLeaveBalances" short-description="Delete Staff Leave Balances">
+        <entity-one entity-name="StaffLeaveBalances" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+
     <simple-method method-name="getCurrentPartyEmploymentData" short-description="Get all current employment information for a certain partyId">
         <!-- party benefit -->
         <entity-and entity-name="BenefitTypeAndParty" list="partyBenefitTypes" filter-by-date="true">
