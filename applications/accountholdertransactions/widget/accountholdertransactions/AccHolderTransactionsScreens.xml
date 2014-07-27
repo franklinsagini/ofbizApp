@@ -32,10 +32,11 @@ under the License.
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
-                <entity-one entity-name="CashWithdrawal" value-field="cashWithdrawalContext"/>
+                <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -53,7 +54,7 @@ under the License.
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Withdrawals List">
+                        		<screenlet title="Transactions">
                         			<include-form name="listCashWithdrawal" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                         		</screenlet>
                         	</widgets>
@@ -69,16 +70,18 @@ under the License.
             <actions>
                 <set field="titleProperty" value="Cash Deposit"/>
                 <set field="headerItem" value="cashDeposit"/>
+              
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createCashDeposit"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
-                <entity-one entity-name="CashDeposit" value-field="cashDepositContext"/>
+                <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -96,7 +99,7 @@ under the License.
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Cash Depoit List">
+                        		<screenlet title="Transactions">
                         			<include-form name="listCashDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                         		</screenlet>
                         	</widgets>
@@ -108,6 +111,7 @@ under the License.
     </screen>
      <!-- NewChequeWithdrawal -->
      <screen name="NewChequeWithdrawal">
+     
         <section>
             <actions>
                 <set field="titleProperty" value="Cheque Withdrawal"/>
@@ -118,10 +122,11 @@ under the License.
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
-                <entity-one entity-name="ChequeWithdrawal" value-field="chequeWithdrawalContext"/>
+                <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -139,7 +144,7 @@ under the License.
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Cheque Withdrawal List">
+                        		<screenlet title="Transactions">
                         			<include-form name="listChequeWithdrawal" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                         		</screenlet>
                         	</widgets>
@@ -164,7 +169,8 @@ under the License.
                 <entity-one entity-name="ChequeDeposit" value-field="chequeDepositContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -182,7 +188,7 @@ under the License.
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Cheque Deposit List">
+                        		<screenlet title="Transactions">
                         			<include-form name="listChequeDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                         		</screenlet>
                         	</widgets>
@@ -207,7 +213,8 @@ under the License.
                 <entity-one entity-name="LoanRepayment" value-field="loanRepaymentContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -250,7 +257,8 @@ under the License.
                 <entity-one entity-name="StandingOrder" value-field="applyStandingOrderContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -268,7 +276,7 @@ under the License.
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Standing Order List">
+                        		<screenlet title="Transactions">
                         			<include-form name="listApplyStandingOrder" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                         		</screenlet>
                         	</widgets>
@@ -316,6 +324,46 @@ under the License.
                         			<include-form name="listChequeType" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                         		</screenlet>
                         	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Find Members Screen -->
+    <screen name="FindMember">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Members"/>
+                <set field="headerItem" value="main"/>
+                <set field="tabButtonItem" value="findmember"/>
+                <set field="memberCtx" from-field="parameters"/>
+
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <!-- platform-specific>
+                                    <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
+                                </platform-specific -->
+                                <screenlet title="Search Members">
+                                        <include-form name="FindMember" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                            	</screenlet>
+                                <screenlet title="Members List">
+                                <include-form  name="members" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
