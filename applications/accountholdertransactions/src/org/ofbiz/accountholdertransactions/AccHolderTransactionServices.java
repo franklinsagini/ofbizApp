@@ -347,7 +347,7 @@ public class AccHolderTransactionServices {
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : cashWithdrawalELI) {
-			bdBalance = bdBalance.add(genericValue.getBigDecimal("cashAmount"));
+			bdBalance = bdBalance.add(genericValue.getBigDecimal("transactionAmount"));
 		}
 		return bdBalance;
 	}

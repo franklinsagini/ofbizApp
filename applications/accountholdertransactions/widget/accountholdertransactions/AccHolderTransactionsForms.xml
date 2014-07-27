@@ -36,10 +36,11 @@ under the License.
         	
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             </entity-condition>
         </actions>
         <field name="accountTransactionId"><hidden/></field>
-		<field name="partyId" title="Member" widget-style="required" required-field="true">
+		<field name="partyId" title="Member" widget-style="required" required-field="true" parameter-name="parameters.partyId">
         	<drop-down allow-empty="true">
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
@@ -52,7 +53,7 @@ under the License.
         <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text></text></field>
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
         
-        <field name="availableAmount" title="Available Amount"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+        <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
@@ -61,11 +62,17 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="AccountTransaction">
+            	
             	<condition-list combine="and">
             		<condition-expr field-name="isActive" value="Y"/>
-            		<condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
             	</condition-list>
             </entity-condition>
+            
+            <entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
 		
@@ -74,6 +81,7 @@ under the License.
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field>
+        <field name="transactionType" title="Transaction Type"><text></text></field>
         <field name="slipNumber" title="SLIP Number"><text></text></field>
         <field name="transactionAmount" title="Amount"><text></text></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
@@ -96,10 +104,11 @@ under the License.
         	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             </entity-condition>
         </actions>
         <field name="accountTransactionId"><hidden/></field>
-		<field name="partyId" title="Member"  widget-style="required" required-field="true">
+		<field name="partyId" title="Member"  widget-style="required" required-field="true" parameter-name="parameters.partyId">
         	<drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
@@ -116,7 +125,7 @@ under the License.
         		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
         	</drop-down>
         </field>
-        <field name="availableAmount" title="Available Amount"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+        <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
@@ -124,11 +133,12 @@ under the License.
       <form name="listCashDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashDeposit" paginate-target="cashDeposit"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="AccountTransaction" >
+           <entity-condition entity-name="AccountTransaction">
             	
             	<condition-list combine="and">
             		<condition-expr field-name="isActive" value="Y"/>
-            		<condition-expr field-name="transactionType" value="CASHDEPOSIT"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
             	</condition-list>
             </entity-condition>
             
@@ -144,8 +154,9 @@ under the License.
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field>
-        <field name="slipNumber" title="SLIP Number"></field>
-        <field name="transactionAmount" title="Cash Amount"></field>
+        <field name="transactionType" title="Transaction Type"><text></text></field>
+        <field name="slipNumber" title="SLIP Number"><text></text></field>
+        <field name="transactionAmount" title="Cash Amount"><text></text></field>
         
          <field name="modeOfPaymentsId" title="Model Of Payment">
         	<drop-down>
@@ -172,10 +183,10 @@ under the License.
         	</entity-condition>
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             </entity-condition>
         </actions>
         <field name="chequeWithdrawalId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		<field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
@@ -197,8 +208,8 @@ under the License.
       <form name="listChequeWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChequeWithdrawal" paginate-target="chequeWithdrawal"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="ChequeWithdrawal">
-            	<condition-expr field-name="active" value="Y"/>
+            <entity-condition entity-name="AccountTransaction">
+            	<condition-expr field-name="isActive" value="Y"/>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="membersList">
@@ -242,11 +253,11 @@ under the License.
         	</entity-condition>
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             </entity-condition>
         </actions>
         <field name="chequeDepositId"><hidden/></field>
         
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		<field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
@@ -301,8 +312,8 @@ under the License.
       <form name="listChequeDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChequeDeposit" paginate-target="chequeDeposit"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="ChequeDeposit">
-            	<condition-expr field-name="active" value="Y"/>
+            <entity-condition entity-name="AccountTransaction">
+            	<condition-expr field-name="isActive" value="Y"/>
             </entity-condition>
             <entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
@@ -379,12 +390,13 @@ under the License.
         	<entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+        	</entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
         	<entity-condition entity-name="SaccoProduct" list="saccoProductList"></entity-condition>
         </actions>
         <field name="loanRepaymentId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		<field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
@@ -425,7 +437,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="LoanRepayment">
-            	<condition-expr field-name="active" value="Y"/>
+            	<condition-expr field-name="isActive" value="Y"/>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="membersList">
@@ -433,7 +445,7 @@ under the License.
         	</entity-condition>
         	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
-        	<entity-condition entity-name="SaccoProduct" list="saccoProductList"></entity-condition>
+        	<entity-condition entity-name="LoanProduct" list="saccoProductList"></entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateLoanRepayment"/>
  		<field name="partyId" title="Member">
@@ -485,14 +497,15 @@ under the License.
         	<entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+        	</entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
         	<entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
         	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
 			<entity-condition entity-name="LoanProduct" list="productList"></entity-condition>
         </actions>
         <field name="standingOrderId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		<field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
@@ -569,7 +582,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StandingOrder">
-            	<condition-expr field-name="active" value="Y"/>
+            	<condition-expr field-name="isActive" value="Y"/>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="membersList">
@@ -658,7 +671,6 @@ under the License.
         
        
         <field name="chequeTypeId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		
 		
         <field name="name" title="Name"><text></text></field>
@@ -675,7 +687,6 @@ under the License.
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChequeType"/>
- 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		
 		
         <field name="name" title="Name"><text></text></field>
@@ -688,5 +699,78 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 
-
+	<form name="FindMember" type="single" target="main" default-entity-name="Member">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="idNumber" title="ID Number"><text-find/></field>
+        <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
+        <field name="memberStatus" title="Status"><text-find/></field>
+        <field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    <form name="members" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="members"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="Member">
+        		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+        
+        
+        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+        
+       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+   
+       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+	     <field name="stationId" title="Station">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+        
+        <field name="memberStatus"><display also-hidden="false"></display></field>
+        
+        <field name="Transactions">
+        	<hyperlink target="cashWithdrawal?partyId=${partyId}" description="Transactions"></hyperlink>
+        </field>
+        
+        <!--  field name="Change Member Status">
+        	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
+        </field>
+        
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
+        </field -->
+     </form>
 </forms>
