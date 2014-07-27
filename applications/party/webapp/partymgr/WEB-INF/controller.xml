@@ -2181,6 +2181,70 @@
 			value="ChangeMemberStatus"></response>
 		<response name="error" type="view" value="ChangeMemberStatus" />
 	</request-map>
+	
+	
+	
+	<request-map uri="partyIdentificationType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="partyIdentificationType"/>
+    </request-map>
+    <request-map uri="createPartyIdentificationType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyIdentificationType"/>
+        <response name="success" type="view" value="partyIdentificationType"/>
+    </request-map>
+    <request-map uri="updatePartyIdentificationType">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updatePartyIdentificationType"/>
+        <response name="success" type="request" value="partyIdentificationType"/>
+        <response name="error" type="view" value="partyIdentificationType"/>
+    </request-map>
+    <request-map uri="deletePartyIdentificationType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyIdentificationType"/>
+        <response name="success" type="view" value="partyIdentificationType"/>
+    </request-map>
+    
+    <!-- Staff Status -->    
+    <request-map uri="enumStaffStatus">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="enumStaffStatus"
+			save-home-view="true">
+			</response>
+	</request-map>
+	
+    <request-map uri="createEnumStaffStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createEnumStaffStatus" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="enumStaffStatus">
+				<!--redirect-parameter name="staffPayrollId"/-->
+			</response>
+		<response name="error" type="view" value="enumStaffStatus" />
+	</request-map>
+	
+	<request-map uri="updateEnumStaffStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateEnumStaffStatus" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="enumStaffStatus">
+			<!-- redirect-parameter name="staffPayrollId"/-->
+			</response>
+		<response name="error" type="view" value="enumStaffStatus" />
+	</request-map>
+	
+	<request-map uri="deleteEnumStaffStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteEnumStaffStatus" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="view"
+			value="staffpayrollelements">
+			<!-- redirect-parameter name="staffPayrollId"/-->
+			</response>
+		<response name="error" type="view" value="enumStaffStatus" />
+	</request-map>
 
 
 	<!-- View Mappings -->
@@ -2483,6 +2547,10 @@
 
 	<view-map name="memberAttachments" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberAttachments" />
+		
+	<view-map name="partyIdentificationType" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewPartyIdentificationType"/>
+	<view-map name="enumStaffStatus" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewenumStaffStatus"/>
+		
 
 
 	<!-- end of view mappings -->

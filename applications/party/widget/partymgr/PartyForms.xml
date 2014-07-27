@@ -1338,6 +1338,55 @@ under the License.
         <field name="estimatedAmount" title="${uiLabelMap.SfaEstimatedAmount}"><display/></field>
         <field name="partyId"><display/></field>
     </form>
+    
+    
+    <form name="NewPartyIdentificationType" type="single" target="createPartyIdentificationType"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="partyIdentificationTypeContext">
+        <actions>
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<set field="parentTypeId" from-field="partyIdentificationTypeId"/>
+        	
+        </actions>
+        
+        <field name="partyIdentificationTypeId"><hidden/></field>
+        <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="parentTypeId" title="Parent ID" > 
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
+       	 </drop-down>
+       	 </field>
+        <field name="hasTable" title="Has Table" ><hidden/>
+            <!-- drop-down allow-empty="true">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down-->
+        </field>
+                        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listPartyIdentificationType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartyIdentificationType" paginate-target="PartyIdentificationType"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyIdentificationType">
+            </entity-condition>
+            <entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<set field="parentTypeId" from-field="partyIdentificationTypeId"/>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updatePAYETable"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="description" title="Description"> <display also-hidden="false"/> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePartyIdentificationType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="partyIdentificationTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    
 
     <form name="listPartyIdentification" type="list" list-name="listIt"
                  default-table-style="basic-table hover-bar" target="updatePartyIdentification">
@@ -1668,6 +1717,37 @@ under the License.
         <field name="memberStatus" title="Status"><display also-hidden="false"></display></field>
         <field name="comment" title="Comment"><display></display></field>
         <field name="createdStamp" title="When"><display also-hidden="false"></display></field>
+    </form>
+    
+    
+    <form name="NewenumStaffStatus" type="single" target="createEnumStaffStatus"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="enumStaffStatusContext">
+        
+        <field name="enum_Id"><hidden/></field>
+	    <field name="enum_code" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listenumStaffStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEnumStaffStatus" paginate-target="Enumeration"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="Enumeration"></entity-condition>
+         </actions>
+         
+        <auto-fields-service default-field-type="hidden" service-name="updateEnumStaffStatus"/>
+       
+        <field name="enum_Id"> <hidden/> </field>
+        <field name="enum_code"> <text></text> </field>
+        <field name="description"> <text></text> </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteEnumStaffStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="enum_Id"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
 </forms>
