@@ -99,6 +99,7 @@ under the License.
 				$.each(data, function(item, itemvalue) {
 				   
 					jQuery('input[name="availableAmount"]').val(itemvalue);
+					jQuery('input[name="bookBalanceAmount"]').val(itemvalue);
 				});
                },
       error : function(errorData){
