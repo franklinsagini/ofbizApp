@@ -26,6 +26,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="Cash Withdrawal"/>
                 <set field="headerItem" value="cashWithdrawal"/>
+                <set field="tabButtonItem" value="cashWithdrawal"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createCashWithdrawal"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -70,13 +71,13 @@ under the License.
             <actions>
                 <set field="titleProperty" value="Cash Deposit"/>
                 <set field="headerItem" value="cashDeposit"/>
+                <set field="tabButtonItem" value="cashDeposit"/>
               
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createCashDeposit"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
                 <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
             </actions>
             <widgets>
@@ -115,13 +116,14 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="Cheque Withdrawal"/>
-                <set field="headerItem" value="chequeWithdrawal"/>
+                <set field="tabButtonItem" value="chequeWithdrawal"/>
                 <set field="displayPassword" value="Y"/>
-                <set field="target" value="createChequeWithdrawal"/>
+                <set field="target" value="createChequeWithdrawal" global="true"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
+               <!-- set field="partyId" from-field="parameters.partyId"/ -->
                 <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
             </actions>
             <widgets>
@@ -159,14 +161,15 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="Cheque Deposit"/>
-                <set field="headerItem" value="chequeDeposit"/>
+                <set field="tabButtonItem" value="chequeDeposit"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createChequeDeposit"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
-                <entity-one entity-name="ChequeDeposit" value-field="chequeDepositContext"/>
+                <!--  set field="partyId" from-field="parameters.partyId"/ -->
+                <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -204,11 +207,15 @@ under the License.
             <actions>
                 <set field="titleProperty" value="Loan Repayment"/>
                 <set field="headerItem" value="loanRepayment"/>
+                <set field="tabButtonItem" value="loanRepayment"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createLoanRepayment"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <!-- entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/ -->
                 
                 <entity-one entity-name="LoanRepayment" value-field="loanRepaymentContext"/>
             </actions>
@@ -248,6 +255,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="Apply Standing Order"/>
                 <set field="headerItem" value="applyStandingOrder"/>
+                 <set field="tabButtonItem" value="applyStandingOrder"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createApplyStandingOrder"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -293,6 +301,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="Cheque Type"/>
                 <set field="headerItem" value="chequeType"/>
+                
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createChequeType"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>

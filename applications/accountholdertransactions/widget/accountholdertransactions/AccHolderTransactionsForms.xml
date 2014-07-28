@@ -40,11 +40,12 @@ under the License.
             </entity-condition>
         </actions>
         <field name="accountTransactionId"><hidden/></field>
-		<field name="partyId" title="Member" widget-style="required" required-field="true" parameter-name="parameters.partyId">
+        <field name="partyId"><hidden/></field>
+		<!-- field name="partyId" title="Member" widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
-        </field>
+        </field -->
          <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
@@ -61,13 +62,14 @@ under the License.
       <form name="listCashWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashWithdrawal" paginate-target="cashWithdrawal"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="AccountTransaction">
+            <entity-condition entity-name="AccountTransaction" >
             	
             	<condition-list combine="and">
             		<condition-expr field-name="isActive" value="Y"/>
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
             	</condition-list>
+            	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
             
             <entity-condition entity-name="Member" list="memberList">
@@ -77,26 +79,30 @@ under the License.
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
 		
 		<field name="partyId" title="Member">
-        	<drop-down>
+        	<!-- drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down>
+        	</drop-down -->
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field>
-        <field name="transactionType" title="Transaction Type"><text></text></field>
-        <field name="slipNumber" title="SLIP Number"><text></text></field>
-        <field name="transactionAmount" title="Amount"><text></text></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="transactionType" title="Transaction Type"><display also-hidden="false"></display></field>
+        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Amount"><display also-hidden="false"></display></field>
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteCashWithdrawal" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="accountTransactionId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
     </form>
     
     <!-- CashDeposit -->
+    <!-- form name="NewCashDeposit" type="single" target="createCashDeposit"
+	focus-field-name="transactionAmount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="accountTransactionContext" default-entity-name="AccountTransaction" -->
     <form name="NewCashDeposit" type="single" target="createCashDeposit"
 	focus-field-name="transactionAmount" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="cashDepositContext">
-        
+	default-table-style="basic-table" default-map-name="cashDepositContext">    
         <actions>
         	<entity-condition entity-name="Member" list="memberList">
         		<order-by field-name="firstName"/>
@@ -106,13 +112,16 @@ under the License.
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
             	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             </entity-condition>
+            
         </actions>
         <field name="accountTransactionId"><hidden/></field>
-		<field name="partyId" title="Member"  widget-style="required" required-field="true" parameter-name="parameters.partyId">
+        <!-- field name="partyId" parameter-name="parameters.partyId"><hidden/></field -->
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
-        </field>
+        </field -->
+        <field name="partyId"><hidden/></field>
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true" >
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
@@ -120,11 +129,11 @@ under the License.
         </field>
         <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text></text></field>
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
-        <field name="modeOfPaymentsId" title="Model Of Payment"  widget-style="required" required-field="true">
+        <!-- field name="modeOfPaymentsId" title="Model Of Payment"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
         	</drop-down>
-        </field>
+        </field -->
         <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -140,6 +149,7 @@ under the License.
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
             	</condition-list>
+            	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="memberList">
@@ -150,31 +160,34 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
 		<field name="partyId" title="Member">
-        	<drop-down>
+        	<!-- drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down>
+        	</drop-down -->
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field>
-        <field name="transactionType" title="Transaction Type"><text></text></field>
-        <field name="slipNumber" title="SLIP Number"><text></text></field>
-        <field name="transactionAmount" title="Cash Amount"><text></text></field>
+        <field name="transactionType" title="Transaction Type"> <display also-hidden="false"></display> </field>
+        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Cash Amount"><display also-hidden="false"></display></field>
         
-         <field name="modeOfPaymentsId" title="Model Of Payment">
-        	<drop-down>
+         <!-- field name="modeOfPaymentsId" title="Model Of Payment">
+        	< drop-down>
         		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
         	</drop-down>
-        </field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        	<display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"></display-entity>
+        </field  -->
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteCashDeposit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="cashDepositId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
     </form>
     
 	<!-- ChequeWithdrawal -->
 	<form name="NewChequeWithdrawal" type="single" target="createChequeWithdrawal"
 	focus-field-name="chequeNo" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="chequeWithdrawalContext">
+	default-table-style="basic-table" default-map-name="accountTransactionContext">
         
         <actions>
         	
@@ -202,7 +215,7 @@ under the License.
         <field name="chequeAmount" title="Cheque Amount"  widget-style="required" required-field="true"><text></text></field>
 		 
       
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
       <form name="listChequeWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChequeWithdrawal" paginate-target="chequeWithdrawal"
@@ -235,7 +248,7 @@ under the License.
 		<!-- ChequeDeposit -->
 	<form name="NewChequeDeposit" type="single" target="createChequeDeposit"
 	focus-field-name="chequeNo" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="chequeDepositContext">
+	default-table-style="basic-table" default-map-name="accountTransactionContext">
         
         <actions>
         	
