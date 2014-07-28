@@ -59,6 +59,9 @@ under the License.
          var reqUrl = '/accountholdertransactions/control/availableamount';
          availableAmount(reqUrl, memberAccountId);
         });
+        
+      
+    
 		
      });
      
@@ -84,7 +87,7 @@ under the License.
     });
     }
 	
-	     function availableAmount(reqUrl, memberAccountId){
+	function availableAmount(reqUrl, memberAccountId){
     jQuery.ajax({
 
      url    : reqUrl,
@@ -103,5 +106,21 @@ under the License.
               alert("Some error occurred while processing the request");
               }
     });
+    }
+    
+    function checkAvailableBalance(){
+    
+    	var isAvailable = false;
+    	
+    	var availableBalance = jQuery('input[name="availableAmount"]').val();
+    	var transactionAmount = jQuery('input[name="transactionAmount"]').val();
+     	
+    	if (transactionAmount < availableBalance){
+    		isAvailable = true;
+    	} else{
+    		//alert('Not enough Balance, Transanction Declined');
+    		isAvailable = false;
+    	}
+    	return isAvailable;
     }
 </script>
