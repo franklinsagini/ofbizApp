@@ -23,7 +23,7 @@ under the License.
 	
 		<!-- NewCashWithdrawal -->
 	<form name="NewCashWithdrawal" type="single" target="createCashWithdrawal"
-	focus-field-name="name" header-row-style="header-row"
+	focus-field-name="transactionAmount" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="cashWithdrawalContext">
         
         <actions>
@@ -33,83 +33,125 @@ under the License.
         	<entity-condition entity-name="Member" list="memberList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
+        	
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            </entity-condition>
         </actions>
-        <field name="cashWithdrawalId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
-		
-		<field name="partyId" title="Member">
-        	<drop-down>
+        <field name="accountTransactionId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+		<!-- field name="partyId" title="Member" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
+        </field -->
+         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
         </field>
-        <field name="slipNumber" title="SLIP Number"><text></text></field>
-        <field name="cashAmount" title="Cash Amount"><text></text></field>
+        <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text></text></field>
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
         
-        <field name="availableAmount" title="Available Amount"><text></text></field>
+        <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return checkAvailableBalance();"><submit button-type="button"/></field>
        </form>
         
       <form name="listCashWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashWithdrawal" paginate-target="cashWithdrawal"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="CashWithdrawal">
-            	<condition-expr field-name="active" value="Y"/>
+            <entity-condition entity-name="AccountTransaction" >
+            	
+            	<condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            	</condition-list>
+            	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
+            
+            <entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
- 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		
 		<field name="partyId" title="Member">
-        	<drop-down>
+        	<!-- drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down>
+        	</drop-down -->
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field>
-        <field name="slipNumber" title="SLIP Number"><text></text></field>
-        <field name="cashAmount" title="Cash Amount"><text></text></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="transactionType" title="Transaction Type"><display also-hidden="false"></display></field>
+        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Amount"><display also-hidden="false"></display></field>
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteCashWithdrawal" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="cashWithdrawalId"/>
+                <parameter param-name="accountTransactionId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
     </form>
     
     <!-- CashDeposit -->
+    <!-- form name="NewCashDeposit" type="single" target="createCashDeposit"
+	focus-field-name="transactionAmount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="accountTransactionContext" default-entity-name="AccountTransaction" -->
     <form name="NewCashDeposit" type="single" target="createCashDeposit"
-	focus-field-name="cashAmount" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="cashDepositContext">
-        
+	focus-field-name="transactionAmount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cashDepositContext">    
         <actions>
         	<entity-condition entity-name="Member" list="memberList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
         	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            </entity-condition>
+            
         </actions>
-        <field name="cashDepositId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
-		<field name="partyId" title="Member">
+        <field name="accountTransactionId"><hidden/></field>
+        <!-- field name="partyId" parameter-name="parameters.partyId"><hidden/></field -->
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
+        </field -->
+        <field name="partyId"><hidden/></field>
+        <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true" >
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
         </field>
-        <field name="slipNumber" title="SLIP Number"><text></text></field>
-        <field name="cashAmount" title="Cash Amount"><text></text></field>
-        <field name="modeOfPaymentsId" title="Model Of Payment">
+        <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text></text></field>
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+        <!-- field name="modeOfPaymentsId" title="Model Of Payment"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
         	</drop-down>
-        </field>
-        <field name="availableAmount" title="Available Amount"><text></text></field>
+        </field -->
+        <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+		<field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
        
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" ><submit button-type="button" /></field>
        </form>
         
       <form name="listCashDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashDeposit" paginate-target="cashDeposit"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="CashDeposit">
-            	<condition-expr field-name="active" value="Y"/>
+           <entity-condition entity-name="AccountTransaction">
+            	
+            	<condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            	</condition-list>
+            	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="memberList">
@@ -119,60 +161,71 @@ under the License.
         	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
- 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
-		
 		<field name="partyId" title="Member">
-        	<drop-down>
+        	<!-- drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down>
+        	</drop-down -->
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field>
-        <field name="slipNumber" title="SLIP Number"></field>
-        <field name="cashAmount" title="Cash Amount"></field>
+        <field name="transactionType" title="Transaction Type"> <display also-hidden="false"></display> </field>
+        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Cash Amount"><display also-hidden="false"></display></field>
         
-         <field name="modeOfPaymentsId" title="Model Of Payment">
-        	<drop-down>
+         <!-- field name="modeOfPaymentsId" title="Model Of Payment">
+        	< drop-down>
         		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
         	</drop-down>
-        </field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        	<display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"></display-entity>
+        </field  -->
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteCashDeposit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="cashDepositId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
     </form>
     
 	<!-- ChequeWithdrawal -->
 	<form name="NewChequeWithdrawal" type="single" target="createChequeWithdrawal"
 	focus-field-name="chequeNo" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="chequeWithdrawalContext">
+	default-table-style="basic-table" default-map-name="accountTransactionContext">
         
         <actions>
         	
         	<entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            </entity-condition>
         </actions>
         <field name="chequeWithdrawalId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
-		<field name="partyId" title="Member">
+		<field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field>
-        <field name="chequeNo" title="Cheque No"><text></text></field>
-        <field name="payee" title="Payee"><text></text></field>
-        <field name="chequeAmount" title="Cheque Amount"><text></text></field>
+        <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
+        </field>
+        <field name="chequeNo" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
+        <field name="payee" title="Payee"  widget-style="required" required-field="true"><text></text></field>
+        <field name="chequeAmount" title="Cheque Amount"  widget-style="required" required-field="true"><text></text></field>
 		 
-      
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+      	<field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
       <form name="listChequeWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChequeWithdrawal" paginate-target="chequeWithdrawal"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="ChequeWithdrawal">
-            	<condition-expr field-name="active" value="Y"/>
+            <entity-condition entity-name="AccountTransaction">
+            	<condition-expr field-name="isActive" value="Y"/>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="membersList">
@@ -198,7 +251,7 @@ under the License.
 		<!-- ChequeDeposit -->
 	<form name="NewChequeDeposit" type="single" target="createChequeDeposit"
 	focus-field-name="chequeNo" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="chequeDepositContext">
+	default-table-style="basic-table" default-map-name="accountTransactionContext">
         
         <actions>
         	
@@ -214,13 +267,21 @@ under the License.
         	<entity-condition entity-name="FinAccount" list="accountList">
         		<order-by field-name="finAccountName"/>
         	</entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            </entity-condition>
         </actions>
         <field name="chequeDepositId"><hidden/></field>
         
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
-		<field name="partyId" title="Member">
+		<field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down>
         </field>
         <field name="internalexternal" title="Internal / External">
@@ -230,45 +291,47 @@ under the License.
             </drop-down>
       	</field>
       	
-      	<field name="chequeTypeId" title="Cheque Type">
+      	<field name="chequeTypeId" title="Cheque Type"  widget-style="required" required-field="true">
       		<drop-down allow-empty="false">
       			<list-options key-name="chequeTypeId" list-name="chequeTypeList" description="${name}"/>
       		</drop-down>
       		
       	</field>
 
-		<field name="bankDetailsId" title="Bank">
+		<field name="bankDetailsId" title="Bank"  widget-style="required" required-field="true">
       		<drop-down allow-empty="false">
       			<list-options key-name="bankDetailsId" list-name="bankDetailsList" description="${bankName}"/>
       		</drop-down>
       		
       	</field>
       	
-      	<field name="bankBranchId" title="Branch">
+      	<field name="bankBranchId" title="Branch"  widget-style="required" required-field="true">
       		<drop-down allow-empty="false">
       			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
       		</drop-down>
       		
       	</field>      	
-        <field name="drawer" title="Drawer" ><text></text></field>
-        <field name="chequeNo" title="Cheque No" ><text></text></field>
-        <field name="receiptNo" title="Receipt No" ><text></text></field>
+        <field name="drawer" title="Drawer"  widget-style="required" required-field="true"><text></text></field>
+        <field name="chequeNo" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
+        <field name="receiptNo" title="Receipt No"  widget-style="required" required-field="true"><text></text></field>
         
-        <field name="saccoAccountId" title="Sacco Account">
+        <field name="saccoAccountId" title="Sacco Account"  widget-style="required" required-field="true">
       		<drop-down allow-empty="false">
       			<list-options key-name="finAccountId" list-name="accountList"  description="${finAccountName} - ${finAccountCode}"/>
       		</drop-down>
       		
       	</field>
-        <field name="chequeAmount" title="Cheque Amount"><text></text></field>
+        <field name="chequeAmount" title="Cheque Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
        </form>
         
       <form name="listChequeDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChequeDeposit" paginate-target="chequeDeposit"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="ChequeDeposit">
-            	<condition-expr field-name="active" value="Y"/>
+            <entity-condition entity-name="AccountTransaction">
+            	<condition-expr field-name="isActive" value="Y"/>
             </entity-condition>
             <entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
@@ -345,43 +408,44 @@ under the License.
         	<entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+        	</entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
         	<entity-condition entity-name="SaccoProduct" list="saccoProductList"></entity-condition>
         </actions>
         <field name="loanRepaymentId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
-		<field name="partyId" title="Member">
+		<field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field>
-        <field name="memberAccountId" title="Member Account">
+        <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
         	<drop-down allow-empty="false">
         		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${accountNo}"/>
         	</drop-down>
         </field>
-        <field name="accountNo" title="Account No"><text></text></field>
-        <field name="accountName" title="Account Name"><text></text></field>
-        <field name="accountBalance" title="Account Balance"><text></text></field>
+        <field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text></text></field>
+        <field name="accountName" title="Account Name"  widget-style="required" required-field="true"><text></text></field>
+        <field name="accountBalance" title="Account Balance"  widget-style="required" required-field="true"><text></text></field>
         
-        <field name="loanApplicationId" title="Loan">
+        <field name="loanApplicationId" title="Loan"  widget-style="required" required-field="true">
         	<drop-down allow-empty="false">
         		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
         	</drop-down>
         </field>
         
-        <field name="loanNo" title="Loan No"><text></text></field>
-        <field name="loanTypeId" title="Loan Type">
+        <field name="loanNo" title="Loan No"  widget-style="required" required-field="true"><text></text></field>
+        <field name="loanTypeId" title="Loan Type"  widget-style="required" required-field="true">
         	<drop-down allow-empty="false">
         		<list-options key-name="saccoProductId" list-name="saccoProductList" description="${name} - ${code}"/>
         	</drop-down>
         </field>
         
-        <field name="loanBalanceAmt" title="Loan Balance"><text></text></field>
-        <field name="interestBalanceAmt" title="Interest Amount" position="2"><text></text></field>
-        <field name="loanRepaymentAmt" title="Loan Repayment Amount"><text></text></field>
-        <field name="interestRepaymentAmt" title="Interest Repayment Amount" position="2"><text></text></field>
+        <field name="loanBalanceAmt" title="Loan Balance"  widget-style="required" required-field="true"><text></text></field>
+        <field name="interestBalanceAmt" title="Interest Amount" position="2"  widget-style="required" required-field="true"><text></text></field>
+        <field name="loanRepaymentAmt" title="Loan Repayment Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="interestRepaymentAmt" title="Interest Repayment Amount" position="2"  widget-style="required" required-field="true"><text></text></field>
         
       
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
@@ -391,7 +455,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="LoanRepayment">
-            	<condition-expr field-name="active" value="Y"/>
+            	<condition-expr field-name="isActive" value="Y"/>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="membersList">
@@ -399,7 +463,7 @@ under the License.
         	</entity-condition>
         	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
-        	<entity-condition entity-name="SaccoProduct" list="saccoProductList"></entity-condition>
+        	<entity-condition entity-name="LoanProduct" list="saccoProductList"></entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateLoanRepayment"/>
  		<field name="partyId" title="Member">
@@ -451,38 +515,45 @@ under the License.
         	<entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+        	</entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
         	<entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
         	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
+			<entity-condition entity-name="LoanProduct" list="productList"></entity-condition>
         </actions>
         <field name="standingOrderId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
-		<field name="partyId" title="Member">
+		<field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field>
-        <field name="memberNo" title="Member No"><text></text></field>
-        <field name="payrollNo" title="Payroll No"><text></text></field>
-        <field name="standingOrderAmount" title="Standing Order Amount"><text></text></field>
-        <field name="orderStartDate" title="Order Start Date"><date-time/></field>
+        <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
+        </field>
+        <field name="memberNo" title="Member No"  widget-style="required" required-field="true"><text></text></field>
+        <field name="payrollNo" title="Payroll No"  widget-style="required" required-field="true"><text></text></field>
+        <field name="standingOrderAmount" title="Standing Order Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="orderStartDate" title="Order Start Date"  widget-style="required" required-field="true"><date-time/></field>
         <field name="internalexternal" title="Internal/External">
         	<drop-down>
         		<option key="External" description="External"/>
         		<option key="Internal" description="Internal"/>
         	</drop-down>
         </field>
-        <field name="transactionTYpe" title="Transaction Type">
+        <field name="transactionTYpe" title="Transaction Type"  widget-style="required" required-field="true">
         	<drop-down>
         		<option key="Loan" description="Loan"/>
         		<option key="Others" description="Others"/>
         	</drop-down>
         </field>
         
-        <field name="loanTypeId" title="Loan Type">
+        <field name="loanTypeId" title="Loan Type"  widget-style="required" required-field="true">
         	<drop-down>
-        		<list-options key-name="saccoProductId" list-name="saccoProductList" description="${name} - ${code}"/>
+        		<list-options key-name="loanProductId" list-name="productList" description="${name} - ${code}"/>
         	</drop-down>
         </field>
         
@@ -529,7 +600,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StandingOrder">
-            	<condition-expr field-name="active" value="Y"/>
+            	<condition-expr field-name="isActive" value="Y"/>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="membersList">
@@ -618,7 +689,6 @@ under the License.
         
        
         <field name="chequeTypeId"><hidden/></field>
-		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		
 		
         <field name="name" title="Name"><text></text></field>
@@ -635,7 +705,6 @@ under the License.
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChequeType"/>
- 		<field name="active" title="Active"><text default-value="Y" disabled="true"></text></field>
 		
 		
         <field name="name" title="Name"><text></text></field>
@@ -648,5 +717,78 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 
-
+	<form name="FindMember" type="single" target="main" default-entity-name="Member">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="idNumber" title="ID Number"><text-find/></field>
+        <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
+        <field name="memberStatus" title="Status"><text-find/></field>
+        <field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    <form name="members" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="members"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="Member">
+        		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+        
+        
+        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+        
+       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+   
+       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+	     <field name="stationId" title="Station">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+        
+        <field name="memberStatus"><display also-hidden="false"></display></field>
+        
+        <field name="Transactions">
+        	<hyperlink target="cashWithdrawal?partyId=${partyId}" description="Transactions"></hyperlink>
+        </field>
+        
+        <!--  field name="Change Member Status">
+        	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
+        </field>
+        
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
+        </field -->
+     </form>
 </forms>

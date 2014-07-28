@@ -457,9 +457,13 @@ under the License.
         <actions>
             <entity-condition entity-name="Member" list="membersList">
             </entity-condition>
-             <entity-condition entity-name="SaccoProduct" list="productsList">
+             <!-- entity-condition entity-name="SaccoProduct" list="productsList">
              	 <condition-expr field-name="productType" operator="equals" value="Loan"/>
+            </entity-condition -->
+            
+            <entity-condition entity-name="LoanProduct" list="productsList">
             </entity-condition>
+            
             <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
             </entity-condition>
             
@@ -478,7 +482,7 @@ under the License.
                 <list-options list-name="membersList" key-name="partyId" description="${firstName} ${lastName}" />
             </drop-down>
         </field -->
-        <field name="partyId" title="Member" widget-style="required" required-field="true">
+        <field name="partyId" title="Member" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="membersList" key-name="partyId" description="${firstName} ${lastName}" />
             </drop-down>
@@ -492,16 +496,18 @@ under the License.
        <field name="memberNumber" title="Member Number" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="mobileNumber" title="Mobile Number" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
-        <field name="saccoProductId" title="Loan Type"  widget-style="required" required-field="true">
+        <field name="loanProductId" title="Loan Type"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
-                <list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/>
+                <list-options list-name="productsList" key-name="loanProductId" description="${name} - ${code}"/>
             </drop-down>
         </field>
 
-       <field name="percentInterestPerMonthAmt" title="Interest Rate (Per Month)" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="interestRatePM" title="Interest Rate (Per Month)" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="maxLoanAmt" title="Maximum Loan Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="maxRepaymentPeriod" title="Maximum Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
-       <field name="loanamt" title="Loan Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
-       <field name="selectedRepaymentPeriod" title="Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       
+       <field name="loanAmt" title="Loan Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="repaymentPeriod" title="Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
 
 
        <field name="paymentMethodTypeId" title="Payment Method" widget-style="required" required-field="true">

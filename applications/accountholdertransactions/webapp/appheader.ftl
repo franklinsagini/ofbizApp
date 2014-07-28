@@ -47,24 +47,35 @@ under the License.
    jQuery(document).ready(function(){
 
 
-   jQuery('select[name="bankDetailsId"]').change(function(){
-         var bankDetailsId = this.value;
-         var reqUrl = '/payroll/control/brancheslist';
-         bankBranches(reqUrl, bankDetailsId);
+   jQuery('select[name="partyId"]').change(function(){
+         var partyId = this.value;
+         var reqUrl = '/accountholdertransactions/control/accountslist';
+         memberAccounts(reqUrl, partyId);
         });
+		
+		
+		  jQuery('select[name="memberAccountId"]').change(function(){
+         var memberAccountId = this.value;
+         var reqUrl = '/accountholdertransactions/control/availableamount';
+         availableAmount(reqUrl, memberAccountId);
+        });
+        
+      
+    
+		
      });
      
-      function bankBranches(reqUrl, bankDetailsId){
+      function memberAccounts(reqUrl, partyId){
     jQuery.ajax({
 
      url    : reqUrl,
      type   : 'GET',
-     data   : {'bankDetailsId': bankDetailsId}, //here you can pass the parameters to  
+     data   : {'partyId': partyId}, //here you can pass the parameters to  
                                                    //the request if any.
      success : function(data){
-				var options =  jQuery('select[name="bankBranchId"]');
+				var options =  jQuery('select[name="memberAccountId"]');
 				options.empty();
-				options.append($("<option />").val('').text('Please select branch ..'));
+				options.append($("<option />").val('').text('Please select Member Account ..'));
 				$.each(data, function(item, itemvalue) {
 				    options.append($("<option />").val(item).text(itemvalue));
 				});
@@ -74,5 +85,43 @@ under the License.
               alert("Some error occurred while processing the request");
               }
     });
+    }
+	
+	function availableAmount(reqUrl, memberAccountId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'memberAccountId': memberAccountId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+				
+				$.each(data, function(item, itemvalue) {
+				   
+					jQuery('input[name="availableAmount"]').val(itemvalue);
+					jQuery('input[name="bookBalanceAmount"]').val(itemvalue);
+				});
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+    });
+    }
+    
+    function checkAvailableBalance(){
+    
+    	var isAvailable = false;
+    	
+    	var availableBalance = jQuery('input[name="availableAmount"]').val();
+    	var transactionAmount = jQuery('input[name="transactionAmount"]').val();
+     	
+    	if (transactionAmount < availableBalance){
+    		isAvailable = true;
+    	} else{
+    		//alert('Not enough Balance, Transanction Declined');
+    		isAvailable = false;
+    	}
+    	return isAvailable;
     }
 </script>

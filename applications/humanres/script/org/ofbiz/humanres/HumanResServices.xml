@@ -47,6 +47,33 @@
         <entity-one entity-name="PartyQual" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+    
+    <!-- Party Qualification Type-->
+	<simple-method method-name="createPartyQualType" short-description="Create a Party Qualification Type">
+        <make-value entity-name="PartyQualType" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PartyQualType" field="partyQualTypeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="partyQualTypeId" field="newEntity.partyQualTypeId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updatePartyQualType" short-description="Update Party Qualification Type">
+        <entity-one entity-name="PartyQualType" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePartyQualType" short-description="Delete Party Qualification Type">
+        <entity-one entity-name="PartyQualType" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+
 
     <simple-method method-name="createPartyResume" short-description="Create Resume for Party">
         <make-value entity-name="PartyResume" value-field="newEntity"/>
@@ -697,6 +724,30 @@
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
+
+    <simple-method method-name="createStaffLeaveBalances" short-description="Create Staff Leave Balances">
+        <make-value entity-name="StaffLeaveBalances" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.staffLeaveBalancesId">
+            <sequenced-id sequence-name="StaffLeaveBalances" field="newEntity.staffLeaveBalancesId"/>
+        </if-empty>
+        <field-to-result field="newEntity.staffLeaveBalancesId" result-name="staffLeaveBalancesId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateStaffLeaveBalances" short-description="Update Staff Leave Balances">
+        <entity-one entity-name="StaffLeaveBalances" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteStaffLeaveBalances" short-description="Delete Staff Leave Balances">
+        <entity-one entity-name="StaffLeaveBalances" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+
     <simple-method method-name="getCurrentPartyEmploymentData" short-description="Get all current employment information for a certain partyId">
         <!-- party benefit -->
         <entity-and entity-name="BenefitTypeAndParty" list="partyBenefitTypes" filter-by-date="true">
@@ -902,6 +953,116 @@
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createTribe" short-description="Create Tribe">
+        <make-value entity-name="Tribe" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.tribeId">
+            <sequenced-id sequence-name="Tribe" field="newEntity.tribeId"/>
+        </if-empty>
+        <field-to-result field="newEntity.tribeId" result-name="tribeId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateTribe" short-description="Update Tribe">
+        <entity-one entity-name="Tribe" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteTribe" short-description="Delete Tribe">
+        <entity-one entity-name="Tribe" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createCounty" short-description="Create County">
+        <make-value entity-name="County" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.countyId">
+            <sequenced-id sequence-name="County" field="newEntity.countyId"/>
+        </if-empty>
+        <field-to-result field="newEntity.countyId" result-name="countyId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateCounty" short-description="Update County">
+        <entity-one entity-name="County" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteCounty" short-description="Delete County">
+        <entity-one entity-name="County" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createBloodGroup" short-description="Create Blood Group">
+        <make-value entity-name="BloodGroup" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.bloodGroupId">
+            <sequenced-id sequence-name="BloodGroup" field="newEntity.bloodGroupId"/>
+        </if-empty>
+        <field-to-result field="newEntity.bloodGroupId" result-name="bloodGroupId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateBloodGroup" short-description="Update Blood Group">
+        <entity-one entity-name="BloodGroup" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteBloodGroup" short-description="Delete Blood Group">
+        <entity-one entity-name="BloodGroup" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createReligion" short-description="Create Religion">
+        <make-value entity-name="Religion" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.religionId">
+            <sequenced-id sequence-name="Religion" field="newEntity.religionId"/>
+        </if-empty>
+        <field-to-result field="newEntity.religionId" result-name="religionId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateReligion" short-description="Update Religion">
+        <entity-one entity-name="Religion" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteReligion" short-description="Delete Religion">
+        <entity-one entity-name="Religion" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+     <simple-method method-name="createFamilyRelations" short-description="Create Family Relations">
+        <make-value entity-name="FamilyRelations" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.familyRelationsId">
+            <sequenced-id sequence-name="FamilyRelations" field="newEntity.familyRelationsId"/>
+        </if-empty>
+        <field-to-result field="newEntity.familyRelationsId" result-name="familyRelationsId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateFamilyRelations" short-description="Update Family Relations">
+        <entity-one entity-name="FamilyRelations" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteFamilyRelations" short-description="Delete Family Relations">
+        <entity-one entity-name="FamilyRelations" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
 </simple-methods>

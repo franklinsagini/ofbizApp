@@ -20,7 +20,7 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="AddEmployee" type="single" target="createEmployee"
+    <!--form name="AddEmployee" type="single" target="createEmployee"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="salutation" title="${uiLabelMap.CommonTitle}"><text size="10" maxlength="30"/></field>
         <field name="firstName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
@@ -39,7 +39,7 @@
         <field name="postalAddContactMechPurpTypeId"><hidden value="PRIMARY_LOCATION"/></field>
         <field name="address1" title="${uiLabelMap.CommonAddress1}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="address2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
-        <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <!-- field name="stateProvinceGeoId" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} - ${geoId}">
@@ -48,7 +48,7 @@
                 </entity-options>
             </drop-down>
         </field -->
-        <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
+        <!--field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
         <field name="countryGeoId" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="${defaultCountryGeoId}">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} - ${geoId}">
@@ -65,7 +65,88 @@
         <field name="emailAddressTitle" title="${uiLabelMap.PartyEmailAddress}" title-area-style="group-label"><display/></field>
         <field name="emailAddress" title="${uiLabelMap.CommonEmail}"><text size="50" maxlength="60"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form -->
+    <form name="AddEmployee" type="single" target="createPerson" default-map-name="personInfo"
+        focus-field-name="salutation" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="personInfo==null" target="createPerson"/>
+        <auto-fields-service service-name="updatePerson"/>
+        <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
+        <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
+        <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="gender">
+            <drop-down allow-empty="true">
+                <option key="M" description="${uiLabelMap.CommonMale}"/>
+                <option key="F" description="${uiLabelMap.CommonFemale}"/>
+            </drop-down>
+        </field>
+        <field name="maritalStatus">
+            <drop-down allow-empty="true">
+                <option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}"/>
+                <option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}"/>
+                <option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}"/>
+                <option key="D" description="${uiLabelMap.PartyMaritalStatusDivorced}"/>
+                <option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}"/>
+            </drop-down>
+        </field>
+        <field name="employmentStatusEnumId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
+                    <entity-constraint name="enumTypeId" value="EMPLOY_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="residenceStatusEnumId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
+                    <entity-constraint name="enumTypeId" value="PTY_RESID_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="existingCustomer">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field name="preferredCurrencyUomId">
+            <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" use-when="person==null"><hidden/></field>
+        <field name="statusId" use-when="person!=null &amp;&amp; leadDescription==null">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" value="PARTY_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" use-when="person!=null &amp;&amp; leadDescription!=null">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusId" operator="in" value="LEAD_ASSIGNED,PARTY_ENABLED,PARTY_DISABLED"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="cancelLink" title=" " widget-style="smallSubmit">
+            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
     </form>
+    
+    
+    
+    
+    
+    
     <form name="AddEmployeeSkills" type="single" target="createEmployeeSkill" default-map-name="partySkill">
         <field name="partyId"><hidden/></field>
         <field name="skillTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -220,6 +301,88 @@
         <field name="fromDate"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
+    <!-- Staff Leave Balance Form -->
+    <form name="NewStaffLeaveBalances" type="single" target="createStaffLeaveBalances"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffLeaveBalanacesContext">
+        
+        <actions>
+        	<entity-condition entity-name="Person" list="partyList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+
+        	<entity-condition entity-name="EmplLeaveType" list="leaveTypeList"></entity-condition>
+        	<set field="leaveTypeId" from-field="leaveTypeId"/>
+        	        	
+        </actions>
+        
+        <field name="staffLeaveBalancesId"><hidden/></field>
+        <field name="partyId" parameter-name="partyId"><hidden/></field>
+        <!-- field name="staffNo" title="Staff No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="20"/></field>
+        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+         <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="partyList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <field name="leaveTypeId" title="Leave Type">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="leaveTypeList" key-name="leaveTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="allocated" title="Days Allocated" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="bbf" title="Balance Brought Forward" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="taken" title="Days Taken" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="accrued" title="Days Accrued" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="balance" title="Balance" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listStaffLeaveBalances" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffLeaveBalances" paginate-target="StaffLeaveBalances"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <!-- actions>
+        	<entity-condition entity-name="PayPoint" list="payPointList" ></entity-condition>
+            <entity-condition entity-name="BankDetails">
+            </entity-condition>
+            <entity-condition entity-name="BankBranch">
+            </entity-condition>
+        </actions -->
+        <actions>
+        	
+        	
+        	 <entity-condition entity-name="StaffLeaveBalances"></entity-condition>
+        	 <entity-condition entity-name="Person" list="partyList"></entity-condition>
+        		<set field="partyId" from-field="partyId"/>
+        	<entity-condition entity-name="EmplLeaveType" list="leaveTypeList">
+            </entity-condition>
+             
+        </actions>
+
+         <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="partyList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <field name="leaveTypeId" title="Leave Type">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="leaveTypeList" key-name="leaveTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="allocated" title="Days Allocated"><text size="30" maxlength="60"/></field>
+        <field name="bbf" title="Balance Brought Forward"><text size="30" maxlength="60"/></field>
+        <field name="taken" title="Days Taken"><text size="30" maxlength="60"/></field>
+        <field name="accrued" title="Days Accrued."><text size="30" maxlength="60"/></field>
+        <field name="balance" title="Balance"><text size="30" maxlength="60"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStaffLeaveBalances" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="staffLeaveBalancesId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
     <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">
         <field name="company" entry-name="employment.partyIdFrom">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
@@ -244,5 +407,139 @@
             </hyperlink>
         </field>
     </form>
+    <!-- HR Definitions -->
+    <form name="NewTribe" type="single" target="createTribe"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="tribeContext">
+        
+        <field name="tribeId"><hidden/></field>
+        <field name="tribe" title="Tribe" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listTribes" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTribe" paginate-target="Tribe"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       
+       <actions>
+            <entity-condition entity-name="Tribe">
+            </entity-condition>
+        </actions>
+       <field name="tribeId"><hidden/></field>
+        <field name="tribe" title="Tribe"><text size="30" maxlength="60"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTribe" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="tribeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <form name="NewCounty" type="single" target="createCounty"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="countyContext">
+        
+        <field name="countyId"><hidden/></field>
+        <field name="county" title="County" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listCounties" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCounty" paginate-target="County"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <actions>
+            <entity-condition entity-name="County">
+            </entity-condition>
+        </actions>
+        <field name="countyId"><hidden/></field>
+        <field name="county" title="County"><text size="30" maxlength="60"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteCounty" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="countyId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <form name="NewBloodGroup" type="single" target="createBloodGroup"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="bloodGroupContext">
+        
+        <field name="bloodGroupId"><hidden/></field>
+        <field name="bloodGroup" title="Blood Group" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listBloodGroups" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBloodGroup" paginate-target="BloodGroup"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <actions>
+            <entity-condition entity-name="BloodGroup">
+            </entity-condition>
+        </actions>
+        <field name="bloodGroupId"><hidden/></field>
+        <field name="bloodGroup" title="Blood Group"><text size="30" maxlength="60"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteBloodGroup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="bloodGroupId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <form name="NewReligion" type="single" target="createReligion"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="religionContext">
+        
+        <field name="religionId"><hidden/></field>
+        <field name="religion" title="Religion" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listReligion" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateReligion" paginate-target="Religion"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       
+       <actions>
+            <entity-condition entity-name="Religion">
+            </entity-condition>
+        </actions>
+        <field name="religionId"><hidden/></field>
+        <field name="religion" title="Religion"><text size="30" maxlength="60"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteReligion" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="religionId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <form name="NewFamilyRelations" type="single" target="createFamilyRelations"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="religionContext">
+        
+        <field name="familyRelationsId"><hidden/></field>
+        <field name="relationship" title="Relationship" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listFamilyRelations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFamilyRelations" paginate-target="Religion"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       
+       <actions>
+            <entity-condition entity-name="FamilyRelations">
+            </entity-condition>
+        </actions>
+        <field name="familyRelationsId"><hidden/></field>
+        <field name="relationship" title="Relationship"><text size="30" maxlength="60"/></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteFamilyRelations" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="familyRelationsId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
 </forms>
 

@@ -198,6 +198,12 @@ under the License.
 	<entity entity-name="LoanProduct" package-name="org.ofbiz.loans"
 		title="Loan Product Entity">
 		<field name="loanProductId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="branchId" type="name"></field>
+		
 		<field name="name" type="name"></field>
 		<field name="code" type="name"></field>
 		<field name="maxRepaymentPeriod" type="numeric"></field>
@@ -207,36 +213,50 @@ under the License.
 		<field name="minimumAmt" type="fixed-point"></field>
 		<field name="maximumAmt" type="fixed-point"></field>
 		
-		<field name="percentageOfSavings" type="indicator"></field>
+		<field name="percentageOfSavings" type="name"></field>
 		<field name="percentageOfSavingsAmt" type="fixed-point"></field>
-		<field name="retention" type="indicator"></field>
+		
+		<field name="multipleOfSavings" type="name"></field>
+		<field name="multipleOfSavingsAmt" type="fixed-point"></field>
+		
+		<field name="retention" type="name"></field>
 		<field name="retentionAmt" type="fixed-point"></field>
 		<field name="retentionPercentage" type="fixed-point"></field>
 		
-		<field name="monthlyContribution" type="indicator"></field>
+		<field name="monthlyContribution" type="name"></field>
 		<field name="monthlyContributionConstant" type="fixed-point"></field>
 		<field name="monthlyContributionDecimal" type="fixed-point"></field>
 		
 		
-		<field name="retainBOSADeposit" type="indicator"></field>
+		<field name="retainBOSADeposit" type="name"></field>
 		<field name="percentageDepositRetained" type="fixed-point"></field>
 		
-		<field name="percentageOfMemberNetSalary" type="indicator"></field>
+		<field name="percentageOfMemberNetSalary" type="name"></field>
 		<field name="percentageOfMemberNetSalaryAmt" type="fixed-point"></field>
 		
-		<field name="salaryPointShouldBeFOSA" type="indicator"></field>
-		<field name="deductFromMemberBonus" type="indicator"></field>
+		<field name="salaryPointShouldBeFOSA" type="name"></field>
+		<field name="deductFromMemberBonus" type="name"></field>
 		
-		<field name="ifGroup" type="indicator"></field>
+		<field name="isGroup" type="name"></field>
 		
 		<field name="minimumPeriodToEligibility" type="numeric"></field>
 		
 		<prim-key field="loanProductId" />
+		
+		<index name="LOAN_NAME" unique="true">
+            <index-field name="name"/>
+        </index>
 	</entity>
 	
 	<entity entity-name="AccountProduct" package-name="org.ofbiz.loans"
 		title="Account Product Entity">
 		<field name="accountProductId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="branchId" type="name"></field>
+		
 		<field name="name" type="name"></field>
 		<field name="code" type="name"></field>
 		<field name="minBalanceAmt" type="currency-amount"></field>
@@ -245,25 +265,31 @@ under the License.
 		<field name="minInterestEarningAmt" type="currency-amount"></field>
 		
 		<field name="minInterestPercentageAboveSavingsAcct" type="fixed-point"></field>
-		<field name="discountOnBankersCheque" type="indicator"></field>
+		<field name="discountOnBankersCheque" type="name"></field>
 		<field name="bankersChequePercentageDiscAmt" type="fixed-point"></field>
 		
-		<field name="limitPerYearWithdrawals" type="indicator"></field>
+		<field name="limitPerYearWithdrawals" type="name"></field>
 		<field name="noOfWithdrawalsPerYear" type="numeric"></field>
 		
-		<field name="withdrawalsTriggerConversionToSavings" type="indicator"></field>
+		<field name="withdrawalsTriggerConversionToSavings" type="name"></field>
 		<field name="noOfWithdrawalsToTrigger" type="numeric"></field>
 		
 		<field name="minimumPeriodInMonths" type="numeric"></field>
 		<field name="interestPerMonth" type="fixed-point"></field>
 		<field name="interestPerAnum" type="fixed-point"></field>
 		
-		<field name="allowLedgerFees" type="indicator"></field>
+		<field name="allowLedgerFees" type="name"></field>
 		<field name="minimumNoOfPeople" type="numeric"></field>
 		
-		<field name="ifGroup" type="indicator"></field>
+		<field name="isGroup" type="name"></field>
 		
 		<prim-key field="accountProductId" />
+		
+		 <index name="ACCOUNT_NAME" unique="true">
+            <index-field name="name"/>
+        </index>
+        
+       
 		
 	</entity>
 	
@@ -311,15 +337,17 @@ under the License.
 		
 		
 		<!-- Loan Type -->
-		<field name="saccoProductId" type="id-ne"></field>
+		<field name="loanProductId" type="id-ne"></field>
 		
-		<field name="percentInterestPerMonthAmt" type="fixed-point"></field>
+		<field name="interestPerMonthAmt" type="fixed-point"></field>
 
 		<field name="maxRepaymentPeriod" type="numeric"></field>
 		
-		<field name="loanamt" type="fixed-point"></field>
+		<field name="repaymentPeriod" type="numeric"></field>
 		
-		<field name="selectedRepaymentPeriod" type="numeric"></field>
+		<field name="maxLoanAmt" type="fixed-point"></field>
+		
+		<field name="loanAmt" type="fixed-point"></field>
 		
 		<field name="paymentMethodTypeId" type="id-ne"></field>
 				
@@ -350,8 +378,8 @@ under the License.
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
-      <relation type="one" fk-name="SACCO_PRODUCT_FK" rel-entity-name="SaccoProduct">
-        <key-map field-name="saccoProductId"/>
+      <relation type="one" fk-name="LOAN_PRODUCT_FK" rel-entity-name="LoanProduct">
+        <key-map field-name="loanProductId"/>
       </relation>
       <relation type="one" fk-name="MEMBER_FK" rel-entity-name="Member">
         <key-map field-name="partyId"/>
@@ -450,8 +478,9 @@ under the License.
 		<field name="memberAccountDetailsId" type="id-ne"></field>
 		<field name="partyId" type="id"></field>
 		<field name="openingBalanceDate" type="date-time"></field>
-		<!-- field name="memberAccountPayableId" type="id"></field -->
-		<field name="glAccountId" type="id"></field>
+		<field name="memberAccountId" type="id"></field>
+		<field name="memberAccountPayableId" type="id"></field>
+		<!-- field name="glAccountId" type="id"></field -->
 		
 		<field name="apOpeningBalance" type="fixed-point"></field>
 		<field name="savingsOpeningBalance" type="fixed-point"></field>
@@ -462,6 +491,9 @@ under the License.
       
        <relation type="one" fk-name="ACCOUNTDETAILS_MEMBER" rel-entity-name="Member">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation fk-name="ACCOUNTDETAILS_MEMBERACCOUNT" rel-entity-name="MemberAccount" type="one">
+      	<key-map field-name="memberAccountId"/>
       </relation>
 	</entity>
 	
