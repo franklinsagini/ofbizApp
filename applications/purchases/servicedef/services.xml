@@ -7,8 +7,31 @@
 
     <service name="noSyntaxError" engine="interface">
         <description>
-            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here
         </description>
-    </service> 
-    
+    </service>
+
+    <service name="createFileStatus" engine="simple" default-entity-name="PartySkill"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartySkill" auth="true">
+        <description>Create Skill for a Party</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createPartySkill" engine="simple" default-entity-name="PartySkill"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartySkill" auth="true">
+        <description>Create Skill for a Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createPartySkill" engine="simple" default-entity-name="PartySkill"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartySkill" auth="true">
+        <description>Create Skill for a Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
 </services>

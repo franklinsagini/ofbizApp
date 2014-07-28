@@ -46,6 +46,56 @@
         <response name="success" type="view" value="reports"/>
     </request-map>
 
+    <!-- New Quotes -->
+
+    <request-map uri="CreatePurchaseQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreatePurchaseQuote"/>
+    </request-map>
+
+    <request-map uri="createPurchaseQuote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductionRun"/>
+        <response name="success" type="view" value="EditPurchaseQuote"/>
+        <response name="error" type="view" value="CreatePurchaseQuote"/>
+    </request-map>
+
+    <!-- REGISTRY JUST FOR TEST -->
+
+    <request-map uri="RegistryFile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RegistryFile"/>
+    </request-map>
+    <request-map uri="FileStatus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FileStatus"/>
+    </request-map>
+    <request-map uri="RequestFile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RequestFile"/>
+    </request-map>
+
+    <request-map uri="createFileStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFileStatus"/>
+        <response name="success" type="view" value="FileStatus"/>
+        <response name="error" type="view" value="FileStatus"/>
+    </request-map>
+
+    <request-map uri="createRegistryFile">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createRegistryFile"/>
+        <response name="success" type="view" value="RegistryFile"/>
+        <response name="error" type="view" value="RegistryFile"/>
+    </request-map>
+
+    <request-map uri="createFileRequest">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFileRequest"/>
+        <response name="success" type="view" value="RequestFile"/>
+        <response name="error" type="view" value="RequestFile"/>
+    </request-map>
+
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://purchases/widget/PurchasesScreens.xml#main"/>
     <view-map name="findQuotes" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findQuotes"/>
@@ -53,4 +103,13 @@
     <view-map name="findShipments" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findShipments"/>
     <view-map name="findReturns" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findReturns"/>
     <view-map name="reports" type="screen" page="component://purchases/widget/PurchasesScreens.xml#reports"/>
+
+
+    <view-map name="CreatePurchaseQuote" page="component://purchases/widget/PurchasesScreens.xml#CreatePurchaseQuote" type="screen"/>
+    <view-map name="EditPurchaseQuote" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#EditPurchaseQuote" type="screen"/>
+
+    <!-- JUST FOR TESTS REGISTRY -->
+    <view-map name="RegistryFile" type="screen" page="component://purchases/widget/PurchasesScreens.xml#CreateRegistryFile"/>
+    <view-map name="FileStatus" type="screen" page="component://purchases/widget/PurchasesScreens.xml#CreateRegistryFileStatus"/>
+    <view-map name="RequestFile" type="screen" page="component://purchases/widget/PurchasesScreens.xml#CreateRegistryFileRequest"/>
 </site-conf>

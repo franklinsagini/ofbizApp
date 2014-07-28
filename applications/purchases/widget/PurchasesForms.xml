@@ -1,6 +1,192 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+    <form name="FindPurchaseQuote" default-map-name="purchaseQuote" target="FindPurchaseQuote" type="single">
+        <auto-fields-entity entity-name="PurchaseQuote" default-field-type="find"/>
+        <field name="purchaseQuoteId" title="${uiLabelMap.PurchaseQuoteId}"></field>
+        <field name="issueDate" title="${uiLabelMap.PurchaseQuoteIssueDate}"></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="QUOTE_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+            <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyId" title="Supplier">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="purchaseQuoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
+        <field name="description"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+
+    <form name="ListPurchaseQuotes" type="list" list-name="workEfforts" paginate-target="ListPurchaseQuotes"
+          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="WorkEffortFindView"/>
+                <field-map field-name="orderBy" value="lastModifiedDate DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            <service service-name="removeDuplicateWorkEfforts" result-map="result" result-map-list="workEfforts">
+                <field-map field-name="workEffortIterator" from-field="listIt"/>
+            </service>
+        </actions>
+    </form>
+
+    <form name="FoundPurchaseQuotes" extends="ListPurchaseQuotes" paginate-target="FindPurchaseQuote" header-row-style="header-row-2"/>
+
+    <!-- PURCHASE ORDERS FORMS -->
+
+    <form name="FindPurchaseOrders" default-map-name="purchaseQuote" target="FindPurchaseQuote" type="single">
+        <auto-fields-entity entity-name="PurchaseQuote" default-field-type="find"/>
+        <field name="purchaseQuoteId" title="${uiLabelMap.PurchaseQuoteId}"></field>
+        <field name="issueDate" title="${uiLabelMap.PurchaseQuoteIssueDate}"></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="QUOTE_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+            <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyId" title="Supplier">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="purchaseQuoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
+        <field name="description"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+
+    <form name="ListPurchaseOrders" type="list" list-name="workEfforts" paginate-target="ListPurchaseQuotes"
+          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="WorkEffortFindView"/>
+                <field-map field-name="orderBy" value="lastModifiedDate DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            <service service-name="removeDuplicateWorkEfforts" result-map="result" result-map-list="workEfforts">
+                <field-map field-name="workEffortIterator" from-field="listIt"/>
+            </service>
+        </actions>
+    </form>
+
+    <!-- Create Quote Forms -->
+
+      <field name="purchaseQuoteId" type="id-ne"></field>
+      <field name="issueDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
+      <field name="currencyUomId" type="id"></field>
+      <field name="purchaseQuoteName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="supplierPartyId" type="id"></field>
+
+    <form name="CreatePurchaseQuote" target="createPurchaseQuote" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" required-field="true">
+            <lookup target-form-name="LookupProduct" size="16"/>
+        </field>
+        <field name="quantity" title="${uiLabelMap.ManufacturingQuantity}" required-field="true">
+            <text size="6"/>
+        </field>
+        <field name="startDate" title="${uiLabelMap.ManufacturingStartDate}" required-field="true">
+            <date-time/>
+        </field>
+        <field name="facilityId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Facility" description="${facilityName} [${facilityId}]">
+                    <!--<entity-constraint name="facilityTypeId" value="WAREHOUSE"/>-->
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="routingId" title="${uiLabelMap.ManufacturingRoutingId}">
+            <lookup target-form-name="LookupRouting" size="16"/>
+        </field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}">
+            <text size="30"/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <text size="50"/>
+        </field>
+        <field name="createDependentProductionRuns" title="${uiLabelMap.ManufacturingCreateDependentProductionRuns}">
+            <drop-down allow-empty="false">
+                <option key="N" description="${uiLabelMap.CommonNo}"/>
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="CreateRegistryFileRequest" type="single" target="updateFileRequest" title="" default-map-name="fileRequest" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="fileRequest==null" target="createFileRequest"/>
+        <field name="registryFileRequestId"><hidden/></field>
+        <field position="1" name="registryFileId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="RegistryFIle" description="${fileName}" key-field-name="registryFileId"/>
+            </drop-down>
+        </field>
+        <!-- submitButton -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+    </form>
+
+    <form name="CreateRegistryFile" type="single" target="updateRegistryFile" title="" default-map-name="registryFile" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="registryFile==null" target="createRegistryFile"/>
+
+
+        <field name="registryFileId"><hidden/></field>
+        <field name="fileName"><text size="50"/></field>
+        <field name="registryFileStatusId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="RegistryFileStatus" description="${statusName}" key-field-name="registryFileStatusId"/>
+            </drop-down>
+        </field>
+        <!-- submitButton -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+    </form>
+
+    <form name="CreateRegistryFileStatus" type="single" target="updateFileStatus" title="" default-map-name="fileStatus" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="fileStatus==null" target="createFileStatus"/>
+        <field name="registryFileStatusId"><hidden/></field>
+        <field name="statusName"><text size="50"/></field>
+        <!-- submitButton -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+            <submit button-type="text-link"/>
+        </field>
+    </form>
 
 </forms>
