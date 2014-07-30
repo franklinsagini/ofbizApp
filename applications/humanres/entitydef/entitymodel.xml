@@ -1022,34 +1022,124 @@ under the License.
         <prim-key field="payrollElementId"/>        
     </entity-->
     
-    <entity entity-name="Tribe" package-name="org.ofbiz.humanres.employment" title="Tribe">
+    <entity entity-name="Tribe" package-name="org.ofbiz.humanres.employment" title="Tribe Entity">
        <field name="tribeId" type="id-ne"><description>primary sequenced ID</description></field>
        <field name="tribe" type="name"></field>
        <prim-key field="tribeId"/>
     </entity>
     
-    <entity entity-name="County" package-name="org.ofbiz.humanres.employment" title="County">
+    <entity entity-name="County" package-name="org.ofbiz.humanres.employment" title="County Entity">
        <field name="countyId" type="id-ne"><description>primary sequenced ID</description></field>
        <field name="county" type="name"></field>
        <prim-key field="countyId"/>
     </entity>
     
-    <entity entity-name="BloodGroup" package-name="org.ofbiz.humanres.employment" title="BloodGroup">
+    <entity entity-name="BloodGroup" package-name="org.ofbiz.humanres.employment" title="Blood Group Entity">
        <field name="bloodGroupId" type="id-ne"><description>primary sequenced ID</description></field>
        <field name="bloodGroup" type="name"></field>
        <prim-key field="bloodGroupId"/>
     </entity>
     
-    <entity entity-name="Religion" package-name="org.ofbiz.humanres.employment" title="Religion">
+    <entity entity-name="Religion" package-name="org.ofbiz.humanres.employment" title="Religion Entity">
        <field name="religionId" type="id-ne"><description>primary sequenced ID</description></field>
        <field name="religion" type="name"></field>
        <prim-key field="religionId"/>
     </entity>
     
-    <entity entity-name="FamilyRelations" package-name="org.ofbiz.humanres.employment" title="FamilyRelations">
+    <entity entity-name="FamilyRelations" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
        <field name="familyRelationsId" type="id-ne"><description>primary sequenced ID</description></field>
        <field name="relationship" type="name"></field>
        <prim-key field="familyRelationsId"/>
     </entity>
+    
+    <entity entity-name="StaffSpouse" package-name="org.ofbiz.humanres.employment" title="Staff Spouse Entity">
+        <field name="staffspouseId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id"></field>
+        <field name="familyRelationsId" type="id"></field>
+        <field name="partyIdentificationTypeId" type="id"></field>
+        <field name="fullname" type="name"></field>
+        <field name="gender" type="indicator"></field>
+        <field name="dob" type="date"></field>
+        <field name="idno" type="name"></field>
+        <field name="employer" type="name"></field>
+        <field name="phoneNo" type="name"></field>
+        <field name="emailAddress" type="name"></field>
+        <field name="postalAddress" type="name"></field>
+        <field name="homeAddress" type="name"></field>
+        <field name="countryGeoId" type="id"></field>
+        
+        <!--field name="maritalstatus" type="id"></field-->
+        
+        <prim-key field="staffspouseId"/>
+        <relation type="one" fk-name="spouse_identification" rel-entity-name="PartyIdentificationType">
+            <key-map field-name="partyIdentificationTypeId"/>
+        </relation>
+        <relation type="one" fk-name="spouse_relationship" rel-entity-name="FamilyRelations">
+            <key-map field-name="familyRelationsId"/>
+        </relation>
+        <relation type="one" fk-name="spouse_party" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="POST_ADDR_CGEO" title="Country" rel-entity-name="Geo">
+        <key-map field-name="countryGeoId"/>
+      </relation>
+        </entity>
+        
+        <entity entity-name="StaffDependant" package-name="org.ofbiz.humanres.employment" title="Staff Dependant Entity">
+        <field name="staffdependantId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id"></field>
+        <field name="familyRelationsId" type="id"></field>
+        <field name="partyIdentificationTypeId" type="id"></field>
+        <field name="fullname" type="name"></field>
+        <field name="gender" type="indicator"></field>
+        <field name="dob" type="date"></field>
+        <field name="idno" type="name"></field>
+        <field name="bloodGroupId" type="id"></field>
+        <field name="isdeceased" type="indicator"></field>  
+           
+        
+        <prim-key field="staffdependantId"/>
+        <relation type="one" fk-name="dependant_identification" rel-entity-name="PartyIdentificationType">
+            <key-map field-name="partyIdentificationTypeId"/>
+        </relation>
+        <relation type="one" fk-name="dependant_relationship" rel-entity-name="FamilyRelations">
+            <key-map field-name="familyRelationsId"/>
+        </relation>
+        <relation type="one" fk-name="dependant_party" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+         <relation type="one" fk-name="dependant_bloodgroup" rel-entity-name="BloodGroup">
+            <key-map field-name="bloodGroupId"/>
+        </relation>
+        </entity> 
+        
+        <entity entity-name="StaffNextOfKin" package-name="org.ofbiz.humanres.employment" title="Staff Next Of Kin Entity">
+        <field name="staffnokId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id"></field>
+        <field name="familyRelationsId" type="id"></field>
+        <field name="partyIdentificationTypeId" type="id"></field>
+        <field name="fullname" type="name"></field>
+        <field name="gender" type="indicator"></field>
+        <field name="idno" type="name"></field>
+        <field name="employer" type="name"></field>
+        <field name="phoneNo" type="name"></field>
+        <field name="emailAddress" type="name"></field>
+        <field name="postalAddress" type="name"></field>
+        <field name="homeAddress" type="name"></field>
+        <field name="countryGeoId" type="id"></field>        
+        <prim-key field="staffnokId"/>
+        <relation type="one" fk-name="nok_identification" rel-entity-name="PartyIdentificationType">
+            <key-map field-name="partyIdentificationTypeId"/>
+        </relation>
+        <relation type="one" fk-name="nok_relationship" rel-entity-name="FamilyRelations">
+            <key-map field-name="familyRelationsId"/>
+        </relation>
+        <relation type="one" fk-name="nok_party" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="POST_ADDR_CGEO" title="Country" rel-entity-name="Geo">
+        <key-map field-name="countryGeoId"/>
+      </relation>
+        </entity>       
     
 </entitymodel>
