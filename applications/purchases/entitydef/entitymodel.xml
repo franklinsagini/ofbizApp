@@ -33,20 +33,28 @@
       <field name="description" type="description"></field>
       <field name="supplierPartyId" type="id"></field>
       <prim-key field="purchaseQuoteId"/>
-      <relation type="one" fk-name="QUOTE_QTTYP" rel-entity-name="QuoteType">
-        <key-map field-name="quoteTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteTypeAttr">
-        <key-map field-name="quoteTypeId"/>
-      </relation>
-      <relation type="one" fk-name="QUOTE_PRTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
       <relation type="one" fk-name="PURCH_QUOTE_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITSG_SPRTY" title="Supplier" rel-entity-name="Party">
         <key-map field-name="supplierPartyId" rel-field-name="partyId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="PurchaseQuoteStatus"
+            package-name="org.ofbiz.accounting.invoice"
+            title="PurchaseQuote Status Entity">
+      <field name="statusId" type="id-ne"></field>
+      <field name="purchaseQuoteId" type="id-ne"></field>
+      <field name="statusDate" type="date-time"></field>
+      <prim-key field="statusId"/>
+      <prim-key field="purchaseQuoteId"/>
+      <prim-key field="statusDate"/>
+      <relation type="one" fk-name="QUOTE_STS_STSITM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_STS_QT" rel-entity-name="PurchaseQuote">
+        <key-map field-name="purchaseQuoteId"/>
       </relation>
     </entity>
 
@@ -101,7 +109,7 @@
       </relation>
     </entity>
 
-    <entity entity-name="RegistryFIle"
+    <entity entity-name="RegistryFile"
             package-name="org.ofbiz.purchases.purchaseorders"
             title="Registry File Entity">
       <field name="registryFileId" type="id-ne"></field>
@@ -122,7 +130,7 @@
       <prim-key field="registryFileStatusId"/>
     </entity>
 
-    <entity entity-name="RegistryFIleRequest"
+    <entity entity-name="RegistryFileRequest"
             package-name="org.ofbiz.purchases.purchaseorders"
             title="Registry File Entity">
       <field name="registryFileRequestId" type="id-ne"></field>
@@ -130,7 +138,7 @@
       <field name="requestDate" type="date-time"></field>
       <prim-key field="registryFileId"/>
       <prim-key field="registryFileRequestId"/>
-      <relation type="one" fk-name="RQST_FILE" rel-entity-name="RegistryFIle">
+      <relation type="one" fk-name="RQST_FILE" rel-entity-name="RegistryFile">
         <key-map field-name="registryFileRequestId" />
       </relation>
     </entity>

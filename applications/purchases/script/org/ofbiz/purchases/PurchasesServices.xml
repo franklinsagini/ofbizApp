@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+    <simple-method method-name="createFileStatus" short-description="Create File Status">
+        <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="RegistryFileStatus"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+              <!-- create a non existing ID -->
+        <sequenced-id sequence-name="RegistryFileStatus" field="registryFileStatusId"/>
+        <set from-field="registryFileStatusId" field="newEntity.registryFileStatusId"/>
+        <field-to-result field="registryFileStatusId" result-name="registryFileStatusId"/>
+         <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+        <check-errors/>
+    </simple-method>
+
+
+    <simple-method method-name="updateFileStatus" short-description="Update Party Skills">
+        <entity-one entity-name="RegistryFileStatus" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="createRegistryFile" short-description="Create File Status">
+        <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="RegistryFile"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+              <!-- create a non existing ID -->
+        <sequenced-id sequence-name="RegistryFile" field="registryFileId"/>
+        <set from-field="registryFileId" field="newEntity.registryFileId"/>
+        <field-to-result field="registryFileId" result-name="registryFileId"/>
+         <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+        <check-errors/>
+    </simple-method>
+
+
+    <simple-method method-name="updateRegistryFile" short-description="Update Party Skills">
+        <entity-one entity-name="RegistryFile" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+
+    <simple-method method-name="createPurchaseQuote" short-description="Create a new Purchase Quote">
+        <now-timestamp field="nowTimestamp"/>
+
+        <make-value value-field="newEntity" entity-name="PurchaseQuote"/>
+
+        <!-- create a non existing ID -->
+        <sequenced-id sequence-name="PurchaseQuote" field="purchaseQuoteId"/>
+        <set from-field="purchaseQuoteId" field="newEntity.purchaseQuoteId"/>
+        <field-to-result field="purchaseQuoteId" result-name="purchaseQuoteId"/>
+
+        <!-- set the invoice date if not provided -->
+        <if-empty field="parameters.issueDate">
+            <set from-field="nowTimestamp" field="parameters.issueDate"/>
+        </if-empty>
+
+        <!-- set the invoice status if not provided -->
+        <if-empty field="parameters.statusId">
+            <set field="parameters.statusId" value="QUOTE_IN_PROCESS"/>
+        </if-empty>
+
+        <!-- use currency of receiving company -->
+        <entity-one entity-name="Party" value-field="party"/>
+        <if-not-empty field="party.preferredCurrencyUomId">
+            <set field="parameters.currencyUomId" from-field="KES"/>
+        </if-not-empty>
+
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <create-value value-field="newEntity"/>
+
+        <!-- create new status entry, and set lastStatusUpdate date -->
+        <make-value value-field="newPurchaseQuoteStatus" entity-name="PurchaseQuoteStatus"/>
+        <set from-field="newEntity.purchaseQuoteId" field="newPurchaseQuoteStatus.purchaseQuoteId"/>
+        <set from-field="newEntity.statusId" field="newPurchaseQuoteStatus.statusId"/>
+        <set from-field="nowTimestamp" field="newPurchaseQuoteStatus.statusDate"/>
+        <create-value value-field="newPurchaseQuoteStatus"/>
+    </simple-method>
+
+
+
+
+
+</simple-methods>

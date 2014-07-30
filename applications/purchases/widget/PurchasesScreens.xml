@@ -121,17 +121,20 @@
     </screen>
 
     <!-- Create Quotes -->
-    <screen name="CreatePurchaseQuote">
+    <screen name="EditPurchaseQuote">
         <section>
             <actions>
                 <set field="titleProperty" value="ManufacturingCreateProductionRun"/>
                 <set field="headerItem" value="jobshop"/>
+                <set field="purchaseQuoteId" from-field="parameters.purchaseQuoteId"/>
+                <entity-one entity-name="PurchaseQuote" value-field="purchaseQuote"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
             </actions>
             <widgets>
                 <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="CreatePurchaseQuote" location="component://purchases/widget/PurchasesForms.xml"/>
+                            <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -139,24 +142,49 @@
         </section>
     </screen>
 
-    <screen name="CreateRegistryFileStatus">
+    <screen name="EditFileStatus">
         <section>
             <actions>
                 <set field="titleProperty" value="Create Registry File Status"/>
                 <set field="headerItem" value="reports"/>
+                <set field="registryFileStatusId" from-field="parameters.registryFileStatusId"/>
+                <entity-one entity-name="RegistryFileStatus" value-field="fileStatus"/>
             </actions>
             <widgets>
                 <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="CreateRegistryFileStatus" location="component://purchases/widget/PurchasesForms.xml"/>
+                            <include-form name="EditFileStatus" location="component://purchases/widget/PurchasesForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <screen name="CreateRegistryFile">
+
+    <screen name="EditRegistryFile">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Request File"/>
+                <set field="headerItem" value="reports"/>
+                <set field="registryFileId" from-field="parameters.registryFileId"/>
+                <entity-one entity-name="RegistryFile" value-field="registryFile"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
+                            <include-form name="EditRegistryFile" location="component://purchases/widget/PurchasesForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+    <screen name="EditRequestFile">
         <section>
             <actions>
                 <set field="titleProperty" value="Create Registry File"/>
@@ -166,7 +194,7 @@
                 <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="CreateRegistryFile" location="component://purchases/widget/PurchasesForms.xml"/>
+                            <include-form name="EditRequestFile" location="component://purchases/widget/PurchasesForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
