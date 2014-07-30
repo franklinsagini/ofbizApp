@@ -93,6 +93,12 @@ under the License.
 			save-current-view="true" />
 	</request-map>
 	
+	<request-map uri="chequeSetup">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="chequeSetup"
+			save-current-view="true" />
+	</request-map>
+	
 	<!-- CRUD CashWithdrawal -->
 	
 	<request-map uri="createCashWithdrawal">
@@ -284,6 +290,34 @@ under the License.
 		<response name="error" type="view" value="chequeType" />
 	</request-map>
 	
+	<!-- Cheque Setup -->
+	<!-- Start -->
+	<request-map uri="createChequeSetup">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChequeSetup"/>
+		<response name="success" type="request-redirect"
+			value="chequeSetup">
+			</response>
+		<response name="error" type="view" value="chequeSetup" />
+	</request-map>
+	
+	<request-map uri="updateChequeSetup">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateChequeSetup" />
+		<response name="success" type="request-redirect-noparam"
+			value="chequeSetup"></response>
+		<response name="error" type="view" value="chequeSetup" />
+	</request-map>
+	
+	<request-map uri="deleteChequeSetup">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteChequeSetup" />
+		<response name="success" type="request-redirect-noparam"
+			value="chequeSetup"></response>
+		<response name="error" type="view" value="chequeSetup" />
+	</request-map>
+	<!-- End -->
+	
 	<request-map uri="accountslist">
     	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
     	<event type="java" path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" invoke="getMemberAccounts" />
@@ -317,6 +351,7 @@ under the License.
 	<view-map name="loanRepayment" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewLoanRepayment"/>
 	<view-map name="applyStandingOrder" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewApplyStandingOrder"/>
 	<view-map name="chequeType" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeType"/>
+	<view-map name="chequeSetup" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeSetup"/>
 	
     <!-- end of view mappings -->
 </site-conf>

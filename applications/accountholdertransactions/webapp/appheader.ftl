@@ -96,11 +96,11 @@ under the License.
                                                    //the request if any.
      success : function(data){
 				
-				$.each(data, function(item, itemvalue) {
+				//$.each(data, function(item, itemvalue) {
 				   
-					jQuery('input[name="availableAmount"]').val(itemvalue);
-					jQuery('input[name="bookBalanceAmount"]').val(itemvalue);
-				});
+					jQuery('input[name="availableAmount"]').val(data.availableAmount);
+					jQuery('input[name="bookBalanceAmount"]').val(data.bookBalanceAmount);
+				//});
                },
       error : function(errorData){
 
@@ -119,7 +119,7 @@ under the License.
     	if (transactionAmount < availableBalance){
     		isAvailable = true;
     	} else{
-    		//alert('Not enough Balance, Transanction Declined');
+    		alert('Not enough Balance, Transanction Declined');
     		isAvailable = false;
     	}
     	return isAvailable;

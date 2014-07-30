@@ -340,6 +340,53 @@ under the License.
         </section>
     </screen>
     
+    <!-- New Cheque Setup (Cheque Clearing Duration) -->
+    <!-- Start -->
+    <screen name="NewChequeSetup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Cheque Setup"/>
+                <set field="headerItem" value="chequeSetup"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createChequeSetup"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="ChequeSetup" value-field="chequeSetupContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Cheque Clearing Duration">
+                                    <include-form name="NewChequeSetup" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Cheque Clearing Setup">
+                        			<include-form name="listChequeSetup" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- End -->
+    
     <!-- Find Members Screen -->
     <screen name="FindMember">
         <section>
