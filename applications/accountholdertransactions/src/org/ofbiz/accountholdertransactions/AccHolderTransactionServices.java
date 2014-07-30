@@ -37,6 +37,7 @@ public class AccHolderTransactionServices {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String bankDetailsId = (String) request.getParameter("bankDetailsId");
+		
 		// GenericValue saccoProduct = null;
 		// EntityListIterator branchesELI;// =
 		// delegator.findListIteratorByCondition("BankBranch", new

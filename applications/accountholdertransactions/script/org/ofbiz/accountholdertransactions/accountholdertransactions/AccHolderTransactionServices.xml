@@ -256,7 +256,31 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     <!-- End -->
-
+	<!-- AccountHolderTransactionSetup -->
+	<!-- Start -->
+	    <simple-method method-name="createAccountHolderTransactionSetup" short-description="Create AccountHolderTransactionSetup">
+        <make-value entity-name="AccountHolderTransactionSetup" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- sequenced-id sequence-name="ChequeSetup" field="chequeSetupId"/ -->
+        <now-timestamp field="newEntity.createdDate"/>
+        <!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateAccountHolderTransactionSetup" short-description="Update AccountHolderTransactionSetup">
+        <entity-one entity-name="AccountHolderTransactionSetup" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteAccountHolderTransactionSetup" short-description="Delete AccountHolderTransactionSetup">
+        <entity-one entity-name="AccountHolderTransactionSetup" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+	<!-- End -->
     
   
     

@@ -337,5 +337,26 @@ under the License.
         
     </entity>
     
+    <entity entity-name="AccountHolderTransactionSetup" package-name="org.ofbiz.accountholdertransactions" title="AccountHolderTransactionSetup Entity">
+        <field name="accountHolderTransactionSetupId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="cashAccountId" type="id"></field>
+        <field name="memberDepositAccId" type="id"></field>
+        
+        <field name="comments" type="name"></field>
+        
+       
+        <prim-key field="accountHolderTransactionSetupId"/>
+        <relation type="one" fk-name="AccountHolderTransactionSetup_CASHACC" rel-entity-name="GlAccount">
+            <key-map field-name="cashAccountId" rel-field-name="glAccountId"/>
+        </relation>
+        <relation type="one" fk-name="AccountHolderTransactionSetup_DEPOSITACC" rel-entity-name="GlAccount">
+            <key-map field-name="memberDepositAccId" rel-field-name="glAccountId"/>
+        </relation>  
+        
+    </entity>
+    
     
 </entitymodel>
