@@ -541,5 +541,320 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
+    <!-- New Spouse Details -->
+    <form name="NewSpouseDetails" type="single" target="createStaffSpouse"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffSpouseContext">
+        <actions>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+
+        	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
+        	<set field="familyRelationsId" from-field="familyRelationsId"/>
+
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<set field="partyIdentificationTypeId" from-field="partyIdentificationTypeId"/>
+        	
+        	<entity-condition entity-name="Geo" list="countryGeoList"></entity-condition>
+        	<set field="countryGeoId" from-field="countryGeoId"/>
+       
+        </actions>        
+        
+        <field name="staffspouseId"><hidden/></field>
+        <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <field name="fullname" title="Spouse Full Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
+       	 </drop-down>
+        </field>
+        <field name="gender" title="Gender">
+        <drop-down allow-empty="false"> 
+        	<option key="M" description="Male"/>
+        	<option key="F" description="Female"/>
+        </drop-down>
+        </field>
+        <field name="dob" title="Date of Birth" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time type="timestamp"></date-time></field>
+         <field name="countryGeoId" title="Nationality">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="countryGeoList" key-name="countryGeoId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="partyIdentificationTypeId" title="Identification Type">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="idno" title="Identification Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="phoneNo" title="Phone Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="emailAddress" title="Email Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="postalAddress" title="Postal Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="homeAddress" title="Residential Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listStaffSpouse" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffSpouse" paginate-target="StaffSpouse"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StaffSpouse"> </entity-condition>
+        	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<entity-condition entity-name="Geo" list="countryGeoList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStaffSpouse"/>
+        
+		<field name="staffspouseId"><hidden/></field>
+        <field name="fullname" title="Spouse Full Name"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
+       	 </drop-down>
+        </field>
+        <field name="gender" title="Gender">
+        <drop-down allow-empty="false"> 
+        	<option key="M" description="Male"/>
+        	<option key="F" description="Female"/>
+        </drop-down>
+        </field>
+        <field name="dob" title="Date of Birth"><date-time/></field> 
+         <field name="countryGeoId" title="Nationality">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="countryGeoList" key-name="countryGeoId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="partyIdentificationTypeId" title="Identification Type">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="idno" title="Identification Number"><text size="30" maxlength="60"/></field>
+        <field name="phoneNo" title="Phone Number"><text size="30" maxlength="60"/></field>
+        <field name="emailAddress" title="Email Address"><text size="30" maxlength="60"/></field>
+        <field name="postalAddress" title="Postal Address"><text size="30" maxlength="60"/></field>
+        <field name="homeAddress" title="Residential Address"><text size="30" maxlength="60"/></field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStaffSpouse" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="staffspouseId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- New Dependant Details -->
+    <form name="NewDependantDetails" type="single" target="createStaffDependant"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffDependantContext">
+        <actions>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+
+        	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
+        	<set field="familyRelationsId" from-field="familyRelationsId"/>
+
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<set field="partyIdentificationTypeId" from-field="partyIdentificationTypeId"/>
+        	
+        	<entity-condition entity-name="BloodGroup" list="bloodGroupList"></entity-condition>
+        	<set field="bloodGroupId" from-field="bloodGroupId"/>
+       
+        </actions>        
+        
+        <field name="staffdependantId"><hidden/></field>
+        <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <field name="fullname" title="Dependant Full Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
+       	 </drop-down>
+        </field>
+        <field name="gender" title="Gender">
+        <drop-down allow-empty="false"> 
+        	<option key="M" description="Male"/>
+        	<option key="F" description="Female"/>
+        </drop-down>
+        </field>
+        <field name="dob" title="Date of Birth" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time type="timestamp"></date-time></field>
+         <field name="bloodGroupId" title="Blood Group">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="bloodGroupList" key-name="bloodGroupId" description="${bloodGroup}"/>
+       	 </drop-down>
+        </field>
+        <field name="partyIdentificationTypeId" title="Identification Type">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="idno" title="Identification Number"><text size="30" maxlength="60"/></field>
+        <field name="isdeceased" title="Deceased">
+        <drop-down allow-empty="false"> 
+        	<option key="N" description="No"/>
+        	<option key="Y" description="Yes"/>
+        </drop-down>
+        </field> 
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listStaffDependants" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffDependant" paginate-target="StaffDependant"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StaffDependant"> </entity-condition>
+        	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<entity-condition entity-name="BloodGroup" list="bloodGroupList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStaffDependant"/>
+        
+		<field name="staffdependantId"><hidden/></field>
+        <field name="fullname" title="Spouse Full Name"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
+       	 </drop-down>
+        </field>
+        <field name="gender" title="Gender">
+        <drop-down allow-empty="false"> 
+        	<option key="M" description="Male"/>
+        	<option key="F" description="Female"/>
+        </drop-down>
+        </field>
+        <field name="dob" title="Date of Birth"><date-time/></field> 
+         <field name="bloodGroupId" title="Blood Group">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="bloodGroupList" key-name="bloodGroupId" description="${bloodGroup}"/>
+       	 </drop-down>
+        </field>
+        <field name="partyIdentificationTypeId" title="Identification Type">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="idno" title="Identification Number"><text size="30" maxlength="60"/></field>
+        <field name="isdeceased" title="Deceased">
+        <drop-down allow-empty="false"> 
+        	<option key="N" description="No"/>
+        	<option key="Y" description="Yes"/>
+        </drop-down>
+        </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStaffDependant" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="staffdependantId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+     <!-- New next Of Kin Details -->
+    <form name="NewNextOfKinDetails" type="single" target="createStaffNextOfKin"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffNextOfKinContext">
+        <actions>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+
+        	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
+        	<set field="familyRelationsId" from-field="familyRelationsId"/>
+
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<set field="partyIdentificationTypeId" from-field="partyIdentificationTypeId"/>
+        	
+        	<entity-condition entity-name="Geo" list="countryGeoList"></entity-condition>
+        	<set field="countryGeoId" from-field="countryGeoId"/>
+       
+        </actions>        
+        
+        <field name="staffnokId"><hidden/></field>
+        <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <field name="fullname" title="Next Of Kin Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
+       	 </drop-down>
+        </field>
+        <field name="gender" title="Gender">
+        <drop-down allow-empty="false"> 
+        	<option key="M" description="Male"/>
+        	<option key="F" description="Female"/>
+        </drop-down>
+        </field>
+        <field name="countryGeoId" title="Nationality">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="countryGeoList" key-name="countryGeoId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="partyIdentificationTypeId" title="Identification Type">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="idno" title="Identification Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="phoneNo" title="Phone Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="emailAddress" title="Email Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="postalAddress" title="Postal Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="homeAddress" title="Residential Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listStaffNextOfKin" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffNextOfKin" paginate-target="StaffNextOfKin"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StaffNextOfKin"> </entity-condition>
+        	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<entity-condition entity-name="Geo" list="countryGeoList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStaffNextOfKin"/>
+        
+		<field name="staffnokId"><hidden/></field>
+        <field name="fullname" title="Spouse Full Name"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
+       	 </drop-down>
+        </field>
+        <field name="gender" title="Gender">
+        <drop-down allow-empty="false"> 
+        	<option key="M" description="Male"/>
+        	<option key="F" description="Female"/>
+        </drop-down>
+        </field> 
+         <field name="countryGeoId" title="Nationality">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="countryGeoList" key-name="countryGeoId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="partyIdentificationTypeId" title="Identification Type">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
+       	 </drop-down>
+        </field>
+        <field name="idno" title="Identification Number"><text size="30" maxlength="60"/></field>
+        <field name="phoneNo" title="Phone Number"><text size="30" maxlength="60"/></field>
+        <field name="emailAddress" title="Email Address"><text size="30" maxlength="60"/></field>
+        <field name="postalAddress" title="Postal Address"><text size="30" maxlength="60"/></field>
+        <field name="homeAddress" title="Residential Address"><text size="30" maxlength="60"/></field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStaffNextOfKin" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="staffnokId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
 </forms>
 
