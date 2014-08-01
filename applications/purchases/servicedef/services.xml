@@ -5,10 +5,43 @@
     <vendor></vendor>
     <version>1.0</version>
 
-    <service name="noSyntaxError" engine="interface">
-        <description>
-            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
-        </description>
-    </service> 
-    
+    <service
+        name="createFileStatus" engine="simple"
+        default-entity-name="RegistryFileStatus"
+        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createFileStatus" auth="true">
+        <description>Create Skill for a Party</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="updateFileStatus" engine="simple" default-entity-name="RegistryFileStatus"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="updateFileStatus" auth="true">
+        <description>Update a PartySkill</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service
+        name="createRegistryFile" engine="simple"
+        default-entity-name="RegistryFileStatus"
+        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createRegistryFile" auth="true">
+        <description>Create Skill for a Party</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="updateRegistryFile" engine="simple" default-entity-name="RegistryFileStatus"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="updateRegistryFile" auth="true">
+        <description>Update a PartySkill</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createPurchaseQuote" engine="simple" default-entity-name="PurchaseQuote"
+        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createPurchaseQuote">
+        <description>Create Invoice Record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
 </services>

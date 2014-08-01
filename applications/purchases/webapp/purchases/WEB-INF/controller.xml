@@ -29,6 +29,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findQuotes"/>
     </request-map>
+    <request-map uri="findPurchaseQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findQuotes"/>
+    </request-map>
     <request-map uri="findPurchaseOrders">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findPurchaseOrders"/>
@@ -46,6 +50,79 @@
         <response name="success" type="view" value="reports"/>
     </request-map>
 
+    <!-- New Quotes -->
+
+    <request-map uri="EditPurchaseQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPurchaseQuote"/>
+    </request-map>
+
+    <request-map uri="createPurchaseQuote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPurchaseQuote"/>
+        <response name="success" type="view" value="EditPurchaseQuote"/>
+        <response name="error" type="view" value="EditPurchaseQuote"/>
+    </request-map>
+    <request-map uri="updatePurchaseQuote">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePurchaseQuote"/>
+        <response name="success" type="view" value="EditPurchaseQuote"/>
+        <response name="error" type="view" value="EditPurchaseQuote"/>
+    </request-map>
+      <request-map uri="LookupPartyName">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupPartyName"/>
+    </request-map>
+
+    <!-- REGISTRY JUST FOR TEST -->
+
+    <request-map uri="EditFileStatus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFileStatus"/>
+    </request-map>
+    <request-map uri="createFileStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFileStatus"/>
+        <response name="success" type="view" value="EditFileStatus"/>
+        <response name="error" type="view" value="EditFileStatus"/>
+    </request-map>
+    <request-map uri="updateFileStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFileStatus"/>
+        <response name="success" type="view" value="EditFileStatus"/>
+        <response name="error" type="view" value="EditFileStatus"/>
+    </request-map>
+
+
+    <request-map uri="EditRegistryFile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRegistryFile"/>
+    </request-map>
+    <request-map uri="createRegistryFile">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createRegistryFile"/>
+        <response name="success" type="view" value="EditRegistryFile"/>
+        <response name="error" type="view" value="EditRegistryFile"/>
+    </request-map>
+    <request-map uri="updateRegistryFile">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateRegistryFile"/>
+        <response name="success" type="view" value="EditRegistryFile"/>
+        <response name="error" type="view" value="EditRegistryFile"/>
+    </request-map>
+
+
+    <request-map uri="EditRequest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRequest"/>
+    </request-map>
+    <request-map uri="createRequest">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFileRequest"/>
+        <response name="success" type="view" value="RequestFile"/>
+        <response name="error" type="view" value="RequestFile"/>
+    </request-map>
+
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://purchases/widget/PurchasesScreens.xml#main"/>
     <view-map name="findQuotes" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findQuotes"/>
@@ -53,4 +130,13 @@
     <view-map name="findShipments" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findShipments"/>
     <view-map name="findReturns" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findReturns"/>
     <view-map name="reports" type="screen" page="component://purchases/widget/PurchasesScreens.xml#reports"/>
+
+
+    <view-map name="EditPurchaseQuote" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditPurchaseQuote"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+
+    <!-- JUST FOR TESTS REGISTRY -->
+    <view-map name="EditFileStatus" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditFileStatus"/>
+    <view-map name="EditRegistryFile" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditRegistryFile"/>
+    <view-map name="EditRequest" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditRequest"/>
 </site-conf>

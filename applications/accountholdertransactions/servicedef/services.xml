@@ -20,53 +20,56 @@ under the License.
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
-    <description>Share Management Services</description>
+    <description>AccountHolder Transactions Services</description>
     <vendor>Verge Interactive</vendor>
     <version>1.0</version>
 
     <!-- CashWithdrawal -->
-    <service name="createCashWithdrawal" engine="simple" default-entity-name="CashWithdrawal"
+    <service name="createCashWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createCashWithdrawal" auth="true">
         <description>Create CashWithdrawal</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="cashAmount" optional="false"></override>
-        <override name="slipNumber" optional="false"></override>
+        <!-- override name="partyId" optional="false"></override>
+        <override name="memberAccountId" optional="false"></override>
+        <override name="transactionAmount" optional="false"></override>
+        <override name="slipNumber" optional="false"></override -->
     </service>
     
-    <service name="updateCashWithdrawal" engine="simple" default-entity-name="CashWithdrawal"
+    <service name="updateCashWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateCashWithdrawal" auth="true">
         <description>Update CashWithdrawal</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
-        <override name="cashAmount" optional="false"></override>
+        <override name="partyId" optional="false"></override>
+        <override name="memberAccountId" optional="false"></override>
+        <override name="transactionAmount" optional="false"></override>
         <override name="slipNumber" optional="false"></override>
     </service>
 
-    <service name="deleteCashWithdrawal" engine="simple" default-entity-name="CashWithdrawal"
+    <service name="deleteCashWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="deleteCashWithdrawal" auth="true">
         <description>Delete CashWithdrawal</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
-  	<!-- CashDeposit -->
-  	    <service name="createCashDeposit" engine="simple" default-entity-name="CashDeposit"
+  	<!-- CashDeposit -->														
+  	    <service name="createCashDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createCashDeposit" auth="true">
         <description>Create CashDeposit</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         
-        <override name="partyId" optional="false"></override>
+        <!-- override name="partyId" optional="false"></override>
         <override name="slipNumber" optional="false"></override>
-        <override name="cashAmount" optional="false"></override>
+        <override name="transactionAmount" optional="false"></override -->
     </service>
     
-    <service name="updateCashDeposit" engine="simple" default-entity-name="CashDeposit"
+    <service name="updateCashDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateCashDeposit" auth="true">
         <description>Update CashDeposit</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
@@ -74,10 +77,10 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="partyId" optional="false"></override>
         <override name="slipNumber" optional="false"></override>
-        <override name="cashAmount" optional="false"></override>
+        <override name="transactionAmount" optional="false"></override>
     </service>
 
-    <service name="deleteCashDeposit" engine="simple" default-entity-name="CashDeposit"
+    <service name="deleteCashDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="deleteCashDeposit" auth="true">
         <description>Delete CashDeposit</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
@@ -85,7 +88,7 @@ under the License.
     </service>
     
      <!-- ChequeWithdrawal -->
-         <service name="createChequeWithdrawal" engine="simple" default-entity-name="ChequeWithdrawal"
+         <service name="createChequeWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createChequeWithdrawal" auth="true">
         <description>Create ChequeWithdrawal</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
@@ -93,7 +96,7 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
-    <service name="updateChequeWithdrawal" engine="simple" default-entity-name="ChequeWithdrawal"
+    <service name="updateChequeWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateChequeWithdrawal" auth="true">
         <description>Update ChequeWithdrawal</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
@@ -101,42 +104,42 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-    <service name="deleteChequeWithdrawal" engine="simple" default-entity-name="ChequeWithdrawal"
+    <service name="deleteChequeWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="deleteChequeWithdrawal" auth="true">
         <description>Delete ChequeWithdrawal</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
       <!-- ChequeDeposit -->
-          <service name="createChequeDeposit" engine="simple" default-entity-name="ChequeDeposit"
+          <service name="createChequeDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createChequeDeposit" auth="true">
         <description>Create ChequeDeposit</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         
-        <override name="partyId" optional="false"></override>
+        <!-- override name="partyId" optional="false"></override>
         <override name="chequeNo" optional="false"></override>
         <override name="payee" optional="false"></override>
-        <override name="chequeAmount" optional="false"></override>
+        <override name="chequeAmount" optional="false"></override -->
         
     </service>
     
-    <service name="updateChequeDeposit" engine="simple" default-entity-name="ChequeDeposit"
+    <service name="updateChequeDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateChequeDeposit" auth="true">
         <description>Update ChequeDeposit</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         
-        <override name="partyId" optional="false"></override>
+        <!--override name="partyId" optional="false"></override>
         <override name="chequeNo" optional="false"></override>
-        <override name="payee" optional="false"></override>
-        <override name="chequeAmount" optional="false"></override>
+        < override name="payee" optional="false"></override>
+        <override name="chequeAmount" optional="false"></override -->
         
     </service>
 
-    <service name="deleteChequeDeposit" engine="simple" default-entity-name="ChequeDeposit"
+    <service name="deleteChequeDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="deleteChequeDeposit" auth="true">
         <description>Delete ChequeDeposit</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
@@ -189,7 +192,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
        <!-- ChequeType -->
-           <service name="createChequeType" engine="simple" default-entity-name="ChequeType"
+    <service name="createChequeType" engine="simple" default-entity-name="ChequeType"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createChequeType" auth="true">
         <description>Create ChequeType</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
@@ -211,7 +214,54 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-       
-       
-   
+    
+    <!-- ChequeSetup -->
+    <!-- Start -->
+    	<service name="createChequeSetup" engine="simple" default-entity-name="ChequeSetup"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createChequeSetup" auth="true">
+        <description>Create ChequeSetup</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateChequeSetup" engine="simple" default-entity-name="ChequeSetup"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateChequeSetup" auth="true">
+        <description>Update ChequeSetup</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteChequeSetup" engine="simple" default-entity-name="ChequeSetup"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="deleteChequeSetup" auth="true">
+        <description>Delete ChequeSetup</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <!-- End -->
+    
+    <!-- AccountHolderTransactionSetup -->
+     <service name="createAccountHolderTransactionSetup" engine="simple" default-entity-name="AccountHolderTransactionSetup"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createAccountHolderTransactionSetup" auth="true">
+        <description>Create AccountHolderTransactionSetup</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateAccountHolderTransactionSetup" engine="simple" default-entity-name="AccountHolderTransactionSetup"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateAccountHolderTransactionSetup" auth="true">
+        <description>Update AccountHolderTransactionSetup</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteAccountHolderTransactionSetup" engine="simple" default-entity-name="AccountHolderTransactionSetup"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="deleteAccountHolderTransactionSetup" auth="true">
+        <description>Delete AccountHolderTransactionSetup</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 </services>

@@ -681,6 +681,30 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
+	  <!-- Party Identification Type-->
+    <service name="createPartyIdentificationType" engine="simple" default-entity-name="PartyIdentificationType"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createPartyIdentificationType" auth="true">
+        <description>Create PartyIdentification Type</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updatePartyIdentificationType" engine="simple" default-entity-name="PartyIdentificationType"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updatePartyIdentificationType" auth="true">
+        <description>Update Party Identification Type</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deletePartyIdentificationType" engine="simple" default-entity-name="PartyIdentificationType"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deletePartyIdentificationType" auth="true">
+        <description>Delete Party Identification Type</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>    
+	
     <!-- PartyIdentification -->
     <service name="createPartyIdentification" engine="entity-auto" default-entity-name="PartyIdentification" invoke="create">
         <description>create PartyIdentification entity</description>
@@ -1865,4 +1889,31 @@ under the License.
         <description>Delete MemberStatusLog</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    
+    <!-- Staff Employment Status -->
+    <service name="createEnumStaffStatus" engine="simple" default-entity-name="Enumeration"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createEnumStaffStatus" auth="true">
+        <description>New Staff Employment Status</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateEnumStaffStatus" engine="simple" default-entity-name="Enumeration"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updateEnumStaffStatus" auth="true">
+        <description>Update Staff Employment Status</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteEnumStaffStatus" engine="simple" default-entity-name="Enumeration"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteEnumStaffStatus" auth="true">
+        <description>Delete Staff Employment Status</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+    
 </services>

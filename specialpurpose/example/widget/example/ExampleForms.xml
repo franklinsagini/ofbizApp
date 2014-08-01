@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-	license agreements. See the NOTICE file distributed with this work for additional 
-	information regarding copyright ownership. The ASF licenses this file to 
-	you under the Apache License, Version 2.0 (the "License"); you may not use 
-	this file except in compliance with the License. You may obtain a copy of 
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+	license agreements. See the NOTICE file distributed with this work for additional
+	information regarding copyright ownership. The ASF licenses this file to
+	you under the Apache License, Version 2.0 (the "License"); you may not use
+	this file except in compliance with the License. You may obtain a copy of
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
 	language governing permissions and limitations under the License. -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -16,7 +16,7 @@
 	<form name="FindExamples" type="single" target="FindExample"
 		default-entity-name="Example">
 		<field name="noConditionFind">
-			<hidden value="Y" /><!-- if this isn't there then with all fields 
+			<hidden value="Y" /><!-- if this isn't there then with all fields
 				empty no query will be done -->
 		</field>
 		<field name="exampleId" title="${uiLabelMap.ExampleExampleId}">
@@ -86,9 +86,9 @@
 		</field>
 	</form>
 
-	<!-- Typically, this extended form wouldn't be necessary. The parent form 
-		(ListExamples) would have these attributes. For the Ajax example we want 
-		all example entities listed, so the we use the entity-condition instead of 
+	<!-- Typically, this extended form wouldn't be necessary. The parent form
+		(ListExamples) would have these attributes. For the Ajax example we want
+		all example entities listed, so the we use the entity-condition instead of
 		the performFind service. -->
 	<form name="ListExamplesAjax" extends="ListExamples" type="list"
 		paginate-target="authview/findExampleAjax">
@@ -128,8 +128,7 @@
 	<form name="EditExample" type="single" target="updateExample"
 		title="" default-map-name="example" default-entity-name="Example">
 		<actions>
-			<entity-one entity-name="StatusItem" value-field="currentStatus"
-				auto-field-map="false">
+			<entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
 				<field-map field-name="statusId" from-field="example.statusId" />
 			</entity-one>
 		</actions>
@@ -151,8 +150,8 @@
 		<field name="exampleTypeId" title="${uiLabelMap.CommonType}"
 			id-name="exampleTypeId" widget-style="required">
 			<drop-down allow-empty="false">
-				<!-- this is a neat feature, but not good for the type because the user 
-					would have to know the possible types in order to enter at least the first 
+				<!-- this is a neat feature, but not good for the type because the user
+					would have to know the possible types in order to enter at least the first
 					letter, so leaving it out by default; just uncomment to enable: <auto-complete/> -->
 				<entity-options entity-name="ExampleType"
 					description="${description}">
@@ -200,7 +199,7 @@
 		</field>
 	</form>
 
-	<!-- Typically, this extended form wouldn't be necessary. The parent form 
+	<!-- Typically, this extended form wouldn't be necessary. The parent form
 		(EditExample) would have these settings. -->
 	<form name="EditExampleBackgroundSubmit" type="single" extends="EditExample"
 		target="updateExampleAjax">
@@ -214,7 +213,7 @@
 		</field>
 		<on-event-update-area event-type="submit"
 			area-id="ListExamplesAjax" area-target="ListExampleFormOnly" />
-		<!--on-event-update-area event-type="submit" area-id="EditExampleAjax" 
+		<!--on-event-update-area event-type="submit" area-id="EditExampleAjax"
 			area-target="CreateExampleFormOnly"/ --><!-- JLR: this does not seem to be useful -->
 	</form>
 
