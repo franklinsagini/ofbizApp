@@ -79,15 +79,15 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
 		
-		<field name="partyId" title="Member">
-        	<!-- drop-down>
+		<!--field name="partyId" title="Member">
+        	< drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down -->
+        	</drop-down 
         	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
-        </field>
+        </field-->
         <field name="transactionType" title="Transaction Type"><display also-hidden="false"></display></field>
         <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
-        <field name="transactionAmount" title="Amount"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Amount"><display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display></field>
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteCashWithdrawal" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="accountTransactionId"/>
@@ -95,6 +95,30 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
         <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false"></display></field>
+
+		        
+        
+        
+        <field name="payee" title="Payee"><display also-hidden="false"></display></field>
+		<field name="bankDetailsId" title="Bank">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankDetailsId" list-name="bankDetailsList" description="${bankName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"></display-entity>
+      	</field>
+      	
+      	<field name="bankBranchId" title="Branch">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"></display-entity>
+      		
+      	</field>      	
+        <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
+        <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
+        
     </form>
     
     <!-- CashDeposit -->
@@ -161,15 +185,15 @@ under the License.
         	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
-		<field name="partyId" title="Member">
-        	<!-- drop-down>
+		<!--field name="partyId" title="Member">
+        	< drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down -->
+        	</drop-down 
         	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
-        </field>
+        </field-->
         <field name="transactionType" title="Transaction Type"> <display also-hidden="false"></display> </field>
         <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
-        <field name="transactionAmount" title="Cash Amount"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Amount"><display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display></field>
         
          <!-- field name="modeOfPaymentsId" title="Model Of Payment">
         	< drop-down>
@@ -184,6 +208,27 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
         <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false"></display></field>
+        
+        <field name="payee" title="Payee"><display also-hidden="false"></display></field>
+		<field name="bankDetailsId" title="Bank">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankDetailsId" list-name="bankDetailsList" description="${bankName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"></display-entity>
+      	</field>
+      	
+      	<field name="bankBranchId" title="Branch">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"></display-entity>
+      		
+      	</field>      	
+        <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
+        <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
+        
     </form>
     
 	<!-- ChequeWithdrawal -->
@@ -214,18 +259,27 @@ under the License.
         </field>
         <field name="chequeNo" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
         <field name="payee" title="Payee"  widget-style="required" required-field="true"><text></text></field>
-        <field name="chequeAmount" title="Cheque Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="transactionAmount" title="Cheque Amount"  widget-style="required" required-field="true"><text></text></field>
 		 
       	<field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
 		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return checkAvailableBalance();"><submit button-type="button"/></field>
        </form>
         
       <form name="listChequeWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChequeWithdrawal" paginate-target="chequeWithdrawal"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="AccountTransaction">
+            <!-- entity-condition entity-name="AccountTransaction">
             	<condition-expr field-name="isActive" value="Y"/>
+            </entity-condition -->
+            <entity-condition entity-name="AccountTransaction">
+            	
+            	<condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            	</condition-list>
+            	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="membersList">
@@ -233,20 +287,50 @@ under the License.
         	</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateMemberShareTransfer"/>
- 		<field name="partyId" title="Member">
-        	<drop-down>
+ 		<!--field name="partyId" title="Member">
+        	< drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        	</drop-down 
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field-->
+        <field name="transactionType" title="Transaction Type"> <display also-hidden="false"></display> </field>
+        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Amount"><display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display></field>
+        
+         <!-- field name="modeOfPaymentsId" title="Model Of Payment">
+        	< drop-down>
+        		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
         	</drop-down>
-        </field>
-        <field name="chequeNo" title="Cheque No"><text></text></field>
-        <field name="payee" title="Payee"><text></text></field>
-        <field name="chequeAmount" title="Cheque Amount"><text></text></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteChequeWithdrawal" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="chequeWithdrawalId"/>
+        	<display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"></display-entity>
+        </field  -->
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteCashDeposit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="cashDepositId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false"></display></field>
+        
+        <field name="payee" title="Payee"><display also-hidden="false"></display></field>
+		<field name="bankDetailsId" title="Bank">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankDetailsId" list-name="bankDetailsList" description="${bankName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"></display-entity>
+      	</field>
+      	
+      	<field name="bankBranchId" title="Branch">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"></display-entity>
+      		
+      	</field>      	
+        <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
+        <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
+        
     </form>
 		<!-- ChequeDeposit -->
 	<form name="NewChequeDeposit" type="single" target="createChequeDeposit"
@@ -321,17 +405,23 @@ under the License.
       		</drop-down>
       		
       	</field>
-        <field name="chequeAmount" title="Cheque Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="transactionAmount" title="Cheque Amount"  widget-style="required" required-field="true"><text></text></field>
         <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
 		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
       <form name="listChequeDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChequeDeposit" paginate-target="chequeDeposit"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="AccountTransaction">
-            	<condition-expr field-name="isActive" value="Y"/>
+            	
+            	<condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            	</condition-list>
+            	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
             <entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
@@ -347,55 +437,38 @@ under the License.
         	</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChequeDeposit"/>
- 		<field name="partyId" title="Member">
-        	<drop-down allow-empty="true">
-                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
-            </drop-down>
-        </field>
-        <field name="internalexternal" title="Internal / External">
-        	<drop-down allow-empty="false">
-                <option key="Internal" description="Internal"/>
-                <option key="External" description="External"/>
-            </drop-down>
-      	</field>
-      	
-      	<field name="chequeTypeId" title="Cheque Type">
-      		<drop-down allow-empty="false">
-      			<list-options key-name="chequeTypeId" list-name="chequeTypeList" description="${name}"/>
-      		</drop-down>
-      		
-      	</field>
-
+ 		<!--field name="partyId" title="Member">
+        	< drop-down>
+        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        	</drop-down 
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field-->
+        <field name="transactionType" title="Transaction Type"> <display also-hidden="false"></display> </field>
+        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Cash Amount"><display also-hidden="false"></display></field>
+        
+        <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false"></display></field>
+        
+        <field name="payee" title="Payee"><display also-hidden="false"></display></field>
 		<field name="bankDetailsId" title="Bank">
-      		<drop-down allow-empty="false">
+      		<!-- drop-down allow-empty="false">
       			<list-options key-name="bankDetailsId" list-name="bankDetailsList" description="${bankName}"/>
-      		</drop-down>
-      		
+      		</drop-down -->
+      		<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"></display-entity>
       	</field>
       	
       	<field name="bankBranchId" title="Branch">
-      		<drop-down allow-empty="false">
+      		<!-- drop-down allow-empty="false">
       			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
-      		</drop-down>
+      		</drop-down -->
+      		<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"></display-entity>
       		
       	</field>      	
-        <field name="drawer" title="Drawer" ><text></text></field>
-        <field name="chequeNo" title="Cheque No" ><text></text></field>
-        <field name="receiptNo" title="Receipt No" ><text></text></field>
+        <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
+        <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
         
-        <field name="saccoAccountId" title="Sacco Account">
-      		<drop-down allow-empty="false">
-      			<list-options key-name="finAccountId" list-name="accountList"  description="${finAccountName} - ${finAccountCode}"/>
-      		</drop-down>
-      		
-      	</field>
-        <field name="chequeAmount" title="Cheque Amount"><text></text></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteChequeDeposit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="chequeDepositId"/>
-            </hyperlink>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
     <!-- NewLoanRepayment -->
@@ -791,4 +864,103 @@ under the License.
         	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
         </field -->
      </form>
+     
+     <!-- Cheque Setup -->
+     <!-- Start -->
+     <form name="NewChequeSetup" type="single" target="createChequeSetup"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="chequeSetupContext">
+        
+       
+        <field name="chequeSetupId"><text default-value="TIMETOCLEAR"></text></field>
+		
+		
+        <field name="durationToClear" title="Duration To Clear (In Days)" widget-style="required" required-field="true"><text></text></field>
+        <field name="comments" title="Comments"><textarea/></field>
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listChequeSetup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChequeSetup" paginate-target="chequeSetup"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ChequeSetup">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateChequeSetup"/>
+		
+		<field name="chequeSetupId" title="Cheque Setup ID"><display also-hidden="false"></display></field>
+        <field name="durationToClear" title="Duration To Clear (In Days)"><display also-hidden="false"></display></field>
+        <field name="comments" title="Comments"><display also-hidden="false"></display></field>
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+     <!-- End -->
+     
+     <!-- AccountHolderTransactionSetup -->
+     <form name="NewAccountHolderTransactionSetup" type="single" target="createAccountHolderTransactionSetup"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="accountHolderTransactionSetupContext">
+		<actions>
+			<entity-condition entity-name="GlAccount" list="glAccountsList"></entity-condition>	
+			<entity-condition entity-name="GlAccount" list="glAccountList"></entity-condition>	
+		</actions>       
+        <field name="accountHolderTransactionSetupId"><text default-value="MEMBERTRANSACTIONACCOUNT"></text></field>
+		
+		
+        <field name="cashAccountId" title="Cash Account" widget-style="required" required-field="true">
+       		<drop-down>
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+        
+        </field>
+       <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
+       		<drop-down>
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+       </field>
+        <field name="comments" title="Comments"><textarea/></field>
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listAccountHolderTransactionSetup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAccountHolderTransactionSetup" paginate-target="accountHolderTransactionSetup"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="AccountHolderTransactionSetup">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateChequeSetup"/>
+		
+		<field name="accountHolderTransactionSetupId"><text default-value="MEMBERTRANSACTIONACCOUNT"></text></field>
+		
+		
+        <field name="cashAccountId" title="Cash Account" widget-style="required" required-field="true">
+       		<drop-down>
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+        
+        </field>
+       <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
+       		<drop-down>
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+       </field>
+        <field name="comments" title="Comments"><textarea/></field>       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
 </forms>

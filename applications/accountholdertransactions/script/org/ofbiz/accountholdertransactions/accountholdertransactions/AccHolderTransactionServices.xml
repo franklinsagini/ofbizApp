@@ -128,6 +128,15 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" value="CHEQUEDEPOSIT"/>
+        
+        <now-timestamp field="createdDate"/>
+        
+        <set field="chequeSetupId" value="TIMETOCLEAR"/>
+        <entity-one value-field="chequeSetup" entity-name="ChequeSetup">
+        </entity-one>
+        <!-- ${chequeSetup.durationToClear} -->
+        <set-calendar field="newEntity.clearDate" from-field="createdDate" days="${chequeSetup.durationToClear}"  />
+        <set field="newEntity.clearDuration" from-field="chequeSetup.durationToClear"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -206,11 +215,14 @@ under the License.
         <set from-field="chequeTypeId" field="newEntity.chequeTypeId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateChequeType" short-description="Update ChequeType">
         <entity-one entity-name="ChequeType" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     
@@ -218,7 +230,57 @@ under the License.
         <entity-one entity-name="ChequeType" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-
+    
+    <!-- ChequeSetup -->
+    <!-- Start -->
+    <simple-method method-name="createChequeSetup" short-description="Create ChequeSetup">
+        <make-value entity-name="ChequeSetup" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- sequenced-id sequence-name="ChequeSetup" field="chequeSetupId"/ -->
+        <now-timestamp field="newEntity.createdDate"/>
+        <!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateChequeSetup" short-description="Update ChequeSetup">
+        <entity-one entity-name="ChequeSetup" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteChequeSetup" short-description="Delete ChequeSetup">
+        <entity-one entity-name="ChequeSetup" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    <!-- End -->
+	<!-- AccountHolderTransactionSetup -->
+	<!-- Start -->
+	    <simple-method method-name="createAccountHolderTransactionSetup" short-description="Create AccountHolderTransactionSetup">
+        <make-value entity-name="AccountHolderTransactionSetup" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- sequenced-id sequence-name="ChequeSetup" field="chequeSetupId"/ -->
+        <now-timestamp field="newEntity.createdDate"/>
+        <!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateAccountHolderTransactionSetup" short-description="Update AccountHolderTransactionSetup">
+        <entity-one entity-name="AccountHolderTransactionSetup" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteAccountHolderTransactionSetup" short-description="Delete AccountHolderTransactionSetup">
+        <entity-one entity-name="AccountHolderTransactionSetup" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+	<!-- End -->
     
   
     
