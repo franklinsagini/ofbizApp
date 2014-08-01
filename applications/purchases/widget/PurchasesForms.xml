@@ -2,14 +2,14 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-    <form name="FindPurchaseQuote" default-map-name="purchaseQuote" target="FindPurchaseQuote" type="single">
+    <form name="FindPurchaseQuote" default-map-name="purchaseQuote" target="findPurchaseQuote" type="single">
         <auto-fields-entity entity-name="PurchaseQuote" default-field-type="find"/>
         <field name="purchaseQuoteId" title="${uiLabelMap.PurchaseQuoteId}"></field>
         <field name="issueDate" title="${uiLabelMap.PurchaseQuoteIssueDate}"></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" operator="equals" value="QUOTE_STATUS"/>
+                    <entity-constraint name="statusTypeId" operator="equals" value="PRCHSE_QUOTE_STATUS"/>
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
             </drop-down>
@@ -33,55 +33,95 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     </form>
 
-    <form name="ListPurchaseQuotes" type="list" list-name="workEfforts" paginate-target="ListPurchaseQuotes"
-          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    <form
+        name="ListPurchaseQuotes"
+        type="list"
+        separate-columns="true"
+        title="Purchase Quotes List"
+        list-name="listIt"
+        target=""
+        default-entity-name="PurchaseQuote"
+        paginate-target="findPurchaseQuote"
+        odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar">
         <actions>
+            <set field="parameters.sortField" from-field="parameters.sortField" default-value="-issueDate"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="WorkEffortFindView"/>
-                <field-map field-name="orderBy" value="lastModifiedDate DESC"/>
+                <field-map field-name="entityName" value="PurchaseQuote"/>
+                <field-map field-name="orderBy" value="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-            <service service-name="removeDuplicateWorkEfforts" result-map="result" result-map-list="workEfforts">
+            <service service-name="removeDuplicateWorkEfforts" result-map="result" result-map-list="listIt">
                 <field-map field-name="workEffortIterator" from-field="listIt"/>
             </service>
         </actions>
+
+      <field name="purchaseQuoteId" type="id-ne"></field>
+      <field name="issueDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
+      <field name="currencyUomId" type="id"></field>
+      <field name="purchaseQuoteName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="supplierPartyId" type="id"></field>
+
+        <field name="purchaseQuoteId" widget-style="buttontext" sort-field="true">
+            <hyperlink description="${purchaseQuoteId}" target="invoiceOverview">
+                <parameter param-name="purchaseQuoteId"/>
+            </hyperlink>
+        </field>
+
+        <field name="issueDate" sort-field="true"><display type="date"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true"><display-entity entity-name="StatusItem"/></field>
+        <field name="description" sort-field="true"><display/></field>
+        <field name="purchaseQuoteName" sort-field="true"><display/></field>
+        <field name="supplierPartyId" title="${uiLabelMap.AccountingFromParty}" sort-field="true">
+
+        </field>
+        <field name="total" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountToApply" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
 
     <form name="FoundPurchaseQuotes" extends="ListPurchaseQuotes" paginate-target="FindPurchaseQuote" header-row-style="header-row-2"/>
 
     <!-- PURCHASE ORDERS FORMS -->
 
-    <form name="FindPurchaseOrders" default-map-name="purchaseQuote" target="FindPurchaseQuote" type="single">
-        <auto-fields-entity entity-name="PurchaseQuote" default-field-type="find"/>
-        <field name="purchaseQuoteId" title="${uiLabelMap.PurchaseQuoteId}"></field>
-        <field name="issueDate" title="${uiLabelMap.PurchaseQuoteIssueDate}"></field>
+    <form
+        name="FindPurchaseOrders"
+        type="single"
+        target="FindPurchaseQuote"
+        default-entity-name="PurchaseOrderHeader" >
+
+        <!-- Fields -->
+        <field name="noConditionFind">
+            <hidden value="Y" /><!-- if this isn't there then with all fields
+                empty no query will be done -->
+        </field>
+
+        <field name="purchaseOrderId" title="Order Id">
+            <text-find />
+        </field>
+        <field name="orderName" title="Order Name">
+            <text-find />
+        </field>
+        <field name="invoiceDate">
+            <date-find type="date"/>
+        </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
-                <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" operator="equals" value="QUOTE_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PURCH_ODR_STATUS"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
-            <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
-                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
-                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="partyId" title="Supplier">
+        <field position="1" name="createdBy">
             <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="purchaseQuoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
-        <field name="description"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
-            <submit button-type="button"/>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}"
+            widget-style="smallSubmit">
+            <submit button-type="button" image-location="/images/icons/magnifier.png" />
         </field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     </form>
 
     <form name="ListPurchaseOrders" type="list" list-name="workEfforts" paginate-target="ListPurchaseQuotes"

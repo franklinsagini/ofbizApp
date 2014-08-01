@@ -38,7 +38,7 @@
                                 <include-form name="FindPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="FoundPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml"/>
+                                <include-form name="ListPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -52,7 +52,7 @@
             <actions>
                 <set field="headerItem" value="PurchaseOrders"/><!-- this highlights the selected menu-item with name "main" -->
                 <set field="titleProperty" value="PageTitleFindOrders"/>
-                <set field="donePage" from-field="parameters.DONE_PAGE"/>
+                <set field="purchaseOrderCtx" from-field="parameters" />
             </actions>
             <widgets>
                 <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -125,7 +125,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="ManufacturingCreateProductionRun"/>
-                <set field="headerItem" value="jobshop"/>
+                <set field="headerItem" value="Quotes"/>
                 <set field="purchaseQuoteId" from-field="parameters.purchaseQuoteId"/>
                 <entity-one entity-name="PurchaseQuote" value-field="purchaseQuote"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
