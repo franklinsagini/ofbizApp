@@ -14,30 +14,18 @@
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
 	<!-- -->
-	<simple-method method-name="createFileRequest"
-		short-description="Create File Request">
-		<now-timestamp field="requestDate"/>
-		<make-value value-field="newEntity" entity-name="FileRequest" />
+	<simple-method method-name="createFileType"
+		short-description="Create File Type">
+		<make-value value-field="newEntity" entity-name="FileType" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="FileRequestSequence" stagger-max="1" field="fileRequestId" />
-		<set field="newEntity.fileRequestId" from-field="fileRequestId"  />
-		<set field="newEntity.requester" from-field="userLogin.userLoginId"  />
-		<set field="newEntity.requestDate" from-field="requestDate" />
+		<sequenced-id sequence-name="FileTypeSequence" field="fileTypeId" />
+		<set field="newEntity.fileTypeId" from-field="fileTypeId" />
 		<create-value value-field="newEntity" />
-	   
-		<set field="registryFileId" from="newEntity.registryFileId"  /> 
-		<entity-one value-field="registryFileId" entity-name="RegistryFile"></entity-one>
-		<set field="RegistryFile.fileStatus"  value="REQUESTED" />
-		<store-value value-field="registryFileId" />
-		 
 	</simple-method>
-	<simple-method method-name="updateFileRequest"
-		short-description="Update File Request">
-		<entity-one entity-name="FileRequest" value-field="fileRequestId" />
-		<set-nonpk-fields value-field="FileRequest" map="parameters" />
-		<set field="FileRequest.updatedBy" from-field="userLogin.userLoginId" />
-		<store-value value-field="fileRequestId"  />
+	<simple-method method-name="deleteFileType"
+		short-description="Delete File Type ">
+		<entity-one entity-name="FileType" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
 	</simple-method>
-
 </simple-methods>

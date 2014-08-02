@@ -12,16 +12,10 @@
 			<hidden value="Y" /><!-- if this isn't there then with all fields 
 				empty no query will be done -->
 		</field>
-
-		<field name="registryFileId" title="registry File Id">
-			<text-find />
-		</field>
 		<field name="createdBy" title="created By">
 			<text-find />
 		</field>
-		<field name="updatedBy" title="updated By">
-			<text-find />
-		</field>
+
 		<field name="isActive" title="is Active">
 			<text-find />
 		</field>
@@ -55,8 +49,7 @@
 				<field-map field-name="viewSize" from-field="viewSize" />
 			</service>
 		</actions>
-		<field name="registryFileId" title="Registry File"
-			widget-style="buttontext">
+		<field name="registryFileId" title="Registry File" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="${registryFileId}"
 				target="EditRegistryFile">
 				<parameter param-name="registryFileId" />
@@ -102,6 +95,20 @@
 			tooltip="${uiLabelMap.CommonCannotBeFound}: [${registryFileId}]">
 			<hidden />
 		</field>
+		<field name="fileTypeId" title="File type id">
+			<hidden />
+		</field>
+		<field name="fileType" title="File Type">
+			<display />
+		</field>
+		<field name="member" title="Member">
+			<drop-down allow-empty="false">
+				<entity-options description="${firstName} ${lastName}"
+					key-field-name="partyId" entity-name="Member">
+					<entity-order-by field-name="firstname" />
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="documentName" title="Document Name">
 			<text />
 		</field>
@@ -113,8 +120,7 @@
 				<entity-options description="${partyId}"
 					key-field-name="partyId" entity-name="PartyRoleNameDetail">
 					<entity-constraint name="roleTypeId" operator="equals"
-						value="EMPLOYEE"  />
-						
+						value="EMPLOYEE" />
 					<entity-order-by field-name="description" />
 				</entity-options>
 			</drop-down>

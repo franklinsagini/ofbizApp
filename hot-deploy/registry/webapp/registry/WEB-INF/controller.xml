@@ -66,7 +66,7 @@
 		<response name="error" type="view" value="EditRetentionSchedule" />
 	</request-map>
 
-	<!--  NonMemberRecord  -->
+	<!-- NonMemberRecord -->
 	<request-map uri="NonMemberRecord">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="NonMemberRecord" />
@@ -94,7 +94,7 @@
 		<response name="error" type="view" value="EditRetentionSchedule" />
 	</request-map>
 
-	<!-- RegistryFile -->	
+	<!-- RegistryFile -->
 	<request-map uri="RegistryFile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="RegistryFile" />
@@ -110,7 +110,7 @@
 	<request-map uri="createRegistryFile">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createRegistryFile" />
-		<response name="success" type="view" value="EditRegistryFile" />
+		<response name="success" type="view" value="RegistryFile" />
 		<response name="error" type="view" value="EditRegistryFile" />
 	</request-map>
 	<request-map uri="updateRegistryFile">
@@ -205,7 +205,46 @@
 		</response>
 		<response name="error" type="view" value="EditReleaseFile" />
 	</request-map>
-	<!--                   -->
+	<!-- -->
+
+	<!-- ReleaseFile -->
+	<request-map uri="FileType">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FileType" />
+	</request-map>
+	<request-map uri="FindFileType">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindFileType" />
+	</request-map>
+	<request-map uri="EditFileType">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditFileType" />
+	</request-map>
+	<request-map uri="createFileType">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createFileType" />
+		<response name="success" type="view" value="FileType" />
+		<response name="error" type="view" value="EditFileType" />
+	</request-map>
+	<request-map uri="updateFileType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateFileType" />
+		<response name="success" type="request-redirect" value="EditFileType">
+			<redirect-parameter name="fileTypeId" />
+		</response>
+		<response name="error" type="view" value="EditFileType" />
+	</request-map>
+	<request-map uri="deleteFileType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteFileType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="EditFileType">
+		</response>
+		<response name="error" type="view" value="EditFileType" />
+	</request-map>
+
+
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
 		page="component://registry/widget/RegistryScreens.xml#main" />
@@ -216,7 +255,7 @@
 	<view-map name="EditEmployer" type="screen"
 		page="component://registry/widget/RegistryScreens.xml#EditEmployer" />
 
-	<!--      -->
+	<!-- -->
 	<view-map name="retentionSchedule" type="screen"
 		page="component://registry/widget/RetentionScheduleScreens.xml#retentionschedules" />
 	<view-map name="EditRetentionSchedule" type="screen"
@@ -224,7 +263,7 @@
 	<view-map name="findRetentionSchedule" type="screen"
 		page="component://registry/widget/RetentionScheduleScreens.xml#FindRetentionSchedule" />
 
-	<!--   -->
+	<!-- -->
 	<view-map name="NonMemberRecord" type="screen"
 		page="component://registry/widget/NonMemberRecordScreens.xml#NonMemberRecord" />
 	<view-map name="FindNonMemberRecord" type="screen"
@@ -232,7 +271,7 @@
 	<view-map name="EditNonMemberRecord" type="screen"
 		page="component://registry/widget/NonMemberRecordScreens.xml#EditNonMemberRecord" />
 
-	<!--  -->
+	<!-- -->
 	<view-map name="RegistryFile" type="screen"
 		page="component://registry/widget/RegistryFileScreens.xml#RegistryFile" />
 	<view-map name="FindRegistryFile" type="screen"
@@ -240,23 +279,23 @@
 	<view-map name="EditRegistryFile" type="screen"
 		page="component://registry/widget/RegistryFileScreens.xml#EditRegistryFile" />
 
-	<!--     -->
+	<!-- -->
 	<view-map name="FileRequest" type="screen"
 		page="component://registry/widget/FileRequestScreens.xml#FileRequest" />
 	<view-map name="FindFileRequest" type="screen"
 		page="component://registry/widget/FileRequestScreens.xml#FindFileRequest" />
 	<view-map name="EditFileRequest" type="screen"
 		page="component://registry/widget/FileRequestScreens.xml#EditFileRequest" />
-		
-	<!--    -->
+
+	<!-- -->
 	<view-map name="IssueFile" type="screen"
 		page="component://registry/widget/IssueFileScreens.xml#IssueFile" />
 	<view-map name="FindIssueFile" type="screen"
 		page="component://registry/widget/IssueFileScreens.xml#FindIssueFile" />
 	<view-map name="EditIssueFile" type="screen"
 		page="component://registry/widget/IssueFileScreens.xml#EditIssueFile" />
-	
-	<!--    -->
+
+	<!-- -->
 	<view-map name="ReleaseFile" type="screen"
 		page="component://registry/widget/ReleaseFileScreens.xml#ReleaseFile" />
 	<view-map name="FindReleaseFile" type="screen"
@@ -264,4 +303,11 @@
 	<view-map name="EditReleaseFile" type="screen"
 		page="component://registry/widget/ReleaseFileScreens.xml#EditReleaseFile" />
 
+	<!-- -->
+	<view-map name="FileType" type="screen"
+		page="component://registry/widget/FileTypeScreens.xml#FileType" />
+	<view-map name="FindFileType" type="screen"
+		page="component://registry/widget/FileTypeScreens.xml#FindFileType" />
+	<view-map name="EditFileType" type="screen"
+		page="component://registry/widget/FileTypeScreens.xml#EditFileType" />
 </site-conf>

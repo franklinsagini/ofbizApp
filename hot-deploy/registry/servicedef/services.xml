@@ -64,7 +64,7 @@
 	</service>
 	<service name="updateNonMemberRecord" default-entity-name="NonMemberRecord"
 		engine="entity-auto" invoke="update" auth="true">
-		<description>Update a Document Retention Schedule</description>
+		<description>Update a Non Member Record</description>
 		<permission-service service-name="partyBasePermissionCheck"
 			main-action="UPDATE" />
 		<auto-attributes include="pk" mode="IN" optional="false" />
@@ -79,24 +79,32 @@
 		<auto-attributes entity-name="RegistryFile" include="pk" mode="IN" optional="true" />
 		<auto-attributes entity-name="RegistryFile" include="nonpk" mode="IN" optional="true" />
 	</service>
+
 	<service name="updateRegistryFile" default-entity-name="RegistryFile"
-		engine="simple" location="component://registry/script/org/ofbiz/registry/RegistryFileServices.xml" 
-		invoke="updateRegistryFile" auth="true">
-		<description>Update a Document Retention Schedule</description>
+		engine="entity-auto" invoke="update" auth="true">
+		<description>Update a Registry File</description>
 		<permission-service service-name="partyBasePermissionCheck"
 			main-action="UPDATE" />
 		<auto-attributes include="pk" mode="IN" optional="false" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />
 	</service>
 
-		<!-- File Request services -->
+		<!-- File Request services 
 	<service name="createFileRequest" engine="simple"
 		location="component://registry/script/org/ofbiz/registry/FileRequestServices.xml"
 		invoke="createFileRequest" auth="true">
 		<description>Create File Request header record</description>
 		<auto-attributes entity-name="FileRequest" include="pk" mode="IN" optional="true" />
 		<auto-attributes entity-name="FileRequest" include="nonpk" mode="IN" optional="true" />
-	</service>
+			
+	</service> -->
+	
+	<service name="createFileRequest" engine="java"
+		location="component://registry/src/org/ofbiz/FileRequestServices.java"
+		invoke="createFileRequest" auth="true">
+		<description>Create File Request header record</description>
+		<attribute name="registryFileId" mode="IN" type="String" optional="false"></attribute>
+    </service>
 	<service name="updateFileRequest" default-entity-name="FileRequest"
 		engine="simple" location="component://registry/script/org/ofbiz/registry/FileRequestServices.xml" 
 		invoke="updateFileRequest" auth="true">
@@ -142,4 +150,28 @@
 		<auto-attributes include="pk" mode="IN" optional="false" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />
 	</service>
+	
+		<!-- Registry file services -->
+	<service name="createFileType" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/FileTypeServices.xml"
+		invoke="createFileType" auth="true">
+		<description>Create Registry file type header record</description>
+		<auto-attributes entity-name="FileType" include="pk" mode="IN" optional="true" />
+		<auto-attributes entity-name="FileType" include="nonpk" mode="IN" optional="true" />
+	</service>
+
+	<service name="updateFileType" default-entity-name="FileType"
+		engine="entity-auto" invoke="update" auth="true">
+		<description>Update a Registry File</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	    <service name="deleteFileType" engine="simple" default-entity-name="FileType"
+             location="component://registry/script/org/ofbiz/registry/FileTypeServices.xml" invoke="deleteFileType" auth="true">
+        <description>Delete File Type</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 </services>
