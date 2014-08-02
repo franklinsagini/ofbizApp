@@ -22,12 +22,12 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
 <!-- CashWithdrawal -->
-<simple-method method-name="createCashWithdrawal" short-description="Create CashWithdrawal">
+	<simple-method method-name="createCashWithdrawal" short-description="Create CashWithdrawal">
         <make-value entity-name="AccountTransaction" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
         
          <set field="newEntity.isActive" value="Y"/>
@@ -35,8 +35,104 @@ under the License.
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" value="CASHWITHDRAWAL"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
+        
+        <!-- Set Posting Type -->
+        <set field="memberDepostPosting" value="D"/>
+        <set field="cashPosting" value="C"/>
+        
+        <!-- map-to-map map="parameters" to-map="transactionParameters"/ -->
+        
+        <!-- Post Cash Withdrawal -->
+        <call-simple-method method-name="createMemberTransaction"></call-simple-method>
+        
+       
+        
+    </simple-method>
+    <simple-method method-name="createMemberTransaction" short-description="Member Transaction Entry">
+        <!-- Create Account Transaction -->
+        <!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
+        <make-value entity-name="AcctgTrans" value-field="acctgTrans"/>
+        <!-- entity-one entity-name="AcctgTrans" value-field="acctgTrans"/ -->
+         <!-- set-pk-fields map="parameters" value-field="acctgTrans"/ -->
+        <!-- set-nonpk-fields map="newEntity" value-field="acctgTrans"/ -->
+        <sequenced-id sequence-name="AcctgTrans" field="acctgTransId"/>
+        <set from-field="acctgTransId" field="acctgTrans.acctgTransId"/>
+        
+        <!-- Get Accounts from setup -->
+        <set field="accountHolderTransactionSetupId" value="MEMBERTRANSACTIONACCOUNT"/>
+        <entity-one entity-name="AccountHolderTransactionSetup" value-field="accountHolderTransactionSetup"/>
+        
+        <!-- Set values Account Trans Entity -->
+        <now-timestamp field="createdDate"/>
+        <set field="acctgTrans.acctgTransTypeId" value="MEMBER_DEPOSIT"/>
+        <set field="acctgTrans.transactionDate" from-field="createdDate"/>
+        <set field="acctgTrans.isPosted" value="Y"/>
+        <set field="acctgTrans.postedDate" from-field="createdDate"/>
+        <set field="acctgTrans.glFiscalTypeId" value="ACTUAL"/>
+        <set field="acctgTrans.partyId" from-field="newEntity.partyId"/>
+        <set field="acctgTrans.createdDate" from-field="createdDate"/>
+        <set field="acctgTrans.createdByUserLogin" from-field="newEntity.createdBy"/>
+        <set field="acctgTrans.lastModifiedDate" from-field="createdDate"/>
+        <set field="acctgTrans.lastModifiedByUserLogin" from-field="newEntity.createdBy"/>
+        <create-value value-field="acctgTrans"/>
+        
+        <!-- Create Account Entries one for Member Deposit and Another for Cash -->
+        <!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
+        <call-simple-method method-name="createMemberDepositEntry"></call-simple-method>
+        <call-simple-method method-name="createMemberCashEntry"></call-simple-method>
+    </simple-method>
+    
+    <simple-method method-name="createMemberDepositEntry" short-description="Member Deposit Entry">
+    	<!-- There is one Debit to the account specified in the setup (Member Deposit) -->
+        <!-- entity-one entity-name="AcctgTransEntry" value-field="memberDepositEntry"/ -->
+        <make-value entity-name="AcctgTransEntry" value-field="memberDepositEntry"/>
+         <!-- set-pk-fields map="parameters" value-field="memberDepositEntry"/ -->
+        <!-- set-nonpk-fields map="newEntity" value-field="memberDepositEntry"/ -->
+        
+        <set field="memberDepositEntry.acctgTransId" from-field="acctgTrans.acctgTransId"/>
+        <set field="memberDepositEntry.acctgTransEntrySeqId" value="1"/>
+        <set field="memberDepositEntry.partyId" from-field="newEntity.partyId"/>
+        <set field="memberDepositEntry.glAccountTypeId" value="MEMBER_DEPOSIT"/>
+        <set field="memberDepositEntry.glAccountId" from-field="accountHolderTransactionSetup.memberDepositAccId"/>
+        <!-- set field="memberDepositEntry.organizationPartyId" from-field="userLogin.partyId"/ -->
+        
+        <set field="memberDepositEntry.organizationPartyId" value="Company"/>
+        <set field="memberDepositEntry.amount" from-field="newEntity.transactionAmount"/>
+		<set field="memberDepositEntry.currencyUomId" value="KES"/>
+		<set field="memberDepositEntry.origAmount" from-field="newEntity.transactionAmount"/>
+		<set field="memberDepositEntry.origCurrencyUomId" value="KES"/>
+    	<set field="memberDepositEntry.debitCreditFlag" from-field="memberDepostPosting"/>    
+    	<set field="memberDepositEntry.reconcileStatusId" value="AES_NOT_RECONCILED"/>    
+        
+        
+        
+        <create-value value-field="memberDepositEntry"/>
+    </simple-method>
+    <simple-method method-name="createMemberCashEntry" short-description="Member Cash Entry">
+    	<!--  There is a Credit in the account specified for Cash Entry (Cash Register in this case) -->
+        <!-- entity-one entity-name="AcctgTransEntry" value-field="memberCashEntry" /-->
+        <make-value entity-name="AcctgTransEntry" value-field="memberCashEntry"/>
+        <!-- set-pk-fields map="parameters" value-field="memberCashEntry"/ -->
+        <!--  set-nonpk-fields map="newEntity" value-field="memberCashEntry"/ -->
+        
+        <set field="memberCashEntry.acctgTransId" from-field="acctgTrans.acctgTransId"/>
+        <set field="memberCashEntry.acctgTransEntrySeqId" value="2"/>
+        <set field="memberCashEntry.partyId" from-field="newEntity.partyId"/>
+        <set field="memberCashEntry.glAccountTypeId" value="MEMBER_DEPOSIT"/>
+        <set field="memberCashEntry.glAccountId" from-field="accountHolderTransactionSetup.cashAccountId"/>
+        <!-- set field="memberCashEntry.organizationPartyId" from-field="userLogin.partyId"/ -->
+        <set field="memberCashEntry.amount" from-field="newEntity.transactionAmount"/>
+         <set field="memberCashEntry.organizationPartyId" value="Company"/>
+		<set field="memberCashEntry.currencyUomId" value="KES"/>
+		<set field="memberCashEntry.origAmount" from-field="newEntity.transactionAmount"/>
+		<set field="memberCashEntry.origCurrencyUomId" value="KES"/>
+    	<set field="memberCashEntry.debitCreditFlag" from-field="cashPosting"/>    
+    	<set field="memberCashEntry.reconcileStatusId" value="AES_NOT_RECONCILED"/> 
+        
+        <create-value value-field="memberCashEntry"/>
     </simple-method>
     
     <simple-method method-name="updateCashWithdrawal" short-description="Update CashWithdrawal">
@@ -61,7 +157,8 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
+        <map-to-map map="parameters" to-map="transactionParameters"/>
        
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
         
@@ -70,6 +167,14 @@ under the License.
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" value="CASHDEPOSIT"/>
         <create-value value-field="newEntity"/>
+        
+         <!-- Set Posting Type -->
+        <set field="memberDepostPosting" value="C"/>
+        <set field="cashPosting" value="D"/>
+        
+         <!-- Post Cash Deposit -->
+        <call-simple-method method-name="createMemberTransaction"></call-simple-method>
+        
     </simple-method>
     <simple-method method-name="updateCashDeposit" short-description="Update CashDeposit">
         <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
@@ -90,7 +195,7 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
         
          <set field="newEntity.isActive" value="Y"/>
@@ -121,7 +226,7 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
         
          <set field="newEntity.isActive" value="Y"/>
@@ -161,7 +266,7 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="LoanRepayment" field="loanRepaymentId"/>
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
         <set from-field="loanRepaymentId" field="newEntity.loanRepaymentId"/>
         
          <set field="newEntity.isActive" value="Y"/>
@@ -189,7 +294,7 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="ApplyStandingOrder" field="applyStandingOrderId"/>
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
         <set from-field="applyStandingOrderId" field="newEntity.applyStandingOrderId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
@@ -211,7 +316,7 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="ChequeType" field="chequeTypeId"/>
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
         <set from-field="chequeTypeId" field="newEntity.chequeTypeId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
@@ -238,7 +343,7 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- sequenced-id sequence-name="ChequeSetup" field="chequeSetupId"/ -->
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
         <!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
@@ -263,7 +368,7 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- sequenced-id sequence-name="ChequeSetup" field="chequeSetupId"/ -->
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
         <!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>

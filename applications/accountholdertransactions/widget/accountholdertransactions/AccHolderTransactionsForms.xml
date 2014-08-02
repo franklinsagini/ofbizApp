@@ -909,8 +909,10 @@ under the License.
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="accountHolderTransactionSetupContext">
 		<actions>
-			<entity-condition entity-name="GlAccount" list="glAccountsList"></entity-condition>	
-			<entity-condition entity-name="GlAccount" list="glAccountList"></entity-condition>	
+			<entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>	
+				
 		</actions>       
         <field name="accountHolderTransactionSetupId"><text default-value="MEMBERTRANSACTIONACCOUNT"></text></field>
 		
@@ -938,29 +940,33 @@ under the License.
             <entity-condition entity-name="AccountHolderTransactionSetup">
             	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
             </entity-condition>
+            
+            <entity-condition entity-name="GlAccount" list="glAccountList">
+			</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChequeSetup"/>
 		
-		<field name="accountHolderTransactionSetupId"><text default-value="MEMBERTRANSACTIONACCOUNT"></text></field>
+		<field name="accountHolderTransactionSetupId"><display also-hidden="false"></display></field>
 		
 		
         <field name="cashAccountId" title="Cash Account" widget-style="required" required-field="true">
-       		<drop-down>
+       		<!-- drop-down>
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down>
-        
+       		</drop-down -->
+        	<display-entity entity-name="GlAccount" description="${accountName} - ${accountCode}" key-field-name="glAccountId" also-hidden="false"></display-entity>
         </field>
        <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
-       		<drop-down>
+       		<!-- drop-down>
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="GlAccount" description="${accountName} - ${accountCode}" key-field-name="glAccountId" also-hidden="false"></display-entity>
        </field>
-        <field name="comments" title="Comments"><textarea/></field>       
+        <field name="comments" title="Comments"><display also-hidden="false"></display></field>       
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="chequeSetupId"/>
             </hyperlink>
-        </field -->
-        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
 </forms>
