@@ -62,12 +62,12 @@
 		<field name="description" type="description"></field>
 		<field name="fileStatus" type="name"></field>
 		<prim-key field="registryFileId" />
-		<!--   <relation type="many" rel-entity-name="FileType">
+		<relation type="many" rel-entity-name="FileType">
 			<key-map field-name="registryFileType" rel-field-name="fileTypeId" />
 		</relation>
 		<relation type="many" rel-entity-name="Member">
 			<key-map field-name="registryMember" rel-field-name="partyId" />
-		</relation> -->
+		</relation>
 	</entity>
 
 	<!-- Registry File Request Entity -->
@@ -124,7 +124,8 @@
 	<entity entity-name="FileType" package-name="org.ofbiz.registry"
 		title="File Type">
 		<field name="fileTypeId" type="id-ne"></field>
-		<field name="fileType" type="name"></field>
+		<field name="fileType" type="name" not-null="true"></field>
+		<field name="fileTypeStatus" type="name"></field>
 		<prim-key field="fileTypeId" />
 	</entity>
 </entitymodel>

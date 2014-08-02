@@ -2,9 +2,6 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-
-
-
 	<form name="FindRegistryFile" type="single" target="FindRegistryFile"
 		default-entity-name="RegistryFile">
 
@@ -15,11 +12,10 @@
 		<field name="createdBy" title="created By">
 			<text-find />
 		</field>
-
 		<field name="isActive" title="is Active">
 			<text-find />
 		</field>
-		<field name="documentName" title="document Name">
+		<field name="documentName" title="Document Name">
 			<text-find />
 		</field>
 		<field name="description" title="Description">
@@ -58,6 +54,9 @@
 		<field name="documentName" title="Document Name">
 			<display />
 		</field>
+		<field name="documentName" title="Document Name">
+			<display />
+		</field>
 		<field name="description" title="Description">
 			<display />
 		</field>
@@ -71,7 +70,12 @@
 				<parameter param-name="registryFileId" />
 			</hyperlink>
 		</field>
-
+		<field name="partyId" title="Member" widget-style="buttontext">
+			<hyperlink target="/partymgr/control/viewmemberprofile"
+				target-type="inter-app" description="View Details">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
 	</form>
 
 	<form name="EditRegistryFile" type="single" target="updateRegistryFile"
@@ -101,11 +105,10 @@
 		<field name="fileType" title="File Type">
 			<display />
 		</field>
-		<field name="member" title="Member">
-			<drop-down allow-empty="false">
+		<field name="partyId" title="Member">
+			<drop-down allow-empty="true" current-description="Select Member">
 				<entity-options description="${firstName} ${lastName}"
 					key-field-name="partyId" entity-name="Member">
-					<entity-order-by field-name="firstname" />
 				</entity-options>
 			</drop-down>
 		</field>
@@ -116,7 +119,7 @@
 			<textarea />
 		</field>
 		<field name="custodian" title="Custodian">
-			<drop-down allow-empty="true" current-description="">
+			<drop-down allow-empty="true" current-description="Select Custodian">
 				<entity-options description="${partyId}"
 					key-field-name="partyId" entity-name="PartyRoleNameDetail">
 					<entity-constraint name="roleTypeId" operator="equals"
