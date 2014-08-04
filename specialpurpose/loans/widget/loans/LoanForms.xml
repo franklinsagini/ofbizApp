@@ -617,6 +617,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="AccountProduct">
+            	<condition-expr field-name="isActive" operator="equals" value="Y"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateAccountProduct"/>
@@ -647,6 +648,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="LoanProduct">
+            	<condition-expr field-name="isActive" operator="equals" value="Y"/>
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanProduct"/ -->
@@ -672,6 +674,62 @@ under the License.
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Lookup Member Forms -->
+    <form name="lookupMember" target="LookupMember" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <!-- <auto-fields-entity entity-name="Product" default-field-type="hidden"/> -->
+        <field name="partyId" title="Member"><text-find/></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="idNumber" title="ID Number"><text-find/></field>
+        <field name="memberNumber" title="Member Number"><text-find/></field>
+        <!-- field name="productTypeId" title="${uiLabelMap.ProductProductType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductCategory" key-field-name="productCategoryId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field -->
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <!-- NOTE DEJ20070829 not sure why this is here, but it doesn't seem applicable for a general product lookup, also doesn't handle case where isVariant is null <field name="isVariant"><hidden value="N"/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupMember" list-name="listIt" title="" type="list" paginate-target="LookupMember"
+        odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+        </actions>
+        <!-- row-actions>            
+            <set field="hasVariants" value="${groovy: org.ofbiz.entity.util.EntityUtil.filterByDate(delegator.findByAnd('ProductAssoc', org.ofbiz.base.util.UtilMisc.toMap('productId', productId, 'productAssocTypeId', 'PRODUCT_VARIANT'), null, true)).size() > 0}" type="Boolean"/>
+        </row-actions -->
+        <field name="partyId" title="Member" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${firstName} ${lastName}" target="javascript:set_value('${partyId}')"/>
+        </field>
+        <field name="firstName" title="First Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+        <field name="idNumber" title="ID Number"><display/></field>
+        <field name="memberNumber" title="Member Number"><display/></field>
+        <!-- field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display-entity entity-name="ProductType"/></field -->
+        <!-- field name="searchVariants" title=" " widget-style="buttontext" use-when="hasVariants">
+            <hyperlink also-hidden="false" target-type="plain" description="Member" target="LookupMember">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field -->
     </form>
    
 </forms>

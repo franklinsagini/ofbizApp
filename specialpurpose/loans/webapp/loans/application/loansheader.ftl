@@ -2,7 +2,18 @@
    jQuery(document).ready(function(){
 
 
-   jQuery('select[name="partyId"]').change(function(){
+   jQuery('input[name="partyId"]').change(function(){
+		 /** var memberId = jQuery('select[name="partyId"]').val;
+         alert(memberId); **/
+         var memberId = this.value;
+         var reqUrl = '/loans/control/memberdetails';
+         sendAjaxRequest(reqUrl, memberId);
+         
+         
+
+        });
+        
+        jQuery('select[name="partyId"]').change(function(){
 		 /** var memberId = jQuery('select[name="partyId"]').val;
          alert(memberId); **/
          var memberId = this.value;
