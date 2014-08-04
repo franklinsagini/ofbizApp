@@ -23,7 +23,7 @@
 									location="component://common/widget/CommonScreens.xml">
 									<decorator-section name="menu-bar">
 										<container style="button-bar">
-											<link target="EditRegistryFile" text="New Registry File"
+											<link target="NewRegistryFile" text="New Registry File"
 												style="buttontext create" />
 										</container>
 									</decorator-section>
@@ -54,6 +54,10 @@
 				<set field="headerItem" value="RegistryFile" />
 				<set field="titleProperty" value="Find Registry File" />
 				<set field="RegistryFileCtx" from-field="parameters" />
+				<entity-condition entity-name="RegistryFile" list="listIt" >
+					<condition-expr field-name="isActive" operator="equals"
+						value="Y" />
+				</entity-condition>
 			</actions>
 			<widgets>
 				<decorator-screen name="RegistryCommonDecorator"
@@ -69,7 +73,7 @@
 									location="component://common/widget/CommonScreens.xml">
 									<decorator-section name="menu-bar">
 										<container style="button-bar">
-											<link target="EditRegistryFile" text="New Registry File"
+											<link target="NewRegistryFile" text="New Registry File"
 												style="buttontext create" />
 										</container>
 									</decorator-section>

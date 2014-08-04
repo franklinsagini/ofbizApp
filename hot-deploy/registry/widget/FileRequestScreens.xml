@@ -7,7 +7,9 @@
 			<actions>
 				<set field="headerItem" value="FileRequest" />
 				<set field="titleProperty" value="File Request" />
-				<set field="FileRequestCtx" from-field="parameters" />
+				<!-- <set field="FileRequestCtx" from-field="parameters" /> -->
+				<set field="RegistryFileId" from-field="parameters.RegistryFileId"/>
+                <entity-one entity-name="RegistryFile" value-field="filerequestmap"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="RegistryCommonDecorator"
@@ -54,6 +56,10 @@
 				<set field="headerItem" value="FileRequest" />
 				<set field="titleProperty" value="Find Registry File" />
 				<set field="FileRequestCtx" from-field="parameters" />
+				<entity-condition entity-name="FileRequest" list="listIt" >
+					<condition-expr field-name="requestStatus" operator="equals"
+						value="REQUESTED" />
+				</entity-condition>
 			</actions>
 			<widgets>
 				<decorator-screen name="RegistryCommonDecorator"

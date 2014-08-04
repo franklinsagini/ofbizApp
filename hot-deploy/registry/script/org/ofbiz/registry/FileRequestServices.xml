@@ -13,7 +13,6 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-	<!-- -->
 	<simple-method method-name="createFileRequest"
 		short-description="Create File Request">
 		<now-timestamp field="requestDate"/>
@@ -22,24 +21,46 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="FileRequestSequence" stagger-max="1" field="fileRequestId" />
 		<set field="newEntity.fileRequestId" from-field="fileRequestId"  />
-		<set field="newEntity.requester" from-field="userLogin.userLoginId" />
+		<set field="newEntity.requester" from-field="userLogin.userLoginId"  />
+		<set field="newEntity.requestStatus"  value="Requested" />
 		<set field="newEntity.requestDate" from-field="requestDate" />
 		<create-value value-field="newEntity" />
 		
-		<set field="registryFileId" from="newEntity.registryFileId"  />
-		<entity-one value-field="registryFileId" entity-name="RegistryFile">
-			<field-map field-name="registryFileId"  from-field="registryFileId" />
+	   <!-- ########################################### -->
+		<set field="registryFileId" from="newEntity.registryFileId"  /> 
+		<entity-one entity-name="RegistryFile" value-field="registryfile">
+			<field-map field-name="registryFileId" from-field="registryFileId"/>
 		</entity-one>
-		<set field="RegistryFile.fileStatus"  value="REQUESTED" />
-		<store-value value-field="registryFileId" />
-		 
+		<set field="registryfile.fileStatus"  value="Requested" />
+		<store-value value-field="registryfile" />
+
 	</simple-method>
+
 	<simple-method method-name="updateFileRequest"
 		short-description="Update File Request">
-		<entity-one entity-name="FileRequest" value-field="fileRequestId" />
-		<set-nonpk-fields value-field="FileRequest" map="parameters" />
-		<set field="FileRequest.updatedBy" from-field="userLogin.userLoginId" />
-		<store-value value-field="fileRequestId"  />
+		<entity-one entity-name="FileRequest" value-field="Request" />
+		<set-nonpk-fields value-field="Request" map="parameters" />
+		<set field="Request.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="Request" />
+	</simple-method>
+
+	
+	<simple-method method-name="cancelFileRequest"
+		short-description="Cancel Registry File">
+		
+		<entity-one entity-name="FileRequest" value-field="request" />
+		<set-nonpk-fields value-field="request" map="parameters" />
+		<set field="request.requestStatus" value="Cancelled" />
+		<set field="request.cancelledBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="request" />
+
+		<set field="registryFileId" from="request.registryFileId"  /> 
+		<entity-one entity-name="RegistryFile" value-field="registryfile">
+			<field-map field-name="registryFileId" from-field="registryFileId"/>
+		</entity-one>
+		<set field="registryfile.fileStatus"  value="Available" />
+		<store-value value-field="registryfile" />
+
 	</simple-method>
 
 </simple-methods>

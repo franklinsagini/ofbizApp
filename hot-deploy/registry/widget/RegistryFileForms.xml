@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-
-
-
-
 	<form name="FindRegistryFile" type="single" target="FindRegistryFile"
 		default-entity-name="RegistryFile">
 
@@ -12,23 +8,10 @@
 			<hidden value="Y" /><!-- if this isn't there then with all fields 
 				empty no query will be done -->
 		</field>
-
-		<field name="registryFileId" title="registry File Id">
-			<text-find />
-		</field>
-		<field name="createdBy" title="created By">
-			<text-find />
-		</field>
-		<field name="updatedBy" title="updated By">
-			<text-find />
-		</field>
 		<field name="isActive" title="is Active">
-			<text-find />
+			<hidden  value="Y" />
 		</field>
-		<field name="documentName" title="document Name">
-			<text-find />
-		</field>
-		<field name="description" title="Description">
+		<field name="documentName" title="Document Name">
 			<text-find />
 		</field>
 		<field name="custodian" title="custodian">
@@ -53,14 +36,12 @@
 				<field-map field-name="entityName" value="RegistryFile" />
 				<field-map field-name="viewIndex" from-field="viewIndex" />
 				<field-map field-name="viewSize" from-field="viewSize" />
+
 			</service>
 		</actions>
-		<field name="registryFileId" title="Registry File"
-			widget-style="buttontext">
-			<hyperlink also-hidden="false" description="${registryFileId}"
-				target="EditRegistryFile">
-				<parameter param-name="registryFileId" />
-			</hyperlink>
+		
+		<field name="documentName" title="Document Name">
+			<display />
 		</field>
 		<field name="documentName" title="Document Name">
 			<display />
@@ -71,14 +52,28 @@
 		<field name="custodian" title="Custodian">
 			<display />
 		</field>
-		<field name="registryFileIds" title="Registry File"
-			widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Request"
-				target="EditFileRequest">
+		<field name="registryFileId" title="Update" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Update"
+				target="EditRegistryFile">
 				<parameter param-name="registryFileId" />
 			</hyperlink>
 		</field>
-
+		<field name="partyId" title="Member" widget-style="buttontext">
+			<hyperlink target="/partymgr/control/viewmemberprofile"
+				target-type="inter-app" description="View Details">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		<field name="request" title="Registry File"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Request"
+				target="createFileRequest">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field>
+		<field name="fileStatus" title="File Status">
+			<display />
+		</field>
 	</form>
 
 	<form name="EditRegistryFile" type="single" target="updateRegistryFile"
@@ -102,6 +97,23 @@
 			tooltip="${uiLabelMap.CommonCannotBeFound}: [${registryFileId}]">
 			<hidden />
 		</field>
+		<field name="fileTypeId" title="File type id">
+			<hidden />
+		</field>
+		<field name="fileType" title="File Type">
+			<display />
+		</field>
+		<field use-when="registryfilemap!=null" name="isActive"
+			title="Active">
+			<text />
+		</field>
+		<field name="partyId" title="Member">
+			<drop-down allow-empty="true" current-description="Select Member">
+				<entity-options description="${firstName} ${lastName}"
+					key-field-name="partyId" entity-name="Member">
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="documentName" title="Document Name">
 			<text />
 		</field>
@@ -109,12 +121,11 @@
 			<textarea />
 		</field>
 		<field name="custodian" title="Custodian">
-			<drop-down allow-empty="true" current-description="">
+			<drop-down allow-empty="true" current-description="Select Custodian">
 				<entity-options description="${partyId}"
 					key-field-name="partyId" entity-name="PartyRoleNameDetail">
 					<entity-constraint name="roleTypeId" operator="equals"
-						value="EMPLOYEE"  />
-						
+						value="EMPLOYEE" />
 					<entity-order-by field-name="description" />
 				</entity-options>
 			</drop-down>

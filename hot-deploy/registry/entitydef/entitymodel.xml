@@ -53,6 +53,8 @@
 		title="Registry File">
 		<field name="registryFileId" type="id-ne"></field>
 		<field name="createdBy" type="name"></field>
+		<field name="fileTypeId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
 		<field name="updatedBy" type="name"></field>
 		<field name="isActive" type="name"></field>
 		<field name="documentName" type="name"></field>
@@ -60,19 +62,28 @@
 		<field name="description" type="description"></field>
 		<field name="fileStatus" type="name"></field>
 		<prim-key field="registryFileId" />
-	</entity>	
-	
+		<relation type="many" rel-entity-name="FileType">
+			<key-map field-name="registryFileType" rel-field-name="fileTypeId" />
+		</relation>
+		<relation type="many" rel-entity-name="Member">
+			<key-map field-name="registryMember" rel-field-name="partyId" />
+		</relation>
+	</entity>
+
 	<!-- Registry File Request Entity -->
 	<entity entity-name="FileRequest" package-name="org.ofbiz.registry"
 		title="File Request">
 		<field name="fileRequestId" type="id-ne"></field>
 		<field name="registryFileId" type="id-ne"></field>
 		<field name="requester" type="name"></field>
+		<field name="requestStatus" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="cancelledBy" type="name"></field>
 		<field name="requestDate" type="date-time"></field>
 		<prim-key field="fileRequestId" />
 		<relation type="one" rel-entity-name="RegistryFile">
-        <key-map field-name="registryRequest" rel-field-name="registryFileId" />
-        </relation>
+			<key-map field-name="registryRequest" rel-field-name="registryFileId" />
+		</relation>
 	</entity>
 
 	<!-- Registry File Issue Entity -->
@@ -82,14 +93,14 @@
 		<field name="fileRequestId" type="id-ne"></field>
 		<field name="registryFileId" type="id-ne"></field>
 		<field name="issuedBy" type="name"></field>
-		<field name="issuedDate" type="date-time"></field>
+		<field name="returnDate" type="date-time"></field>
 		<prim-key field="issueFileId" />
 		<relation type="one" rel-entity-name="RegistryFile">
-        <key-map field-name="registryIssue" rel-field-name="registryFileId" />
-        </relation>
-        <relation type="one" rel-entity-name="FileRequest">
-        <key-map field-name="requestIssue" rel-field-name="fileRequestId" />
-        </relation>
+			<key-map field-name="registryIssue" rel-field-name="registryFileId" />
+		</relation>
+		<relation type="one" rel-entity-name="FileRequest">
+			<key-map field-name="requestIssue" rel-field-name="fileRequestId" />
+		</relation>
 	</entity>
 
 	<!-- Registry File Release Entity -->
@@ -102,16 +113,24 @@
 		<field name="releaseDate" type="date-time"></field>
 		<prim-key field="releaseFileId" />
 		<relation type="one" rel-entity-name="RegistryFile">
-        <key-map field-name="registryRelease" rel-field-name="registryFileId" />
-        </relation>
-        <relation type="one" rel-entity-name="IssueFile">
-        <key-map field-name="IssueRelease" rel-field-name="issueFileId" />
-        </relation>
-        <relation type="one" rel-entity-name="FileRequest">
-        <key-map field-name="RequestRelease" rel-field-name="fileRequestId" />
-        </relation>
-	</entity>		
+			<key-map field-name="registryRelease" rel-field-name="registryFileId" />
+		</relation>
+		<relation type="one" rel-entity-name="IssueFile">
+			<key-map field-name="IssueRelease" rel-field-name="issueFileId" />
+		</relation>
+		<relation type="one" rel-entity-name="FileRequest">
+			<key-map field-name="RequestRelease" rel-field-name="fileRequestId" />
+		</relation>
+	</entity>
 
+	<!-- Registry File Type Entity -->
+	<entity entity-name="FileType" package-name="org.ofbiz.registry"
+		title="File Type">
+		<field name="fileTypeId" type="id-ne"></field>
+		<field name="fileType" type="name" not-null="true"></field>
+		<field name="fileTypeStatus" type="name"></field>
+		<prim-key field="fileTypeId" />
+	</entity>
 </entitymodel>
 
 
