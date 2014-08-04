@@ -46,16 +46,35 @@
 				<parameter param-name="fileRequestId" />
 			</hyperlink>
 		</field>
+		
 		<field name="registryFileId" title="Document">
 			<display />
 		</field>
 		<field 
 			name="requester" title="Requester"> 
 			<display /> 
-		</field> 
+		</field>
 		<field 
-			name="requestDate" title="Date Requested"> 
+			name="requestStatus" title="Request Status"> 
 			<display /> 
+		</field>
+		<field 
+		    name="requestDate" title="Date Requested"> 
+			<display /> 
+		</field>
+		<field name="cancel" title="Cancel"
+			widget-style="buttontext">
+		<hyperlink also-hidden="false" description="Cancel Request"
+				target="cancelFileRequest">
+				<parameter param-name="fileRequestId" />
+			</hyperlink>
+		</field>
+		<field name="issue" title="Issue File"
+			widget-style="buttontext">
+		<hyperlink also-hidden="false" description="Issue File"
+				target="EditIssueFile">
+				<parameter param-name="fileRequestId" />
+			</hyperlink>
 		</field>
 	</form>
 
@@ -77,12 +96,12 @@
 			tooltip="${uiLabelMap.CommonCannotBeFound}: [${fileRequestId}]">
 			<hidden />
 		</field>
-		<field name="registryFileId" title="Document">
-			<drop-down allow-empty="true" current-description="">
-				<entity-options description="${documentName}"
-					key-field-name="registryFileId" entity-name="RegistryFile">
-					<entity-constraint name="fileStatus" operator="equals" value="AVAILABLE"/>
-				</entity-options>
+		<field name="registryFileId" parameter-name="registryFileId"><display /></field>
+		<field name="requestStatus" title="Request Status">
+			<drop-down allow-empty="false">
+			<option key="Requested" description="Requested"/>
+			<option key="Pending" description="Pending"/>
+			<option key="Rejected" description="Rejected"/>
 			</drop-down>
 		</field>
 				<!-- submitButton -->

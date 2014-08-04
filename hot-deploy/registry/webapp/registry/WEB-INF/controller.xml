@@ -146,7 +146,7 @@
 	<request-map uri="createFileRequest">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createFileRequest" />
-		<response name="success" type="view" value="EditFileRequest" />
+		<response name="success" type="view" value="FindFileRequest" />
 		<response name="error" type="view" value="EditFileRequest" />
 	</request-map>
 	<request-map uri="updateFileRequest">
@@ -157,7 +157,14 @@
 		</response>
 		<response name="error" type="view" value="EditFileRequest" />
 	</request-map>
-
+	<request-map uri="cancelFileRequest">
+		<security https="true" auth="true" />
+		<event type="service" invoke="cancelFileRequest" />
+		<response name="success" type="request-redirect" value="FindFileRequest">
+			<redirect-parameter name="fileRequestId" />
+		</response>
+		<response name="error" type="view" value="FindFileRequest" />
+	</request-map>
 	<!-- IssueFile -->
 	<request-map uri="IssueFile">
 		<security https="true" auth="true" />

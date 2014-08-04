@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-
 	<form name="FindRegistryFile" type="single" target="FindRegistryFile"
 		default-entity-name="RegistryFile">
 
@@ -9,16 +8,10 @@
 			<hidden value="Y" /><!-- if this isn't there then with all fields 
 				empty no query will be done -->
 		</field>
-		<field name="createdBy" title="created By">
-			<text-find />
-		</field>
 		<field name="isActive" title="is Active">
-			<text-find />
+			<hidden  value="Y" />
 		</field>
 		<field name="documentName" title="Document Name">
-			<text-find />
-		</field>
-		<field name="description" title="Description">
 			<text-find />
 		</field>
 		<field name="custodian" title="custodian">
@@ -43,14 +36,10 @@
 				<field-map field-name="entityName" value="RegistryFile" />
 				<field-map field-name="viewIndex" from-field="viewIndex" />
 				<field-map field-name="viewSize" from-field="viewSize" />
+
 			</service>
 		</actions>
-		<field name="registryFileId" title="Registry File" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="${registryFileId}"
-				target="EditRegistryFile">
-				<parameter param-name="registryFileId" />
-			</hyperlink>
-		</field>
+		
 		<field name="documentName" title="Document Name">
 			<display />
 		</field>
@@ -63,10 +52,9 @@
 		<field name="custodian" title="Custodian">
 			<display />
 		</field>
-		<field name="registryFileIds" title="Registry File"
-			widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Request"
-				target="EditFileRequest">
+		<field name="registryFileId" title="Update" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Update"
+				target="EditRegistryFile">
 				<parameter param-name="registryFileId" />
 			</hyperlink>
 		</field>
@@ -75,6 +63,16 @@
 				target-type="inter-app" description="View Details">
 				<parameter param-name="partyId" />
 			</hyperlink>
+		</field>
+		<field name="request" title="Registry File"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Request"
+				target="createFileRequest">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field>
+		<field name="fileStatus" title="File Status">
+			<display />
 		</field>
 	</form>
 
@@ -104,6 +102,10 @@
 		</field>
 		<field name="fileType" title="File Type">
 			<display />
+		</field>
+		<field use-when="registryfilemap!=null" name="isActive"
+			title="Active">
+			<text />
 		</field>
 		<field name="partyId" title="Member">
 			<drop-down allow-empty="true" current-description="Select Member">
