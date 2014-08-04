@@ -37,7 +37,7 @@ public class AccHolderTransactionServices {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String bankDetailsId = (String) request.getParameter("bankDetailsId");
-		
+
 		// GenericValue saccoProduct = null;
 		// EntityListIterator branchesELI;// =
 		// delegator.findListIteratorByCondition("BankBranch", new
@@ -191,51 +191,15 @@ public class AccHolderTransactionServices {
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
-
-		BigDecimal bdOpeningBalance = BigDecimal.ZERO;
-		BigDecimal bdTotalCashDeposit = BigDecimal.ZERO;
-		BigDecimal bdTotalCashWithdrawal = BigDecimal.ZERO;
-		
-		BigDecimal bdTotalChequeDeposit = BigDecimal.ZERO;
-		BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
-		BigDecimal bdTotalChequeWithdrawal = BigDecimal.ZERO;
-		
-		BigDecimal bdAvailableAmount = BigDecimal.ZERO;
-		BigDecimal bdBookBalanceAmount = BigDecimal.ZERO;
-
-		// Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String memberAccountId = (String) request
 				.getParameter("memberAccountId");
 		log.info(" ######### The Member Account is #########" + memberAccountId);
-		// Get Opening Balance
-		bdOpeningBalance = calculateOpeningBalance(memberAccountId, delegator);
-		// Get Total Deposits
-		bdTotalCashDeposit = calculateTotalCashDeposits(memberAccountId, delegator);
-		// Get Total Withdrawals
-		bdTotalCashWithdrawal = calculateTotalCashWithdrawals(memberAccountId,
-				delegator);
-		
-		bdTotalChequeDeposit = calculateTotalChequeDeposits(memberAccountId, delegator);
-		
-		bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(memberAccountId, delegator);
-		
-		bdTotalChequeWithdrawal = calculateTotalChequeWithdrawals(memberAccountId,
-				delegator);
-		// Available Amount = Total Opening Account + Total Deposits - Total
-		// Withdrawals
-		bdAvailableAmount = bdOpeningBalance.add(bdTotalCashDeposit).add(bdTotalChequeDepositCleared)
-				.subtract(bdTotalCashWithdrawal).subtract(bdTotalChequeWithdrawal);
-		
-		bdBookBalanceAmount = bdOpeningBalance.add(bdTotalCashDeposit).add(bdTotalChequeDeposit)
-				.subtract(bdTotalCashWithdrawal).subtract(bdTotalChequeWithdrawal);
-		
-		
-		result.put("availableAmount", bdAvailableAmount);
-		result.put("bookBalanceAmount", bdBookBalanceAmount);
-
+		result.put("availableAmount",
+				getTotalSavings(memberAccountId, delegator));
+		result.put("bookBalanceAmount",
+				getBookBalance(memberAccountId, delegator));
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
-
 		// set the X-JSON content type
 		response.setContentType("application/x-json");
 		// jsonStr.length is not reliable for unicode characters
@@ -249,7 +213,6 @@ public class AccHolderTransactionServices {
 				e1.printStackTrace();
 			}
 		}
-
 		// return the JSON String
 		Writer out;
 		try {
@@ -261,11 +224,9 @@ public class AccHolderTransactionServices {
 				throw new EventHandlerException(
 						"Unable to get response writer", e);
 			} catch (EventHandlerException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
-
 		return json;
 	}
 
@@ -336,7 +297,8 @@ public class AccHolderTransactionServices {
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : cashDepositELI) {
-			bdBalance = bdBalance.add(genericValue.getBigDecimal("transactionAmount"));
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
 		}
 		return bdBalance;
 	}
@@ -344,14 +306,13 @@ public class AccHolderTransactionServices {
 	private static BigDecimal calculateTotalCashWithdrawals(
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> cashWithdrawalELI = null;
-		
+
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition
-						.makeCondition("transactionType",
-								EntityOperator.EQUALS, "CASHWITHDRAWAL")),
-						EntityOperator.AND);
+						memberAccountId), EntityCondition.makeCondition(
+						"transactionType", EntityOperator.EQUALS,
+						"CASHWITHDRAWAL")), EntityOperator.AND);
 
 		try {
 			cashWithdrawalELI = delegator.findList("AccountTransaction",
@@ -369,25 +330,25 @@ public class AccHolderTransactionServices {
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : cashWithdrawalELI) {
-			bdBalance = bdBalance.add(genericValue.getBigDecimal("transactionAmount"));
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
 		}
 		return bdBalance;
 	}
-	
+
 	/**
 	 * Cheque Deposit
 	 * */
 	private static BigDecimal calculateTotalChequeDeposits(
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> chequeDepositELI = null;
-		
+
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition
-						.makeCondition("transactionType",
-								EntityOperator.EQUALS, "CHEQUEDEPOSIT")),
-						EntityOperator.AND);
+						memberAccountId), EntityCondition.makeCondition(
+						"transactionType", EntityOperator.EQUALS,
+						"CHEQUEDEPOSIT")), EntityOperator.AND);
 
 		try {
 			chequeDepositELI = delegator.findList("AccountTransaction",
@@ -405,25 +366,25 @@ public class AccHolderTransactionServices {
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : chequeDepositELI) {
-			bdBalance = bdBalance.add(genericValue.getBigDecimal("transactionAmount"));
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
 		}
 		return bdBalance;
 	}
-	
+
 	/***
-	 *Cheque Withdrawal 
+	 * Cheque Withdrawal
 	 ***/
 	private static BigDecimal calculateTotalChequeWithdrawals(
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> chequeWithdrawalELI = null;
-		
+
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition
-						.makeCondition("transactionType",
-								EntityOperator.EQUALS, "CHEQUEWITHDRAWAL")),
-						EntityOperator.AND);
+						memberAccountId), EntityCondition.makeCondition(
+						"transactionType", EntityOperator.EQUALS,
+						"CHEQUEWITHDRAWAL")), EntityOperator.AND);
 
 		try {
 			chequeWithdrawalELI = delegator.findList("AccountTransaction",
@@ -441,26 +402,29 @@ public class AccHolderTransactionServices {
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : chequeWithdrawalELI) {
-			bdBalance = bdBalance.add(genericValue.getBigDecimal("transactionAmount"));
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
 		}
 		return bdBalance;
 	}
-	
+
 	/***
 	 * Cleared Cheque Deposit
 	 ***/
 	private static BigDecimal calculateTotalClearedChequeDeposits(
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> chequeDepositELI = null;
-		
+
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition
-						.makeCondition("transactionType",
-								EntityOperator.EQUALS, "CHEQUEDEPOSIT"), 
-						EntityCondition.makeCondition("clearDate", EntityOperator.LESS_THAN_EQUAL_TO, new Timestamp(Calendar.getInstance().getTimeInMillis()) )		
-						),
+						memberAccountId), EntityCondition.makeCondition(
+						"transactionType", EntityOperator.EQUALS,
+						"CHEQUEDEPOSIT"), EntityCondition
+						.makeCondition("clearDate",
+								EntityOperator.LESS_THAN_EQUAL_TO,
+								new Timestamp(Calendar.getInstance()
+										.getTimeInMillis()))),
 						EntityOperator.AND);
 
 		try {
@@ -479,8 +443,70 @@ public class AccHolderTransactionServices {
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : chequeDepositELI) {
-			bdBalance = bdBalance.add(genericValue.getBigDecimal("transactionAmount"));
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
 		}
 		return bdBalance;
 	}
+
+	/***
+	 * The total savings = Opening Balance + Total Cash Deposits + Total Cleared
+	 * Cheques - Total Cash Withdrawals - Total Cleared C
+	 **/
+	public static BigDecimal getTotalSavings(String memberAccountId,
+			Delegator delegator) {
+		BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+		BigDecimal bdTotalCashDeposit = BigDecimal.ZERO;
+		BigDecimal bdTotalCashWithdrawal = BigDecimal.ZERO;
+
+		BigDecimal bdTotalChequeDeposit = BigDecimal.ZERO;
+		BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
+		BigDecimal bdTotalChequeWithdrawal = BigDecimal.ZERO;
+		// Get Opening Balance
+		bdOpeningBalance = calculateOpeningBalance(memberAccountId, delegator);
+		// Get Total Deposits
+		bdTotalCashDeposit = calculateTotalCashDeposits(memberAccountId,
+				delegator);
+		// Get Total Withdrawals
+		bdTotalCashWithdrawal = calculateTotalCashWithdrawals(memberAccountId,
+				delegator);
+
+		bdTotalChequeDeposit = calculateTotalChequeDeposits(memberAccountId,
+				delegator);
+
+		bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(
+				memberAccountId, delegator);
+
+		bdTotalChequeWithdrawal = calculateTotalChequeWithdrawals(
+				memberAccountId, delegator);
+		// Available Amount = Total Opening Account + Total Deposits - Total
+		// Withdrawals
+		return bdOpeningBalance.add(bdTotalCashDeposit)
+				.add(bdTotalChequeDepositCleared)
+				.subtract(bdTotalCashWithdrawal)
+				.subtract(bdTotalChequeWithdrawal);
+	}
+
+	/***
+	 * Book Balance = Total Savings + Total Cleared Chequered - Total Cheques
+	 * Deposited
+	 **/
+	public static BigDecimal getBookBalance(String memberAccountId,
+			Delegator delegator) {
+
+		BigDecimal bdTotalChequeDeposit = BigDecimal.ZERO;
+		BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
+		BigDecimal bdTotalSavings = getTotalSavings(memberAccountId, delegator);
+
+		bdTotalChequeDeposit = calculateTotalChequeDeposits(memberAccountId,
+				delegator);
+		bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(
+				memberAccountId, delegator);
+
+		// return
+		// bdOpeningBalance.add(bdTotalCashDeposit).add(bdTotalChequeDeposit)
+		// .subtract(bdTotalCashWithdrawal).subtract(bdTotalChequeWithdrawal);
+		return bdTotalSavings.add(bdTotalChequeDeposit).subtract(bdTotalChequeDepositCleared);
+	}
+
 }

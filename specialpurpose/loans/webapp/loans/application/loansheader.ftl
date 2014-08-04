@@ -8,19 +8,26 @@
          var memberId = this.value;
          var reqUrl = '/loans/control/memberdetails';
          sendAjaxRequest(reqUrl, memberId);
-         
-         
-
         });
         
-        jQuery('select[name="partyId"]').change(function(){
+   jQuery('select[name="partyId"]').change(function(){
 		 /** var memberId = jQuery('select[name="partyId"]').val;
          alert(memberId); **/
          var memberId = this.value;
          var reqUrl = '/loans/control/memberdetails';
          sendAjaxRequest(reqUrl, memberId);
          
-         
+         if ((jQuery('select[name="loanProductId"]').val().length > 0) && (memberId.length > 0)){
+         	var loanProductId = jQuery('select[name="loanProductId"]').val();
+         	//alert(loanProductId);
+         	
+         	/**
+         		Compute the maximum loan possible for this Member for the specified product
+         		
+         	**/
+         	var loanMaxCalculationUrl = '/loans/control/loanMaxCalculation';
+         	calculateLoanMaxAmount(loanMaxCalculationUrl, loanProductId, memberId);
+         } 
 
         });
         
@@ -32,7 +39,17 @@
          var reqUrl = '/loans/control/loandetails';
          populateLoanDetails(reqUrl, loanProductId);
          
-         
+         if ((jQuery('select[name="partyId"]').val().length > 0) && (loanProductId.length > 0)){
+          	var memberId = jQuery('select[name="partyId"]').val();
+         	//alert(memberId);
+         	
+         	/**
+         		Compute the maximum loan possible for this Member for the specified product
+         		
+         	**/
+         	var loanMaxCalculationUrl = '/loans/control/loanMaxCalculation';
+         	calculateLoanMaxAmount(loanMaxCalculationUrl, loanProductId, memberId);
+         }
 
         });
      });
@@ -63,8 +80,6 @@
 
               alert("Some error occurred while processing the request");
               }
-
-
     });
     }
     /** 
@@ -83,8 +98,29 @@
 				 $('input[name="interestRatePM"]').val(data.interestRatePM);
 				 $('input[name="maxRepaymentPeriod"]').val(data.maxRepaymentPeriod);
 				 $('input[name="maximumAmt"]').val(data.maximumAmt);
-				// $('input[name="selectedRepaymentPeriod"]').val(data.selectedRepaymentPeriod);
-              //You handle the response here like displaying in required div etc. 
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+
+
+    });
+
+   }
+   
+   	/** 
+    	Calculate Loan Maximum Amount
+    **/
+     function calculateLoanMaxAmount(loanMaxCalculationUrl, loanProductId, memberId){
+    jQuery.ajax({
+
+     url    : loanMaxCalculationUrl,
+     type   : 'GET',
+     data   : {'loanProductId': loanProductId, 'memberId': memberId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+				 $('input[name="maxLoanAmt"]').val(data.maxLoanAmt);
                },
       error : function(errorData){
 
