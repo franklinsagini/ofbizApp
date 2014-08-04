@@ -33,7 +33,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findQuotes"/>
     </request-map>
-    <request-map uri="findPurchaseOrders">
+    <request-map uri="FindPurchaseOrders">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findPurchaseOrders"/>
     </request-map>
@@ -72,6 +72,22 @@
       <request-map uri="LookupPartyName">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupPartyName"/>
+    </request-map>
+
+
+    <!-- PURCHASE ORDERS -->
+    <request-map uri="EditPurchaseOrders">
+        <security auth="true" https="true" />
+        <response name="success" type="view" value="EditPurchaseOrders" />
+    </request-map>
+
+    <request-map uri="updatePurchaseOrder">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updatePurchaseOrder" />
+        <response name="success" type="request-redirect" value="EditPurchaseOrders">
+            <redirect-parameter name="purchaseOrderId" />
+        </response>
+        <response name="error" type="view" value="EditPurchaseOrders" />
     </request-map>
 
     <!-- REGISTRY JUST FOR TEST -->
@@ -134,6 +150,8 @@
 
     <view-map name="EditPurchaseQuote" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditPurchaseQuote"/>
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <!-- Edit Purchase Orders View Map -->
+    <view-map name="EditPurchaseOrders" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditPurchaseOrders"/>
 
     <!-- JUST FOR TESTS REGISTRY -->
     <view-map name="EditFileStatus" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditFileStatus"/>

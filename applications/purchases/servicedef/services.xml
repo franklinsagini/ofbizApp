@@ -44,4 +44,26 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
+    <!-- PURCHASE ORDER SERVICES -->
+    <service name="createExample" default-entity-name="PurchaseOrderHeader"
+        engine="entity-auto" invoke="create" auth="true">
+        <description>Create a PurchaseOrderHeader</description>
+        <permission-service service-name="exampleGenericPermission"
+            main-action="CREATE" />
+        <auto-attributes include="pk" mode="OUT" optional="false" />
+        <auto-attributes include="nonpk" mode="IN" optional="true" />
+        <override name="exampleTypeId" optional="false" />
+        <override name="statusId" optional="false" />
+        <override name="exampleName" optional="false" />
+    </service>
+    <service name="updatePurchaseOrder" default-entity-name="PurchaseOrderHeader"
+        engine="entity-auto" invoke="update" auth="true">
+        <description>Update a PurchaseOrderHeader</description>
+        <permission-service service-name="exampleGenericPermission"
+            main-action="UPDATE" />
+        <auto-attributes include="pk" mode="IN" optional="false" />
+        <auto-attributes include="nonpk" mode="IN" optional="true" />
+        <attribute name="oldStatusId" type="String" mode="OUT"
+            optional="false" />
+    </service>
 </services>
