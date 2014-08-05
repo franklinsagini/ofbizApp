@@ -266,7 +266,7 @@ under the License.
 
 	<request-map uri="deleteLoanProduct">
 		<security https="true" auth="true" />
-		<event type="service" invoke="deleteSaccoProduct" />
+		<event type="service" invoke="deleteLoanProduct" />
 		<!-- response name="success" type="view" value="FindPartySkills"/ -->
 		<response name="success" type="request-redirect-noparam"
 			value="LoanProduct"></response>
@@ -292,9 +292,9 @@ under the License.
 
 	<request-map uri="deleteAccountProduct">
 		<security https="true" auth="true" />
-		<event type="service" invoke="deleteSaccoProduct" />
+		<event type="service" invoke="deleteAccountProduct" />
 		<response name="success" type="request-redirect-noparam"
-			value="savingsproductsetup"></response>
+			value="AccountProduct"></response>
 	</request-map>
 	
 	<!-- Loan Application -->
@@ -340,6 +340,13 @@ under the License.
     <request-map uri="loandetails">
     	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
     	<event type="java" path="org.ofbiz.loans.LoanServices" invoke="getLoanDetails" />
+		<response name="success" type="none">
+    </response>
+    </request-map>
+    
+     <request-map uri="loanMaxCalculation">
+    	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+    	<event type="java" path="org.ofbiz.loans.LoanServices" invoke="getLoanMaxAmount" />
 		<response name="success" type="none">
     </response>
     </request-map>
@@ -698,6 +705,8 @@ under the License.
 		<response name="success" type="view" value="LoanProduct" />
 	</request-map>
 	
+	<request-map uri="LookupMember"><security auth="true" https="true"/><response name="success" type="view" value="LookupMember"/></request-map>
+	
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -785,6 +794,8 @@ under the License.
 		page="component://loans/widget/loans/LoanScreens.xml#AccountProduct" />
 		<view-map name="LoanProduct" type="screen"
 		page="component://loans/widget/loans/LoanScreens.xml#LoanProduct" />
+		
+		 <view-map name="LookupMember" page="component://loans/widget/loans/LoanScreens.xml#LookupMember" type="screen"/>
     <!-- Supported Content Types -->
     <!--
         text/html

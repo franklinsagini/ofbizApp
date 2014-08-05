@@ -60,7 +60,7 @@
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
                                 <container style="button-bar">
-                                    <link  text="${uiLabelMap.PurchaseOrderCreate}" target="EditPurchaseQuote" style="buttontext">
+                                    <link  text="${uiLabelMap.PurchaseOrderCreate}" target="EditPurchaseOrders" style="buttontext">
                                         <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                     </link>
                                 </container>
@@ -141,6 +141,38 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="EditPurchaseOrders">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditExample" />
+                <set field="tabButtonItem" value="EditExample" />
+                <set field="purchaseOrderId" from-field="parameters.purchaseOrderId" />
+                <entity-one entity-name="PurchaseOrderHeader" value-field="purchaseOrder" />
+            </actions>
+            <widgets>
+                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Edit Purchase Order">
+                            <include-form name="EditPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml" />
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+                        <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
+                            <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml"/>
+                        </screenlet>
+
+
+
+
+
+
+
 
     <screen name="EditFileStatus">
         <section>

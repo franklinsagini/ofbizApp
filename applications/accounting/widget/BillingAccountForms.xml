@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="ListBillingAccounts" type="list" list-name="listIt" paginate-target="FindBillingAccount" default-entity-name="BillingAccount"
@@ -130,7 +130,7 @@ under the License.
 
         <field use-when="partyId != null" name="partyId"><hidden/></field>
         <field use-when="roleTypeId != null" name="roleTypeId"><hidden/></field>
-        <field name="partyId"  use-when="partyId == null" title="${uiLabelMap.AccountingPartyBilledTo}"><lookup target-form-name="LookupPartyName"/></field>
+        <field use-when="partyId == null" name="partyId"   title="${uiLabelMap.AccountingPartyBilledTo}"><lookup target-form-name="LookupPartyName"/></field>
         <field use-when="roleTypeId == null" name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
 
         <field name="accountCurrencyUomId">

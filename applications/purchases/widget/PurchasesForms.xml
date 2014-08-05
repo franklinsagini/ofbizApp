@@ -86,11 +86,11 @@
     <form name="FoundPurchaseQuotes" extends="ListPurchaseQuotes" paginate-target="FindPurchaseQuote" header-row-style="header-row-2"/>
 
     <!-- PURCHASE ORDERS FORMS -->
-
+        <!-- Find Purchase Orders Form -->
     <form
         name="FindPurchaseOrders"
         type="single"
-        target="FindPurchaseQuote"
+        target="FindPurchaseOrders"
         default-entity-name="PurchaseOrderHeader" >
 
         <!-- Fields -->
@@ -105,7 +105,7 @@
         <field name="orderName" title="Order Name">
             <text-find />
         </field>
-        <field name="invoiceDate">
+        <field name="orderDate">
             <date-find type="date"/>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
@@ -123,14 +123,24 @@
             <submit button-type="button" image-location="/images/icons/magnifier.png" />
         </field>
     </form>
+        <!-- List Purchase Orders Form -->
+    <form
+        name="ListPurchaseOrders"
+        type="list"
+        list-name="listIt"
+        paginate-target="FindPurchaseOrders"
+        default-entity-name="PurchaseOrderHeader"
+        separate-columns="true"
+        odd-row-style="alternate-row"
+        header-row-style="header-row-2"
+        default-table-style="basic-table hover-bar">
 
-    <form name="ListPurchaseOrders" type="list" list-name="workEfforts" paginate-target="ListPurchaseQuotes"
-          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="WorkEffortFindView"/>
-                <field-map field-name="orderBy" value="lastModifiedDate DESC"/>
+                <field-map field-name="inputFields" from-field="purchaseOrderCtx" />
+                <field-map field-name="entityName" value="PurchaseOrderHeader"/>
+                <field-map field-name="orderBy" value="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -138,10 +148,82 @@
                 <field-map field-name="workEffortIterator" from-field="listIt"/>
             </service>
         </actions>
+        <!-- Fields -->
+        <field name="purchaseOrderId" title="Order Id"
+            widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${purchaseOrderId}"
+                target="EditExample">
+                <parameter param-name="purchaseOrderId" />
+            </hyperlink>
+        </field>
+        <field name="orderName" title="Order Name"
+            sort-field="true">
+            <display />
+        </field>
+        <field name="orderDate" title="${uiLabelMap.OrderOrderDate}">
+            <display/>
+        </field>
+         <field name="statusId" title="Status">
+            <display/>
+        </field>
+         <field name="createdBy" title="Created By">
+            <display/>
+        </field>
     </form>
 
+    <!-- Edit Purchase Orders Form -->
+
+    <form name="EditPurchaseOrders" type="single" target="updatePurchaseOrder"
+        title="" default-map-name="purchaseOrder" default-entity-name="PurchaseOrderHeader">
+        <actions>
+            <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" from-field="purchaseOrder.statusId" />
+            </entity-one>
+        </actions>
+        <alt-target use-when="purchaseOrder==null" target="createPurchaseOrder" />
+        <auto-fields-service service-name="updatePurchaseOrder" />
+        <field use-when="purchaseOrder!=null" name="purchaseOrderId"
+            title="${uiLabelMap.ExampleExampleId}" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+        <field use-when="purchaseOrder==null @and purchaseOrderId==null" name="purchaseOrderId"
+            title="${uiLabelMap.ExampleExampleId}">
+            <ignored />
+        </field>
+        <field use-when="purchaseOrder==null @and purchaseOrderId!=null" name="purchaseOrderId"
+            title="${uiLabelMap.ExampleExampleId}">
+            <display description="${uiLabelMap.CommonCannotBeFound}: [${purchaseOrderId}]"
+                also-hidden="false" />
+        </field>
+
+        <field name="orderName" required-field="true" widget-style="required" />
+
+
+
+
+
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PURCH_ODR_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="createdBy">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+
+        <field name="submitButton" use-when="purchaseOrder==null" title="${uiLabelMap.CommonCreate}">
+            <submit button-type="button" />
+        </field>
+
+        <field name="submitButton" use-when="purchaseOrder!=null" title="${uiLabelMap.CommonUpdate}">
+            <submit button-type="button" />
+        </field>
+    </form>
+
+
     <!-- Create Quote Forms -->
-      <field name="supplierPartyId" type="id"></field>
 
     <form name="EditPurchaseQuote" type="single" target="updatePurchaseQuote" title="" default-map-name="purchaseQuote"
         header-row-style="header-row" default-table-style="basic-table">

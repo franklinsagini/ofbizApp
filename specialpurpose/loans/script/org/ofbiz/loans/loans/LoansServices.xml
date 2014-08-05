@@ -23,32 +23,39 @@ under the License.
         
         <!--  Account Product Start -->
         <simple-method method-name="createAccountProduct" short-description="Create Account Product">
-        <make-value entity-name="AccountProduct" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="AccountProduct" field="accountProductId"/>
-        <set from-field="accountProductId" field="newEntity.accountProductId"/>
-        <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
-        <create-value value-field="newEntity"/>
-        <!-- set field="accountProd" from-field="newEntity.loanApplicationId"/>
-        <entity-one entity-name="LoanApplication" value-field="loanApplication">
-        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
-        </entity-one>
-        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
-        <store-value value-field="loanApplication"/ -->
+        
+        <if-empty field="parameters.accountProductId">
+        	<make-value entity-name="AccountProduct" value-field="newEntity"/>
+	        <set-pk-fields map="parameters" value-field="newEntity"/>
+	        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+	        <sequenced-id sequence-name="AccountProduct" field="accountProductId"/>
+	        <set from-field="accountProductId" field="newEntity.accountProductId"/>
+	        <set field="newEntity.isActive" value="Y"/>
+	        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+	        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+	        <create-value value-field="newEntity"/>
+        	<else>
+        		<call-simple-method method-name="updateAccountProduct"></call-simple-method>
+        	</else>
+        </if-empty>
+        
+        
+       
     </simple-method>
     
     <simple-method method-name="updateAccountProduct" short-description="Update Account Product">
-        <entity-one entity-name="AccountProduct" value-field="accountProduct"/>
+         <entity-one entity-name="AccountProduct" value-field="accountProduct">
+        	<field-map field-name="accountProductId" from-field="parameters.accountProductId"/>
+        </entity-one>
         <set-nonpk-fields value-field="accountProduct" map="parameters"/>
         <set field="accountProduct.updatedBy" from-field="userLogin.userLoginId"/>
         <store-value value-field="accountProduct"/>
     </simple-method>
     
     <simple-method method-name="deleteAccountProduct" short-description="Delete Account Product">
-        <entity-one entity-name="AccountProduct" value-field="accountProduct"/>
+        <entity-one entity-name="AccountProduct" value-field="accountProduct">
+        	<field-map field-name="accountProductId" from-field="parameters.accountProductId"/>
+        </entity-one>
         <set field="accountProduct.isActive" value="N"/>
         <set field="accountProduct.updatedBy" from-field="userLogin.userLoginId"/>
         <!-- remove-value value-field="accountProduct"/ -->
@@ -57,22 +64,25 @@ under the License.
         <!--  Account Product End -->
         
         <!-- Loan Product Start -->
-        <simple-method method-name="createLoanProduct" short-description="Create Loan Product">
-        <make-value entity-name="LoanProduct" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="LoanProduct" field="loanProductId"/>
-        <set from-field="loanProductId" field="newEntity.loanProductId"/>
-        <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
-        <create-value value-field="newEntity"/>
-        <!-- set field="accountProd" from-field="newEntity.loanApplicationId"/>
-        <entity-one entity-name="LoanApplication" value-field="loanApplication">
-        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
-        </entity-one>
-        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
-        <store-value value-field="loanApplication"/ -->
+      <simple-method method-name="createLoanProduct" short-description="Create Loan Product">
+      	<if-empty field="parameters.loanProductId">
+      	
+	      		<make-value entity-name="LoanProduct" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <sequenced-id sequence-name="LoanProduct" field="loanProductId"/>
+		        <set from-field="loanProductId" field="newEntity.loanProductId"/>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateLoanProduct"></call-simple-method>
+      		</else>
+      	</if-empty>
+      
+        
+     
     </simple-method>
     
     <simple-method method-name="updateLoanProduct" short-description="Update Loan Product">
