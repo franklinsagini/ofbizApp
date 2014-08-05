@@ -10,6 +10,9 @@
             <widgets>
                 <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <screenlet title="Purchases Management">
+                            <platform-specific><html><html-template location="component://purchases/webapp/purchases/main.ftl"/></html></platform-specific>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -19,28 +22,37 @@
     <screen name="findQuotes">
         <section>
             <actions>
-                <set field="headerItem" value="Quotes"/><!-- this highlights the selected menu-item with name "main" -->
+                 <set field="headerItem" value="quotes"/><!-- this highlights the selected menu-item with name "main" -->
                 <set field="titleProperty" value="PageTitleFindOrder"/>
-                <set field="donePage" from-field="parameters.DONE_PAGE"/>
+                <set field="purchaseQuoteCtx" from-field="parameters" />
             </actions>
             <widgets>
                 <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="menu-bar">
-                                <container style="button-bar">
-                                    <link  text="${uiLabelMap.PurchaseQuoteCreate}" target="EditPurchaseQuote" style="buttontext">
-                                        <parameter param-name="DONE_PAGE" from-field="donePage"/>
-                                    </link>
-                                </container>
-                            </decorator-section>
-                            <decorator-section name="search-options">
-                                <include-form name="FindPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml"/>
-                            </decorator-section>
-                            <decorator-section name="search-results">
-                                <include-form name="ListPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml"/>
-                            </decorator-section>
-                        </decorator-screen>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="EXAMPLE" action="_VIEW" />
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="EditPurchaseQuote" text="New Quote" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}
+                                </label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -161,18 +173,6 @@
             </widgets>
         </section>
     </screen>
-
-
-                        <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml"/>
-                        </screenlet>
-
-
-
-
-
-
-
 
     <screen name="EditFileStatus">
         <section>
