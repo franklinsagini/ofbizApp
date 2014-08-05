@@ -75,6 +75,7 @@
 				 $('input[name="memberNumber"]').val(data.memberNumber);
 				 $('input[name="mobileNumber"]').val(data.mobileNumber);
 				 $('input[name="joinDate_i18n"]').val(data.joinDate);
+				 $('input[name="joinDate"]').val(data.joinDate);
 				 $('input[name="membershipDuration"]').val(data.membershipDuration);
 				 
               //You handle the response here like displaying in required div etc. 
@@ -144,7 +145,7 @@
     	
     	
     	var loanAmt = jQuery('input[name="loanAmt"]').val();
-    	var maxLoanAmt  = jQuery('input[name="loanAmt"]').val();
+    	var maxLoanAmt  = jQuery('input[name="maxLoanAmt"]').val();
     	
     	var repaymentPeriod = jQuery('input[name="repaymentPeriod"]').val();
     	var maxRepaymentPeriod  = jQuery('input[name="maxRepaymentPeriod"]').val();
@@ -154,25 +155,33 @@
     	
     	/**
     		loanamt
+    		if (maxLoanAmt < loanAmt)
     		
     	**/
-     	
-    	if (maxLoanAmt < loanAmt){
+     	if (parseFloat(maxLoanAmt, 10) < parseFloat(loanAmt, 10))
+    	{
     	
     		isValid = false;
-    		message = ' You cannot exceed maximum Loan Amount allowed 3 times your savings';
+    		message = ' You cannot exceed maximum Loan Amount allowed (3 times your savings)';
     	}
     	
-    	if (maxRepaymentPeriod < repaymentPeriod){
+    	/** if (maxRepaymentPeriod < repaymentPeriod) **/
+    	
+    	if (parseFloat(maxRepaymentPeriod, 10) < parseFloat(repaymentPeriod, 10))
+    	{
     	
     		if (!isValid){
-    			message = " and Repayment Perod must be less than "+maxRepaymentPeriod;
+    			message = message+" and Repayment Perod must be less than "+maxRepaymentPeriod;
     		}else{
     			message = " Repayment Perod must be less than "+maxRepaymentPeriod;
     		}
     	
     		isValid = false;
     		
+    	}
+    	
+    	if (!isValid){
+    		alert(message);
     	}
     	
     	return isValid;
