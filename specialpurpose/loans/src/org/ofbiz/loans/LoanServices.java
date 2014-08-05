@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
+import org.joda.time.JodaTimePermission;
+import org.joda.time.LocalDateTime;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -124,6 +132,13 @@ public class LoanServices {
 
 			result.put("payrollNo", member.get("payrollNumber"));
 			result.put("memberNo", member.get("memberNumber"));
+			result.put("joinDate", member.get("joinDate"));
+			
+			//SimpleDateFormat
+			
+			//Calculate Date Duration from Join Date to Now
+			int membershipDuration = getMemberDurations(member.getDate("joinDate"));
+			result.put("membershipDuration", membershipDuration);
 		} else {
 			System.out.println("######## Member details not found #### ");
 		}
@@ -283,6 +298,23 @@ public class LoanServices {
 		}
 		// sum up all the savings
 		return bdTotalSavings;
+	}
+	
+	private static int getMemberDurations(Date joinDate){
+		
+		
+		
+		LocalDateTime stJoinDate = new LocalDateTime(joinDate.getTime());
+		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
+		
+		PeriodType monthDay = PeriodType.months();
+		
+		Period difference = new Period(stJoinDate, stCurrentDate, monthDay);
+		
+		int months = difference.getMonths();
+		
+		return months;
+		
 	}
 
 }
