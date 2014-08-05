@@ -101,6 +101,9 @@
 				 $('input[name="interestRatePM"]').val(data.interestRatePM);
 				 $('input[name="maxRepaymentPeriod"]').val(data.maxRepaymentPeriod);
 				 $('input[name="maximumAmt"]').val(data.maximumAmt);
+				 $('input[name="multipleOfSavingsAmt"]').val(data.multipleOfSavingsAmt);
+				 
+				 
                },
       error : function(errorData){
 
@@ -134,4 +137,44 @@
     });
 
    }
+   
+   function validLoanApplication(){
+    
+    	var isValid = true;
+    	
+    	
+    	var loanAmt = jQuery('input[name="loanAmt"]').val();
+    	var maxLoanAmt  = jQuery('input[name="loanAmt"]').val();
+    	
+    	var repaymentPeriod = jQuery('input[name="repaymentPeriod"]').val();
+    	var maxRepaymentPeriod  = jQuery('input[name="maxRepaymentPeriod"]').val();
+    	var message;
+    	
+    	
+    	
+    	/**
+    		loanamt
+    		
+    	**/
+     	
+    	if (maxLoanAmt < loanAmt){
+    	
+    		isValid = false;
+    		message = ' You cannot exceed maximum Loan Amount allowed 3 times your savings';
+    	}
+    	
+    	if (maxRepaymentPeriod < repaymentPeriod){
+    	
+    		if (!isValid){
+    			message = " and Repayment Perod must be less than "+maxRepaymentPeriod;
+    		}else{
+    			message = " Repayment Perod must be less than "+maxRepaymentPeriod;
+    		}
+    	
+    		isValid = false;
+    		
+    	}
+    	
+    	return isValid;
+    }
    </script>
