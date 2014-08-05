@@ -1,3 +1,4 @@
+/*
 package org.ofbiz.registry;
 
 
@@ -52,3 +53,4 @@ public static Map createFileRequest(DispatchContext dctx, Map context) {
        return resultMap;
 }
 }
+*/
