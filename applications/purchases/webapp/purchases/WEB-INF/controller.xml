@@ -29,6 +29,22 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findQuotes"/>
     </request-map>
+    <request-map uri="editPurchaseQuote">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="editPurchaseQuote" />
+    </request-map>
+    <request-map uri="createPurchaseQuote">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createPurchaseQuote" />
+        <response name="success" type="view" value="editPurchaseQuote" />
+        <response name="error" type="view" value="editPurchaseQuote" />
+    </request-map>
+    <request-map uri="updatePurchaseQuote">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updatePurchaseQuote" />
+        <response name="success" type="view" value="editPurchaseQuote" />
+        <response name="error" type="view" value="editPurchaseQuote" />
+    </request-map>
     <request-map uri="findPurchaseQuote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findQuotes"/>
@@ -146,6 +162,8 @@
     <view-map name="findShipments" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findShipments"/>
     <view-map name="findReturns" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findReturns"/>
     <view-map name="reports" type="screen" page="component://purchases/widget/PurchasesScreens.xml#reports"/>
+
+    <view-map name="editPurchaseQuote" type="screen" page="component://purchases/widget/PurchasesScreens.xml#editPurchaseQuote" />
 
 
     <view-map name="EditPurchaseQuote" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditPurchaseQuote"/>
