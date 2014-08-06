@@ -501,7 +501,7 @@ under the License.
        <field name="mobileNumber" title="Mobile Number" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        
        <field name="joinDate" title="Date Joined"  required-field="true" widget-style="required"><date-time type="date"> </date-time></field>
-       <field name="membershipDuration" title="Membership Duration (Months)" widget-style="required" required-field="true"><text size="30" maxlength="60" disabled="true"/></field>
+       <field name="membershipDuration" title="Membership Duration (Months)" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
         <field name="loanProductId" title="Loan Type"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
@@ -510,12 +510,12 @@ under the License.
         </field>
 
        <field name="interestRatePM" title="Interest Rate (Per Month)" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
-       <field name="maxLoanAmt" title="Maximum Loan Amount" widget-style="required" required-field="true"><text size="30" maxlength="60" disabled="true"/></field>
-       <field name="maxRepaymentPeriod" title="Maximum Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="maxLoanAmt" title="Maximum Loan Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="maxRepaymentPeriod" title="Maximum Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60" /></field>
        
        <field name="loanAmt" title="Loan Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="repaymentPeriod" title="Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
-
+		<field name="multipleOfSavingsAmt"><hidden/></field>
 
        <field name="paymentMethodTypeId" title="Payment Method" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
@@ -535,7 +535,7 @@ under the License.
                 <list-options list-name="loanSecurityList" key-name="loanSecurityId" description="${security}"/>
             </drop-down>
        </field -->
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return validLoanApplication();"><submit button-type="button"/></field>
     </form>
   
     <form name="FindLoanApplications" type="single" target="FindLoanApplication" default-entity-name="LoanApplication">
@@ -559,11 +559,11 @@ under the License.
             </drop-down>
         </field>
         <field name="applicationStatus" title="Status"><text-find/></field>
-        <field name="loanamt" title="Amount"> <text-find></text-find> </field>
+        <field name="loanAmt" title="Amount"> <text-find></text-find> </field>
         <field name="percentInterestPerMonthAmt" title="Interest Per Month"><text-find/></field>
-        <field name="selectedRepaymentPeriod" title="Repayment Period"><text-find/></field>
+        <field name="repaymentPeriod" title="Repayment Period"><text-find/></field>
         
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit" ><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
     
     
@@ -593,18 +593,17 @@ under the License.
         <!-- field name="firstName"> <text></text> </field>
         <field name="middleName"> <text></text> </field>
         <field name="lastName"> <text></text> </field -->
-        <field name="saccoProductId" title="Loan Type">
-        	<display-entity description="${name} ${code}" entity-name="SaccoProduct" also-hidden="false"></display-entity>
+        <field name="loanProductId" title="Product">
+        	<display-entity description="${name} ${code}" entity-name="LoanProduct" also-hidden="false"></display-entity>
             <!-- drop-down allow-empty="true">
                 <entity-options description="${name} ${code}" entity-name="SaccoProduct">
                 </entity-options>
             </drop-down -->
         </field>
-        <field name="loanamt"><display also-hidden="false"/></field>
-        <field name="percentInterestPerMonthAmt"><display also-hidden="false"/></field>
-        <field name="maxRepaymentPeriod"><display also-hidden="false"/></field>
+        <field name="loanAmt" title="Amount"><display also-hidden="false"/></field>
+        <field name="interestRatePM" title="Interest Rate(P.M)"><display also-hidden="false"/></field>
+        <field name="repaymentPeriod" title="Repayment Period"><display also-hidden="false"/></field>
         
-        <field name="selectedRepaymentPeriod"><display also-hidden="false"/></field>
         
         <field name="paymentMethodTypeId" title="Payment Method">
         	<display-entity  description="${description}" entity-name="PaymentMethodType"></display-entity>
@@ -622,8 +621,8 @@ under the License.
         	<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}" description="Edit Application"></hyperlink>
         </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteAccountProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="saccoProductId"/>
+            <hyperlink target="deleteLoanProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanProductId"/>
             </hyperlink>
         </field>
         <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
