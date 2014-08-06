@@ -59,6 +59,59 @@
         </field>
     </form>
 
+    <form
+        name="EditPurchaseQuote"
+        type="single"
+        target="updatePurchaseQuote"
+        title=""
+        default-map-name="quote"
+        default-entity-name="PrchseQteHdr" >
+        <actions>
+            <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" from-field="quote.statusId"/>
+            </entity-one>
+        </actions>
+
+        <alt-target use-when="quote==null" target="createPurchaseQuote" />
+        <auto-fields-service service-name="updatePurchaseQuote" map-name="quote"/>
+
+
+        <field name="quoteId" use-when="quote==null @and quoteId==null" title="Quote Id">
+            <ignored/>
+        </field>
+        <field name="quoteId" use-when="quote!=null" title="Quote id" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="quoteId" use-when="quote==null" title="Supplier">
+            <ignored/>
+        </field>
+        <field name="supplierId" title="Supplier">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+
+        <field name="partyId">
+            <hidden/>
+        </field>
+        <field name="statusId">
+            <hidden/>
+        </field>
+        <field name="quoteDate">
+            <hidden/>
+        </field>
+        <field name="confirmDate">
+            <hidden/>
+        </field>
+
+        <field name="submitButton" use-when="quote==null" title="${uiLabelMap.CommonCreate}">
+            <submit button-type="button" />
+        </field>
+
+        <field name="submitButton" use-when="quote!=null" title="${uiLabelMap.CommonUpdate}">
+            <submit button-type="button" />
+        </field>
+    </form>
+
 
 
 

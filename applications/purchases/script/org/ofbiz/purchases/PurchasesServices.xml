@@ -21,71 +21,65 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-    <simple-method method-name="createFileStatus" short-description="Create File Status">
+
+    <simple-method method-name="createPurchaseQuote" short-description="Create File Quote">\
+        <now-timestamp field="nowTimestamp"/>
         <!-- create new entity and create all the fields -->
-        <make-value value-field="newEntity" entity-name="RegistryFileStatus"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <make-value value-field="newEntity" entity-name="PrchseQteHdr"/>
               <!-- create a non existing ID -->
-        <sequenced-id sequence-name="RegistryFileStatus" field="registryFileStatusId"/>
-        <set from-field="registryFileStatusId" field="newEntity.registryFileStatusId"/>
-        <field-to-result field="registryFileStatusId" result-name="registryFileStatusId"/>
+        <sequenced-id sequence-name="PrchseQteHdr" field="quoteId"/>
+        <set from-field="quoteId" field="newEntity.quoteId"/>
+        <field-to-result field="quoteId" result-name="quoteId"/>
+        <if-empty field="parameters.statusId">
+            <set field="parameters.statusId" value="QUOTE_IN_PROCESS"/>
+        </if-empty>
+                <!-- set the invoice date if not provided -->
+        <if-empty field="parameters.quoteDate">
+            <set from-field="nowTimestamp" field="parameters.quoteDate"/>
+        </if-empty>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
          <!-- finally create the record (should not exist already)-->
         <create-value value-field="newEntity"/>
+        <!-- create new status entry, and set lastStatusUpdate date -->
+        <make-value value-field="newQuoteStatus" entity-name="PrchsQteStts"/>
+        <set from-field="newEntity.quoteId" field="newQuoteStatus.quoteId"/>
+        <set from-field="newEntity.statusId" field="newQuoteStatus.statusId"/>
+        <set from-field="nowTimestamp" field="newQuoteStatus.statusDate"/>
+        <create-value value-field="newQuoteStatus"/>
         <check-errors/>
     </simple-method>
 
-
-    <simple-method method-name="updateFileStatus" short-description="Update Party Skills">
-        <entity-one entity-name="RegistryFileStatus" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-
-    <simple-method method-name="createRegistryFile" short-description="Create File Status">
-        <!-- create new entity and create all the fields -->
-        <make-value value-field="newEntity" entity-name="RegistryFile"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-              <!-- create a non existing ID -->
-        <sequenced-id sequence-name="RegistryFile" field="registryFileId"/>
-        <set from-field="registryFileId" field="newEntity.registryFileId"/>
-        <field-to-result field="registryFileId" result-name="registryFileId"/>
-         <!-- finally create the record (should not exist already)-->
-        <create-value value-field="newEntity"/>
-        <check-errors/>
-    </simple-method>
-
-
-    <simple-method method-name="updateRegistryFile" short-description="Update Party Skills">
-        <entity-one entity-name="RegistryFile" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-
-
-    <simple-method method-name="createPurchaseQuote" short-description="Create a new Purchase Quote">
+    <simple-method method-name="createInvoice" short-description="Create a new Invoice">
         <now-timestamp field="nowTimestamp"/>
 
-        <make-value value-field="newEntity" entity-name="PurchaseQuote"/>
+        <make-value value-field="newEntity" entity-name="Invoice"/>
 
-        <!-- create a non existing ID -->
-        <sequenced-id sequence-name="PurchaseQuote" field="purchaseQuoteId"/>
-        <set from-field="purchaseQuoteId" field="newEntity.purchaseQuoteId"/>
-        <field-to-result field="purchaseQuoteId" result-name="purchaseQuoteId"/>
+        <!-- call getNextInvoiceId service with the parameters.partyIdFrom when invoice Id is not suplied
+                            else use it from the input -->
+        <if-empty field="parameters.invoiceId">
+            <set-service-fields service-name="getNextInvoiceId" to-map="getNextInvoiceIdMap" map="parameters"/>
+            <set field="getNextInvoiceIdMap.partyId" from-field="parameters.partyIdFrom"/>
+            <call-service service-name="getNextInvoiceId" in-map-name="getNextInvoiceIdMap">
+                <result-to-field result-name="invoiceId" field="parameters.invoiceId"/>
+            </call-service>
+        </if-empty>
+        <field-to-result field="parameters.invoiceId" result-name="invoiceId"/>
 
         <!-- set the invoice date if not provided -->
-        <if-empty field="parameters.issueDate">
-            <set from-field="nowTimestamp" field="parameters.issueDate"/>
+        <if-empty field="parameters.invoiceDate">
+            <set from-field="nowTimestamp" field="parameters.invoiceDate"/>
         </if-empty>
 
         <!-- set the invoice status if not provided -->
         <if-empty field="parameters.statusId">
-            <set field="parameters.statusId" value="QUOTE_IN_PROCESS"/>
+            <set field="parameters.statusId" value="INVOICE_IN_PROCESS"/>
         </if-empty>
 
         <!-- use currency of receiving company -->
         <entity-one entity-name="Party" value-field="party"/>
         <if-not-empty field="party.preferredCurrencyUomId">
-            <set field="parameters.currencyUomId" from-field="KES"/>
+            <set field="parameters.currencyUomId" from-field="party.preferredCurrencyUomId"/>
         </if-not-empty>
 
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -93,12 +87,14 @@
         <create-value value-field="newEntity"/>
 
         <!-- create new status entry, and set lastStatusUpdate date -->
-        <make-value value-field="newPurchaseQuoteStatus" entity-name="PurchaseQuoteStatus"/>
-        <set from-field="newEntity.purchaseQuoteId" field="newPurchaseQuoteStatus.purchaseQuoteId"/>
-        <set from-field="newEntity.statusId" field="newPurchaseQuoteStatus.statusId"/>
-        <set from-field="nowTimestamp" field="newPurchaseQuoteStatus.statusDate"/>
-        <create-value value-field="newPurchaseQuoteStatus"/>
+        <make-value value-field="newInvoiceStatus" entity-name="InvoiceStatus"/>
+        <set from-field="newEntity.invoiceId" field="newInvoiceStatus.invoiceId"/>
+        <set from-field="newEntity.statusId" field="newInvoiceStatus.statusId"/>
+        <set from-field="nowTimestamp" field="newInvoiceStatus.statusDate"/>
+        <create-value value-field="newInvoiceStatus"/>
     </simple-method>
+
+
 
 
 

@@ -37,7 +37,7 @@
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="EditPurchaseQuote" text="New Quote" style="buttontext create"/>
+                                            <link target="editPurchaseQuote" text="New Quote" style="buttontext create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -53,6 +53,26 @@
                                 </label>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="editPurchaseQuote">
+        <section>
+            <actions>
+                <set field="headerItem" value="quotes" />
+                <set field="titleProperty" value="Edit Quotes" />
+                <set field="quoteId" from-field="parameters.quoteId" />
+                <entity-one entity-name="PrchseQteHdr" value-field="quote" />
+            </actions>
+            <widgets>
+                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Edit Quote">
+                            <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml" />
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -139,7 +159,7 @@
                 <set field="titleProperty" value="ManufacturingCreateProductionRun"/>
                 <set field="headerItem" value="Quotes"/>
                 <set field="purchaseQuoteId" from-field="parameters.purchaseQuoteId"/>
-                <entity-one entity-name="PurchaseQuote" value-field="purchaseQuote"/>
+                <entity-one entity-name="PrchseQteHdr" value-field="purchaseQuote"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
             </actions>
             <widgets>

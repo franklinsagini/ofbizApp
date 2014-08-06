@@ -64,16 +64,42 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		<field name="request" title="Registry File"
+		<field name="request" use-when="${fileStatus=='Available'}" title="Request File"
 			widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Request"
 				target="createFileRequest">
 				<parameter param-name="registryFileId" />
 			</hyperlink>
 		</field>
+		<!-- <field name="request" use-when="${fileStatus=='Requested'}" title="Action"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Issue"
+				target="createFileRequest">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field>
+		<field name="fileStatus" title="File Status">
+			<display />
+					<field name="request" use-when="${fileStatus=='Issued'}" title="Action"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Release"
+				target="createFileRequest">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field> -->
 		<field name="fileStatus" title="File Status">
 			<display />
 		</field>
+		<field name="fileStatus" use-when="${fileStatus=='Requested'} || ${fileStatus=='Issued'}"  title="File Status">
+			<hyperlink also-hidden="false" description="${fileStatus}"
+				target="/partymgr/control/viewmemberprofile"
+				target-type="inter-app">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+
+
+		<!-- use-when="${bsh:emplPositionId==userLogin.partyId}" -->
 	</form>
 
 	<form name="EditRegistryFile" type="single" target="updateRegistryFile"
@@ -134,7 +160,7 @@
 			name="requestDate" title="request Date"> <date-time /> </field> -->
 
 		<!-- submitButton -->
-		<field use-when="registryfilemap==null" name="submitButton"
+		<field  use-when="registryfilemap==null" name="submitButton"
 			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
 			<submit button-type="text-link" />
 		</field>

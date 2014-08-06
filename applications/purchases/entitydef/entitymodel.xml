@@ -29,12 +29,42 @@
 
     <field name="quoteId" type="id-ne"></field>
     <field name="partyId" type="id-ne"></field>
+    <field name="supplierId" type="id-ne"></field>
     <field name="quoteDate" type="date-time"></field>
+     <field name="confirmDate" type="date-time"></field>
     <field name="supplierRefId" type="id-long"></field>
+    <field name="statusId" type="id-ne"></field>
+    <field name="description" type="description"></field>
     <prim-key field="quoteId"/>
     <relation type="one" fk-name="PRCH_QUOTE_PARTY" rel-entity-name="Party">
       <key-map field-name="partyId"/>
     </relation>
+    <relation type="one" fk-name="QTE_STTS" rel-entity-name="StatusItem">
+          <key-map field-name="statusId"/>
+    </relation>
+    <relation type="one" fk-name="QTE_SPLR_PTY" title="Supplier" rel-entity-name="Party">
+        <key-map field-name="supplierId" rel-field-name="partyId"/>
+    </relation>
+    <relation type="one" fk-name="QTE_CRTD_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+    </relation>
   </entity>
+
+    <entity entity-name="PrchsQteStts"
+            package-name="org.ofbiz.accounting.invoice"
+            title="Quote Status Entity">
+      <field name="statusId" type="id-ne"></field>
+      <field name="quoteId" type="id-ne"></field>
+      <field name="statusDate" type="date-time"></field>
+      <prim-key field="statusId"/>
+      <prim-key field="quoteId"/>
+      <prim-key field="statusDate"/>
+      <relation type="one" fk-name="QUOTE_STS_STSITM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_STS_QUOTE" rel-entity-name="PrchseQteHdr">
+        <key-map field-name="quoteId"/>
+      </relation>
+    </entity>
 
 </entitymodel>

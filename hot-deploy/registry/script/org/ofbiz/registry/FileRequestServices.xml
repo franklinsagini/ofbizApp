@@ -19,6 +19,13 @@
 		<make-value value-field="newEntity" entity-name="FileRequest" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		
+		<set field="registryFileId" from="newEntity.registryFileId"  /> 
+		<entity-one entity-name="RegistryFile" value-field="registryfile">
+			<field-map field-name="registryFileId" from-field="registryFileId"/>
+		</entity-one>
+		<if-compare operator="equals" value="Available" field="registryfile.fileStatus">
+		
 		<sequenced-id sequence-name="FileRequestSequence" stagger-max="1" field="fileRequestId" />
 		<set field="newEntity.fileRequestId" from-field="fileRequestId"  />
 		<set field="newEntity.requester" from-field="userLogin.userLoginId"  />
@@ -31,9 +38,11 @@
 		<entity-one entity-name="RegistryFile" value-field="registryfile">
 			<field-map field-name="registryFileId" from-field="registryFileId"/>
 		</entity-one>
+		<if-compare operator="equals" value="Available" field="fileStatus"></if-compare>
 		<set field="registryfile.fileStatus"  value="Requested" />
 		<store-value value-field="registryfile" />
-
+        </if-compare>
+        
 	</simple-method>
 
 	<simple-method method-name="updateFileRequest"
