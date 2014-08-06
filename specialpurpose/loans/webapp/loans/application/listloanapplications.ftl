@@ -99,7 +99,7 @@ under the License.
         <#assign alt_row = false>
         <#assign rowCount = 0>
         <#list applicationsList as applicationRow>
-          <#assign loanType = applicationRow.getRelatedOne("SaccoProduct")?if_exists>
+          <#assign loanType = applicationRow.getRelatedOne("LoanProduct")?if_exists>
           <#assign loanStatus = applicationRow.getRelatedOne("LoanStatus")?if_exists>
           <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
           	<td><a href="<@ofbizUrl>viewapplicationprofile?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${applicationRow.loanNo?if_exists}</a></td>
@@ -107,9 +107,9 @@ under the License.
            
             <td>${applicationRow.memberNumber?if_exists}</td>
           	<td>${applicationRow.mobileNumber?if_exists}</td>
-          	<td>${applicationRow.loanamt?if_exists}</td>
+          	<td>${applicationRow.loanAmt?if_exists}</td>
           	<td>${applicationRow.applicationStatus?if_exists}</td>
-          	<td>${applicationRow.selectedRepaymentPeriod?if_exists}</td>
+          	<td>${applicationRow.repaymentPeriod?if_exists}</td>
             <td class="button-col align-float">
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Edit </a> 
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Delete </a> 

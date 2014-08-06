@@ -138,7 +138,10 @@ public class LoanServices {
 			SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
 			String strJoinDate = format1.format(joinDate);
 			result.put("joinDate", strJoinDate);
-
+			
+			SimpleDateFormat formattedDateInput = new SimpleDateFormat("yyyy-MM-dd");
+			String dateInputJoinDate = formattedDateInput.format(joinDate);
+			result.put("inputDate", dateInputJoinDate);
 			// SimpleDateFormat
 
 			// Calculate Date Duration from Join Date to Now
