@@ -44,7 +44,6 @@ public class LoanServices {
 			loanProduct = delegator.findOne("LoanProduct",
 					UtilMisc.toMap("loanProductId", loanProductId), false);
 		} catch (GenericEntityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "Cannot Get Product Details";
 		}
@@ -54,6 +53,8 @@ public class LoanServices {
 			result.put("maxRepaymentPeriod",
 					loanProduct.get("maxRepaymentPeriod"));
 			result.put("maximumAmt", loanProduct.get("maximumAmt"));
+			result.put("multipleOfSavingsAmt", loanProduct.get("multipleOfSavingsAmt"));
+			
 			// result.put("selectedRepaymentPeriod",
 			// saccoProduct.get("selectedRepaymentPeriod"));
 		} else {
@@ -132,12 +133,17 @@ public class LoanServices {
 
 			result.put("payrollNo", member.get("payrollNumber"));
 			result.put("memberNo", member.get("memberNumber"));
-			result.put("joinDate", member.get("joinDate"));
-			
-			//SimpleDateFormat
-			
-			//Calculate Date Duration from Join Date to Now
-			int membershipDuration = getMemberDurations(member.getDate("joinDate"));
+
+			Date joinDate = member.getDate("joinDate");
+			SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+			String strJoinDate = format1.format(joinDate);
+			result.put("joinDate", strJoinDate);
+
+			// SimpleDateFormat
+
+			// Calculate Date Duration from Join Date to Now
+			int membershipDuration = getMemberDurations(joinDate);
+
 			result.put("membershipDuration", membershipDuration);
 		} else {
 			System.out.println("######## Member details not found #### ");
@@ -211,33 +217,34 @@ public class LoanServices {
 		BigDecimal savingsMultiplier = BigDecimal.ZERO;
 		result.put("maxLoanAmt", BigDecimal.ZERO);
 		if (loanProduct != null) {
-			
+
 			// result.put("interestRatePM", loanProduct.get("interestRatePM"));
 			// result.put("maxRepaymentPeriod",
 			// loanProduct.get("maxRepaymentPeriod"));
 			// result.put("maximumAmt", loanProduct.get("maximumAmt"));
 			// result.put("selectedRepaymentPeriod",
 			// saccoProduct.get("selectedRepaymentPeriod"));
-			if(loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
-				savingsMultiplier = loanProduct.getBigDecimal("multipleOfSavingsAmt");
+			if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null) {
+				savingsMultiplier = loanProduct
+						.getBigDecimal("multipleOfSavingsAmt");
 			}
-			
+
 			bdMaximumLoanAmt = bdTotalSavings.multiply(savingsMultiplier);
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
 		} else {
 			System.out.println("######## Product details not found #### ");
-			
+
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
 		}
 
 		// Get the multiplier for the Loan Savings
 
 		// Multiple the Total Savings by the Multiplier
-		
+
 		// Return the Multiple as the Maximum of the Loan/Product
 
 		// SaccoProduct
-		
+
 		// return JSONBuilder.class.
 		// JSONObject root = new JSONObject();
 
@@ -280,41 +287,51 @@ public class LoanServices {
 
 	private static BigDecimal totalSavings(String memberId, Delegator delegator) {
 		// Get Accounts for this member
-		List<GenericValue> memberAccountELI = null; //= delegator.findListIteratorByCondition("MemberAccount", new EntityExpr("partyId", EntityOperator.EQUALS, memberId), UtilMisc.toList("productId"), null);
+		List<GenericValue> memberAccountELI = null; // =
+													// delegator.findListIteratorByCondition("MemberAccount",
+													// new EntityExpr("partyId",
+													// EntityOperator.EQUALS,
+													// memberId),
+													// UtilMisc.toList("productId"),
+													// null);
 		try {
-			memberAccountELI = delegator.findList("MemberAccount", EntityCondition.makeCondition("partyId", memberId), null, null, null, false);
+			memberAccountELI = delegator.findList("MemberAccount",
+					EntityCondition.makeCondition("partyId", memberId), null,
+					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
-		if (memberAccountELI == null){
+
+		if (memberAccountELI == null) {
 			return BigDecimal.ZERO;
 		}
 		BigDecimal bdTotalSavings = BigDecimal.ZERO;
 		for (GenericValue genericValue : memberAccountELI) {
-			//result.put(genericValue.get("bankBranchId").toString(), genericValue.get("branchName"));
-			//Compute the total Savings for this account
-			bdTotalSavings = bdTotalSavings.add(AccHolderTransactionServices.getTotalSavings(genericValue.get("memberAccountId").toString(), delegator));
+			// result.put(genericValue.get("bankBranchId").toString(),
+			// genericValue.get("branchName"));
+			// Compute the total Savings for this account
+			bdTotalSavings = bdTotalSavings.add(AccHolderTransactionServices
+					.getTotalSavings(genericValue.get("memberAccountId")
+							.toString(), delegator));
 		}
 		// sum up all the savings
 		return bdTotalSavings;
 	}
-	
-	private static int getMemberDurations(Date joinDate){
-		
-		
-		
+
+	private static int getMemberDurations(Date joinDate) {
+
 		LocalDateTime stJoinDate = new LocalDateTime(joinDate.getTime());
-		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
-		
+		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
+				.getTimeInMillis());
+
 		PeriodType monthDay = PeriodType.months();
-		
+
 		Period difference = new Period(stJoinDate, stCurrentDate, monthDay);
-		
+
 		int months = difference.getMonths();
-		
+
 		return months;
-		
+
 	}
 
 }

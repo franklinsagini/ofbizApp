@@ -628,7 +628,8 @@ public class UtilDateTime {
      * @return A date String in the format MM/DD/YYYY
      */
     public static String toDateString(java.util.Date date) {
-        return toDateString(date, "MM/dd/yyyy");
+        //return toDateString(date, "MM/dd/yyyy");
+    	return toDateString(date, "dd/MM/yyyy");
     }
 
     /**
