@@ -40,6 +40,18 @@ under the License.
     </postprocessor>
     -->
 
+
+    <!--  Request Mappings for calling leave duration and end date java functions -->
+   <request-map uri="emplleaveduration">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveDuration" />
+        <response name="success" type="none">
+    </response>
+    </request-map>
+    <request-map uri="emplleaveend">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveEnd" />
+        <response name="success" type="none">
+    </response>
+    </request-map>
     <!-- Request Mappings -->
     <request-map uri="view">
         <security https="true" auth="false"/>
@@ -408,6 +420,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmplLeave"/>
     </request-map>
+    
     <request-map uri="deleteEmplLeave">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteEmplLeave"/>
