@@ -3,12 +3,14 @@ package org.ofbiz.loans;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -34,6 +36,11 @@ public class AmortizationServices {
 		String loanApplicationId = (String) request
 				.getParameter("loanApplicationId");
 		GenericValue loanApplication = null, loanAmortization;
+		
+		Logger log = Logger.getLogger(AmortizationServices.class);
+		log.info("########### LLLLLLLLLLLLLLLLLLLLL #############");
+		log.info("########### The loanApplicationId is ::: "+loanApplicationId);
+		log.info("########### LLLLLLLLLLLLLLLLLLLLL #############");
 
 		// Get the Loan Application ID
 		try {
@@ -52,7 +59,7 @@ public class AmortizationServices {
 		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
 		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal("interestRatePM").divide(
 				new BigDecimal(ONEHUNDRED));
-		int iRepaymentPeriod = loanApplication.getInteger("repaymentPeriod");
+		int iRepaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
 		BigDecimal dbRepaymentPrincipalAmt, bdRepaymentInterestAmt;
 		BigDecimal paymentAmount = calculatePaymentAmount(
 				dbLoanAmt,
@@ -71,23 +78,34 @@ public class AmortizationServices {
 			iAmortizationCount++;
 			loanAmortizationId = delegator.getNextSeqId("LoanAmortization", 1);
 			
-			loanAmortization = delegator.makeValueSingle("LoanAmortization", UtilMisc.toMap("loanAmortizationId", loanAmortizationId));
-			loanAmortization.set("loanAmortizationId", loanAmortizationId);
-			loanAmortization.set("paymentNo", iAmortizationCount);
-			loanAmortization.set("loanApplicationId", loanApplicationId);
+			//loanAmortization.set("loanAmortizationId", loanAmortizationId);
+			//loanAmortization.set("paymentNo", new Long(iAmortizationCount).longValue());
+			//loanAmortization.set("loanApplicationId", loanApplicationId);
 			
-			loanAmortization.set("paymentAmount", paymentAmount);
+			//loanAmortization.set("paymentAmount", paymentAmount);
 			
 			bdRepaymentInterestAmt = bdPreviousBalance.multiply(bdInterestRatePM);
 			
-			loanAmortization.set("interestAmount", bdRepaymentInterestAmt);
+			//loanAmortization.set("interestAmount", bdRepaymentInterestAmt);
 			
 			dbRepaymentPrincipalAmt = paymentAmount.subtract(bdRepaymentInterestAmt);
-			loanAmortization.set("principalAmount", dbRepaymentPrincipalAmt);
+			//loanAmortization.set("principalAmount", dbRepaymentPrincipalAmt);
 			
 			bdPreviousBalance = bdPreviousBalance.subtract(dbRepaymentPrincipalAmt);
-			loanAmortization.set("balanceAmount", bdPreviousBalance);
+			//loanAmortization.set("balanceAmount", bdPreviousBalance);
 			
+			loanAmortization = delegator.makeValue("LoanAmortization", UtilMisc.toMap("loanAmortizationId", loanAmortizationId, "paymentNo",
+					new Long(iAmortizationCount).longValue(), "loanApplicationId", loanApplicationId, "paymentAmount", paymentAmount.setScale(6, RoundingMode.HALF_UP), "interestAmount", bdRepaymentInterestAmt.setScale(6, RoundingMode.HALF_UP), "principalAmount", dbRepaymentPrincipalAmt.setScale(6, RoundingMode.HALF_UP), "balanceAmount", bdPreviousBalance.setScale(6, RoundingMode.HALF_UP)));
+
+			// log.info("$$$$$$$$$$$$$$$$$ loanAmortizationId : "+loanAmortizationId);
+			// log.info("$$$$$$$$$$$$$$$$$ paymentNo : "+iAmortizationCount);
+			// log.info("$$$$$$$$$$$$$$$$$ loanApplicationId : "+loanApplicationId);
+			// log.info("$$$$$$$$$$$$$$$$$ paymentAmount : "+paymentAmount.setScale(6,
+			// RoundingMode.HALF_UP));
+			// log.info("$$$$$$$$$$$$$$$$$ interestAmount : "+bdRepaymentInterestAmt.setScale(6,
+			// RoundingMode.HALF_UP));
+			// log.info("$$$$$$$$$$$$$$$$$ bdPreviousBalance : "+bdPreviousBalance.setScale(6,
+			// RoundingMode.HALF_UP));
 			listTobeStored.add(loanAmortization);
 		}
 		//Save the list
@@ -143,7 +161,7 @@ public class AmortizationServices {
 		// divideOnePlusInterestMinusOne
 		bdPaymentAmount = bdInterestByPrincipal.multiply(
 				bdOnePlusInterestPowerPeriod).divide(
-				bdOnePlusInterestPowerPeriodMinusOne);
+				bdOnePlusInterestPowerPeriodMinusOne, RoundingMode.HALF_UP);
 
 		return bdPaymentAmount;
 	}
