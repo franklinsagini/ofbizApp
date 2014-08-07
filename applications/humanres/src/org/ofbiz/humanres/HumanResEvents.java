@@ -19,11 +19,19 @@
 package org.ofbiz.humanres;
 
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import net.sf.json.JSONObject;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
