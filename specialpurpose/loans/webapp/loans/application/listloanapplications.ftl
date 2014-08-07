@@ -90,10 +90,13 @@ under the License.
           <td>Loan No</td>
           <td>Loan Type</td>
           <td>Member No</td>
+          <td>First Name</td>
+          <td>Last Name</td>
           <td>Mobile No</td>
           <td>Loan Amount</td>
           <td>Loan Status</td>
           <td>Repayment Period</td>
+          <td>Interest Rate (P.M)</td>
           <td>&nbsp;</td>
         </tr>
         <#assign alt_row = false>
@@ -106,10 +109,14 @@ under the License.
             <td><a href="<@ofbizUrl>viewapplicationprofile?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${loanType.name} ${loanType.code}</a></td>
            
             <td>${applicationRow.memberNumber?if_exists}</td>
+            <td>${applicationRow.firstName?if_exists}</td>
+            <td>${applicationRow.lastName?if_exists}</td>
           	<td>${applicationRow.mobileNumber?if_exists}</td>
           	<td>${applicationRow.loanAmt?if_exists}</td>
           	<td>${applicationRow.applicationStatus?if_exists}</td>
           	<td>${applicationRow.repaymentPeriod?if_exists}</td>
+          	<td>${applicationRow.interestRatePM?if_exists}</td>
+          	
             <td class="button-col align-float">
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Edit </a> 
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Delete </a> 
