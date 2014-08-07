@@ -38,21 +38,27 @@
                 <field-map field-name="viewSize" from-field="viewSize" />
             </service>
         </actions>
+        <row-actions>
+            <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
+                <field-map field-name="partyId" from-field="supplierId"/>
+            </service>
+        </row-actions>
 
         <field name="quoteId" title="Quote Id" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${quoteId}" target="EditExample">
+            <hyperlink also-hidden="false" description="${quoteId}" target="editPurchaseQuote">
                 <parameter param-name="quoteId" />
             </hyperlink>
         </field>
 
-        <field name="partyId" title="Supplier" sort-field="true">
-            <hyperlink target="/partymgr/control/PartyFinancialHistory" target-type="inter-app" description="${partyNameResultFrom.fullName} [${partyIdFrom}]">
-                <parameter param-name="partyId" from-field="partyId"/>
-            </hyperlink>
-        </field>
 
         <field name="quoteDate" sort-field="true">
             <display type="date"/>
+        </field>
+        <field name="statusId" title="Status" sort-field="true">
+            <display/>
+        </field>
+        <field name="partyId" title="Prepared By" sort-field="true">
+            <display/>
         </field>
         <field name="supplierRefId" sort-field="true">
             <display type="date"/>
@@ -70,6 +76,9 @@
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="quote.statusId"/>
             </entity-one>
+<!--        <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
+                <field-map field-name="partyId" from-field="quote.partyId"/>
+            </service> -->
         </actions>
 
         <alt-target use-when="quote==null" target="createPurchaseQuote" />
@@ -82,22 +91,31 @@
         <field name="quoteId" use-when="quote!=null" title="Quote id" tooltip="${uiLabelMap.CommonNotModifRecreat}">
             <display />
         </field>
-
-        <field name="quoteId" use-when="quote==null" title="Supplier">
-            <ignored/>
+        <field name="quoteDate" use-when="quote==null">
+            <hidden/>
         </field>
-        <field name="supplierId" title="Supplier">
-            <lookup target-form-name="LookupPartyName"/>
+        <field name="quoteDate" use-when="quote!=null" title="Creation Date">
+            <display type="date"/>
         </field>
-
+        <field name="statusId" use-when="quote==null">
+            <hidden/>
+        </field>
+        <field name="statusId" use-when="quote!=null" title="Status">
+            <display-entity entity-name="StatusItem"/>
+        </field>
         <field name="partyId">
             <hidden/>
         </field>
-        <field name="statusId">
-            <hidden/>
+<!--         <field name="partyId" title="Prepared By" use-when="quote!=null">
+            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultFrom.fullName}">
+                <parameter param-name="partyId" from-field="quote.partyId"/>
+            </hyperlink>
+        </field> -->
+        <field name="partyId" title="Prepared By" use-when="quote!=null">
+            <display-entity entity-name="Party"/>
         </field>
-        <field name="quoteDate">
-            <hidden/>
+        <field name="supplierId" title="Supplier">
+            <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="confirmDate">
             <hidden/>

@@ -37,6 +37,9 @@
         <if-empty field="parameters.quoteDate">
             <set from-field="nowTimestamp" field="parameters.quoteDate"/>
         </if-empty>
+        <!-- Set the prepared by using the currently logged in user -->
+        <set from-field="${userLogin.partyId}" field="parameters.partyId" />
+        <set field="parameters.partyId" value="${userLogin.partyId}"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
          <!-- finally create the record (should not exist already)-->
@@ -50,54 +53,33 @@
         <check-errors/>
     </simple-method>
 
-    <simple-method method-name="createInvoice" short-description="Create a new Invoice">
-        <now-timestamp field="nowTimestamp"/>
+    <simple-method method-name="updatePurchaseQuote" short-description="Update a Quote">
 
-        <make-value value-field="newEntity" entity-name="Invoice"/>
+        <!-- find the current record -->
+        <make-value value-field="lookupPKMap" entity-name="PrchseQteHdr"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key entity-name="PrchseQteHdr" map="lookupPKMap" value-field="lookedUpValue"/>
 
-        <!-- call getNextInvoiceId service with the parameters.partyIdFrom when invoice Id is not suplied
-                            else use it from the input -->
-        <if-empty field="parameters.invoiceId">
-            <set-service-fields service-name="getNextInvoiceId" to-map="getNextInvoiceIdMap" map="parameters"/>
-            <set field="getNextInvoiceIdMap.partyId" from-field="parameters.partyIdFrom"/>
-            <call-service service-name="getNextInvoiceId" in-map-name="getNextInvoiceIdMap">
-                <result-to-field result-name="invoiceId" field="parameters.invoiceId"/>
-            </call-service>
-        </if-empty>
-        <field-to-result field="parameters.invoiceId" result-name="invoiceId"/>
+        <!-- only try to update content if the status is in process.... -->
+        <if-compare field="lookedUpValue.statusId" operator="equals" value="QUOTE_IN_PROCESS">
+            <clone-value value-field="lookedUpValue" new-value-field="savedValue"/>
+            <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
 
-        <!-- set the invoice date if not provided -->
-        <if-empty field="parameters.invoiceDate">
-            <set from-field="nowTimestamp" field="parameters.invoiceDate"/>
-        </if-empty>
+            <!-- only save if something has changed, do not update status here -->
+            <set from-field="savedValue.statusId" field="lookedUpValue.statusId"/>  <!-- get old status back -->
+            <if-compare-field field="lookedUpValue" to-field="savedValue" operator="not-equals" type="Object">
+                <store-value value-field="lookedUpValue"/> <!-- update all non status and key fields -->
+            </if-compare-field>
+            <else>
+                <add-error>
+                    <fail-property resource="AccountingUiLabels" property="Can only update Quote, when status is in-process...current Status: ${lookedUpValue.statusId}"/>
+                </add-error>
+                <log level="error" message="Can only update Quote, when status is in-process...current Status: ${lookedUpValue.statusId}"/>
+                <check-errors/>
+            </else>
+        </if-compare>
 
-        <!-- set the invoice status if not provided -->
-        <if-empty field="parameters.statusId">
-            <set field="parameters.statusId" value="INVOICE_IN_PROCESS"/>
-        </if-empty>
+        <!-- check if there is a requested status change if yes call invoice status update service -->
 
-        <!-- use currency of receiving company -->
-        <entity-one entity-name="Party" value-field="party"/>
-        <if-not-empty field="party.preferredCurrencyUomId">
-            <set field="parameters.currencyUomId" from-field="party.preferredCurrencyUomId"/>
-        </if-not-empty>
-
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <create-value value-field="newEntity"/>
-
-        <!-- create new status entry, and set lastStatusUpdate date -->
-        <make-value value-field="newInvoiceStatus" entity-name="InvoiceStatus"/>
-        <set from-field="newEntity.invoiceId" field="newInvoiceStatus.invoiceId"/>
-        <set from-field="newEntity.statusId" field="newInvoiceStatus.statusId"/>
-        <set from-field="nowTimestamp" field="newInvoiceStatus.statusDate"/>
-        <create-value value-field="newInvoiceStatus"/>
     </simple-method>
-
-
-
-
-
-
-
 </simple-methods>
