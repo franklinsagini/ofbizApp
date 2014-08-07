@@ -340,7 +340,9 @@ under the License.
 		<field name="loanProductId" type="id-ne"></field>
 		
 		<field name="interestPerMonthAmt" type="fixed-point"></field>
-
+		
+		
+		<field name="interestRatePM" type="fixed-point"></field>
 		<field name="maxRepaymentPeriod" type="numeric"></field>
 		
 		<field name="repaymentPeriod" type="numeric"></field>
@@ -378,6 +380,9 @@ under the License.
 		 <!-- Membership Duration -->
 		 <field name="joinDate" type="date"></field>
 		 <field name="membershipDuration" type="numeric"></field>
+		 
+		 <field name="amortationGenerated" type="indicator"></field>
+		 <field name="dateAmortationGenerated" type="date-time"></field>
 		
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
@@ -408,6 +413,25 @@ under the License.
       	</relation>
       	<relation type="one" fk-name="LOANAPPLICATION_FK" rel-entity-name="LoanApplication">
        		<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
+		<!-- Loan Application Security -->
+	<entity entity-name="LoanAmortization" package-name="org.ofbiz.loans"
+		title="Loan Amortization">
+		<field name="loanAmortizationId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="paymentNo" type="numeric"></field>
+		
+		<field name="paymentAmount" type="fixed-point"></field>
+		<field name="principalAmount" type="fixed-point"></field>
+		<field name="interestAmount" type="fixed-point"></field>
+		<field name="balanceAmount" type="fixed-point"></field>
+		<field name="isPaid" type="indicator"></field>
+		<field name="datePaid" type="date-time"></field>
+		<prim-key field="loanAmortizationId"/>
+		<relation type="one" fk-name="LOANAMORTIZATION_LOANAPPLICATIONFK" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
       	</relation>
 	</entity>
 	

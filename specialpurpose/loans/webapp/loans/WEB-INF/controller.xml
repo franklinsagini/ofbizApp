@@ -305,9 +305,10 @@ under the License.
 	
 	<request-map uri="createLoanApplication">
 		<security https="true" auth="true" />
-		<event type="simple"
-			path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createLoanApplication" />
+		<!-- event type="simple"
+			path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createLoanApplication" / -->
 		<!-- response name="success" type="view" value="loanproductsetup"/ -->
+		<event type="service" invoke="createLoanApplication" />
 		<response name="success" type="request-redirect-noparam"
 			value="loanapplication"></response>
 		<response name="error" type="view" value="loanapplication" />
@@ -341,7 +342,7 @@ under the License.
     	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
     	<event type="java" path="org.ofbiz.loans.LoanServices" invoke="getLoanDetails" />
 		<response name="success" type="none">
-    </response>
+    	</response>
     </request-map>
     
      <request-map uri="loanMaxCalculation">
@@ -691,6 +692,7 @@ under the License.
 		<response name="success" type="view" value="disburseLoan"
 			save-home-view="true" />
 	</request-map>
+	
 	<!-- End Loan Applications Guarantor -->
 	
 	<!-- Account Product -->
@@ -706,6 +708,16 @@ under the License.
 	</request-map>
 	
 	<request-map uri="LookupMember"><security auth="true" https="true"/><response name="success" type="view" value="LookupMember"/></request-map>
+	
+	<request-map uri="generateschedule">
+		<security auth="true" https="true"/>
+    	<event type="java" path="org.ofbiz.loans.AmortizationServices" invoke="generateschedule" />
+		<response name="success" type="view"
+			value="disburseLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="disburseLoan" />
+    </request-map>
 	
     <!-- end of request mappings -->
 

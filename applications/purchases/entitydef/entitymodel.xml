@@ -22,124 +22,48 @@
 <!-- ========================================================= -->
   <!-- org.ofbiz.order.quote -->
 <!-- ========================================================= -->
-    <entity entity-name="PurchaseQuote"
-            package-name="org.ofbiz.purchases.quote"
-            title="Quote Entity">
-      <field name="purchaseQuoteId" type="id-ne"></field>
-      <field name="issueDate" type="date-time"></field>
-      <field name="statusId" type="id"></field>
-      <field name="currencyUomId" type="id"></field>
-      <field name="purchaseQuoteName" type="name"></field>
-      <field name="description" type="description"></field>
-      <field name="supplierPartyId" type="id"></field>
-      <prim-key field="purchaseQuoteId"/>
-      <relation type="one" fk-name="PURCH_QUOTE_STATUS" rel-entity-name="StatusItem">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_ITSG_SPRTY" title="Supplier" rel-entity-name="Party">
-        <key-map field-name="supplierPartyId" rel-field-name="partyId"/>
-      </relation>
-    </entity>
+  <entity
+    entity-name="PrchseQteHdr"
+    package-name="org.ofbiz.purchases.quote"
+    title="Purchase Quote Header">
 
-    <entity entity-name="PurchaseQuoteStatus"
+    <field name="quoteId" type="id-ne"></field>
+    <field name="partyId" type="id-ne"></field>
+    <field name="supplierId" type="id-ne"></field>
+    <field name="quoteDate" type="date-time"></field>
+     <field name="confirmDate" type="date-time"></field>
+    <field name="supplierRefId" type="id-long"></field>
+    <field name="statusId" type="id-ne"></field>
+    <field name="description" type="description"></field>
+    <prim-key field="quoteId"/>
+    <relation type="one" fk-name="PRCH_QUOTE_PARTY" rel-entity-name="Party">
+      <key-map field-name="partyId"/>
+    </relation>
+    <relation type="one" fk-name="QTE_STTS" rel-entity-name="StatusItem">
+          <key-map field-name="statusId"/>
+    </relation>
+    <relation type="one" fk-name="QTE_SPLR_PTY" title="Supplier" rel-entity-name="Party">
+        <key-map field-name="supplierId" rel-field-name="partyId"/>
+    </relation>
+    <relation type="one" fk-name="QTE_CRTD_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+    </relation>
+  </entity>
+
+    <entity entity-name="PrchsQteStts"
             package-name="org.ofbiz.accounting.invoice"
-            title="PurchaseQuote Status Entity">
+            title="Quote Status Entity">
       <field name="statusId" type="id-ne"></field>
-      <field name="purchaseQuoteId" type="id-ne"></field>
+      <field name="quoteId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>
       <prim-key field="statusId"/>
-      <prim-key field="purchaseQuoteId"/>
+      <prim-key field="quoteId"/>
       <prim-key field="statusDate"/>
       <relation type="one" fk-name="QUOTE_STS_STSITM" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" fk-name="QUOTE_STS_QT" rel-entity-name="PurchaseQuote">
-        <key-map field-name="purchaseQuoteId"/>
-      </relation>
-    </entity>
-
-    <entity entity-name="PurchaseQuoteItem"
-            package-name="org.ofbiz.purchases.quote"
-            title="Quote Item Entity">
-      <field name="purchaseQuoteId" type="id-ne"></field>
-      <field name="purchaseQuoteItemSeqId" type="id-ne"></field>
-      <field name="productId" type="id"></field>
-      <field name="quantity" type="fixed-point"></field>
-      <field name="quoteUnitPrice" type="currency-amount"></field>
-      <field name="configId" type="id"></field>
-      <field name="estimatedDeliveryDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
-      <prim-key field="purchaseQuoteId"/>
-      <prim-key field="purchaseQuoteItemSeqId"/>
-      <relation type="one" fk-name="PURC_QUOTE_ITM" rel-entity-name="PurchaseQuote">
-        <key-map field-name="purchaseQuoteId"/>
-      </relation>
-      <relation type="one" fk-name="PURC_QUOTE_ITM_PROD" rel-entity-name="Product">
-        <key-map field-name="productId"/>
-      </relation>
-    </entity>
-
-    <entity entity-name="PurchaseOrderHeader"
-            package-name="org.ofbiz.purchases.purchaseorders"
-            never-cache="true"
-            title="Order Header Entity">
-      <field name="purchaseOrderId" type="id-ne"></field>
-      <field name="orderName" type="name"></field>
-      <field name="orderDate" type="date-time"></field>
-      <field name="statusId" type="id"></field>
-      <field name="createdBy" type="id-vlong"></field>
-      <field name="currencyUom" type="id"></field>
-      <field name="billingAccountId" type="id"></field>
-      <field name="originFacilityId" type="id"></field>
-      <field name="transactionId" type="id-long"></field>
-      <field name="grandTotal" type="currency-amount"></field>
-      <field name="isViewed" type="indicator"></field>
-      <prim-key field="purchaseOrderId"/>
-      <relation type="one" fk-name="ORDER_HDR_BACCT" rel-entity-name="BillingAccount">
-        <key-map field-name="billingAccountId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_HDR_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
-        <key-map field-name="createdBy" rel-field-name="userLoginId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_HDR_STTS" rel-entity-name="StatusItem">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_HDR_CUOM" rel-entity-name="Uom">
-        <key-map field-name="currencyUom" rel-field-name="uomId"/>
-      </relation>
-    </entity>
-
-    <entity entity-name="RegistryFile"
-            package-name="org.ofbiz.purchases.purchaseorders"
-            title="Registry File Entity">
-      <field name="registryFileId" type="id-ne"></field>
-      <field name="fileName" type="name"></field>
-      <field name="registryFileStatusId" type="id-ne"></field>
-      <prim-key field="registryFileId"/>
-      <prim-key field="registryFileStatusId"/>
-      <relation type="one" fk-name="FILE_STTUS" rel-entity-name="RegistryFileStatus">
-        <key-map field-name="registryFileStatusId" />
-      </relation>
-    </entity>
-
-    <entity entity-name="RegistryFileStatus"
-            package-name="org.ofbiz.purchases.purchaseorders"
-            title="Registry File Entity">
-      <field name="registryFileStatusId" type="id-ne"></field>
-      <field name="statusName" type="name"></field>
-      <prim-key field="registryFileStatusId"/>
-    </entity>
-
-    <entity entity-name="RegistryFileRequest"
-            package-name="org.ofbiz.purchases.purchaseorders"
-            title="Registry File Entity">
-      <field name="registryFileRequestId" type="id-ne"></field>
-      <field name="registryFileId" type="id-ne"></field>
-      <field name="requestDate" type="date-time"></field>
-      <prim-key field="registryFileId"/>
-      <prim-key field="registryFileRequestId"/>
-      <relation type="one" fk-name="RQST_FILE" rel-entity-name="RegistryFile">
-        <key-map field-name="registryFileRequestId" />
+      <relation type="one" fk-name="QUOTE_STS_QUOTE" rel-entity-name="PrchseQteHdr">
+        <key-map field-name="quoteId"/>
       </relation>
     </entity>
 

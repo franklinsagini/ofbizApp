@@ -75,7 +75,7 @@
 				 $('input[name="memberNumber"]').val(data.memberNumber);
 				 $('input[name="mobileNumber"]').val(data.mobileNumber);
 				 $('input[name="joinDate_i18n"]').val(data.joinDate);
-				 $('input[name="joinDate"]').val(data.joinDate);
+				 $('input[name="joinDate"]').val(data.inputDate);
 				 $('input[name="membershipDuration"]').val(data.membershipDuration);
 				 
               //You handle the response here like displaying in required div etc. 

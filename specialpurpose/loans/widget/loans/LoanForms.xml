@@ -436,6 +436,7 @@ under the License.
         <field name="applicationStatus" title="Status"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
         <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
         <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        
     </form>
     
     <form name="listDisburseLoan" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDisburseLoan" paginate-target="loanStatusLog"
@@ -458,6 +459,32 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
+    <form name="listAmortizationSchedule" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDisburseLoan" paginate-target="disburseLoan"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanAmortization">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateDisburseLoan"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="paymentNo" title="No"><display also-hidden="false"></display> </field>
+        <field name="paymentAmount" title="Payment Amount"><display also-hidden="false"></display>  </field>
+        <field name="principalAmount" title="Principal Amount"><display also-hidden="false"></display>  </field>
+        <field name="interestAmount" title="Interest Amount"><display also-hidden="false"></display>  </field>
+        <field name="balanceAmount" title="Balance Amount"><display also-hidden="false"></display>  </field>
+        <!--  field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteDisburseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusLogId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+    
+    
     
     <!-- AccountProduct -->
     <form name="AccountProduct" type="single" target="createAccountProduct"

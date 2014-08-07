@@ -61,11 +61,13 @@ public class UtilDateTime {
     /**
      * JDBC escape format for java.sql.Date conversions.
      */
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    // public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_FORMAT = "dd-MM-yyyy";
     /**
      * JDBC escape format for java.sql.Timestamp conversions.
      */
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    // public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss.SSS";
     /**
      * JDBC escape format for java.sql.Time conversions.
      */
@@ -192,7 +194,8 @@ public class UtilDateTime {
      * @return String formatted for right now
      */
     public static String nowDateString() {
-        return nowDateString("yyyyMMddHHmmss");
+        // return nowDateString("yyyyMMddHHmmss");
+        return nowDateString("ddMMyyyyHHmmss");
     }
 
     /**
@@ -546,7 +549,8 @@ public class UtilDateTime {
             second = time.substring(timeColon2 + 1);
         }
 
-        return toDate(month, day, year, hour, minute, second);
+        // return toDate(month, day, year, hour, minute, second);
+        return toDate(day, month,  year, hour, minute, second);
     }
 
     /**
@@ -574,7 +578,8 @@ public class UtilDateTime {
         } catch (Exception e) {
             return null;
         }
-        return toDate(month, day, year, hour, minute, second);
+        // return toDate(month, day, year, hour, minute, second);
+        return toDate(day, month, year, hour, minute, second);
     }
 
     /**
@@ -628,8 +633,10 @@ public class UtilDateTime {
      * @return A date String in the format MM/DD/YYYY
      */
     public static String toDateString(java.util.Date date) {
-        //return toDateString(date, "MM/dd/yyyy");
-    	return toDateString(date, "dd/MM/yyyy");
+
+        // return toDateString(date, "MM/dd/yyyy");
+        return toDateString(date, "dd/MM/yyyy");
+
     }
 
     /**
