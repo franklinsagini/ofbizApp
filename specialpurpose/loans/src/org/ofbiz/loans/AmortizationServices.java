@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 /***
@@ -36,13 +38,7 @@ public class AmortizationServices {
 		String loanApplicationId = (String) request
 				.getParameter("loanApplicationId");
 		GenericValue loanApplication = null, loanAmortization;
-		
-		Logger log = Logger.getLogger(AmortizationServices.class);
-		log.info("########### LLLLLLLLLLLLLLLLLLLLL #############");
-		log.info("########### The loanApplicationId is ::: "+loanApplicationId);
-		log.info("########### LLLLLLLLLLLLLLLLLLLLL #############");
 
-		// Get the Loan Application ID
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
 					UtilMisc.toMap("loanApplicationId", loanApplicationId),
@@ -51,72 +47,61 @@ public class AmortizationServices {
 			e2.printStackTrace();
 		}
 
+		deleteExistingSchedule(delegator, loanApplicationId);
+
 		/**
 		 * Given: Loan Amount, Interest Rate and Payment Period Calculate the
 		 * Monthly Payment (Straight Line)
 		 * 
 		 * **/
 		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
-		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal("interestRatePM").divide(
-				new BigDecimal(ONEHUNDRED));
-		int iRepaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
+		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
+				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
+		int iRepaymentPeriod = loanApplication.getLong("repaymentPeriod")
+				.intValue();
 		BigDecimal dbRepaymentPrincipalAmt, bdRepaymentInterestAmt;
-		BigDecimal paymentAmount = calculatePaymentAmount(
-				dbLoanAmt,
-				bdInterestRatePM,
-				iRepaymentPeriod);
+		BigDecimal paymentAmount = calculatePaymentAmount(dbLoanAmt,
+				bdInterestRatePM, iRepaymentPeriod);
 
-		//This value will be changing as we go along
+		// This value will be changing as we go along
 		BigDecimal bdPreviousBalance = dbLoanAmt;
 		String loanAmortizationId;
-		
+
 		int iAmortizationCount = 0;
-		
+
 		List<GenericValue> listTobeStored = new LinkedList<GenericValue>();
-		
-		while (iAmortizationCount < iRepaymentPeriod){
+
+		while (iAmortizationCount < iRepaymentPeriod) {
 			iAmortizationCount++;
 			loanAmortizationId = delegator.getNextSeqId("LoanAmortization", 1);
-			
-			//loanAmortization.set("loanAmortizationId", loanAmortizationId);
-			//loanAmortization.set("paymentNo", new Long(iAmortizationCount).longValue());
-			//loanAmortization.set("loanApplicationId", loanApplicationId);
-			
-			//loanAmortization.set("paymentAmount", paymentAmount);
-			
-			bdRepaymentInterestAmt = bdPreviousBalance.multiply(bdInterestRatePM);
-			
-			//loanAmortization.set("interestAmount", bdRepaymentInterestAmt);
-			
-			dbRepaymentPrincipalAmt = paymentAmount.subtract(bdRepaymentInterestAmt);
-			//loanAmortization.set("principalAmount", dbRepaymentPrincipalAmt);
-			
-			bdPreviousBalance = bdPreviousBalance.subtract(dbRepaymentPrincipalAmt);
-			//loanAmortization.set("balanceAmount", bdPreviousBalance);
-			
-			loanAmortization = delegator.makeValue("LoanAmortization", UtilMisc.toMap("loanAmortizationId", loanAmortizationId, "paymentNo",
-					new Long(iAmortizationCount).longValue(), "loanApplicationId", loanApplicationId, "paymentAmount", paymentAmount.setScale(6, RoundingMode.HALF_UP), "interestAmount", bdRepaymentInterestAmt.setScale(6, RoundingMode.HALF_UP), "principalAmount", dbRepaymentPrincipalAmt.setScale(6, RoundingMode.HALF_UP), "balanceAmount", bdPreviousBalance.setScale(6, RoundingMode.HALF_UP)));
 
-			// log.info("$$$$$$$$$$$$$$$$$ loanAmortizationId : "+loanAmortizationId);
-			// log.info("$$$$$$$$$$$$$$$$$ paymentNo : "+iAmortizationCount);
-			// log.info("$$$$$$$$$$$$$$$$$ loanApplicationId : "+loanApplicationId);
-			// log.info("$$$$$$$$$$$$$$$$$ paymentAmount : "+paymentAmount.setScale(6,
-			// RoundingMode.HALF_UP));
-			// log.info("$$$$$$$$$$$$$$$$$ interestAmount : "+bdRepaymentInterestAmt.setScale(6,
-			// RoundingMode.HALF_UP));
-			// log.info("$$$$$$$$$$$$$$$$$ bdPreviousBalance : "+bdPreviousBalance.setScale(6,
-			// RoundingMode.HALF_UP));
+			bdRepaymentInterestAmt = bdPreviousBalance
+					.multiply(bdInterestRatePM);
+			dbRepaymentPrincipalAmt = paymentAmount
+					.subtract(bdRepaymentInterestAmt);
+			bdPreviousBalance = bdPreviousBalance
+					.subtract(dbRepaymentPrincipalAmt);
+			loanAmortization = delegator.makeValue("LoanAmortization", UtilMisc
+					.toMap("loanAmortizationId", loanAmortizationId,
+							"paymentNo", new Long(iAmortizationCount)
+									.longValue(), "loanApplicationId",
+							loanApplicationId, "paymentAmount", paymentAmount
+									.setScale(6, RoundingMode.HALF_UP),
+							"interestAmount", bdRepaymentInterestAmt.setScale(
+									6, RoundingMode.HALF_UP),
+							"principalAmount", dbRepaymentPrincipalAmt
+									.setScale(6, RoundingMode.HALF_UP),
+							"balanceAmount", bdPreviousBalance.setScale(6,
+									RoundingMode.HALF_UP)));
 			listTobeStored.add(loanAmortization);
 		}
-		//Save the list
+		// Save the list
 		try {
 			delegator.storeAll(listTobeStored);
 		} catch (GenericEntityException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		// Get the
-
 		Writer out;
 		try {
 			out = response.getWriter();
@@ -189,6 +174,37 @@ public class AmortizationServices {
 			BigDecimal interestRatePM, int repaymentPeriod) {
 		return ((new BigDecimal(ONE).add(interestRatePM)).pow(repaymentPeriod))
 				.subtract(new BigDecimal(ONE));
+	}
+
+	/***
+	 * Delete the existing Armotization schedule for the regenetaion to happen
+	 * */
+	private static void deleteExistingSchedule(Delegator delegator,
+			String loanApplicationId) {
+		// Get the loan armotization entities for the loan application and
+		// delete them
+		List<GenericValue> loanAmortizationELI = null; // =
+
+		try {
+			loanAmortizationELI = delegator.findList("LoanAmortization",
+					EntityCondition.makeCondition("loanApplicationId",
+							loanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		List<GenericValue> toDeleteList = new LinkedList<GenericValue>();
+
+		for (GenericValue genericValue : loanAmortizationELI) {
+			toDeleteList.add(genericValue);
+		}
+
+		try {
+			delegator.removeAll(toDeleteList);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
