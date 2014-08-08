@@ -685,6 +685,11 @@
         <make-value entity-name="EmplLeave" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>
         <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <if-empty field="newEntity.leaveId">
+         <sequenced-id sequence-name="EmplLeaveId" field="newEntity.leaveId"/>
+        </if-empty>
+        <field-to-result field="newEntity.leaveId" result-name="leaveId"/>
+
         <create-value value-field="newEntity"/>
         <check-errors/>
         <property-to-field resource="HumanResUiLabels" property="HumanResLeaveCreationSuccess" field="successMessage"/>
@@ -694,6 +699,13 @@
     <simple-method method-name="updateEmplLeave" short-description="Update Employee Leave">
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="forwardEmplLeave" short-description="Forward Employee Leave">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <!-- <set field="forwardedBy" from-field="userLogin.userLoginId"  /> -->
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 

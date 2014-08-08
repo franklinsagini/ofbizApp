@@ -268,21 +268,21 @@ under the License.
         <field name="days" title="Days" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="daytype"  title="Day Specification" >
             <drop-down allow-empty="false">
-                <option key="W" description="Work Days"/>
-                <option key="C" description="Calendar Days"/>
+                <option key="Work Days" description="Work Days"/>
+                <option key="Calendar Days" description="Calendar Days"/>
             </drop-down>
         </field>
         <field name="gender"  title="Gender" >
             <drop-down allow-empty="false">
-            	<option key="A" description="All"/>
-                <option key="M" description="Male"/>
-                <option key="F" description="Female"/>
+            	<option key="All" description="All"/>
+                <option key="Male" description="Male"/>
+                <option key="Female" description="Female"/>
             </drop-down>
         </field>
         <field name="isforwarded"  title="Can Be Forwarded" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="forwardmax" title="Max Days Forwarded" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -290,33 +290,33 @@ under the License.
         <field name="validity" title="Validity (Months)"><text size="30" maxlength="60"/></field>
         <field name="isallocated"  title="Allocated" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="isencashable"  title="Encashable" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="isaccrued"  title="Accrued" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="accrualRate" title="Accrual Rate" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="hasbalance"  title="Has Balance" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="allowoverflow"  title="Allow Overflow" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         
@@ -328,16 +328,14 @@ under the License.
         <actions>
             <entity-condition entity-name="EmplLeaveType"><order-by field-name="leaveTypeId"/></entity-condition>
         </actions>
-        <auto-fields-service service-name="updateEmplLeaveType" default-field-type="hidden"/>
-         <field name="leaveTypeId" title="Update">
-         <hyperlink also-hidden="false" title="Update" description="${leaveTypeId}" target="EditEmplLeaveTypes">
-                <parameter param-name="leaveTypeId"/>
-            </hyperlink>
-        </field>
+        <!-- <auto-fields-service service-name="updateEmplLeaveType" default-field-type="hidden"/> -->
+       
         <field name="days" title="Days"><display/></field>
         <field name="daytype" title="Day type"><display/></field>
         <field name="gender" title="Gender"><display/></field>
-        <field name="isforwarded" title="Is forwarded"><display/></field>
+        <field name="isforwarded" title="Is forwarded">
+            <display description="YES"/>
+        </field>
         <field name="forwardmax" title="Forward max}"><display/></field>
         <field name="noticeperiod" title="Noticeperiod"><display/></field>
         <field name="validity" title="Validity"><display/></field>
@@ -347,9 +345,17 @@ under the License.
         <field name="isaccrued" title="Is accrued"><display/></field>
         <field name="accrualRate" title="Accrual Rate"><display/></field>
         <field name="hasbalance" title="Has balance"><display/></field>
-        <field name="allowoverflow" title="Allow overflow"><display/></field>
+        <field name="allowoverflowq" title="Allow Overflow">
+            <display />
+        </field>
+            <!-- <field name="allowoverflow" title="Allow overflow"><display/></field> -->
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmplLeaveType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="leaveTypeId"/>
+            </hyperlink>
+        </field>
+          <field name="leaveTypeId" title="Update" >
+         <hyperlink also-hidden="false" title="Update" description="Update"  target="EditEmplLeaveTypes">
                 <parameter param-name="leaveTypeId"/>
             </hyperlink>
         </field>

@@ -34,8 +34,31 @@ under the License.
   <!--  - org.ofbiz.humanres.employment -->
   <!--  - org.ofbiz.humanres.position -->
   <!-- ========================================================= -->
-
-
+     <!--  <entity entity-name="DaySpecificatiom"
+            package-name="org.ofbiz.humanres"
+            title="Day Specificatiom Entity">
+      <field name="daySpecificatiomId" type="id-ne"></field>
+      <field name="description" type="id-ne"></field>
+      <field name="leaveApprover" type="id"></field>
+      <field name="leaveLogStatus" type="description"></field>
+      <prim-key field="LeaveStatusLogsId"/>
+      <relation type="one" fk-name="EMPLEAVE_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
+        <key-map field-name="leaveId" rel-field-name="leaveId"/>
+      </relation>
+    </entity> -->
+  <!-- ================================== -->
+    <entity entity-name="LeaveStatusLogs"
+            package-name="org.ofbiz.humanres"
+            title="Leave Status Logs Entity">
+      <field name="leaveStatusLogsId" type="id-ne"></field>
+      <field name="leaveId" type="id-ne"></field>
+      <field name="leaveApprover" type="id"></field>
+      <field name="leaveLogStatus" type="description"></field>
+      <prim-key field="LeaveStatusLogsId"/>
+      <relation type="one" fk-name="EMPLEAVE_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
+        <key-map field-name="leaveId" rel-field-name="leaveId"/>
+      </relation>
+    </entity>
   <!-- ========================================================= -->
   <!-- org.ofbiz.humanres.ability -->
   <!-- ========================================================= -->
@@ -502,21 +525,21 @@ under the License.
             title="Employee Leave Type Entity">
         <field name="leaveTypeId" type="id-ne"/>
         <field name="parentTypeId" type="id-ne"/>
-        <field name="hasTable" type="indicator"/>
+        <field name="hasTable" type="name"/>
         <field name="description" type="description"/>
         <field name="days" type="numeric"></field>        
-        <field name="daytype" type="name"></field>
+        <field name="daytype" type="description"></field>
         <field name="gender" type="name"></field>
-        <field name="isforwarded" type="indicator"></field>
+        <field name="isforwarded" type="name"></field>
         <field name="forwardmax" type="numeric"></field>
         <field name="noticeperiod" type="numeric"></field>
         <field name="validity" type="numeric"></field>
-        <field name="isallocated" type="indicator"></field>
-        <field name="isencashable" type="indicator"></field>
-        <field name="isaccrued" type="indicator"></field>
+        <field name="isallocated" type="name"></field>
+        <field name="isencashable" type="name"></field>
+        <field name="isaccrued" type="name"></field>
         <field name="accrualRate" type="fixed-point"></field>
-        <field name="hasbalance" type="indicator"></field>
-        <field name="allowoverflow" type="indicator"></field>
+        <field name="hasbalance" type="name"></field>
+        <field name="allowoverflow" type="name"></field>
         <prim-key field="leaveTypeId"/>
         <relation type="one" fk-name="EMPL_LEAVE_TPAR" title="Parent" rel-entity-name="EmplLeaveType">
             <key-map field-name="parentTypeId" rel-field-name="leaveTypeId"/>
