@@ -45,6 +45,51 @@
         <response name="success" type="view" value="editPurchaseQuote" />
         <response name="error" type="view" value="editPurchaseQuote" />
     </request-map>
+    <!-- Quotes Lines Requests -->
+    <request-map uri="editQuoteLines">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editPurchaseQuoteItems"/>
+    </request-map>
+    <request-map uri="createQuoteLine">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createQuoteLine"/>
+        <response name="success" type="request-redirect" value="editPurchaseQuoteItems">
+            <redirect-parameter name="quoteId"/>
+        </response>
+        <response name="error" type="view" value="editPurchaseQuoteItems"/>
+    </request-map>
+    <request-map uri="updateQuoteLine">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateQuoteLine"/>
+        <response name="success" type="request-redirect" value="editPurchaseQuoteItems">
+            <redirect-parameter name="quoteId"/>
+        </response>
+        <response name="error" type="view" value="editPurchaseQuoteItems"/>
+    </request-map>
+    <request-map uri="deleteQuoteLine">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteImprestItem"/>
+        <response name="success" type="request-redirect" value="editPurchaseQuoteItems">
+            <redirect-parameter name="quoteId"/>
+        </response>
+        <response name="error" type="view" value="editPurchaseQuoteItems"/>
+    </request-map>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <request-map uri="findPurchaseQuote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findQuotes"/>
@@ -106,6 +151,11 @@
         <response name="error" type="view" value="EditPurchaseOrders" />
     </request-map>
 
+     <request-map uri="LookupProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+
     <!-- REGISTRY JUST FOR TEST -->
 
     <request-map uri="EditFileStatus">
@@ -164,10 +214,12 @@
     <view-map name="reports" type="screen" page="component://purchases/widget/PurchasesScreens.xml#reports"/>
 
     <view-map name="editPurchaseQuote" type="screen" page="component://purchases/widget/PurchasesScreens.xml#editPurchaseQuote" />
+    <view-map name="editPurchaseQuoteItems" type="screen" page="component://purchases/widget/PurchasesScreens.xml#editPurchaseQuoteItems" />
 
 
     <view-map name="EditPurchaseQuote" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditPurchaseQuote"/>
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
     <!-- Edit Purchase Orders View Map -->
     <view-map name="EditPurchaseOrders" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditPurchaseOrders"/>
 

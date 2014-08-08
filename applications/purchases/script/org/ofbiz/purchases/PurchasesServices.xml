@@ -82,4 +82,19 @@
         <!-- check if there is a requested status change if yes call invoice status update service -->
 
     </simple-method>
+
+
+    <simple-method method-name="createQuoteLine" short-description="Create a new Invoice Item">
+        <set field="quoteId" from-field="parameters.quoteId"/>
+        <make-value value-field="newEntity" entity-name="QuoteLines"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.quoteItemSeqId">
+            <make-next-seq-id value-field="newEntity" seq-field-name="quoteItemSeqId"/> <!-- this finds the next sub-sequence ID -->
+            <field-to-result field="newEntity.quoteItemSeqId" result-name="quoteItemSeqId"/>
+        </if-empty>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+
 </simple-methods>

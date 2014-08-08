@@ -13,6 +13,7 @@
     <!-- ======================== Data Model ===================== -->
     <!-- The modules in this file are as follows:                  -->
     <!--  - org.ofbiz.purchases.quote -->
+    <!--  - org.ofbiz.purchases.quotelines -->
     <!--  - org.ofbiz.purchases.purchaseorders -->
     <!--  - org.ofbiz.purchases.purchaseorders -->
     <!--  - org.ofbiz.purchases.shipments -->
@@ -50,6 +51,32 @@
     </relation>
   </entity>
 
+  <entity entity-name="QuoteLines"
+            package-name="org.ofbiz.purchases.quotelines"
+            never-cache="true"
+            title="Order Item Entity">
+      <field name="quoteId" type="id-ne"></field>
+      <field name="quoteItemSeqId" type="id-ne"></field>
+      <field name="productId" type="id"></field>
+      <field name="quantity" type="fixed-point" enable-audit-log="true"></field>
+      <field name="unitPrice" type="currency-precise" enable-audit-log="true"></field>
+      <field name="itemDescription" type="description"></field>
+      <field name="comments" type="comment"></field>
+      <field name="overrideGlAccountId" type="id"><description>Used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc.</description></field>
+      <prim-key field="quoteId"/>
+      <prim-key field="quoteItemSeqId"/>
+      <prim-key field="productId" />
+      <relation type="one" fk-name="QUOTE_ITM_HDR" rel-entity-name="PrchseQteHdr">
+        <key-map field-name="quoteId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITEM_OGLA" title="Override" rel-entity-name="GlAccount">
+        <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
+    </entity>
+
     <entity entity-name="PrchsQteStts"
             package-name="org.ofbiz.accounting.invoice"
             title="Quote Status Entity">
@@ -64,6 +91,59 @@
       </relation>
       <relation type="one" fk-name="QUOTE_STS_QUOTE" rel-entity-name="PrchseQteHdr">
         <key-map field-name="quoteId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="PurchaseOrderHeader"
+            package-name="org.ofbiz.purchases.order"
+            never-cache="true"
+            title="Order Header Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderName" type="name"></field>
+      <field name="orderDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
+      <field name="createdBy" type="id-vlong"></field>
+      <field name="currencyUom" type="id"></field>
+      <field name="billingAccountId" type="id"></field>
+      <field name="grandTotal" type="currency-amount"></field>
+      <prim-key field="orderId"/>
+      <relation type="one" fk-name="ORDER_HDR_BACCT" rel-entity-name="BillingAccount">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdBy" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_CUOM" rel-entity-name="Uom">
+        <key-map field-name="currencyUom" rel-field-name="uomId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="OrderLines"
+            package-name="org.ofbiz.purchases.orderlines"
+            never-cache="true"
+            title="Order Item Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="productId" type="id"></field>
+      <field name="quantity" type="fixed-point" enable-audit-log="true"></field>
+      <field name="unitPrice" type="currency-precise" enable-audit-log="true"></field>
+      <field name="itemDescription" type="description"></field>
+      <field name="comments" type="comment"></field>
+      <field name="overrideGlAccountId" type="id"><description>Used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc.</description></field>
+      <prim-key field="orderId"/>
+      <prim-key field="orderItemSeqId"/>
+      <prim-key field="productId" />
+      <relation type="one" fk-name="QUOTE_ITM_HDR" rel-entity-name="PrchseQteHdr">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITEM_OGLA" title="Override" rel-entity-name="GlAccount">
+        <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
       </relation>
     </entity>
 

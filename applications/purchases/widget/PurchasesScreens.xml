@@ -64,6 +64,7 @@
         <section>
             <actions>
                 <set field="headerItem" value="quotes" />
+                <set field="tabButtonItem" value="editQuote"/>
                 <set field="titleProperty" value="Edit Quotes" />
                 <set field="quoteId" from-field="parameters.quoteId" />
                 <entity-one entity-name="PrchseQteHdr" value-field="quote" />
@@ -73,6 +74,34 @@
                     <decorator-section name="body">
                         <screenlet title="Edit Quote">
                             <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml" />
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="editPurchaseQuoteItems">
+        <section>
+            <actions>
+                <set field="headerItem" value="quotes" />
+                <set field="tabButtonItem" value="editQuoteLines"/>
+                <set field="titleProperty" value="Edit Quotes Lines" />
+                <set field="quoteId" from-field="parameters.quoteId" />
+            </actions>
+            <widgets>
+                <decorator-screen name="QuotesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Edit Quote">
+                            <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml" />
+                        </screenlet>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <screenlet title="Quote Lines ">
+                            <include-form name="ListQuoteItems" location="component://purchases/widget/PurchasesForms.xml"/>
+                        </screenlet>
+                        <screenlet title="Add Quote Line">
+                            <include-form name="AddQuoteItem" location="component://purchases/widget/PurchasesForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -105,6 +134,121 @@
                                 <include-form name="ListPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+     <screen name="FindInvoices">
+        <section>
+            <actions>
+                <set field="headerItem" value="PurchaseOrders"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="titleProperty" value="PageTitleFindOrders"/>
+                <set field="purchaseOrderCtx" from-field="parameters" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPurchaseOrderDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <include-menu name="OrderSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                        <container style="clear"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListPurchaseOrders"  location="component://purchases/widget/PurchasesForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditInvoice">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditInvoice"/>
+                <set field="tabButtonItem" value="editInvoice"/>
+                <set field="invoiceId" from-field="parameters.invoiceId"/>
+                <entity-one entity-name="Invoice" value-field="invoice"/>
+                <entity-one entity-name="InvoiceType" value-field="invoiceType">
+                    <field-map field-name="invoiceTypeId" from-field="invoice.invoiceTypeId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleEditInvoice}">
+                                    <include-form name="EditInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.PageTitleEditInvoice}">
+                                    <include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditInvoiceItems">
+        <section>
+            <actions>
+                <property-map resource="AccountingEntityLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewIndex" from-field="parameters.viewIndex"/>
+                <set field="viewSize" from-field="parameters.viewSize"/>
+                <set field="titleProperty" value="PageTitleListInvoices"/>
+                <set field="tabButtonItem" value="listInvoiceItems"/>
+                <set field="invoiceId" from-field="parameters.invoiceId"/>
+                <set field="invoiceItemSeqd" from-field="parameters.invoiceItemSeqId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+                <entity-one entity-name="Invoice" value-field="invoice"/>
+                <entity-one entity-name="InvoiceItem" value-field="invoiceItem"/>
+                <entity-and entity-name="InvoiceItem" list="invoiceItems">
+                    <field-map field-name="invoiceId" from-field="parameters.invoiceId"/>
+                    <order-by field-name="invoiceItemSeqId"/>
+                </entity-and>
+                <entity-condition entity-name="InvoiceItemType" list="PayrolGroup">
+                    <condition-expr field-name="parentTypeId" value="PAYROL"/>
+                </entity-condition>
+                <entity-condition entity-name="InvoiceItemType" list="PayrolList"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetAccountOrganizationAndClass.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.AccountingInvoiceItems}">
+                            <include-form name="EditInvoiceItems" location="component://accounting/widget/InvoiceForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.AccountingInvoiceItemAdd}">
+                            <section>
+                                <condition>
+                                    <not><if-compare field="invoice.invoiceTypeId" operator="equals" value="PAYROL_INVOICE"/></not>
+                                </condition>
+                                <widgets>
+                                    <include-form name="EditInvoiceItem" location="component://accounting/widget/InvoiceForms.xml"/>
+                                </widgets>
+                                <fail-widgets>
+                                    <platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/InvoiceItemsPayrol.ftl"/></html></platform-specific>
+                                </fail-widgets>
+                            </section>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
