@@ -23,11 +23,12 @@
         <section>
             <actions>
                  <set field="headerItem" value="quotes"/><!-- this highlights the selected menu-item with name "main" -->
+                 <set field="tabButtonItem" value="find"/>
                 <set field="titleProperty" value="PageTitleFindOrder"/>
                 <set field="purchaseQuoteCtx" from-field="parameters" />
             </actions>
             <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="QuotesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -68,9 +69,8 @@
                 <entity-one entity-name="PrchseQteHdr" value-field="quote" />
             </actions>
             <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="QuotesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="QuoteSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                         <screenlet title="Edit Quote">
                             <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml" />
                         </screenlet>
