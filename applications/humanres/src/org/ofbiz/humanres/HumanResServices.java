@@ -53,8 +53,6 @@ public class HumanResServices {
 		log.info("LLLLLLLLL FROM : "+fromDate);
 		log.info("LLLLLLLLL TO : "+thruDate);
 		
-		
-		
 		LocalDateTime stfromDate = new LocalDateTime(fromDate.getTime());
 		LocalDateTime stthruDate = new LocalDateTime(thruDate.getTime());
 
@@ -104,19 +102,68 @@ public class HumanResServices {
 
 	}
 	
-	public static String  getLeaveEnd(Date fromDate, int leaveDuration) {
+	public static String  getLeaveEnd(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Date fromDate = null;
+		try {
+			fromDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fromDate")));
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		
+		int leaveDuration = new Integer(request.getParameter("leaveDuration")).intValue();
 
-		LocalDateTime stfromDate = new LocalDateTime(fromDate.getTime());
-		Days days = Days.days(leaveDuration);
+		LocalDateTime dateFromDate = new LocalDateTime(fromDate.getTime());
+		//Days days = Days.days(leaveDuration);
 		
 		//int stleaveDuration = leaveDuration;
-		LocalDateTime thruDate;
-		//return thruDate = stfromDate.plusDays(days);
-		//DateTime thruDate = new DateTime().plusDays(stleaveDuration);
+		LocalDateTime dateThruDate = dateFromDate.plusDays(leaveDuration);
 		
+		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		
-		//return thruDate;
-		return "";
+		String i18ThruDate = sdfDisplayDate.format(dateThruDate.toDate());
+	    String thruDate = sdfDate.format(dateThruDate.toDate());
+		
+	    result.put("thruDate_i18n", i18ThruDate);
+	    result.put("thruDate", thruDate);
+	    
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
 
 	}
 

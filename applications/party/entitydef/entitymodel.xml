@@ -2787,11 +2787,15 @@ under the License.
             title="Role Type Entity">
       <field name="roleTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
+      <field name="supervisorId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="roleTypeId"/>
       <relation type="one" fk-name="ROLE_TYPE_PAR" title="Parent" rel-entity-name="RoleType">
         <key-map field-name="parentTypeId" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ROLE_TYPE_SUP" title="Supervisor" rel-entity-name="RoleType">
+        <key-map field-name="supervisorId" rel-field-name="roleTypeId"/>
       </relation>
     </entity>
     <view-entity entity-name="RoleTypeIn3Levels"
