@@ -5,8 +5,11 @@
    jQuery('input[name="fromDate"]').change(function(){
 		 
          var fromDate = this.value;
-         var thruDate =  input[name="thruDate"]').val();
+         
+         var thruDate =  jQuery('input[name="thruDate"]').val();
          var reqUrl = '/humanres/control/emplleaveduration';
+         alert('Changed from Date');
+         alert(fromDate);
           if ((fromDate.length > 0) && (thruDate.length > 0)){
          	calculateDuration(reqUrl, fromDate, thruDate);
          }
@@ -16,15 +19,19 @@
         
    jQuery('input[name="thruDate"]').change(function(){
 		 
-         var fromDate = this.value;
-         var thruDate =  input[name="thruDate"]').val();
+         var thruDate = this.value;
+         var fromDate =  jQuery('input[name="fromDate"]').val();
          var reqUrl = '/humanres/control/emplleaveduration';
+           alert('Changed thru Date');
+           alert(thruDate);
           if ((fromDate.length > 0) && (thruDate.length > 0)){
          	calculateDuration(reqUrl, fromDate, thruDate);
          }
          
          
         });
+		
+		 });
      
      
 
