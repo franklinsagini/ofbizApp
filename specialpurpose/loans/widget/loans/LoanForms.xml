@@ -435,6 +435,7 @@ under the License.
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
         <field name="applicationStatus" title="Status"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
         <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field>
         <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         
     </form>
@@ -452,6 +453,8 @@ under the License.
         </field -->
          <field name="createdBy"><display also-hidden="false"></display> </field>
         <field name="applicationStatus"><display also-hidden="false"></display>  </field>
+        <field name="disbursementDate" title="Date Disbursed"> <display/> </field>
+        <field name="repaymentStartDate" title="Repayment Start Date"> <display /> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteDisburseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanStatusLogId"/>
@@ -472,10 +475,11 @@ under the License.
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
          <field name="paymentNo" title="No"><display also-hidden="false"></display> </field>
-        <field name="paymentAmount" title="Payment Amount"><display also-hidden="false"></display>  </field>
-        <field name="principalAmount" title="Principal Amount"><display also-hidden="false"></display>  </field>
-        <field name="interestAmount" title="Interest Amount"><display also-hidden="false"></display>  </field>
-        <field name="balanceAmount" title="Balance Amount"><display also-hidden="false"></display>  </field>
+         <field name="expectedPaymentDate" title="Expected Date"> <display/> </field>
+        <field name="paymentAmount" title="Payment Amount"><display type="currency" currency="KES" also-hidden="false"></display>  </field>
+        <field name="principalAmount" title="Principal Amount"><display  type="currency" currency="KES" also-hidden="false"></display>  </field>
+        <field name="interestAmount" title="Interest Amount"><display type="currency" currency="KES" also-hidden="false"></display>  </field>
+        <field name="balanceAmount" title="Balance Amount"><display type="currency" currency="KES" also-hidden="false"></display>  </field>
         <!--  field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteDisburseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanStatusLogId"/>
