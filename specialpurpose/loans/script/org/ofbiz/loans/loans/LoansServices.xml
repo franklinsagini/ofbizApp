@@ -472,6 +472,8 @@ under the License.
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <now field="currentDate"/>
+        <set field="newEntity.disbursementDate" from-field="currentDate"/>
         <create-value value-field="newEntity"/>
         
         <set field="loanApplicationId" from-field="newEntity.loanApplicationId"/>
@@ -479,6 +481,10 @@ under the License.
         	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
         </entity-one>
         <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
+        <set from-field="newEntity.disbursementDate" field="loanApplication.disbursementDate"/>
+        <set from-field="newEntity.repaymentStartDate" field="loanApplication.repaymentStartDate"/>
+        <set value="Y" field="loanApplication.isDisbursed"/>
+        
         <store-value value-field="loanApplication"/>
     </simple-method>
     
