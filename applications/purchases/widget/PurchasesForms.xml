@@ -6,7 +6,7 @@
         <auto-fields-entity entity-name="PrchseQteHdr" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
-        <submit button-type="button"/>
+            <submit button-type="button"/>
         </field>
     </form>
 
@@ -145,26 +145,27 @@
     </form>
 
 
-     <form name="FindPurchaseOrders" type="single" target="findPurchaseOrders"
+     <form name="FindPurchaseOrders" type="single" target="FindPurchaseOrders"
         title="Find and list Purchase Orders"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="orderId"><text-find ignore-case="true"/></field>
         <field name="orderName"><text-find ignore-case="true"/></field>
-       <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
+        <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
         <field name="orderDate"><date-find type="date"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListPurchaseOrders" type="list" separate-columns="true"
         title="Purchase Orders List" list-name="listIt" target=""
-        default-entity-name="PurchaseOrderHeader" paginate-target="findPurchaseOrders"
+        default-entity-name="PurchaseOrderHeader" paginate-target="FindPurchaseOrders"
         odd-row-style="alternate-row" header-row-style="header-row-2"
         default-table-style="basic-table hover-bar">
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="-orderDate"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="inputFields" from-field="purchaseOrderCtx"/>
+                 <field-map field-name="entityName" value="PrchseQteHdr" />
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
@@ -179,66 +180,44 @@
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
-        <field name="invoiceTypeId" sort-field="true">
-            <display-entity entity-name="InvoiceType"/>
-        </field>
-        <field name="invoiceDate" sort-field="true">
+        <field name="orderDate" sort-field="true">
             <display/>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true"><display-entity entity-name="StatusItem"/></field>
-        <field name="description" sort-field="true"><display/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" sort-field="true">
-            <hyperlink target="/partymgr/control/PartyFinancialHistory" target-type="inter-app" description="${partyNameResultFrom.fullName} [${partyIdFrom}]">
-                <parameter param-name="partyId" from-field="partyIdFrom"/>
-            </hyperlink>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true">
+            <display-entity entity-name="StatusItem"/>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}" parameter-name="partyId">
-            <hyperlink target="/partymgr/control/PartyFinancialHistory" target-type="inter-app" description="${partyNameResultTo.fullName} [${partyId}]">
-                <parameter param-name="partyId"/>
-            </hyperlink>
+        <field name="grandTotal" widget-area-style="align-text">
+            <display type="currency" currency="${currencyUomId}"/>
         </field>
-        <field name="total" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountToApply" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
 
-    <form name="invoiceHeader" type="single" title="Invoice header information" default-map-name="invoice"
-        header-row-style="header-row" default-table-style="basic-table">
+    <form name="EditPurchaseOrder" type="single" title="Purchase Order header information"
+        default-map-name="PurchaseOrderHeader" header-row-style="header-row"
+        default-table-style="basic-table">
         <actions>
-            <set field="total" value="${bsh:return(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice));}"/>
-            <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
-                <field-map field-name="partyId" from-field="invoice.partyIdFrom"/>
-                <field-map field-name="compareDate" from-field="invoice.invoiceDate"/>
-                <field-map field-name="lastNameFirst" value="Y"/>
-            </service>
-            <service service-name="getPartyNameForDate" result-map="partyNameResultTo">
-                <field-map field-name="partyId" from-field="invoice.partyId"/>
-                <field-map field-name="compareDate" from-field="invoice.invoiceDate"/>
-                <field-map field-name="lastNameFirst" value="Y"/>
-            </service>
         </actions>
-        <field name="invoiceId"><hidden/></field>
-        <field position="1" name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"><display-entity entity-name="StatusItem"/></field>
-        <field position="1" name="description"><display/></field>
-        <field position="2" name="invoiceMessage"><display/></field>
-        <field position="1" name="partyIdFrom">
-            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultFrom.fullName} [${invoice.partyIdFrom}]">
-                <parameter param-name="partyId" from-field="invoice.partyIdFrom"/>
-            </hyperlink>
+        <field name="orderId"><hidden/></field>
+        <field name="orderName">
+            <display/>
         </field>
-        <field position="2" name="partyIdTo" entry-name="partyId">
-            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${invoice.partyId}]">
-                <parameter param-name="partyId" from-field="invoice.partyId"/>
-            </hyperlink>
+        <field name="invoiceMessage">
+            <display/>
         </field>
-        <field position="1" name="roleTypeId"><display/></field>
-        <field position="2" name="billingAccountId"><display/></field>
-        <field position="1" name="invoiceDate"><display description="${bsh:if(invoice.get(&quot;invoiceDate&quot;)!=null)return(invoice.getString(&quot;invoiceDate&quot;).substring(0,10));}"/></field>
-        <field position="2" name="dueDate"><display description="${bsh:if(invoice.get(&quot;dueDate&quot;)!=null)return(invoice.getString(&quot;dueDate&quot;).substring(0,10));}"/></field>
-        <field position="1" name="total"><display description="${total}" type="currency" currency="${invoice.currencyUomId}"/></field>
-        <field position="2" name="paidDate"><display description="${bsh:if(invoice.get(&quot;paidDate&quot;)!=null)return(invoice.getString(&quot;paidDate&quot;).substring(0,10));}"/></field>
-        <field position="1" name="referenceNumber" title="${uiLabelMap.FormFieldTitle_referenceNum}"><display/></field>
-        <field name="currencyUomId"><hidden/></field>
+        <field position="1" name="grandTotal">
+            <display/>
+        </field>
+        <field position="2" name="billingAccountId">
+            <display/>
+        </field>
+        <field position="1" name="orderDate">
+            <display/>
+        </field>
+        <field name="invoiceDate">
+            <date-time/>
+        </field>
+        <field name="currencyUomId">
+            <hidden/>
+        </field>
     </form>
 
 <form name="invoiceItems" list-name="invItemAndOrdItems" target="" title="" type="list" separate-columns="true" paginate-target="invoiceOverview"
@@ -248,7 +227,7 @@
             <set field="total" value="${quantity * amount ?: 0}" type="BigDecimal"/>
         </row-actions>
         <auto-fields-entity entity-name="InvoiceItem" default-field-type="display"/>
-        <field name="invoiceId"><hidden/></field>
+        <field name="orderId"><hidden/></field>
         <field name="invoiceItemSeqId"><display/></field>
         <field name="invoiceItemTypeId"><display-entity entity-name="InvoiceItemType"/></field>
         <field name="orderId" widget-style="linktext">

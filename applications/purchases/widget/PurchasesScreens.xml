@@ -109,43 +109,14 @@
         </section>
     </screen>
 
+    <!-- Orders Screen -->
     <screen name="findPurchaseOrders">
         <section>
             <actions>
-                <set field="headerItem" value="PurchaseOrders"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="headerItem" value="purchaseOrders"/><!-- this highlights the selected menu-item with name "main" -->
                 <set field="titleProperty" value="PageTitleFindOrders"/>
                 <set field="purchaseOrderCtx" from-field="parameters" />
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="menu-bar">
-                                <container style="button-bar">
-                                    <link  text="${uiLabelMap.PurchaseOrderCreate}" target="EditPurchaseOrders" style="buttontext">
-                                        <parameter param-name="DONE_PAGE" from-field="donePage"/>
-                                    </link>
-                                </container>
-                            </decorator-section>
-                            <decorator-section name="search-options">
-                                <include-form name="FindPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml"/>
-                            </decorator-section>
-                            <decorator-section name="search-results">
-                                <include-form name="ListPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml"/>
-                            </decorator-section>
-                        </decorator-screen>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-     <screen name="FindInvoices">
-        <section>
-            <actions>
-                <set field="headerItem" value="PurchaseOrders"/><!-- this highlights the selected menu-item with name "main" -->
-                <set field="titleProperty" value="PageTitleFindOrders"/>
-                <set field="purchaseOrderCtx" from-field="parameters" />
+                <set field="tabButtonItem" value="find"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPurchaseOrderDecorator" location="${parameters.mainDecoratorLocation}">
@@ -172,32 +143,26 @@
         </section>
     </screen>
 
-    <screen name="EditInvoice">
+    <screen name="EditPurchaseOrders">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditInvoice"/>
-                <set field="tabButtonItem" value="editInvoice"/>
-                <set field="invoiceId" from-field="parameters.invoiceId"/>
-                <entity-one entity-name="Invoice" value-field="invoice"/>
-                <entity-one entity-name="InvoiceType" value-field="invoiceType">
-                    <field-map field-name="invoiceTypeId" from-field="invoice.invoiceTypeId"/>
-                </entity-one>
+                <set field="titleProperty" value="Edit Purchase Order"/>
+                <set field="headerItem" value="purchaseOrders"/>
+                <set field="tabButtonItem" value="editOrder"/>
+                <set field="orderId" from-field="parameters.orderId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
+                <decorator-screen name="CommonPurchaseOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <condition>
-                                <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
-                            </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleEditInvoice}">
-                                    <include-form name="EditInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="EditPurchaseOrder" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${uiLabelMap.PageTitleEditInvoice}">
-                                    <include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="invoiceHeader" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -319,25 +284,7 @@
         </section>
     </screen>
 
-    <screen name="EditPurchaseOrders">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleEditExample" />
-                <set field="tabButtonItem" value="EditExample" />
-                <set field="purchaseOrderId" from-field="parameters.purchaseOrderId" />
-                <entity-one entity-name="PurchaseOrderHeader" value-field="purchaseOrder" />
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="Edit Purchase Order">
-                            <include-form name="EditPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml" />
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+
 
     <screen name="EditFileStatus">
         <section>
