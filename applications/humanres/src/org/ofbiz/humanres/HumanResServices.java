@@ -19,6 +19,7 @@ import org.joda.time.Days;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 //import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.webapp.event.EventHandlerException;
 
@@ -53,14 +54,16 @@ public class HumanResServices {
 		log.info("LLLLLLLLL FROM : "+fromDate);
 		log.info("LLLLLLLLL TO : "+thruDate);
 		
-		LocalDateTime stfromDate = new LocalDateTime(fromDate.getTime());
-		LocalDateTime stthruDate = new LocalDateTime(thruDate.getTime());
+		//LocalDateTime stfromDate = new LocalDateTime(fromDate.getTime());
+		//LocalDateTime stthruDate = new LocalDateTime(thruDate.getTime());
 
-		PeriodType dayDay = PeriodType.days();
+		//PeriodType dayDay = PeriodType.days();
 
-		Period difference = new Period(stfromDate, stthruDate, dayDay);
+		//Period difference = new Period(stfromDate, stthruDate, dayDay);
 
-		int leaveDuration = difference.getDays();
+		//int leaveDuration = difference.getDays();
+		
+		int leaveDuration = AccHolderTransactionServices.calculateWorkingDaysBetweenDates(fromDate, thruDate);
 		
 		result.put("leaveDuration", leaveDuration);
 
@@ -119,13 +122,15 @@ public class HumanResServices {
 		//Days days = Days.days(leaveDuration);
 		
 		//int stleaveDuration = leaveDuration;
-		LocalDateTime dateThruDate = dateFromDate.plusDays(leaveDuration);
+		//LocalDateTime dateThruDate = dateFromDate.plusDays(leaveDuration);
+		
+		Date endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
 		
 		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		
-		String i18ThruDate = sdfDisplayDate.format(dateThruDate.toDate());
-	    String thruDate = sdfDate.format(dateThruDate.toDate());
+		String i18ThruDate = sdfDisplayDate.format(endDate);
+	    String thruDate = sdfDate.format(endDate);
 		
 	    result.put("thruDate_i18n", i18ThruDate);
 	    result.put("thruDate", thruDate);

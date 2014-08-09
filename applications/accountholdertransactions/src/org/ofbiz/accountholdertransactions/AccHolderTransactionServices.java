@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -507,6 +510,48 @@ public class AccHolderTransactionServices {
 		// bdOpeningBalance.add(bdTotalCashDeposit).add(bdTotalChequeDeposit)
 		// .subtract(bdTotalCashWithdrawal).subtract(bdTotalChequeWithdrawal);
 		return bdTotalSavings.add(bdTotalChequeDeposit).subtract(bdTotalChequeDepositCleared);
+	}
+	
+	/**
+	 * Calculate End Date given start date and number of days
+	 * **/
+	public static Date calculateEndWorkingDay(Date startDate, int noOfDays){
+		
+		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
+		//Calculate End Date
+		int count = 1;
+		while (count < noOfDays)
+		{
+			if (localDateEndDate.getDayOfWeek() == DateTimeConstants.FRIDAY){
+				localDateEndDate = localDateEndDate.plusDays(3);
+			} else{
+				localDateEndDate = localDateEndDate.plusDays(1);
+			}
+			count++;
+		}
+			
+			
+		return localDateEndDate.toDate();
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Aug 9, 2014 3:29:16 PM
+	 * Calculate Working Days between two dates - startDate and endDate
+	 * */
+	public static int calculateWorkingDaysBetweenDates(Date startDate, Date endDate){
+		int daysCount = 1;
+		LocalDate localDateStartDate = new LocalDate(startDate);
+		LocalDate localDateEndDate = new LocalDate(endDate);
+		
+		while (localDateStartDate.toDate().before(localDateEndDate.toDate())){
+			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY) && (localDateStartDate.getDayOfWeek() != DateTimeConstants.SUNDAY)){
+				daysCount++;
+			}
+			
+			localDateStartDate = localDateStartDate.plusDays(1);
+		}
+		
+		return daysCount;
 	}
 
 }

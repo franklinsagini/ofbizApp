@@ -2,35 +2,18 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-    <form
-        name="FindPurchaseQuotes"
-        default-map-name="purchaseQuote"
-        target="findPurchaseQuote"
-        type="single">
-
+    <form name="FindPurchaseQuotes" default-map-name="purchaseQuote" target="findPurchaseQuote" type="single">
         <auto-fields-entity entity-name="PrchseQteHdr" default-field-type="find"/>
-         <field name="noConditionFind"><hidden value="Y"/></field>
-
+        <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-
     </form>
 
-    <form
-        name="ListPurchaseQuotes"
-        type="list"
-        list-name="listIt"
-        paginate-target="FindPurchaseQuotes"
-        default-entity-name="PrchseQteHdr"
-        separate-columns="true"
-        odd-row-style="alternate-row"
-        header-row-style="header-row-2"
-        default-table-style="basic-table hover-bar">
-
+    <form name="ListPurchaseQuotes" type="list" list-name="listIt" paginate-target="FindPurchaseQuotes" default-entity-name="PrchseQteHdr"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <service service-name="performFind" result-map="result"
-                result-map-list="listIt">
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="purchaseQuoteCtx" />
                 <field-map field-name="entityName" value="PrchseQteHdr" />
                 <field-map field-name="orderBy" from-field="parameters.sortField" />
@@ -38,21 +21,24 @@
                 <field-map field-name="viewSize" from-field="viewSize" />
             </service>
         </actions>
-
+        <row-actions>
+            <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
+                <field-map field-name="partyId" from-field="supplierId"/>
+            </service>
+        </row-actions>
         <field name="quoteId" title="Quote Id" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${quoteId}" target="EditExample">
+            <hyperlink also-hidden="false" description="${quoteId}" target="editPurchaseQuote">
                 <parameter param-name="quoteId" />
             </hyperlink>
         </field>
-
-        <field name="partyId" title="Supplier" sort-field="true">
-            <hyperlink target="/partymgr/control/PartyFinancialHistory" target-type="inter-app" description="${partyNameResultFrom.fullName} [${partyIdFrom}]">
-                <parameter param-name="partyId" from-field="partyId"/>
-            </hyperlink>
-        </field>
-
         <field name="quoteDate" sort-field="true">
             <display type="date"/>
+        </field>
+        <field name="statusId" title="Status" sort-field="true">
+            <display/>
+        </field>
+        <field name="partyId" title="Prepared By" sort-field="true">
+            <display/>
         </field>
         <field name="supplierRefId" sort-field="true">
             <display type="date"/>
@@ -70,34 +56,38 @@
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="quote.statusId"/>
             </entity-one>
+<!--        <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
+                <field-map field-name="partyId" from-field="quote.partyId"/>
+            </service> -->
         </actions>
-
         <alt-target use-when="quote==null" target="createPurchaseQuote" />
         <auto-fields-service service-name="updatePurchaseQuote" map-name="quote"/>
-
-
         <field name="quoteId" use-when="quote==null @and quoteId==null" title="Quote Id">
             <ignored/>
         </field>
         <field name="quoteId" use-when="quote!=null" title="Quote id" tooltip="${uiLabelMap.CommonNotModifRecreat}">
             <display />
         </field>
-
-        <field name="quoteId" use-when="quote==null" title="Supplier">
-            <ignored/>
+        <field name="quoteDate" use-when="quote==null">
+            <hidden/>
         </field>
-        <field name="supplierId" title="Supplier">
-            <lookup target-form-name="LookupPartyName"/>
+        <field name="quoteDate" use-when="quote!=null" title="Creation Date">
+            <display type="date"/>
         </field>
-
+        <field name="statusId" use-when="quote==null">
+            <hidden/>
+        </field>
+        <field name="statusId" use-when="quote!=null" title="Status">
+            <display-entity entity-name="StatusItem"/>
+        </field>
         <field name="partyId">
             <hidden/>
         </field>
-        <field name="statusId">
-            <hidden/>
+        <field name="partyId" title="Prepared By" use-when="quote!=null">
+            <display-entity entity-name="Party"/>
         </field>
-        <field name="quoteDate">
-            <hidden/>
+        <field name="supplierId" title="Supplier">
+            <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="confirmDate">
             <hidden/>
@@ -113,7 +103,154 @@
     </form>
 
 
+    <!-- QUOTES ITEMS FORMS -->
+    <form name="ListQuoteItems" type="list" list-name="imprestItems" target="updateImprestItem">
+        <actions>
+            <entity-condition entity-name="QuoteLines">
+                <condition-expr field-name="quoteId" from-field="quoteId"/>
+                <order-by field-name="quoteItemSeqId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateImprestItem"/>
+        <field name="quoteId"><hidden/></field>
+        <field name="quoteItemSeqId" title="${uiLabelMap.CommonItem}"><display/></field>
+        <field name="description"><text size="30"/></field>
+        <field name="productId" title="Product"><display/></field>
+        <field name="quantity" title="Quantity"><display/></field>
+        <field name="unitPrice" title="Unit Price"><display/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="deleteImprestItem" description="${uiLabelMap.CommonDelete}" also-hidden="false" confirmation-message="${uiLabelMap.CommonConfirmDelete}" image-location="${iconsLocation}/delete.png">
+                <parameter param-name="quoteId"/>
+                <parameter param-name="quoteItemSeqId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
 
+    <form
+        name="AddQuoteItem"
+        type="single"
+        target="createQuoteLine"
+        title="">
+        <auto-fields-service service-name="createQuoteLine"/>
+        <field name="quoteId"><hidden/></field>
+        <field name="quoteItemSeqId"><ignored/><!-- this will be auto-sequenced --></field>
+        <field name="productId" title="${uiLabelMap.AccountingProductId}">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="overrideGlAccountId">
+            <hidden/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button" request-confirmation="true"/></field>
+    </form>
+
+
+     <form name="FindPurchaseOrders" type="single" target="FindPurchaseOrders"
+        title="Find and list Purchase Orders"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="orderId"><text-find ignore-case="true"/></field>
+        <field name="orderName"><text-find ignore-case="true"/></field>
+        <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
+        <field name="orderDate"><date-find type="date"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="ListPurchaseOrders" type="list" separate-columns="true"
+        title="Purchase Orders List" list-name="listIt" target=""
+        default-entity-name="PurchaseOrderHeader" paginate-target="FindPurchaseOrders"
+        odd-row-style="alternate-row" header-row-style="header-row-2"
+        default-table-style="basic-table hover-bar">
+        <actions>
+            <set field="parameters.sortField" from-field="parameters.sortField" default-value="-orderDate"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="purchaseOrderCtx"/>
+                 <field-map field-name="entityName" value="PrchseQteHdr" />
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>
+            <set field="currencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
+        </row-actions>
+
+        <field name="orderId" widget-style="buttontext" sort-field="true">
+            <hyperlink description="${orderId}" target="invoiceOverview">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field>
+        <field name="orderDate" sort-field="true">
+            <display/>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true">
+            <display-entity entity-name="StatusItem"/>
+        </field>
+        <field name="grandTotal" widget-area-style="align-text">
+            <display type="currency" currency="${currencyUomId}"/>
+        </field>
+    </form>
+
+    <form name="EditPurchaseOrder" type="single" title="Purchase Order header information"
+        default-map-name="PurchaseOrderHeader" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        </actions>
+        <field name="orderId"><hidden/></field>
+        <field name="orderName">
+            <display/>
+        </field>
+        <field name="invoiceMessage">
+            <display/>
+        </field>
+        <field position="1" name="grandTotal">
+            <display/>
+        </field>
+        <field position="2" name="billingAccountId">
+            <display/>
+        </field>
+        <field position="1" name="orderDate">
+            <display/>
+        </field>
+        <field name="invoiceDate">
+            <date-time/>
+        </field>
+        <field name="currencyUomId">
+            <hidden/>
+        </field>
+    </form>
+
+<form name="invoiceItems" list-name="invItemAndOrdItems" target="" title="" type="list" separate-columns="true" paginate-target="invoiceOverview"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <row-actions>
+            <set field="quantity" value="${groovy: quantity ?: 1}" type="BigDecimal"/>
+            <set field="total" value="${quantity * amount ?: 0}" type="BigDecimal"/>
+        </row-actions>
+        <auto-fields-entity entity-name="InvoiceItem" default-field-type="display"/>
+        <field name="orderId"><hidden/></field>
+        <field name="invoiceItemSeqId"><display/></field>
+        <field name="invoiceItemTypeId"><display-entity entity-name="InvoiceItemType"/></field>
+        <field name="orderId" widget-style="linktext">
+            <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field>
+        <field name="orderItemSeqId" widget-area-style="align-text"><display/></field>
+        <field name="inventoryItemId" widget-area-style="align-text"><display/></field>
+        <field name="quantity" widget-area-style="align-text"><display/></field>
+        <field name="amount" title="${uiLabelMap.AccountingUnitPrice}" widget-area-style="align-text"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="total"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="productId" widget-style="linktext">
+            <hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}">
+                <parameter param-name="productId"/>
+            </hyperlink>
+        </field>
+        <field name="overrideGlAccountId" widget-area-style="align-text">
+            <hyperlink target="GlAccountNavigate" description="${overrideGlAccountId}">
+                <parameter param-name="glAccountId" from-field="overrideGlAccountId"/>
+            </hyperlink>
+        </field>
+    </form>
 
 
 

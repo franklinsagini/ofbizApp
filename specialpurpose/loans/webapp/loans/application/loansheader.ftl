@@ -162,7 +162,7 @@
     	{
     	
     		isValid = false;
-    		message = ' You cannot exceed maximum Loan Amount allowed (3 times your savings)';
+    		message = ' You cannot exceed maximum Loan Amount allowed (3 times your savings) Minus Pre-existing loans';
     	}
     	
     	/** if (maxRepaymentPeriod < repaymentPeriod) **/

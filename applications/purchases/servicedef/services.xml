@@ -16,11 +16,49 @@
         <auto-attributes include="pk" mode="OUT" optional="false" />
         <auto-attributes include="nonpk" mode="IN" optional="true" />
     </service>
-    <service name="updatePurchaseQuote" default-entity-name="PrchseQteHdr" engine="simple"
-                location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="updatePurchaseQuote" auth="true">
-        <description>Update a Product</description>
+
+    <service
+        name="updatePurchaseQuote"
+        default-entity-name="PrchseQteHdr"
+        engine="simple"
+        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml"
+        invoke="updatePurchaseQuote"
+        auth="true">
+        <description>Update a Quote</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="false" />
+        <override name="confirmDate" optional="true"/>
     </service>
+
+<!--     <service name="createQuoteLine" default-entity-name="QuoteLines" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a QuoteLines</description>
+        <permission-service service-name="exampleGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="quoteId" type="String" mode="IN" optional="false"/>
+        <override name="quoteItemSeqId" mode="OUT"/>  make this OUT rather than IN, we will automatically generate the next sub-sequence ID
+        <override name="description" optional="false"/>
+    </service> -->
+    <service name="createQuoteLine" engine="simple" default-entity-name="QuoteLines"
+        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml"
+        invoke="createQuoteLine">
+        <description>Create a new Quote Item Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="quoteItemSeqId" mode="INOUT" optional="true"/><!-- will optionally be assigned by the system -->
+        <override name="description" allow-html="any"/>
+    </service>
+    <service name="updateQuoteLine" default-entity-name="QuoteLines" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a QuoteLines</description>
+        <permission-service service-name="exampleGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteQuoteLine" default-entity-name="QuoteLines" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a QuoteLines</description>
+        <permission-service service-name="exampleGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
 
 </services>

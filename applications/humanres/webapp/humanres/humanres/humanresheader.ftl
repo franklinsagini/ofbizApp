@@ -27,8 +27,7 @@
          var thruDate = this.value;
          var fromDate =  jQuery('input[name="fromDate"]').val();
          var reqUrl = '/humanres/control/emplleaveduration';
-           alert('Changed thru Date');
-           alert(thruDate);
+          
           if ((fromDate.length > 0) && (thruDate.length > 0)){
          	calculateDuration(reqUrl, fromDate, thruDate);
          }
