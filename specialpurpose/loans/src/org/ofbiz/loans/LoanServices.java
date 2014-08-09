@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -206,6 +207,7 @@ public class LoanServices {
 		// Get Total Savings for the Member (Get total for each of their savings
 		// account)
 		BigDecimal bdMaximumLoanAmt = BigDecimal.ZERO;
+		BigDecimal bdExistingLoans;
 		BigDecimal bdTotalSavings = totalSavings(memberId, delegator);
 		// Get get Loan Product
 		try {
@@ -231,6 +233,10 @@ public class LoanServices {
 			}
 
 			bdMaximumLoanAmt = bdTotalSavings.multiply(savingsMultiplier);
+			
+			//Get Existing Loans
+			bdExistingLoans = calculateExistingLoansTotal(memberId, delegator);
+			bdMaximumLoanAmt = bdMaximumLoanAmt.subtract(bdExistingLoans);
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
 		} else {
 			System.out.println("######## Product details not found #### ");
@@ -333,6 +339,31 @@ public class LoanServices {
 
 		return months;
 
+	}
+	/**
+	 * Calculate Existing Loans Total
+	 * **/
+	private static BigDecimal calculateExistingLoansTotal(String memberId, Delegator delegator){
+		BigDecimal existingLoansTotal = BigDecimal.ZERO;
+		
+		List<GenericValue> loanApplicationELI = null; // =
+
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					EntityCondition.makeCondition("partyId",
+							memberId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		//List<GenericValue> loansList = new LinkedList<GenericValue>();
+
+		for (GenericValue genericValue : loanApplicationELI) {
+			//toDeleteList.add(genericValue);
+			existingLoansTotal = existingLoansTotal.add(genericValue.getBigDecimal("loanAmt"));
+		}
+
+		return existingLoansTotal;
 	}
 
 }
