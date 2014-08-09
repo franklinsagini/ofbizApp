@@ -20,6 +20,28 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="editSupervisorLevel">
+        <section>
+            <actions>
+                <set field="headerItem" value="SupervisorLevel"/>
+                <set field="titleProperty" value="PageTitleListSupervisorLevels"/>
+                <set field="SupervisorLevelId" from-field="parameters.SupervisorLevelId"/>
+                 <entity-one entity-name="SupervisorLevel" value-field="supervisor"/>
+                 <set field="partyId" from-field="parameters.partyId"/>
+                 <entity-one entity-name="Member" value-field="memberContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="SupervisorLevelPanel" title="${uiLabelMap.HumanResAddSupervisorLevel}" collapsible="true">
+                            <include-form name="AddSupervisorLevels" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <include-form name="listSupervisorLevel" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditSkillTypes">
         <section>
             <actions>
@@ -233,7 +255,7 @@
                 <set field="headerItem" value="GlobalHRSettings"/>
                 <set field="tabButtonItem" value="EmplLeaveType"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
-                <entity-one entity-name="EmplLeaveType" value-field="emplLeaveType"/>
+                <entity-one entity-name="EmplLeaveType" value-field="editleavetype"/>
             </actions>
             <widgets>
                 <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">

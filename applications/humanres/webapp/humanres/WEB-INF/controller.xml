@@ -62,6 +62,26 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
+    <!-- ===== SupervisorLevel ==== -->
+    <request-map uri="editSupervisorLevel">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="createSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="updateSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="deleteSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
 
 
     <!-- ================HumanResource==================================== -->
@@ -439,7 +459,7 @@ under the License.
     </request-map>
     <request-map uri="updateEmplLeaveType">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateEmplLeaveType"/>
+        <event type="service" invoke="updateEmplLeaveType"/>
         <response name="success" type="view" value="EditEmplLeaveTypes"/>
         <response name="error" type="view" value="EditEmplLeaveTypes"/>
     </request-map>
@@ -1483,6 +1503,10 @@ under the License.
     <view-map name="FindPartySkills" type="screen" page="component://humanres/widget/PartySkillScreens.xml#FindPartySkills"/>
     <view-map name="NewPartySkill" type="screen" page="component://humanres/widget/PartySkillScreens.xml#NewPartySkill"/>
 
+  <view-map name="findSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#findSupervisorLevel"/>
+    <view-map name="newSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#newSupervisorLevel"/>
+    <view-map name="editSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#editSupervisorLevel"/>
+ 
     <view-map name="FindPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#FindPartyQuals"/>
     <view-map name="NewPartyQual" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQual"/>
     <view-map name="EditPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#EditPartyQuals"/>

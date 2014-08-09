@@ -23,6 +23,33 @@ under the License.
     <description>Human Resources Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
+
+    <service name="createSupervisorLevel" engine="simple" default-entity-name="SupervisorLevel"
+            location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createSupervisorLevel" auth="true">
+        <description>Create a Party Qualification entry</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="partyId" optional="false"/>
+        <override name="supervisorLevel" optional="false"/>
+        <!-- <override name="fromDate" optional="true"/> -->
+    </service>
+
+    <service name="updateSupervisorLevel" engine="simple" default-entity-name="SupervisorLevel"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateSupervisorLevel" auth="true">
+        <description>Update Qualification of Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteSupervisorLevel" engine="simple" default-entity-name="SupervisorLevel"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteSupervisorLevel" auth="true">
+        <description>Delete Qualification of Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
     <!-- Ability Group -->
     <service name="createPartyQual" engine="simple" default-entity-name="PartyQual"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyQual" auth="true">

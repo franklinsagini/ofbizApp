@@ -20,7 +20,33 @@
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+    <simple-method method-name="createSupervisorLevel" short-description="Supervisor Level">
+        <make-value entity-name="SupervisorLevel" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <!-- <if-empty field="newEntity.fromDate">
+            <now-timestamp field="nowTimeStamp"/>
+            <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
+        </if-empty> -->
+        <sequenced-id sequence-name="SupervisorLevelSequence" stagger-max="1" field="SupervisorLevelId" />
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="newEntity.supervisorLevelId" from-field="SupervisorLevelId"  />
+        <!-- <field-to-result field="newEntity.partyId" result-name="partyId"/> -->
+        <!-- <field-to-result field="newEntity.partyQualTypeId" result-name="partyQualTypeId"/> -->
+        <!-- <field-to-result field="newEntity.fromDate" result-name="fromDate"/> -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
 
+    <!-- Ability Group -->
+     <simple-method method-name="updateSupervisorLevel" short-description="Supervisor Level">
+        <entity-one entity-name="SupervisorLevel" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteSupervisorLevel" short-description="Delete Supervisor Level">
+        <entity-one entity-name="SupervisorLevel" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
     <!-- Party Qualification -->
     <simple-method method-name="createPartyQual" short-description="Create a Party Qualification">
         <make-value entity-name="PartyQual" value-field="newEntity"/>
