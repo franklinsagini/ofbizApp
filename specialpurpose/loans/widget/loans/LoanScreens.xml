@@ -617,6 +617,11 @@ under the License.
                <entity-one value-field="loanApplication" entity-name="LoanApplication">
                		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
                </entity-one>
+               
+               <set field="loanProductId" value="${loanApplication.loanProductId}"/>
+               <entity-one value-field="loanProduct" entity-name="LoanProduct">
+               		<field-map field-name="loanProductId"  value="${loanApplication.loanProductId}"/>
+               </entity-one>
                 
                 <entity-one entity-name="LoanStatusLog" value-field="loanStatusLogContext"/>
             </actions>
@@ -633,10 +638,12 @@ under the License.
                                 		<widgets>
                                 			<container>
                                 				<label style="h3">Member    : ${loanApplication.firstName} ${loanApplication.lastName}</label>
-                                				<label style="h3">Amount    : ${loanApplication.loanAmt}</label>
+                                				<label style="h3">Amount    : KES ${loanApplication.loanAmt}</label>
                                 				<label style="h3">Interest(P.M.)  : ${loanApplication.interestRatePM}</label>
                                 				<label style="h3">Repayment(Months) : ${loanApplication.repaymentPeriod}</label>
-                                				 
+                                				<label style="h3">Deduction Method : ${loanProduct.deductionType}</label>
+                                				<label style="h3">Per Month Repayment : KES ${loanApplication.monthlyRepayment}</label>
+                                				<label style="h3">Total Repayment : KES ${loanApplication.totalRepayment}</label>
                                             
                                             </container>
                                 		</widgets>
