@@ -276,7 +276,6 @@ public class AmortizationServices {
 		try {
 			delegator.removeAll(toDeleteList);
 		} catch (GenericEntityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
