@@ -241,6 +241,12 @@ under the License.
 		
 		<field name="minimumPeriodToEligibility" type="numeric"></field>
 		
+		<field name="deductionType" type="name"></field>
+		<!-- 
+			LINEAR
+			REDUCING_BALANCE
+		 -->
+		
 		<prim-key field="loanProductId" />
 		
 		<index name="LOAN_NAME" unique="true">
@@ -387,6 +393,8 @@ under the License.
 		 <field name="isDisbursed" type="indicator"></field>
 		 <field name="disbursementDate" type="date-time"></field>
 		 <field name="repaymentStartDate" type="date-time"></field>
+		 
+		 <field name="totalRepayment" type="fixed-point"></field>
 		
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
@@ -584,6 +592,18 @@ under the License.
       <relation type="one" fk-name="LoanStatusLog_branch" rel-entity-name="PartyGroup">
         <key-map field-name="branchId" rel-field-name="partyId"/>
       </relation>
+	</entity>
+	
+	<entity entity-name="SalaryProcessingDate" package-name="org.ofbiz.loans"
+		title="SalaryProcessingDate Entity">
+		<field name="salaryProcessingDateId" type="id-ne"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="branchId" type="name"></field>
+		
+		<field name="processingDay" type="numeric"></field>
+		<prim-key field="salaryProcessingDateId"/>
 	</entity>
 	
 	

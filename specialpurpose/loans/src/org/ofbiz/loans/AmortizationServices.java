@@ -32,12 +32,20 @@ import org.ofbiz.webapp.event.EventHandlerException;
 public class AmortizationServices {
 	private static int ONEHUNDRED = 100;
 	private static int ONE = 1;
+	private static String LINEAR = "LINEAR";
+	private static String REDUCING_BALANCE = "REDUCING_BALANCE";
+	
+	public static Logger log = Logger.getLogger(AmortizationServices.class);
+	
+
 
 	/****
 	 * For the Loan Application Specified calculate the Armotization Schedule
 	 **/
 	public static String generateschedule(HttpServletRequest request,
 			HttpServletResponse response) {
+		
+		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String loanApplicationId = (String) request
 				.getParameter("loanApplicationId");
@@ -64,9 +72,31 @@ public class AmortizationServices {
 		int iRepaymentPeriod = loanApplication.getLong("repaymentPeriod")
 				.intValue();
 		BigDecimal dbRepaymentPrincipalAmt, bdRepaymentInterestAmt;
-		BigDecimal paymentAmount = calculatePaymentAmount(dbLoanAmt,
-				bdInterestRatePM, iRepaymentPeriod);
+		BigDecimal paymentAmount;
 
+		/***
+		 * Get Loan Product or Loan Type
+		 * */
+		GenericValue loanProduct = null;
+		String loanProductId = loanApplication.getString("loanProductId");
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", loanProductId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Determine the Deduction Type
+		String deductionType = null;
+		deductionType = loanProduct.getString("deductionType");
+
+		if (deductionType.equals(REDUCING_BALANCE)) {
+			paymentAmount = calculateReducingBalancePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		} else {
+			paymentAmount = calculateFlatRatePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		}
 		// This value will be changing as we go along
 		BigDecimal bdPreviousBalance = dbLoanAmt;
 		String loanAmortizationId;
@@ -75,20 +105,32 @@ public class AmortizationServices {
 
 		List<GenericValue> listTobeStored = new LinkedList<GenericValue>();
 		
-		Timestamp repaymentDate = null;
-		//repaymentDate = loanApplication.getDate("repaymentStartDate");
-		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
 		
+
+		Timestamp repaymentDate = null;
+		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
+
 		while (iAmortizationCount < iRepaymentPeriod) {
 			iAmortizationCount++;
 			loanAmortizationId = delegator.getNextSeqId("LoanAmortization", 1);
 
+			if (deductionType.equals(REDUCING_BALANCE)){
 			bdRepaymentInterestAmt = bdPreviousBalance
 					.multiply(bdInterestRatePM);
+			} else{
+				bdRepaymentInterestAmt = dbLoanAmt
+						.multiply(bdInterestRatePM);
+			}
+			
 			dbRepaymentPrincipalAmt = paymentAmount
 					.subtract(bdRepaymentInterestAmt);
-			bdPreviousBalance = bdPreviousBalance
+			
+			
+				bdPreviousBalance = bdPreviousBalance
 					.subtract(dbRepaymentPrincipalAmt);
+			
+			
+			
 			loanAmortization = delegator.makeValue("LoanAmortization", UtilMisc
 					.toMap("loanAmortizationId", loanAmortizationId,
 							"paymentNo", new Long(iAmortizationCount)
@@ -101,20 +143,25 @@ public class AmortizationServices {
 									.setScale(6, RoundingMode.HALF_UP),
 							"balanceAmount", bdPreviousBalance.setScale(6,
 									RoundingMode.HALF_UP),
-									"expectedPaymentDate", repaymentDate		
-									
-							));
+							"expectedPaymentDate", repaymentDate
+
+					));
 			listTobeStored.add(loanAmortization);
-			
+
 			repaymentDate = calculateNextPaymentDate(repaymentDate);
 		}
+		
+		
 		// Save the list
 		try {
 			delegator.storeAll(listTobeStored);
 		} catch (GenericEntityException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		
+		
+		
+		updateLoanApplicationRepayments(delegator, loanApplicationId, paymentAmount, iRepaymentPeriod);
 		Writer out;
 		try {
 			out = response.getWriter();
@@ -125,7 +172,6 @@ public class AmortizationServices {
 				throw new EventHandlerException(
 						"Unable to get response writer", e);
 			} catch (EventHandlerException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -138,8 +184,8 @@ public class AmortizationServices {
 	 * @author Japheth Odonya @when Aug 7, 2014 12:21:55 AM
 	 * 
 	 * */
-	private static BigDecimal calculatePaymentAmount(BigDecimal loanAmt,
-			BigDecimal interestRatePM, int repaymentPeriod) {
+	private static BigDecimal calculateReducingBalancePaymentAmount(
+			BigDecimal loanAmt, BigDecimal interestRatePM, int repaymentPeriod) {
 
 		BigDecimal bdPaymentAmount;
 		// paymentAmount = (interestRatePM.multiply(loanAmt)).multiply((new
@@ -160,6 +206,21 @@ public class AmortizationServices {
 		bdPaymentAmount = bdInterestByPrincipal.multiply(
 				bdOnePlusInterestPowerPeriod).divide(
 				bdOnePlusInterestPowerPeriodMinusOne, RoundingMode.HALF_UP);
+
+		return bdPaymentAmount;
+	}
+
+	/**
+	 * @author Japheth Odonya @when Aug 10, 2014 1:04:44 PM Calculcate Repayment
+	 *         Amount for Flat Rate Loan Repayment Method
+	 * */
+	private static BigDecimal calculateFlatRatePaymentAmount(
+			BigDecimal loanAmt, BigDecimal interestRatePM, int repaymentPeriod) {
+		BigDecimal bdPaymentAmount;
+
+		bdPaymentAmount = ((interestRatePM.multiply(loanAmt)
+				.multiply(new BigDecimal(repaymentPeriod))).add(loanAmt))
+				.divide(new BigDecimal(repaymentPeriod),  RoundingMode.HALF_UP);
 
 		return bdPaymentAmount;
 	}
@@ -219,18 +280,49 @@ public class AmortizationServices {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/***
-	 *@author Japheth Odonya  @when Aug 8, 2014 6:33:38 PM 
-	 *Add one month
+	 * @author Japheth Odonya @when Aug 8, 2014 6:33:38 PM Add one month
 	 **/
-	private static Timestamp calculateNextPaymentDate(Timestamp repaymentDate){
-		LocalDateTime localRepaymentDate = new LocalDateTime(repaymentDate.getTime());
+	private static Timestamp calculateNextPaymentDate(Timestamp repaymentDate) {
+		LocalDateTime localRepaymentDate = new LocalDateTime(
+				repaymentDate.getTime());
 		localRepaymentDate = localRepaymentDate.plusMonths(1);
-		
-		//repaymentDate = localRepaymentDate.;
+
+		// repaymentDate = localRepaymentDate.;
 		repaymentDate = new Timestamp(localRepaymentDate.toDate().getTime());
 		return repaymentDate;
+	}
+	
+	/**
+	 * @author Japheth Odonya  @when Aug 10, 2014 2:39:57 PM
+	 * Update Loan Application with the Total Repayment Amount and the Per Month Amount 
+	 * */
+	public static void updateLoanApplicationRepayments(Delegator delegator, String loanApplicationId, BigDecimal paymentAmount, int iRepaymentPeriod){
+		//Update Loan 
+		GenericValue loanApplication = null;
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		loanApplication.set("monthlyRepayment", paymentAmount.setScale(
+				6, RoundingMode.HALF_UP));
+		
+		
+		//Calculate Total Repayment Amount
+		BigDecimal bdTotalRepayment = (paymentAmount.multiply(new BigDecimal(iRepaymentPeriod))).setScale(
+				6, RoundingMode.HALF_UP);
+		loanApplication.set("totalRepayment", bdTotalRepayment);
+		
+		try {
+			delegator.store(loanApplication);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
