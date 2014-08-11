@@ -462,7 +462,15 @@ under the License.
     </simple-method>
      <!-- DisburseLoan -->
      <simple-method method-name="createDisburseLoan" short-description="Create Loan Disbursement">
-        <make-value entity-name="LoanStatusLog" value-field="newEntity"/>
+        <call-simple-method method-name="saveDisbursementRecord" scope="inline"></call-simple-method>
+        <set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/>
+        <entity-one entity-name="LoanApplication" value-field="loanApplication">
+        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set field="repaymentStartDate" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/>
+    </simple-method>
+    <simple-method method-name="saveDisbursementRecord" use-transaction="true">
+    	<make-value entity-name="LoanStatusLog" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="LoanStatusLog" field="loanStatusLogId"/>
@@ -480,7 +488,8 @@ under the License.
         </entity-one>
         <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
         <set from-field="newEntity.disbursementDate" field="loanApplication.disbursementDate"/>
-        <set from-field="newEntity.repaymentStartDate" field="loanApplication.repaymentStartDate"/>
+        
+        <!--  set from-field="newEntity.repaymentStartDate" field="loanApplication.repaymentStartDate"/ -->
         <set value="Y" field="loanApplication.isDisbursed"/>
         
         <store-value value-field="loanApplication"/>

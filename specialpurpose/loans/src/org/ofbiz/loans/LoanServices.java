@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -30,9 +32,11 @@ import org.ofbiz.webapp.event.EventHandlerException;
 import com.google.gson.Gson;
 
 public class LoanServices {
-
+	public static Logger log = Logger.getLogger(LoanServices.class);
+	
 	public static String getLoanDetails(HttpServletRequest request,
 			HttpServletResponse response) {
+		
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String loanProductId = (String) request.getParameter("loanProductId");
@@ -364,6 +368,90 @@ public class LoanServices {
 		}
 
 		return existingLoansTotal;
+	}
+	
+	public static Timestamp calculateLoanRepaymentStartDate(GenericValue loanApplication) {
+
+		Map<String, Object> result = FastMap.newInstance();
+		String loanApplicationId = loanApplication.getString("loanApplicationId");// (String)context.get("loanApplicationId");
+		log.info("What we got is ############ " + loanApplicationId);
+
+		Delegator delegator;
+		// delegator = D
+		// ctx.getDelegator();
+
+		// delegator = DelegatorFactoryImpl.getDelegator("delegator");
+		delegator = loanApplication.getDelegator();
+		// GenericValue accountTransaction = null;
+		try {
+			loanApplication = delegator
+					.findOne("LoanApplication", UtilMisc.toMap(
+							"loanApplicationId", loanApplicationId),
+							false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		//Get Salary processing day
+		Timestamp repaymentStartDate = getProcessingDate(delegator);
+
+		
+		// loanApplication.set("monthlyRepayment", paymentAmount);
+		loanApplication.set("repaymentStartDate", repaymentStartDate);
+		log.info("##### End Date is ######## " + repaymentStartDate);
+		log.info("##### ID is  ######## "
+				+ loanApplicationId);
+		loanApplication.set("repaymentStartDate", repaymentStartDate);
+		
+		 try {
+		 delegator.createOrStore(loanApplication);
+		 } catch (GenericEntityException e) {
+		 e.printStackTrace();
+		 }
+		result.put("repaymentStartDate", repaymentStartDate);
+		return repaymentStartDate;
+	}
+	
+	private static Timestamp getProcessingDate(Delegator delegator){
+		List<GenericValue> salaryProcessingDateELI = null; // =
+		Long processingDay = 0l;
+		try {
+			salaryProcessingDateELI = delegator.findList("SalaryProcessingDate",
+					null, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+
+		for (GenericValue genericValue : salaryProcessingDateELI) {
+			processingDay = genericValue.getLong("processingDay");
+		}
+		
+		log.info("##### Salary Processing Day is ######## " + processingDay);
+		
+		Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		Timestamp repaymentDate = new Timestamp(Calendar.getInstance().getTimeInMillis()); ;
+		LocalDateTime localDateCurrent = new LocalDateTime(currentDate.getTime());
+		LocalDateTime localDateRepaymentDate = new LocalDateTime(repaymentDate.getTime());
+		
+		
+		if (localDateCurrent.getDayOfMonth() < processingDay.intValue()){
+			//Repayment Date is Beginning of Next Month
+			localDateRepaymentDate = localDateRepaymentDate.plusMonths(1);
+			//localDateRepaymentDate = localDateRepaymentDate.getD
+			//DateMidnight firstDay = new DateMidnight().withDayOfMonth(1);
+			DateTime startOfTheMonth = new DateTime().dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			DateTime startOfNextMonth = startOfTheMonth.plusMonths(1).dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate().toDate().getTime());
+		} else{
+			//from 15th and beyond then start paying two months later
+			DateTime startOfTheMonth = new DateTime().dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			DateTime startOfNextMonth = startOfTheMonth.plusMonths(2).dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate().toDate().getTime());
+		}
+		
+		return repaymentDate;
+
 	}
 
 }
