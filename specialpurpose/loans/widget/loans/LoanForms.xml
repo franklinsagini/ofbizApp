@@ -789,5 +789,102 @@ under the License.
             </hyperlink>
         </field -->
     </form>
+    
+    <!-- Salary Processing Date -->
+    <form name="NewSalaryProcessingDate" type="single" target="createSalaryProcessingDate"
+        focus-field-name="description" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
+        
+        <field name="salaryProcessingDateId"><hidden/></field>
+        
+        <field name="processingDay"  title="Processing Day" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="15" description="15th"/>
+                <option key="1" description="1st"/>
+                <option key="2" description="2nd"/>
+                <option key="3" description="3rd"/>
+                <option key="4" description="4th"/>
+                <option key="5" description="5th"/>
+                <option key="6" description="6th"/>
+                <option key="7" description="7th"/>
+                <option key="8" description="8th"/>
+                <option key="9" description="9th"/>
+                <option key="10" description="10th"/>
+                <option key="11" description="11th"/>
+                <option key="12" description="12th"/>
+                <option key="13" description="13th"/>
+                <option key="14" description="14th"/>
+                <option key="16" description="16th"/>
+                <option key="17" description="17th"/>
+                <option key="18" description="18th"/>
+                <option key="19" description="19th"/>
+                <option key="20" description="20st"/>
+                <option key="21" description="21st"/>
+                <option key="22" description="22nd"/>
+                <option key="23" description="23rd"/>
+                <option key="24" description="24th"/>
+                <option key="25" description="25th"/>
+                <option key="26" description="26th"/>
+                <option key="27" description="27th"/>
+                <option key="28" description="28th"/>
+                <option key="29" description="29th"/>
+                <option key="30" description="30st"/>
+                <option key="31" description="31st"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listSalaryProcessingDate" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSalaryProcessingDate" paginate-target="salaryProcessingDate"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SalaryProcessingDate">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateSalaryProcessingDate"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="processingDay">
+        	 <drop-down allow-empty="true">
+                <option key="15" description="15th"/>
+                <option key="1" description="1st"/>
+                <option key="2" description="2nd"/>
+                <option key="3" description="3rd"/>
+                <option key="4" description="4th"/>
+                <option key="5" description="5th"/>
+                <option key="6" description="6th"/>
+                <option key="7" description="7th"/>
+                <option key="8" description="8th"/>
+                <option key="9" description="9th"/>
+                <option key="10" description="10th"/>
+                <option key="11" description="11th"/>
+                <option key="12" description="12th"/>
+                <option key="13" description="13th"/>
+                <option key="14" description="14th"/>
+                <option key="16" description="16th"/>
+                <option key="17" description="17th"/>
+                <option key="18" description="18th"/>
+                <option key="19" description="19th"/>
+                <option key="20" description="20st"/>
+                <option key="21" description="21st"/>
+                <option key="22" description="22nd"/>
+                <option key="23" description="23rd"/>
+                <option key="24" description="24th"/>
+                <option key="25" description="25th"/>
+                <option key="26" description="26th"/>
+                <option key="27" description="27th"/>
+                <option key="28" description="28th"/>
+                <option key="29" description="29th"/>
+                <option key="30" description="30st"/>
+                <option key="31" description="31st"/>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteSalaryProcessingDate" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="salaryProcessingDateId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
    
 </forms>
