@@ -473,7 +473,7 @@ under the License.
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffPayrollContext">
         
         <actions>
-        	<entity-condition entity-name="Party" list="partyList"></entity-condition>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
         	<set field="partyId" from-field="partyId"/>
 
         	<entity-condition entity-name="PayrollPeriod" list="periodList"></entity-condition>
@@ -488,8 +488,13 @@ under the License.
        	 	<list-options list-name="periodList" key-name="payrollPeriodId" description="${name}"/>
        	 </drop-down>
         </field-->
-        <field name="staffNo" title="Staff No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
+        </field>
+        <!-- field name="staffNo" title="Staff No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
+        <!--field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
         <field name="closed"  title="Closed" >
             <drop-down allow-empty="false">
                 <option key="N" description="No"/>
@@ -507,18 +512,21 @@ under the License.
             </entity-condition>
            <entity-condition entity-name="PayrollPeriod" list="periodList">
             </entity-condition>
+            <entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStaffPayroll"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
-        <field name="payrollPeriodId" title="Payroll Period"> 
+        <field name="payrollPeriodId"><hidden/></field>
+        <field name="partyId">
         	<drop-down>
-        		<list-options key-name="payrollPeriodId" list-name="periodList" description="${name}"/>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
         	</drop-down>
-         </field>
-        <field name="staffNo"> <text></text> </field>
-        <field name="staffName"> <text></text> </field>
+        </field>
+        <field name="staffNo"> <hidden/> </field>
+        <field name="staffName"> <hidden/> </field>
        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteStaffPayroll" description="${uiLabelMap.CommonDelete}" also-hidden="false">
