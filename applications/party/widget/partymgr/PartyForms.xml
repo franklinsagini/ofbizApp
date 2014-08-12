@@ -23,21 +23,36 @@ under the License.
 
     <form name="EditPerson" type="single" target="updatePerson" default-map-name="personInfo"
         focus-field-name="salutation" header-row-style="header-row" default-table-style="basic-table">
-        <alt-target use-when="personInfo==null" target="createPerson"/>
+        <actions>
+        	<entity-condition entity-name="Religion" list="religionList"></entity-condition>
+        	<set field="religionId" from-field="religionId"/>
+
+        	<entity-condition entity-name="BloodGroup" list="bloodGroupList"></entity-condition>
+        	<set field="bloodGroupId" from-field="bloodGroupId"/>
+        	
+        	<entity-condition entity-name="Tribe" list="tribeList"></entity-condition>
+        	<set field="tribeId" from-field="tribeId"/>
+        	
+        	<entity-condition entity-name="County" list="countyList"></entity-condition>
+        	<set field="countyId" from-field="countyId"/>
+
+        </actions>
+        <alt-target use-when="personInfo==null" target="createPerson"/>        
         <auto-fields-service service-name="updatePerson"/>
+        
         <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="gender">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
                 <option key="M" description="${uiLabelMap.CommonMale}"/>
                 <option key="F" description="${uiLabelMap.CommonFemale}"/>
             </drop-down>
         </field>
         <field name="maritalStatus">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
                 <option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}"/>
                 <option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}"/>
                 <option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}"/>
@@ -45,6 +60,30 @@ under the License.
                 <option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}"/>
             </drop-down>
         </field>
+        <field name="religionId" title="Religion">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="religionList" key-name="religionId" description="${religion}"/>
+       	 </drop-down>
+        </field>
+        <field name="bloodGroupId" title="Blood Group">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="bloodGroupList" key-name="bloodGroupId" description="${bloodGroup}"/>
+       	 </drop-down>
+        </field>
+        <field name="tribeId" title="Tribe">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="tribeList" key-name="tribeId" description="${tribe}"/>
+       	 </drop-down>
+        </field>
+        <field name="countyId" title="County">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
+       	 </drop-down>
+        </field>
+        <field name="appointmentdate" title="Appointment Date"><date-time/></field>  
+        <field name="confirmationdate" title="Confirmation Date"><date-time/></field>  
+        <field name="retirementdate" title="Retirement Date"><date-time/></field>         
+      
         <field name="employmentStatusEnumId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
@@ -61,9 +100,11 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="existingCustomer">
-            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
-        </field>
+        <field name="existingCustomer"><hidden/></field>
+        <!-- field name="existingCustomer">
+            <drop-down allow-empty="false"><option key="N" description="${uiLabelMap.CommonN}"/>
+            <option key="Y" description="${uiLabelMap.CommonY}"/></drop-down>
+        </field-->
         <field name="preferredCurrencyUomId">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
@@ -89,6 +130,17 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="suffix"><hidden/></field>
+        <field name="nickname"><hidden/></field>
+        <field name="firstNameLocal"><hidden/></field>
+        <field name="middleNameLocal"><hidden/></field>
+        <field name="lastNameLocal"><hidden/></field>
+        <field name="otherLocal"><hidden/></field>
+        <field name="memberId"><hidden/></field>
+        <field name="deceasedDate"><hidden/></field>
+        <field name="mothersMaidenName"><hidden/></field>
+        <field name="cardId"><hidden/></field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -170,13 +222,12 @@ under the License.
         <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName}"/></field>
         <field name="comments" title="${uiLabelMap.PartyComments}"><display/></field>
         <field name="externalId"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
-        <field name="gender">
-            <drop-down allow-empty="true">
-                <option key="M" description="${uiLabelMap.CommonMale}"/>
-                <option key="F" description="${uiLabelMap.CommonFemale}"/>
-            </drop-down>
+        <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>      
+      
+       <field name="gender" entry-name="partyId">
+            <display-entity also-hidden="false" entity-name="Person" key-field-name="partyId" description="${gender}"/>
         </field>
+
         <field name="maritalStatus">
             <drop-down allow-empty="true">
                 <option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}"/>
