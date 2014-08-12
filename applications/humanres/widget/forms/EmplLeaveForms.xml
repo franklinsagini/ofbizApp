@@ -214,17 +214,18 @@
 		default-table-style="basic-table hover-bar">
 		<actions>
 			<set field="entityName" value="EmplLeave" />
-			<entity-one value-field="level" entity-name="SupervisorLevel">
-					<field-map field-name="partyId" from-field="${userLogin.partyId}" />
-					
-			</entity-one>
+			
+			
+			<!-- <entity-one value-field="level" entity-name="SupervisorLevel">
+					<field-map field-name="partyId" from-field="${userLogin.partyId}"/>
+			</entity-one> -->
 			
 			<entity-condition entity-name="EmplLeave">
 				<condition-list>
 					<condition-expr field-name="leaveStatus" operator="not-equals"
 						value="CREATED" />
 					<condition-expr field-name="leaveStage" operator="equals"
-						from-field="level.supervisorLevel" />
+						from-field="superVisorLevelValue" />
 				</condition-list>
 				<order-by field-name="partyId" />
 			</entity-condition>
