@@ -718,6 +718,37 @@ under the License.
 			</response>
 		<response name="error" type="view" value="disburseLoan" />
     </request-map>
+    
+    
+    <request-map uri="salaryProcessingDate">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<!-- Salary Processing Date CRUD -->
+	<request-map uri="createSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<request-map uri="updateSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<request-map uri="deleteSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
 	
     <!-- end of request mappings -->
 
@@ -808,6 +839,9 @@ under the License.
 		page="component://loans/widget/loans/LoanScreens.xml#LoanProduct" />
 		
 		 <view-map name="LookupMember" page="component://loans/widget/loans/LoanScreens.xml#LookupMember" type="screen"/>
+		 
+		 
+		 <view-map name="NewSalaryProcessingDate" page="component://loans/widget/loans/LoanScreens.xml#NewSalaryProcessingDate" type="screen"/>
     <!-- Supported Content Types -->
     <!--
         text/html

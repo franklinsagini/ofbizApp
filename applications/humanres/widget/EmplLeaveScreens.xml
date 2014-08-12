@@ -18,10 +18,9 @@
 				<set field="titleProperty" value="HumanResFindEmplLeave" />
 				<set field="headerItem" value="Leave" />
 				<set field="tabButtonItem" value="EmployeeLeave" />
-			<!-- 	<set field="partyId" from-field="parameters.partyId" />
-				<set field="leaveTypeId" from-field="parameters.leaveTypeId" />
-				<set field="fromDate" from-field="parameters.fromDate" />
-				<set field="emplLeaveCtx" from-field="parameters" /> -->
+				<!-- <set field="partyId" from-field="parameters.partyId" /> <set field="leaveTypeId" 
+					from-field="parameters.leaveTypeId" /> <set field="fromDate" from-field="parameters.fromDate" 
+					/> <set field="emplLeaveCtx" from-field="parameters" /> -->
 				<service service-name="humanResManagerPermission"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="ADMIN" />
@@ -85,15 +84,19 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<set field="approverPartyId" from-field="parameters.userLogin.partyId" />
 				<set field="approver" from-field="parameters.userLogin.partyId" />
+				<entity-one value-field="level" entity-name="SupervisorLevel">
+					<field-map field-name="partyId" from-field="parameters.userLogin.partyId" />
+				</entity-one>
 				<entity-one entity-name="Employment" value-field="department">
 					<field-map field-name="partyIdTo" from-field="parameters.userLogin.partyId" />
 				</entity-one>
-				<entity-one entity-name="Employment" value-field="departmentmembers">
+				<entity-and entity-name="Employment" list="departmentmembers">
 					<field-map field-name="partyIdFrom" from-field="department.partyFromId" />
-				</entity-one>
-				<entity-one entity-name="EmplLeave" value-field="departmentleaves">
-					<field-map field-name="partyId" from-field="department.partyFromId" />
-				</entity-one>
+				</entity-and>
+				<entity-and entity-name="EmplLeave" list="departmentleaves">
+					<field-map field-name="partyId" from-field="departmentmembers.partyIdTo" />
+				</entity-and>
+
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"

@@ -116,7 +116,9 @@ under the License.
     	var availableBalance = jQuery('input[name="availableAmount"]').val();
     	var transactionAmount = jQuery('input[name="transactionAmount"]').val();
      	
-    	if (transactionAmount < availableBalance){
+     	
+     	
+    	if (parseFloat(transactionAmount, 10) < parseFloat(availableBalance, 10)){
     		isAvailable = true;
     	} else{
     		alert('Not enough Balance, Transanction Declined');

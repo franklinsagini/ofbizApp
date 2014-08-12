@@ -30,21 +30,28 @@ under the License.
         <field name="payrollElementId"><hidden/></field>
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="elementType"  title="Element Type" >
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <option key="Payment" description="Payment"/>
                 <option key="Deduction" description="Deduction"/>
+                <option key="systemElement" description="System Element"/>
+            </drop-down>
+        </field>
+        <field name="iscalulated"  title="Calculated" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
             </drop-down>
         </field>
         <field name="hasBalance"  title="Has Balance" >
             <drop-down allow-empty="false">
+                <option key="N" description="No"/>                
                 <option key="Y" description="Yes"/>
-                <option key="N" description="No"/>
             </drop-down>
         </field>
         <field name="relief"  title="Is Relief" >
-            <drop-down allow-empty="false">
-                <option key="Y" description="Yes"/>
+            <drop-down allow-empty="false">                
                 <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
             </drop-down>
         </field>
         
@@ -61,17 +68,17 @@ under the License.
             </drop-down>
         </field>
         
-        <field name="systemcontrolled"  title="Control Type" >
+        <!--field name="systemcontrolled"  title="Control Type" >
             <drop-down allow-empty="false">
             	<option key="User" description="User Controlled "/>
                 <option key="System" description="System Controlled"/>
             </drop-down>
-        </field>
+        </field-->
         
          <field name="taxable"  title="Is Taxable" >
             <drop-down allow-empty="false">
-                <option key="Y" description="Yes"/>
                 <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
             </drop-down>
         </field>
         
@@ -120,8 +127,8 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
-        <field name="interestamount" title="Interest Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="interestrate" title="Interest Rate" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="interestamount" title="Interest Amount"><text size="30" maxlength="60"/></field>
+        <field name="interestrate" title="Interest Rate"><text size="30" maxlength="60"/></field>
         <field name="interestfrequency"  title="Interest Frequency" >
             <drop-down allow-empty="false">
                 <option key="pa" description="Per Annum"/>
@@ -427,8 +434,8 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
-        <field name="startDate"><date-time/></field> 
-        <field name="endDate"><date-time/></field>
+        <field name="startDate"><date-time type="date"/></field> 
+        <field name="endDate"><date-time type="date"/></field>
         
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
@@ -448,14 +455,20 @@ under the License.
         <!-- field name="bankDetailsId" title="Bank">
         	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
         </field -->
+        <field name="payrollPeriodId"><hidden/></field>       
         <field name="payrollYearId"> <hidden/> </field>
         <field name="sequence_no" title="Sequence No"> <display also-hidden="false"/> </field>
-        <field name="name"> <text></text> </field>
+        <field name="name"> <text ></text> </field>
         <field name="currentperiod" title="Current Period"> <text disabled="false"></text> </field>
-        <field name="startDate"><date-time /></field>
-        <field name="endDate"><date-time /></field>
+        <field name="startDate"><date-time type="date"/></field>
+        <field name="endDate"><date-time type="date"/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePayrollPeriod" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="payrollPeriodId"/>
+            </hyperlink>
+        </field>
+        <field name="addPeriodStaff" title="Add Staff" widget-style="buttontext">
+            <hyperlink target="staffpayroll" description="Add Staff" also-hidden="false">
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
@@ -467,7 +480,7 @@ under the License.
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffPayrollContext">
         
         <actions>
-        	<entity-condition entity-name="Party" list="partyList"></entity-condition>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
         	<set field="partyId" from-field="partyId"/>
 
         	<entity-condition entity-name="PayrollPeriod" list="periodList"></entity-condition>
@@ -477,13 +490,18 @@ under the License.
         
         <field name="staffPayrollId"><hidden/></field>
         <field name="partyId" parameter-name="partyId"><hidden/></field>
-        <field name="payrollPeriodId" title="Payroll Period">        	
+        <!--field name="payrollPeriodId" title="Payroll Period">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="periodList" key-name="payrollPeriodId" description="${name}"/>
        	 </drop-down>
+        </field-->
+        <field name="partyId">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        	</drop-down>
         </field>
-        <field name="staffNo" title="Staff No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <!-- field name="staffNo" title="Staff No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
+        <!--field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
         <field name="closed"  title="Closed" >
             <drop-down allow-empty="false">
                 <option key="N" description="No"/>
@@ -501,18 +519,21 @@ under the License.
             </entity-condition>
            <entity-condition entity-name="PayrollPeriod" list="periodList">
             </entity-condition>
+            <entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStaffPayroll"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
-        <field name="payrollPeriodId" title="Payroll Period"> 
+        <field name="payrollPeriodId"><hidden/></field>
+        <field name="partyId">
         	<drop-down>
-        		<list-options key-name="payrollPeriodId" list-name="periodList" description="${name}"/>
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
         	</drop-down>
-         </field>
-        <field name="staffNo"> <text></text> </field>
-        <field name="staffName"> <text></text> </field>
+        </field>
+        <field name="staffNo"> <hidden/> </field>
+        <field name="staffName"> <hidden/> </field>
        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteStaffPayroll" description="${uiLabelMap.CommonDelete}" also-hidden="false">

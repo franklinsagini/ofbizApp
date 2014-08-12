@@ -80,16 +80,25 @@ under the License.
     </form>
     
      <form name="ViewLoanApplicationDetails" type="single" default-map-name="lookupLoanApplication">
+     	<actions>
+     		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+     			<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+     		</entity-one>
+     		
+     		<entity-one entity-name="LoanProduct" value-field="loanProduct">
+     			<field-map field-name="loanProductId" value="${loanApplication.loanProductId}"/>
+     		</entity-one>
+     	</actions>
         <!--  field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field-->
         <field name="loanApplicationId"><hidden/></field>
         <field name="partyId" title="Member">
         	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
         </field>
-        <field name="saccoProductId" title="Loan Type"><display description="${lookupLoanType.name} - ${lookupLoanType.code}"/></field>
+        <field name="loanProductId" title="Loan Product"><display description="${loanProduct.name} - ${loanProduct.code}"/></field>
         <!-- field name="comments" title="${uiLabelMap.PartyComments}"><display/></field -->
-        <field name="loanamt" title="Amount"><display also-hidden="false"/></field>
-        <field name="percentInterestPerMonthAmt" title="Interest Rate"><display also-hidden="false"/></field>
-        <field name="selectedRepaymentPeriod" title="Repayment Period"><display also-hidden="false"/></field>
+        <field name="loanAmt" title="Amount"><display  type="currency" currency="KES" also-hidden="false"/></field>
+        <field name="interestRatePM" title="Interest Rate(P.M.)"><display also-hidden="false"/></field>
+        <field name="repaymentPeriod" title="Repayment Period(Months)"><display also-hidden="false"/></field>
         <field name="paymentMethodTypeId" title="Payment Method">
         	<display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${lookupPaymentMethodType.description}"/>
         </field>
@@ -433,10 +442,10 @@ under the License.
         
         <field name="loanStatusLogId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
-        <field name="applicationStatus" title="Status"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
-        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="applicationStatus" title="Status" required-field="true"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
         <field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field>
-        <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
     
@@ -639,6 +648,17 @@ under the License.
             </drop-down>
         </field>
         
+        <!-- 
+			LINEAR
+			REDUCING_BALANCE
+		 -->
+        <field name="deductionType"  title="Deduction Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="LINEAR" description="Linear/Flat Rate"/>
+                <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
+            </drop-down>
+        </field>
+        
         <field name="minimumPeriodToEligibility" title="Minimum Period To Eligibility (Months)" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
  		
         <field name="saveLoanProduct" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit  button-type="button" /></field>
@@ -687,13 +707,20 @@ under the License.
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
         <field name="loanProductId"><hidden/></field>
-        <field name="name"> <text></text> </field>
-        <field name="code"><text/></field>
-        <field name="maxRepaymentPeriod"><text/></field>
-        <field name="interestRatePM"><text/></field>
+        <field name="name"> <text size="20"></text> </field>
+        <field name="code"><text size="10"/></field>
+        <field name="maxRepaymentPeriod"><text size="10"/></field>
+        <field name="interestRatePM"><text size="10"/></field>
         
-         <field name="minimumAmt"><text/></field>
-        <field name="maximumAmt"><text/></field>
+         <field name="minimumAmt"><text size="10"/></field>
+        <field name="maximumAmt"><text size="10"/></field>
+        
+        <field name="deductionType"  title="Deduction Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="LINEAR" description="Linear/Flat Rate"/>
+                <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
+            </drop-down>
+        </field>
         
         <field name="Edit Loan">
         	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
@@ -704,7 +731,7 @@ under the License.
                 <parameter param-name="loanProductId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
     
     <!-- Lookup Member Forms -->
@@ -761,6 +788,103 @@ under the License.
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field -->
+    </form>
+    
+    <!-- Salary Processing Date -->
+    <form name="NewSalaryProcessingDate" type="single" target="createSalaryProcessingDate"
+        focus-field-name="description" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
+        
+        <field name="salaryProcessingDateId"><hidden/></field>
+        
+        <field name="processingDay"  title="Processing Day" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="15" description="15th"/>
+                <option key="1" description="1st"/>
+                <option key="2" description="2nd"/>
+                <option key="3" description="3rd"/>
+                <option key="4" description="4th"/>
+                <option key="5" description="5th"/>
+                <option key="6" description="6th"/>
+                <option key="7" description="7th"/>
+                <option key="8" description="8th"/>
+                <option key="9" description="9th"/>
+                <option key="10" description="10th"/>
+                <option key="11" description="11th"/>
+                <option key="12" description="12th"/>
+                <option key="13" description="13th"/>
+                <option key="14" description="14th"/>
+                <option key="16" description="16th"/>
+                <option key="17" description="17th"/>
+                <option key="18" description="18th"/>
+                <option key="19" description="19th"/>
+                <option key="20" description="20st"/>
+                <option key="21" description="21st"/>
+                <option key="22" description="22nd"/>
+                <option key="23" description="23rd"/>
+                <option key="24" description="24th"/>
+                <option key="25" description="25th"/>
+                <option key="26" description="26th"/>
+                <option key="27" description="27th"/>
+                <option key="28" description="28th"/>
+                <option key="29" description="29th"/>
+                <option key="30" description="30st"/>
+                <option key="31" description="31st"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listSalaryProcessingDate" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSalaryProcessingDate" paginate-target="salaryProcessingDate"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SalaryProcessingDate">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateSalaryProcessingDate"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="processingDay">
+        	 <drop-down allow-empty="true">
+                <option key="15" description="15th"/>
+                <option key="1" description="1st"/>
+                <option key="2" description="2nd"/>
+                <option key="3" description="3rd"/>
+                <option key="4" description="4th"/>
+                <option key="5" description="5th"/>
+                <option key="6" description="6th"/>
+                <option key="7" description="7th"/>
+                <option key="8" description="8th"/>
+                <option key="9" description="9th"/>
+                <option key="10" description="10th"/>
+                <option key="11" description="11th"/>
+                <option key="12" description="12th"/>
+                <option key="13" description="13th"/>
+                <option key="14" description="14th"/>
+                <option key="16" description="16th"/>
+                <option key="17" description="17th"/>
+                <option key="18" description="18th"/>
+                <option key="19" description="19th"/>
+                <option key="20" description="20st"/>
+                <option key="21" description="21st"/>
+                <option key="22" description="22nd"/>
+                <option key="23" description="23rd"/>
+                <option key="24" description="24th"/>
+                <option key="25" description="25th"/>
+                <option key="26" description="26th"/>
+                <option key="27" description="27th"/>
+                <option key="28" description="28th"/>
+                <option key="29" description="29th"/>
+                <option key="30" description="30st"/>
+                <option key="31" description="31st"/>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteSalaryProcessingDate" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="salaryProcessingDateId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
    
 </forms>

@@ -860,9 +860,11 @@
 
 	<simple-method method-name="updateEmplLeave"
 		short-description="Update Employee Leave">
-		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+		<entity-one entity-name="EmplLeave"  value-field="lookedUpValue" />
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="HumanResLeaveCreationSuccess" field="successMessage" />
 	</simple-method>
 
     <simple-method method-name="approveEmplLeaveStatus"
@@ -870,9 +872,19 @@
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
         <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
         <set field="lookedUpValue.approvedBy" from-field="userLogin.userLoginId" />
+        <if-compare operator="equals" value="01" field="lookedUpValue.leaveStage">
+         <set field="lookedUpValue.leaveStage" value="02" />
+        </if-compare>
+        <if-compare operator="equals" value="02" field="lookedUpValue.leaveStage">
+         <set field="lookedUpValue.leaveStage" value="03" />
+        </if-compare>
+        <if-compare operator="equals" value="03" field="lookedUpValue.leaveStage">
+         <set field="lookedUpValue.leaveStage" value="04" />
+        </if-compare>
         <set field="lookedUpValue.leaveStatus" value="Approved" />
         <store-value value-field="lookedUpValue" />
-
+        
+		<log message="==== Leave Approved for ${lookedUpValue.partyId} by ${userLogin.userLoginId}===" level="info"/>
         <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
         <set-pk-fields map="parameters" value-field="newEntity" />
         <set-nonpk-fields map="parameters" value-field="newEntity" />
@@ -883,6 +895,7 @@
         <set field="newEntity.approvedBy" from-field="userLogin.userLoginId" />
         <set field="newEntity.leaveLogStatus" value="Approved" />
         <create-value value-field="newEntity" />
+        <log message="===== Leave Approved log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
 
     </simple-method>
     <simple-method method-name="rejectEmplLeaveStatus"
@@ -899,14 +912,14 @@
         <sequenced-id sequence-name="leavestatuslogSequence" stagger-max="1" field="leaveStsLogId" />
         <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
-        <set field="newEntity.partyId" from="userLogin.userLoginId" />
+        <set field="newEntity.approvedBy" from="userLogin.userLoginId" />
         <set field="newEntity.leaveLogStatus" value="Rejected" />
         <create-value value-field="newEntity" />
 
     </simple-method>
 	<simple-method method-name="forwardEmplLeave"
 		short-description="Forward Employee Leave">
-		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" ></entity-one>
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<set field="lookedUpValue.forwardedBy" from-field="userLogin.userLoginId" />
 		<set field="lookedUpValue.leaveStatus" value="Forwarded" />
@@ -928,6 +941,8 @@
 		short-description="Delete Employee Leave">
 		<entity-one entity-name="EmplLeave" value-field="emplLeave" />
 		<remove-value value-field="emplLeave" />
+		<property-to-field resource="HumanResUiLabels"
+			property="HumanResLeaveCreationSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createEmplLeaveType"
@@ -941,6 +956,8 @@
 		<field-to-result field="newEntity.leaveTypeId"
 			result-name="leaveTypeId" />
 		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="updateEmplLeaveType"
@@ -948,12 +965,16 @@
 		<entity-one entity-name="EmplLeaveType" value-field="lookedUpValue" />
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="deleteEmplLeaveType"
 		short-description="Delete leaveType">
 		<entity-one entity-name="EmplLeaveType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 
