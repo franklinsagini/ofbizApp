@@ -40,6 +40,18 @@ under the License.
     </postprocessor>
     -->
 
+
+    <!--  Request Mappings for calling leave duration and end date java functions -->
+   <request-map uri="emplleaveduration">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveDuration" />
+        <response name="success" type="none">
+    </response>
+    </request-map>
+    <request-map uri="emplleaveend">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveEnd" />
+        <response name="success" type="none">
+    </response>
+    </request-map>
     <!-- Request Mappings -->
     <request-map uri="view">
         <security https="true" auth="false"/>
@@ -49,6 +61,26 @@ under the License.
     <request-map uri="main">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
+    </request-map>
+    <!-- ===== SupervisorLevel ==== -->
+    <request-map uri="editSupervisorLevel">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="createSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="updateSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="deleteSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
     </request-map>
 
 
@@ -77,6 +109,28 @@ under the License.
         <event type="service" invoke="deletePartyQual"/>
         <response name="success" type="view" value="FindPartyQuals"/>
     </request-map>
+
+     <request-map uri="partyQualType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="partyQualType"/>
+    </request-map>
+    
+    <request-map uri="createPartyQualType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyQualType"/>
+        <response name="success" type="view" value="partyQualType"/>
+    </request-map>
+    <request-map uri="updatePartyQualType">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updatePartyQualType"/>
+        <response name="success" type="view" value="partyQualType"/>
+    </request-map>
+    <request-map uri="deletePartyQualType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyQualType"/>
+        <response name="success" type="view" value="partyQualType"/>
+    </request-map>
+
     <request-map uri="FindPartyResumes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPartyResumes"/>
@@ -386,6 +440,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmplLeave"/>
     </request-map>
+    
     <request-map uri="deleteEmplLeave">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteEmplLeave"/>
@@ -404,7 +459,7 @@ under the License.
     </request-map>
     <request-map uri="updateEmplLeaveType">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateEmplLeaveType"/>
+        <event type="service" invoke="updateEmplLeaveType"/>
         <response name="success" type="view" value="EditEmplLeaveTypes"/>
         <response name="error" type="view" value="EditEmplLeaveTypes"/>
     </request-map>
@@ -414,6 +469,32 @@ under the License.
         <response name="success" type="view" value="EditEmplLeaveTypes"/>
         <response name="error" type="view" value="EditEmplLeaveTypes"/>
     </request-map>
+    
+    <!-- Staff Leave Balances-->
+    
+    <request-map uri="staffLeaveBalances">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffLeaveBalances"/>
+    </request-map>
+    <request-map uri="createStaffLeaveBalances">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createStaffLeaveBalances"/>
+        <response name="success" type="view" value="staffLeaveBalances"/>
+        <response name="error" type="view" value="staffLeaveBalances"/>
+    </request-map>
+    <request-map uri="updateStaffLeaveBalances">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateStaffLeaveBalances"/>
+        <response name="success" type="view" value="staffLeaveBalances"/>
+        <response name="error" type="view" value="staffLeaveBalances"/>
+    </request-map>
+    <request-map uri="deleteStaffLeaveBalances">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteStaffLeaveBalances"/>
+        <response name="success" type="view" value="staffLeaveBalances"/>
+        <response name="error" type="view" value="staffLeaveBalances"/>
+    </request-map>
+    
    <!-- ================Employee Position Group==================================== -->
     <request-map uri="FindEmplPositions">
         <security https="true" auth="true"/>
@@ -639,6 +720,28 @@ under the License.
         <event type="service" invoke="updateEmplLeave"/>
         <response name="success" type="view" value="EditEmployeeLeaves"/>
         <response name="error" type="view" value="EditEmployeeLeaves"/>
+    </request-map>
+    <request-map uri="forwardEmplLeave">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="forwardEmplLeave"/>
+        <response name="success" type="view" value="FindEmplLeaves"/>
+        <response name="error" type="view" value="FindEmplLeaves"/>
+    </request-map>
+    <request-map uri="approveEmplLeaveStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveEmplLeaveStatus"/>
+        <response name="success" type="view" value="FindLeaveApprovals"/>
+        <response name="error" type="view" value="FindLeaveApprovals"/>
+    </request-map>
+        <request-map uri="rejectEmplLeaveStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="rejectEmplLeaveStatus"/>
+        <response name="success" type="view" value="FindLeaveApprovals"/>
+        <response name="error" type="view" value="FindLeaveApprovals"/>
+    </request-map>
+    <request-map uri="viewEmplLeaveDetails">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewEmplLeaveDetails"/>
     </request-map>
 
     <!-- ===================Responsibility Request============== -->
@@ -1097,6 +1200,247 @@ under the License.
         <response name="error" type="view-last"/>
     </request-map>
     
+    <request-map uri="tribe">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="tribe"/>
+        <response name="error" type="view" value="tribe"
+        	save-home-view="true"/>
+    </request-map>
+    <request-map uri="createTribe">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTribe"/>
+        <response name="success" type="request-redirect-noparam" value="tribe"/>
+        <response name="error" type="view" value="tribe"/>
+    </request-map>
+    <request-map uri="updateTribe">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTribe"/>
+        <response name="success" type="request-redirect-noparam" value="tribe"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    <request-map uri="deleteTribe">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTribe"/>
+        <response name="success" type="view" value="tribe"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    
+    <request-map uri="county">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="county"/>
+        <response name="error" type="view" value="county"
+        	save-home-view="true"/>
+    </request-map>
+    <request-map uri="createCounty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCounty"/>
+        <response name="success" type="request-redirect-noparam" value="county"/>
+        <response name="error" type="view" value="county"/>
+    </request-map>
+    <request-map uri="updateCounty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCounty"/>
+        <response name="success" type="request-redirect-noparam" value="county"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    <request-map uri="deleteCounty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCounty"/>
+        <response name="success" type="view" value="county"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    
+    <request-map uri="bloodgroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="bloodgroup"/>
+        <response name="error" type="view" value="bloodgroup"
+        	save-home-view="true"/>
+    </request-map>    
+    <request-map uri="createBloodGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBloodGroup"/>
+        <response name="success" type="view" value="bloodgroup"/>
+        <response name="error" type="view" value="bloodgroup"/>
+    </request-map>
+    <request-map uri="updateBloodGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBloodGroup"/>
+        <response name="success" type="view" value="bloodgroup"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    <request-map uri="deleteBloodGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteBloodGroup"/>
+        <response name="success" type="view" value="bloodgroup"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    
+    <request-map uri="religion">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="religion"/>
+        <response name="error" type="view" value="religion"
+        	save-home-view="true"/>
+    </request-map>    
+    <request-map uri="createReligion">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createReligion"/>
+        <response name="success" type="request-redirect-noparam" value="religion"/>
+        <response name="error" type="view" value="religion"/>
+    </request-map>
+    <request-map uri="updateReligion">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateReligion"/>
+        <response name="success" type="request-redirect-noparam" value="religion"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    <request-map uri="deleteReligion">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteReligion"/>
+        <response name="success" type="view" value="religion"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    
+    <request-map uri="familyrelations">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="familyrelations"/>
+        <response name="error" type="view" value="familyrelations"
+        	save-home-view="true"/>
+    </request-map>    
+    <request-map uri="createFamilyRelations">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFamilyRelations"/>
+        <response name="success" type="request-redirect-noparam" value="familyrelations"/>
+        <response name="error" type="view" value="familyrelations"/>
+    </request-map>
+    <request-map uri="updateFamilyRelations">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateFamilyRelations"/>
+        <response name="success" type="request-redirect-noparam" value="familyrelations"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    <request-map uri="deleteFamilyRelations">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteFamilyRelations"/>
+        <response name="success" type="view" value="familyrelations"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    
+    <request-map uri="spouse">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="spouse"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Spouse Details -->
+	<request-map uri="createStaffSpouse">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStaffSpouse" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="spouse">
+			</response>
+		<response name="error" type="view" value="spouse" />
+	</request-map>
+	
+	<request-map uri="updateStaffSpouse">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStaffSpouse" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="spouse">
+			</response>
+		<response name="error" type="view" value="spouse" />
+	</request-map>
+	
+	<request-map uri="deleteStaffSpouse">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffSpouse" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="spouse">
+			</response>
+		<response name="error" type="view" value="spouse" />
+	</request-map>
+	
+	<request-map uri="dependant">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="dependant"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Dependant Details -->
+	<request-map uri="createStaffDependant">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStaffDependant" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="dependant">
+			</response>
+		<response name="error" type="view" value="dependant" />
+	</request-map>
+	
+	<request-map uri="updateStaffDependant">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStaffDependant" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="dependant">
+			</response>
+		<response name="error" type="view" value="dependant" />
+	</request-map>
+	
+	<request-map uri="deleteStaffDependant">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffDependant" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="dependant">
+			</response>
+		<response name="error" type="view" value="dependant" />
+	</request-map>
+	
+	<request-map uri="nextofkin">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="nextofkin"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Dependant Details -->
+	<request-map uri="createStaffNextOfKin">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStaffNextOfKin" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="nextofkin">
+			</response>
+		<response name="error" type="view" value="nextofkin" />
+	</request-map>
+	
+	<request-map uri="updateStaffNextOfKin">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStaffNextOfKin" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="nextofkin">
+			</response>
+		<response name="error" type="view" value="nextofkin" />
+	</request-map>
+	
+	<request-map uri="deleteStaffNextOfKin">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffNextOfKin" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="nextofkin">
+			</response>
+		<response name="error" type="view" value="nextofkin" />
+	</request-map>
+    
+    
+    
+    
+    
+    
     <!--==============PayRoll History Requests==================-->
     <request-map uri="PayrollHistory">
         <security https="true" auth="true"/>
@@ -1160,6 +1504,8 @@ under the License.
     <view-map name="EditEmployeeResumes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeResumes"/>
     <view-map name="EditEmployeePerformanceNotes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeePerformanceNotes"/>
     <view-map name="EditEmployeeLeaves" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeLeaves"/>
+    
+    <view-map name="viewEmplLeaveDetails" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#viewEmplLeaveDetails"/>
 
     <view-map name="FindEmplPositions" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#FindEmplPositions"/>
     <view-map name="EditEmplPosition" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#EditEmplPosition"/>
@@ -1175,9 +1521,14 @@ under the License.
     <view-map name="FindPartySkills" type="screen" page="component://humanres/widget/PartySkillScreens.xml#FindPartySkills"/>
     <view-map name="NewPartySkill" type="screen" page="component://humanres/widget/PartySkillScreens.xml#NewPartySkill"/>
 
+  <view-map name="findSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#findSupervisorLevel"/>
+    <view-map name="newSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#newSupervisorLevel"/>
+    <view-map name="editSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#editSupervisorLevel"/>
+ 
     <view-map name="FindPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#FindPartyQuals"/>
     <view-map name="NewPartyQual" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQual"/>
     <view-map name="EditPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#EditPartyQuals"/>
+    <view-map name="partyQualType" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualType"/>
 
     <view-map name="FindEmploymentApps" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#FindEmploymentApps"/>
     <view-map name="NewEmploymentApp" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#NewEmploymentApp"/>
@@ -1212,6 +1563,9 @@ under the License.
     <view-map name="EditEmplLeaveReasonTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditEmplLeaveReasonTypes"/>
     <view-map name="FindLeaveApprovals" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindLeaveApprovals"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
+    
+    <view-map name="staffLeaveBalances" type="screen" page="component://humanres/widget/EmployeeScreens.xml#StaffLeaveBalances"/>
+    
     <view-map name="EditInternalOrgFtl" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#EditInternalOrgFtl"/>
     <view-map name="RemoveInternalOrgFtl" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#RemoveInternalOrgFtl"/>
     
@@ -1236,4 +1590,16 @@ under the License.
     
     <!-- ==================PayRoll History View Map===================== -->
     <view-map name="PayrollHistory" type="screen" page="component://humanres/widget/EmployeeScreens.xml#PayrollHistory"/>
+    
+    <!-- ==================HR Definitions View Map===================== -->
+    
+    <view-map name="tribe" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewTribe"/>
+    <view-map name="county" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewCounty"/>
+    <view-map name="bloodgroup" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewBloodGroup"/>
+    <view-map name="religion" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewReligion"/>
+    <view-map name="familyrelations" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewFamilyRelations"/>
+    
+    <view-map name="spouse" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewSpouseDetails"/>
+    <view-map name="dependant" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewDependantDetails"/>
+    <view-map name="nextofkin" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewNextOfKinDetails"/>
 </site-conf>

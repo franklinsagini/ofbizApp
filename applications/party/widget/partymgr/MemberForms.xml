@@ -128,9 +128,9 @@ under the License.
         focus-field-name="accountNo" header-row-style="header-row" default-table-style="basic-table">
         
          <actions>
-             <entity-condition entity-name="SaccoProduct" list="productsList">
-             	 <condition-expr field-name="productType" operator="equals" value="Account"/>
-             	 <order-by field-name="saccoProductId" />
+             <entity-condition entity-name="AccountProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+             	 <order-by field-name="accountProductId" />
             </entity-condition>
             
             <entity-condition entity-name="AccountStatus" list="accountStatusList">
@@ -149,9 +149,9 @@ under the License.
         <field name="enabled"><hidden/></field>
         <field name="accountNo"><text default-value="5-02-"></text></field>
         <field name="accountName"><text></text></field>
-        <field name="saccoProductId" title="Account">
+        <field name="accountProductId" title="Account">
             <drop-down allow-empty="false">
-                <list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/>
+                <list-options list-name="productsList" key-name="accountProductId" description="${name} - ${code}"/>
             </drop-down>
         </field>
         
@@ -392,15 +392,15 @@ under the License.
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
-         <field name="accountNo" title="Account No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-         <field name="accountName" title="Account Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+         <field name="accountNo" title="Account No" widget-style="required"><text size="30" maxlength="60"/></field>
+         <field name="accountName" title="Account Name" widget-style="required"><text size="30" maxlength="60"/></field>
         <!-- field name="saccoProductId" title="Account">
         	<display-entity description="${name} - ${code} " entity-name="SaccoProduct" also-hidden="true"></display-entity>
           </field -->
-          <field name="saccoProductId" title="Account">
+          <field name="accountProductId" title="Account">
             <drop-down allow-empty="false">
                 <!-- list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/ -->
-                <entity-options description="${name} - ${code}" entity-name="SaccoProduct"></entity-options>
+                <entity-options description="${name} - ${code}" entity-name="AccountProduct"></entity-options>
             </drop-down>
         </field>
         
@@ -563,6 +563,10 @@ under the License.
             
             <entity-condition entity-name="GlAccount" list="accountsList">
             </entity-condition>
+            
+            <entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+            </entity-condition>
               
             <!--entity-condition entity-name="LoanSecurity" list="loanSecurityList">
             </entity-condition -->
@@ -573,11 +577,16 @@ under the License.
         <field name="partyId"><hidden/></field>
         <field name="enabled"><hidden/></field>
         
-         <field name="openingBalanceDate" title="Opening Bal Date"><date-time/></field>
+         <field name="openingBalanceDate" title="Opening Bal Date"><date-time type="date"/></field>
          
-         <field name="memberAccountPayableId" title="Member AP" >
+         <!-- field name="memberAccountPayableId" title="Member AP" >
             <drop-down allow-empty="true">
                 <list-options list-name="accountsList" key-name="glAccountId" description="${accountName} - ${accountCode}" />
+            </drop-down>
+        </field -->
+         <field name="memberAccountId" title="Member Account" >
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down>
         </field>
          <field name="apOpeningBalance" title="AP Opening Balance"> <text></text> </field>
@@ -593,9 +602,15 @@ under the License.
     <form name="listOpeningBalance" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateOpeningBalance" paginate-target="findAccountDetails"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+        	
             <entity-condition entity-name="MemberAccountDetails">
             	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
             </entity-condition>
+            <entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+            </entity-condition>
+            
+			
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
         <field name="memberAccountDetailsId"><hidden/></field>
@@ -609,8 +624,13 @@ under the License.
         
         <field name="openingBalanceDate"><display also-hidden="false"/></field>
         
-        <field name="memberAccountPayableId" title="Account Payable">
+        <!-- field name="memberAccountPayableId" title="Account Payable">
         	<display-entity description="${accountName} ${accountCode}" key-field-name="glAccountId" entity-name="GlAccount" also-hidden="false" ></display-entity>
+        </field -->
+        <field name="memberAccountId" title="Member Account" >
+            <drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down>
         </field>
         
         <field name="apOpeningBalance"><display also-hidden="false"/></field>
@@ -621,7 +641,7 @@ under the License.
                 <parameter param-name="memberAccountDetailsId"/>
             </hyperlink>
         </field>
-        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
         <!-- a href="<@ofbizUrl>employmentDetails?partyId=${partyId}</@ofbizUrl>">Edit </a -->
         <field name="submitButton" title="${uiLabelMap.CommonEdit}"><hyperlink target="openingBalance?partyId=${partyId}" description="Edit"></hyperlink></field>
     </form>

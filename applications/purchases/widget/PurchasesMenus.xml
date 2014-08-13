@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="MainAppBar" title="${uiLabelMap.PurchasesApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="main" title="${uiLabelMap.CommonMain}">
+            <link target="main"/>
+        </menu-item>
+        <menu-item name="quotes" title="${uiLabelMap.PurchasesQuote}">
+            <link target="findQuotes"/>
+        </menu-item>
+        <menu-item name="purchaseOrders" title="${uiLabelMap.PurchasesPurchaseOrders}">
+            <link target="FindPurchaseOrders"/>
+        </menu-item>
+        <menu-item name="shipments" title="${uiLabelMap.PurchasesShipments}">
+            <link target="findShipments"/>
+        </menu-item>
+        <menu-item name="returns" title="${uiLabelMap.PurchasesReturns}">
+            <link target="findReturns"/>
+        </menu-item>
+        <menu-item name="reports" title="${uiLabelMap.PurchasesReports}">
+            <link target="reports"/>
+        </menu-item>
+    </menu>
+    <!-- Quotes Tab Bar -->
+    <menu name="QuotesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+
+        <menu-item name="find" title="${uiLabelMap.CommonFind}">
+            <link target="findQuotes"/>
+        </menu-item>
+
+        <menu-item name="editQuote" title="Edit Quote">
+            <link target="editPurchaseQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+
+
+        <menu-item name="editQuoteLines" title="Quote Lines">
+            <link target="editQuoteLines"/>
+        </menu-item>
+    </menu>
+    <menu name="OrdersTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="find" title="${uiLabelMap.CommonFind}">
+            <link target="FindPurchaseOrders"/>
+        </menu-item>
+        <menu-item name="editOrder" title="Edit Order">
+            <link target="EditPurchaseOrders">
+                <parameter param-name="orderId" from-field="order.orderId"/>
+            </link>
+        </menu-item>
+        <menu-item name="editQuoteLines" title="Quote Lines">
+            <link target="editQuoteLines"/>
+        </menu-item>
+    </menu>
+    <menu name="OrderSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="createNew" title="Create New Order" widget-style="buttontext create">
+            <link target="EditPurchaseOrders"/>
+        </menu-item>
+    </menu>
+</menus>

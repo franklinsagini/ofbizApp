@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+	<description>Registry Services</description>
+	<vendor></vendor>
+	<version>1.0</version>
+
+	<service name="noSyntaxError" engine="interface">
+		<description>
+			Dummy service to prevent empty files and syntax error - Remove when the
+			1st real service will be added here
+		</description>
+	</service>
+
+	<service name="createEmployer" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/RegistryServices.xml"
+		invoke="createEmployer" auth="true">
+		<description>Create an imprest header record</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="CREATE" />
+		<auto-attributes entity-name="Employer" include="pk"
+			mode="IN" optional="false" />
+		<auto-attributes entity-name="Employer" include="nonpk"
+			mode="IN" optional="true" />
+		<override name="statusId" optional="false" />
+	</service>
+
+	<service name="createRetentionSchedule" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/RetentionScheduleServices.xml"
+		invoke="createRetentionSchedule" auth="true">
+		<description>Create an imprest header record</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="CREATE" />
+		<auto-attributes entity-name="DocumentRetentionSchedule"
+			include="pk" mode="IN" optional="false" />
+		<auto-attributes entity-name="DocumentRetentionSchedule"
+			include="nonpk" mode="IN" optional="true" />
+		<override name="Folio" optional="false" />
+		<override name="retentionScheduleName" optional="false" />
+		<override name="retentionScheduleStatus" optional="false" />
+	</service>
+	<service name="updateRetentionSchedule" default-entity-name="DocumentRetentionSchedule"
+		engine="entity-auto" invoke="update" auth="true">
+		<description>Update a Document Retention Schedule</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	<!-- Non Member Record services -->
+	<service name="createNonMemberRecord" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/NonMemberRecordServices.xml"
+		invoke="createNonMemberRecord" auth="true">
+		<description>Create an imprest header record</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="CREATE" />
+		<auto-attributes entity-name="NonMemberRecord"
+			include="pk" mode="IN" optional="false" />
+		<auto-attributes entity-name="NonMemberRecord"
+			include="nonpk" mode="IN" optional="true" />
+		<override name="ObjectName" optional="false" />
+		<override name="VolumeNumber" optional="false" />
+		<override name="SecurityLevel" optional="false" />
+	</service>
+	<service name="updateNonMemberRecord" default-entity-name="NonMemberRecord"
+		engine="entity-auto" invoke="update" auth="true">
+		<description>Update a Non Member Record</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+
+	<!-- Registry file services -->
+	<service name="createRegistryFile" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/RegistryFileServices.xml"
+		invoke="createRegistryFile" auth="true">
+		<description>Create Registry file header record</description>
+		<auto-attributes entity-name="RegistryFile" include="pk"
+			mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryFile" include="nonpk"
+			mode="IN" optional="true" />
+	</service>
+	<service name="updateRegistryFile" default-entity-name="RegistryFile"
+		engine="simple"
+		location="component://registry/script/org/ofbiz/registry/RegistryFileServices.xml"
+		invoke="updateRegistryFile" auth="true">
+		<description>Update a Registry File</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+
+	<!-- File Request services -->
+	<service name="createFileRequest" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/FileRequestServices.xml"
+		invoke="createFileRequest" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes entity-name="FileRequest" include="pk"
+			mode="IN" optional="true" />
+		<auto-attributes entity-name="FileRequest" include="nonpk"
+			mode="IN" optional="true" />
+	</service>
+
+	<service name="updateFileRequest" default-entity-name="FileRequest"
+		engine="simple"
+		location="component://registry/script/org/ofbiz/registry/FileRequestServices.xml"
+		invoke="updateFileRequest" auth="true">
+		<description>Update a File Request</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	<service name="cancelFileRequest" default-entity-name="FileRequest"
+		engine="simple"
+		location="component://registry/script/org/ofbiz/registry/FileRequestServices.xml"
+		invoke="cancelFileRequest" auth="true">
+		<description>Update a File Request</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+
+	<!-- Issue File services -->
+	<service name="createIssueFile" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/IssueFileServices.xml"
+		invoke="createIssueFile" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes entity-name="IssueFile" include="pk"
+			mode="IN" optional="true" />
+		<auto-attributes entity-name="IssueFile" include="nonpk"
+			mode="IN" optional="true" />
+	</service>
+	<service name="updateIssueFile" default-entity-name="IssueFile"
+		engine="simple"
+		location="component://registry/script/org/ofbiz/registry/IssueFileServices.xml"
+		invoke="updateIssueFile" auth="true">
+		<description>Update a File Request</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+
+	<!-- Release File services -->
+	<service name="createReleaseFile" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/ReleaseFileServices.xml"
+		invoke="createReleaseFile" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes entity-name="ReleaseFile" include="pk"
+			mode="IN" optional="true" />
+		<auto-attributes entity-name="ReleaseFile" include="nonpk"
+			mode="IN" optional="true" />
+	</service>
+	<service name="updateReleaseFile" default-entity-name="ReleaseFile"
+		engine="simple"
+		location="component://registry/script/org/ofbiz/registry/ReleaseFileServices.xml"
+		invoke="updateReleaseFile" auth="true">
+		<description>Update a File Request</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+
+	<!-- Registry file services -->
+	<service name="createFileType" engine="simple"
+		location="component://registry/script/org/ofbiz/registry/FileTypeServices.xml"
+		invoke="createFileType" auth="true">
+		<description>Create Registry file type header record</description>
+		<auto-attributes entity-name="FileType" include="pk"
+			mode="IN" optional="true" />
+		<auto-attributes entity-name="FileType" include="nonpk"
+			mode="IN" optional="true" />
+	</service>
+
+	<service name="updateFileType" default-entity-name="FileType"
+		engine="entity-auto" invoke="update" auth="true">
+		<description>Update a Registry File</description>
+		<permission-service service-name="partyBasePermissionCheck"
+			main-action="UPDATE" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	<service name="deleteFileType" engine="simple"
+		default-entity-name="FileType"
+		location="component://registry/script/org/ofbiz/registry/FileTypeServices.xml"
+		invoke="deleteFileType" auth="true">
+		<description>Delete File Type</description>
+		<!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+		<auto-attributes mode="IN" include="pk" optional="false" />
+	</service>
+</services>

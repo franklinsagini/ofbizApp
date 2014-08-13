@@ -18,10 +18,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- Invoice forms -->
-    <form name="FindInvoices" type="single" target="findInvoices" title="Find and list invoices"
+    <form name="FindInvoices" type="single" target="findInvoices"
+        title="Find and list invoices"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
@@ -82,7 +83,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="invoiceTypeId" sort-field="true"><display-entity entity-name="InvoiceType"/></field>
-        <field name="invoiceDate" sort-field="true"><display type="date"/></field>
+        <field name="invoiceDate" sort-field="true"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true"><display-entity entity-name="StatusItem"/></field>
         <field name="description" sort-field="true"><display/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" sort-field="true">
@@ -290,7 +291,9 @@ under the License.
         <field name="invoiceId"><hidden/></field>
         <field position="1" name="invoiceDate"><date-time/></field>
         <field position="2" name="dueDate"><date-time/></field>
-        <field position="1" name="invoiceTypeId" use-when="invoice!=null"><display-entity entity-name="InvoiceType" description="${description}"/></field>
+        <field position="1" name="invoiceTypeId" use-when="invoice!=null">
+            <display-entity entity-name="InvoiceType" description="${description}"/>
+        </field>
         <field position="1" name="invoiceTypeId" use-when="invoice==null">
             <drop-down allow-empty="false" no-current-selected-key="SALES_INVOICE">
                 <entity-options description="${description}" entity-name="InvoiceType">
@@ -298,9 +301,15 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoice==null"><hidden value="INVOICE_IN_PROCESS"/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="invoice!=null"><display-entity entity-name="StatusItem"/></field>
-        <field position="1" name="description"><text size="100"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoice==null">
+            <hidden value="INVOICE_IN_PROCESS"/>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="invoice!=null">
+            <display-entity entity-name="StatusItem"/>
+        </field>
+        <field position="1" name="description">
+            <text size="100"/>
+        </field>
         <field position="1" name="partyIdFrom" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;SALES_INVOICE&quot;)"><display description="${invoice.partyIdFrom}"/></field>
         <field position="1" name="partyIdFrom" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)"><display description="${invoice.partyId}"/></field>
@@ -449,8 +458,17 @@ under the License.
         </field>
     </form>
 
-    <form name="EditInvoiceApplications" type="list"  list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="true" target="updateInvoiceApplication" title="Apply payments to invoices" separate-columns="false"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    <form
+        name="EditInvoiceApplications"
+        type="list"
+        list-name="invoiceApplications"
+        default-entity-name="InvoiceItem"
+        use-row-submit="true"
+        target="updateInvoiceApplication"
+        title="Apply payments to invoices"
+        separate-columns="false"
+        odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar">
         <field name="statusId"><hidden/></field>
         <field name="paymentApplicationId"><hidden/></field>
         <field name="invoiceItemSeqId"><display/></field>
@@ -657,7 +675,7 @@ under the License.
         <field name="partyIdFrom"><ignored/></field>
         <field name="partyIdTo"><ignored/></field>
     </form>
-    
+
     <form name="ListSupplierInvoices" extends="ListInvoices" list-name="invoiceslistexternal"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="partyIdFrom"><ignored/></field>

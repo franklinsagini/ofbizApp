@@ -143,18 +143,23 @@ under the License.
                 <parameter param-name="imprestId"/>
             </hyperlink>
         </field>
+
         <field name="docNumber" title="Doc Number">
             <display/>
         </field>
+
         <field name="partyId" title="Created By">
             <display/>
         </field>
+
         <field name="imprestDate" title="Created On">
             <display/>
         </field>
+
         <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true">
             <display-entity entity-name="StatusItem" description="${statusCode}"/>
         </field>
+
     </form>
 
     <form name="EditImprest" type="single" target="updateImprest" title="" default-map-name="imprest" header-row-style="header-row" default-table-style="basic-table">
@@ -228,7 +233,11 @@ under the License.
 
     </form>
     <!-- IMPREST ITEMS FORMS -->
-    <form name="ListImprestItems" type="list"  list-name="imprestItems"  target="updateImprestItem">
+    <form
+        name="ListImprestItems"
+        type="list"
+        list-name="imprestItems"
+        target="updateImprestItem">
         <actions>
             <entity-condition entity-name="ImprestItem">
                 <condition-expr field-name="imprestId" from-field="imprestId"/>
@@ -248,7 +257,10 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
-    <form name="AddImprestItem" type="single" target="createImprestItem" title="">
+    <form name="AddImprestItem"
+        type="single"
+        target="createImprestItem"
+        title="">
         <auto-fields-service service-name="createImprestItem"/>
         <field name="imprestId"><hidden/></field>
         <field name="imprestItemSeqId"><ignored/><!-- this will be auto-sequenced --></field>

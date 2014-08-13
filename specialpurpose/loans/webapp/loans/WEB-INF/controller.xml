@@ -251,63 +251,64 @@ under the License.
 
 	<request-map uri="createLoanProduct">
 		<security https="true" auth="true" />
-		<event type="simple"
-			path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createLoanProduct" />
-		<!-- response name="success" type="view" value="loanproductsetup"/ -->
+		<event type="service" invoke="createLoanProduct" />
 		<response name="success" type="request-redirect-noparam"
-			value="loanproductsetup"></response>
-		<response name="error" type="view" value="loanproductsetup" />
+			value="LoanProduct"></response>
 	</request-map>
-	
-
-	
-	
-
-	<request-map uri="updateAccountProduct">
-		<security https="true" auth="true" />
-		<event type="service" invoke="updateAccountProduct" />
-		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
-			value="savingsproductsetup"></response>
-		<response name="error" type="view" value="savingsproductsetup" />
-	</request-map>
-
-	<request-map uri="updateLoanProduct">
+		<request-map uri="updateLoanProduct">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateLoanProduct" />
 		<!-- response name="success" type="view" value="loanproductsetup" / -->
 		<response name="success" type="request-redirect-noparam"
-			value="loanproductsetup"></response>
-		<response name="error" type="view" value="loanproductsetup" />
+			value="LoanProduct"></response>
+		<response name="error" type="view" value="LoanProduct" />
 	</request-map>
 
 	<request-map uri="deleteLoanProduct">
 		<security https="true" auth="true" />
-		<event type="service" invoke="deleteSaccoProduct" />
+		<event type="service" invoke="deleteLoanProduct" />
 		<!-- response name="success" type="view" value="FindPartySkills"/ -->
 		<response name="success" type="request-redirect-noparam"
-			value="loanproductsetup"></response>
+			value="LoanProduct"></response>
 	</request-map>
+
+	
+	
+	<request-map uri="createAccountProduct">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createAccountProduct" />
+		<response name="success" type="request-redirect-noparam"
+			value="AccountProduct"></response>
+	</request-map>
+	<request-map uri="updateAccountProduct">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateAccountProduct" />
+		<response name="success" type="request-redirect-noparam"
+			value="AccountProduct"></response>
+		<response name="error" type="view" value="AccountProduct" />
+	</request-map>
+
+
 
 	<request-map uri="deleteAccountProduct">
 		<security https="true" auth="true" />
-		<event type="service" invoke="deleteSaccoProduct" />
-		<!-- response name="success" type="view" value="FindPartySkills"/ -->
+		<event type="service" invoke="deleteAccountProduct" />
 		<response name="success" type="request-redirect-noparam"
-			value="savingsproductsetup"></response>
+			value="AccountProduct"></response>
 	</request-map>
 	
 	<!-- Loan Application -->
-		<request-map uri="loanapplication">
+	<request-map uri="loanapplication">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="loanapplication" />
 	</request-map>
 	
 	<request-map uri="createLoanApplication">
 		<security https="true" auth="true" />
-		<event type="simple"
-			path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createLoanApplication" />
+		<!-- event type="simple"
+			path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createLoanApplication" / -->
 		<!-- response name="success" type="view" value="loanproductsetup"/ -->
+		<event type="service" invoke="createLoanApplication" />
 		<response name="success" type="request-redirect-noparam"
 			value="loanapplication"></response>
 		<response name="error" type="view" value="loanapplication" />
@@ -340,6 +341,13 @@ under the License.
     <request-map uri="loandetails">
     	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
     	<event type="java" path="org.ofbiz.loans.LoanServices" invoke="getLoanDetails" />
+		<response name="success" type="none">
+    	</response>
+    </request-map>
+    
+     <request-map uri="loanMaxCalculation">
+    	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+    	<event type="java" path="org.ofbiz.loans.LoanServices" invoke="getLoanMaxAmount" />
 		<response name="success" type="none">
     </response>
     </request-map>
@@ -684,7 +692,63 @@ under the License.
 		<response name="success" type="view" value="disburseLoan"
 			save-home-view="true" />
 	</request-map>
+	
 	<!-- End Loan Applications Guarantor -->
+	
+	<!-- Account Product -->
+	<request-map uri="AccountProduct">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="AccountProduct" />
+	</request-map>
+	
+	<!-- Loan Product -->
+	<request-map uri="LoanProduct">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LoanProduct" />
+	</request-map>
+	
+	<request-map uri="LookupMember"><security auth="true" https="true"/><response name="success" type="view" value="LookupMember"/></request-map>
+	
+	<request-map uri="generateschedule">
+		<security auth="true" https="true"/>
+    	<event type="java" path="org.ofbiz.loans.AmortizationServices" invoke="generateschedule" />
+		<response name="success" type="view"
+			value="disburseLoan">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="disburseLoan" />
+    </request-map>
+    
+    
+    <request-map uri="salaryProcessingDate">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<!-- Salary Processing Date CRUD -->
+	<request-map uri="createSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<request-map uri="updateSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<request-map uri="deleteSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
 	
     <!-- end of request mappings -->
 
@@ -769,6 +833,15 @@ under the License.
     <view-map name="FindLoanApplication" type="screen" page="component://loans/widget/loans/LoanScreens.xml#FindLoanApplication"/>
 		
 		
+		<view-map name="AccountProduct" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#AccountProduct" />
+		<view-map name="LoanProduct" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#LoanProduct" />
+		
+		 <view-map name="LookupMember" page="component://loans/widget/loans/LoanScreens.xml#LookupMember" type="screen"/>
+		 
+		 
+		 <view-map name="NewSalaryProcessingDate" page="component://loans/widget/loans/LoanScreens.xml#NewSalaryProcessingDate" type="screen"/>
     <!-- Supported Content Types -->
     <!--
         text/html

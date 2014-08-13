@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.humanres;
 
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;

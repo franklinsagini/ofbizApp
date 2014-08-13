@@ -90,26 +90,33 @@ under the License.
           <td>Loan No</td>
           <td>Loan Type</td>
           <td>Member No</td>
+          <td>First Name</td>
+          <td>Last Name</td>
           <td>Mobile No</td>
           <td>Loan Amount</td>
           <td>Loan Status</td>
           <td>Repayment Period</td>
+          <td>Interest Rate (P.M)</td>
           <td>&nbsp;</td>
         </tr>
         <#assign alt_row = false>
         <#assign rowCount = 0>
         <#list applicationsList as applicationRow>
-          <#assign loanType = applicationRow.getRelatedOne("SaccoProduct")?if_exists>
+          <#assign loanType = applicationRow.getRelatedOne("LoanProduct")?if_exists>
           <#assign loanStatus = applicationRow.getRelatedOne("LoanStatus")?if_exists>
           <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
           	<td><a href="<@ofbizUrl>viewapplicationprofile?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${applicationRow.loanNo?if_exists}</a></td>
             <td><a href="<@ofbizUrl>viewapplicationprofile?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">${loanType.name} ${loanType.code}</a></td>
            
             <td>${applicationRow.memberNumber?if_exists}</td>
+            <td>${applicationRow.firstName?if_exists}</td>
+            <td>${applicationRow.lastName?if_exists}</td>
           	<td>${applicationRow.mobileNumber?if_exists}</td>
-          	<td>${applicationRow.loanamt?if_exists}</td>
+          	<td>${applicationRow.loanAmt?if_exists}</td>
           	<td>${applicationRow.applicationStatus?if_exists}</td>
-          	<td>${applicationRow.selectedRepaymentPeriod?if_exists}</td>
+          	<td>${applicationRow.repaymentPeriod?if_exists}</td>
+          	<td>${applicationRow.interestRatePM?if_exists}</td>
+          	
             <td class="button-col align-float">
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Edit </a> 
             	<a href="<@ofbizUrl>loanapplication?loanApplicationId=${applicationRow.loanApplicationId}</@ofbizUrl>">Delete </a> 

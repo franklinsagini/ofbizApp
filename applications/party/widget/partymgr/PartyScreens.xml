@@ -924,6 +924,9 @@ under the License.
                             <widgets>
                             	
                                 <screenlet title="${uiLabelMap.PartyCreateNewMember}">
+                                	 <!-- platform-specific>
+                           					<html><html-template location="component://party/webapp/partymgr/party/partyHeader.ftl"/></html>
+                        			</platform-specific -->
                                     <include-form name="NewMember" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -1321,7 +1324,57 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+	
+	
+	 <!-- Party Identification Type -->    
+    <screen name="NewPartyIdentificationType">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Party Identification Type"/>
+                <set field="headerItem" value="partyIdentificationType"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPartyIdentificationType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!--set field="staffPayrollId" from-field="parameters.staffPayrollId"/-->
+                
+                <entity-one entity-name="PartyIdentificationType" value-field="partyIdentificationTypeContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <!-- include-menu name="PayrollTablesTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/-->
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Party Identification Type">
+                                    <include-form name="NewPartyIdentificationType" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="List Party Identification Type">
+                        			<include-form name="listPartyIdentificationType" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	
     <!-- PartyIdentification Screen -->
     <screen name="ListPartyIdentifications">
         <section>
@@ -2265,6 +2318,52 @@ under the License.
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="NewenumStaffStatus">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Staff Employment Status"/>
+                <set field="headerItem" value="enumStaffStatus"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createEnumStaffStatus"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!--set field="staffPayrollId" from-field="parameters.staffPayrollId"/-->
+                
+                <entity-one entity-name="Enumeration" value-field="enumStaffStatusContext"/>
+               
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Staff Employment Status">
+                                    <include-form name="NewenumStaffStatus" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff Employment Status List">
+                        			<include-form name="listenumStaffStatus" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>

@@ -80,16 +80,25 @@ under the License.
     </form>
     
      <form name="ViewLoanApplicationDetails" type="single" default-map-name="lookupLoanApplication">
+     	<actions>
+     		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+     			<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+     		</entity-one>
+     		
+     		<entity-one entity-name="LoanProduct" value-field="loanProduct">
+     			<field-map field-name="loanProductId" value="${loanApplication.loanProductId}"/>
+     		</entity-one>
+     	</actions>
         <!--  field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field-->
         <field name="loanApplicationId"><hidden/></field>
         <field name="partyId" title="Member">
         	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
         </field>
-        <field name="saccoProductId" title="Loan Type"><display description="${lookupLoanType.name} - ${lookupLoanType.code}"/></field>
+        <field name="loanProductId" title="Loan Product"><display description="${loanProduct.name} - ${loanProduct.code}"/></field>
         <!-- field name="comments" title="${uiLabelMap.PartyComments}"><display/></field -->
-        <field name="loanamt" title="Amount"><display also-hidden="false"/></field>
-        <field name="percentInterestPerMonthAmt" title="Interest Rate"><display also-hidden="false"/></field>
-        <field name="selectedRepaymentPeriod" title="Repayment Period"><display also-hidden="false"/></field>
+        <field name="loanAmt" title="Amount"><display  type="currency" currency="KES" also-hidden="false"/></field>
+        <field name="interestRatePM" title="Interest Rate(P.M.)"><display also-hidden="false"/></field>
+        <field name="repaymentPeriod" title="Repayment Period(Months)"><display also-hidden="false"/></field>
         <field name="paymentMethodTypeId" title="Payment Method">
         	<display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${lookupPaymentMethodType.description}"/>
         </field>
@@ -433,9 +442,11 @@ under the License.
         
         <field name="loanStatusLogId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
-        <field name="applicationStatus" title="Status"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
-        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
-        <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="applicationStatus" title="Status" required-field="true"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
+        <field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field>
+        <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
+        
     </form>
     
     <form name="listDisburseLoan" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDisburseLoan" paginate-target="loanStatusLog"
@@ -451,6 +462,8 @@ under the License.
         </field -->
          <field name="createdBy"><display also-hidden="false"></display> </field>
         <field name="applicationStatus"><display also-hidden="false"></display>  </field>
+        <field name="disbursementDate" title="Date Disbursed"> <display/> </field>
+        <field name="repaymentStartDate" title="Repayment Start Date"> <display /> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteDisburseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanStatusLogId"/>
@@ -459,6 +472,419 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
-   
+    <form name="listAmortizationSchedule" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDisburseLoan" paginate-target="disburseLoan"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanAmortization">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateDisburseLoan"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="paymentNo" title="No"><display also-hidden="false"></display> </field>
+         <field name="expectedPaymentDate" title="Expected Date"> <display/> </field>
+        <field name="paymentAmount" title="Payment Amount"><display type="currency" currency="KES" also-hidden="false"></display>  </field>
+        <field name="principalAmount" title="Principal Amount"><display  type="currency" currency="KES" also-hidden="false"></display>  </field>
+        <field name="interestAmount" title="Interest Amount"><display type="currency" currency="KES" also-hidden="false"></display>  </field>
+        <field name="balanceAmount" title="Balance Amount"><display type="currency" currency="KES" also-hidden="false"></display>  </field>
+        <!--  field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteDisburseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusLogId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+    
+    
+    
+    <!-- AccountProduct -->
+    <form name="AccountProduct" type="single" target="createAccountProduct"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="accountContext">
+        
+        <field name="accountProductId"><hidden/></field>
+ 
+        <field name="name" title="Name"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="code" title="Code" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+
+      	<field name="minBalanceAmt" title="Minimum Balance"><text size="30" maxlength="60"/></field>
+        
+        <field name="minSavingsAmt" title="Minimum Savings Amount"><text size="30" maxlength="60"/></field>
+        
+        <field name="minInterestEarningAmt" title="Minimum Interest Earning Amount"><text size="30" maxlength="60"/></field>
+        
+        <field name="minInterestPercentageAboveSavingsAcct" title="Minimum % Above Savings Amount"><text size="30" maxlength="60"/></field>
+     
+     	<field name="discountOnBankersCheque"  title="Discount on Bankers Cheque ?" >
+            <drop-down allow-empty="true">
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
+            </drop-down>
+        </field>
+        <field name="bankersChequePercentageDiscAmt" title="Bankers Cheque Discount Amount"><text size="30" maxlength="60"/></field>
+     	<field name="limitPerYearWithdrawals"  title="Limit Per Year Withdrawals?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+     	<field name="noOfWithdrawalsPerYear" title="No Of Withdrawals Per Year" ><text size="30" maxlength="60"/></field>
+     	
+     	<field name="withdrawalsTriggerConversionToSavings"  title="Withdrawals Trigger Conversion to Savings A/C?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+     	<field name="noOfWithdrawalsToTrigger" title="No Of Withdrawals To Trigger Conversion to Savings A/C" ><text size="30" maxlength="60"/></field>
+     	
+     	<field name="minimumPeriodInMonths" title="Minimum Period in Months" ><text size="30" maxlength="60"/></field>
+     	<field name="interestPerMonth" title="Interest Per Month" ><text size="30" maxlength="60"/></field>
+     	<field name="interestPerAnum" title="Interest Per Annum" ><text size="30" maxlength="60"/></field>
+     	
+     	<field name="allowLedgerFees"  title="Allow Ledger Fee?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+     
+     	<field name="isGroup"  title="Is Group Account?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="saveAccountProduct" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Loan Product -->
+    <form name="LoanProduct" type="single" target="createLoanProduct" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanContext">
+        
+        <field name="loanProductId"><hidden/></field>
+ 
+        <field name="name" title="Name"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+       <field name="code" title="Code" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+
+      	<field name="maxRepaymentPeriod" title="Maximum Repayment Period" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        <field name="interestRatePM" title="Interest Rate P.M" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        <field name="appraisalPercentage" title="Appraisal Percentage" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        <field name="minimumAmt" title="Minimum Amount" ><text size="30" maxlength="60"/></field>
+        <field name="maximumAmt" title="Maximum Amount"><text size="30" maxlength="60"/></field>
+        
+        <field name="multipleOfSavings"  title="Multiple of Savings?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+                
+            </drop-down>
+        </field>
+        <field name="multipleOfSavingsAmt" title="Multiple of Savings Amount"><text size="30" maxlength="60"/></field>
+        
+        <field name="retention"  title="Retention?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+                
+            </drop-down>
+        </field>
+        <field name="retentionAmt" title="Retained Amount"><text size="30" maxlength="60"/></field>
+        <field name="retentionPercentage" title="Retained %"><text size="30" maxlength="60"/></field>
+        
+         <field name="monthlyContribution"  title="Monthly Contribution?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+                
+            </drop-down>
+        </field>
+        <field name="monthlyContributionConstant" title="Monthly Contribution Constant Amount"><text size="30" maxlength="60"/></field>
+        <field name="monthlyContributionDecimal" title="Monthly Contribution fraction of Principal Amount"><text size="30" maxlength="60"/></field>
+        
+        <field name="retainBOSADeposit"  title="Retain BOSA Deposit?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+                
+            </drop-down>
+        </field>
+        <field name="percentageDepositRetained" title="% of BOSA Retained"><text size="30" maxlength="60"/></field>
+        
+         <field name="percentageOfMemberNetSalary"  title="% of Member Net Salary?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+                
+            </drop-down>
+        </field>
+        <field name="percentageOfMemberNetSalaryAmt" title="% of Member Net Salary Amount"><text size="30" maxlength="60"/></field>
+        
+        
+        
+        <field name="salaryPointShouldBeFOSA"  title="Salary Point should be FOSA?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+                
+            </drop-down>
+        </field>
+         <field name="deductFromMemberBonus"  title="Deduct from Member Bonus?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+                
+            </drop-down>
+        </field>
+         <field name="isGroup"  title="Is Group?">
+            <drop-down allow-empty="false">
+            	<option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+                
+            </drop-down>
+        </field>
+        
+        <!-- 
+			LINEAR
+			REDUCING_BALANCE
+		 -->
+        <field name="deductionType"  title="Deduction Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="LINEAR" description="Linear/Flat Rate"/>
+                <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
+            </drop-down>
+        </field>
+        
+        <field name="minimumPeriodToEligibility" title="Minimum Period To Eligibility (Months)" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+ 		
+        <field name="saveLoanProduct" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit  button-type="button" /></field>
+    </form>
+    
+   <form name="listAccountProduct" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAccountProduct" paginate-target="accountProduct"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="AccountProduct">
+            	<condition-expr field-name="isActive" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateAccountProduct"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="accountProductId"><hidden/></field>
+        <field name="name"> <text></text> </field>
+        <field name="code"><text/></field>
+        <field name="minBalanceAmt"><text></text></field>
+        <field name="minSavingsAmt"><text></text></field>
+        <field name="minInterestEarningAmt"><text></text></field>
+        <field name="interestPerMonth"><text></text></field>
+        
+        <field name="Edit Account">
+        	<hyperlink target="AccountProduct?accountProductId=${accountProductId}" description="Edit Account"></hyperlink>
+        </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteAccountProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="saccoProductId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listLoanProduct" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanProduct" paginate-target="loanProduct"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanProduct">
+            	<condition-expr field-name="isActive" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanProduct"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="loanProductId"><hidden/></field>
+        <field name="name"> <text size="20"></text> </field>
+        <field name="code"><text size="10"/></field>
+        <field name="maxRepaymentPeriod"><text size="10"/></field>
+        <field name="interestRatePM"><text size="10"/></field>
+        
+         <field name="minimumAmt"><text size="10"/></field>
+        <field name="maximumAmt"><text size="10"/></field>
+        
+        <field name="deductionType"  title="Deduction Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="LINEAR" description="Linear/Flat Rate"/>
+                <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
+            </drop-down>
+        </field>
+        
+        <field name="Edit Loan">
+        	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
+        </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanProductId"/>
+            </hyperlink>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+    
+    <!-- Lookup Member Forms -->
+    <form name="lookupMember" target="LookupMember" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <!-- <auto-fields-entity entity-name="Product" default-field-type="hidden"/> -->
+        <field name="partyId" title="Member"><text-find/></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="idNumber" title="ID Number"><text-find/></field>
+        <field name="memberNumber" title="Member Number"><text-find/></field>
+        <!-- field name="productTypeId" title="${uiLabelMap.ProductProductType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductCategory" key-field-name="productCategoryId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field -->
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <!-- NOTE DEJ20070829 not sure why this is here, but it doesn't seem applicable for a general product lookup, also doesn't handle case where isVariant is null <field name="isVariant"><hidden value="N"/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupMember" list-name="listIt" title="" type="list" paginate-target="LookupMember"
+        odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+        </actions>
+        <!-- row-actions>            
+            <set field="hasVariants" value="${groovy: org.ofbiz.entity.util.EntityUtil.filterByDate(delegator.findByAnd('ProductAssoc', org.ofbiz.base.util.UtilMisc.toMap('productId', productId, 'productAssocTypeId', 'PRODUCT_VARIANT'), null, true)).size() > 0}" type="Boolean"/>
+        </row-actions -->
+        <field name="partyId" title="Member" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${firstName} ${lastName}" target="javascript:set_value('${partyId}')"/>
+        </field>
+        <field name="firstName" title="First Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+        <field name="idNumber" title="ID Number"><display/></field>
+        <field name="memberNumber" title="Member Number"><display/></field>
+        <!-- field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display-entity entity-name="ProductType"/></field -->
+        <!-- field name="searchVariants" title=" " widget-style="buttontext" use-when="hasVariants">
+            <hyperlink also-hidden="false" target-type="plain" description="Member" target="LookupMember">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field -->
+    </form>
+    
+    <!-- Salary Processing Date -->
+    <form name="NewSalaryProcessingDate" type="single" target="createSalaryProcessingDate"
+        focus-field-name="description" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
+        
+        <field name="salaryProcessingDateId"><hidden/></field>
+        
+        <field name="processingDay"  title="Processing Day" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="15" description="15th"/>
+                <option key="1" description="1st"/>
+                <option key="2" description="2nd"/>
+                <option key="3" description="3rd"/>
+                <option key="4" description="4th"/>
+                <option key="5" description="5th"/>
+                <option key="6" description="6th"/>
+                <option key="7" description="7th"/>
+                <option key="8" description="8th"/>
+                <option key="9" description="9th"/>
+                <option key="10" description="10th"/>
+                <option key="11" description="11th"/>
+                <option key="12" description="12th"/>
+                <option key="13" description="13th"/>
+                <option key="14" description="14th"/>
+                <option key="16" description="16th"/>
+                <option key="17" description="17th"/>
+                <option key="18" description="18th"/>
+                <option key="19" description="19th"/>
+                <option key="20" description="20st"/>
+                <option key="21" description="21st"/>
+                <option key="22" description="22nd"/>
+                <option key="23" description="23rd"/>
+                <option key="24" description="24th"/>
+                <option key="25" description="25th"/>
+                <option key="26" description="26th"/>
+                <option key="27" description="27th"/>
+                <option key="28" description="28th"/>
+                <option key="29" description="29th"/>
+                <option key="30" description="30st"/>
+                <option key="31" description="31st"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listSalaryProcessingDate" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSalaryProcessingDate" paginate-target="salaryProcessingDate"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SalaryProcessingDate">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateSalaryProcessingDate"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="processingDay">
+        	 <drop-down allow-empty="true">
+                <option key="15" description="15th"/>
+                <option key="1" description="1st"/>
+                <option key="2" description="2nd"/>
+                <option key="3" description="3rd"/>
+                <option key="4" description="4th"/>
+                <option key="5" description="5th"/>
+                <option key="6" description="6th"/>
+                <option key="7" description="7th"/>
+                <option key="8" description="8th"/>
+                <option key="9" description="9th"/>
+                <option key="10" description="10th"/>
+                <option key="11" description="11th"/>
+                <option key="12" description="12th"/>
+                <option key="13" description="13th"/>
+                <option key="14" description="14th"/>
+                <option key="16" description="16th"/>
+                <option key="17" description="17th"/>
+                <option key="18" description="18th"/>
+                <option key="19" description="19th"/>
+                <option key="20" description="20st"/>
+                <option key="21" description="21st"/>
+                <option key="22" description="22nd"/>
+                <option key="23" description="23rd"/>
+                <option key="24" description="24th"/>
+                <option key="25" description="25th"/>
+                <option key="26" description="26th"/>
+                <option key="27" description="27th"/>
+                <option key="28" description="28th"/>
+                <option key="29" description="29th"/>
+                <option key="30" description="30st"/>
+                <option key="31" description="31st"/>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteSalaryProcessingDate" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="salaryProcessingDateId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
    
 </forms>

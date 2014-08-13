@@ -17,7 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindAgreements" target="FindAgreement" title="" type="single"
@@ -72,7 +72,7 @@ under the License.
                 <field-map field-name="compareDate" from-field="agreementDate"/>
                 <field-map field-name="lastNameFirst" value="Y"/>
             </service>
-        </row-actions>         
+        </row-actions>
         <auto-fields-entity entity-name="Agreement" default-field-type="display"/>
         <field name="agreementId" title="${uiLabelMap.CommonEdit}" widget-style="buttontext" sort-field="true">
             <hyperlink also-hidden="false" description="${agreementId}" target="EditAgreement">
@@ -83,7 +83,7 @@ under the License.
         <field name="partyIdFrom" sort-field="true">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultFrom.fullName} [${partyIdFrom}]" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
-            </hyperlink> 
+            </hyperlink>
         </field>
         <field name="partyIdTo" sort-field="true">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultTo.fullName} [${partyIdTo}]" target-type="inter-app">
@@ -109,12 +109,22 @@ under the License.
         </field>
     </form>
 
-    <form name="EditAgreement" type="single" target="updateAgreement" title="" default-map-name="agreement"
-        header-row-style="header-row" default-table-style="basic-table">
+    <form   name="EditAgreement"
+            type="single"
+            target="updateAgreement"
+            title=""
+            default-map-name="agreement"
+            header-row-style="header-row"
+            default-table-style="basic-table">
         <alt-target use-when="agreement==null" target="createAgreement"/>
         <auto-fields-service service-name="updateAgreement" default-field-type="edit" map-name="agreement"/>
-        <field name="agreementId" use-when="agreementId!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field name="agreementId" use-when="agreement==null&amp;&amp;agreementId==null"><ignored/></field>
+
+        <field name="agreementId" use-when="agreementId!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display/>
+        </field>
+        <field name="agreementId" use-when="agreement==null&amp;&amp;agreementId==null">
+            <ignored/>
+        </field>
         <field name="productId" title="${uiLabelMap.AccountingProductId}">
             <lookup target-form-name="LookupProduct"/>
         </field>
@@ -139,7 +149,6 @@ under the License.
         <field name="partyIdTo" title="${uiLabelMap.AccountingPartyIdTo}">
             <lookup target-form-name="LookupPartyName"/>
         </field>
-
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>

@@ -2728,12 +2728,21 @@ under the License.
       <field name="memberId" type="id"></field>
       <field name="gender" type="indicator"></field>
       <field name="birthDate" type="date"></field>
+      <field name="religionId" type="id"></field>
+      <field name="bloodGroupId" type="id"></field>
+      <field name="tribeId" type="id"></field>
+      <field name="countyId" type="id"></field>
+      <field name="appointmentdate" type="date"></field>
+      <field name="retirementdate" type="date"></field>      
+      <field name="confirmationdate" type="date"></field>
       <field name="deceasedDate" type="date"></field>
       <field name="height" type="floating-point"></field>
       <field name="weight" type="floating-point"></field>
       <field name="mothersMaidenName" type="long-varchar" encrypt="true"></field>
       <field name="maritalStatus" type="indicator"></field>
       <field name="socialSecurityNumber" type="long-varchar" encrypt="true"></field>
+      <field name="nhifNumber" type="long-varchar" encrypt="true"></field>
+      <field name="pinNumber" type="long-varchar" encrypt="true"></field>
       <field name="passportNumber" type="long-varchar" encrypt="true"></field>
       <field name="passportExpireDate" type="date"></field>
       <field name="totalYearsWorkExperience" type="floating-point"></field>
@@ -2745,6 +2754,10 @@ under the License.
       <field name="monthsWithEmployer" type="numeric"></field>
       <field name="existingCustomer" type="indicator"></field>
       <field name="cardId" type="id-long" ></field>
+      
+     
+      
+      
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -2778,11 +2791,15 @@ under the License.
             title="Role Type Entity">
       <field name="roleTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
+      <field name="supervisorId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="roleTypeId"/>
       <relation type="one" fk-name="ROLE_TYPE_PAR" title="Parent" rel-entity-name="RoleType">
         <key-map field-name="parentTypeId" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ROLE_TYPE_SUP" title="Supervisor" rel-entity-name="RoleType">
+        <key-map field-name="supervisorId" rel-field-name="roleTypeId"/>
       </relation>
     </entity>
     <view-entity entity-name="RoleTypeIn3Levels"
@@ -3217,7 +3234,7 @@ under the License.
      <entity entity-name="MemberAccount" package-name="org.ofbiz.party.party" title="MemberAccount Entity">
      		<field name="memberAccountId" type="id-ne"></field>
      		<field name="partyId" type="id"></field>
-			<field name="saccoProductId" type="id"></field>
+			<field name="accountProductId" type="id"></field>
 			<field name="accountNo" type="name"></field>
 			<field name="accountName" type="name"></field>
 			<field name="accountStatusId" type="id"></field>
@@ -3232,8 +3249,8 @@ under the License.
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
 
-      <relation type="one" fk-name="MEMBERACCOUNT_SACCOPRODUCT" rel-entity-name="SaccoProduct">
-            <key-map field-name="saccoProductId"/>
+      <relation type="one" fk-name="MEMBERACCOUNT_ACCOUNTPRODUCT" rel-entity-name="AccountProduct">
+            <key-map field-name="accountProductId"/>
         </relation>
 
         <relation type="one" fk-name="MEMBERACCOUNT_AccountStatus" rel-entity-name="AccountStatus">

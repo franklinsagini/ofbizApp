@@ -20,6 +20,59 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+      
+        <form name="listSupervisorLevel" type="multi" title="" target="updateSupervisorLevel" list-name="listIt"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SupervisorLevel"><order-by field-name="supervisorLevelId"/></entity-condition>
+        </actions>
+        <field name="partyId" title="Supervisor" ><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/></field>
+        <!-- <field name="firstName" entry-name="Member" map-name="${partyId}"></field> -->
+        <field name="supervisorLevel" title="${uiLabelMap.Level}"><display /></field>
+        <field name="updateLink" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+            <hyperlink target="editSupervisorLevel" description="${uiLabelMap.CommonUpdate}" also-hidden="false">
+                <parameter param-name="supervisorLevelId"/>
+            </hyperlink>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteSupervisorLevel" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="supervisorLevelId"/>
+            </hyperlink>
+        </field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
+    
+    </form>
+
+    <form name="AddSupervisorLevels" type="single" target="updateSupervisorLevel" default-map-name="supervisor"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="supervisor==null" target="createSupervisorLevel" />
+        <field use-when="supervisor!=null" name="supervisorLevelId"
+            title="supervisor Id" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+        <field use-when="supervisor==null&amp;&amp;supervisorLevelId==null"
+            name="supervisorLevelId" title="registry File Id">
+            <hidden />
+        </field>
+        <field name="partyId" title="Staff">
+            <drop-down allow-empty="true" current-description="Select Member">
+                <entity-options description="${firstName} ${lastName}"
+                    key-field-name="partyId" entity-name="Person">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="supervisorLevel" title="${uiLabelMap.Level}"><text/></field>
+        <field use-when="supervisor==null" name="submitButton"
+            title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+            <submit button-type="text-link" />
+        </field>
+        <field use-when="supervisor!=null" name="updateButton"
+            title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+            <submit button-type="text-link" /></field>
+    </form>
+
+
     <form name="ListSkillTypes" type="multi" title="" target="updateSkillType"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -165,7 +218,7 @@ under the License.
     <form name="AddEmplPositionTypeRate" type="single" target="updateEmplPositionTypeRate" default-map-name="emplPositionTypeRate" paginate-target="EditEmplPositionTypeRates"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
-            <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
         </actions>
         <field name="emplPositionTypeId"><hidden value="${parameters.emplPositionTypeId}"/></field>
         <field name="rateTypeId"   tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -260,83 +313,126 @@ under the License.
         <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-    <form name="AddEmplLeaveType" type="single" target="createEmplLeaveType" default-map-name="emplLeaveType"
+    <form name="AddEmplLeaveType" type="single" target="updateEmplLeaveType" 
+        default-map-name="editleavetype"
         header-row-style="header-row" default-table-style="basic-table">
-        <auto-fields-service service-name="createEmplLeaveType" default-field-type="hidden"/>
-        <field name="leaveTypeId" title="Leave Type"><text/></field>
+        <alt-target use-when="editleavetype==null" target="createEmplLeaveType" />
+
+        <field use-when="editleavetype!=null" name="leaveTypeId"
+            title="leave Type" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+         <field use-when="editleavetype==null&amp;&amp;leaveTypeId==null" 
+            name="leaveTypeId" title="Leave Type" widget-style="required">
+            <text />
+        </field>
+
         <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="days" title="Days" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="daytype"  title="Day Specification" >
             <drop-down allow-empty="false">
-                <option key="W" description="Work Days"/>
-                <option key="C" description="Calendar Days"/>
+                <option key="Work Days" description="Work Days"/>
+                <option key="Calendar Days" description="Calendar Days"/>
             </drop-down>
         </field>
         <field name="gender"  title="Gender" >
-            <drop-down allow-empty="true">
-                <option key="M" description="Male"/>
-                <option key="F" description="Female"/>
+            <drop-down allow-empty="false">
+            	<option key="All" description="All"/>
+                <option key="Male" description="Male"/>
+                <option key="Female" description="Female"/>
             </drop-down>
         </field>
         <field name="isforwarded"  title="Can Be Forwarded" >
             <drop-down allow-empty="false">
-                <option key="Y" description="Yes"/>
-                <option key="N" description="No"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="forwardmax" title="Max Days Forwarded" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="noticeperiod" title="Notice Period (Days)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="validity" title="Validity (Months)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="validity" title="Validity (Months)"><text size="30" maxlength="60"/></field>
         <field name="isallocated"  title="Allocated" >
-            <drop-down allow-empty="true">
-                <option key="Y" description="Yes"/>
-                <option key="N" description="No"/>
+            <drop-down allow-empty="false">
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="isencashable"  title="Encashable" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="isaccrued"  title="Accrued" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="accrualRate" title="Accrual Rate" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="hasbalance"  title="Has Balance" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="allowoverflow"  title="Allow Overflow" >
-            <drop-down allow-empty="true">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
+            <drop-down allow-empty="false">
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
-        
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+            <field use-when="editleavetype==null" name="submitButton"
+            title="${uiLabelMap.CommonCreate}" widget-style="buttontext">
+            <submit button-type="text-link" />
+        </field>
+        <field use-when="editleavetype!=null" name="updateButton"
+            title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+            <submit button-type="text-link" />
+        </field>
+
     </form>
+
         
     <form name="ListEmplLeaveTypes" type="multi" title="" target="updateEmplLeaveType"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="EmplLeaveType"><order-by field-name="leaveTypeId"/></entity-condition>
         </actions>
-        <auto-fields-service service-name="updateEmplLeaveType" default-field-type="hidden"/>
-        <field name="leaveTypeId" title="Leave Type"><display/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
+       <field name="leaveTypeId" title="Leave Type" >
+         <display/>
+        </field>
+        <field name="days" title="Days"><display/></field>
+        <field name="daytype" title="Day type"><display/></field>
+        <field name="gender" title="Gender"><display/></field>
+        <field name="isforwarded" title="Is forwarded">
+            <display />
+        </field>
+        <field name="forwardmax" title="Forward max}"><display/></field>
+        <field name="noticeperiod" title="Noticeperiod"><display/></field>
+        <field name="validity" title="Validity"><display/></field>
+
+        <field name="isallocated" title="Is allocated"><display/></field>
+        <field name="isencashable" title="Is encashable"><display/></field>
+        <field name="isaccrued" title="Is accrued"><display/></field>
+        <field name="accrualRate" title="Accrual Rate"><display/></field>
+        <field name="hasbalance" title="Has balance"><display/></field>
+        <field name="allowoverflow" title="Allow Overflow">
+            <display />
+        </field>
+            <!-- <field name="allowoverflow" title="Allow overflow"><display/></field> -->
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmplLeaveType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="leaveTypeId"/>
             </hyperlink>
         </field>
+          <field name="leaveTypeIds" title="Update" >
+         <hyperlink also-hidden="false" description="Update"  target="EditEmplLeaveTypes">
+                <parameter param-name="leaveTypeId"/>
+            </hyperlink>
+        </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
+        <!-- <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field> -->
     </form>
     <form name="AddEmplLeaveReasonType" type="single" target="createEmplLeaveReasonType" default-map-name="emplLeaveReasonType"
         header-row-style="header-row" default-table-style="basic-table">

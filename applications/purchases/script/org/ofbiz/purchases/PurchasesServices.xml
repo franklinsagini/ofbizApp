@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+
+    <simple-method method-name="createPurchaseQuote" short-description="Create File Quote">\
+        <now-timestamp field="nowTimestamp"/>
+        <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="PrchseQteHdr"/>
+              <!-- create a non existing ID -->
+        <sequenced-id sequence-name="PrchseQteHdr" field="quoteId"/>
+        <set from-field="quoteId" field="newEntity.quoteId"/>
+        <field-to-result field="quoteId" result-name="quoteId"/>
+        <if-empty field="parameters.statusId">
+            <set field="parameters.statusId" value="QUOTE_IN_PROCESS"/>
+        </if-empty>
+                <!-- set the invoice date if not provided -->
+        <if-empty field="parameters.quoteDate">
+            <set from-field="nowTimestamp" field="parameters.quoteDate"/>
+        </if-empty>
+        <!-- Set the prepared by using the currently logged in user -->
+        <set from-field="${userLogin.partyId}" field="parameters.partyId" />
+        <set field="parameters.partyId" value="${userLogin.partyId}"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+         <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+        <!-- create new status entry, and set lastStatusUpdate date -->
+        <make-value value-field="newQuoteStatus" entity-name="PrchsQteStts"/>
+        <set from-field="newEntity.quoteId" field="newQuoteStatus.quoteId"/>
+        <set from-field="newEntity.statusId" field="newQuoteStatus.statusId"/>
+        <set from-field="nowTimestamp" field="newQuoteStatus.statusDate"/>
+        <create-value value-field="newQuoteStatus"/>
+        <check-errors/>
+    </simple-method>
+
+    <simple-method method-name="updatePurchaseQuote" short-description="Update a Quote">
+
+        <!-- find the current record -->
+        <make-value value-field="lookupPKMap" entity-name="PrchseQteHdr"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key entity-name="PrchseQteHdr" map="lookupPKMap" value-field="lookedUpValue"/>
+
+        <!-- only try to update content if the status is in process.... -->
+        <if-compare field="lookedUpValue.statusId" operator="equals" value="QUOTE_IN_PROCESS">
+            <clone-value value-field="lookedUpValue" new-value-field="savedValue"/>
+            <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+
+            <!-- only save if something has changed, do not update status here -->
+            <set from-field="savedValue.statusId" field="lookedUpValue.statusId"/>  <!-- get old status back -->
+            <if-compare-field field="lookedUpValue" to-field="savedValue" operator="not-equals" type="Object">
+                <store-value value-field="lookedUpValue"/> <!-- update all non status and key fields -->
+            </if-compare-field>
+            <else>
+                <add-error>
+                    <fail-property resource="AccountingUiLabels" property="Can only update Quote, when status is in-process...current Status: ${lookedUpValue.statusId}"/>
+                </add-error>
+                <log level="error" message="Can only update Quote, when status is in-process...current Status: ${lookedUpValue.statusId}"/>
+                <check-errors/>
+            </else>
+        </if-compare>
+
+        <!-- check if there is a requested status change if yes call invoice status update service -->
+
+    </simple-method>
+
+
+    <simple-method method-name="createQuoteLine" short-description="Create a new Invoice Item">
+        <set field="quoteId" from-field="parameters.quoteId"/>
+        <make-value value-field="newEntity" entity-name="QuoteLines"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.quoteItemSeqId">
+            <make-next-seq-id value-field="newEntity" seq-field-name="quoteItemSeqId"/> <!-- this finds the next sub-sequence ID -->
+            <field-to-result field="newEntity.quoteItemSeqId" result-name="quoteItemSeqId"/>
+        </if-empty>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+
+</simple-methods>
