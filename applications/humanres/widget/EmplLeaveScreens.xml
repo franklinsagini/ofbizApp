@@ -28,6 +28,7 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
+
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -84,25 +85,17 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<set field="approverPartyId" from-field="parameters.userLogin.partyId" />
 				<set field="approver" from-field="parameters.userLogin.partyId" />
-				<!-- <entity-one value-field="level" entity-name="SupervisorLevel">
-					<field-map field-name="partyId" from-field="${userLogin.partyId}" />
-				</entity-one> -->
-				<!-- <entity-one entity-name="Employment" value-field="department">
-					<field-map field-name="partyIdTo" from-field="parameters.userLogin.partyId" />
-				</entity-one>
-				<entity-and entity-name="Employment" list="departmentmembers">
-					<field-map field-name="partyIdFrom" from-field="department.partyFromId" />
-				</entity-and>
-				<entity-and entity-name="EmplLeave" list="departmentleaves">
-					<field-map field-name="partyId" from-field="departmentmembers.partyIdTo" />
-				</entity-and> -->
 				
 				<!-- set field="partyId" from-field="userLogin.partyId"/ -->
 			<entity-one entity-name="Party" value-field="party">
 				<field-map field-name="partyId" from-field="userLogin.partyId"/>
 			</entity-one>
-			<!-- userLogin.partyId -->
 			<set field="superVisorLevelValue" value="${bsh:org.ofbiz.humanres.LeaveServices.getSupervisorLevel(party);}"/>
+			<!-- 
+			<entity-one entity-name="Employment" value-field="employee">
+				<field-map field-name="partyIdTo" from-field="userLogin.partyId"/>
+			</entity-one> -->
+			<set field="partyIdFromV" value="${bsh:org.ofbiz.humanres.LeaveServices.getpartyIdFrom(party);}"/>
 
 			</actions>
 			<widgets>
@@ -156,6 +149,10 @@
 					<field-map field-name="leaveTypeId" from-field="leaveTypeId" />
 					<field-map field-name="fromDate" from-field="fromDate" />
 				</entity-one>
+				<entity-one entity-name="Party" value-field="party">
+					<field-map field-name="partyId" from-field="userLogin.partyId"/>
+				</entity-one>
+				<set field="leaveBalance" value="${bsh:org.ofbiz.humanres.LeaveServices.getLeaveBalance(party);}"/>
 
 			</actions>
 			<widgets>
