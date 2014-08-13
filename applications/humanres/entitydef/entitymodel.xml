@@ -58,20 +58,11 @@ under the License.
         <key-map field-name="partyId" rel-field-name="partyId"/>
         </relation>
     </entity>
+    
 
 
-    <entity entity-name="LeaveStatusLogs"
-            package-name="org.ofbiz.humanres"
-            title="Leave Status Logs Entity">
-      <field name="leaveStatusLogsId" type="id-ne"></field>
-      <field name="leaveId" type="id-ne"></field>
-      <field name="leaveApprover" type="id"></field>
-      <field name="leaveLogStatus" type="description"></field>
-      <prim-key field="LeaveStatusLogsId"/>
-      <relation type="one" fk-name="EMPLEAVE_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
-        <key-map field-name="leaveId" rel-field-name="leaveId"/>
-      </relation>
-    </entity>
+
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.humanres.ability -->
   <!-- ========================================================= -->
@@ -463,37 +454,27 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="employmentAppSourceTypeId"/>
       </relation>
     </entity>
-    
-<!-- 	<entity entity-name="EmplLeave"
-            package-name="org.ofbiz.humanres.employment"
-            title="Employee Leave Entity">
-        <field name="partyId" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="emplLeaveReasonTypeId" type="id-ne"/>
-        <field name="fromDate" type="date-time"/>
-        <field name="thruDate" type="date-time"/>
-        <field name="approverPartyId" type="id-ne"/>
-        <field name="leaveStatus" type="id-ne"/>
-        <field name="description" type="description"/>
-        <prim-key field="partyId"/>
-        <prim-key field="leaveTypeId"/>
-        <prim-key field="fromDate"/>
-        <relation type="one" fk-name="EMPL_LEAVE_PRTY" rel-entity-name="Party">
-            <key-map field-name="partyId"/>
-        </relation>
-        <relation type="one" fk-name="EMPL_LEAVE_ELETP" rel-entity-name="EmplLeaveType">
-            <key-map field-name="leaveTypeId"/>
-        </relation>
-        <relation type="one" fk-name="EMP_LEAV_REAS_ELTP" rel-entity-name="EmplLeaveReasonType">
-            <key-map field-name="emplLeaveReasonTypeId"/>
-        </relation>
-        <relation type="one" fk-name="EMPL_LEAVE_APPR" title="Approver" rel-entity-name="Party">
-            <key-map field-name="approverPartyId" rel-field-name="partyId"/>
-        </relation>
-        <relation type="one" fk-name="EMPL_LEAVE_STS" rel-entity-name="StatusItem">
-            <key-map field-name="leaveStatus" rel-field-name="statusId"/>
-        </relation>
-    </entity> -->
+
+        <!-- ===========  Leave Status Logs  =========== -->
+    <entity entity-name="LeaveStatusLog"
+            package-name="org.ofbiz.humanres"
+            title="Leave Status Logs Entity">
+      <field name="leaveStsLogId" type="id-ne"></field>
+      <field name="leaveId" type="id"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="approvedBy" type="id-ne"></field>
+      <field name="leaveLogStatus" type="description"></field>
+      <prim-key field="leaveStsLogId"/>
+      <relation type="one" fk-name="EMPLEAVE_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
+        <key-map field-name="leaveId" rel-field-name="leaveId"/>
+      </relation>
+      <relation type="many" fk-name="PARTY_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
+        <key-map field-name="partyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="MEMB_STTLOGS" title="Parent" rel-entity-name="Member">
+        <key-map field-name="partyId" rel-field-name="approvedBy"/>
+      </relation>
+    </entity>
     
     <entity entity-name="EmplLeave"
             package-name="org.ofbiz.humanres.employment"
@@ -501,17 +482,18 @@ under the License.
         <field name="partyId" type="id-ne"/>
         <field name="leaveTypeId" type="id-ne"/>
         <field name="emplLeaveReasonTypeId" type="id-ne"/>
-       
-        <field name="fromDate" type="date-time"/>
+       <field name="leaveId" type="id"/>
+        <field name="fromDate" type="date"/>
         
         <field name="leaveDuration" type="id-ne"/>     
         
-        <field name="thruDate" type="date-time"/>
+        <field name="thruDate" type="date"/>
         
         <field name="leaveBalance" type="id-ne"/>
-        
-        <field name="approverPartyId" type="id-ne"/>
+        <field name="forwardedBy" type="id-ne"/>
+        <field name="approvedBy" type="id-ne"/>
         <field name="leaveStatus" type="id-ne"/>
+        <field name="leaveStage" type="id-ne"></field>
         <field name="description" type="description"/>
         <prim-key field="partyId"/>
         <prim-key field="leaveTypeId"/>
@@ -528,10 +510,13 @@ under the License.
         <relation type="one" fk-name="EMPL_LEAVE_APPR" title="Approver" rel-entity-name="Party">
             <key-map field-name="approverPartyId" rel-field-name="partyId"/>
         </relation>
-        <relation type="one" fk-name="EMPL_LEAVE_STS" rel-entity-name="StatusItem">
+        <!-- <relation type="one" fk-name="EMPL_LEAVE_STS" rel-entity-name="StatusItem">
             <key-map field-name="leaveStatus" rel-field-name="statusId"/>
-        </relation>
+        </relation> -->
     </entity>
+
+
+    <!-- =======   Employee Leave Type  ======== -->
     <entity entity-name="EmplLeaveType"
             package-name="org.ofbiz.humanres.employment"
             default-resource-name="HumanResEntityLabels"
@@ -1215,5 +1200,49 @@ under the License.
         <key-map field-name="countryGeoId"/>
       </relation>
         </entity>       
+            <view-entity entity-name="EmplLeaveView" package-name="org.ofbiz.humanres">
+	    <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
+	    <member-entity entity-alias="EmploymentView" entity-name="Employment"></member-entity>
+	    <member-entity entity-alias="EmplLeaveView" entity-name="EmplLeave"></member-entity>
+		
+			<alias entity-alias="PersonView" name="EmplFirstName" field="firstName"/>
+			<alias entity-alias="PersonView" name="EmplFastName" field="lastName"/>
+			<alias entity-alias="PersonView" name="partyId" field="partyId"/>
+			
+			<alias entity-alias="EmploymentView" name="partyIdFrom" field="partyIdFrom"/>
+			
+			<alias entity-alias="EmplLeaveView" name="leaveTypeId" field="leaveTypeId"/>
+			<alias entity-alias="EmplLeaveView" name="emplLeaveReasonTypeId" field="emplLeaveReasonTypeId"/>
+			<alias entity-alias="EmplLeaveView" name="leaveId" field="leaveId"/>
+			<alias entity-alias="EmplLeaveView" name="fromDate" field="fromDate"/>
+			<alias entity-alias="EmplLeaveView" name="leaveDuration" field="leaveDuration"/>
+			<alias entity-alias="EmplLeaveView" name="thruDate" field="thruDate"/>
+			<alias entity-alias="EmplLeaveView" name="leaveBalance" field="leaveBalance"/>
+			<alias entity-alias="EmplLeaveView" name="forwardedBy" field="forwardedBy"/>
+			<alias entity-alias="EmplLeaveView" name="approvedBy" field="approvedBy"/>
+			<alias entity-alias="EmplLeaveView" name="leaveStatus" field="leaveStatus"/>
+			<alias entity-alias="EmplLeaveView" name="leaveStage"></alias>
+			<alias entity-alias="EmplLeaveView" name="description"></alias>	
+			
+	    <view-link  entity-alias="PersonView" rel-entity-alias="EmploymentView">
+	    	<key-map field-name="partyId" rel-field-name="partyIdTo"/>
+	    </view-link>
+	    <view-link entity-alias="EmploymentView" rel-entity-alias="EmplLeaveView" >
+	    	<key-map field-name="partyIdTo" rel-field-name="partyId"/>
+	    </view-link>
+    </view-entity>
+    <view-entity entity-name="SupervisorLevelView" package-name="org.ofbiz.humanres">
+	    <member-entity entity-alias="SupervisorLevelV" entity-name="SupervisorLevel"></member-entity>
+	    <member-entity entity-alias="EmploymentV" entity-name="Employment"></member-entity>
+
+			<alias entity-alias="SupervisorLevelV" name="supervisorLevel" field="supervisorLevel"/>
+			<alias entity-alias="SupervisorLevelV" name="partyId" field="partyId"/>
+			
+			<alias entity-alias="EmploymentV" name="partyIdFrom" field="partyIdFrom"/>
+				
+	    <view-link  entity-alias="SupervisorLevelV" rel-entity-alias="EmploymentV">
+	    	<key-map field-name="partyId" rel-field-name="partyIdTo"/>
+	    </view-link>
+    </view-entity>
     
 </entitymodel>

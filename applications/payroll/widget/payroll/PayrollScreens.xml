@@ -307,6 +307,9 @@ under the License.
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
                 <entity-one entity-name="StaffPayroll" value-field="staffPayrollContext"/>
+                <entity-one value-field="payrollperiod" entity-name="PayrollPeriod">
+                	<field-map field-name="payrollPeriodId" from-field="payrollPeriodId"/>
+                </entity-one>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -323,7 +326,7 @@ under the License.
                                 	<section>
                                 		<widgets>
     										<container style="button-bar">                                                   
-                                                <link target="runpayroll?payrollPeriodId=${payrollPeriodId}"  text="Run Payroll" style="buttontext create">
+                                                <link target="runpayroll?payrollPeriodId=${parameters.payrollPeriodId}"  text="Run Payroll" style="buttontext create">
                                                     <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                                    
                                                 </link>
@@ -341,7 +344,7 @@ under the License.
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Staff Payroll">
+                        		<screenlet title="New Staff Payroll for the period${payrollperiod.name}">
                         			<include-form name="listStaffPayroll" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                         		</screenlet>
                         	</widgets>

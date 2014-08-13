@@ -484,7 +484,7 @@ under the License.
     </request-map>
     <request-map uri="updateStaffLeaveBalances">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateStaffLeaveBalances"/>
+        <event type="service" invoke="updateStaffLeaveBalances"/>
         <response name="success" type="view" value="staffLeaveBalances"/>
         <response name="error" type="view" value="staffLeaveBalances"/>
     </request-map>
@@ -726,6 +726,22 @@ under the License.
         <event type="service" invoke="forwardEmplLeave"/>
         <response name="success" type="view" value="FindEmplLeaves"/>
         <response name="error" type="view" value="FindEmplLeaves"/>
+    </request-map>
+    <request-map uri="approveEmplLeaveStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveEmplLeaveStatus"/>
+        <response name="success" type="view" value="FindLeaveApprovals"/>
+        <response name="error" type="view" value="FindLeaveApprovals"/>
+    </request-map>
+        <request-map uri="rejectEmplLeaveStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="rejectEmplLeaveStatus"/>
+        <response name="success" type="view" value="FindLeaveApprovals"/>
+        <response name="error" type="view" value="FindLeaveApprovals"/>
+    </request-map>
+    <request-map uri="viewEmplLeaveDetails">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewEmplLeaveDetails"/>
     </request-map>
 
     <!-- ===================Responsibility Request============== -->
@@ -1488,7 +1504,9 @@ under the License.
     <view-map name="EditEmployeeResumes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeResumes"/>
     <view-map name="EditEmployeePerformanceNotes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeePerformanceNotes"/>
     <view-map name="EditEmployeeLeaves" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeLeaves"/>
-      
+    
+    <view-map name="viewEmplLeaveDetails" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#viewEmplLeaveDetails"/>
+
     <view-map name="FindEmplPositions" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#FindEmplPositions"/>
     <view-map name="EditEmplPosition" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#EditEmplPosition"/>
     <view-map name="ListEmplPositions" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#ListEmplPositionsParty"/>

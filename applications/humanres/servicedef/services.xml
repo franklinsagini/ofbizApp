@@ -733,20 +733,31 @@ under the License.
     <service name="updateEmplLeave" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmplLeave" auth="true">
         <description>Update Valid Employee Leave</description>
-        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <!-- <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/> -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <!-- <override name="approverPartyId" optional="false"/> -->
         <override name="thruDate" optional="false"/>
     </service>
     <service name="forwardEmplLeave" engine="simple" default-entity-name="EmplLeave"
-             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmplLeave" auth="true">
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="forwardEmplLeave" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <!-- <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/> -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="approveEmplLeaveStatus" engine="simple" default-entity-name="EmplLeave"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="approveEmplLeaveStatus" auth="true">
+        <description>Approve Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="rejectEmplLeaveStatus" engine="simple" default-entity-name="EmplLeave"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="rejectEmplLeaveStatus" auth="true">
         <description>Forward Valid Employee Leave</description>
         <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <!-- <override name="supervisorId" optional="false"/> -->
-        <!-- <override name="thruDate" optional="false"/> -->
     </service>
 
     <service name="deleteEmplLeave" engine="simple" default-entity-name="EmplLeave"
