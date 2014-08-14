@@ -222,7 +222,44 @@ under the License.
     </simple-method>
 <!-- ChequeDeposit -->
 <simple-method method-name="createChequeDeposit" short-description="Create ChequeDeposit">
-        <make-value entity-name="AccountTransaction" value-field="newEntity"/>
+        <call-simple-method method-name="createChequeDepositTemporary" scope="inline"></call-simple-method>
+        <!-- create-object class-name="org.ofbiz.entity.GenericDelegator"  field="delegator">
+        	<field field="delegator"/>
+        </create-object -->
+        
+         <set from-field="newEntity.accountTransactionId" field="accountTransactionId"/>
+         <entity-one value-field="accountTransaction" entity-name="AccountTransaction">
+         	<field-map field-name="accountTransactionId" from-field="newEntity.accountTransactionId"/>
+         </entity-one>
+        <set field="endDate" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.calculateChequeClearance(accountTransaction);}" type="Timestamp"/>
+        <!-- call-class-method  class-name="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" method-name="calculateChequeClearance" ret-field="endDate">
+        	<string value="${accountTransactionId}"/>
+        </call-class-method -->
+       
+        
+        <map-to-map map="newEntity" to-map="transactionMap"/>
+        <make-value value-field="anotherTransaction" entity-name="AccountTransaction" map="transactionMap"/>
+        <set field="anotherTransaction.clearDate" from-field="endDate"/>
+        <!-- create-value value-field="newEntity"/ -->
+        
+         <call-simple-method method-name="removeTransaction" scope="inline"></call-simple-method>
+        <!--  store-value value-field="anotherTransaction"/ -->
+        <call-simple-method method-name="createChequeDepositWithEndDate" scope="inline"></call-simple-method>
+        
+        <!-- map-to-map map="newEntity" to-map="transactionMap"/ -->
+         <!-- call-service service-name="calculateChequeClearDate" in-map-name="transactionMap" include-user-login="false" require-new-transaction="true"  >
+         	<result-to-field result-name="clearDate"/>
+            <result-to-result result-name="clearDate"/>
+         </call-service -->
+        
+        
+    </simple-method>
+    
+    <simple-method method-name="removeTransaction" use-transaction="true">
+    	<remove-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="createChequeDepositTemporary" use-transaction="true">
+    	<make-value entity-name="AccountTransaction" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
@@ -244,8 +281,35 @@ under the License.
         <set field="newEntity.clearDuration" from-field="chequeSetup.durationToClear"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
+        
         <create-value value-field="newEntity"/>
     </simple-method>
+    
+    <simple-method method-name="createChequeDepositWithEndDate" use-transaction="true">
+         <set-pk-fields map="parameters" value-field="anotherTransaction"/>
+        <set-nonpk-fields map="parameters" value-field="anotherTransaction"/>
+        <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
+        <now-timestamp field="createdDate"/>
+        <set from-field="accountTransactionId" field="anotherTransaction.accountTransactionId"/>
+        
+         <set field="anotherTransaction.isActive" value="Y"/>
+        <set field="anotherTransaction.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="anotherTransaction.branchId" from-field="userLogin.partyId"/>
+        <set field="anotherTransaction.transactionType" value="CHEQUEDEPOSIT"/>
+        
+        <now-timestamp field="createdDate"/>
+        
+        <set field="chequeSetupId" value="TIMETOCLEAR"/>
+        <entity-one value-field="chequeSetup" entity-name="ChequeSetup">
+        </entity-one>
+        <!-- ${chequeSetup.durationToClear} -->
+        <set field="anotherTransaction.clearDuration" from-field="chequeSetup.durationToClear"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        
+        <create-value value-field="anotherTransaction"/>
+    </simple-method>
+    
     <simple-method method-name="updateChequeDeposit" short-description="Update ChequeDeposit">
        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>

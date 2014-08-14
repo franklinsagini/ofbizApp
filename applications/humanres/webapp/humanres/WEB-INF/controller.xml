@@ -62,6 +62,26 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
+    <!-- ===== SupervisorLevel ==== -->
+    <request-map uri="editSupervisorLevel">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="createSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="updateSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
+    <request-map uri="deleteSupervisorLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteSupervisorLevel"/>
+        <response name="success" type="view" value="editSupervisorLevel"/>
+    </request-map>
 
 
     <!-- ================HumanResource==================================== -->
@@ -439,7 +459,7 @@ under the License.
     </request-map>
     <request-map uri="updateEmplLeaveType">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateEmplLeaveType"/>
+        <event type="service" invoke="updateEmplLeaveType"/>
         <response name="success" type="view" value="EditEmplLeaveTypes"/>
         <response name="error" type="view" value="EditEmplLeaveTypes"/>
     </request-map>
@@ -464,7 +484,7 @@ under the License.
     </request-map>
     <request-map uri="updateStaffLeaveBalances">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateStaffLeaveBalances"/>
+        <event type="service" invoke="updateStaffLeaveBalances"/>
         <response name="success" type="view" value="staffLeaveBalances"/>
         <response name="error" type="view" value="staffLeaveBalances"/>
     </request-map>
@@ -706,6 +726,22 @@ under the License.
         <event type="service" invoke="forwardEmplLeave"/>
         <response name="success" type="view" value="FindEmplLeaves"/>
         <response name="error" type="view" value="FindEmplLeaves"/>
+    </request-map>
+    <request-map uri="approveEmplLeaveStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveEmplLeaveStatus"/>
+        <response name="success" type="view" value="FindLeaveApprovals"/>
+        <response name="error" type="view" value="FindLeaveApprovals"/>
+    </request-map>
+        <request-map uri="rejectEmplLeaveStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="rejectEmplLeaveStatus"/>
+        <response name="success" type="view" value="FindLeaveApprovals"/>
+        <response name="error" type="view" value="FindLeaveApprovals"/>
+    </request-map>
+    <request-map uri="viewEmplLeaveDetails">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewEmplLeaveDetails"/>
     </request-map>
 
     <!-- ===================Responsibility Request============== -->
@@ -1468,7 +1504,9 @@ under the License.
     <view-map name="EditEmployeeResumes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeResumes"/>
     <view-map name="EditEmployeePerformanceNotes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeePerformanceNotes"/>
     <view-map name="EditEmployeeLeaves" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeLeaves"/>
-      
+    
+    <view-map name="viewEmplLeaveDetails" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#viewEmplLeaveDetails"/>
+
     <view-map name="FindEmplPositions" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#FindEmplPositions"/>
     <view-map name="EditEmplPosition" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#EditEmplPosition"/>
     <view-map name="ListEmplPositions" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#ListEmplPositionsParty"/>
@@ -1483,6 +1521,10 @@ under the License.
     <view-map name="FindPartySkills" type="screen" page="component://humanres/widget/PartySkillScreens.xml#FindPartySkills"/>
     <view-map name="NewPartySkill" type="screen" page="component://humanres/widget/PartySkillScreens.xml#NewPartySkill"/>
 
+  <view-map name="findSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#findSupervisorLevel"/>
+    <view-map name="newSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#newSupervisorLevel"/>
+    <view-map name="editSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#editSupervisorLevel"/>
+ 
     <view-map name="FindPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#FindPartyQuals"/>
     <view-map name="NewPartyQual" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQual"/>
     <view-map name="EditPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#EditPartyQuals"/>

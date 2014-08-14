@@ -242,21 +242,6 @@ under the License.
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
-	
-	
-	
-	<simple-method method-name="createLoanStatus" short-description="Create Loan Status">
-        <make-value entity-name="LoanStatus" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="LoanStatus" field="loanStatusId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanStatusId" field="newEntity.loanStatusId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
-    </simple-method>
     
      <simple-method method-name="updateLoanSecurity" short-description="Update Loan Security">
         <entity-one entity-name="LoanSecurity" value-field="lookedUpValue"/>
@@ -267,6 +252,19 @@ under the License.
     <simple-method method-name="deleteLoanSecurity" short-description="Delete Loan Security">
         <entity-one entity-name="LoanSecurity" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createLoanStatus" short-description="Create Loan Status">
+        <make-value entity-name="LoanStatus" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanStatus" field="loanStatusId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanStatusId" field="newEntity.loanStatusId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
     </simple-method>
 	
 	
@@ -464,7 +462,15 @@ under the License.
     </simple-method>
      <!-- DisburseLoan -->
      <simple-method method-name="createDisburseLoan" short-description="Create Loan Disbursement">
-        <make-value entity-name="LoanStatusLog" value-field="newEntity"/>
+        <call-simple-method method-name="saveDisbursementRecord" scope="inline"></call-simple-method>
+        <set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/>
+        <entity-one entity-name="LoanApplication" value-field="loanApplication">
+        	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set field="repaymentStartDate" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/>
+    </simple-method>
+    <simple-method method-name="saveDisbursementRecord" use-transaction="true">
+    	<make-value entity-name="LoanStatusLog" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="LoanStatusLog" field="loanStatusLogId"/>
@@ -482,7 +488,8 @@ under the License.
         </entity-one>
         <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
         <set from-field="newEntity.disbursementDate" field="loanApplication.disbursementDate"/>
-        <set from-field="newEntity.repaymentStartDate" field="loanApplication.repaymentStartDate"/>
+        
+        <!--  set from-field="newEntity.repaymentStartDate" field="loanApplication.repaymentStartDate"/ -->
         <set value="Y" field="loanApplication.isDisbursed"/>
         
         <store-value value-field="loanApplication"/>
@@ -497,6 +504,30 @@ under the License.
     <simple-method method-name="deleteDisburseLoan" short-description="Delete Loan Disbursement">
         <entity-one entity-name="LoanStatusLog" value-field="loanStatusLog"/>
         <remove-value value-field="loanStatusLog"/>
+    </simple-method>
+    
+    <!-- SalaryProcessingDate -->
+       <simple-method method-name="createSalaryProcessingDate" short-description="Create SalaryProcessingDate">
+        <make-value entity-name="SalaryProcessingDate" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="SalaryProcessingDate" field="salaryProcessingDateId"/>
+        <set from-field="salaryProcessingDateId" field="newEntity.salaryProcessingDateId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateSalaryProcessingDate" short-description="Update SalaryProcessingDate">
+        <entity-one entity-name="SalaryProcessingDate" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteSalaryProcessingDate" short-description="Delete SalaryProcessingDate">
+        <entity-one entity-name="SalaryProcessingDate" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
 </simple-methods>

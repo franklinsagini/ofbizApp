@@ -211,6 +211,9 @@
         <menu-item name="partyQualType" title="Staff Qualification Types">
             <link target="partyQualType"/>
         </menu-item>
+        <menu-item name="supervisorLevel" title="Supervisor Levels">
+            <link target="editSupervisorLevel"/>
+        </menu-item>
     </menu>
     
     <menu name="EmplRelationsTabBar" type="simple" default-menu-item-name="spouse"
@@ -258,6 +261,14 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
+         <menu-item name="viewidentifications" title="${uiLabelMap.PartyPartyIdentifications}">
+            <link target="viewidentifications">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        
+        
+        
         <!-- I think these don't belong here, I'll get to these in short while.
         <menu-item name="EditEmployeeEmploymentApps" title="${uiLabelMap.HumanResEmploymentApp}">
             <link target="EditEmployeeEmploymentApps">
@@ -282,6 +293,17 @@
         <menu-item name="PayrollHistory" title="${uiLabelMap.HumanResPayRollHistory}">
             <link target="PayrollHistory">
                 <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+         <menu-item name="EditPartyResumes" title="${uiLabelMap.HumanResPartyResume}">
+            <link target="EditPartyResumes">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditEmploymentApps" title="${uiLabelMap.HumanResEmploymentApp}">
+            <link target="EditEmploymentApps">
+                <parameter param-name="partyId"/>
+                <parameter param-name="referredByPartyId" from-field="partyId"/>
             </link>
         </menu-item>
     </menu>
@@ -369,6 +391,22 @@
         </menu-item>
         <menu-item name="staffLeaveBalances" title="Staff Leave Balances">
             <link target="staffLeaveBalances"/>
+        </menu-item>
+    </menu>
+    <menu name="ApproveReject" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="Approve" title="Approve Employee Leave">
+            <link target="approveEmplLeaveStatus">
+                <parameter param-name="partyId"/>
+                <parameter param-name="fromDate"/>
+                <parameter param-name="leaveTypeId"/>
+            </link>
+        </menu-item>
+        <menu-item name="Reject" title="Reject Employee Leave">
+            <link target="rejectEmplLeaveStatus">
+                <parameter param-name="partyId"/>
+                <parameter param-name="fromDate"/>
+                <parameter param-name="leaveTypeId"/>
+            </link>
         </menu-item>
     </menu>
 

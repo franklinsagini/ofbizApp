@@ -264,4 +264,17 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <service name="calculateChequeClearDate" engine="java"
+            location="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" invoke="calculateChequeClearance" auth="false" >
+        <description>Calculate Cheque Clearance</description>
+        
+        
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/> 
+        <attribute name="accountTransactionId" type="String" mode="IN" optional="true"/>  
+        
+           
+ </service>
 </services>

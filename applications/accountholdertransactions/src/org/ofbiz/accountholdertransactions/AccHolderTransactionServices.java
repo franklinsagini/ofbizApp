@@ -6,6 +6,8 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,14 +17,19 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.service.DispatchContext;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -506,7 +513,147 @@ public class AccHolderTransactionServices {
 		// return
 		// bdOpeningBalance.add(bdTotalCashDeposit).add(bdTotalChequeDeposit)
 		// .subtract(bdTotalCashWithdrawal).subtract(bdTotalChequeWithdrawal);
-		return bdTotalSavings.add(bdTotalChequeDeposit).subtract(bdTotalChequeDepositCleared);
+		return bdTotalSavings.add(bdTotalChequeDeposit).subtract(
+				bdTotalChequeDepositCleared);
+	}
+
+	/**
+	 * Calculate End Date given start date and number of days
+	 * **/
+	public static Date calculateEndWorkingDay(Date startDate, int noOfDays) {
+
+		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
+
+		// If this is happening on sunday or saturday push it to start on monday
+		if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SATURDAY) {
+			localDateEndDate = localDateEndDate.plusDays(2);
+		}
+
+		if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+			localDateEndDate = localDateEndDate.plusDays(1);
+		}
+		// Calculate End Date
+		int count = 1;
+		while (count < noOfDays) {
+			if (localDateEndDate.getDayOfWeek() == DateTimeConstants.FRIDAY) {
+				localDateEndDate = localDateEndDate.plusDays(3);
+			} else {
+				localDateEndDate = localDateEndDate.plusDays(1);
+			}
+			count++;
+		}
+
+		return localDateEndDate.toDate();
+	}
+
+	/****
+	 * @author Japheth Odonya @when Aug 9, 2014 3:29:16 PM Calculate Working
+	 *         Days between two dates - startDate and endDate
+	 * */
+	public static int calculateWorkingDaysBetweenDates(Date startDate,
+			Date endDate) {
+		int daysCount = 1;
+		LocalDate localDateStartDate = new LocalDate(startDate);
+		LocalDate localDateEndDate = new LocalDate(endDate);
+
+		while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
+			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY)
+					&& (localDateStartDate.getDayOfWeek() != DateTimeConstants.SUNDAY)) {
+				daysCount++;
+			}
+
+			localDateStartDate = localDateStartDate.plusDays(1);
+		}
+
+		return daysCount;
+	}
+
+	public static Date calculateEndWorkingDayCheque(Date startDate, int noOfDays) {
+
+		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
+
+		// If this is happening on sunday or saturday push it to start on monday
+		if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SATURDAY) {
+			localDateEndDate = localDateEndDate.plusDays(2);
+		}
+
+		if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+			localDateEndDate = localDateEndDate.plusDays(1);
+		}
+		// Calculate End Date
+		int count = 0;
+		while (count < noOfDays) {
+			if (localDateEndDate.getDayOfWeek() == DateTimeConstants.FRIDAY) {
+				localDateEndDate = localDateEndDate.plusDays(3);
+			} else {
+				localDateEndDate = localDateEndDate.plusDays(1);
+			}
+			count++;
+		}
+
+		return localDateEndDate.toDate();
+	}
+
+	/***
+	 * @author Japheth Odonya @when Aug 10, 2014 4:01:22 PM Calculate Cheque
+	 *         Clearance
+	 * */
+	// public static Map<String, Object>
+	// calculateChequeClearance(DispatchContext ctx,
+	// Map<String, ? extends Object> context){
+	public static Timestamp calculateChequeClearance(GenericValue accountTransaction) {
+
+		Map<String, Object> result = FastMap.newInstance();
+		String accountTransactionId = accountTransaction
+				.getString("accountTransactionId");// (String)context.get("accountTransactionId");
+		log.info("What we got is ############ " + accountTransactionId);
+
+		Delegator delegator;
+		// delegator = D
+		// ctx.getDelegator();
+
+		// delegator = DelegatorFactoryImpl.getDelegator("delegator");
+		delegator = accountTransaction.getDelegator();
+		// GenericValue accountTransaction = null;
+		try {
+			accountTransaction = delegator
+					.findOne("AccountTransaction", UtilMisc.toMap(
+							"accountTransactionId", accountTransactionId),
+							false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Get Current Date
+		Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+		// Get Clearance Duration
+		int clearDuration = accountTransaction.getLong("clearDuration")
+				.intValue();
+		// Calculate Cheque Clear Date
+		Date clearDate = calculateEndWorkingDayCheque(currentDate,
+				clearDuration);
+
+		// loanApplication.set("monthlyRepayment", paymentAmount);
+		accountTransaction.set("clearDate", clearDate);
+		log.info("##### End Date is ######## " + clearDate);
+		log.info("##### ID is  ######## "
+				+ accountTransaction.getString("accountTransactionId"));
+		log.info("##### transactionAmount is  ######## "
+				+ accountTransaction.getString("transactionAmount"));
+
+		// try {
+		// delegator.removeValue(accountTransaction);
+		// } catch (GenericEntityException e1) {
+		// e1.printStackTrace();
+		// }
+		//
+		// try {
+		// delegator.createOrStore(accountTransaction);
+		// } catch (GenericEntityException e) {
+		// e.printStackTrace();
+		// }
+		result.put("clearDate", clearDate);
+		return new Timestamp(clearDate.getTime());
 	}
 
 }

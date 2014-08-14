@@ -598,6 +598,18 @@ under the License.
 		<response name="error" type="view" value="nssftable" />
 	</request-map>
 	
+	 <request-map uri="runpayroll">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.payroll.PayrollProcess" invoke="runPayroll" >
+        
+        </event>
+        <response name="success" type="view"
+			value="staffpayroll">
+				<redirect-parameter name="payrollPeriodId"/>
+			</response>
+			<response name="error" type="view" value="staffpayroll" />
+    </request-map>
+	
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
