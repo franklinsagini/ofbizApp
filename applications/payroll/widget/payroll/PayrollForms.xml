@@ -33,7 +33,7 @@ under the License.
             <drop-down allow-empty="true">
                 <option key="Payment" description="Payment"/>
                 <option key="Deduction" description="Deduction"/>
-                <option key="systemElement" description="System Element"/>
+                <option key="System Element" description="System Element"/>
             </drop-down>
         </field>
         <field name="iscalulated"  title="Calculated" >
@@ -89,7 +89,7 @@ under the License.
             </drop-down>
         </field>
         <field name="benefit"  title="Benefit Type" >
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <option key="Cash" description="Cash Benefit"/>
                 <option key="Non-cash" description="Non-cash Benefit"/>
             </drop-down>
@@ -508,6 +508,8 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>        
+        <field name="pensionpercentage" title="Pension Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="nssfVolAmount" title="NSSF Vol Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
@@ -527,11 +529,13 @@ under the License.
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
         <field name="payrollPeriodId"><hidden/></field>
-        <field name="partyId">
+        <field name="partyId" title="Employee">
         	<drop-down>
         		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
         	</drop-down>
         </field>
+        <field name="pensionpercentage" title="Pension Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="nssfVolAmount" title="NSSF Vol Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="staffNo"> <hidden/> </field>
         <field name="staffName"> <hidden/> </field>
        
@@ -668,7 +672,7 @@ under the License.
         <field name="pension_maxContibution" title="Maximum Pension Contribution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="insuranceReliefmax" title="Maximum Insurance Relief" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="insuranceReliefRate" title="Insurance Relief Rate (%)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-                
+        <field name="staticnssfAmount" title="NSSF Flat Rate" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
     
