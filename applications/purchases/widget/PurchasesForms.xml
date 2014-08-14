@@ -72,7 +72,7 @@
         <field name="statusId" use-when="quote!=null" title="Status">
             <display-entity entity-name="StatusItem"/>
         </field>
-        <field name="description" type="description">
+        <field name="description">
             <textarea/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="quoteId==null">
@@ -80,6 +80,99 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="quoteId!=null">
             <submit/>
+        </field>
+    </form>
+
+    <form
+        name="EditQuoteItemsForm"
+        type="list"
+        list-name="listIt"
+        default-map-name="quote"
+        target="createPurchaseQuote"
+        >
+        <actions>
+        </actions>
+        <alt-target use-when="quoteId!=null" target="updatePurchaseQuote"/>
+
+        <field name="viewSize"><hidden value="${viewSize}"/></field>
+        <field name="viewIndex"><hidden value="${viewIndex}"/></field>
+
+        <field name="quoteItemSeqId" widget-style="buttontext">
+           <hyperlink target="listInvoiceItems"  description="${quoteItemSeqId}">
+                <parameter param-name="quoteId"/>
+                <parameter param-name="quoteItemSeqId"/>
+            </hyperlink>
+        </field>
+        <field name="productId">
+            <lookup target-form-name="LookupProduct" size="20"/>
+        </field>
+        <field name="quantity"><text size="10"/></field>
+        <field name="overrideGlAccountId">
+           <drop-down allow-empty="true">
+               <list-options list-name="glAccountOrganizationAndClassList" key-name="glAccountId" description="${glAccountId} ${accountName}"/>
+           </drop-down>
+        </field>
+        <field name="unitPrice" title="${uiLabelMap.AccountingUnitPrice}">
+            <text size="10"/>
+        </field>
+       <field name="total" widget-area-style="align-text">
+            <display type="currency" currency="${invoice.currencyUomId}"/><!-- this should not look like something you can modify, -->
+       </field>
+        <field name="description"><text size="50"/></field>
+        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
+        <field name="removeButton" title=" " widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem">
+                <parameter param-name="invoiceId"/>
+                <parameter param-name="invoiceItemSeqId"/>
+                <parameter param-name="viewIndex"/>
+                <parameter param-name="viewSize"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form
+        name="EditQuoteItemForm"
+        type="single"
+        target="createPurchaseQuoteItem"
+        title=""
+        default-map-name="quoteItem"
+        default-entity-name="QuoteLines"
+        header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <set field="quoteId" from-field="parameters.quoteId" />
+        </actions>
+        <field name="quoteId"><hidden/></field>
+        <field name="description">
+            <text size="80"/>
+        </field>
+        <field name="overrideGlAccountId">
+            <drop-down allow-empty="true">
+                <list-options list-name="glAccountOrganizationAndClassList" key-name="glAccountId" description="${glAccountId} ${accountName}"/>
+            </drop-down>
+        </field>
+        <field name="overrideGlAccountId">
+            <drop-down allow-empty="true">
+                <entity-options
+                    entity-name="GlAccount"
+                    key-field-name="glAccountId"
+                    description="${glAccountId} ${accountName}">
+                    <entity-order-by field-name="accountName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productId">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="quantity"><text size="10"/></field>
+
+
+        <field name="amount" title="${uiLabelMap.AccountingUnitPrice}"><text size="10"/></field>
+        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="quoteItem==null">
+            <submit button-type="button"/>
+        </field>
+        <field name="updateButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="quoteItem!=null">
+            <submit button-type="button"/>
         </field>
     </form>
 

@@ -32,10 +32,24 @@
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
+
         <menu-item name="editQuoteLines" title="Quote Lines">
-            <link target="editQuoteLines"/>
+            <link target="editQuoteLines">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
         </menu-item>
     </menu>
+
+    <menu name="QuotesSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="createNew" title="Create New Quote" widget-style="buttontext create">
+            <link target="editPurchaseQuote"/>
+        </menu-item>
+    </menu>
+
+
+
+
+
     <menu name="OrdersTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="find" title="${uiLabelMap.CommonFind}">
             <link target="FindPurchaseOrders"/>
