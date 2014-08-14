@@ -103,6 +103,7 @@
       <field name="orderDate" type="date-time"></field>
       <field name="statusId" type="id"></field>
       <field name="createdBy" type="id-vlong"></field>
+      <field name="supplierId" type="id-ne"></field>
       <field name="currencyUom" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="grandTotal" type="currency-amount"></field>
@@ -112,6 +113,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_HDR_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdBy" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PRCH_SPLR_PTY" title="Supplier" rel-entity-name="Party">
+          <key-map field-name="supplierId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="ORDER_HDR_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="SimplestScreen">
+        <section>
+            <widgets>
+                <label text="Simplest Screen possible in OFBiz!"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="AnotherSimpleScreen">
+        <section>
+            <widgets>
+                <label text="Just Another Simple Screen."/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CompoundedScreen">
+        <section>
+            <widgets>
+                <decorator-screen name="xhtml-decorator">
+                    <decorator-section name="title">
+                        <label text="A Screen made up of 2 simpler screens."/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <container>
+                            <include-screen name="SimplestScreen"/>
+                        </container>
+                        <container>
+                            <include-screen name="AnotherSimpleScreen"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ConditionalScreen">
+        <section>
+            <condition>
+                <if-compare field-name="parameters.show" operator="equals" value="widgets"/>
+            </condition>
+            <actions>
+                <set field="blah" value="blih"/>
+            </actions>
+            <widgets>
+                <label text="Condition passed. Showing widgets element. Blah is: ${blah}"/>
+            </widgets>
+            <fail-widgets>
+                <label text="Condition failed! Showing fail-widgets element. Blah is: ${blah}"/>
+            </fail-widgets>
+        </section>
+    </screen>
+
+    <screen name="ConditionalScreenWithBsh">
+        <section>
+            <condition>
+                <if-compare field-name="parameters.show" operator="equals" value="widgets"/>
+            </condition>
+            <actions>
+                <script location="component://learning/webapp/learning/WEB-INF/actions/learning/conditionalScreenActions.bsh"/>
+            </actions>
+            <widgets>
+                <label text="Condition passed. Showing widgets element. Blah is: ${blah}"/>
+
+                <label text="${passMsg}"/>
+            </widgets>
+            <fail-widgets>
+                <label text="Condition failed! Showing fail-widgets element. Blah is: ${blah}"/>
+            </fail-widgets>
+        </section>
+    </screen>
+
+    <screen name="NestedSections">
+        <section>
+            <condition>
+                <if-compare field-name="parameters.outer" operator="equals" value="true"/>
+            </condition>
+            <actions>
+                <set field="blah" value="blih"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label text="In Then part. Blah is: ${blah}"/>
+                </container>
+                <container>
+                    <label text="inner is: ${parameters.inner}"/>
+                </container>
+                <section>
+                    <condition>
+                        <if-compare field-name="parameters.inner" operator="equals" value="true"/>
+                    </condition>
+                    <actions>
+                        <set field="inner.blah" value="thenBlih"/>
+                    </actions>
+                    <widgets>
+                        <label text="In Then-Then part. inner.blah is: ${inner.blah}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label text="In Then-Else part. inner.blah is: ${inner.blah}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+            <fail-widgets>
+                <container>
+                    <label text="In Else part. Blah is: ${blah}"/>
+                </container>
+                <container>
+                    <label text="inner is: ${parameters.inner}"/>
+                </container>
+                <section>
+                    <condition>
+                        <if-compare field-name="parameters.inner" operator="equals" value="true"/>
+                    </condition>
+                    <actions>
+                        <set field="inner.blah" value="elseBlih"/>
+                    </actions>
+                    <widgets>
+                        <label text="In Else-Then part. inner.blah is: ${inner.blah}"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label text="In Else-Else part. inner.blah is: ${inner.blah}"/>
+                    </fail-widgets>
+                </section>
+            </fail-widgets>
+        </section>
+    </screen>
+
+    <screen name="GlobalContext">
+        <section>
+            <actions>
+                <set field="global1" value="Global Value A" global="true"/>
+                <set field="local1" value="Local Value A"/>
+                <script location="component://learning/webapp/learning/WEB-INF/actions/learning/globalContext.bsh"/>
+            </actions>
+            <widgets>
+                <label text="&lt;table style=&quot;width:50%&quot;&gt;&lt;tr&gt;"/>
+                <label text="&lt;td style=&quot;border:thin solid&quot;&gt;"/>
+                <include-screen name="NestedScreen"/>
+                <label text="&lt;/td&gt;"/>
+                <label text="&lt;td style=&quot;border:thin solid&quot;&gt;"/>
+                <container>
+                    <label text="GlobalContext screen:"/>
+                </container>
+                <container>
+                    <label text="global1: ${global1}"/>
+                </container>
+                <container>
+                    <label text="global2: ${global2}"/>
+                </container>
+                <container>
+                    <label text="global3: ${global3}"/>
+                </container>
+                <container>
+                    <label text="global4: ${global4}"/>
+                </container>
+                <container>
+                    <label text="local1: ${local1}"/>
+                </container>
+                <container>
+                    <label text="local2: ${local2}"/>
+                </container>
+                <container>
+                    <label text="local3: ${local3}"/>
+                </container>
+                <container>
+                    <label text="local4: ${local4}"/>
+                </container>
+                <label text="&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="NestedScreen">
+        <section>
+            <actions>
+                <set field="global3" value="Global Value C" global="true"/>
+                <set field="global4" value="Global Value D" global="true"/>
+                <set field="local3" value="Local Value c"/>
+                <set field="local4" value="Local Value d"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label text="NestedScreen screen:"/>
+                </container>
+                <container>
+                    <label text="global1: ${global1}"/>
+                </container>
+                <container>
+                    <label text="global2: ${global2}"/>
+                </container>
+                <container>
+                    <label text="global3: ${global3}"/>
+                </container>
+                <container>
+                    <label text="global4: ${global4}"/>
+                </container>
+                <container>
+                    <label text="local1: ${local1}"/>
+                </container>
+                <container>
+                    <label text="local2: ${local2}"/>
+                </container>
+                <container>
+                    <label text="local3: ${local3}"/>
+                </container>
+                <container>
+                    <label text="local4: ${local4}"/>
+                </container>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="header">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://learning/webapp/learning/includes/header.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="footer">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://learning/webapp/learning/includes/footer.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="xhtml-decorator">
+        <section>
+            <widgets>
+                <include-screen name="header1"/>
+                <decorator-section-include name="title"/>
+                <include-screen name="header2"/>
+                <decorator-section-include name="body"/>
+                <include-screen name="footer"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="header1">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://learning/webapp/learning/includes/header1.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="header2">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://learning/webapp/learning/includes/header2.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="body-header">
+        <section>
+            <widgets>
+                <label text="Start of Body"/>
+                <label text="&lt;span style=&quot;background-color:#FFEEEE&quot;&gt;"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="body-footer">
+        <section>
+            <widgets>
+                <label text="&lt;/span&gt;"/>
+                <label text="End of Body"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ShowProcessing">
+        <section>
+                <condition>
+                    <not>
+                        <if-empty field-name="parameters.submit"/>
+                    </not>
+                </condition>
+                <widgets>
+                    <container>
+                        <label text="firstName: ${parameters.firstName}"/>
+                    </container>
+                    <container>
+                        <label text="lastName: ${parameters.lastName}"/>
+                    </container>
+                    <container>
+                        <label text="combined: ${parameters.Combined}"/>
+                    </container>
+                    <container>
+                        <label text="submit: ${parameters.submit}"/></container>
+                    <container>
+                        <label text="All the parameters we received:"/>
+                    </container>
+                    <container>
+                        <label text="${parameters.allParams}"/>
+                    </container>
+                </widgets>
+        </section>
+    </screen>
+
+    <screen name="ListFormScreen">
+        <section>
+        <actions>
+            <!-- <set field="row1.firstName" value="First1"/>
+            <set field="row1.lastName" value="Last1"/>
+            <set field="row2.firstName" value="First2"/>
+            <set field="row2.lastName" value="Last2"/>
+            <set field="row3.firstName" value="First3"/>
+            <set field="row3.lastName" value="Last3"/>
+            <set field="listOfRecords[]" from-field="row1"/>
+            <set field="listOfRecords[]" from-field="row2"/>
+            <set field="listOfRecords[]" from-field="row3"/> -->
+            <script location="component://learning/webapp/learning/WEB-INF/actions/learning/loadListOfSampleData.bsh"/>
+        </actions>
+        <widgets>
+            <decorator-screen name="xhtml-decorator">
+                <decorator-section name="title">
+                    <label text="A Screen with a list of forms."/>
+                </decorator-section>
+                <decorator-section name="body">
+                    <include-form name="ListForm" location="component://learning/widget/learning/LearningForms.xml"/>
+                    <include-screen name="ShowProcessing"/>
+                </decorator-section>
+            </decorator-screen>
+        </widgets>
+        </section>
+    </screen>
+
+    <screen name="MultiFormScreen">
+        <section>
+            <actions>
+                <script location="component://learning/webapp/learning/WEB-INF/actions/learning/loadListOfSampleData.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="xhtml-decorator">
+                    <decorator-section name="title">
+                        <label text="A Screen with a multi type form."/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <include-form name="MultiForm" location="component://learning/widget/learning/LearningForms.xml"/>
+                        <include-screen name="ShowProcessing"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+
+
+</screens>
