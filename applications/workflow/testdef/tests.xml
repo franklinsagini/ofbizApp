@@ -18,15 +18,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz Applications Build" default="build" basedir=".">
-    <filelist id="application-builds" dir="applications"
-        files="content/build.xml,party/build.xml,
-               workeffort/build.xml,product/build.xml,marketing/build.xml,
-               order/build.xml,manufacturing/build.xml,
-               accounting/build.xml,
-    		   payroll/build.xml,
-    		   sharemanagement/build.xml,
-    	       accountholdertransactions/build.xml,
-               securityext/build.xml, humanres/build.xml, workflow/build.xml"/>
+<test-suite suite-name="example-tests"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/test-suite.xsd">
 
-</project>
+    <test-case case-name="userLoginEntityXmlAssert">
+        <entity-xml action="assert" entity-xml-url="component://example/testdef/assertdata/TestUserLoginData.xml"/>
+    </test-case>
+    <test-case case-name="testCreateExampleService Through Service Engine">
+        <service-test service-name="testCreateExampleService"/>
+    </test-case>
+    <test-case case-name="testCreateExampleService Direct Simple Method">
+        <simple-method-test location="component://example/script/org/ofbiz/example/example/ExampleServices.xml" name="testCreateExampleService"/>
+    </test-case>
+</test-suite>

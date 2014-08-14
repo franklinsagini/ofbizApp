@@ -18,15 +18,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz Applications Build" default="build" basedir=".">
-    <filelist id="application-builds" dir="applications"
-        files="content/build.xml,party/build.xml,
-               workeffort/build.xml,product/build.xml,marketing/build.xml,
-               order/build.xml,manufacturing/build.xml,
-               accounting/build.xml,
-    		   payroll/build.xml,
-    		   sharemanagement/build.xml,
-    	       accountholdertransactions/build.xml,
-               securityext/build.xml, humanres/build.xml, workflow/build.xml"/>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
-</project>
+    <menu name="EditExample" extends="EditExample" extends-resource="component://example/widget/example/ExampleMenus.xml">
+        <menu-item name="EditExampleOriginal" title="${uiLabelMap.ExampleOriginalExample}">
+            <link target="/example/control/EditExample" url-mode="inter-app">
+                <parameter param-name="exampleId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+</menus>
