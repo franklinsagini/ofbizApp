@@ -2,6 +2,48 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <screen name="CommonQuoteDecorator">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="headerItem" value="findQuotes"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <widgets>
+                                <include-menu name="QuotesTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not>
+                                            <if-empty field="parameters.quoteId"/>
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="QuotesSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                        <container style="leftclear">
+                                            <label style="h1" text="Quote From Supplier: ${quote.supplierId} of Quote ID: [${quoteId}]  ${${extraFunctionName}}"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
     <screen name="main">
         <section>
             <actions>
@@ -23,16 +65,16 @@
         <section>
             <actions>
                 <set field="headerItem" value="findQuotes"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="tabButtonItem" value="find"/>
                 <set field="purchaseQuoteCtx" from-field="parameters" />
             </actions>
             <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <container style="button-bar">
-                                    <link target="editPurchaseQuote" text="New Quote" style="buttontext create"/>
-                                </container>
+                                <include-menu name="QuotesSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <container style="clear"/>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
@@ -49,16 +91,46 @@
 
     <screen name="EditQuoteScreen">
         <section>
-            <actions>
-                <set field="hederItem" value="findQuotes"/><!-- this highlights the seleted menu-item with name "main" -->
+            <actions><!-- this highlights the seleted menu-item with name "main" -->
                 <set field="quoteId" from-field="parameters.quoteId"/>
+                <set field="tabButtonItem" value="editQuote"/>
                 <entity-one entity-name="PrchseQteHdr" value-field="quote" />
             </actions>
             <widgets>
-                <decorator-screen name="QuotesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="Edit Quote">
                             <include-form name="EditQuoteForm" location="component://purchases/widget/PurchasesForms.xml" />
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditQuoteItemsScreen">
+        <section>
+            <actions><!-- this highlights the seleted menu-item with name "main" -->
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <set field="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
+                <set field="tabButtonItem" value="editQuoteLines"/>
+                 <set field="viewIndex" from-field="parameters.viewIndex"/>
+                <set field="viewSize" from-field="parameters.viewSize"/>
+                <entity-one entity-name="PrchseQteHdr" value-field="quote" />
+                <entity-one entity-name="QuoteLines" value-field="quoteItem"/>
+                <entity-and entity-name="QuoteLines" list="quoteItems">
+                    <field-map field-name="quoteId" from-field="parameters.quoteId"/>
+                    <order-by field-name="quoteItemSeqId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Quote Items">
+                            <include-form name="EditQuoteItemsForm" location="component://purchases/widget/PurchasesForms.xml" />
+                        </screenlet>
+                        <screenlet title="Edit Quote Items">
+                            <include-form name="EditQuoteItemForm" location="component://purchases/widget/PurchasesForms.xml" />
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

@@ -26,4 +26,16 @@
         <auto-attributes include="nonpk" mode="IN" optional="false" />
         <override name="confirmDate" optional="true"/>
     </service>
+
+    <service name="createPurchaseQuoteItem" engine="simple"
+        default-entity-name="QuoteLines"
+        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createPurchaseQuoteItem">
+        <description>Create a new Quote Item Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="quoteItemSeqId" mode="INOUT" optional="true"/><!-- will optionally be assigned by the system -->
+        <override name="description" allow-html="any"/>
+    </service>
+
+
 </services>
