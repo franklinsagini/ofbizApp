@@ -130,10 +130,17 @@
 	<form name="EditEmplLeave" type="single" target="updateEmplLeaveExt"
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
+		<actions>
+			
+		</actions>
+		
 		<alt-target use-when="leaveApp==null" target="createEmplLeaveExt" />
 		<field name="partyId" title="Member">
-			<hidden value="${userLogin.partyId}" />
+			<text  disabled="true" default-value="${userLogin.partyId}" />
 		</field>
+		 <field name="appointmentdate" title="Appointment Date">
+			<text  disabled="true" default-value="${appointmentdate}"/>
+		</field> 
 		<field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}">
 			<drop-down allow-empty="true">
 				<entity-options description="${description}"
@@ -155,8 +162,8 @@
 		<field name="thruDate" tooltip="${uiLabelMap.CommonRequired}">
 			<date-time type="date" />
 		</field>
-		<field name="leaveBalance" tooltip="${uiLabelMap.CommonRequired}">
-			<display />
+		<field name="leaveBalance" >
+			<text default-value="${leaveBalance}" disabled="true"></text>
 		</field>
 		<field name="leaveStage">
 			<hidden value="01" />

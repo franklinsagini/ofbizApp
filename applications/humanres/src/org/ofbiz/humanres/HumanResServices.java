@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -20,21 +21,91 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
-//import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
-//import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
-//import org.ofbiz.webapp.event.EventHandlerException;
-
 
 public class HumanResServices {
+
+// ============================================================== 
+		public static String getLeaveBalance(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+/*   leaveTypeId partyId appointmentDate */
+		Date appointmentdate = null;
+		try {
+			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		//String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
+		//int partyId = new Integer(request.getParameter("partyId")).intValue();
+		
+		//Logger log = Logger.getLogger(HumanResServices.class);
+		//log.info("LLLLLLLLL FROM : "+appointmentdate);
+		
+
+		LocalDateTime stappointmentdate = new LocalDateTime(appointmentdate);
+		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
+				.getTimeInMillis());
+
+		PeriodType monthDay = PeriodType.months();
+
+		Period difference = new Period(stappointmentdate, stCurrentDate, monthDay);
+
+		int months = difference.getMonths();
+		double leaveBalances = months * 2.5;
+		String leaveBalance = Double.toString(leaveBalances);
+
+		//return leaveBalance;
+
+		result.put("leaveBalance", leaveBalance);
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+	}
+// ==============================================================
+
 
 	public static String getLeaveDuration(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-		//request.getPa
-		//yyyy-MM-dd
+
 		Date fromDate = null;
 		try {
 			fromDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fromDate")));
@@ -53,16 +124,7 @@ public class HumanResServices {
 		Logger log = Logger.getLogger(HumanResServices.class);
 		log.info("LLLLLLLLL FROM : "+fromDate);
 		log.info("LLLLLLLLL TO : "+thruDate);
-		
-		//LocalDateTime stfromDate = new LocalDateTime(fromDate.getTime());
-		//LocalDateTime stthruDate = new LocalDateTime(thruDate.getTime());
 
-		//PeriodType dayDay = PeriodType.days();
-
-		//Period difference = new Period(stfromDate, stthruDate, dayDay);
-
-		//int leaveDuration = difference.getDays();
-		
 		int leaveDuration = AccHolderTransactionServices.calculateWorkingDaysBetweenDates(fromDate, thruDate);
 		
 		result.put("leaveDuration", leaveDuration);
@@ -119,11 +181,7 @@ public class HumanResServices {
 		int leaveDuration = new Integer(request.getParameter("leaveDuration")).intValue();
 
 		LocalDateTime dateFromDate = new LocalDateTime(fromDate.getTime());
-		//Days days = Days.days(leaveDuration);
-		
-		//int stleaveDuration = leaveDuration;
-		//LocalDateTime dateThruDate = dateFromDate.plusDays(leaveDuration);
-		
+
 		Date endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
 		
 		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
