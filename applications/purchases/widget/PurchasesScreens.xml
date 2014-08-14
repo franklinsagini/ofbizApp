@@ -19,264 +19,46 @@
         </section>
     </screen>
 
-    <screen name="findQuotes">
+    <screen name="FindQuotesScreen">
         <section>
             <actions>
-                 <set field="headerItem" value="quotes"/><!-- this highlights the selected menu-item with name "main" -->
-                 <set field="tabButtonItem" value="find"/>
-                <set field="titleProperty" value="PageTitleFindOrder"/>
+                <set field="headerItem" value="findQuotes"/><!-- this highlights the selected menu-item with name "main" -->
                 <set field="purchaseQuoteCtx" from-field="parameters" />
             </actions>
             <widgets>
-                <decorator-screen name="QuotesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="EXAMPLE" action="_VIEW" />
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="editPurchaseQuote" text="New Quote" style="buttontext create"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.ExampleViewPermissionError}
-                                </label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="editPurchaseQuote" text="New Quote" style="buttontext create"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
 
-    <screen name="editPurchaseQuote">
+    <screen name="EditQuoteScreen">
         <section>
             <actions>
-                <set field="headerItem" value="quotes" />
-                <set field="tabButtonItem" value="editQuote"/>
-                <set field="titleProperty" value="Edit Quotes" />
-                <set field="quoteId" from-field="parameters.quoteId" />
+                <set field="hederItem" value="findQuotes"/><!-- this highlights the seleted menu-item with name "main" -->
+                <set field="quoteId" from-field="parameters.quoteId"/>
                 <entity-one entity-name="PrchseQteHdr" value-field="quote" />
             </actions>
             <widgets>
                 <decorator-screen name="QuotesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="Edit Quote">
-                            <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml" />
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="editPurchaseQuoteItems">
-        <section>
-            <actions>
-                <set field="headerItem" value="quotes" />
-                <set field="tabButtonItem" value="editQuoteLines"/>
-                <set field="titleProperty" value="Edit Quotes Lines" />
-                <set field="quoteId" from-field="parameters.quoteId" />
-            </actions>
-            <widgets>
-                <decorator-screen name="QuotesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="Edit Quote">
-                            <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml" />
-                        </screenlet>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <screenlet title="Quote Lines ">
-                            <include-form name="ListQuoteItems" location="component://purchases/widget/PurchasesForms.xml"/>
-                        </screenlet>
-                        <screenlet title="Add Quote Line">
-                            <include-form name="AddQuoteItem" location="component://purchases/widget/PurchasesForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <!-- Orders Screen -->
-    <screen name="findPurchaseOrders">
-        <section>
-            <actions>
-                <set field="headerItem" value="purchaseOrders"/><!-- this highlights the selected menu-item with name "main" -->
-                <set field="titleProperty" value="PageTitleFindOrders"/>
-                <set field="purchaseOrderCtx" from-field="parameters" />
-                <set field="tabButtonItem" value="find"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonPurchaseOrderDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <include-menu name="OrderSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
-                                        <container style="clear"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListPurchaseOrders"  location="component://purchases/widget/PurchasesForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="EditPurchaseOrders">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Edit Purchase Order"/>
-                <set field="headerItem" value="purchaseOrders"/>
-                <set field="tabButtonItem" value="editOrder"/>
-                <set field="orderId" from-field="parameters.orderId"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonPurchaseOrderDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditInvoice}">
-                                    <include-form name="EditPurchaseOrder" location="component://purchases/widget/PurchasesForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditInvoice}">
-                                    <include-form name="invoiceHeader" location="component://purchases/widget/PurchasesForms.xml"/>
-                                </screenlet>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="EditInvoiceItems">
-        <section>
-            <actions>
-                <property-map resource="AccountingEntityLabels" map-name="uiLabelMap" global="true"/>
-                <set field="viewIndex" from-field="parameters.viewIndex"/>
-                <set field="viewSize" from-field="parameters.viewSize"/>
-                <set field="titleProperty" value="PageTitleListInvoices"/>
-                <set field="tabButtonItem" value="listInvoiceItems"/>
-                <set field="invoiceId" from-field="parameters.invoiceId"/>
-                <set field="invoiceItemSeqd" from-field="parameters.invoiceItemSeqId"/>
-                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
-                <entity-one entity-name="Invoice" value-field="invoice"/>
-                <entity-one entity-name="InvoiceItem" value-field="invoiceItem"/>
-                <entity-and entity-name="InvoiceItem" list="invoiceItems">
-                    <field-map field-name="invoiceId" from-field="parameters.invoiceId"/>
-                    <order-by field-name="invoiceItemSeqId"/>
-                </entity-and>
-                <entity-condition entity-name="InvoiceItemType" list="PayrolGroup">
-                    <condition-expr field-name="parentTypeId" value="PAYROL"/>
-                </entity-condition>
-                <entity-condition entity-name="InvoiceItemType" list="PayrolList"/>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetAccountOrganizationAndClass.groovy"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingInvoiceItems}">
-                            <include-form name="EditInvoiceItems" location="component://accounting/widget/InvoiceForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.AccountingInvoiceItemAdd}">
-                            <section>
-                                <condition>
-                                    <not><if-compare field="invoice.invoiceTypeId" operator="equals" value="PAYROL_INVOICE"/></not>
-                                </condition>
-                                <widgets>
-                                    <include-form name="EditInvoiceItem" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </widgets>
-                                <fail-widgets>
-                                    <platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/InvoiceItemsPayrol.ftl"/></html></platform-specific>
-                                </fail-widgets>
-                            </section>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="findShipments">
-        <section>
-            <actions>
-                <set field="headerItem" value="Shipments"/><!-- this highlights the selected menu-item with name "main" -->
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="findReturns">
-        <section>
-            <actions>
-                <set field="headerItem" value="Returns"/><!-- this highlights the selected menu-item with name "main" -->
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="reports">
-        <section>
-            <actions>
-                <set field="headerItem" value="Reports"/><!-- this highlights the selected menu-item with name "main" -->
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <!-- Create Quotes -->
-    <screen name="EditPurchaseQuote">
-        <section>
-            <actions>
-                <set field="titleProperty" value="ManufacturingCreateProductionRun"/>
-                <set field="headerItem" value="Quotes"/>
-                <set field="purchaseQuoteId" from-field="parameters.purchaseQuoteId"/>
-                <entity-one entity-name="PrchseQteHdr" value-field="purchaseQuote"/>
-                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="EditPurchaseQuote" location="component://purchases/widget/PurchasesForms.xml"/>
+                            <include-form name="EditQuoteForm" location="component://purchases/widget/PurchasesForms.xml" />
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -285,81 +67,4 @@
     </screen>
 
 
-
-    <screen name="EditFileStatus">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Create Registry File Status"/>
-                <set field="headerItem" value="reports"/>
-                <set field="registryFileStatusId" from-field="parameters.registryFileStatusId"/>
-                <entity-one entity-name="RegistryFileStatus" value-field="fileStatus"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="EditFileStatus" location="component://purchases/widget/PurchasesForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="EditRegistryFile">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Request File"/>
-                <set field="headerItem" value="reports"/>
-                <set field="registryFileId" from-field="parameters.registryFileId"/>
-                <entity-one entity-name="RegistryFile" value-field="registryFile"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="EditRegistryFile" location="component://purchases/widget/PurchasesForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-
-
-    <screen name="EditRequestFile">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Create Registry File"/>
-                <set field="headerItem" value="reports"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="EditRequestFile" location="component://purchases/widget/PurchasesForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CreateRegistryFileRequest">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Request File"/>
-                <set field="headerItem" value="reports"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="PurchasesCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PurchaseQuoteCreate}">
-                            <include-form name="CreateRegistryFileRequest" location="component://purchases/widget/PurchasesForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
 </screens>
