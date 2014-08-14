@@ -1,37 +1,40 @@
 package org.ofbiz.humanres;
 
+import java.util.Calendar;
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-
 public class LeaveServices {
-	
-	public static String getLeaveBalance(GenericValue party){
-		String leaveBalance = "";
 
-		String partyId = party.getString("partyId");
+	public static String getLeaveAppointmentDate(GenericValue person){
+		String appointmentdate = "";
+
+		String partyId = person.getString("partyId");
 		
-		Delegator delegator = party.getDelegator();
+		Delegator delegator = person.getDelegator();
 				
-		List<GenericValue> leavebalanceELI = null; 
+		List<GenericValue> getLeaveAppointmentDateELI = null; 
 
 		try {
-			leavebalanceELI = delegator.findList("StaffLeaveBalances",
+			getLeaveAppointmentDateELI = delegator.findList("Person",
 					EntityCondition.makeCondition("partyId",
 							partyId), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 		
-		for (GenericValue genericValue : leavebalanceELI) {
-			leaveBalance = genericValue.getString("balance");
+		for (GenericValue genericValue : getLeaveAppointmentDateELI) {
+			appointmentdate = genericValue.getString("appointmentdate");
 		}
+		return appointmentdate;
 
-		return leaveBalance;
 	}
 	
 	public static String getpartyIdFrom(GenericValue party){
