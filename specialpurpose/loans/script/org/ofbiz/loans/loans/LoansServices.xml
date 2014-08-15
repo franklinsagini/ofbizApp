@@ -198,6 +198,12 @@ under the License.
             <set field="newEntity.isActive" value="Y"/>
             <sequenced-id field="newEntity.loanNo" sequence-name="LoanNumber" stagger-max="1"  />
             
+            <!-- Set WorkflowDocument -->
+            <set field="documentName" value="LOAN"/>
+            <set field="newEntity.workflowDocumentTypeId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getWorkflowDocumentType(documentName);}" type="String"/>
+            <!-- Set OrganizationUnit -->
+            <set field="partyId" from-field="userLogin.partyId"/>
+            <set field="newEntity.organizationUnitId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getUserOrganizationUnit(partyId);}" type="String"/>
             <create-value value-field="newEntity"/>
         <else>
         	<call-simple-method method-name="updateLoanApplication"></call-simple-method>

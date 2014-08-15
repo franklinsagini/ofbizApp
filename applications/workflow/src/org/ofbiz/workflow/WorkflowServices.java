@@ -1,89 +1,82 @@
-package org.ofbiz.sharemanagement;
+package org.ofbiz.workflow;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import javolution.util.FastMap;
 
+import org.apache.log4j.Logger;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.webapp.event.EventHandlerException;
 
-import com.google.gson.Gson;
-
+/**
+ * @author Japheth Odonya  @when Aug 15, 2014 9:01:19 PM
+ * 
+ * **/
 public class WorkflowServices {
-	public static String getBranches(HttpServletRequest request, HttpServletResponse response){
-		Map<String, Object> result = FastMap.newInstance();
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		String bankDetailsId = (String) request.getParameter("bankDetailsId");
-		//GenericValue saccoProduct = null;
-		//EntityListIterator branchesELI;// = delegator.findListIteratorByCondition("BankBranch", new EntityExpr("bankDetailsId", EntityOperator.EQUALS,  bankDetailsId), null, UtilMisc.toList("bankBranchId", "branchName"), "branchName", null);
-		//branchesELI = delegator.findListIteratorByCondition(dynamicViewEntity, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderBy, findOptions)
-		//branchesELI = delegator.findListIteratorByCondition("BankBranch", new EntityExpr("productId", EntityOperator.NOT_EQUAL, null), UtilMisc.toList("productId"), null);
-		List<GenericValue> branchesELI = null;
-		
-		//branchesELI = delegator.findList("BankBranch", new EntityExpr(), UtilMisc.toList("bankBranchId", "branchName"), null, null, null);
-		try {
-			//branchesELI = delegator.findList("BankBranch", EntityCondition.makeConditionWhere("(bankDetailsId = "+bankDetailsId+")"), null, null, null, false);
-			branchesELI = delegator.findList("BankBranch", EntityCondition.makeCondition("bankDetailsId", bankDetailsId), null, null, null, false);
-		} catch (GenericEntityException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		//SaccoProduct
 	
-		//Add Branches to a list
-		
-		if (branchesELI == null){
-			result.put("", "No Braches");
-		}
-		
-		for (GenericValue genericValue : branchesELI) {
-			result.put(genericValue.get("bankBranchId").toString(), genericValue.get("branchName"));
-		}
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(result);
+	public static Logger log = Logger.getLogger(WorkflowServices.class);
+	
+	/***
+	 * @author Japheth Odonya  @when Aug 15, 2014 9:01:33 PM
+	 * Get the Organization Unit given the Party/User (partyId)
+	 *  The OrganizationUnit is gotten by querying UnitEmployeeMap
+	 * */
+	public static String getUserOrganizationUnit(String partyId) {
 
-		// set the X-JSON content type
-		response.setContentType("application/x-json");
-		// jsonStr.length is not reliable for unicode characters
+		Map<String, Object> result = FastMap.newInstance();
+		log.info("What we got the Party ############ " + partyId);
+
+		Delegator delegator;
+		delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		List<GenericValue> unitEmployeeMapELI = null; // =
+
 		try {
-			response.setContentLength(json.getBytes("UTF8").length);
-		} catch (UnsupportedEncodingException e) {
-			try {
-				throw new EventHandlerException("Problems with Json encoding",
-						e);
-			} catch (EventHandlerException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			unitEmployeeMapELI = delegator.findList("UnitEmployeeMap",
+					EntityCondition.makeCondition("partyId",
+							partyId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
 		}
 
-		// return the JSON String
-		Writer out;
+		String organizationUnitId = "";
+		for (GenericValue genericValue : unitEmployeeMapELI) {
+			organizationUnitId = genericValue.getString("organizationUnitId");
+		}
+		
+		result.put("organizationUnitId", organizationUnitId);
+		return organizationUnitId;
+	}
+	
+	/***
+	 * Get the document workflow ID given the document name (this can either be LEAVE, LOAN, INVOICE etc)
+	 * **/
+	public static String getWorkflowDocumentType(String documentName){
+		Map<String, Object> result = FastMap.newInstance();
+		log.info("What we got the Document Name ############ " + documentName);
+
+		Delegator delegator;
+		delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> workflowDocumentTypeELI = null; // =
+
 		try {
-			out = response.getWriter();
-			out.write(json);
-			out.flush();
-		} catch (IOException e) {
-			try {
-				throw new EventHandlerException(
-						"Unable to get response writer", e);
-			} catch (EventHandlerException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			workflowDocumentTypeELI = delegator.findList("WorkflowDocumentType",
+					EntityCondition.makeCondition("name",
+							documentName), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
 		}
 
-		return json;
+		String workflowDocumentTypeId = "";
+		for (GenericValue genericValue : workflowDocumentTypeELI) {
+			workflowDocumentTypeId = genericValue.getString("workflowDocumentTypeId");
+		}
+		
+		result.put("workflowDocumentTypeId", workflowDocumentTypeId);
+		return workflowDocumentTypeId;
 	}
 }
