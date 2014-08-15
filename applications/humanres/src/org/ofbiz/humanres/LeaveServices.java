@@ -12,17 +12,40 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 public class LeaveServices {
+/*	public static int getApprovedLeaveSum(GenericValue person){
+		int newLeaveBalance = 0;
+		String partyId = person.getString("partyId");
+		
+		Delegator delegator = person.getDelegator();
+				
+		List<GenericValue> getApprovedLeaveSumELI = null;
+		try {
+			getApprovedLeaveSumELI = delegator.findList("StaffLeaveBalances",
+					EntityCondition.makeCondition("partyId",
+							partyId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		for (GenericValue genericValue2 : getApprovedLeaveSumELI) {
+			newLeaveBalance += genericValue2.getInteger("leaveDuration");
+		}
+		/////////////////////////////////////////////////////
 
+				
+		
+		return newLeaveBalance;
+
+	}*/
 	public static String getLeaveAppointmentDate(GenericValue person){
 		String appointmentdate = "";
-
+		
 		String partyId = person.getString("partyId");
 		
 		Delegator delegator = person.getDelegator();
 				
 		List<GenericValue> getLeaveAppointmentDateELI = null; 
-
-		try {
+		
+	try {
 			getLeaveAppointmentDateELI = delegator.findList("Person",
 					EntityCondition.makeCondition("partyId",
 							partyId), null, null, null, false);
@@ -33,6 +56,8 @@ public class LeaveServices {
 		for (GenericValue genericValue : getLeaveAppointmentDateELI) {
 			appointmentdate = genericValue.getString("appointmentdate");
 		}
+		
+				
 		return appointmentdate;
 
 	}
