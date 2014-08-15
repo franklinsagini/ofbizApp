@@ -244,7 +244,16 @@ under the License.
         <set field="newEntity.clearDuration" from-field="chequeSetup.durationToClear"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
+        
         <create-value value-field="newEntity"/>
+        <!-- create-object class-name="org.ofbiz.entity.GenericDelegator"  field="delegator">
+        	<field field="delegator"/>
+        </create-object -->
+        <set field="endDate" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.calculateChequeClearance(accountTransactionId)}" type="Date"/>
+        <!-- call-class-method  class-name="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" method-name="calculateChequeClearance" ret-field="endDate">
+        	<string value="${accountTransactionId}"/>
+        </call-class-method -->
+        
     </simple-method>
     <simple-method method-name="updateChequeDeposit" short-description="Update ChequeDeposit">
        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>

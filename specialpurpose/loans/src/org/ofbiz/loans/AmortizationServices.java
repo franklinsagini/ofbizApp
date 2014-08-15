@@ -34,12 +34,18 @@ public class AmortizationServices {
 	private static int ONE = 1;
 	private static String LINEAR = "LINEAR";
 	private static String REDUCING_BALANCE = "REDUCING_BALANCE";
+	
+	public static Logger log = Logger.getLogger(AmortizationServices.class);
+	
+
 
 	/****
 	 * For the Loan Application Specified calculate the Armotization Schedule
 	 **/
 	public static String generateschedule(HttpServletRequest request,
 			HttpServletResponse response) {
+		
+		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String loanApplicationId = (String) request
 				.getParameter("loanApplicationId");
@@ -98,6 +104,8 @@ public class AmortizationServices {
 		int iAmortizationCount = 0;
 
 		List<GenericValue> listTobeStored = new LinkedList<GenericValue>();
+		
+		
 
 		Timestamp repaymentDate = null;
 		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
@@ -142,13 +150,16 @@ public class AmortizationServices {
 
 			repaymentDate = calculateNextPaymentDate(repaymentDate);
 		}
+		
+		
 		// Save the list
 		try {
 			delegator.storeAll(listTobeStored);
 		} catch (GenericEntityException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		
+		
 		
 		updateLoanApplicationRepayments(delegator, loanApplicationId, paymentAmount, iRepaymentPeriod);
 		Writer out;
@@ -161,7 +172,6 @@ public class AmortizationServices {
 				throw new EventHandlerException(
 						"Unable to get response writer", e);
 			} catch (EventHandlerException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -298,7 +308,9 @@ public class AmortizationServices {
 			e2.printStackTrace();
 		}
 		
-		loanApplication.set("monthlyRepayment", paymentAmount);
+		loanApplication.set("monthlyRepayment", paymentAmount.setScale(
+				6, RoundingMode.HALF_UP));
+		
 		
 		//Calculate Total Repayment Amount
 		BigDecimal bdTotalRepayment = (paymentAmount.multiply(new BigDecimal(iRepaymentPeriod))).setScale(
