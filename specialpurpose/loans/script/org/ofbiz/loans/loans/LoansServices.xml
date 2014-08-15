@@ -198,6 +198,10 @@ under the License.
             <set field="newEntity.isActive" value="Y"/>
             <sequenced-id field="newEntity.loanNo" sequence-name="LoanNumber" stagger-max="1"  />
             
+            <!-- Set WorkflowDocument -->
+            <set field="newEntity.workflowDocumentTypeId" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/>
+            <!-- Set OrganizationUnit -->
+            <set field="newEntity.organizationUnitId" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/>
             <create-value value-field="newEntity"/>
         <else>
         	<call-simple-method method-name="updateLoanApplication"></call-simple-method>
