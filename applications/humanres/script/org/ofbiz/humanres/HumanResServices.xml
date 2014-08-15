@@ -926,24 +926,18 @@
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<set field="fromDate" from="lookedUpValue.fromDate"  /> 
 		<set field="leaveId" from="lookedUpValue.leaveId"  />
-
+		<set field="documentType" from="LEAVE"  />
 		<entity-one entity-name="EmplLeave" value-field="firstLevel">
 			<field-map field-name="leaveTypeId" from-field="lookedUpValue.leaveTypeId"/>
 			<field-map field-name="fromDate" from-field="lookedUpValue.fromDate"/>
 			<field-map field-name="partyId" from-field="lookedUpValue.partyId"/>
 		</entity-one>
 		<if-compare operator="equals" value="" field="checkforId.workflowDocumentTypeId">
-		<set field="workflowDocumentTypeId" value="${bsh:org.ofbiz.humanres.LeaveServices.getworkflowDocumentTypeId(firstLevel)"/>
-		</if-compare>
-		<!-- <entity-one entity-name="workflowDocumentTypeId" value-field="NextLevel">
-		<field-map field-name="workflowDocumentTypeId" from-field="lookedUpValue.workflowDocumentTypeId"/>
-		</entity-one>
-		<field-map field-name="partyId" from-field="lookedUpValue.partyId"/>
- -->
+		<set field="lookedUpValue.workflowDocumentTypeId" value="${bsh:org.ofbiz.humanres.LeaveServices.getworkflowDocumentTypeId(documentType)"/></if-compare>
 		<set field="lookedUpValue.forwardedBy" from-field="userLogin.userLoginId" />
 		<set field="lookedUpValue.leaveStatus" value="Forwarded" />
 		<store-value value-field="lookedUpValue" />
-
+		
 		<make-value value-field="newEntity" entity-name="LeaveStatusLog" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />

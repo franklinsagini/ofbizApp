@@ -2,18 +2,24 @@ package org.ofbiz.humanres;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
+import javolution.util.FastMap;
+
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionListBase;
 public class LeaveServices {
-	public static String getworkflowDocumentTypeId(GenericValue firstLevel){
+	public static Logger log = Logger.getLogger(LeaveServices.class);
+	public static String getworkflowDocumentTypeIdtry(GenericValue firstLevel){
 		String unitId = "";
 		String partyId = firstLevel.getString("partyId");
 		
@@ -37,7 +43,31 @@ public class LeaveServices {
 		return unitId;
 
 	}
-	
+	public static String getworkflowDocumentTypeId(String documentType){
+		
+		Map<String, Object> result = FastMap.newInstance();
+		log.info("================" + documentType + "================");
+
+		Delegator delegator;
+		delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> documentTypeELI = null; // =
+
+		try {
+			documentTypeELI = delegator.findList("WorkflowDocumentType",
+					EntityCondition.makeCondition("name",
+							documentType), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String workflowDocumentTypeId = "";
+		for (GenericValue genericValue : documentTypeELI) {
+			workflowDocumentTypeId = genericValue.getString("workflowDocumentTypeId");
+		}
+		
+		result.put("workflowDocumentTypeId", workflowDocumentTypeId);
+		return workflowDocumentTypeId;
+	}
 	
 	private static EntityCondition EntityConditionListBase(String string,
 			String partyId, String string2, String unitId) {
