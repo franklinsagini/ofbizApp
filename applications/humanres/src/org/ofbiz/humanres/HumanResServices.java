@@ -22,6 +22,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -78,39 +79,42 @@ public static String getLeaveBalance(HttpServletRequest request,
 		}
 		String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
 		int partyId = new Integer(request.getParameter("partyId")).intValue();
-	
+		
 		//   get current leave balance  //
 		
-		//double currentLeaveBalance = 0;
-		//Delegator delegator = (Delegator) request.getAttribute("delegator");
-		//Delegator delegator = getDelegator(partyId);
-		//List<GenericValue> getApprovedLeaveSumELI = null;
+		// double currentLeaveBalance = 0;
+		 Delegator delegator = (Delegator) request.getAttribute("delegator");
+		// //Delegator delegator = getDelegator(partyId);
+		// List<GenericValue> getApprovedLeaveSumELI = null;
 		
-		/*try {
-		getApprovedLeaveSumELI = delegator.findList("StaffLeaveBalances",
-				EntityCondition.makeCondition("partyId",
-						partyId), null, null, null, false);
-			} catch (GenericEntityException e) {
-					e.printStackTrace();
-			}
-		for (GenericValue genericValue2 : getApprovedLeaveSumELI) {
-		currentLeaveBalance = genericValue2.getInteger("balance");
-		}*/
+		// try {
+		// getApprovedLeaveSumELI = delegator.findList("StaffLeaveBalances",
+		// 		EntityCondition.makeCondition("partyId",
+		// 				partyId), null, null, null, false);
+		// 	} catch (GenericEntityException e) {
+		// 			e.printStackTrace();
+		// 	}
+		// for (GenericValue genericValue2 : getApprovedLeaveSumELI) {
+		// currentLeaveBalance = genericValue2.getInteger("balance");
+		// }
 		
 		// ============ get accrual rate ================ //
-/*		int accrualRate = 0;
-		List<GenericValue> getAccrueRateELI = null;
-		
+	double accrualRate = 0; 
+	GenericValue accrualRates = null;
 		try {
-			getAccrueRateELI = delegator.findList("EmplLeaveType",
-				EntityCondition.makeCondition("leaveTypeId",
-						leaveTypeId), null, null, null, false);
-			} catch (GenericEntityException e) {
-					e.printStackTrace();
-			}
-		for (GenericValue genericAccrueRate : getAccrueRateELI) {
-			accrualRate = genericAccrueRate.getInteger("accrualRate");
-		}*/
+			 accrualRates = delegator.findOne("EmplLeaveType",
+					UtilMisc.toMap("leaveTypeId", leaveTypeId), false);
+		} catch (GenericEntityException e) {
+			return "Cannot Get Accrual Rate";
+		}
+		if (accrualRates != null) {
+
+			accrualRate = accrualRates.getDouble("accrualRate");
+			
+		} else {
+			System.out.println("######## Accrual Rate not found #### ");
+		}
+
 		//========= ==============================//
 	
 		LocalDateTime stappointmentdate = new LocalDateTime(appointmentdate);
@@ -122,16 +126,16 @@ public static String getLeaveBalance(HttpServletRequest request,
 		Period difference = new Period(stappointmentdate, stCurrentDate, monthDay);
 
 		int months = difference.getMonths();
-		String leaveBalance = Double.toString(months);
-		//double accruedDays = months * accrualRate;
-		//double balanceDays =  accruedDays - currentLeaveBalance; 
-		//String accruedDay = Double.toString(accruedDays);
-		//String balanceDay = Double.toString(balanceDays);
+		//String leaveBalance = Double.toString(months);
+		double accruedDays = months * accrualRate;
+		double balanceDays =  accruedDays - 0; 
+		String accruedDay = Double.toString(accruedDays);
+		String balanceDay = Double.toString(balanceDays);
 
 		//return leaveBalance;
-		result.put("leaveBalance",leaveBalance );
-		//result.put("accruedDay", accruedDay);
-		//result.put("balanceDay" , balanceDay);
+		//result.put("leaveBalance",leaveBalance );
+		result.put("accruedDay", accruedDay);
+		result.put("balanceDay" , balanceDay);
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);

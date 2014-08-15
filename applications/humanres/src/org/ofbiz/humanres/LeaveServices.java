@@ -11,31 +11,65 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionListBase;
 public class LeaveServices {
-/*	public static int getApprovedLeaveSum(GenericValue person){
-		int newLeaveBalance = 0;
-		String partyId = person.getString("partyId");
+	public static String getworkflowDocumentTypeId(GenericValue firstLevel){
+		String unitId = "";
+		String partyId = firstLevel.getString("partyId");
 		
-		Delegator delegator = person.getDelegator();
+		Delegator delegator = firstLevel.getDelegator();
 				
-		List<GenericValue> getApprovedLeaveSumELI = null;
+		List<GenericValue> getEmplUnitELI = null;
 		try {
-			getApprovedLeaveSumELI = delegator.findList("StaffLeaveBalances",
-					EntityCondition.makeCondition("partyId",
-							partyId), null, null, null, false);
+			getEmplUnitELI = delegator.findList("UnitEmployeeMap",
+					EntityConditionListBase("partyId",
+							partyId,"unitId", unitId), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		for (GenericValue genericValue2 : getApprovedLeaveSumELI) {
-			newLeaveBalance += genericValue2.getInteger("leaveDuration");
+		for (GenericValue genericValueUnit : getEmplUnitELI) {
+			unitId = genericValueUnit.getString("organizationUnitId");
 		}
 		/////////////////////////////////////////////////////
 
 				
 		
-		return newLeaveBalance;
+		return unitId;
 
-	}*/
+	}
+	
+	
+	private static EntityCondition EntityConditionListBase(String string,
+			String partyId, String string2, String unitId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public static String getEmplUnit(GenericValue person){
+		String unitId = "";
+		String partyId = person.getString("partyId");
+		
+		Delegator delegator = person.getDelegator();
+				
+		List<GenericValue> getEmplUnitELI = null;
+		try {
+			getEmplUnitELI = delegator.findList("UnitEmployeeMap",
+					EntityCondition.makeCondition("partyId",
+							partyId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		for (GenericValue genericValueUnit : getEmplUnitELI) {
+			unitId = genericValueUnit.getString("organizationUnitId");
+		}
+		/////////////////////////////////////////////////////
+
+				
+		
+		return unitId;
+
+	}
 	public static String getLeaveAppointmentDate(GenericValue person){
 		String appointmentdate = "";
 		
