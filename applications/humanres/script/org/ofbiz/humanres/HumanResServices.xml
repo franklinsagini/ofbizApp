@@ -850,6 +850,7 @@
 			<sequenced-id sequence-name="EmplLeaveId" field="leaveId" />
 		</if-empty>
 		<set field="newEntity.leaveId" from-field="leaveId" />
+		<set field="newEntity.documentTypeId" value="LEAVE" />
 		<set field="newEntity.leaveStage" from-field="leaveStage" />
 		<create-value value-field="newEntity" />
 		<check-errors />
@@ -923,10 +924,20 @@
 		short-description="Forward Employee Leave">
 		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" ></entity-one>
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="fromDate" from="lookedUpValue.fromDate"  /> 
+		<set field="leaveId" from="lookedUpValue.leaveId"  />
+		<set field="documentType" from="LEAVE"  />
+		<entity-one entity-name="EmplLeave" value-field="firstLevel">
+			<field-map field-name="leaveTypeId" from-field="lookedUpValue.leaveTypeId"/>
+			<field-map field-name="fromDate" from-field="lookedUpValue.fromDate"/>
+			<field-map field-name="partyId" from-field="lookedUpValue.partyId"/>
+		</entity-one>
+		<if-compare operator="equals" value="" field="checkforId.workflowDocumentTypeId">
+		<set field="lookedUpValue.workflowDocumentTypeId" value="${bsh:org.ofbiz.humanres.LeaveServices.getworkflowDocumentTypeId(documentType)"/></if-compare>
 		<set field="lookedUpValue.forwardedBy" from-field="userLogin.userLoginId" />
 		<set field="lookedUpValue.leaveStatus" value="Forwarded" />
 		<store-value value-field="lookedUpValue" />
-
+		
 		<make-value value-field="newEntity" entity-name="LeaveStatusLog" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
