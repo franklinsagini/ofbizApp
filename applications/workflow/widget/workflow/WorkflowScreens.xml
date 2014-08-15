@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <!-- 
+    	organizationUnit
+     -->
+     <screen name="organizationUnit">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Organization Unit"/>
+                <set field="headerItem" value="organizationUnit"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createOrganizationUnit"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="OrganizationUnit" value-field="organizationUnitContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Organization Unit">
+                                    <include-form name="organizationUnit" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Units List">
+                        			<include-form name="listOrganizationUnit" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+   <!-- 
+   		documentType
+    -->
+    <screen name="documentType">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Document Type"/>
+                <set field="headerItem" value="documentType"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createDocumentType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="WorkflowDocumentType" value-field="documentTypeContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Document Type">
+                                    <include-form name="documentType" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Document Type">
+                        			<include-form name="listDocumentType" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- unitEmployeeMap
+    	 -->
+    <screen name="unitEmployeeMap">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Unit Employee Map"/>
+                <set field="headerItem" value="unitEmployeeMap"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createUnitEmployeeMap"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="UnitEmployeeMap" value-field="unitEmployeeMapContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Unit Employee Map">
+                                    <include-form name="unitEmployeeMap" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Unit Employee Map List">
+                        			<include-form name="listUnitEmployeeMap" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>	 
+    <!-- 
+    	documentLevelConfig
+     -->
+    <screen name="documentLevelConfig">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Document Level Config"/>
+                <set field="headerItem" value="documentLevelConfig"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createDocumentLevelConfig"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="DocumentLevelConfig" value-field="documentLevelConfigContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Document Level Config">
+                                    <include-form name="documentLevelConfig" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Document Level Configurations">
+                        			<include-form name="listDocumentLevelConfig" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+     <!-- 
+     	documentApproval
+      -->
+    <screen name="documentApproval">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Document Approval"/>
+                <set field="headerItem" value="documentApproval"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createDocumentApproval"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="OrganizationUnit" value-field="documentApprovalContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Document Approval">
+                                    <include-form name="documentApproval" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Document Approvals">
+                        			<include-form name="listDocumentApproval" location="component://workflow/widget/workflow/WorkflowForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

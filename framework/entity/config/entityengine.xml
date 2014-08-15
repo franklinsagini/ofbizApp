@@ -58,13 +58,6 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 		<!-- <group-map group-name="org.ofbiz" datasource-name="localpostgres"/> -->
 		<group-map group-name="org.ofbiz" datasource-name="localmssql"/>
 
-
-
-		<group-map group-name="org.ofbiz" datasource-name="localpostgres"/>
-		<!--group-map group-name="org.ofbiz" datasource-name="localmssql"/-->
-
-
-
         <group-map group-name="org.ofbiz.olap" datasource-name="localderbyolap"/>
         <group-map group-name="org.ofbiz.tenant" datasource-name="localderbytenant"/>
     </delegator>
@@ -729,7 +722,16 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <read-data reader-name="ext"/>
         <read-data reader-name="ext-test"/>
         <read-data reader-name="ext-demo"/>
-        <inline-jdbc
+        <!-- inline-jdbc
+                jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                jdbc-uri="jdbc:sqlserver://192.168.1.209:1433;databaseName=vergesacco;SelectMethod=cursor;"
+                jdbc-username="vergeuser"
+                jdbc-password="vergeuser2014"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="250"
+                time-between-eviction-runs-millis="600000"/ -->
+                <inline-jdbc
                 jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
                 jdbc-uri="jdbc:sqlserver://localhost:1433;databaseName=vergesacco;SelectMethod=cursor;"
                 jdbc-username="vergeuser"

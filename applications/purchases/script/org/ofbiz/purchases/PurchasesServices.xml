@@ -84,8 +84,11 @@
     </simple-method>
 
 
-    <simple-method method-name="createQuoteLine" short-description="Create a new Invoice Item">
+    <simple-method method-name="createPurchaseQuoteItem" short-description="Create a new Invoice Item">
+        <log level="info" message=">>>>>>>>>>>>>>>>>>>In createPurchaseQuoteItem quoteId is [${parameters.quoteId}]"/>
         <set field="quoteId" from-field="parameters.quoteId"/>
+        <log level="info" message=">>>>>>>>>>>>>>>>>>>In createPurchaseQuoteItem quoteId is [${parameters.quoteId}]"/>
+        <!-- TODO Remember to do something about statuses here -->
         <make-value value-field="newEntity" entity-name="QuoteLines"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -93,8 +96,29 @@
             <make-next-seq-id value-field="newEntity" seq-field-name="quoteItemSeqId"/> <!-- this finds the next sub-sequence ID -->
             <field-to-result field="newEntity.quoteItemSeqId" result-name="quoteItemSeqId"/>
         </if-empty>
+        <!-- if there is no amount and a productItem is supplied fill the amount(price) and description from the product record
+             TODO: there are return adjustments now that make this code very broken. The check for price was added as a quick fix. -->
+        <if-empty field="parameters.unitPrice">
+            <if-not-empty field="parameters.productId">
+                <entity-one entity-name="Product" value-field="product"/>
+                <set from-field="product.description" field="newEntity.description"/>
+                <set from-field="product" field="calculateProductPriceMap.product"/>
+                <call-service service-name="calculateProductPrice" in-map-name="calculateProductPriceMap">
+                    <result-to-field result-name="price" field="newEntity.unitPrice"/>
+                </call-service>
+            </if-not-empty>
+        </if-empty>
+        <if-not-empty field="parameters.productId">
+            <if-empty field="parameters.quantity">
+                <set field="newEntity.quantity" value="1.0" type="BigDecimal"/>
+             </if-empty>
+        </if-not-empty>
+        <if-empty field="newEntity.unitPrice">
+            <add-error>
+                <fail-property resource="AccountingUiLabels" property="AccountingInvoiceAmountIsMandatory"/>
+            </add-error>
+        </if-empty>
         <create-value value-field="newEntity"/>
     </simple-method>
-
 
 </simple-methods>
