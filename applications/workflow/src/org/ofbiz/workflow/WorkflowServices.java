@@ -56,6 +56,27 @@ public class WorkflowServices {
 	 * Get the document workflow ID given the document name (this can either be LEAVE, LOAN, INVOICE etc)
 	 * **/
 	public static String getWorkflowDocumentType(String documentName){
-		return null;
+		Map<String, Object> result = FastMap.newInstance();
+		log.info("What we got the Document Name ############ " + documentName);
+
+		Delegator delegator;
+		delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> workflowDocumentTypeELI = null; // =
+
+		try {
+			workflowDocumentTypeELI = delegator.findList("WorkflowDocumentType",
+					EntityCondition.makeCondition("name",
+							documentName), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String workflowDocumentTypeId = "";
+		for (GenericValue genericValue : workflowDocumentTypeELI) {
+			workflowDocumentTypeId = genericValue.getString("workflowDocumentTypeId");
+		}
+		
+		result.put("workflowDocumentTypeId", workflowDocumentTypeId);
+		return workflowDocumentTypeId;
 	}
 }
