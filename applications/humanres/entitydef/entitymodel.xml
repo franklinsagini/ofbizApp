@@ -555,6 +555,8 @@ under the License.
         <field name="bbf" type="fixed-point"></field>
         <field name="taken" type="fixed-point"></field>
         <field name="accrued" type="fixed-point"></field>
+        <field name="lostLeaveDays" type="id"></field>
+        <field name="carriedOverDays" type="id"></field>
         <field name="balance" type="id"></field>
         <prim-key field="staffLeaveBalancesId"/>
         <relation type="one" fk-name="leavebalance_leavetype" rel-entity-name="EmplLeaveType">
@@ -1242,6 +1244,19 @@ under the License.
 				
 	    <view-link  entity-alias="SupervisorLevelV" rel-entity-alias="EmploymentV">
 	    	<key-map field-name="partyId" rel-field-name="partyIdTo"/>
+	    </view-link>
+    </view-entity>
+    
+    <view-entity entity-name="EmplAnnualLeaveView" package-name="org.ofbiz.humanres">
+	    <member-entity entity-alias="StaffLeaveBalancesV" entity-name="StaffLeaveBalances"></member-entity>
+	    <member-entity entity-alias="EmplLeaveV" entity-name="EmplLeave"></member-entity>
+
+			<alias entity-alias="StaffLeaveBalancesV" name="partId" field="partyId"/>
+			<alias entity-alias="StaffLeaveBalancesV" name="balance" field="balance"/>
+			<alias entity-alias="EmplLeaveV" name="leaveTypeId" field="leaveTypeId"/>
+				
+	    <view-link  entity-alias="StaffLeaveBalancesV" rel-entity-alias="EmplLeaveV">
+	    	<key-map field-name="partyId" rel-field-name="partyId"/>
 	    </view-link>
     </view-entity>
     
