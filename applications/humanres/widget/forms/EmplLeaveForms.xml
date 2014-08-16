@@ -97,7 +97,7 @@
 			<display />
 		</field>
 		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext" use-when="${leaveStatus=='CREATED'}">
+			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
 				target="EditEmplLeave">
 				<parameter param-name="partyId" />
@@ -106,16 +106,16 @@
 			</hyperlink>
 		</field>
 		<field name="forwardLeave" title="${uiLabelMap.forward}"
-			widget-style="buttontext" use-when="${leaveStatus=='CREATED'}">
+			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.forward}"
-				target="forwardEmplLeave">
+				target="forwardApplication">
 				<parameter param-name="partyId" />
 				<parameter param-name="leaveTypeId" />
 				<parameter param-name="fromDate" />
 			</hyperlink>
 		</field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
-			widget-style="buttontext" use-when="${leaveStatus=='CREATED'}">
+			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
 				target="deleteEmplLeave">
 				<parameter param-name="partyId" />
@@ -130,24 +130,20 @@
 	<form name="EditEmplLeave" type="single" target="updateEmplLeaveExt"
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
-		<actions>
-			
-		</actions>
-		
 		<alt-target use-when="leaveApp==null" target="createEmplLeaveExt" />
 		<field name="partyId" title="Member">
-			<text value="${userLogin.partyId}" />
+			<hidden value="${userLogin.partyId}" />
 		</field>
 		 <field name="appointmentdate" title="Appointment Date">
-			<text value="${appointmentdate}"/>
+			<hidden value="${appointmentdate}"/>
 		</field> 
-		<field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}">
+		<field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}" title="Leave Type">
 			<drop-down allow-empty="true">
 				<entity-options description="${description}"
 					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
 			</drop-down>
 		</field>
-		<field name="emplLeaveReasonTypeId">
+		<field name="emplLeaveReasonTypeId" title="Leave Reason">
 			<drop-down allow-empty="true">
 				<entity-options description="${description}"
 					key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType" />
@@ -162,23 +158,17 @@
 		<field name="thruDate" tooltip="${uiLabelMap.CommonRequired}">
 			<date-time type="date" />
 		</field>
-		<field name="unitId" tooltip="${uiLabelMap.CommonRequired}">
+		<field name="organizationUnitId" tooltip="${uiLabelMap.CommonRequired}">
 			<hidden value="${unitId}"/>
 		</field>
-		<field name="accruedDay" >
+		<field name="accruedDay" title="Accrued Days" >
 			<text default-value="${accruedDay}" disabled="true"></text>
 		</field>
-		<field name="balanceDay" >
+		<!-- <field name="balanceDay" >
 			<text default-value="${balanceDay}" disabled="true"></text>
-		</field>
-		<field name="leaveBalance" >
-			<text default-value="${leaveBalance}" disabled="true"></text>
-		</field>
-		<field name="leaveStage">
-			<hidden value="01" />
-		</field>
-		<field name="leaveStatus">
-			<hidden value="CREATED" />
+		</field> -->
+		<field name="leaveBalance" title="Leave Balance">
+			<text default-value="${balanceDay}" disabled="true"></text>
 		</field>
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}"
 			widget-style="smallSubmit">
