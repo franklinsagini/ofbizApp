@@ -841,7 +841,8 @@
 		<remove-value value-field="agreementEmploymentAppl" />
 	</simple-method>
 
-	<simple-method method-name="createEmplLeave"
+
+<!-- 	<simple-method method-name="createEmplLeave"
 		short-description="Create Employee Leave">
 		<make-value entity-name="EmplLeave" value-field="newEntity" />
 		<set-pk-fields value-field="newEntity" map="parameters" />
@@ -857,7 +858,7 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="HumanResLeaveCreationSuccess" field="successMessage" />
 		<field-to-result field="responseMessage" result-name="successMessage" />
-	</simple-method>
+	</simple-method> -->
 
 	<simple-method method-name="updateEmplLeave"
 		short-description="Update Employee Leave">
@@ -920,35 +921,56 @@
         <create-value value-field="newEntity" />
 
     </simple-method>
-	<simple-method method-name="forwardEmplLeave"
-		short-description="Forward Employee Leave">
-		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" ></entity-one>
-		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
-		<set field="fromDate" from="lookedUpValue.fromDate"  /> 
-		<set field="leaveId" from="lookedUpValue.leaveId"  />
-		<set field="documentType" from="LEAVE"  />
-		<entity-one entity-name="EmplLeave" value-field="firstLevel">
-			<field-map field-name="leaveTypeId" from-field="lookedUpValue.leaveTypeId"/>
-			<field-map field-name="fromDate" from-field="lookedUpValue.fromDate"/>
-			<field-map field-name="partyId" from-field="lookedUpValue.partyId"/>
-		</entity-one>
-		<if-compare operator="equals" value="" field="checkforId.workflowDocumentTypeId">
-		<set field="lookedUpValue.workflowDocumentTypeId" value="${bsh:org.ofbiz.humanres.LeaveServices.getworkflowDocumentTypeId(documentType)"/></if-compare>
-		<set field="lookedUpValue.forwardedBy" from-field="userLogin.userLoginId" />
-		<set field="lookedUpValue.leaveStatus" value="Forwarded" />
-		<store-value value-field="lookedUpValue" />
-		
-		<make-value value-field="newEntity" entity-name="LeaveStatusLog" />
-		<set-pk-fields map="parameters" value-field="newEntity" />
-		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="leavestatuslogSequence" stagger-max="1" field="leaveStsLogId" />
-		<set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
-		<set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
-		<set field="newEntity.partyId" from="userLogin.userLoginId" />
-		<set field="newEntity.leaveLogStatus" value="Forwarded" />
-		<create-value value-field="newEntity" />
+	<simple-method method-name="createEmplLeave"
+		short-description="Create Employee Leave">
+		<make-value entity-name="EmplLeave" value-field="newEntity"/>
+		<set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <now-timestamp field="newEntity.createdDate"/>
+		<set field="documentName" value="LEAVE"  />
 
+		<if-empty field="parameters.workflowDocumentTypeId">
+			<set field="newEntity.workflowDocumentTypeId" 
+			value="${bsh:org.ofbiz.humanres.LeaveServices.getWorkflowDocumentType(documentName);}"/>
+
+		<set field="newEntity.applicationStatus" value="NEW"/>
+		<set field="newEntity.leaveStatus" value="DRAFT"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<sequenced-id sequence-name="EmplLeaveId" field="leaveId" />
+		<set field="newEntity.leaveId" from-field="leaveId" />
+		<create-value value-field="newEntity"/>
+
+		<make-value value-field="newStatusLog" entity-name="LeaveStatusLog" />
+		<set-pk-fields map="parameters" value-field="newStatusLog" />
+		<set-nonpk-fields map="parameters" value-field="newStatusLog" />
+		<sequenced-id sequence-name="leavestatuslogSequence" stagger-max="1" field="leaveStsLogId" />
+		<set field="newStatusLog.leaveStsLogId" from-field="leaveStsLogId" />
+		<set field="newStatusLog.leaveId" from="newEntity.leaveId" />
+		<set field="newStatusLog.partyId" from="userLogin.userLoginId" />
+		<set field="newStatusLog.leaveLogStatus" value="NEW" />
+		<create-value value-field="newStatusLog" />
+		<else>
+			<call-simple-method method-name="updateLeaveApplication"></call-simple-method>
+		</else>
+		</if-empty>
 	</simple-method>
+	<simple-method method-name="updateLeaveApplication" short-description="Update Leave Application">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        
+        <set field="partyId" from-field="parameters.partyId"/>
+        <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
+        <set field="fromDate" from-field="parameters.fromDate"/>
+        	<entity-one value-field="currentApplication" entity-name="EmplLeave">
+        		<field-map field-name="leaveTypeId" from-field="leaveTypeId"/>
+        		<field-map field-name="partyId" from-field="partyId"/>
+        		<field-map field-name="fromDate" from-field="fromDate"/>
+        	</entity-one>
+           <set field="lookedUpValue.updatedBy" from-field="userLogin.userLoginId"/>
+
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
 
 	<simple-method method-name="deleteEmplLeave"
 		short-description="Delete Employee Leave">
