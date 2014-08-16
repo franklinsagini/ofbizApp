@@ -1,11 +1,41 @@
 <script type="text/javascript">
    jQuery(document).ready(function(){
-
-   jQuery('select[name="leaveTypeId"]').change(function(){
+   // Calculate new leave balance //
+   jQuery('input[name="leaveDuration"]').change(function(){
 		 
+         var leaveDuration = this.value;
+         var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
+               
+         var reqUrl = '/humanres/control/emplleaveNewLeaveBalance';
+          if ((leaveBalance.length > 0) && (leaveDuration.length > 0)){
+         	calculateNewLeaveBalance(reqUrl, leaveDuration, leaveBalance);
+         }
+
+        });
+     function calculateNewLeaveBalance(reqUrl, leaveDuration, leaveBalance){
+	    jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'leaveBalance': leaveBalance, 'leaveDuration':leaveDuration}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+					 $('input[name="newLeaveBalance"]').val(data.newLeaveBalance);
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    } 
+   // Calculate annual leave //
+   jQuery('select[name="leaveTypeId"]').change(function(){
+		 //jQuery('input[name="leaveBalance"]').show();
          var leaveTypeId = this.value;
+         //console.log(leaveTypeId);
          if (leaveTypeId =="Annual leave"){
-         
+          
          var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
          var partyId =  jQuery('input[name="partyId"]').val();
          
@@ -14,6 +44,11 @@
          	calculateBalance(reqUrl, leaveTypeId, partyId,appointmentdate);
          }
 
+         }
+         if(leaveTypeId !="Annual leave"){
+         	jQuery('input[name="balanceDay"]').val("");
+
+         	jQuery('input[name="accruedDay"]').val("");
          }
          
         });
@@ -80,8 +115,10 @@
 	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId ,"appointmentdate" :appointmentdate}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
+	     			//$('input[name="leaveBalance"]').val(data.leaveBalance);
+					 $('input[name="accruedDay"]').val(data.accruedDay);
+					 $('input[name="balanceDay"]').val(data.balanceDay);
 					 $('input[name="leaveBalance"]').val(data.leaveBalance);
-					 
 	               },
 	      error : function(errorData){
 	

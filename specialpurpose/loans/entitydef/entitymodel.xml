@@ -307,6 +307,13 @@ under the License.
 		<prim-key field="loanSecurityId"/>
 	</entity>
 	
+	<entity entity-name="LoanNumber" package-name="org.ofbiz.loans"
+		title="LoanNumber Entity">
+		<field name="loanNumberId" type="id-ne"></field>
+		<field name="description" type="description"></field>
+		<prim-key field="loanNumberId"/>
+	</entity>
+	
 	<!-- org.ofbiz.loans.Bank -->
 	<entity entity-name="Bank" package-name="org.ofbiz.loans.Bank"
 		title="Bank Entity">
@@ -395,6 +402,15 @@ under the License.
 		 <field name="repaymentStartDate" type="date-time"></field>
 		 
 		 <field name="totalRepayment" type="fixed-point"></field>
+		 
+		 <field name="organizationUnitId" type="id"></field>
+		 <field name="workflowDocumentTypeId" type="id"></field>
+		 <field name="documentApprovalId" type="id"></field>
+		 <field name="responsibleEmployee" type="id"></field>
+		 
+		 
+		 <field name="approvalStatus" type="name"></field> <!-- In Progress (at Level N), Approved by Level N -->
+		 
 		
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
@@ -409,6 +425,18 @@ under the License.
       
       <relation type="one" fk-name="LOANSTATUS_FK" rel-entity-name="LoanStatus">
         <key-map field-name="loanStatusId"/>
+      </relation>
+      
+
+
+	<relation type="one" fk-name="LOANAPP_ORGANIZATIONUNIT_FK" rel-entity-name="OrganizationUnit">
+        <key-map field-name="organizationUnitId"/>
+      </relation>
+      <relation type="one" fk-name="LOANAPP_WORKFLOW_FK" rel-entity-name="WorkflowDocumentType">
+        <key-map field-name="workflowDocumentTypeId"/>
+      </relation>
+      <relation type="one" fk-name="LOANAPP_APPROVAL_FK" rel-entity-name="DocumentApproval">
+        <key-map field-name="documentApprovalId"/>
       </relation>
 	</entity>
 	

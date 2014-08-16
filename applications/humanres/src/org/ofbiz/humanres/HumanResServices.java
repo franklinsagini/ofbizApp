@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,17 +22,54 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
 
 public class HumanResServices {
 
-// ============================================================== 
-		public static String getLeaveBalance(HttpServletRequest request,
+	/*public static double getApprovedLeaveSum(GenericValue person){
+		double newLeaveBalance = 0;
+		String partyId = person.getString("partyId");
+		
+		Delegator delegator = getDelegator();
+				
+		List<GenericValue> getApprovedLeaveSumELI = null;
+		try {
+			getApprovedLeaveSumELI = delegator.findList("StaffLeaveBalances",
+					EntityCondition.makeCondition("partyId",
+							partyId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		for (GenericValue genericValue2 : getApprovedLeaveSumELI) {
+			newLeaveBalance += genericValue2.getInteger("leaveDuration");
+		}
+		/////////////////////////////////////////////////////
+
+				
+		
+		return newLeaveBalance;
+
+	}*/
+	
+	
+/*private static Delegator getDelegator(int partyId) {
+		// TODO Auto-generated method stub
+		return null;
+	}*/
+
+
+		// ============================================================== 
+public static String getLeaveBalance(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-/*   leaveTypeId partyId appointmentDate */
+
 		Date appointmentdate = null;
 		try {
 			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
@@ -39,28 +77,65 @@ public class HumanResServices {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		//String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
-		//int partyId = new Integer(request.getParameter("partyId")).intValue();
+		String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
+		int partyId = new Integer(request.getParameter("partyId")).intValue();
 		
-		//Logger log = Logger.getLogger(HumanResServices.class);
-		//log.info("LLLLLLLLL FROM : "+appointmentdate);
+		//   get current leave balance  //
 		
+		// double currentLeaveBalance = 0;
+		 Delegator delegator = (Delegator) request.getAttribute("delegator");
+		// //Delegator delegator = getDelegator(partyId);
+		// List<GenericValue> getApprovedLeaveSumELI = null;
+		
+		// try {
+		// getApprovedLeaveSumELI = delegator.findList("StaffLeaveBalances",
+		// 		EntityCondition.makeCondition("partyId",
+		// 				partyId), null, null, null, false);
+		// 	} catch (GenericEntityException e) {
+		// 			e.printStackTrace();
+		// 	}
+		// for (GenericValue genericValue2 : getApprovedLeaveSumELI) {
+		// currentLeaveBalance = genericValue2.getInteger("balance");
+		// }
+		
+		// ============ get accrual rate ================ //
+	double accrualRate = 0; 
+	GenericValue accrualRates = null;
+		try {
+			 accrualRates = delegator.findOne("EmplLeaveType",
+					UtilMisc.toMap("leaveTypeId", leaveTypeId), false);
+		} catch (GenericEntityException e) {
+			return "Cannot Get Accrual Rate";
+		}
+		if (accrualRates != null) {
 
+			accrualRate = accrualRates.getDouble("accrualRate");
+			
+		} else {
+			System.out.println("######## Accrual Rate not found #### ");
+		}
+
+		//========= ==============================//
+	
 		LocalDateTime stappointmentdate = new LocalDateTime(appointmentdate);
 		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
 				.getTimeInMillis());
-
+		
 		PeriodType monthDay = PeriodType.months();
 
 		Period difference = new Period(stappointmentdate, stCurrentDate, monthDay);
 
 		int months = difference.getMonths();
-		double leaveBalances = months * 2.5;
-		String leaveBalance = Double.toString(leaveBalances);
+		//String leaveBalance = Double.toString(months);
+		double accruedDays = months * accrualRate;
+		double balanceDays =  accruedDays - 0; 
+		String accruedDay = Double.toString(accruedDays);
+		String balanceDay = Double.toString(balanceDays);
 
 		//return leaveBalance;
-
-		result.put("leaveBalance", leaveBalance);
+		//result.put("leaveBalance",leaveBalance );
+		result.put("accruedDay", accruedDay);
+		result.put("balanceDay" , balanceDay);
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -229,5 +304,9 @@ public class HumanResServices {
 
 
 	}
-
+public static void main(String[] args){
+	
+	
 }
+}
+
