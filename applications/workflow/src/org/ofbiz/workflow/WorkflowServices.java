@@ -129,7 +129,6 @@ public class WorkflowServices {
 				.getString("workflowDocumentTypeId");
 		String documentApprovalId = null;
 		documentApprovalId = loanApplication.getString("documentApprovalId");
-		
 		GenericValue documentApproval = doFoward(delegator, organizationUnitId,
 				workflowDocumentTypeId, documentApprovalId);
 		
