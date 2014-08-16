@@ -340,9 +340,13 @@ under the License.
     </request-map>
     
     <request-map uri="forwardApplication">
+		<security auth="true" https="true"/>
     	<event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" />
-		<response name="success" type="none">
-    </response>
+		<response name="success" type="view"
+			value="loanapplication">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="loanapplication" />
     </request-map>
     
     <request-map uri="loandetails">
