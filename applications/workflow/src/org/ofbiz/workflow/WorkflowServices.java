@@ -129,6 +129,7 @@ public class WorkflowServices {
 				.getString("workflowDocumentTypeId");
 		String documentApprovalId = null;
 		documentApprovalId = loanApplication.getString("documentApprovalId");
+		
 		GenericValue documentApproval = doFoward(delegator, organizationUnitId,
 				workflowDocumentTypeId, documentApprovalId);
 		
@@ -140,10 +141,14 @@ public class WorkflowServices {
 			loanApplication.set("documentApprovalId", documentApproval.getString("documentApprovalId"));
 			
 			if ((documentApproval.getString("nextLevel") == null) || (documentApproval.getString("nextLevel").equals(""))){
-			loanApplication.set("approvalStatus", documentApproval.getString("stageAction"));
+				loanApplication.set("approvalStatus", documentApproval.getString("stageAction"));
 			} else{
 				loanApplication.set("approvalStatus", documentApproval.getString("stageAction")+" (APPROVED)");
 			}
+			
+			//Set Responsible
+			//responsibleEmployee
+			loanApplication.set("responsibleEmployee", documentApproval.getString("responsibleEmployee"));
 			
 			
 			
@@ -161,29 +166,29 @@ public class WorkflowServices {
 		// return JSONBuilder.class.
 		// JSONObject root = new JSONObject();
 		
-		Gson gson = new Gson();
-		String json = gson.toJson(result);
+		//		Gson gson = new Gson();
+		//		String json = gson.toJson(result);
 
-		System.out.println("json = " + json);
+		//System.out.println("json = " + json);
 
 		// set the X-JSON content type
-		response.setContentType("application/x-json");
+		//response.setContentType("application/x-json");
 		// jsonStr.length is not reliable for unicode characters
-		try {
-			response.setContentLength(json.getBytes("UTF8").length);
-		} catch (UnsupportedEncodingException e) {
-			try {
-				throw new EventHandlerException("Problems with Json encoding",
-						e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
+		//		try {
+		//			response.setContentLength(json.getBytes("UTF8").length);
+		//		} catch (UnsupportedEncodingException e) {
+		//			try {
+		//				throw new EventHandlerException("Problems with Json encoding",
+		//						e);
+		//			} catch (EventHandlerException e1) {
+		//				e1.printStackTrace();
+		//			}
+		//		}
 		// return the JSON String
 		Writer out;
 		try {
 			out = response.getWriter();
-			out.write(json);
+			out.write(result.get("fowardMessage").toString());
 			out.flush();
 		} catch (IOException e) {
 			try {
@@ -193,7 +198,7 @@ public class WorkflowServices {
 				e1.printStackTrace();
 			}
 		}
-		return json;
+		return result.get("fowardMessage").toString();
 
 	}
 
