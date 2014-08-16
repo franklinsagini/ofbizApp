@@ -198,7 +198,7 @@ public class WorkflowServices {
 				e1.printStackTrace();
 			}
 		}
-		return result.get("fowardMessage").toString();
+		return "";//result.get("fowardMessage").toString();
 
 	}
 
