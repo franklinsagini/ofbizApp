@@ -176,4 +176,50 @@
         </field>
     </form>
 
+    <!--
+        Purchase Orders Forms
+    -->
+    <form name="FindPurchaseOrders" default-map-name="purchaseOders" target="findPurchaseOrders" type="single">
+        <auto-fields-entity entity-name="PurchaseOrderHeader" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListPurchaseOrders" type="list" list-name="listIt"
+        paginate-target="findPurchaseOrders" default-entity-name="PurchaseOrderHeader"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2"
+        default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="purchaseOrderCtx" />
+                <field-map field-name="entityName" value="PurchaseOrderHeader" />
+                <field-map field-name="orderBy" from-field="parameters.sortField" />
+                <field-map field-name="viewIndex" from-field="viewIndex" />
+                <field-map field-name="viewSize" from-field="viewSize" />
+            </service>
+        </actions>
+        <field name="orderId" title="Order ID" sort-field="true" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${orderId}" target="editPurchaseQuote">
+                <parameter param-name="orderId" />
+            </hyperlink>
+        </field>
+        <field name="orderName" sort-field="true">
+            <display />
+        </field>
+        <field name="orderDate" sort-field="true">
+            <display type="date"/>
+        </field>
+        <field name="statusId" title="Status" sort-field="true">
+            <display/>
+        </field>
+        <field name="createdBy" title="Prepared By" sort-field="true">
+            <display/>
+        </field>
+        <field name="supplierId" sort-field="true">
+            <display />
+        </field>
+    </form>
+
 </forms>
