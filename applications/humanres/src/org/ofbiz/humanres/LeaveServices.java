@@ -53,7 +53,7 @@ public class LeaveServices {
 		
 		List<GenericValue> leaveApplicationELI = null;
 		GenericValue leave = null;
-		log.info(" From Date : " + fromDate);
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>From Date : " + fromDate);
 
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -129,64 +129,35 @@ public class LeaveServices {
 
 	}
 
-	/**
-	 * Get Current Approval from DocumentLevelConfig
-	 * **/
-	private static GenericValue getCurrentApprovalFromLevelConfig(
-			Delegator delegator, String organizationUnitId,
-			String workflowDocumentTypeId) {
+	public static String getWorkflowDocumentType(String documentName) {
+		Map<String, Object> result = FastMap.newInstance();
+		log.info("What we got the Document Name ############ " + documentName);
 
-		List<GenericValue> documentLevelConfigELI = new LinkedList<GenericValue>();
+		Delegator delegator;
+		delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> workflowDocumentTypeELI = null; // =
 
-		EntityConditionList<EntityExpr> documentLevelConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"organizationUnitId", EntityOperator.EQUALS,
-						organizationUnitId), EntityCondition.makeCondition(
-						"workflowDocumentTypeId", EntityOperator.EQUALS,
-						workflowDocumentTypeId)), EntityOperator.AND);
 		try {
-			documentLevelConfigELI = delegator.findList("DocumentLevelConfig",
-					documentLevelConditions, null, null, null, false);
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
-
-		GenericValue documentLevelConfig = null;
-
-		for (GenericValue genericValue : documentLevelConfigELI) {
-			documentLevelConfig = genericValue;
-		}
-
-		String currentApprovalId = documentLevelConfig
-				.getString("documentApprovalId");
-
-		// Get the DocumentApproval
-		GenericValue currentApproval = null;
-		currentApproval = getCurrentApprovalFromDocumentApproval(delegator,
-				currentApprovalId);
-		return currentApproval;
-	}
-
-	public static GenericValue getCurrentApprovalFromDocumentApproval(
-			Delegator delegator, String documentApprovalId) {
-
-		GenericValue documentApproval = null;
-		try {
-			documentApproval = delegator.findOne("DocumentApproval",
-					UtilMisc.toMap("documentApprovalId", documentApprovalId),
-					false);
+			workflowDocumentTypeELI = delegator.findList(
+					"WorkflowDocumentType",
+					EntityCondition.makeCondition("name", documentName), null,
+					null, null, false);
 		} catch (GenericEntityException e) {
-			// UtilMisc.toMap("errMessage", e.getMessage()), locale));
-			// return "Document Approved";
 			e.printStackTrace();
 		}
-		return documentApproval;
+
+		String workflowDocumentTypeId = "";
+		for (GenericValue genericValue : workflowDocumentTypeELI) {
+			workflowDocumentTypeId = genericValue
+					.getString("workflowDocumentTypeId");
+		}
+
+		result.put("workflowDocumentTypeId", workflowDocumentTypeId);
+		return workflowDocumentTypeId;
 	}
 
-	// =====================================//
 
-	
-	public static String getEmplUnit(GenericValue person) {
+		public static String getEmplUnit(GenericValue person) {
 		String organizationUnitId = "";
 		String partyId = person.getString("partyId");
 

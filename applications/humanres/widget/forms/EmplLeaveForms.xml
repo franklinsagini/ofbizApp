@@ -90,14 +90,16 @@
 		<field name="leaveDuration">
 			<display />
 		</field>
-		<field name="leaveBalance">
+		<field name="approvalStatus">
 			<display />
 		</field>
-		<field name="leaveStatus">
-			<display />
+		<field name="responsibleEmployee">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}" key-field-name="partyId">
+			
+			</display-entity>
 		</field>
 		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
 				target="EditEmplLeave">
 				<parameter param-name="partyId" />
@@ -106,17 +108,16 @@
 			</hyperlink>
 		</field>
 		<field name="forwardLeave" title="${uiLabelMap.forward}"
-			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.forward}"
 				target="forwardApplication">
 				<parameter param-name="partyId" />
-				<parameter param-name="leaveId" />
 				<parameter param-name="leaveTypeId" />
 				<parameter param-name="fromDate" />
 			</hyperlink>
 		</field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
-			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
 				target="deleteEmplLeave">
 				<parameter param-name="partyId" />
@@ -212,14 +213,14 @@
 			<set field="entityName" value="EmplLeaveView" />
 			<entity-condition entity-name="EmplLeaveView">
 				<condition-list>
-					<condition-expr field-name="leaveStatus" operator="not-equals"
-						value="CREATED" />
-					<condition-expr field-name="responsibleEmployee" operator="equals"
+					 <!-- <condition-expr field-name="applicationStatus" operator="equals"
+						value="NEW" /> -->
+					<!--<condition-expr field-name="responsibleEmployee" operator="equals"
 						from-field="responsibleEmployee" />
-					 <!-- <condition-expr field-name="partyIdFrom" operator="equals"
-						from-field="partyIdFromV" /> -->
-					<condition-expr field-name="organizationUnitId" operator="equals"
-						from-field="organizationUnitId" />
+					 <condition-expr field-name="partyIdFrom" operator="equals"
+						from-field="partyIdFromV" />-->
+					<!-- <condition-expr field-name="organizationUnitId" operator="equals"
+						from-field="organizationUnitId" />  -->
 				</condition-list>
 				<order-by field-name="partyId" />
 			</entity-condition>
@@ -247,7 +248,6 @@
 			widget-style="buttontext">
 			<hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.viewdetails}">
 				<parameter param-name="partyId" />
-				<parameter param-name="leaveId" />
 				<parameter param-name="fromDate" />
 				<parameter param-name="leaveTypeId" />
 			</hyperlink>
@@ -296,7 +296,7 @@
 		</field>
 	</form>
 
-	<form name="approveEmplLeaveStatus" type="single" target="approveEmplLeaveStatus"
+	<form name="approveEmplLeaveStatus" type="single" target="forwardApplication"
 		default-map-name="leaveApp">
 		<actions>
 			<set field="entityName" value="EmplLeave" />
