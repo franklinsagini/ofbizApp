@@ -26,6 +26,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
+//import org.ofbiz.workflow.WorkflowServices;
 
 public class LeaveServices {
 	public static Logger log = Logger.getLogger(LeaveServices.class);
@@ -33,25 +34,19 @@ public class LeaveServices {
 	public static String forwardApplication(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-		// Delegator delegator = dctx.getDelegator();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		// request.getParameter(arg0)
+		// =============== primary Keys     ============//
 		String partyId = (String) request.getParameter("partyId");
 		String leaveTypeId = (String) request.getParameter("leaveTypeId");
 		Timestamp fromDate = null;
-		// LocalDateTime fromDate = null;
 		try {
-
-			// fromDates = (Date)(new
-			// SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fromDate")));
 			fromDate = new Timestamp(
-					((Date) (new SimpleDateFormat("yyyy-MM-dd").parse(request
-							.getParameter("fromDate")))).getTime());
-			// fromDate = new LocalDateTime(fromDates);
+					((Date) (new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fromDate")))).getTime());
 		} catch (ParseException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		// =============== primary Keys     ============//
 		GenericValue leaveApplication = null;
 		List<GenericValue> leaveApplicationELI = null;
 
@@ -73,43 +68,43 @@ public class LeaveServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		GenericValue documentApproval = null;
+		GenericValue loanApplication = null;
 		String documentApprovalId = null, workflowDocumentTypeId = null, organizationUnitId = null;
 		for (GenericValue genericValue : leaveApplicationELI) {
 			// Get Unit and Document
 			organizationUnitId = genericValue.getString("organizationUnitId");
-			workflowDocumentTypeId = genericValue
-					.getString("workflowDocumentTypeId");
+			workflowDocumentTypeId = genericValue.getString("workflowDocumentTypeId");
+			
 			documentApprovalId = genericValue.getString("documentApprovalId");
 			}
+			GenericValue documentApproval = null;
 			documentApproval =  doFoward(delegator, organizationUnitId,
 					workflowDocumentTypeId, documentApprovalId);
 		
 		if (documentApproval == null) {
-			// Loan Approved
+			// Leave Approved
 			result.put("fowardMessage", "");
 		} else {
-			// Foward Loan Application by setting the documentApprovalId
-			leaveApplication.set("documentApprovalId",
+				loanApplication.set("documentApprovalId",
 					documentApproval.getString("documentApprovalId"));
 
 			if ((documentApproval.getString("nextLevel") == null)
 					|| (documentApproval.getString("nextLevel").equals(""))) {
-				leaveApplication.set("approvalStatus",
+				loanApplication.set("approvalStatus",
 						documentApproval.getString("stageAction"));
 			} else {
-				leaveApplication.set("approvalStatus",
+				loanApplication.set("approvalStatus",
 						documentApproval.getString("stageAction")
 								+ " (APPROVED)");
 			}
 
 			// Set Responsible
 			// responsibleEmployee
-			leaveApplication.set("responsibleEmployee",
+			loanApplication.set("responsibleEmployee",
 					documentApproval.getString("responsibleEmployee"));
-
+			//}
 			try {
-				delegator.createOrStore(leaveApplication);
+				delegator.createOrStore(loanApplication);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -222,65 +217,9 @@ public class LeaveServices {
 
 	// =====================================//
 
-	public static String getWorkflowDocumentType(String documentName) {
-		Map<String, Object> result = FastMap.newInstance();
-		log.info("What we got the Document Name ############ " + documentName);
-
-		Delegator delegator;
-		delegator = DelegatorFactoryImpl.getDelegator(null);
-		List<GenericValue> workflowDocumentTypeELI = null; // =
-
-		try {
-			workflowDocumentTypeELI = delegator.findList(
-					"WorkflowDocumentType",
-					EntityCondition.makeCondition("name", documentName), null,
-					null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-
-		String workflowDocumentTypeId = "";
-		for (GenericValue genericValue : workflowDocumentTypeELI) {
-			workflowDocumentTypeId = genericValue
-					.getString("workflowDocumentTypeId");
-		}
-
-		result.put("workflowDocumentTypeId", workflowDocumentTypeId);
-		return workflowDocumentTypeId;
-	}
-
-	public static String getworkflowDocumentTypeIdtry(GenericValue firstLevel) {
-		String unitId = "";
-		String partyId = firstLevel.getString("partyId");
-
-		Delegator delegator = firstLevel.getDelegator();
-
-		List<GenericValue> getEmplUnitELI = null;
-		try {
-			getEmplUnitELI = delegator.findList(
-					"UnitEmployeeMap",
-					EntityConditionListBase("partyId", partyId, "unitId",
-							unitId), null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		for (GenericValue genericValueUnit : getEmplUnitELI) {
-			unitId = genericValueUnit.getString("organizationUnitId");
-		}
-		// ///////////////////////////////////////////////////
-
-		return unitId;
-
-	}
-
-	private static EntityCondition EntityConditionListBase(String string,
-			String partyId, String string2, String unitId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	public static String getEmplUnit(GenericValue person) {
-		String unitId = "";
+		String organizationUnitId = "";
 		String partyId = person.getString("partyId");
 
 		Delegator delegator = person.getDelegator();
@@ -294,11 +233,11 @@ public class LeaveServices {
 			e.printStackTrace();
 		}
 		for (GenericValue genericValueUnit : getEmplUnitELI) {
-			unitId = genericValueUnit.getString("organizationUnitId");
+			organizationUnitId = genericValueUnit.getString("organizationUnitId");
 		}
 		// ///////////////////////////////////////////////////
 
-		return unitId;
+		return organizationUnitId;
 
 	}
 

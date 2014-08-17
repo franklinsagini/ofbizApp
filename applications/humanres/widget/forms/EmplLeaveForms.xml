@@ -159,7 +159,7 @@
 			<date-time type="date" />
 		</field>
 		<field name="organizationUnitId" tooltip="${uiLabelMap.CommonRequired}">
-			<hidden value="${unitId}"/>
+			<hidden value="${organizationUnitId}"/>
 		</field>
 		<field name="accruedDay" title="Accrued Days" >
 			<text default-value="${accruedDay}" disabled="true"></text>
@@ -213,10 +213,12 @@
 				<condition-list>
 					<condition-expr field-name="leaveStatus" operator="not-equals"
 						value="CREATED" />
-					<condition-expr field-name="leaveStage" operator="equals"
-						from-field="superVisorLevelValue" />
-					 <condition-expr field-name="partyIdFrom" operator="equals"
-						from-field="partyIdFromV" />
+					<condition-expr field-name="responsibleEmployee" operator="equals"
+						from-field="responsibleEmployee" />
+					 <!-- <condition-expr field-name="partyIdFrom" operator="equals"
+						from-field="partyIdFromV" /> -->
+					<condition-expr field-name="organizationUnitId" operator="equals"
+						from-field="organizationUnitId" />
 				</condition-list>
 				<order-by field-name="partyId" />
 			</entity-condition>
