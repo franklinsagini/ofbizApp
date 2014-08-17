@@ -1,4 +1,4 @@
-package org.ofbiz.payroll;
+/*package org.ofbiz.payroll;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -26,9 +26,9 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 
-/**
- * @author charles
- * **/
+
+  @author charles
+
 public class PayrollProcess {
 	static BigDecimal bdNSSFStatutory = BigDecimal.ZERO;
 	static BigDecimal bdNSSFVoluntary = BigDecimal.ZERO;
@@ -64,7 +64,7 @@ public class PayrollProcess {
 		// try {
 		// chequeDepositELI = delegator.findList("AccountTransaction",
 		// transactionConditions, null, null, null, false);
-		//			
+		//
 		// } catch (GenericEntityException e2) {
 		// e2.printStackTrace();
 		// }
@@ -110,7 +110,7 @@ public class PayrollProcess {
 		BigDecimal bdGrossTax=BigDecimal.ZERO;
 		BigDecimal bdNHIF=BigDecimal.ZERO;
 		BigDecimal bdTotRelief=BigDecimal.ZERO;
-		
+
 		bdBasicPay = getBasicPay(employee, delegator);
 		log.info("######### Basic Pay Amount " + bdBasicPay);
 		bdGrossPay = sumPayments(employee, delegator);
@@ -124,9 +124,9 @@ public class PayrollProcess {
 		bdNHIF=computeNHIF(employee, delegator, bdBasicPay);
 		bdTotRelief=getTotalRelief(employee, delegator);
 
-		
-		
-		
+
+
+
 		// Save Gross Pay
 		String staffPayrollElementsSequenceId = delegator
 				.getNextSeqId("StaffPayrollElements");
@@ -156,20 +156,20 @@ public class PayrollProcess {
 		BigDecimal bdtotalRelief=BigDecimal.ZERO;
 		BigDecimal bdInsuranceRelief=BigDecimal.ZERO;
 		BigDecimal bdMPR=BigDecimal.ZERO;
-		
+
 		bdInsuranceRelief=getInsuranceRelief(employee, delegator);
 		bdMPR=getMPR(employee, delegator);
 		log.info("######### Insurance Relief " + bdInsuranceRelief);
 		log.info("######### MPR " + bdMPR);
 		bdtotalRelief=bdInsuranceRelief.add(bdMPR);
-		
-		
+
+
 		return bdtotalRelief;
 	}
 
 	private static BigDecimal getMPR(GenericValue employee, Delegator delegator) {
 		BigDecimal bdMPR = BigDecimal.ZERO;
-		
+
 		List<GenericValue> payrollConstantELI = null;
 
 		try {
@@ -191,14 +191,14 @@ public class PayrollProcess {
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdInsRelief = BigDecimal.ZERO;
-		
+
 		EntityConditionList<EntityExpr> elementConditions = EntityCondition
 		 .makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 		 "insurancecontribution", EntityOperator.EQUALS,
 		 "Y"), EntityCondition.makeCondition(
 		 "hasRelief", EntityOperator.EQUALS,
 		 "Y")), EntityOperator.AND);
-		
+
 		try {
 			payrollElementELI = delegator.findList("PayrollElement",
 					elementConditions,
@@ -212,7 +212,7 @@ public class PayrollProcess {
 
 			bdInsRelief = bdInsRelief.add(getElementAmount(payrollElement, delegator));
 		}
-//		bdInsRelief 
+//		bdInsRelief
 
 		return bdInsRelief;
 	}
@@ -311,7 +311,7 @@ public class PayrollProcess {
 
 		// for (GenericValue payrollElement : employeeELI) {
 		// //Get the amount
-		//			
+		//
 		// bdGross = bdGross.add(getElementAmount(payrollElement, delegator));
 		// }
 
@@ -344,7 +344,7 @@ public class PayrollProcess {
 		}
 		return bdDisabltyAllowanceAmount;
 	}
-	
+
 	private static BigDecimal getMPRAmount(
 			GenericValue payrollConstant, Delegator delegator) {
 		// Do the real getting
@@ -826,11 +826,11 @@ public class PayrollProcess {
 			grossTax = grossTax.add(taxTracker2.getTaxBase().multiply(
 					taxTracker2.getTaxPercent()));
 		}
-		
+
 		log.info("##########Gross Tax :" +grossTax);
 		return grossTax;
 	}
-	
+
 	private static BigDecimal computeNHIF(GenericValue employee, Delegator delegator,
 			BigDecimal bdBasicPay) {
 		BigDecimal bdLowerBracket, bdUpperBracket = BigDecimal.ZERO;
@@ -843,15 +843,15 @@ public class PayrollProcess {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-	
+
 		BigDecimal contribution = BigDecimal.ZERO;
-		
+
 		for (GenericValue genericValue : nhifTableELI) {
 			bdLowerBracket = genericValue.getBigDecimal("lowerbracket");
 			bdUpperBracket = genericValue.getBigDecimal("upperbracket");
-			
+
 			if ((!(bdBasicPay.compareTo(bdLowerBracket) == -1)) && (!(bdBasicPay.compareTo(bdUpperBracket) == 1 ))){
-				
+
 				contribution = genericValue.getBigDecimal("contribution");
 			}
 		}
@@ -860,3 +860,4 @@ public class PayrollProcess {
 	}
 
 }
+ */

@@ -43,6 +43,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVFormat.CSVFormatBuilder;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.log4j.Logger;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.workflow.WorkflowServices;
 import org.ofbiz.accounting.payment.PaymentWorker;
@@ -112,6 +113,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
 public class InvoiceServices {
 
 	public static String module = InvoiceServices.class.getName();
+	public static Logger log = Logger.getLogger(InvoiceServices.class);
 
 	// set some BigDecimal properties
 	private static final BigDecimal ZERO = BigDecimal.ZERO;
@@ -4075,10 +4077,11 @@ public class InvoiceServices {
 		// request.getParameter(arg0)
 		String invoiceId = (String) request.getParameter("invoiceId");
 
+		log.info("Retrived invoice ID:>>>>>>>>>>>>>>> ############ " + invoiceId);
+
 		GenericValue invoice = null;
 		try {
-			invoice = delegator.findOne("invoice",
-					UtilMisc.toMap("invoiceId", invoiceId), false);
+			invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
 		} catch (GenericEntityException e) {
 			// UtilMisc.toMap("errMessage", e.getMessage()), locale));
 			return "Cannot Get Invoice";
@@ -4086,7 +4089,9 @@ public class InvoiceServices {
 
 		// Get Unit and Document
 		String organizationUnitId = invoice.getString("organizationUnitId");
+		log.info("Retrived organizationUnitId :>>>>>>>>>>>>>>> ############ " + organizationUnitId);
 		String workflowDocumentTypeId = invoice.getString("workflowDocumentTypeId");
+		log.info("Retrived workflowDocumentTypeId:>>>>>>>>>>>>>>> ############ " + workflowDocumentTypeId);
 		String documentApprovalId = null;
 		documentApprovalId = invoice.getString("documentApprovalId");
 
@@ -4100,11 +4105,14 @@ public class InvoiceServices {
 			// Foward Loan Application by setting the documentApprovalId
 			invoice.set("documentApprovalId", documentApproval.getString("documentApprovalId"));
 
-			if ((documentApproval.getString("nextLevel") == null) || (documentApproval.getString("nextLevel").equals(""))) {
+			if ((documentApproval.getString("nextLevel") == null)	|| (documentApproval.getString("nextLevel").equals(""))) {
 				invoice.set("approvalStatus", documentApproval.getString("stageAction"));
+				
 			} else {
 				invoice.set("approvalStatus", documentApproval.getString("stageAction") + " (APPROVED)");
 			}
+			
+			log.info("approvalStatus:>>>>>>>>>>>>>>> ############ " + documentApproval.getString("stageAction"));
 
 			// Set Responsible
 			// responsibleEmployee

@@ -385,7 +385,9 @@ under the License.
         <response name="error" type="view" value="EditInvoiceItemType"/>
     </request-map>
 
-    <!-- payment requests -->
+    <!--
+        payment requests
+    -->
     <request-map uri="findPayments">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findPayments"/>
@@ -2769,12 +2771,23 @@ under the License.
 
     <request-map uri="forwardApplication">
         <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" />
+        <event type="java" path="org.ofbiz.accounting.invoice.InvoiceServices" invoke="forwardApplication" />
         <response name="success" type="view" value="editInvoice">
                 <redirect-parameter name="invoiceId"/>
         </response>
         <response name="error" type="view" value="editInvoice" />
     </request-map>
+
+    <request-map uri="forwardPaymentApproval">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accounting.payment.PaymentWorker" invoke="forwardApplication" />
+        <response name="success" type="view" value="editInvoice">
+                <redirect-parameter name="invoiceId"/>
+        </response>
+        <response name="error" type="view" value="editInvoice" />
+    </request-map>
+
+
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>

@@ -1222,7 +1222,8 @@ under the License.
      <field name="organizationUnitId" type="id"></field>
      <field name="workflowDocumentTypeId" type="id"></field>
      <field name="documentApprovalId" type="id"></field>
-      <field name="responsibleEmployee" type="id"></field>
+     <field name="responsibleEmployee" type="id"></field>
+    <field name="approvalStatus" type="name"></field>
 
 
 
@@ -2938,6 +2939,16 @@ under the License.
       <field name="overrideGlAccountId" type="id"></field>
       <field name="actualCurrencyAmount" type="currency-amount"><!-- The ActualCurrency amount and uomId are for the values coming from the bank (if known) and are to be used for reconciliation and such later, and not for PaymentApplication. --></field>
       <field name="actualCurrencyUomId" type="id"></field>
+      <!--
+        Workflow Fields
+       -->
+     <field name="organizationUnitId" type="id"></field>
+     <field name="workflowDocumentTypeId" type="id"></field>
+     <field name="documentApprovalId" type="id"></field>
+     <field name="responsibleEmployee" type="id"></field>
+
+
+     <field name="approvalStatus" type="name"></field>
       <prim-key field="paymentId"/>
       <relation type="one" fk-name="PAYMENT_PMTYP" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId"/>
@@ -2994,7 +3005,21 @@ under the License.
       <relation type="one" fk-name="PAYMENT_ORGLA" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
       </relation>
+
+      <!--
+          Workflow Relations
+       -->
+      <relation type="one" fk-name="LOANAPP_ORGANIZATIONUNIT_FK" rel-entity-name="OrganizationUnit">
+        <key-map field-name="organizationUnitId"/>
+      </relation>
+      <relation type="one" fk-name="LOANAPP_WORKFLOW_FK" rel-entity-name="WorkflowDocumentType">
+        <key-map field-name="workflowDocumentTypeId"/>
+      </relation>
+      <relation type="one" fk-name="LOANAPP_APPROVAL_FK" rel-entity-name="DocumentApproval">
+        <key-map field-name="documentApprovalId"/>
+      </relation>
     </entity>
+
     <view-entity entity-name="PaymentAndTypePartyNameView"
       package-name="org.ofbiz.accounting.payment"
       title="Payment PaymentType PaymentMethodType StatusItem and Party Name View Entity">
