@@ -2763,6 +2763,19 @@ under the License.
     </request-map>
     <!-- end of request mappings -->
 
+    <!--
+        Workflow Requests
+    -->
+
+    <request-map uri="forwardApplication">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" />
+        <response name="success" type="view" value="editInvoice">
+                <redirect-parameter name="invoiceId"/>
+        </response>
+        <response name="error" type="view" value="editInvoice" />
+    </request-map>
+
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
 

@@ -82,12 +82,46 @@
             save-current-view="true" />
     </request-map>
 
+    <request-map uri="purchaseOrders">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="PurchaseOrderScreen"
+            save-current-view="true" />
+    </request-map>
+
+
+    <!--
+        Purchase Order CRUD Operations
+    -->
+
+    <request-map uri="createPurchaseOrder">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createPurchaseOrder" />
+        <response name="success" type="request-redirect-noparam" value="purchaseOrders">
+            </response>
+        <response name="error" type="view" value="PurchaseOrderScreen" />
+    </request-map>
+
+    <request-map uri="updatePurchaseOrder">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updatePurchaseOrder" />
+        <response name="success" type="request-redirect-noparam" value="purchaseOrders"></response>
+        <response name="error" type="view" value="PurchaseOrderScreen" />
+    </request-map>
+
+    <request-map uri="deletePurchaseOrder">
+        <security https="true" auth="true" />
+        <event type="service" invoke="deletePurchaseOrder" />
+        <response name="success" type="request-redirect-noparam" value="purchaseOrders"></response>
+        <response name="error" type="view" value="PurchaseOrderScreen" />
+    </request-map>
+
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://purchases/widget/PurchasesScreens.xml#main"/>
     <view-map name="FindQuotesScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindQuotesScreen"/>
     <view-map name="EditQuoteScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditQuoteScreen"/>
     <view-map name="EditQuoteItemsScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditQuoteItemsScreen"/>
+    <view-map name="PurchaseOrderScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#PurchaseOrderScreen"/>
 
 
     <!--

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -221,7 +221,9 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="statusToApproved" title="${uiLabelMap.AccountingInvoiceStatusToApproved}">
             <condition>
                 <and>
-                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <not>
+                        <if-empty field="invoice.invoiceId"/>
+                    </not>
                     <or>
                         <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
                         <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT"/>
@@ -237,7 +239,9 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="statusToReceived" title="${uiLabelMap.AccountingInvoiceStatusToReceived}">
             <condition>
                 <and>
-                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <not>
+                        <if-empty field="invoice.invoiceId"/>
+                    </not>
                     <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
                     <or>
                         <if-compare field="invoice.invoiceTypeId" operator="equals" value="PURCHASE_INVOICE"/>
@@ -268,6 +272,25 @@ http://www.apache.org/licenses/LICENSE-2.0
             <link target="setInvoiceStatus" request-confirmation="true" confirmation-message="You want to change status to SENT of invoice number ${invoice.statusId}?">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
                 <parameter param-name="statusId" value="INVOICE_SENT"/>
+            </link>
+        </menu-item>
+        <menu-item name="sentForApproval" title="Sent For Approval">
+            <condition>
+                <!-- <or>
+                    <and>
+                        <not><if-empty field="invoice.invoiceId"/></not>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
+                    </and>
+                    <and>
+                        <not><if-empty field="invoice.invoiceId"/></not>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED"/>
+                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
+                    </and>
+                </or> -->
+            </condition>
+            <link target="forwardApplication" request-confirmation="true" confirmation-message="You want to change status to SENT of invoice number ${invoice.statusId}?">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
             </link>
         </menu-item>
         <menu-item name="statusToReady" title="${uiLabelMap.AccountingInvoiceStatusToReady}">

@@ -48,7 +48,8 @@ under the License.
 
     <!-- Invoice services -->
     <service name="createInvoice" engine="simple" default-entity-name="Invoice"
-        location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
+        location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml"
+        invoke="createInvoice">
         <description>Create Invoice Record</description>
         <permission-service service-name="acctgInvoicePermissionCheck" main-action="CREATE"/>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
@@ -59,6 +60,7 @@ under the License.
         <override name="description" allow-html="any"/>
         <override name="invoiceMessage" allow-html="any"/>
     </service>
+
     <service name="copyInvoice" engine="simple" default-entity-name="Invoice"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="copyInvoice">
         <description>Create Invoice Record/items from an existing invoice</description>
@@ -190,10 +192,10 @@ under the License.
     <service name="createCommissionInvoices" engine="java"
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createCommissionInvoices">
         <description>
-            Create commission invoice for the list of sales invoices.  
-            Returns a List of Maps, one for each invoice created containing: 
-                commissionInvoiceId: the invoiceId of the invoice created 
-                salesRepresentative: the invoice partyIdFrom 
+            Create commission invoice for the list of sales invoices.
+            Returns a List of Maps, one for each invoice created containing:
+                commissionInvoiceId: the invoiceId of the invoice created
+                salesRepresentative: the invoice partyIdFrom
         </description>
         <attribute name="partyIds" type="List" mode="IN" optional="true"/>
         <attribute name="invoiceIds" type="List" mode="IN" optional="false"/>
@@ -309,14 +311,14 @@ under the License.
         <description>Scheduled service to generate Invoice from an existing Invoice</description>
         <attribute name="recurrenceInfoId" mode="IN" type="String" optional="false"/>
     </service>
-    
+
     <service name="cancelInvoice" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="cancelInvoice">
         <description>Cancel Invoice</description>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceTypeId" type="String" mode="OUT" optional="false"/>
     </service>
-    
+
     <service name="getInvoiceRunningTotal" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="getInvoiceRunningTotal" auth="true">
         <description>calculate running total for selected Invoices</description>
@@ -324,8 +326,8 @@ under the License.
         <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceRunningTotal" type="String" mode="OUT" optional="false"/>
     </service>
-    
-    <service name="addtax" engine="simple" 
+
+    <service name="addtax" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="addtax">
         <description>Call Tax Calculate Service</description>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
@@ -375,14 +377,14 @@ under the License.
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="errorMessage" type="String" optional="true" mode="OUT"/>
     </service>
-    
+
     <service name="createInvoiceFromOrder" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceFromOrder">
         <description>Create an invoice from existing order when invoicePerShipment is N</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
     <!-- Invoice content services -->
     <service name="createInvoiceContent" default-entity-name="InvoiceContent" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceContent" auth="true">
@@ -406,7 +408,7 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="createSimpleTextContentForInvoice" default-entity-name="InvoiceContent" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createSimpleTextContentForInvoice" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
@@ -437,5 +439,5 @@ under the License.
         <attribute mode="INOUT" name="organizationPartyId" type="String" optional="false"/>
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="true" />
     </service>
-    
+
 </services>
