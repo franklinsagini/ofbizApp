@@ -26,7 +26,8 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
-//import org.ofbiz.workflow.WorkflowServices;
+import org.ofbiz.workflow.WorkflowServices;
+
 
 public class LeaveServices {
 	public static Logger log = Logger.getLogger(LeaveServices.class);
@@ -36,8 +37,10 @@ public class LeaveServices {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		// =============== primary Keys     ============//
+		
 		String partyId = (String) request.getParameter("partyId");
 		String leaveTypeId = (String) request.getParameter("leaveTypeId");
+		String leaveId = (String) request.getParameter("leaveId");
 		Timestamp fromDate = null;
 		try {
 			fromDate = new Timestamp(
@@ -47,71 +50,64 @@ public class LeaveServices {
 			e2.printStackTrace();
 		}
 		// =============== primary Keys     ============//
-		GenericValue leaveApplication = null;
+		
 		List<GenericValue> leaveApplicationELI = null;
-
+		GenericValue leave = null;
 		log.info(" From Date : " + fromDate);
 
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
-						EntityCondition.makeCondition("leaveTypeId",
-								EntityOperator.EQUALS, leaveTypeId),
+						EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
 						EntityCondition.makeCondition("fromDate",
-								EntityOperator.EQUALS, new java.sql.Date(
-										fromDate.getTime()))),
+								EntityOperator.EQUALS, new java.sql.Date(fromDate.getTime()))),
 						EntityOperator.AND);
 
 		try {
 			leaveApplicationELI = delegator.findList("EmplLeave",
 					leaveConditions, null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
+		} catch (GenericEntityException e2) {
+			//e2.printStackTrace();
+			return "Cannot Get Leave Application";
 		}
-		GenericValue loanApplication = null;
-		String documentApprovalId = null, workflowDocumentTypeId = null, organizationUnitId = null;
+		
+		//String documentApprovalId = null, workflowDocumentTypeId = null, organizationUnitId = null;
 		for (GenericValue genericValue : leaveApplicationELI) {
 			// Get Unit and Document
-			organizationUnitId = genericValue.getString("organizationUnitId");
-			workflowDocumentTypeId = genericValue.getString("workflowDocumentTypeId");
-			
-			documentApprovalId = genericValue.getString("documentApprovalId");
+				leave = genericValue;
 			}
+			String organizationUnitId = leave.getString("organizationUnitId");
+			String workflowDocumentTypeId = leave.getString("workflowDocumentTypeId");
+			String documentApprovalId = leave.getString("documentApprovalId");
+			
 			GenericValue documentApproval = null;
-			documentApproval =  doFoward(delegator, organizationUnitId,
-					workflowDocumentTypeId, documentApprovalId);
-		
+			documentApproval =  WorkflowServices.doFoward(delegator, organizationUnitId,	workflowDocumentTypeId, documentApprovalId);
+		log.info("=====================" +documentApproval);
+
 		if (documentApproval == null) {
 			// Leave Approved
 			result.put("fowardMessage", "");
 		} else {
-				loanApplication.set("documentApprovalId",
-					documentApproval.getString("documentApprovalId"));
+			leave.set("documentApprovalId", documentApproval.getString("documentApprovalId"));
 
-			if ((documentApproval.getString("nextLevel") == null)
-					|| (documentApproval.getString("nextLevel").equals(""))) {
-				loanApplication.set("approvalStatus",
-						documentApproval.getString("stageAction"));
+			if ((documentApproval.getString("nextLevel") == null)|| (documentApproval.getString("nextLevel").equals(""))) {
+				leave.set("approvalStatus", documentApproval.getString("stageAction"));
 			} else {
-				loanApplication.set("approvalStatus",
-						documentApproval.getString("stageAction")
-								+ " (APPROVED)");
+				leave.set("approvalStatus", documentApproval.getString("stageAction")	+ " (APPROVED)");
 			}
 
 			// Set Responsible
 			// responsibleEmployee
-			loanApplication.set("responsibleEmployee",
-					documentApproval.getString("responsibleEmployee"));
+			leave.set("responsibleEmployee",	documentApproval.getString("responsibleEmployee"));
 			//}
 			try {
-				delegator.createOrStore(loanApplication);
+				delegator.createOrStore(leave);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			result.put("fowardMessage",
-					documentApproval.getString("stageAction"));
+			result.put("fowardMessage",	documentApproval.getString("stageAction"));
 
 		}
 
@@ -131,34 +127,6 @@ public class LeaveServices {
 		}
 		return "";// result.get("fowardMessage").toString();
 
-	}
-
-	public static GenericValue doFoward(Delegator delegator,
-			String organizationUnitId, String workflowDocumentTypeId,
-			String documentApprovalId) {
-		GenericValue currentApproval = null;
-		if ((documentApprovalId == null) || (documentApprovalId.equals(""))) {
-			// This is the first forwad, get the first approver from Document
-			// Level Config
-			currentApproval = getCurrentApprovalFromLevelConfig(delegator,
-					organizationUnitId, workflowDocumentTypeId);
-			return currentApproval;
-		} else {
-			// Get the DocumentApproval from the DocumentApproval using the
-			// documentApprovalId
-			currentApproval = getCurrentApprovalFromDocumentApproval(delegator,
-					documentApprovalId);
-
-			String nextLevelId = null;
-			nextLevelId = currentApproval.getString("nextLevel");
-
-			if ((nextLevelId == null) || (nextLevelId.equals(""))) {
-				return null;
-			} else {
-				return getCurrentApprovalFromDocumentApproval(delegator,
-						nextLevelId);
-			}
-		}
 	}
 
 	/**
