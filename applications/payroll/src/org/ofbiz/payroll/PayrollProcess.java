@@ -34,6 +34,7 @@ public class PayrollProcess {
 	static BigDecimal bdNSSFVoluntary = BigDecimal.ZERO;
 	static BigDecimal bdPensionAmt = BigDecimal.ZERO;
 	static BigDecimal bdMAX_PENSION_CONTRIBUTION = BigDecimal.ZERO;
+	static BigDecimal bdINSURANCE_RELIEF_MAX = BigDecimal.ZERO;
 	static BigDecimal bdBasicPay = BigDecimal.ZERO;
 
 	private static Logger log = Logger.getLogger(PayrollProcess.class);
@@ -163,6 +164,7 @@ public class PayrollProcess {
 		log.info("######### MPR " + bdMPR);
 		bdtotalRelief=bdInsuranceRelief.add(bdMPR);
 		
+		log.info("######### TotRelief " + bdtotalRelief);
 		
 		return bdtotalRelief;
 	}
@@ -191,6 +193,7 @@ public class PayrollProcess {
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdInsRelief = BigDecimal.ZERO;
+		BigDecimal bdInsAmount = BigDecimal.ZERO;
 		
 		EntityConditionList<EntityExpr> elementConditions = EntityCondition
 		 .makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -210,11 +213,62 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdInsRelief = bdInsRelief.add(getElementAmount(payrollElement, delegator));
+			bdInsAmount = bdInsAmount.add(getElementAmount(payrollElement, delegator));
 		}
-//		bdInsRelief 
 
+		bdInsRelief = bdInsAmount.multiply(getInsuranceReliefPercentage(employee, delegator));
+		
+		log.info("######### Insurance Max " + bdINSURANCE_RELIEF_MAX);
+		if(bdInsRelief.compareTo(bdINSURANCE_RELIEF_MAX)>=0)
+		{
+			bdInsRelief=bdINSURANCE_RELIEF_MAX;
+		}
+		
 		return bdInsRelief;
+	}
+
+	private static BigDecimal getInsuranceReliefPercentage(
+			GenericValue employee, Delegator delegator) {
+		BigDecimal bdInsPercentage = BigDecimal.ZERO;
+		List<GenericValue> insurancePercentgelELI = null;
+		try {
+			insurancePercentgelELI = delegator.findList("PayrollConstants",
+					null, null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue staffPension : insurancePercentgelELI) {
+			// Get the amount
+
+			bdInsPercentage = getInsPercentage(staffPension, delegator)
+					.divide(new BigDecimal(100), RoundingMode.HALF_UP);
+			log.info("######### Insurance % " + bdInsPercentage);
+		}
+
+		return bdInsPercentage;
+	}
+
+	private static BigDecimal getInsPercentage(GenericValue staffInsurance,
+			Delegator delegator) {
+		BigDecimal bdInsPercentage = BigDecimal.ZERO;
+		List<GenericValue> staffPayrollELI = new LinkedList<GenericValue>();
+		try {
+			staffPayrollELI = delegator.findList("PayrollConstants",
+					EntityCondition.makeCondition("payrollConstantsId",
+							staffInsurance.getString("payrollConstantsId")), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue insPercentge : staffPayrollELI) {
+			// Get the amount
+			bdInsPercentage = insPercentge.getBigDecimal("insuranceReliefRate");
+			bdINSURANCE_RELIEF_MAX=insPercentge.getBigDecimal("insuranceReliefmax");
+		}
+		return bdInsPercentage;
 	}
 
 	private static BigDecimal calcTaxablePay(GenericValue employee,
