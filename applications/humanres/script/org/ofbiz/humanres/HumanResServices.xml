@@ -932,12 +932,12 @@
 		<if-empty field="parameters.workflowDocumentTypeId">
 			<set field="newEntity.workflowDocumentTypeId" 
 			value="${bsh:org.ofbiz.humanres.LeaveServices.getWorkflowDocumentType(documentName);}"/>
-
+		</if-empty>
 		<set field="newEntity.applicationStatus" value="NEW"/>
 		<set field="newEntity.leaveStatus" value="DRAFT"/>
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
-		<sequenced-id sequence-name="EmplLeaveId" field="leaveId" />
+		<sequenced-id sequence-name="EmplLeave" field="leaveId" />
 		<set field="newEntity.leaveId" from-field="leaveId" />
 		<create-value value-field="newEntity"/>
 
@@ -950,10 +950,7 @@
 		<set field="newStatusLog.partyId" from="userLogin.userLoginId" />
 		<set field="newStatusLog.leaveLogStatus" value="NEW" />
 		<create-value value-field="newStatusLog" />
-		<else>
-			<call-simple-method method-name="updateLeaveApplication"></call-simple-method>
-		</else>
-		</if-empty>
+		
 	</simple-method>
 	<simple-method method-name="updateLeaveApplication" short-description="Update Leave Application">
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>

@@ -306,6 +306,9 @@ under the License.
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
+                <set field="payrollPeriodId" from-field="parameters.payrollPeriodId"/>
+                
+            
                 <entity-one entity-name="StaffPayroll" value-field="staffPayrollContext"/>
                 <entity-one value-field="payrollperiod" entity-name="PayrollPeriod">
                 	<field-map field-name="payrollPeriodId" from-field="payrollPeriodId"/>
@@ -319,7 +322,7 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="New Staff Payroll">
+                                <screenlet title="Add Staff To Payroll">
                                     <include-form name="NewStaffPayroll" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                                 </screenlet>
                                 <screenlet>
@@ -344,7 +347,8 @@ under the License.
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="New Staff Payroll for the period${payrollperiod.name}">
+
+                        		<screenlet title="Staff In Payroll ${payrollperiod.name}">
                         			<include-form name="listStaffPayroll" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                         		</screenlet>
                         	</widgets>
@@ -373,6 +377,11 @@ under the License.
                 <entity-one value-field="element" entity-name="StaffPayroll">
                 	<field-map field-name="staffPayrollId" from-field="staffPayrollId"/>
                 </entity-one>
+                
+                <entity-one value-field="person" entity-name="Person">
+                	<field-map field-name="partyId" value="${element.partyId}"/>
+                </entity-one>
+                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -382,7 +391,7 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="New Staff Payroll Element for ${element.staffName}">
+                                <screenlet title="New Staff Payroll Element for ${person.firstName} ${person.lastName}">
                                     <include-form name="NewStaffPayrollElements" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                                 </screenlet>
                             </widgets>

@@ -25,7 +25,11 @@ under the License.
     
     <!-- New Payroll Element -->
     <form name="NewPayrollElement" type="single" target="createPayrollElement"
-        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollElementContext">
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollElementContext" paginate-target="elementsDefinition">
+         <actions>
+        	<entity-condition entity-name="PayrollElement" list="elementList"></entity-condition>
+        	<set field="parentId" from-field="payrollElementId"/>
+        </actions>	        
         
         <field name="payrollElementId"><hidden/></field>
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -114,6 +118,13 @@ under the License.
             </drop-down>
         </field>
         
+         <field name="isInterest"  title="Has Interest" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
         <field name="hasInterest"  title="Has Interest" >
             <drop-down allow-empty="false">
                 <option key="N" description="No"/>
@@ -147,16 +158,27 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
+        <field name="parentId" title="Parent Element">
+        	<drop-down allow-empty="true">
+        		<list-options list-name="parentList" key-name="payrollElementId" description="${name}"/>
+        	</drop-down>
+        </field>
+        <field name="childId" title="Child Element">
+        	<drop-down allow-empty="true">
+        		<list-options list-name="childList" key-name="payrollElementId" description="${name}"/>
+        	</drop-down>
+        </field>
         
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
     
-    <form name="listPayrollElements" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollElement" paginate-target="PayrollElement"
+    <form name="listPayrollElements" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollElement" paginate-target="elementsDefinition"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollElement">
             </entity-condition>
+            <entity-condition entity-name="PayrollElement" list="payrollElementList"></entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updatePayrollElement"/>
         <!-- field name="skillTypeId">
@@ -165,6 +187,14 @@ under the License.
         <field name="name"> <display also-hidden="false"/> </field>
         <field name="elementType"> <display also-hidden="false"/> </field>
         <field name="payslipdisplay"> <display also-hidden="false"/> </field>
+        <field name="hasInterest" title="Has Interest"> <display also-hidden="false"/> </field>
+        <field name="isfixed" title="Fixed"> <display also-hidden="false"/> </field>
+        <field name="interestamount"> <display also-hidden="false"/> </field>
+        <field name="interestrate"> <display also-hidden="false"/> </field>
+        <field name="interestfrequency"> <display also-hidden="false"/> </field>
+        <field name="childId" title="Child Element">
+        	<display-entity entity-name="PayrollElement" key-field-name="payrollElementId" description="${name}"></display-entity>
+        </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePayrollElement" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="payrollElementId"/>
@@ -603,6 +633,7 @@ under the License.
         <!-- field name="bankDetailsId" title="Bank">
         	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
         </field -->
+        <field name="staffPayrollId"> <hidden/> </field>
         <field name="payrollYearId"> <hidden/> </field>
         <field name="payrollElementId" title="Payroll Element"> 
         	<drop-down>
@@ -614,7 +645,7 @@ under the License.
         <field name="recurrencyExpiry"><date-time/></field>
         
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteStaffPayrollElements" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteStaffPayrollElements?${staffPayrollId}" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="staffPayrollElementsId"/>
             </hyperlink>
         </field>

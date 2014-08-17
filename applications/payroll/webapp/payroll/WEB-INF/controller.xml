@@ -48,7 +48,7 @@ under the License.
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="staffpayroll"/></request-map>
 	
 	<!-- Payroll Request Maps -->
 	<request-map uri="elementsDefinition">
@@ -378,9 +378,9 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteStaffPayrollElements" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="view"
-			value="staffpayrollelements">
-			<redirect-parameter name="staffPayrollId"/>
+		<response name="success" type="request-redirect"
+			value="staffpayrollelements" save-current-view="true" save-last-view="true">
+				<redirect-parameter name="staffPayrollId"/>
 			</response>
 		<response name="error" type="view" value="staffpayrollelements" />
 	</request-map>

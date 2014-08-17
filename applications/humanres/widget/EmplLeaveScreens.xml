@@ -90,12 +90,9 @@
 			<entity-one entity-name="Party" value-field="party">
 				<field-map field-name="partyId" from-field="userLogin.partyId"/>
 			</entity-one>
-			<set field="superVisorLevelValue" value="${bsh:org.ofbiz.humanres.LeaveServices.getSupervisorLevel(party);}"/>
-			<!-- 
-			<entity-one entity-name="Employment" value-field="employee">
-				<field-map field-name="partyIdTo" from-field="userLogin.partyId"/>
-			</entity-one> -->
-			<set field="partyIdFromV" value="${bsh:org.ofbiz.humanres.LeaveServices.getpartyIdFrom(party);}"/>
+			<!-- <set field="responsibleEmployee" value="${bsh:org.ofbiz.humanres.LeaveServices.getSupervisorLevel(party);}"/> -->
+			<set field="organizationUnitId" value="${bsh:org.ofbiz.humanres.LeaveServices.getEmplUnit(party);}"/>
+			<!-- <set field="partyIdFromV" value="${bsh:org.ofbiz.humanres.LeaveServices.getpartyIdFrom(party);}"/> -->
 
 			</actions>
 			<widgets>
@@ -153,7 +150,7 @@
 				<field-map field-name="partyId" from-field="userLogin.partyId"/>
 				</entity-one>
 			<set field="appointmentdate" value="${bsh:org.ofbiz.humanres.LeaveServices.getLeaveAppointmentDate(person);}"/>
-			<set field="unitId" value="${bsh:org.ofbiz.humanres.LeaveServices.getEmplUnit(person);}"/>
+			<set field="organizationUnitId" value="${bsh:org.ofbiz.humanres.LeaveServices.getEmplUnit(person);}"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"

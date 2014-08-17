@@ -90,14 +90,16 @@
 		<field name="leaveDuration">
 			<display />
 		</field>
-		<field name="leaveBalance">
+		<field name="approvalStatus">
 			<display />
 		</field>
-		<field name="leaveStatus">
-			<display />
+		<field name="responsibleEmployee">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}" key-field-name="partyId">
+			
+			</display-entity>
 		</field>
 		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
 				target="EditEmplLeave">
 				<parameter param-name="partyId" />
@@ -106,7 +108,7 @@
 			</hyperlink>
 		</field>
 		<field name="forwardLeave" title="${uiLabelMap.forward}"
-			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.forward}"
 				target="forwardApplication">
 				<parameter param-name="partyId" />
@@ -115,7 +117,7 @@
 			</hyperlink>
 		</field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
-			widget-style="buttontext" use-when="${leaveStatus=='DRAFT'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
 				target="deleteEmplLeave">
 				<parameter param-name="partyId" />
@@ -159,7 +161,7 @@
 			<date-time type="date" />
 		</field>
 		<field name="organizationUnitId" tooltip="${uiLabelMap.CommonRequired}">
-			<hidden value="${unitId}"/>
+			<hidden value="${organizationUnitId}"/>
 		</field>
 		<field name="accruedDay" title="Accrued Days" >
 			<text default-value="${accruedDay}" disabled="true"></text>
@@ -211,12 +213,14 @@
 			<set field="entityName" value="EmplLeaveView" />
 			<entity-condition entity-name="EmplLeaveView">
 				<condition-list>
-					<condition-expr field-name="leaveStatus" operator="not-equals"
-						value="CREATED" />
-					<condition-expr field-name="leaveStage" operator="equals"
-						from-field="superVisorLevelValue" />
+					 <!-- <condition-expr field-name="applicationStatus" operator="equals"
+						value="NEW" /> -->
+					<!--<condition-expr field-name="responsibleEmployee" operator="equals"
+						from-field="responsibleEmployee" />
 					 <condition-expr field-name="partyIdFrom" operator="equals"
-						from-field="partyIdFromV" />
+						from-field="partyIdFromV" />-->
+					<!-- <condition-expr field-name="organizationUnitId" operator="equals"
+						from-field="organizationUnitId" />  -->
 				</condition-list>
 				<order-by field-name="partyId" />
 			</entity-condition>
@@ -292,7 +296,7 @@
 		</field>
 	</form>
 
-	<form name="approveEmplLeaveStatus" type="single" target="approveEmplLeaveStatus"
+	<form name="approveEmplLeaveStatus" type="single" target="forwardApplication"
 		default-map-name="leaveApp">
 		<actions>
 			<set field="entityName" value="EmplLeave" />
