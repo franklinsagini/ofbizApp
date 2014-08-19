@@ -2,19 +2,19 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="CommonQuoteDecorator">
+    <screen name="CommonSupllierDecorator">
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="headerItem" value="findQuotes"/>
+                <set field="headerItem" value="suppliers"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
                         <section>
                             <widgets>
-                                <include-menu name="QuotesTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <include-menu name="SupplierTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -24,7 +24,7 @@
                                 <section>
                                     <condition>
                                         <not>
-                                            <if-empty field="parameters.quoteId"/>
+                                            <if-empty field="parameters.supplierId"/>
                                         </not>
                                     </condition>
                                     <widgets>
@@ -44,7 +44,7 @@
     </screen>
 
 
-    <screen name="main">
+    <screen name="homeScreen">
         <section>
             <actions>
                 <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
@@ -61,7 +61,7 @@
         </section>
     </screen>
 
-    <screen name="FindQuotesScreen">
+    <screen name="findSuppliersScreen">
         <section>
             <actions>
                 <set field="headerItem" value="findQuotes"/><!-- this highlights the selected menu-item with name "main" -->
@@ -89,7 +89,7 @@
         </section>
     </screen>
 
-    <screen name="EditQuoteScreen">
+    <screen name="EditSuppliersScreen">
         <section>
             <actions><!-- this highlights the seleted menu-item with name "main" -->
                 <set field="quoteId" from-field="parameters.quoteId"/>

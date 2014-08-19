@@ -77,13 +77,6 @@ under the License.
             </add-error>
         </if-empty>
 
-        <!-- Set WorkflowDocument -->
-            <set field="documentName" value="PAYMENT"/>
-            <set field="payment.workflowDocumentTypeId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getWorkflowDocumentType(documentName);}" type="String"/>
-            <!-- Set OrganizationUnit -->
-            <set field="partyId" from-field="userLogin.partyId"/>
-            <set field="payment.organizationUnitId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getUserOrganizationUnit(partyId);}" type="String"/>
-
         <set-nonpk-fields map="parameters" value-field="payment"/>
         <if-empty field="payment.effectiveDate">
             <now-timestamp field="payment.effectiveDate"/>
