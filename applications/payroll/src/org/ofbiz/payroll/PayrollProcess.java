@@ -23,19 +23,35 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.payroll.TaxTracker;
 import org.ofbiz.webapp.event.EventHandlerException;
-
 
 /**
  * @author charles
  * **/
 public class PayrollProcess {
-	static BigDecimal bdNSSFStatutory = BigDecimal.ZERO;
-	static BigDecimal bdNSSFVoluntary = BigDecimal.ZERO;
-	static BigDecimal bdPensionAmt = BigDecimal.ZERO;
+
 	static BigDecimal bdMAX_PENSION_CONTRIBUTION = BigDecimal.ZERO;
 	static BigDecimal bdINSURANCE_RELIEF_MAX = BigDecimal.ZERO;
 	static BigDecimal bdBasicPay = BigDecimal.ZERO;
+
+	/***
+	 * Values to Write
+	 * 
+	 * */
+
+	public static BigDecimal bdEXCESSPENSIONBENEFIT;
+	public static BigDecimal bdINSURANCERELIEF;
+	public static BigDecimal bdLOWINTERESTBENEFIT;
+	public static BigDecimal bdMPR;
+	public static BigDecimal bdNETPAY;
+	public static BigDecimal bdNHIF;
+	public static BigDecimal bdPAYE;
+	public static BigDecimal bdTAXABLEINCOME;
+	public static BigDecimal bdTOTDEDUCTIONS;
+	public static BigDecimal bdNSSFStatutory = BigDecimal.ZERO;
+	public static BigDecimal bdNSSFVoluntary = BigDecimal.ZERO;
+	public static BigDecimal bdPensionAmt = BigDecimal.ZERO;
 
 	private static Logger log = Logger.getLogger(PayrollProcess.class);
 
@@ -106,38 +122,60 @@ public class PayrollProcess {
 	private static void processPayroll(GenericValue employee,
 			String staffPayrollId, Delegator delegator) {
 		// Compute Gross Pay
-		BigDecimal bdGrossPay=BigDecimal.ZERO;
-		BigDecimal bdTaxablePay=BigDecimal.ZERO;
-		BigDecimal bdGrossTax=BigDecimal.ZERO;
-		BigDecimal bdNHIF=BigDecimal.ZERO;
-		BigDecimal bdTotRelief=BigDecimal.ZERO;
-		
-		bdBasicPay = getBasicPay(employee, delegator);
+		BigDecimal bdGrossPay = BigDecimal.ZERO;
+		BigDecimal bdTaxablePay = BigDecimal.ZERO;
+		BigDecimal bdGrossTax = BigDecimal.ZERO;
+		BigDecimal bdPAYEAmount = BigDecimal.ZERO;
+		BigDecimal bdNHIFAmount = BigDecimal.ZERO;
+		BigDecimal bdTotRelief = BigDecimal.ZERO;
+		BigDecimal bdTotDeductions = BigDecimal.ZERO;
+		BigDecimal bdNetPay = BigDecimal.ZERO;
+
+		bdBasicPay = getBasicPay(employee, staffPayrollId, delegator);
 		log.info("######### Basic Pay Amount " + bdBasicPay);
-		bdGrossPay = sumPayments(employee, delegator);
+		bdGrossPay = sumPayments(employee, staffPayrollId, delegator);
 		log.info("######### Gross Pay Amount " + bdGrossPay);
 
 		bdTaxablePay = calcTaxablePay(employee, delegator, bdGrossPay,
 				staffPayrollId);
 		log.info("######### Taxable Pay Amount " + bdTaxablePay);
+		bdTAXABLEINCOME = bdTaxablePay;
 
-		bdGrossTax=computeGrossTax(bdTaxablePay, delegator);
-		bdNHIF=computeNHIF(employee, delegator, bdBasicPay);
-		bdTotRelief=getTotalRelief(employee, delegator);
+		bdGrossTax = computeGrossTax(bdTaxablePay, delegator);
+		bdNHIFAmount = computeNHIF(employee, delegator, bdBasicPay);
+		bdNHIF = bdNHIFAmount;
+		bdTotRelief = getTotalRelief(employee, staffPayrollId, delegator);
 
-		
-		
-		
+		bdPAYEAmount = bdGrossTax.subtract(bdTotRelief);
+		bdPAYE = bdPAYEAmount;
+
+		calculateInterestAmounts(employee, staffPayrollId, delegator);
+
+		bdTotDeductions = sumDeductions(employee, staffPayrollId, delegator).add(bdPensionAmt)
+				.add(bdPAYEAmount).add(bdNSSFStatutory).add(bdNSSFVoluntary)
+				.add(bdNHIFAmount);
+		log.info("######### Tot Deductions " + bdTotDeductions);
+		bdTOTDEDUCTIONS = bdTotDeductions;
+
+		bdNetPay = bdGrossPay.subtract(bdTotDeductions);
+		log.info("######### Net Pay " + bdNetPay);
+		bdNETPAY = bdNetPay;
+
+		// bdtotDeductions=getTotalDeductions(employee, delegator, );
+
 		// Save Gross Pay
-		String staffPayrollElementsSequenceId = delegator
+		String staffPayrollElementsSequenceId;
+		GenericValue staffPayrollElement;
+		
+		staffPayrollElementsSequenceId = delegator
 				.getNextSeqId("StaffPayrollElements");
 
-		GenericValue staffPayrollElement = delegator.makeValidValue(
+		staffPayrollElement = delegator.makeValidValue(
 				"StaffPayrollElements", UtilMisc.toMap(
 						"staffPayrollElementsSequenceId",
 						staffPayrollElementsSequenceId, "payrollElementId",
 						"GROSSPAY", "amount", bdGrossPay, "staffPayrollId",
-						staffPayrollId));
+						staffPayrollId, "valueChanged", "N", "balance", BigDecimal.valueOf(0.0)));
 		try {
 			staffPayrollElement = delegator
 					.createSetNextSeqId(staffPayrollElement);
@@ -150,33 +188,135 @@ public class PayrollProcess {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+
+		List<GenericValue> listSystemElements = new ArrayList<GenericValue>();
+		GenericValue systemElement;
+		/***
+		 * "EXCESSPENSIONBENEFIT" "INSURANCERELIEF" "LOWINTERESTBENEFIT" "MPR"
+		 * "NETPAY" "NHIF" "NSSF" "NSSFVOL" "PAYE" "PENSION" "TAXABLEINCOME"
+		 * "TOTDEDUCTIONS"
+		 * */
+		/**
+		 * 	public static BigDecimal bdEXCESSPENSIONBENEFIT; 
+			public static BigDecimal bdINSURANCERELIEF;
+			public static BigDecimal bdLOWINTERESTBENEFIT;
+			public static BigDecimal bdMPR;
+			public static BigDecimal bdNETPAY;
+			public static BigDecimal bdNHIF;
+			public static BigDecimal bdPAYE;
+			public static BigDecimal bdTAXABLEINCOME;
+			public static BigDecimal bdTOTDEDUCTIONS;
+			public static BigDecimal bdNSSFStatutory = BigDecimal.ZERO;
+			public static BigDecimal bdNSSFVoluntary = BigDecimal.ZERO;
+			public static BigDecimal bdPensionAmt = BigDecimal.ZERO;
+		 **/
+		// EXCESSPENSIONBENEFIT
+		listSystemElements.add(createElementToSave(delegator, "EXCESSPENSIONBENEFIT", bdEXCESSPENSIONBENEFIT, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "INSURANCERELIEF", bdINSURANCERELIEF, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "LOWINTERESTBENEFIT", bdLOWINTERESTBENEFIT, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "MPR", bdMPR, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "NETPAY", bdNETPAY, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "NHIF", bdNHIF, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "PAYE", bdPAYE, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "TAXABLEINCOME", bdTAXABLEINCOME, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "TOTDEDUCTIONS", bdTOTDEDUCTIONS, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "NSSF", bdNSSFStatutory, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "NSSFVOL", bdNSSFVoluntary, staffPayrollId));
+		listSystemElements.add(createElementToSave(delegator, "PENSION", bdPensionAmt, staffPayrollId));
+		
+		try {
+			delegator.storeAll(listSystemElements);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	private static GenericValue createElementToSave(Delegator delegator, String payrollElementId, BigDecimal elementAmount, String staffPayrollId ){
+		String staffPayrollElementsSequenceId = delegator
+		.getNextSeqId("StaffPayrollElements");
+
+		GenericValue staffPayrollElement = delegator.makeValidValue(
+				"StaffPayrollElements", UtilMisc.toMap(
+						"staffPayrollElementsId",
+						staffPayrollElementsSequenceId, "payrollElementId",
+						payrollElementId, "amount", elementAmount, "staffPayrollId",
+						staffPayrollId, "valueChanged", "N", "balance", BigDecimal.valueOf(0.0)));
+		try {
+			staffPayrollElement = delegator
+					.createSetNextSeqId(staffPayrollElement);
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}
+		return staffPayrollElement; 
 	}
 
-	private static BigDecimal getTotalRelief(GenericValue employee,
+	private static BigDecimal calculateInterestAmounts(GenericValue employee,
+			String staffPayrollId, Delegator delegator) {
+
+		List<GenericValue> payrollElementsWithInterestELI = null;
+		// BigDecimal bdLoanAmount = BigDecimal.ZERO;
+
+		try {
+			payrollElementsWithInterestELI = delegator.findList(
+					"PayrollElement", EntityCondition.makeCondition(
+							"hasInterest", "Y"), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		// for (GenericValue payrollElement : payrollElementELI) {
+		// // Get the amount
+		//
+		// getLoanElementAmount(payrollElement, delegator);
+		// }
+
+		// We have PayrollElements with interest
+		for (GenericValue payrolElement : payrollElementsWithInterestELI) {
+			if ((payrolElement.getString("isfixed") != null)
+					&& (payrolElement.getString("isfixed").equals("Y"))) {
+				// Get the amount and add it to the staffPayrolElements
+				processFixedInterest(delegator, payrolElement, staffPayrollId);
+			} else if ((payrolElement.getString("isfixed") != null)
+					&& (payrolElement.getString("isfixed").equals("N"))) {
+				// Get the rate, Get the frequency, Get the Balance before
+				// deduction, multiply rate by balance then save the new value
+				processVariableInterest(delegator, payrolElement,
+						staffPayrollId);
+			}
+		}
+
+		return null;
+	}
+
+	private static BigDecimal getTotalRelief(GenericValue employee,String staffPayrollId,
 			Delegator delegator) {
-		BigDecimal bdtotalRelief=BigDecimal.ZERO;
-		BigDecimal bdInsuranceRelief=BigDecimal.ZERO;
-		BigDecimal bdMPR=BigDecimal.ZERO;
-		
-		bdInsuranceRelief=getInsuranceRelief(employee, delegator);
-		bdMPR=getMPR(employee, delegator);
+		BigDecimal bdtotalRelief = BigDecimal.ZERO;
+		BigDecimal bdInsuranceRelief = BigDecimal.ZERO;
+		BigDecimal bdMPRAmount = BigDecimal.ZERO;
+
+		bdInsuranceRelief = getInsuranceRelief(employee, staffPayrollId, delegator);
+		bdINSURANCERELIEF = bdInsuranceRelief;
+		bdMPRAmount = getMPR(employee, delegator);
+		bdMPR = bdMPRAmount;
 		log.info("######### Insurance Relief " + bdInsuranceRelief);
 		log.info("######### MPR " + bdMPR);
-		bdtotalRelief=bdInsuranceRelief.add(bdMPR);
-		
+		bdtotalRelief = bdInsuranceRelief.add(bdMPR);
+
 		log.info("######### TotRelief " + bdtotalRelief);
-		
+
 		return bdtotalRelief;
 	}
 
 	private static BigDecimal getMPR(GenericValue employee, Delegator delegator) {
 		BigDecimal bdMPR = BigDecimal.ZERO;
-		
+
 		List<GenericValue> payrollConstantELI = null;
 
 		try {
-			payrollConstantELI = delegator.findList("PayrollConstants",
-					null, null, null, null, false);
+			payrollConstantELI = delegator.findList("PayrollConstants", null,
+					null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -189,23 +329,22 @@ public class PayrollProcess {
 		return bdMPR;
 	}
 
-	private static BigDecimal getInsuranceRelief(GenericValue employee,
+	private static BigDecimal getInsuranceRelief(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdInsRelief = BigDecimal.ZERO;
 		BigDecimal bdInsAmount = BigDecimal.ZERO;
-		
+
 		EntityConditionList<EntityExpr> elementConditions = EntityCondition
-		 .makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-		 "insurancecontribution", EntityOperator.EQUALS,
-		 "Y"), EntityCondition.makeCondition(
-		 "hasRelief", EntityOperator.EQUALS,
-		 "Y")), EntityOperator.AND);
-		
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"insurancecontribution", EntityOperator.EQUALS, "Y"),
+						EntityCondition.makeCondition("hasRelief",
+								EntityOperator.EQUALS, "Y")),
+						EntityOperator.AND);
+
 		try {
 			payrollElementELI = delegator.findList("PayrollElement",
-					elementConditions,
-					null, null, null, false);
+					elementConditions, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -213,17 +352,18 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdInsAmount = bdInsAmount.add(getElementAmount(payrollElement, delegator));
+			bdInsAmount = bdInsAmount.add(getElementAmount(payrollElement,staffPayrollId,
+					delegator));
 		}
 
-		bdInsRelief = bdInsAmount.multiply(getInsuranceReliefPercentage(employee, delegator));
-		
+		bdInsRelief = bdInsAmount.multiply(getInsuranceReliefPercentage(
+				employee, delegator));
+
 		log.info("######### Insurance Max " + bdINSURANCE_RELIEF_MAX);
-		if(bdInsRelief.compareTo(bdINSURANCE_RELIEF_MAX)>=0)
-		{
-			bdInsRelief=bdINSURANCE_RELIEF_MAX;
+		if (bdInsRelief.compareTo(bdINSURANCE_RELIEF_MAX) >= 0) {
+			bdInsRelief = bdINSURANCE_RELIEF_MAX;
 		}
-		
+
 		return bdInsRelief;
 	}
 
@@ -233,8 +373,7 @@ public class PayrollProcess {
 		List<GenericValue> insurancePercentgelELI = null;
 		try {
 			insurancePercentgelELI = delegator.findList("PayrollConstants",
-					null, null,
-					null, null, false);
+					null, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -243,8 +382,8 @@ public class PayrollProcess {
 			// Get the amount
 
 			bdInsPercentage = getInsPercentage(staffPension, delegator)
-					.divide(new BigDecimal(100), RoundingMode.HALF_UP);
-			log.info("######### Insurance % " + bdInsPercentage);
+					.multiply(new BigDecimal(0.01));
+			log.info("######### Insurance but now % " + bdInsPercentage);
 		}
 
 		return bdInsPercentage;
@@ -257,17 +396,21 @@ public class PayrollProcess {
 		try {
 			staffPayrollELI = delegator.findList("PayrollConstants",
 					EntityCondition.makeCondition("payrollConstantsId",
-							staffInsurance.getString("payrollConstantsId")), null,
-					null, null, false);
+							staffInsurance.getString("payrollConstantsId")),
+					null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 
 		for (GenericValue insPercentge : staffPayrollELI) {
 			// Get the amount
+			log.info("######### Insurance insuranceReliefRate % "
+					+ insPercentge.getBigDecimal("insuranceReliefRate"));
 			bdInsPercentage = insPercentge.getBigDecimal("insuranceReliefRate");
-			bdINSURANCE_RELIEF_MAX=insPercentge.getBigDecimal("insuranceReliefmax");
+			bdINSURANCE_RELIEF_MAX = insPercentge
+					.getBigDecimal("insuranceReliefmax");
 		}
+		log.info("######### Insurance % " + bdInsPercentage);
 		return bdInsPercentage;
 	}
 
@@ -281,9 +424,10 @@ public class PayrollProcess {
 
 		bdExcessPensionBenefit = calcExcessPensionBen(employee, delegator,
 				staffPayrollId);
-		bdLowInterestBenefit = calcLowInterestBen(employee, delegator);
+		bdLowInterestBenefit = calcLowInterestBen(employee, staffPayrollId, delegator);
+		bdLOWINTERESTBENEFIT = bdLowInterestBenefit;
 		bdDisabilityAllowance = getDisabilityAllowance(employee, delegator);
-		bdNonTaxableAmounts = getNonTaxableAmounts(employee, delegator);
+		bdNonTaxableAmounts = getNonTaxableAmounts(employee, staffPayrollId, delegator);
 
 		bdTaxableIncome = bdGrossPay.add(bdExcessPensionBenefit).add(
 				bdLowInterestBenefit).subtract(bdNSSFStatutory).subtract(
@@ -297,7 +441,7 @@ public class PayrollProcess {
 		return bdTaxableIncome;
 	}
 
-	private static BigDecimal getNonTaxableAmounts(GenericValue employee,
+	private static BigDecimal getNonTaxableAmounts(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdNonTaxableAmounts = BigDecimal.ZERO;
@@ -320,7 +464,7 @@ public class PayrollProcess {
 			// Get the amount
 
 			bdNonTaxableAmounts = bdNonTaxableAmounts.add(getElementAmount(
-					payrollElement, delegator));
+					payrollElement, staffPayrollId, delegator));
 		}
 
 		return bdNonTaxableAmounts;
@@ -394,13 +538,14 @@ public class PayrollProcess {
 
 		for (GenericValue staffPayrollConstants : staffPayrollConstantsELI) {
 			// Get the amount
-			bdDisabltyAllowanceAmount = staffPayrollConstants.getBigDecimal("disability_relief");
+			bdDisabltyAllowanceAmount = staffPayrollConstants
+					.getBigDecimal("disability_relief");
 		}
 		return bdDisabltyAllowanceAmount;
 	}
-	
-	private static BigDecimal getMPRAmount(
-			GenericValue payrollConstant, Delegator delegator) {
+
+	private static BigDecimal getMPRAmount(GenericValue payrollConstant,
+			Delegator delegator) {
 		// Do the real getting
 		BigDecimal bdMPRAmount = BigDecimal.ZERO;
 		List<GenericValue> staffPayrollConstantsELI = new LinkedList<GenericValue>();
@@ -415,12 +560,13 @@ public class PayrollProcess {
 
 		for (GenericValue staffPayrollConstants : staffPayrollConstantsELI) {
 			// Get the amount
-			bdMPRAmount = staffPayrollConstants.getBigDecimal("monthlyPersonalRelief");
+			bdMPRAmount = staffPayrollConstants
+					.getBigDecimal("monthlyPersonalRelief");
 		}
 		return bdMPRAmount;
 	}
 
-	private static BigDecimal calcLowInterestBen(GenericValue employee,
+	private static BigDecimal calcLowInterestBen(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		BigDecimal bdlowIntBen = BigDecimal.ZERO;
 		BigDecimal bdsalaryAdvanceAmount = BigDecimal.ZERO;
@@ -440,10 +586,10 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdsalaryAdvanceAmount = getElementAmount(payrollElement, delegator);
-			bdsalaryAdvanceBalance = getSalaryAdvanceBalance(payrollElement,
+			bdsalaryAdvanceAmount = getElementAmount(payrollElement, staffPayrollId, delegator);
+			bdsalaryAdvanceBalance = getSalaryAdvanceBalance(payrollElement, staffPayrollId,
 					delegator);
-			balanceModified = getBalanceModified(payrollElement, delegator);
+			balanceModified = getBalanceModified(payrollElement, staffPayrollId, delegator);
 		}
 		if (!balanceModified.equals("Y")) {
 			bdFinalSalaryAdvance = bdsalaryAdvanceBalance;
@@ -502,16 +648,21 @@ public class PayrollProcess {
 		return bdlowInterstRate;
 	}
 
-	private static String getBalanceModified(GenericValue payrollElement,
+	private static String getBalanceModified(GenericValue payrollElement, String staffPayrollId,
 			Delegator delegator) {
 		// Do the real getting
 		String ismodified = "";
 		List<GenericValue> staffPayrollElementsELI = new LinkedList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> staffPayrolElementConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("staffPayrollId", EntityOperator.EQUALS,
+								staffPayrollId), EntityCondition.makeCondition(
+						"payrollElementId", EntityOperator.EQUALS,
+						payrollElement.getString("payrollElementId"))), EntityOperator.AND);
 		try {
 			staffPayrollElementsELI = delegator.findList(
-					"StaffPayrollElements", EntityCondition.makeCondition(
-							"payrollElementId", payrollElement
-									.getString("payrollElementId")), null,
+					"StaffPayrollElements", staffPayrolElementConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -525,15 +676,20 @@ public class PayrollProcess {
 	}
 
 	private static BigDecimal getSalaryAdvanceBalance(
-			GenericValue payrollElement, Delegator delegator) {
+			GenericValue payrollElement, String staffPayrollId, Delegator delegator) {
 		// Do the real getting
 		BigDecimal bdAmount = BigDecimal.ZERO;
 		List<GenericValue> staffPayrollElementsELI = new LinkedList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> staffPayrolElementConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("staffPayrollId", EntityOperator.EQUALS,
+								staffPayrollId), EntityCondition.makeCondition(
+						"payrollElementId", EntityOperator.EQUALS,
+						payrollElement.getString("payrollElementId"))), EntityOperator.AND);
 		try {
 			staffPayrollElementsELI = delegator.findList(
-					"StaffPayrollElements", EntityCondition.makeCondition(
-							"payrollElementId", payrollElement
-									.getString("payrollElementId")), null,
+					"StaffPayrollElements", staffPayrolElementConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -570,6 +726,7 @@ public class PayrollProcess {
 		}
 
 		log.info("######### EPB " + bdEPB);
+		bdEXCESSPENSIONBENEFIT = bdEPB;
 		return bdEPB;
 	}
 
@@ -636,7 +793,7 @@ public class PayrollProcess {
 		return bdPensionAmount;
 	}
 
-	private static BigDecimal getBasicPay(GenericValue employee,
+	private static BigDecimal getBasicPay(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdBasicPy = BigDecimal.ZERO;
@@ -651,7 +808,7 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdBasicPy = getElementAmount(payrollElement, delegator);
+			bdBasicPy = getElementAmount(payrollElement, staffPayrollId, delegator);
 		}
 
 		return bdBasicPy;
@@ -764,7 +921,7 @@ public class PayrollProcess {
 		return bdNSSF;
 	}
 
-	private static BigDecimal sumPayments(GenericValue employee,
+	private static BigDecimal sumPayments(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdGross = BigDecimal.ZERO;
@@ -779,22 +936,53 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdGross = bdGross.add(getElementAmount(payrollElement, delegator));
+			bdGross = bdGross.add(getElementAmount(payrollElement, staffPayrollId, delegator));
 		}
 
 		return bdGross;
 	}
 
-	private static BigDecimal getElementAmount(GenericValue payrollElement,
+	/**
+	 * @author charles
+	 * **/
+	private static BigDecimal sumDeductions(GenericValue employee, String staffPayrollId,
+			Delegator delegator) {
+		List<GenericValue> payrollElementELI = null;
+		BigDecimal bdOtherDeduction = BigDecimal.ZERO;
+		try {
+			payrollElementELI = delegator.findList("PayrollElement",
+					EntityCondition.makeCondition("elementType", "Deduction"),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue payrollElement : payrollElementELI) {
+			// Get the amount
+
+			bdOtherDeduction = bdOtherDeduction.add(getElementAmount(
+					payrollElement, staffPayrollId, delegator));
+		}
+
+		return bdOtherDeduction;
+	}
+
+	private static BigDecimal getElementAmount(GenericValue payrollElement, String staffPayrollId,
 			Delegator delegator) {
 		// Do the real getting
 		BigDecimal bdAmount = BigDecimal.ZERO;
 		List<GenericValue> staffPayrollElementsELI = new LinkedList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> staffPayrolElementConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("staffPayrollId", EntityOperator.EQUALS,
+								staffPayrollId), EntityCondition.makeCondition(
+						"payrollElementId", EntityOperator.EQUALS,
+						payrollElement.getString("payrollElementId"))), EntityOperator.AND);
+		
 		try {
 			staffPayrollElementsELI = delegator.findList(
-					"StaffPayrollElements", EntityCondition.makeCondition(
-							"payrollElementId", payrollElement
-									.getString("payrollElementId")), null,
+					"StaffPayrollElements", staffPayrolElementConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -802,7 +990,8 @@ public class PayrollProcess {
 
 		for (GenericValue staffPayrollElement : staffPayrollElementsELI) {
 			// Get the amount
-			bdAmount = bdAmount.add(staffPayrollElement.getBigDecimal("amount"));
+			bdAmount = bdAmount
+					.add(staffPayrollElement.getBigDecimal("amount"));
 		}
 		return bdAmount;
 	}
@@ -812,6 +1001,7 @@ public class PayrollProcess {
 		// Do the real getting
 		BigDecimal bdNSSFAmount = BigDecimal.ZERO;
 		List<GenericValue> staffPayrollConstantsELI = new LinkedList<GenericValue>();
+		
 		try {
 			staffPayrollConstantsELI = delegator.findList("PayrollConstants",
 					EntityCondition.makeCondition("payrollConstantsId",
@@ -870,7 +1060,7 @@ public class PayrollProcess {
 			bdPercentage = bdPercentage.multiply(new BigDecimal(0.01));
 			taxTracker.setTaxPercent(bdPercentage);
 			taxTracker.setCount(count);
-			log.info("########## Percentage Divided by 100 : " +bdPercentage);
+			log.info("########## Percentage Divided by 100 : " + bdPercentage);
 			listTaxTracker.add(taxTracker);
 
 		}
@@ -880,13 +1070,13 @@ public class PayrollProcess {
 			grossTax = grossTax.add(taxTracker2.getTaxBase().multiply(
 					taxTracker2.getTaxPercent()));
 		}
-		
-		log.info("##########Gross Tax :" +grossTax);
+
+		log.info("##########Gross Tax :" + grossTax);
 		return grossTax;
 	}
-	
-	private static BigDecimal computeNHIF(GenericValue employee, Delegator delegator,
-			BigDecimal bdBasicPay) {
+
+	private static BigDecimal computeNHIF(GenericValue employee,
+			Delegator delegator, BigDecimal bdBasicPay) {
 		BigDecimal bdLowerBracket, bdUpperBracket = BigDecimal.ZERO;
 
 		// Get the TaxTable
@@ -897,20 +1087,190 @@ public class PayrollProcess {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-	
+
 		BigDecimal contribution = BigDecimal.ZERO;
-		
+
 		for (GenericValue genericValue : nhifTableELI) {
 			bdLowerBracket = genericValue.getBigDecimal("lowerbracket");
 			bdUpperBracket = genericValue.getBigDecimal("upperbracket");
-			
-			if ((!(bdBasicPay.compareTo(bdLowerBracket) == -1)) && (!(bdBasicPay.compareTo(bdUpperBracket) == 1 ))){
-				
+
+			if ((!(bdBasicPay.compareTo(bdLowerBracket) == -1))
+					&& (!(bdBasicPay.compareTo(bdUpperBracket) == 1))) {
+
 				contribution = genericValue.getBigDecimal("contribution");
 			}
 		}
 		log.info("######### NHIF " + contribution);
 		return contribution;
+	}
+
+	private static BigDecimal getLoanElementAmount(GenericValue payrollElement, String staffPayrollId,
+			Delegator delegator) {
+		// Do the real getting
+		BigDecimal bdAmount = BigDecimal.ZERO;
+		List<GenericValue> staffPayrollElementsELI = new LinkedList<GenericValue>();
+		try {
+			staffPayrollElementsELI = delegator.findList(
+					"StaffPayrollElements", EntityCondition.makeCondition(
+							"payrollElementId", payrollElement
+									.getString("payrollElementId")), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue staffPayrollElement : staffPayrollElementsELI) {
+			// Get the amount
+			if (staffPayrollElement.getString("isfixed").equals("Y")) {
+
+			} else {
+
+			}
+		}
+		return bdAmount;
+	}
+
+	/***
+	 * @author charles Get the fixed Interest
+	 * */
+	private static void processFixedInterest(Delegator delegator,
+			GenericValue payrolElement, String staffPayrollId) {
+		// Save the amount to staffPayrollElements
+		/***
+		 * payrollElementId staffPayrollId amount balance
+		 * 
+		 * 
+		 * */
+		// GenericValue interestPayrolElement =
+		// delegator.makeValidValue("PayrollElement", )
+		String staffPayrollElementsId = delegator
+				.getNextSeqId("StaffPayrollElements");
+		BigDecimal bdInterestAmt = payrolElement
+				.getBigDecimal("interestamount");
+		GenericValue interestPayrolElement = delegator.makeValidValue(
+				"StaffPayrollElements", UtilMisc.toMap(
+						"staffPayrollElementsId", staffPayrollElementsId,
+						"payrollElementId", payrolElement.getString("childId"),
+						"staffPayrollId", staffPayrollId, "amount",
+						bdInterestAmt));
+		log.info("Fixed  Interest Amount :: " + bdInterestAmt);
+
+		try {
+			delegator.createOrStore(interestPayrolElement);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/***
+	 * @author charles Get/Compute the variable interest
+	 * */
+	private static void processVariableInterest(Delegator delegator,
+			GenericValue payrolElement, String staffPayrollId) {
+		// Get the rate, Get the frequency, Get the Balance before deduction,
+		// multiply rate by balance then save the new value
+		// BigDecimal bdBalanceAmt =
+		GenericValue staffPayrollElement = getStaffPayrolElement(payrolElement
+				.getString("payrollElementId"), staffPayrollId, delegator);
+
+		/****
+		 * staffPayrollElementsId staffPayrollId payrollElementId amount
+		 * 
+		 * 
+		 * */
+		BigDecimal bdInterestAmt = computeInterestAmount(staffPayrollElement,
+				payrolElement, delegator);
+		log.info("################ Variable Interest Amount :: "
+				+ bdInterestAmt);
+
+		String staffPayrollElementsId = delegator
+				.getNextSeqId("StaffPayrollElements");
+		GenericValue interestPayrolElement = delegator.makeValidValue(
+				"StaffPayrollElements", UtilMisc.toMap(
+						"staffPayrollElementsId", staffPayrollElementsId,
+						"payrollElementId", payrolElement.getString("childId"),
+						"staffPayrollId", staffPayrollId, "amount",
+						bdInterestAmt));
+		try {
+			delegator.createOrStore(interestPayrolElement);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static BigDecimal computeInterestAmount(
+			GenericValue staffPayrollElement, GenericValue payrolElement,
+			Delegator delegator) {
+
+		BigDecimal bdFinalBalance = BigDecimal.ZERO, bdFinalInterestAmt = BigDecimal.ZERO;
+
+		if ((staffPayrollElement != null) && (staffPayrollElement.getString("valueChanged") != null)
+				&& (staffPayrollElement.getString("valueChanged").equals("Y"))) {
+			bdFinalBalance = staffPayrollElement.getBigDecimal("amount").add(
+					staffPayrollElement.getBigDecimal("balance"));
+		} else if ((staffPayrollElement != null) && (staffPayrollElement.getString("valueChanged") != null)
+				&& (staffPayrollElement.getString("valueChanged").equals("N"))) {
+			bdFinalBalance = staffPayrollElement.getBigDecimal("balance");
+		}
+		log.info("################ Interest Balance :: " + bdFinalBalance);
+
+		// PM Interest
+		// BigDecimal bdInterestRate =
+		// (payrolElement.getBigDecimal("interestrate") == null) ?
+		// BigDecimal.ZERO : payrolElement.getBigDecimal("interestrate");
+		BigDecimal bdInterestRate;
+		if (payrolElement.getBigDecimal("interestrate") == null) {
+			bdInterestRate = BigDecimal.ZERO;
+		} else {
+			bdInterestRate = payrolElement.getBigDecimal("interestrate");
+		}
+
+		if ((payrolElement.getString("interestfrequency") != null)
+				&& (payrolElement.getString("interestfrequency").equals("pa"))) {
+			bdInterestRate = bdInterestRate.divide(new BigDecimal(1200), 6,
+					RoundingMode.HALF_UP).setScale(6, RoundingMode.HALF_UP);
+		} else if ((payrolElement.getString("interestfrequency") != null)
+				&& (payrolElement.getString("interestfrequency").equals("pm"))) {
+			bdInterestRate = (BigDecimal) bdInterestRate.divide(
+					new BigDecimal(100), 6, RoundingMode.HALF_UP).setScale(6,
+					RoundingMode.HALF_UP);
+		}
+		log.info("################ Interest Rate :: " + bdInterestRate);
+
+		bdFinalInterestAmt = bdFinalBalance.multiply(bdInterestRate).setScale(
+				6, RoundingMode.HALF_UP);
+		//
+		return bdFinalInterestAmt;
+	}
+
+	/***
+	 * @author charles Get the StaffPayrolElement given the payrollElementId and
+	 *         staffPayrollId
+	 * */
+	private static GenericValue getStaffPayrolElement(String payrollElementId,
+			String staffPayrollId, Delegator delegator) {
+
+		List<GenericValue> staffPayrolElementsELI = new LinkedList<GenericValue>();
+
+		EntityConditionList<EntityExpr> staffPayrolElementConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("staffPayrollId", EntityOperator.EQUALS,
+								staffPayrollId), EntityCondition.makeCondition(
+						"payrollElementId", EntityOperator.EQUALS,
+						payrollElementId)), EntityOperator.AND);
+
+		try {
+			staffPayrolElementsELI = delegator.findList("StaffPayrollElements",
+					staffPayrolElementConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue staffPayrolElement = null;
+		for (GenericValue genericValue : staffPayrolElementsELI) {
+			staffPayrolElement = genericValue;
+		}
+
+		return staffPayrolElement;
 	}
 
 }
