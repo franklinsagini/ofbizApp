@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <version>1.0</version>
+    <default-resource-name>WorkflowEntityLabels</default-resource-name>
+
+    <!-- ========================================================= -->
+    <!-- ======================== Data Model ===================== -->
+    <!-- The modules in this file are as follows:                  -->
+    <!--  - org.ofbiz.example.example -->
+    <!--  - org.ofbiz.example.feature -->
+    <!-- ========================================================= -->
+
+    <!-- ========================================================= -->
+    <!-- org.ofbiz.workflow 
+    	Entities
+    	
+    	OrganizationUnit
+    	WorkflowDocumentType
+    	UnitEmployeeMap
+    	DocumentLevelConfig
+    	DocumentApproval
+    	
+    -->
+    	
+    <!-- ========================================================= -->
+    
+    <entity entity-name="OrganizationUnit" package-name="org.ofbiz.workflow" title="OrganizationUnit Entity">
+        <field name="organizationUnitId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="name" type="name"></field>
+        <prim-key field="organizationUnitId"/>
+    </entity>
+    
+    <entity entity-name="WorkflowDocumentType" package-name="org.ofbiz.workflow" title="WorkflowDocumentType Entity">
+        <field name="workflowDocumentTypeId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="name" type="name"></field>
+        <prim-key field="workflowDocumentTypeId"/>
+    </entity>
+
+    <entity entity-name="UnitEmployeeMap" package-name="org.ofbiz.workflow" title="UnitEmployeeMap Entity">
+        <field name="unitEmployeeMapId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id"></field>
+        <field name="organizationUnitId" type="id"></field>
+        <field name="isHead" type="name"></field>
+
+        
+        
+        <prim-key field="unitEmployeeMapId"/>
+        <!-- relation type="one" fk-name="MEMBERSHAREDEPOSIT_FINACCT" rel-entity-name="FinAccount">
+            <key-map field-name="shareAccountId" rel-field-name="finAccountId"/>
+        </relation -->
+        <relation type="one" fk-name="UNITEMPLOYEEMAP_UNIT" title="Unit" rel-entity-name="OrganizationUnit">
+        <key-map field-name="organizationUnitId"/>
+      </relation>
+        
+        <relation type="one" fk-name="UNITEMPLOYEEMAP_EMPLOYEE" rel-entity-name="Person">
+            <key-map field-name="partyId" />
+        </relation>
+    </entity>
+    
+     <entity entity-name="DocumentLevelConfig" package-name="org.ofbiz.workflow" title="DocumentLevelConfig Entity">
+        <field name="documentLevelConfigId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="organizationUnitId" type="id-ne"></field>
+        
+        
+        <field name="workflowDocumentTypeId" type="id-ne"></field>
+        
+        <field name="documentApprovalId" type="id-ne"></field>
+        
+        
+        <prim-key field="documentLevelConfigId"/>
+        
+        <relation type="one" fk-name="DocumentLevelConfig_organizationUnit" title="organizationUnit" rel-entity-name="OrganizationUnit">
+        	<key-map field-name="organizationUnitId"/>
+      	</relation>
+      	 <relation type="one" fk-name="DocumentLevelConfig_DocumentType" title="DocumentType" rel-entity-name="WorkflowDocumentType">
+        <key-map field-name="workflowDocumentTypeId"/>
+      </relation>
+      
+       <relation type="one" fk-name="DocumentLevelConfig_DocumentApproval" rel-entity-name="DocumentApproval">
+            <key-map field-name="documentApprovalId"/>
+        </relation>
+        
+     </entity>
+    
+     <entity entity-name="DocumentApproval" package-name="org.ofbiz.workflow" title="DocumentApproval Entity">
+        <field name="documentApprovalId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="workflowDocumentTypeId" type="id"></field>
+         <field name="organizationUnitId" type="id-ne"></field>
+         <field name="nextLevel" type="id"></field>
+         <field name="previousLevel" type="id"></field>
+        <field name="levelName" type="name"></field>
+        <field name="stageAction" type="name"></field>
+       	<field name="responsibleEmployee" type="id-ne"></field>
+        
+        <prim-key field="documentApprovalId"/>
+        <relation type="one" fk-name="DocumentApproval_DocumentType" rel-entity-name="WorkflowDocumentType">
+            <key-map field-name="workflowDocumentTypeId"/>
+        </relation>
+        
+        
+        <relation type="one" fk-name="DocumentApproval_OrganizationUnit" rel-entity-name="OrganizationUnit">
+            <key-map field-name="organizationUnitId"/>
+        </relation>
+        
+     
+        
+        <relation type="one" fk-name="DocumentApproval_NextLevel" rel-entity-name="DocumentApproval">
+            <key-map field-name="nextLevel" rel-field-name="documentApprovalId"/>
+        </relation>
+        
+        <relation type="one" fk-name="DocumentApproval_PreviousLevel" rel-entity-name="DocumentApproval">
+           <key-map field-name="previousLevel" rel-field-name="documentApprovalId"/>
+        </relation>
+        
+           <relation type="one" fk-name="DocumentApproval_ResponsibleEmployee" rel-entity-name="Person">
+            <key-map field-name="responsibleEmployee" rel-field-name="partyId"/>
+        </relation>
+        
+        </entity>
+</entitymodel>

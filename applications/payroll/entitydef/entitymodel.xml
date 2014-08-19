@@ -56,15 +56,24 @@ under the License.
         <field name="hasRelief" type="indicator"></field>
         <field name="recurrent" type="indicator"></field>
         <field name="hasInterest" type="indicator"></field>
+        <field name="isInterest" type="indicator"></field>
         <field name="isfixed" type="indicator"></field>
         <field name="interestamount" type="currency-amount"></field>
-        <field name="interestrate" type="numeric"></field>
+        <field name="interestrate" type="floating-point"></field>
         <field name="interestfrequency" type="name"></field>
         <field name="payslipdisplay" type="indicator"></field>
         <field name="isbold" type="indicator"></field>
+        <field name="parentId" type="id"></field>
+        <field name="childId" type="id"></field>
         
         
         <prim-key field="payrollElementId"/>
+        <relation type="one" fk-name="parent_Element" rel-entity-name="PayrollElement">
+            <key-map field-name="parentId"/>
+        </relation>
+        <relation type="one" fk-name="child_Element" rel-entity-name="PayrollElement">
+            <key-map field-name="childId"/>
+        </relation>
         <!-- relation type="one" fk-name="EXMPL_TYP" rel-entity-name="ExampleType">
             <key-map field-name="exampleTypeId"/>
         </relation>
@@ -163,6 +172,8 @@ under the License.
         <field name="staffNo" type="name"></field>
         <field name="staffName" type="name"></field>
        <field name="closed" type="indicator"></field>
+       <field name="pensionpercentage" type="currency-amount"></field> 
+       <field name="nssfVolAmount" type="currency-amount"></field> 
         <prim-key field="staffPayrollId"/>
         <relation type="one" fk-name="management_period" rel-entity-name="PayrollPeriod">
             <key-map field-name="payrollPeriodId"/>
@@ -210,8 +221,11 @@ under the License.
 	        <field name="disability_relief" type="currency-amount"></field>
 	        <field name="lowInterstRate" type="numeric"></field> 
 	        <field name="pension_maxContibution" type="currency-amount"></field> 
+	        <field name="monthlyPersonalRelief" type="currency-amount"></field>
 	        <field name="insuranceReliefmax" type="currency-amount"></field>
-	        <field name="insuranceReliefRate" type="numeric"></field>
+	        <field name="insuranceReliefRate" type="floating-point"></field>
+	        <field name="staticnssfAmount" type="currency-amount"></field>
+	        
 	        <prim-key field="payrollConstantsId"/>
         </entity>
         
@@ -219,7 +233,7 @@ under the License.
 	        <field name="payeTableId" type="id-ne"><description>primary sequenced ID</description></field>
 	        <field name="lowerbracket" type="currency-amount"></field>
 	        <field name="upperbracket" type="currency-amount"></field>
-	        <field name="percentage" type="numeric"></field> 
+	        <field name="percentage" type="floating-point"></field> 
 	        <field name="amount" type="currency-amount"></field> 
 	        <prim-key field="payeTableId"/>
         </entity>
@@ -236,7 +250,7 @@ under the License.
 	        <field name="nssfTableId" type="id-ne"><description>primary sequenced ID</description></field>
 	        <field name="tiername" type="currency-amount"></field>
 	        <field name="upperbracket" type="currency-amount"></field>
-	        <field name="percentage" type="numeric"></field> 
+	        <field name="percentage" type="floating-point"></field> 
 	        <prim-key field="nssfTableId"/>
         </entity>
         

@@ -4,7 +4,7 @@
         <menu-item name="main" title="${uiLabelMap.CommonMain}">
             <link target="main"/>
         </menu-item>
-        <menu-item name="quotes" title="${uiLabelMap.PurchasesQuote}">
+        <menu-item name="findQuotes" title="${uiLabelMap.PurchasesQuote}">
             <link target="findQuotes"/>
         </menu-item>
         <menu-item name="purchaseOrders" title="${uiLabelMap.PurchasesPurchaseOrders}">
@@ -33,11 +33,23 @@
             </link>
         </menu-item>
 
-
         <menu-item name="editQuoteLines" title="Quote Lines">
-            <link target="editQuoteLines"/>
+            <link target="editQuoteLines">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
         </menu-item>
     </menu>
+
+    <menu name="QuotesSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="createNew" title="Create New Quote" widget-style="buttontext create">
+            <link target="editPurchaseQuote"/>
+        </menu-item>
+    </menu>
+
+
+
+
+
     <menu name="OrdersTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="find" title="${uiLabelMap.CommonFind}">
             <link target="FindPurchaseOrders"/>
@@ -47,8 +59,8 @@
                 <parameter param-name="orderId" from-field="order.orderId"/>
             </link>
         </menu-item>
-        <menu-item name="editQuoteLines" title="Quote Lines">
-            <link target="editQuoteLines"/>
+        <menu-item name="editOrderLines" title="Order Lines">
+            <link target="EditOrderLines"/>
         </menu-item>
     </menu>
     <menu name="OrderSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">

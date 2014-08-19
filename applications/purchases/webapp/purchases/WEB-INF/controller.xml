@@ -25,190 +25,62 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
+
     <request-map uri="findQuotes">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="findQuotes"/>
+        <response name="success" type="view" value="FindQuotesScreen"/>
     </request-map>
+
     <request-map uri="editPurchaseQuote">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="editPurchaseQuote" />
-    </request-map>
-    <request-map uri="createPurchaseQuote">
-        <security https="true" auth="true" />
-        <event type="service" invoke="createPurchaseQuote" />
-        <response name="success" type="view" value="editPurchaseQuote" />
-        <response name="error" type="view" value="editPurchaseQuote" />
-    </request-map>
-    <request-map uri="updatePurchaseQuote">
-        <security https="true" auth="true" />
-        <event type="service" invoke="updatePurchaseQuote" />
-        <response name="success" type="view" value="editPurchaseQuote" />
-        <response name="error" type="view" value="editPurchaseQuote" />
-    </request-map>
-    <!-- Quotes Lines Requests -->
-    <request-map uri="editQuoteLines">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="editPurchaseQuoteItems"/>
-    </request-map>
-    <request-map uri="createQuoteLine">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createQuoteLine"/>
-        <response name="success" type="request-redirect" value="editPurchaseQuoteItems">
-            <redirect-parameter name="quoteId"/>
-        </response>
-        <response name="error" type="view" value="editPurchaseQuoteItems"/>
-    </request-map>
-    <request-map uri="updateQuoteLine">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateQuoteLine"/>
-        <response name="success" type="request-redirect" value="editPurchaseQuoteItems">
-            <redirect-parameter name="quoteId"/>
-        </response>
-        <response name="error" type="view" value="editPurchaseQuoteItems"/>
-    </request-map>
-    <request-map uri="deleteQuoteLine">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deleteImprestItem"/>
-        <response name="success" type="request-redirect" value="editPurchaseQuoteItems">
-            <redirect-parameter name="quoteId"/>
-        </response>
-        <response name="error" type="view" value="editPurchaseQuoteItems"/>
-    </request-map>
-    <request-map uri="findPurchaseQuote">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="findQuotes"/>
-    </request-map>
-    <request-map uri="FindPurchaseOrders">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="findPurchaseOrders"/>
-    </request-map>
-    <request-map uri="findShipments">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="findShipments"/>
-    </request-map>
-    <request-map uri="findReturns">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="findReturns"/>
-    </request-map>
-    <request-map uri="reports">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="reports"/>
+        <response name="success" type="view" value="EditQuoteScreen" />
     </request-map>
 
-    <!-- New Quotes -->
-
-    <request-map uri="EditPurchaseQuote">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPurchaseQuote"/>
-    </request-map>
-
-    <request-map uri="createPurchaseQuote">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createPurchaseQuote"/>
-        <response name="success" type="view" value="EditPurchaseQuote"/>
-        <response name="error" type="view" value="EditPurchaseQuote"/>
-    </request-map>
-    <request-map uri="updatePurchaseQuote">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updatePurchaseQuote"/>
-        <response name="success" type="view" value="EditPurchaseQuote"/>
-        <response name="error" type="view" value="EditPurchaseQuote"/>
-    </request-map>
-      <request-map uri="LookupPartyName">
+    <request-map uri="LookupPartyName">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupPartyName"/>
     </request-map>
 
-
-    <!-- PURCHASE ORDERS -->
-    <request-map uri="EditPurchaseOrders">
-        <security auth="true" https="true" />
-        <response name="success" type="view" value="EditPurchaseOrders" />
-    </request-map>
-
-    <request-map uri="updatePurchaseOrder">
+    <request-map uri="createPurchaseQuote">
         <security https="true" auth="true" />
-        <event type="service" invoke="updatePurchaseOrder" />
-        <response name="success" type="request-redirect" value="EditPurchaseOrders">
-            <redirect-parameter name="purchaseOrderId" />
-        </response>
-        <response name="error" type="view" value="EditPurchaseOrders" />
+        <event type="service" invoke="createPurchaseQuote" />
+        <response name="success" type="view" value="EditQuoteScreen" />
+        <response name="error" type="view" value="EditQuoteScreen" />
     </request-map>
 
-     <request-map uri="LookupProduct">
+    <request-map uri="updatePurchaseQuote">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updatePurchaseQuote" />
+        <response name="success" type="view" value="EditQuoteScreen" />
+        <response name="error" type="view" value="EditQuoteScreen" />
+    </request-map>
+
+    <request-map uri="editQuoteLines">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuoteItemsScreen"/>
+    </request-map>
+
+    <request-map uri="createPurchaseQuoteItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPurchaseQuoteItem"/>
+        <response name="success" type="view" value="EditQuoteItemsScreen"/>
+        <response name="error" type="view" value="EditQuoteItemsScreen"/>
+    </request-map>
+
+    <request-map uri="LookupProduct">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupProduct"/>
     </request-map>
 
-    <!-- REGISTRY JUST FOR TEST -->
 
-    <request-map uri="EditFileStatus">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditFileStatus"/>
-    </request-map>
-    <request-map uri="createFileStatus">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createFileStatus"/>
-        <response name="success" type="view" value="EditFileStatus"/>
-        <response name="error" type="view" value="EditFileStatus"/>
-    </request-map>
-    <request-map uri="updateFileStatus">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateFileStatus"/>
-        <response name="success" type="view" value="EditFileStatus"/>
-        <response name="error" type="view" value="EditFileStatus"/>
-    </request-map>
-
-
-    <request-map uri="EditRegistryFile">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditRegistryFile"/>
-    </request-map>
-    <request-map uri="createRegistryFile">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createRegistryFile"/>
-        <response name="success" type="view" value="EditRegistryFile"/>
-        <response name="error" type="view" value="EditRegistryFile"/>
-    </request-map>
-    <request-map uri="updateRegistryFile">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateRegistryFile"/>
-        <response name="success" type="view" value="EditRegistryFile"/>
-        <response name="error" type="view" value="EditRegistryFile"/>
-    </request-map>
-
-
-    <request-map uri="EditRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditRequest"/>
-    </request-map>
-    <request-map uri="createRequest">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createFileRequest"/>
-        <response name="success" type="view" value="RequestFile"/>
-        <response name="error" type="view" value="RequestFile"/>
-    </request-map>
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://purchases/widget/PurchasesScreens.xml#main"/>
-    <view-map name="findQuotes" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findQuotes"/>
-    <view-map name="findPurchaseOrders" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findPurchaseOrders"/>
-    <view-map name="findShipments" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findShipments"/>
-    <view-map name="findReturns" type="screen" page="component://purchases/widget/PurchasesScreens.xml#findReturns"/>
-    <view-map name="reports" type="screen" page="component://purchases/widget/PurchasesScreens.xml#reports"/>
+    <view-map name="FindQuotesScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindQuotesScreen"/>
+    <view-map name="EditQuoteScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditQuoteScreen"/>
+    <view-map name="EditQuoteItemsScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditQuoteItemsScreen"/>
 
-    <view-map name="editPurchaseQuote" type="screen" page="component://purchases/widget/PurchasesScreens.xml#editPurchaseQuote" />
-    <view-map name="editPurchaseQuoteItems" type="screen" page="component://purchases/widget/PurchasesScreens.xml#editPurchaseQuoteItems" />
-
-
-    <view-map name="EditPurchaseQuote" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditPurchaseQuote"/>
+    <!-- Utility View Maps -->
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
-    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
-    <!-- Edit Purchase Orders View Map -->
-    <view-map name="EditPurchaseOrders" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditPurchaseOrders"/>
-
-    <!-- JUST FOR TESTS REGISTRY -->
-    <view-map name="EditFileStatus" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditFileStatus"/>
-    <view-map name="EditRegistryFile" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditRegistryFile"/>
-    <view-map name="EditRequest" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditRequest"/>
+     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
 </site-conf>

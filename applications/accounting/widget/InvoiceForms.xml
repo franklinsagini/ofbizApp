@@ -354,8 +354,17 @@ under the License.
         </field>
     </form>
 
-   <form name="EditInvoiceItems" type="multi"  list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItem?invoiceId=${invoiceId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Invoice Items" paginate-target="listInvoiceItems"
-       odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+   <form
+        name="EditInvoiceItems"
+        type="multi"
+        list-name="invoiceItems"
+        default-entity-name="InvoiceItem"
+        target="updateInvoiceItem?invoiceId=${invoiceId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}"
+        title="Edit Invoice Items"
+        paginate-target="listInvoiceItems"
+        odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar">
+
        <row-actions>
            <set field="total" value="${groovy: (quantity ?: 1) * (amount ?: 0)}" type="BigDecimal"/>
        </row-actions>
@@ -383,21 +392,27 @@ under the License.
                <list-options list-name="glAccountOrganizationAndClassList" key-name="glAccountId" description="${glAccountId} ${accountName}"/>
            </drop-down>
        </field>
-       <field name="amount" title="${uiLabelMap.AccountingUnitPrice}"><text size="10"/></field>
-       <field name="total" widget-area-style="align-text"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence display -->
-       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
-       <field name="removeButton" title=" " widget-style="buttontext">
+        <field name="amount" title="${uiLabelMap.AccountingUnitPrice}"><text size="10"/></field>
+        <field name="total" widget-area-style="align-text">
+            <display type="currency" currency="${invoice.currencyUomId}"/>
+        </field>  <!-- this should not look like something you can modify,e display -->
+        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
+        <field name="removeButton" title=" " widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>
                 <parameter param-name="viewIndex"/>
                 <parameter param-name="viewSize"/>
             </hyperlink>
-       </field>
+        </field>
     </form>
 
-    <form name="EditInvoiceItem" type="single" target="createInvoiceItem" title="" default-map-name="invoiceItem" default-entity-name="InvoiceItem"
-        header-row-style="header-row" default-table-style="basic-table">
+    <form name="EditInvoiceItem" type="single"
+        target="createInvoiceItem" title=""
+        default-map-name="invoiceItem"
+        default-entity-name="InvoiceItem"
+        header-row-style="header-row"
+        default-table-style="basic-table">
         <field name="invoiceId"><hidden/></field>
         <field position="1" name="invoiceItemTypeId">
             <drop-down allow-empty="false">

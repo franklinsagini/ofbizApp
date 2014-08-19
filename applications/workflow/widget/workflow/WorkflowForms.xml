@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	
+		<!-- OrganizationUnit -->
+	<form name="organizationUnit" type="single" target="createOrganizationUnit"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="organizationUnitContext">
+   
+        <field name="organizationUnitId"><hidden/></field>
+        <field name="name" title="Name" widget-style="required" required-field="true" ><text></text></field>
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listOrganizationUnit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateOrganizationUnit" paginate-target="organizationUnit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="OrganizationUnit">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateOrganizationUnit"/>
+ 		
+        <field name="name" title="Name"> <text></text> </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteOrganizationUnit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="organizationUnitId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+   <!-- Document Type -->
+   <form name="documentType" type="single" target="createDocumentType"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="documentTypeContext">
+   		
+        <field name="workflowDocumentTypeId"><hidden/></field>
+        <field name="name" title="Name" widget-style="required" required-field="true" ><text></text></field>
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+     </form>
+        
+     <form name="listDocumentType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDocumentType" paginate-target="documentType"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	       	<actions>
+	       		<entity-condition entity-name="WorkflowDocumentType"></entity-condition>
+	       	</actions>
+	        <!-- actions>
+	            <entity-condition entity-name="DocumentType">
+	            </entity-condition>
+	        </actions -->
+	        <auto-fields-service default-field-type="hidden" service-name="updateDocumentType"/>
+	 		
+	        <field name="name" title="Name"> <text></text> </field>
+	        
+	        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+	            <hyperlink target="deleteDocumentType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+	                <parameter param-name="workflowDocumentTypeId"/>
+	            </hyperlink>
+	        </field>
+	        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- unitEmployeeMap -->
+    <form name="unitEmployeeMap" type="single" target="createUnitEmployeeMap"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="unitEmployeeMapContext">
+   		<actions>
+   			<entity-condition entity-name="Person" list="employeeList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="OrganizationUnit" list="organizationUnitList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+   		</actions>
+        <field name="unitEmployeeMapId"><hidden/></field>
+        <field name="partyId" title="Employee">
+        	<drop-down allow-empty="true">
+                <list-options list-name="employeeList"   key-name="partyId" description="${firstName} ${lastName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="organizationUnitId" title="Unit">
+        	<drop-down allow-empty="true">
+                <list-options list-name="organizationUnitList"   key-name="organizationUnitId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="isHead"  title="Is Head" >
+            <drop-down allow-empty="false">
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+     </form>
+        
+     <form name="listUnitEmployeeMap" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateUnitEmployeeMap" paginate-target="unitEmployeeMap"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	        <actions>
+	         <entity-condition entity-name="UnitEmployeeMap">
+	            </entity-condition>
+   			<entity-condition entity-name="Person" list="employeeList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="OrganizationUnit" list="organizationUnitList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+   		</actions>
+        <field name="unitEmployeeMapId"><hidden/></field>
+        <field name="partyId" title="Employee">
+        	<drop-down allow-empty="true">
+                <list-options list-name="employeeList"   key-name="partyId" description="${firstName} ${lastName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="organizationUnitId" title="Unit">
+        	<drop-down allow-empty="true">
+                <list-options list-name="organizationUnitList"   key-name="organizationUnitId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="isHead"  title="Is Head" >
+            <drop-down allow-empty="false">
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+	        
+	        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+	            <hyperlink target="deleteUnitEmployeeMap" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+	                <parameter param-name="unitEmployeeMapId"/>
+	            </hyperlink>
+	        </field>
+	        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- documentLevelConfig -->
+    <form name="documentLevelConfig" type="single" target="createDocumentLevelConfig"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="documentLevelConfigContext">
+   		<actions>
+   			<entity-condition entity-name="OrganizationUnit" list="unitList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="WorkflowDocumentType" list="documentTypeList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="DocumentApproval" list="documentApprovalList">
+        		<order-by field-name="documentApprovalId"/>
+        	</entity-condition>
+   		</actions>
+        <field name="documentLevelConfigId"><hidden/></field>
+        <field name="organizationUnitId" title="Unit">
+        	<drop-down allow-empty="true">
+                <list-options list-name="unitList"   key-name="organizationUnitId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="workflowDocumentTypeId" title="Document Type">
+        	<drop-down allow-empty="true">
+                <list-options list-name="documentTypeList"   key-name="workflowDocumentTypeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="documentApprovalId" title="Document Approval">
+        	<drop-down allow-empty="true">
+                <list-options list-name="documentApprovalList"   key-name="documentApprovalId" description="${levelName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+     </form>
+        
+     <form name="listDocumentLevelConfig" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDocumentLevelConfig" paginate-target="documentLevelConfig"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	       		<actions>
+	       		<entity-condition entity-name="DocumentLevelConfig">
+        	</entity-condition>
+   			<entity-condition entity-name="OrganizationUnit" list="unitList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="WorkflowDocumentType" list="documentTypeList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="DocumentApproval" list="documentApprovalList">
+        		<order-by field-name="documentApprovalId"/>
+        	</entity-condition>
+   		</actions>
+        <field name="documentLevelConfigId"><hidden/></field>
+        <field name="organizationUnitId" title="Unit">
+        	<drop-down allow-empty="true">
+                <list-options list-name="unitList"   key-name="organizationUnitId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="workflowDocumentTypeId" title="Document Type">
+        	<drop-down allow-empty="true">
+                <list-options list-name="documentTypeList"   key-name="workflowDocumentTypeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="documentApprovalId" title="Document Approval">
+        	<drop-down allow-empty="true">
+                <list-options list-name="documentApprovalList"   key-name="documentApprovalId" description="${levelName}"/>
+            </drop-down>
+        </field>
+	        
+	    <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+	            <hyperlink target="deleteDocumentType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+	                <parameter param-name="workflowDocumentTypeId"/>
+	            </hyperlink>
+	        </field>
+	        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- 
+    	documentApproval
+		listDocumentApproval
+     -->
+     
+     <form name="documentApproval" type="single" target="createDocumentApproval"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="documentApprovalContext">
+   		<actions>
+   			<entity-condition entity-name="WorkflowDocumentType" list="documentTypeList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="OrganizationUnit" list="organizationUnitList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="DocumentApproval" list="documentApprovalList">
+        		<order-by field-name="documentApprovalId"/>
+        	</entity-condition>
+        		
+        	<entity-condition entity-name="Person" list="employeeList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>	
+   		</actions>
+        <field name="documentApprovalId"><hidden/></field>
+        
+        <field name="levelName" title="Level Name"> <text size="25"></text> </field>
+        <field name="stageAction" title="Stage Action"> <text size="25"></text> </field>
+        
+        <field name="workflowDocumentTypeId" title="Document Type">
+        	<drop-down allow-empty="true" text-size="25">
+                <list-options list-name="documentTypeList" key-name="workflowDocumentTypeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        
+        <field name="organizationUnitId" title="Unit">
+        	<drop-down allow-empty="true" text-size="25">
+                <list-options list-name="organizationUnitList"  key-name="organizationUnitId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="workflowDocumentTypeId" title="Document Type">
+        	<drop-down allow-empty="true" text-size="25">
+                <list-options list-name="documentTypeList"  key-name="workflowDocumentTypeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="nextLevel" title="Next Level">
+        	<drop-down allow-empty="true" text-size="25">
+                <list-options list-name="documentApprovalList"   key-name="documentApprovalId" description="${levelName}"/>
+            </drop-down>
+        </field>
+        
+         <field name="previousLevel" title="Previous Level">
+        	<drop-down allow-empty="true" text-size="25">
+                <list-options list-name="documentApprovalList"   key-name="documentApprovalId" description="${levelName}"/>
+            </drop-down>
+        </field>
+        
+         <field name="responsibleEmployee" title="Employee Responsible(Approver) ">
+        	<drop-down allow-empty="true" text-size="25">
+                <list-options list-name="employeeList"  key-name="partyId" description="${firstName} ${lastName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+     </form>
+        
+     <form name="listDocumentApproval" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDocumentApproval" paginate-target="documentApproval"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	       		<actions>
+	       		<entity-condition entity-name="DocumentApproval">
+        	</entity-condition>
+	       		
+   			<entity-condition entity-name="WorkflowDocumentType" list="documentTypeList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="OrganizationUnit" list="organizationUnitList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="DocumentApproval" list="documentApprovalList">
+        		<order-by field-name="documentApprovalId"/>
+        	</entity-condition>
+        		
+        	<entity-condition entity-name="Person" list="employeeList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>	
+   		</actions>
+        <field name="documentApprovalId"><hidden/></field>
+        <field name="levelName" title="Level Name"> <text size="25"></text> </field>
+         <field name="stageAction" title="Stage Action"> <text size="25"></text> </field>
+        <field name="workflowDocumentTypeId" title="Document Type">
+        	<drop-down allow-empty="true"  text-size="25">
+                <list-options list-name="documentTypeList"  key-name="workflowDocumentTypeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        
+        <field name="organizationUnitId" title="Unit">
+        	<drop-down allow-empty="true" text-size="25">
+                <list-options list-name="organizationUnitList"  key-name="organizationUnitId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="workflowDocumentTypeId" title="Document Type">
+        	<drop-down allow-empty="true"  text-size="10">
+                <list-options list-name="documentTypeList" key-name="workflowDocumentTypeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="nextLevel" title="Next Level">
+        	<drop-down allow-empty="true"  text-size="30">
+                <list-options list-name="documentApprovalList" key-name="documentApprovalId" description="${levelName}"/>
+            </drop-down>
+        </field>
+        
+         <field name="previousLevel" title="Previous Level">
+        	<drop-down allow-empty="true"  text-size="30">
+                <list-options list-name="documentApprovalList" key-name="documentApprovalId" description="${levelName}"/>
+            </drop-down>
+        </field>
+        
+         <field name="responsibleEmployee" title="Employee Responsible(Approver) ">
+        	<drop-down allow-empty="true"  text-size="15">
+                <list-options list-name="employeeList" key-name="partyId" description="${firstName} ${lastName}"/>
+            </drop-down>
+        </field>
+	        
+	    <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+	            <hyperlink target="deleteDocumentApproval" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+	                <parameter param-name="documentApprovalId"/>
+	            </hyperlink>
+	        </field>
+	        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+</forms>

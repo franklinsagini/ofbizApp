@@ -14,8 +14,6 @@
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 	<form name="FindEmplLeaves" type="single" target="FindEmplLeaves"
 		odd-row-style="header-row" default-table-style="basic-table">
-		<!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/> -->
-		<!-- <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
 		<field name="partyId">
 			<hidden value="${userLogin.partyId}" />
 		</field>
@@ -41,7 +39,6 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<!-- <field name="approverPartyId"><lookup target-form-name="LookupPartyName"/></field> -->
 		<field name="description">
 			<hidden />
 		</field>
@@ -93,14 +90,16 @@
 		<field name="leaveDuration">
 			<display />
 		</field>
-		<field name="leaveBalance">
+		<field name="approvalStatus">
 			<display />
 		</field>
-		<field name="leaveStatus">
-			<display />
+		<field name="responsibleEmployee">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}" key-field-name="partyId">
+			
+			</display-entity>
 		</field>
 		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext" use-when="${leaveStatus=='CREATED'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
 				target="EditEmplLeave">
 				<parameter param-name="partyId" />
@@ -109,16 +108,16 @@
 			</hyperlink>
 		</field>
 		<field name="forwardLeave" title="${uiLabelMap.forward}"
-			widget-style="buttontext" use-when="${leaveStatus=='CREATED'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.forward}"
-				target="forwardEmplLeave">
+				target="forwardApplication">
 				<parameter param-name="partyId" />
 				<parameter param-name="leaveTypeId" />
 				<parameter param-name="fromDate" />
 			</hyperlink>
 		</field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
-			widget-style="buttontext" use-when="${leaveStatus=='CREATED'}">
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
 				target="deleteEmplLeave">
 				<parameter param-name="partyId" />
@@ -137,13 +136,16 @@
 		<field name="partyId" title="Member">
 			<hidden value="${userLogin.partyId}" />
 		</field>
-		<field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}">
+		 <field name="appointmentdate" title="Appointment Date">
+			<hidden value="${appointmentdate}"/>
+		</field> 
+		<field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}" title="Leave Type">
 			<drop-down allow-empty="true">
 				<entity-options description="${description}"
 					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
 			</drop-down>
 		</field>
-		<field name="emplLeaveReasonTypeId">
+		<field name="emplLeaveReasonTypeId" title="Leave Reason">
 			<drop-down allow-empty="true">
 				<entity-options description="${description}"
 					key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType" />
@@ -158,14 +160,17 @@
 		<field name="thruDate" tooltip="${uiLabelMap.CommonRequired}">
 			<date-time type="date" />
 		</field>
-		<field name="leaveBalance" tooltip="${uiLabelMap.CommonRequired}">
-			<display />
+		<field name="organizationUnitId" tooltip="${uiLabelMap.CommonRequired}">
+			<hidden value="${organizationUnitId}"/>
 		</field>
-		<field name="leaveStage">
-			<hidden value="01" />
+		<field name="accruedDay" title="Accrued Days" >
+			<text default-value="${accruedDay}" disabled="true"></text>
 		</field>
-		<field name="leaveStatus">
-			<hidden value="CREATED" />
+		<!-- <field name="balanceDay" >
+			<text default-value="${balanceDay}" disabled="true"></text>
+		</field> -->
+		<field name="leaveBalance" title="Leave Balance">
+			<text default-value="${balanceDay}" disabled="true"></text>
 		</field>
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}"
 			widget-style="smallSubmit">
@@ -177,24 +182,16 @@
 		</field>
 	</form>
 	<form name="FindLeaveApprovals" target="FindLeaveApprovals" type="single">
-		<!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/> -->
 		<field name="noConditionFind">
 			<hidden value="Y" /><!-- if this isn't there then with all fields 
 				empty no query will be done -->
 		</field>
-		<!--<field name="approverPartyId" use-when="!hasAdminPermission"><hidden 
-			value="${approverPartyId}"/></field> -->
 		<field name="partyId">
 			<lookup target-form-name="LookupPartyName" />
 		</field>
 		<field name="leaveStatus">
 			<hidden value="Approved" />
 		</field>
-		<!-- <field name="leaveStatus"> <drop-down allow-empty="true"> <entity-options 
-			description="${description}" key-field-name="statusId" entity-name="StatusItem"> 
-			<entity-constraint name="statusTypeId" operator="equals" value="LEAVE_STATUS"/> 
-			<entity-order-by field-name="description"/> </entity-options> </drop-down> 
-			</field> -->
 		<field name="leaveTypeId">
 			<text-find />
 		</field>
@@ -213,24 +210,20 @@
 		odd-row-style="alternate-row" header-row-style="header-row-2"
 		default-table-style="basic-table hover-bar">
 		<actions>
-			<set field="entityName" value="EmplLeave" />
-			
-			
-			<!-- <entity-one value-field="level" entity-name="SupervisorLevel">
-					<field-map field-name="partyId" from-field="${userLogin.partyId}"/>
-			</entity-one> -->
-			
-			<entity-condition entity-name="EmplLeave">
+			<set field="entityName" value="EmplLeaveView" />
+			<entity-condition entity-name="EmplLeaveView">
 				<condition-list>
-					<condition-expr field-name="leaveStatus" operator="not-equals"
-						value="CREATED" />
-					<condition-expr field-name="leaveStage" operator="equals"
-						from-field="superVisorLevelValue" />
+					 <!-- <condition-expr field-name="applicationStatus" operator="equals"
+						value="NEW" /> -->
+					<!--<condition-expr field-name="responsibleEmployee" operator="equals"
+						from-field="responsibleEmployee" />
+					 <condition-expr field-name="partyIdFrom" operator="equals"
+						from-field="partyIdFromV" />-->
+					<!-- <condition-expr field-name="organizationUnitId" operator="equals"
+						from-field="organizationUnitId" />  -->
 				</condition-list>
 				<order-by field-name="partyId" />
 			</entity-condition>
-			<!-- <entity-condition entity-name="EmplLeave"> <condition-expr field-name="leaveStage" 
-				operator="equals" value="01" /> </entity-condition> -->
 			<service service-name="performFind" result-map="result"
 				result-map-list="listIt">
 				<field-map field-name="inputFields" from-field="parameters" />
@@ -303,7 +296,7 @@
 		</field>
 	</form>
 
-	<form name="approveEmplLeaveStatus" type="single" target="approveEmplLeaveStatus"
+	<form name="approveEmplLeaveStatus" type="single" target="forwardApplication"
 		default-map-name="leaveApp">
 		<actions>
 			<set field="entityName" value="EmplLeave" />

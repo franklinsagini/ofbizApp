@@ -42,6 +42,23 @@ under the License.
 
 
     <!--  Request Mappings for calling leave duration and end date java functions -->
+    <request-map uri="forwardApplication">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="forwardApplication" />
+    <response name="success" type="view"
+    value="FindEmplLeaves">
+    <redirect-parameter name="partyId"/>
+    <redirect-parameter name="fromDate"/>
+    <redirect-parameter name="leaveTypeId"/>
+    </response>
+    <response name="error" type="view" value="FindEmplLeaves" />
+    </request-map>
+
+
+   <request-map uri="emplleavebalance">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveBalance" />
+        <response name="success" type="none"></response>
+    </request-map>
    <request-map uri="emplleaveduration">
         <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveDuration" />
         <response name="success" type="none">
@@ -484,7 +501,7 @@ under the License.
     </request-map>
     <request-map uri="updateStaffLeaveBalances">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateStaffLeaveBalances"/>
+        <event type="service" invoke="updateStaffLeaveBalances"/>
         <response name="success" type="view" value="staffLeaveBalances"/>
         <response name="error" type="view" value="staffLeaveBalances"/>
     </request-map>
