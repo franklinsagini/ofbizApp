@@ -635,18 +635,66 @@ under the License.
       </relation>
 	</entity>
 	
-	<entity entity-name="SalaryProcessingDate" package-name="org.ofbiz.loans"
-		title="SalaryProcessingDate Entity">
-		<field name="salaryProcessingDateId" type="id-ne"></field>
+	<entity entity-name="ProductCharge" package-name="org.ofbiz.loans"
+		title="ProductCharge Entity">
+		<field name="productChargeId" type="id-ne"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
-		<field name="branchId" type="name"></field>
+		<field name="name" type="name"></field>
 		
-		<field name="processingDay" type="numeric"></field>
-		<prim-key field="salaryProcessingDateId"/>
+		<prim-key field="productChargeId"/>
 	</entity>
 	
+	<entity entity-name="LoanProductCharge" package-name="org.ofbiz.loans"
+		title="LoanProductCharge Entity">
+		<field name="loanProductChargeId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="loanProductId" type="id-ne"></field>
+		<field name="productChargeId" type="id-ne"></field>
+		<field name="isFixed" type="indicator"></field>
+		<field name="rateAmount" type="fixed-point"></field>
+		<field name="fixedAmount" type="fixed-point"></field>
+		
+		
+		
+		<prim-key field="loanProductChargeId"/>
+		<relation type="one" fk-name="LoanProductCharge_Charge" rel-entity-name="ProductCharge">
+        	<key-map field-name="productChargeId"/>
+      	</relation>
+      	<relation type="one" fk-name="LoanProductCharge_LoanProduct" rel-entity-name="LoanProduct">
+        	<key-map field-name="loanProductId"/>
+      	</relation>
+	</entity>
 	
+	<entity entity-name="LoanApplicationCharge" package-name="org.ofbiz.loans"
+		title="LoanApplicationCharge Entity">
+		<field name="loanApplicationChargeId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="loanApplicationId" type="id-ne"></field>
+		<field name="productChargeId" type="id-ne"></field>
+		<field name="isFixed" type="indicator"></field>
+		<field name="rateAmount" type="fixed-point"></field>
+		<field name="fixedAmount" type="fixed-point"></field>
+		
+		
+		
+		<prim-key field="loanApplicationChargeId"/>
+		<relation type="one" fk-name="LoanProductCharge_Charge" rel-entity-name="ProductCharge">
+        	<key-map field-name="productChargeId"/>
+      	</relation>
+      	<relation type="one" fk-name="LoanProductCharge_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
 	
 </entitymodel>
