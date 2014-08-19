@@ -27,28 +27,39 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
 
 public class HumanResServices {
-
-	/*public static double getApprovedLeaveSum(GenericValue person){
+	public static Logger log = Logger.getLogger(LeaveServices.class);
+/*	public static double getApprovedLeaveSum(GenericValue person){
 		double newLeaveBalance = 0;
 		String partyId = person.getString("partyId");
-		
+		//String partyId = person.getString("fromDate");
+		String partyId = person.getString("leaveTypeId");
 		Delegator delegator = getDelegator();
-				
-		List<GenericValue> getApprovedLeaveSumELI = null;
+		List<GenericValue> getApprovedLeaveSumELI = null;		
+		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "NEW")),
+						EntityOperator.AND);
+
 		try {
-			getApprovedLeaveSumELI = delegator.findList("StaffLeaveBalances",
-					EntityCondition.makeCondition("partyId",
-							partyId), null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
+			getApprovedLeaveSumELI = delegator.findList("EmplLeave",
+					leaveConditions, null, null, null, false);
+		} catch (GenericEntityException e2) {
+			//e2.printStackTrace();
+			return "Cannot Get approved leaves";
 		}
-		for (GenericValue genericValue2 : getApprovedLeaveSumELI) {
-			newLeaveBalance += genericValue2.getInteger("leaveDuration");
+		for (GenericValue genericValue : getApprovedLeaveSumELI) {
+			newLeaveBalance += genericValue.getInteger("leaveDuration");
 		}
 		/////////////////////////////////////////////////////
 
@@ -56,20 +67,14 @@ public class HumanResServices {
 		
 		return newLeaveBalance;
 
-	}*/
+	}
+	*/
 	
-	
-/*private static Delegator getDelegator(int partyId) {
-		// TODO Auto-generated method stub
-		return null;
-	}*/
-
-
-		// ============================================================== 
+	// ============================================================== 
 public static String getLeaveBalance(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		Date appointmentdate = null;
 		try {
 			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
@@ -78,25 +83,34 @@ public static String getLeaveBalance(HttpServletRequest request,
 			e2.printStackTrace();
 		}
 		String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
-		int partyId = new Integer(request.getParameter("partyId")).intValue();
+		String partyId = new String(request.getParameter("partyId")).toString();
 		
 		//   get current leave balance  //
 		
-		// double currentLeaveBalance = 0;
-		 Delegator delegator = (Delegator) request.getAttribute("delegator");
-		// //Delegator delegator = getDelegator(partyId);
-		// List<GenericValue> getApprovedLeaveSumELI = null;
-		
-		// try {
-		// getApprovedLeaveSumELI = delegator.findList("StaffLeaveBalances",
-		// 		EntityCondition.makeCondition("partyId",
-		// 				partyId), null, null, null, false);
-		// 	} catch (GenericEntityException e) {
-		// 			e.printStackTrace();
-		// 	}
-		// for (GenericValue genericValue2 : getApprovedLeaveSumELI) {
-		// currentLeaveBalance = genericValue2.getInteger("balance");
-		// }
+		List<GenericValue> getApprovedLeaveSumELI = null;		
+		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "NEW")),
+						EntityOperator.AND);
+
+		try {
+			getApprovedLeaveSumELI = delegator.findList("EmplLeave",
+					leaveConditions, null, null, null, false);
+		} catch (GenericEntityException e2) {
+			//e2.printStackTrace();
+			return "Cannot Get approved leaves";
+		}
+		log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
+	double approvedLeaveSum =0;
+	double  usedLeaveDays = 0;
+	double lostLeaveDays = 0;
+		for (GenericValue genericValue : getApprovedLeaveSumELI) {
+			 approvedLeaveSum += genericValue.getLong("leaveDuration");
+		}
+		log.info("============================================================" +approvedLeaveSum);
 		
 		// ============ get accrual rate ================ //
 	double accrualRate = 0; 
@@ -114,7 +128,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 		} else {
 			System.out.println("######## Accrual Rate not found #### ");
 		}
-
+		
 		//========= ==============================//
 	
 		LocalDateTime stappointmentdate = new LocalDateTime(appointmentdate);
@@ -126,16 +140,16 @@ public static String getLeaveBalance(HttpServletRequest request,
 		Period difference = new Period(stappointmentdate, stCurrentDate, monthDay);
 
 		int months = difference.getMonths();
-		//String leaveBalance = Double.toString(months);
-		double accruedDays = months * accrualRate;
-		double balanceDays =  accruedDays - 0; 
-		String accruedDay = Double.toString(accruedDays);
-		String balanceDay = Double.toString(balanceDays);
+		String approvedLeaveSumed = Double.toString(approvedLeaveSum);
+		double accruedLeaveDay = months * accrualRate;
+		double leaveBalances =  accruedLeaveDay - approvedLeaveSum; 
+		String accruedLeaveDays = Double.toString(accruedLeaveDay);
+		String leaveBalance = Double.toString(leaveBalances);
 
 		//return leaveBalance;
-		//result.put("leaveBalance",leaveBalance );
-		result.put("accruedDay", accruedDay);
-		result.put("balanceDay" , balanceDay);
+		result.put("approvedLeaveSumed",approvedLeaveSumed );
+		result.put("accruedLeaveDays", accruedLeaveDays);
+		result.put("leaveBalance" , leaveBalance);
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);

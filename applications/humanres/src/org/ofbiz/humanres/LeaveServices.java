@@ -92,6 +92,7 @@ public class LeaveServices {
 
 			if ((documentApproval.getString("nextLevel") == null)|| (documentApproval.getString("nextLevel").equals(""))) {
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
+				leave.set("applicationStatus","LEAVE_APPROVED"); // Employee to go for leave.
 			} else {
 				leave.set("approvalStatus", documentApproval.getString("stageAction")	+ " (APPROVED)");
 			}
@@ -237,12 +238,6 @@ public class LeaveServices {
 
 		Delegator delegator = party.getDelegator();
 
-		// try {
-		// superVisorLevel = delegator.findOne("SupervisorLevel",
-		// UtilMisc.toMap("partyId", partyId), false);
-		// } catch (GenericEntityException e2) {
-		// e2.printStackTrace();
-		// }
 
 		List<GenericValue> levelsELI = null; // =
 
