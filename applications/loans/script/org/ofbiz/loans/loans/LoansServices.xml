@@ -536,4 +536,76 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- ProductCharge -->
+    <simple-method method-name="createProductCharge" short-description="Create ProductCharge">
+        <make-value entity-name="ProductCharge" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="ProductCharge" field="productChargeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="productChargeId" field="newEntity.productChargeId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateProductCharge" short-description="Update ProductCharge">
+        <entity-one entity-name="ProductCharge" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteProductCharge" short-description="Delete ProductCharge">
+        <entity-one entity-name="ProductCharge" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- LoanProductCharge -->
+        <simple-method method-name="createLoanProductCharge" short-description="Create LoanProductCharge">
+        <make-value entity-name="LoanProductCharge" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanProductCharge" field="loanProductChargeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanProductChargeId" field="newEntity.loanProductChargeId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanProductCharge" short-description="Update LoanProductCharge">
+        <entity-one entity-name="LoanProductCharge" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanProductCharge" short-description="Delete LoanProductCharge">
+        <entity-one entity-name="LoanProductCharge" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- LoanApplicationCharge -->
+    <simple-method method-name="createLoanApplicationCharge" short-description="Create LoanApplicationCharge">
+        <make-value entity-name="LoanApplicationCharge" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanApplicationCharge" field="loanApplicationChargeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanApplicationChargeId" field="newEntity.loanApplicationChargeId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanApplicationCharge" short-description="Update LoanApplicationCharge">
+        <entity-one entity-name="LoanApplicationCharge" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanApplicationCharge" short-description="Delete LoanApplicationCharge">
+        <entity-one entity-name="LoanApplicationCharge" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

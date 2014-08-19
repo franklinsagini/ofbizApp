@@ -665,10 +665,23 @@
 		<entity-one entity-name="SkillType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
+    <simple-method method-name="createPartyRole" short-description="Create Party Role">
+        <entity-one entity-name="PartyRole" value-field="partyRole"/>
+        <if-empty field="partyRole">
+            <make-value entity-name="PartyRole" value-field="newEntity"/>
+            <set-pk-fields map="parameters" value-field="newEntity"/>
+            <create-value value-field="newEntity"/>
+        </if-empty>
+    </simple-method>
+
+
 
 	<simple-method method-name="createEmployee"
 		short-description="Create New Employee">
 		<set field="parameters.roleTypeId" value="EMPLOYEE" />
+		<set field="roleMap.partyId" from-field="parameters.accountPartyId"/>
+        <set field="roleMap.roleTypeId" value="EMPLOYEE"/>
+        <call-service service-name="createPartyRole" in-map-name="roleMap"/>
 		<call-simple-method method-name="createPersonRoleAndContactMechs"
 			xml-resource="component://party/script/org/ofbiz/party/party/PartySimpleMethods.xml" />
 		<if-not-empty field="parameters.partyIdFrom">
