@@ -485,7 +485,7 @@ under the License.
         <field name="leaveId" type="id"/>
         <field name="fromDate" type="date"/>
         <field name="leaveDuration" type="numeric"/>     
-        
+
         <field name="thruDate" type="date"/>
         <field name="isActive" type="indicator"></field>
         <field name="leaveBalance" type="numeric"/>
@@ -1211,7 +1211,7 @@ under the License.
             <view-entity entity-name="EmplLeaveView" package-name="org.ofbiz.humanres">
 	    <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
 	    <member-entity entity-alias="EmploymentView" entity-name="Employment"></member-entity>
-	    <member-entity entity-alias="EmplLeaveView" entity-name="EmplLeave"></member-entity>
+	    <member-entity entity-alias="EmplLeaveV" entity-name="EmplLeave"></member-entity>
 		
 			<alias entity-alias="PersonView" name="EmplFirstName" field="firstName"/>
 			<alias entity-alias="PersonView" name="EmplFastName" field="lastName"/>
@@ -1219,23 +1219,29 @@ under the License.
 			
 			<alias entity-alias="EmploymentView" name="partyIdFrom" field="partyIdFrom"/>
 			
-			<alias entity-alias="EmplLeaveView" name="leaveTypeId" field="leaveTypeId"/>
-			<alias entity-alias="EmplLeaveView" name="emplLeaveReasonTypeId" field="emplLeaveReasonTypeId"/>
-			<alias entity-alias="EmplLeaveView" name="leaveId" field="leaveId"/>
-			<alias entity-alias="EmplLeaveView" name="fromDate" field="fromDate"/>
-			<alias entity-alias="EmplLeaveView" name="leaveDuration" field="leaveDuration"/>
-			<alias entity-alias="EmplLeaveView" name="thruDate" field="thruDate"/>
-			<alias entity-alias="EmplLeaveView" name="leaveBalance" field="leaveBalance"/>
-			<alias entity-alias="EmplLeaveView" name="forwardedBy" field="forwardedBy"/>
-			<alias entity-alias="EmplLeaveView" name="approvedBy" field="approvedBy"/>
-			<alias entity-alias="EmplLeaveView" name="leaveStatus" field="leaveStatus"/>
-			<alias entity-alias="EmplLeaveView" name="leaveStage"></alias>
-			<alias entity-alias="EmplLeaveView" name="description"></alias>	
+      
+
+      <alias entity-alias="EmplLeaveV" name="responsibleEmployee" field="responsibleEmployee"/>
+      <alias entity-alias="EmplLeaveV" name="applicationStatus" field="applicationStatus"/>
+      <alias entity-alias="EmplLeaveV" name="approvalStatus" field="approvalStatus"/>
+      <alias entity-alias="EmplLeaveV" name="organizationUnitId" field="organizationUnitId"/>
+			<alias entity-alias="EmplLeaveV" name="leaveTypeId" field="leaveTypeId"/>
+			<alias entity-alias="EmplLeaveV" name="emplLeaveReasonTypeId" field="emplLeaveReasonTypeId"/>
+			<alias entity-alias="EmplLeaveV" name="leaveId" field="leaveId"/>
+			<alias entity-alias="EmplLeaveV" name="fromDate" field="fromDate"/>
+			<alias entity-alias="EmplLeaveV" name="leaveDuration" field="leaveDuration"/>
+			<alias entity-alias="EmplLeaveV" name="thruDate" field="thruDate"/>
+			<alias entity-alias="EmplLeaveV" name="leaveBalance" field="leaveBalance"/>
+			<alias entity-alias="EmplLeaveV" name="forwardedBy" field="forwardedBy"/>
+			<alias entity-alias="EmplLeaveV" name="approvedBy" field="approvedBy"/>
+			<alias entity-alias="EmplLeaveV" name="leaveStatus" field="leaveStatus"/>
+			<alias entity-alias="EmplLeaveV" name="leaveStage"></alias>
+			<alias entity-alias="EmplLeaveV" name="description"></alias>	
 			
 	    <view-link  entity-alias="PersonView" rel-entity-alias="EmploymentView">
 	    	<key-map field-name="partyId" rel-field-name="partyIdTo"/>
 	    </view-link>
-	    <view-link entity-alias="EmploymentView" rel-entity-alias="EmplLeaveView" >
+	    <view-link entity-alias="EmploymentView" rel-entity-alias="EmplLeaveV" >
 	    	<key-map field-name="partyIdTo" rel-field-name="partyId"/>
 	    </view-link>
     </view-entity>

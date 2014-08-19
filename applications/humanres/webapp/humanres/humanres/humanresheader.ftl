@@ -46,9 +46,9 @@
 
          }
          if(leaveTypeId !="Annual leave"){
-         	jQuery('input[name="balanceDay"]').val("");
-
-         	jQuery('input[name="accruedDay"]').val("");
+         	jQuery('input[name="approvedLeaveSumed"]').val("");
+         	jQuery('input[name="accruedLeaveDays"]').val("");
+         	jQuery('input[name="leaveBalance"]').val("");
          }
          
         });
@@ -115,9 +115,9 @@
 	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId ,"appointmentdate" :appointmentdate}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
-	     			//$('input[name="leaveBalance"]').val(data.leaveBalance);
-					 $('input[name="accruedDay"]').val(data.accruedDay);
-					 $('input[name="leaveBalance"]').val(data.balanceDay);
+	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
+					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
+					 $('input[name="leaveBalance"]').val(data.leaveBalance);
 					 //$('input[name="leaveBalance"]').val(data.leaveBalance);
 	               },
 	      error : function(errorData){
