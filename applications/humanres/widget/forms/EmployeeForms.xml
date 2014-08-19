@@ -184,8 +184,9 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
     <form name="AddEmployeeQualification" type="single" target="createEmployeeQualification">
-        <auto-fields-service service-name="createPartyQual"/>
+        <!--auto-fields-service service-name="createPartyQual"/-->
         <field name="partyId"><hidden/></field>
         <field name="partyQualTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
@@ -194,7 +195,14 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId">
+        <field name="qualificationDesc" title="Qualification Desc"><text size="30" maxlength="60"/></field>
+        <field name="title" title="Title"><text size="30" maxlength="60"/></field>
+        <field name="institute" title="Institute"><text size="30" maxlength="60"/></field>
+        <field name="institutelocation" title="Institute Location"><text size="30" maxlength="60"/></field>
+        <field name="fromDate"><date-time type="date"/></field>
+        <field name="thruDate"><date-time type="date"/></field>
+
+        <!-- field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
@@ -209,7 +217,7 @@
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field-->
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmployeeQualification" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployeeQualification" paginate-target="FindPartyQuals"
@@ -220,13 +228,18 @@
                 <order-by field-name="fromDate"/>
             </entity-condition>
         </actions>
-        <auto-fields-service service-name="updatePartyQual"/>
+        <!--auto-fields-service service-name="updatePartyQual"/-->
         <field name="partyId"><hidden/></field>
         <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
+        
         <field name="qualificationDesc"><text/></field>
         <field name="title"><text/></field>
-        <field name="statusId">
+        <field name="institute"><text/></field>
+        <field name="fromDate"><date-time type="date"/></field>
+        <field name="thruDate"><date-time type="date"/></field>
+       
+       
+        <!--field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
@@ -241,7 +254,7 @@
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field-->
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmployeeQualification" also-hidden="false" description="${uiLabelMap.CommonDelete}">
