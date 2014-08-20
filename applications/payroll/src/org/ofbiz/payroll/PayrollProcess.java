@@ -23,6 +23,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.payroll.TaxTracker;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 <<<<<<< HEAD
@@ -137,9 +138,9 @@ public class PayrollProcess {
 		BigDecimal bdTotDeductions = BigDecimal.ZERO;
 		BigDecimal bdNetPay = BigDecimal.ZERO;
 
-		bdBasicPay = getBasicPay(employee, delegator);
+		bdBasicPay = getBasicPay(employee, staffPayrollId, delegator);
 		log.info("######### Basic Pay Amount " + bdBasicPay);
-		bdGrossPay = sumPayments(employee, delegator);
+		bdGrossPay = sumPayments(employee, staffPayrollId, delegator);
 		log.info("######### Gross Pay Amount " + bdGrossPay);
 
 		bdTaxablePay = calcTaxablePay(employee, delegator, bdGrossPay,
@@ -150,14 +151,14 @@ public class PayrollProcess {
 		bdGrossTax = computeGrossTax(bdTaxablePay, delegator);
 		bdNHIFAmount = computeNHIF(employee, delegator, bdBasicPay);
 		bdNHIF = bdNHIFAmount;
-		bdTotRelief = getTotalRelief(employee, delegator);
+		bdTotRelief = getTotalRelief(employee, staffPayrollId, delegator);
 
 		bdPAYEAmount = bdGrossTax.subtract(bdTotRelief);
 		bdPAYE = bdPAYEAmount;
 
 		calculateInterestAmounts(employee, staffPayrollId, delegator);
 
-		bdTotDeductions = sumDeductions(employee, delegator).add(bdPensionAmt)
+		bdTotDeductions = sumDeductions(employee, staffPayrollId, delegator).add(bdPensionAmt)
 				.add(bdPAYEAmount).add(bdNSSFStatutory).add(bdNSSFVoluntary)
 				.add(bdNHIFAmount);
 		log.info("######### Tot Deductions " + bdTotDeductions);
@@ -187,7 +188,7 @@ public class PayrollProcess {
 						"staffPayrollElementsSequenceId",
 						staffPayrollElementsSequenceId, "payrollElementId",
 						"GROSSPAY", "amount", bdGrossPay, "staffPayrollId",
-						staffPayrollId));
+						staffPayrollId, "valueChanged", "N", "balance", BigDecimal.valueOf(0.0)));
 		try {
 			staffPayrollElement = delegator
 					.createSetNextSeqId(staffPayrollElement);
@@ -254,7 +255,7 @@ public class PayrollProcess {
 						"staffPayrollElementsId",
 						staffPayrollElementsSequenceId, "payrollElementId",
 						payrollElementId, "amount", elementAmount, "staffPayrollId",
-						staffPayrollId));
+						staffPayrollId, "valueChanged", "N", "balance", BigDecimal.valueOf(0.0)));
 		try {
 			staffPayrollElement = delegator
 					.createSetNextSeqId(staffPayrollElement);
@@ -302,7 +303,7 @@ public class PayrollProcess {
 		return null;
 	}
 
-	private static BigDecimal getTotalRelief(GenericValue employee,
+	private static BigDecimal getTotalRelief(GenericValue employee,String staffPayrollId,
 			Delegator delegator) {
 <<<<<<< HEAD
 		BigDecimal bdtotalRelief=BigDecimal.ZERO;
@@ -320,7 +321,7 @@ public class PayrollProcess {
 		BigDecimal bdInsuranceRelief = BigDecimal.ZERO;
 		BigDecimal bdMPRAmount = BigDecimal.ZERO;
 
-		bdInsuranceRelief = getInsuranceRelief(employee, delegator);
+		bdInsuranceRelief = getInsuranceRelief(employee, staffPayrollId, delegator);
 		bdINSURANCERELIEF = bdInsuranceRelief;
 		bdMPRAmount = getMPR(employee, delegator);
 		bdMPR = bdMPRAmount;
@@ -354,7 +355,7 @@ public class PayrollProcess {
 		return bdMPR;
 	}
 
-	private static BigDecimal getInsuranceRelief(GenericValue employee,
+	private static BigDecimal getInsuranceRelief(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdInsRelief = BigDecimal.ZERO;
@@ -387,7 +388,7 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdInsAmount = bdInsAmount.add(getElementAmount(payrollElement,
+			bdInsAmount = bdInsAmount.add(getElementAmount(payrollElement,staffPayrollId,
 					delegator));
 		}
 
@@ -463,10 +464,10 @@ public class PayrollProcess {
 
 		bdExcessPensionBenefit = calcExcessPensionBen(employee, delegator,
 				staffPayrollId);
-		bdLowInterestBenefit = calcLowInterestBen(employee, delegator);
+		bdLowInterestBenefit = calcLowInterestBen(employee, staffPayrollId, delegator);
 		bdLOWINTERESTBENEFIT = bdLowInterestBenefit;
 		bdDisabilityAllowance = getDisabilityAllowance(employee, delegator);
-		bdNonTaxableAmounts = getNonTaxableAmounts(employee, delegator);
+		bdNonTaxableAmounts = getNonTaxableAmounts(employee, staffPayrollId, delegator);
 
 		bdTaxableIncome = bdGrossPay.add(bdExcessPensionBenefit).add(
 				bdLowInterestBenefit).subtract(bdNSSFStatutory).subtract(
@@ -480,7 +481,7 @@ public class PayrollProcess {
 		return bdTaxableIncome;
 	}
 
-	private static BigDecimal getNonTaxableAmounts(GenericValue employee,
+	private static BigDecimal getNonTaxableAmounts(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdNonTaxableAmounts = BigDecimal.ZERO;
@@ -503,7 +504,7 @@ public class PayrollProcess {
 			// Get the amount
 
 			bdNonTaxableAmounts = bdNonTaxableAmounts.add(getElementAmount(
-					payrollElement, delegator));
+					payrollElement, staffPayrollId, delegator));
 		}
 
 		return bdNonTaxableAmounts;
@@ -610,7 +611,7 @@ public class PayrollProcess {
 		return bdMPRAmount;
 	}
 
-	private static BigDecimal calcLowInterestBen(GenericValue employee,
+	private static BigDecimal calcLowInterestBen(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		BigDecimal bdlowIntBen = BigDecimal.ZERO;
 		BigDecimal bdsalaryAdvanceAmount = BigDecimal.ZERO;
@@ -630,10 +631,10 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdsalaryAdvanceAmount = getElementAmount(payrollElement, delegator);
-			bdsalaryAdvanceBalance = getSalaryAdvanceBalance(payrollElement,
+			bdsalaryAdvanceAmount = getElementAmount(payrollElement, staffPayrollId, delegator);
+			bdsalaryAdvanceBalance = getSalaryAdvanceBalance(payrollElement, staffPayrollId,
 					delegator);
-			balanceModified = getBalanceModified(payrollElement, delegator);
+			balanceModified = getBalanceModified(payrollElement, staffPayrollId, delegator);
 		}
 		if (!balanceModified.equals("Y")) {
 			bdFinalSalaryAdvance = bdsalaryAdvanceBalance;
@@ -692,16 +693,21 @@ public class PayrollProcess {
 		return bdlowInterstRate;
 	}
 
-	private static String getBalanceModified(GenericValue payrollElement,
+	private static String getBalanceModified(GenericValue payrollElement, String staffPayrollId,
 			Delegator delegator) {
 		// Do the real getting
 		String ismodified = "";
 		List<GenericValue> staffPayrollElementsELI = new LinkedList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> staffPayrolElementConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("staffPayrollId", EntityOperator.EQUALS,
+								staffPayrollId), EntityCondition.makeCondition(
+						"payrollElementId", EntityOperator.EQUALS,
+						payrollElement.getString("payrollElementId"))), EntityOperator.AND);
 		try {
 			staffPayrollElementsELI = delegator.findList(
-					"StaffPayrollElements", EntityCondition.makeCondition(
-							"payrollElementId", payrollElement
-									.getString("payrollElementId")), null,
+					"StaffPayrollElements", staffPayrolElementConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -715,15 +721,20 @@ public class PayrollProcess {
 	}
 
 	private static BigDecimal getSalaryAdvanceBalance(
-			GenericValue payrollElement, Delegator delegator) {
+			GenericValue payrollElement, String staffPayrollId, Delegator delegator) {
 		// Do the real getting
 		BigDecimal bdAmount = BigDecimal.ZERO;
 		List<GenericValue> staffPayrollElementsELI = new LinkedList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> staffPayrolElementConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("staffPayrollId", EntityOperator.EQUALS,
+								staffPayrollId), EntityCondition.makeCondition(
+						"payrollElementId", EntityOperator.EQUALS,
+						payrollElement.getString("payrollElementId"))), EntityOperator.AND);
 		try {
 			staffPayrollElementsELI = delegator.findList(
-					"StaffPayrollElements", EntityCondition.makeCondition(
-							"payrollElementId", payrollElement
-									.getString("payrollElementId")), null,
+					"StaffPayrollElements", staffPayrolElementConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -827,7 +838,7 @@ public class PayrollProcess {
 		return bdPensionAmount;
 	}
 
-	private static BigDecimal getBasicPay(GenericValue employee,
+	private static BigDecimal getBasicPay(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdBasicPy = BigDecimal.ZERO;
@@ -842,7 +853,7 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdBasicPy = getElementAmount(payrollElement, delegator);
+			bdBasicPy = getElementAmount(payrollElement, staffPayrollId, delegator);
 		}
 
 		return bdBasicPy;
@@ -955,7 +966,7 @@ public class PayrollProcess {
 		return bdNSSF;
 	}
 
-	private static BigDecimal sumPayments(GenericValue employee,
+	private static BigDecimal sumPayments(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdGross = BigDecimal.ZERO;
@@ -970,7 +981,7 @@ public class PayrollProcess {
 		for (GenericValue payrollElement : payrollElementELI) {
 			// Get the amount
 
-			bdGross = bdGross.add(getElementAmount(payrollElement, delegator));
+			bdGross = bdGross.add(getElementAmount(payrollElement, staffPayrollId, delegator));
 		}
 
 		return bdGross;
@@ -979,7 +990,7 @@ public class PayrollProcess {
 	/**
 	 * @author charles
 	 * **/
-	private static BigDecimal sumDeductions(GenericValue employee,
+	private static BigDecimal sumDeductions(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdOtherDeduction = BigDecimal.ZERO;
@@ -995,22 +1006,28 @@ public class PayrollProcess {
 			// Get the amount
 
 			bdOtherDeduction = bdOtherDeduction.add(getElementAmount(
-					payrollElement, delegator));
+					payrollElement, staffPayrollId, delegator));
 		}
 
 		return bdOtherDeduction;
 	}
 
-	private static BigDecimal getElementAmount(GenericValue payrollElement,
+	private static BigDecimal getElementAmount(GenericValue payrollElement, String staffPayrollId,
 			Delegator delegator) {
 		// Do the real getting
 		BigDecimal bdAmount = BigDecimal.ZERO;
 		List<GenericValue> staffPayrollElementsELI = new LinkedList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> staffPayrolElementConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("staffPayrollId", EntityOperator.EQUALS,
+								staffPayrollId), EntityCondition.makeCondition(
+						"payrollElementId", EntityOperator.EQUALS,
+						payrollElement.getString("payrollElementId"))), EntityOperator.AND);
+		
 		try {
 			staffPayrollElementsELI = delegator.findList(
-					"StaffPayrollElements", EntityCondition.makeCondition(
-							"payrollElementId", payrollElement
-									.getString("payrollElementId")), null,
+					"StaffPayrollElements", staffPayrolElementConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -1029,6 +1046,7 @@ public class PayrollProcess {
 		// Do the real getting
 		BigDecimal bdNSSFAmount = BigDecimal.ZERO;
 		List<GenericValue> staffPayrollConstantsELI = new LinkedList<GenericValue>();
+		
 		try {
 			staffPayrollConstantsELI = delegator.findList("PayrollConstants",
 					EntityCondition.makeCondition("payrollConstantsId",
@@ -1144,7 +1162,7 @@ public class PayrollProcess {
 		return contribution;
 	}
 
-	private static BigDecimal getLoanElementAmount(GenericValue payrollElement,
+	private static BigDecimal getLoanElementAmount(GenericValue payrollElement, String staffPayrollId,
 			Delegator delegator) {
 		// Do the real getting
 		BigDecimal bdAmount = BigDecimal.ZERO;
@@ -1244,11 +1262,11 @@ public class PayrollProcess {
 
 		BigDecimal bdFinalBalance = BigDecimal.ZERO, bdFinalInterestAmt = BigDecimal.ZERO;
 
-		if ((staffPayrollElement.getString("valueChanged") != null)
+		if ((staffPayrollElement != null) && (staffPayrollElement.getString("valueChanged") != null)
 				&& (staffPayrollElement.getString("valueChanged").equals("Y"))) {
 			bdFinalBalance = staffPayrollElement.getBigDecimal("amount").add(
 					staffPayrollElement.getBigDecimal("balance"));
-		} else if ((staffPayrollElement.getString("valueChanged") != null)
+		} else if ((staffPayrollElement != null) && (staffPayrollElement.getString("valueChanged") != null)
 				&& (staffPayrollElement.getString("valueChanged").equals("N"))) {
 			bdFinalBalance = staffPayrollElement.getBigDecimal("balance");
 		}

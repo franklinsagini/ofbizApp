@@ -1,0 +1,983 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+        can be found in the following xml file. A component can override the
+        elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/>
+
+    <description>Loans Component Site Configuration File</description>
+
+    <!--
+     These can be used to return the reports as views; make sure the classes are compiled and available
+       <handler name="datavision" type="view" class="org.ofbiz.webapp.view.DataVisionViewHandler"/>
+       <handler name="jasperreportspdf" type="view" class="org.ofbiz.webapp.view.JasperReportsPdfViewHandler"/>
+       <handler name="jasperreportsxml" type="view" class="org.ofbiz.webapp.view.JasperReportsXmlViewHandler"/>
+   -->
+
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+   <preprocessor>
+   </preprocessor>
+   -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+   <postprocessor>
+       <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
+   </postprocessor>
+   -->
+
+    <!-- Request Mappings -->
+    <!-- request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map -->
+        <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanApplication"/></request-map>
+        <request-map uri="FindLoanProduct"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanProduct"/></request-map>
+
+        <request-map uri="FindLoanApplication"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanApplication"/></request-map>
+    <!-- Example Requests -->
+    <request-map uri="FindExample"><security https="true" auth="true"/><response name="success" type="view" value="FindExample"/></request-map>
+    <request-map uri="EditExample"><security https="true" auth="true"/><response name="success" type="view" value="EditExample"/></request-map>
+    <request-map uri="EditExampleLayer"><security https="true" auth="true"/><response name="success" type="view" value="EditExampleLayer"/></request-map>
+    <request-map uri="ExampleReportHtml"><security https="true" auth="true"/><response name="success" type="view" value="ExampleReportHtml"/></request-map>
+    <request-map uri="ExampleReportPdf"><security https="true" auth="true"/><response name="success" type="view" value="ExampleReportPdf"/></request-map>
+    <request-map uri="createExample">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExample"/>
+        <response name="success" type="request-redirect" value="EditExample">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="FindExample"/>
+    </request-map>
+    <request-map uri="updateExample">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExample"/>
+        <response name="success" type="request-redirect" value="EditExample">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExample"/>
+    </request-map>
+    <request-map uri="createExampleAjax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExample"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateExampleAjax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExample"/>
+        <response name="success" type="view" value="findExampleAjax"/>
+        <response name="error" type="view" value="findExampleAjax"/>
+    </request-map>
+
+    <request-map uri="EditExampleItems"><security https="true" auth="true"/><response name="success" type="view" value="EditExampleItems"/></request-map>
+    <request-map uri="createExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExampleItem"/>
+        <response name="success" type="request-redirect" value="EditExampleItems">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleItems"/>
+    </request-map>
+    <request-map uri="updateExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExampleItem"/>
+        <response name="success" type="request-redirect" value="EditExampleItems">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleItems"/>
+    </request-map>
+    <request-map uri="deleteExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteExampleItem"/>
+        <response name="success" type="request-redirect" value="EditExampleItems">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleItems"/>
+    </request-map>
+
+    <request-map uri="EditExampleFeatureAppls"><security https="true" auth="true"/><response name="success" type="view" value="EditExampleFeatureAppls"/></request-map>
+    <request-map uri="example_createExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExampleFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditExampleFeatureAppls">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleFeatureAppls"/>
+    </request-map>
+    <request-map uri="example_updateExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExampleFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditExampleFeatureAppls">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleFeatureAppls"/>
+    </request-map>
+    <request-map uri="example_deleteExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteExampleFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditExampleFeatureAppls">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleFeatureAppls"/>
+    </request-map>
+
+    <!-- ExampleFeature Requests -->
+    <request-map uri="FindExampleFeature"><security https="true" auth="true"/><response name="success" type="view" value="FindExampleFeature"/></request-map>
+    <request-map uri="EditExampleFeature"><security https="true" auth="true"/><response name="success" type="view" value="EditExampleFeature"/></request-map>
+    <request-map uri="createExampleFeature">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExampleFeature"/>
+        <response name="success" type="request-redirect" value="EditExampleFeature">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleFeature"/>
+    </request-map>
+    <request-map uri="updateExampleFeature">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExampleFeature"/>
+        <response name="success" type="request-redirect" value="EditExampleFeature">
+            <redirect-parameter name="exampleFeatureId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleFeature"/>
+    </request-map>
+
+    <request-map uri="EditExampleFeatureExampleAppls"><security https="true" auth="true"/><response name="success" type="view" value="EditExampleFeatureExampleAppls"/></request-map>
+    <request-map uri="feature_createExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExampleFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditExampleFeatureExampleAppls">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleFeatureExampleAppls"/>
+    </request-map>
+    <request-map uri="feature_updateExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExampleFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditExampleFeatureExampleAppls">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleFeatureExampleAppls"/>
+    </request-map>
+    <request-map uri="feature_deleteExampleFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteExampleFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditExampleFeatureExampleAppls">
+            <redirect-parameter name="exampleId"/>
+        </response>
+        <response name="error" type="view" value="EditExampleFeatureExampleAppls"/>
+    </request-map>
+    <request-map uri="findExampleFeatures">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://loans/webapp/example/WEB-INF/actions/includes/FindExampleFeatures.groovy"/>
+        <response name="success" type="view" value="ajaxAutocompleteOptions"/>
+        <response name="error" type="view" value="ajaxAutocompleteOptions"/>
+    </request-map>
+
+    <request-map uri="FormWidgetExamples"><security https="true" auth="true"/><response name="success" type="view" value="FormWidgetExamples"/></request-map>
+
+    <request-map uri="LookupExampleFeature"><security https="true" auth="true"/><response name="success" type="view" value="LookupExampleFeature"/></request-map>
+    <request-map uri="LookupPartyGroupByName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyGroupByName"/></request-map>
+
+    <request-map uri="ListExampleFormOnly"><security https="true" auth="false"/><response name="success" type="view" value="ListExampleFormOnly"/></request-map>
+    <request-map uri="CreateExampleFormOnly"><security https="true" auth="false"/><response name="success" type="view" value="CreateExampleFormOnly"/></request-map>
+
+    <request-map uri="printExampleFOPFonts">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="printExampleFOPFonts"/>
+    </request-map>
+
+    <request-map uri="views">
+        <security https="true" auth="false"/>
+        <response name="success" type="request" value="main"/>
+    </request-map>
+
+    <request-map uri="ExampleGeoLocationPointSet1"><security https="true" auth="true"/><response name="success" type="view" value="ExampleGeoLocationPointSet1"/></request-map>
+    <request-map uri="ExampleGeoLocationPointSet2"><security https="true" auth="true"/><response name="success" type="view" value="ExampleGeoLocationPointSet2"/></request-map>
+    <request-map uri="ExampleGeoLocationPointSet3"><security https="true" auth="true"/><response name="success" type="view" value="ExampleGeoLocationPointSet3"/></request-map>
+    <request-map uri="ExampleGeoLocationPointSet4"><security https="true" auth="true"/><response name="success" type="view" value="ExampleGeoLocationPointSet4"/></request-map>
+    <request-map uri="ExampleGeoLocationAddress"><security https="true" auth="true"/><response name="success" type="view" value="ExampleGeoLocationAddress"/></request-map>
+    <request-map uri="ExampleOsmGeoLocationPointSet1"><security https="true" auth="true"/><response name="success" type="view" value="ExampleOsmGeoLocationPointSet1"/></request-map>
+    <request-map uri="ExampleOsmGeoLocationPointSet2"><security https="true" auth="true"/><response name="success" type="view" value="ExampleOsmGeoLocationPointSet2"/></request-map>
+    <request-map uri="ExampleOsmGeoLocationPointSet3"><security https="true" auth="true"/><response name="success" type="view" value="ExampleOsmGeoLocationPointSet3"/></request-map>
+    <request-map uri="ExampleOsmGeoLocationPointSet4"><security https="true" auth="true"/><response name="success" type="view" value="ExampleOsmGeoLocationPointSet4"/></request-map>
+
+    <!--flot example requests-->
+    <request-map uri="ExampleBarChart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ExampleBarChart"/>
+    </request-map>
+    <request-map uri="ExamplePieChart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ExamplePieChart"/>
+    </request-map>
+
+    <!-- Loans and related stuff -->
+    <!-- Loans -->
+        <request-map uri="savingsproductsetup">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="savingsproductsetup" />
+        </request-map>
+
+        <request-map uri="loanproductsetup">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="loanproductsetup" />
+        </request-map>
+
+        <request-map uri="createSavingsProduct">
+                <security https="true" auth="true" />
+                <event type="simple"
+                        path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createSavingsProduct" />
+                <!-- response name="success" type="view" value="savingsproductsetup"/ -->
+                <response name="success" type="request-redirect-noparam"
+                        value="savingsproductsetup"></response>
+                <response name="error" type="view" value="savingsproductsetup" />
+        </request-map>
+
+        <request-map uri="createLoanProduct">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanProduct" />
+                <response name="success" type="request-redirect-noparam"
+                        value="LoanProduct"></response>
+        </request-map>
+                <request-map uri="updateLoanProduct">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanProduct" />
+                <!-- response name="success" type="view" value="loanproductsetup" / -->
+                <response name="success" type="request-redirect-noparam"
+                        value="LoanProduct"></response>
+                <response name="error" type="view" value="LoanProduct" />
+        </request-map>
+
+        <request-map uri="deleteLoanProduct">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanProduct" />
+                <!-- response name="success" type="view" value="FindPartySkills"/ -->
+                <response name="success" type="request-redirect-noparam"
+                        value="LoanProduct"></response>
+        </request-map>
+
+
+
+        <request-map uri="createAccountProduct">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createAccountProduct" />
+                <response name="success" type="request-redirect-noparam"
+                        value="AccountProduct"></response>
+        </request-map>
+        <request-map uri="updateAccountProduct">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateAccountProduct" />
+                <response name="success" type="request-redirect-noparam"
+                        value="AccountProduct"></response>
+                <response name="error" type="view" value="AccountProduct" />
+        </request-map>
+
+
+
+        <request-map uri="deleteAccountProduct">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteAccountProduct" />
+                <response name="success" type="request-redirect-noparam"
+                        value="AccountProduct"></response>
+        </request-map>
+
+        <!-- Loan Application -->
+        <request-map uri="loanapplication">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="loanapplication" />
+        </request-map>
+
+        <request-map uri="createLoanApplication">
+                <security https="true" auth="true" />
+                <!-- event type="simple"
+                        path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createLoanApplication" / -->
+                <!-- response name="success" type="view" value="loanproductsetup"/ -->
+                <event type="service" invoke="createLoanApplication" />
+                <response name="success" type="request-redirect-noparam"
+                        value="loanapplication"></response>
+                <response name="error" type="view" value="loanapplication" />
+        </request-map>
+
+        <request-map uri="updateLoanApplication">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanApplication" />
+                <!-- response name="success" type="view" value="loanproductsetup" / -->
+                <response name="success" type="request-redirect-noparam"
+                        value="loanapplication"></response>
+                <response name="error" type="view" value="loanapplication" />
+        </request-map>
+
+        <request-map uri="deleteLoanApplication">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanApplication" />
+                <!-- response name="success" type="view" value="FindPartySkills"/ -->
+                <response name="success" type="request-redirect-noparam"
+                        value="loanapplication"></response>
+        </request-map>
+
+        <request-map uri="memberdetails">
+        <!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+        <event type="java" path="org.ofbiz.loans.LoanServices" invoke="getMember" />
+                <response name="success" type="none">
+    </response>
+    </request-map>
+
+    <request-map uri="forwardApplication">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" />
+                <response name="success" type="view"
+                        value="loanapplication">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="loanapplication" />
+    </request-map>
+
+    <request-map uri="loandetails">
+        <!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+        <event type="java" path="org.ofbiz.loans.LoanServices" invoke="getLoanDetails" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
+
+     <request-map uri="loanMaxCalculation">
+        <!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+        <event type="java" path="org.ofbiz.loans.LoanServices" invoke="getLoanMaxAmount" />
+                <response name="success" type="none">
+    </response>
+    </request-map>
+
+    <!-- Loan Security and Loan Status Request Map -->
+
+    <request-map uri="NewLoanSecurity">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="NewLoanSecurity" />
+        </request-map>
+
+        <request-map uri="NewLoanStatus">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="NewLoanStatus" />
+        </request-map>
+
+        <request-map uri="createLoanSecurity">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanSecurity" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanSecurity"></response>
+                <response name="error" type="view" value="NewLoanSecurity" />
+        </request-map>
+
+        <request-map uri="updateLoanSecurity">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanSecurity" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanSecurity"></response>
+                <response name="error" type="view" value="NewLoanSecurity" />
+        </request-map>
+
+        <request-map uri="deleteLoanSecurity">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanSecurity" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanSecurity"></response>
+                <response name="error" type="view" value="NewLoanSecurity" />
+        </request-map>
+
+                <request-map uri="createLoanStatus">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanStatus" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanStatus"></response>
+                <response name="error" type="view" value="NewLoanStatus" />
+        </request-map>
+
+        <request-map uri="updateLoanStatus">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanStatus" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanStatus"></response>
+                <response name="error" type="view" value="NewLoanStatus" />
+        </request-map>
+
+        <request-map uri="deleteLoanStatus">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanStatus" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanStatus"></response>
+                <response name="error" type="view" value="NewLoanStatus" />
+        </request-map>
+
+    <request-map uri="loanapplicationslist">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="loanapplicationslist"
+                        save-current-view="true" />
+        </request-map>
+
+        <!-- Loan Application Details -->
+        <request-map uri="viewapplicationprofile">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="viewapplicationprofile"
+                        save-home-view="true" />
+        </request-map>
+
+        <!-- Loan Application Security -->
+        <!-- Start LoanApplicationSecurity -->
+        <request-map uri="createLoanApplicationSecurity">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanApplicationSecurity" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+
+        <request-map uri="updateLoanApplicationSecurity">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanApplicationSecurity" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+
+        <request-map uri="deleteLoanApplicationSecurity">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanApplicationSecurity" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+        <!-- End Start Loan Application -->
+
+        <!-- Loan Application Collateral -->
+        <!-- Start Loan Applications Collateral -->
+        <request-map uri="createLoanApplicationCollateral">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanApplicationCollateral" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+
+        <request-map uri="updateLoanApplicationCollateral">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanApplicationCollateral" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+
+        <request-map uri="deleteLoanApplicationCollateral">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanApplicationCollateral" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+        <!-- End Loan Applications Collateral -->
+
+        <!-- Loan Applications Guarantor -->
+        <!-- Start Loan Applications Guarantor -->
+        <request-map uri="createLoanApplicationGuarantor">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanApplicationGuarantor" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+
+        <request-map uri="updateLoanApplicationGuarantor">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanApplicationGuarantor" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+
+        <request-map uri="deleteLoanApplicationGuarantor">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanApplicationGuarantor" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="viewapplicationprofile">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="viewapplicationprofile" />
+        </request-map>
+
+
+
+
+        <!-- ReviewLoan CRUD  -->
+
+        <request-map uri="createReviewLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createReviewLoan" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="reviewLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="reviewLoan" />
+        </request-map>
+
+        <request-map uri="updateReviewLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateReviewLoan" />
+                <response name="success" type="request-redirect"
+                        value="reviewLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="reviewLoan" />
+        </request-map>
+
+        <request-map uri="deleteReviewLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteReviewLoan" />
+                <response name="success" type="request-redirect"
+                        value="reviewLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="reviewLoan" />
+        </request-map>
+
+
+        <!-- AppraiseLoan CRUD  -->
+
+
+        <request-map uri="createAppraiseLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createAppraiseLoan" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="appraiseLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="appraiseLoan" />
+        </request-map>
+
+        <request-map uri="updateAppraiseLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateAppraiseLoan" />
+                <response name="success" type="request-redirect"
+                        value="appraiseLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="appraiseLoan" />
+        </request-map>
+
+        <request-map uri="deleteAppraiseLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteAppraiseLoan" />
+                <response name="success" type="request-redirect"
+                        value="appraiseLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="appraiseLoan" />
+        </request-map>
+        <!-- ApproveLoan CRUD  -->
+        <request-map uri="createApproveLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createApproveLoan" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="approveLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="approveLoan" />
+        </request-map>
+
+        <request-map uri="updateApproveLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateApproveLoan" />
+                <response name="success" type="request-redirect"
+                        value="approveLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="approveLoan" />
+        </request-map>
+
+        <request-map uri="deleteApproveLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteApproveLoan" />
+                <response name="success" type="request-redirect"
+                        value="approveLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="approveLoan" />
+        </request-map>
+
+        <!-- DisburseLoan CRUD  -->
+        <request-map uri="createDisburseLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createDisburseLoan" />
+                <!-- response name="success" type="view" value="savingsproductsetup" / -->
+                <response name="success" type="request-redirect"
+                        value="disburseLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="disburseLoan" />
+        </request-map>
+
+        <request-map uri="updateDisburseLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateDisburseLoan" />
+                <response name="success" type="request-redirect"
+                        value="disburseLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="disburseLoan" />
+        </request-map>
+
+        <request-map uri="deleteDisburseLoan">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteDisburseLoan" />
+                <response name="success" type="request-redirect"
+                        value="disburseLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="disburseLoan" />
+        </request-map>
+
+        <!-- Loan Processing -->
+        <request-map uri="reviewLoan">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="reviewLoan"
+                        save-home-view="true" />
+        </request-map>
+
+        <request-map uri="appraiseLoan">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="appraiseLoan"
+                        save-home-view="true" />
+        </request-map>
+
+        <request-map uri="approveLoan">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="approveLoan"
+                        save-home-view="true" />
+        </request-map>
+
+        <request-map uri="disburseLoan">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="disburseLoan"
+                        save-home-view="true" />
+        </request-map>
+
+        <!-- End Loan Applications Guarantor -->
+
+        <!-- Account Product -->
+        <request-map uri="AccountProduct">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="AccountProduct" />
+        </request-map>
+
+        <!-- Loan Product -->
+        <request-map uri="LoanProduct">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="LoanProduct" />
+        </request-map>
+
+        <request-map uri="LookupMember"><security auth="true" https="true"/><response name="success" type="view" value="LookupMember"/></request-map>
+
+        <request-map uri="generateschedule">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.loans.AmortizationServices" invoke="generateschedule" />
+                <response name="success" type="view"
+                        value="disburseLoan">
+                                <redirect-parameter name="loanApplicationId"/>
+                        </response>
+                <response name="error" type="view" value="disburseLoan" />
+    </request-map>
+
+
+    <request-map uri="salaryProcessingDate">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="NewSalaryProcessingDate" />
+        </request-map>
+
+        <!-- Salary Processing Date CRUD -->
+        <request-map uri="createSalaryProcessingDate">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createSalaryProcessingDate" />
+                <response name="success" type="request-redirect-noparam"
+                        value="salaryProcessingDate"></response>
+                <response name="error" type="view" value="NewSalaryProcessingDate" />
+        </request-map>
+
+        <request-map uri="updateSalaryProcessingDate">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateSalaryProcessingDate" />
+                <response name="success" type="request-redirect-noparam"
+                        value="salaryProcessingDate"></response>
+                <response name="error" type="view" value="NewSalaryProcessingDate" />
+        </request-map>
+
+        <request-map uri="deleteSalaryProcessingDate">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteSalaryProcessingDate" />
+                <response name="success" type="request-redirect-noparam"
+                        value="salaryProcessingDate"></response>
+                <response name="error" type="view" value="NewSalaryProcessingDate" />
+        </request-map>
+
+        <!-- start ProductCharge -->
+        <request-map uri="NewProductCharge">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="NewProductCharge" />
+        </request-map>
+
+        <request-map uri="createProductCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createProductCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewProductCharge"></response>
+                <response name="error" type="view" value="NewProductCharge" />
+        </request-map>
+
+        <request-map uri="updateProductCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateProductCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewProductCharge"></response>
+                <response name="error" type="view" value="NewProductCharge" />
+        </request-map>
+
+        <request-map uri="deleteProductCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteProductCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewProductCharge"></response>
+                <response name="error" type="view" value="NewProductCharge" />
+        </request-map>
+        <!-- end ProductCharge -->
+
+        <request-map uri="viewloanproductdetails">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="viewloanproductdetails"
+                        save-home-view="true" />
+        </request-map>
+
+        <!-- start LoanProductCharge -->
+        <request-map uri="NewLoanProductCharge">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="NewLoanProductCharge" />
+        </request-map>
+
+        <request-map uri="createLoanProductCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanProductCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanProductCharge"></response>
+                <response name="error" type="view" value="NewLoanProductCharge" />
+        </request-map>
+
+        <request-map uri="updateLoanProductCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanProductCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanProductCharge"></response>
+                <response name="error" type="view" value="NewLoanProductCharge" />
+        </request-map>
+
+        <request-map uri="deleteLoanProductCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanProductCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanProductCharge"></response>
+                <response name="error" type="view" value="NewLoanProductCharge" />
+        </request-map>
+        <!-- end LoanProductCharge -->
+
+        <!-- start LoanApplicationCharge -->
+                <request-map uri="NewLoanApplicationCharge">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="NewLoanApplicationCharge" />
+        </request-map>
+
+        <request-map uri="createLoanApplicationCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanApplicationCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanApplicationCharge"></response>
+                <response name="error" type="view" value="NewLoanApplicationCharge" />
+        </request-map>
+
+        <request-map uri="updateLoanApplicationCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanApplicationCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanApplicationCharge"></response>
+                <response name="error" type="view" value="NewLoanApplicationCharge" />
+        </request-map>
+
+        <request-map uri="deleteLoanApplicationCharge">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanApplicationCharge" />
+                <response name="success" type="request-redirect-noparam"
+                        value="NewLoanApplicationCharge"></response>
+                <response name="error" type="view" value="NewLoanApplicationCharge" />
+        </request-map>
+        <!-- end LoanApplicationCharge -->
+
+    <!-- end of request mappings -->
+
+    <!-- View Mappings -->
+    <!--  view-map name="main" type="screen" page="component://loans/widget/loans/CommonScreens.xml#main"/ -->
+    <view-map name="main" type="screen" page="component://loans/widget/loans/LoanScreens.xml#loanapplicationslist"/>
+
+    <view-map name="EditExample" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#EditExample"/>
+    <view-map name="EditExampleLayer" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#EditExampleLayer"/>
+    <view-map name="EditExampleItems" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#EditExampleItems"/>
+    <view-map name="EditExampleFeatureAppls" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#EditExampleFeatureAppls"/>
+    <view-map name="ExampleReportHtml" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleReport"/>
+    <view-map name="ExampleReportPdf" type="screenfop" page="component://loans/widget/loans/ExampleScreens.xml#ExampleReport" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="FindExampleFeature" type="screen" page="component://loans/widget/loans/ExampleFeatureScreens.xml#FindExampleFeature"/>
+    <view-map name="EditExampleFeature" type="screen" page="component://loans/widget/loans/ExampleFeatureScreens.xml#EditExampleFeature"/>
+    <view-map name="EditExampleFeatureExampleAppls" type="screen" page="component://loans/widget/loans/ExampleFeatureScreens.xml#EditExampleFeatureExampleAppls"/>
+
+    <view-map name="FormWidgetExamples" type="screen" page="component://loans/widget/loans/FormWidgetExampleScreens.xml#FormWidgetExamples"/>
+
+    <view-map name="LookupExampleFeature" type="screen" page="component://loans/widget/loans/ExampleFeatureScreens.xml#LookupExampleFeature"/>
+    <view-map name="LookupPartyGroupByName" type="screen" page="component://loans/widget/loans/FormWidgetExampleLookupScreens.xml#LookupPartyGroupByName"/>
+
+    <!-- ajax view mappings -->
+    <view-map name="findExampleAjax" type="screen" page="component://loans/widget/loans/ExampleAjaxScreens.xml#AjaxExample"/>
+    <view-map name="ListExampleFormOnly" type="screen" page="component://loans/widget/loans/ExampleAjaxScreens.xml#ListExampleFormOnly"/>
+    <view-map name="CreateExampleFormOnly" type="screen" page="component://loans/widget/loans/ExampleAjaxScreens.xml#CreateExampleFormOnly"/>
+    <view-map name="printExampleFOPFonts" type="screenfop" page="component://loans/widget/loans/FormWidgetExampleScreens.xml#printExampleFOPFonts" content-type="application/pdf"  encoding="none"/>
+
+    <view-map name="ExampleGeoLocationPointSet1" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleGeoLocationPointSet1"/>
+    <view-map name="ExampleGeoLocationPointSet2" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleGeoLocationPointSet2"/>
+    <view-map name="ExampleGeoLocationPointSet3" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleGeoLocationPointSet3"/>
+    <view-map name="ExampleGeoLocationPointSet4" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleGeoLocationPointSet4"/>
+    <view-map name="ExampleGeoLocationAddress" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleGeoLocationAddress"/>
+    <view-map name="ExampleOsmGeoLocationPointSet1" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleOsmGeoLocationPointSet1"/>
+    <view-map name="ExampleOsmGeoLocationPointSet2" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleOsmGeoLocationPointSet2"/>
+    <view-map name="ExampleOsmGeoLocationPointSet3" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleOsmGeoLocationPointSet3"/>
+    <view-map name="ExampleOsmGeoLocationPointSet4" type="screen" page="component://loans/widget/loans/ExampleScreens.xml#ExampleOsmGeoLocationPointSet4"/>
+
+    <!-- Flot view mapping -->
+    <view-map name="ExampleBarChart" page="component://loans/widget/loans/ExampleScreens.xml#ExampleBarChart" type="screen"/>
+    <view-map name="ExamplePieChart" page="component://loans/widget/loans/ExampleScreens.xml#ExamplePieChart" type="screen"/>
+
+        <!-- Loans and Related Stuff -->
+        <!-- Loans -->
+        <view-map name="savingsproductsetup" type="screen"
+                page="component://loans/widget/loans/ExampleScreens.xml#NewSavingsProduct" />
+        <view-map name="loanproductsetup" type="screen"
+                page="component://loans/widget/loans/ExampleScreens.xml#NewLoanProduct" />
+
+        <view-map name="loanapplication" type="screen"
+                page="component://loans/widget/loans/ExampleScreens.xml#NewLoanApplication" />
+
+        <!-- Loan Security and Loan Status Views-->
+        <view-map name="NewLoanSecurity" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#NewLoanSecurity" />
+        <view-map name="NewLoanStatus" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#NewLoanStatus" />
+
+                <!-- loanapplicationslist -->
+        <view-map name="loanapplicationslist" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#loanapplicationslist" />
+
+        <view-map name="viewapplicationprofile" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#viewapplicationprofile" />
+
+                <view-map name="viewloanproductdetails" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#viewloanproductdetails" />
+
+
+        <!-- Loan Processing -->
+                <view-map name="reviewLoan" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#reviewLoan" />
+
+                <view-map name="appraiseLoan" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#appraiseLoan" />
+
+                <view-map name="approveLoan" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#approveLoan" />
+
+                <view-map name="disburseLoan" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#disburseLoan" />
+
+
+    <view-map name="FindLoanApplication" type="screen" page="component://loans/widget/loans/LoanScreens.xml#FindLoanApplication"/>
+
+
+                <view-map name="AccountProduct" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#AccountProduct" />
+                <view-map name="LoanProduct" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#LoanProduct" />
+
+                 <view-map name="LookupMember" page="component://loans/widget/loans/LoanScreens.xml#LookupMember" type="screen"/>
+
+
+                 <view-map name="NewSalaryProcessingDate" page="component://loans/widget/loans/LoanScreens.xml#NewSalaryProcessingDate" type="screen"/>
+
+                 <view-map name="NewProductCharge" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#NewProductCharge" />
+
+                <view-map name="NewLoanProductCharge" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#NewLoanProductCharge" />
+
+                <view-map name="FindLoanProduct" type="screen" page="component://loans/widget/loans/LoanScreens.xml#FindLoanProduct"/>
+
+                <view-map name="NewLoanApplicationCharge" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#NewLoanApplicationCharge" />
+    <!-- Supported Content Types -->
+    <!--
+       text/html
+       application/pdf
+       application/postscript
+       application/vnd.ms-excel
+       application/vnd.ms-word
+       application/vnd.ms-powerpoint
+       application/vnd.oasis.opendocument.text
+       application/vnd.oasis.opendocument.spreadsheet
+       application/vnd.oasis.opendocument.presentation
+    -->
+
+    <!-- end of view mappings -->
+</site-conf
