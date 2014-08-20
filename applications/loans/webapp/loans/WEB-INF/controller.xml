@@ -732,9 +732,140 @@ under the License.
 
 
     <request-map uri="salaryProcessingDate">
-                <security https="true" auth="true" />
-                <response name="success" type="view" value="NewSalaryProcessingDate" />
-        </request-map>
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<!-- Salary Processing Date CRUD -->
+	<request-map uri="createSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<request-map uri="updateSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<request-map uri="deleteSalaryProcessingDate">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteSalaryProcessingDate" />
+		<response name="success" type="request-redirect-noparam"
+			value="salaryProcessingDate"></response>
+		<response name="error" type="view" value="NewSalaryProcessingDate" />
+	</request-map>
+	
+	<!-- start ProductCharge -->
+	<request-map uri="NewProductCharge">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewProductCharge" />
+	</request-map>
+	
+	<request-map uri="createProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createProductCharge" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewProductCharge"></response>
+		<response name="error" type="view" value="NewProductCharge" />
+	</request-map>
+
+	<request-map uri="updateProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateProductCharge" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewProductCharge"></response>
+		<response name="error" type="view" value="NewProductCharge" />
+	</request-map>
+	
+	<request-map uri="deleteProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteProductCharge" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewProductCharge"></response>
+		<response name="error" type="view" value="NewProductCharge" />
+	</request-map>
+	<!-- end ProductCharge -->
+	
+	<request-map uri="viewloanproductdetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="viewloanproductdetails"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- start LoanProductCharge -->
+	<request-map uri="NewLoanProductCharge">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewLoanProductCharge" />
+	</request-map>
+	
+	<request-map uri="createLoanProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanProductCharge" />
+		<response name="success" type="request-redirect"
+			value="viewloanproductdetails">
+				<redirect-parameter name="loanProductId"/>
+			</response>
+		<response name="error" type="view" value="viewloanproductdetails" />
+	</request-map>
+
+	<request-map uri="updateLoanProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanProductCharge" />
+		<response name="success" type="request-redirect"
+			value="viewloanproductdetails">
+				<redirect-parameter name="loanProductId"/>
+			</response>
+		<response name="error" type="view" value="viewloanproductdetails" />
+	</request-map>
+	
+	<request-map uri="deleteLoanProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLoanProductCharge" />
+		<response name="success" type="request-redirect"
+			value="viewloanproductdetails">
+				<redirect-parameter name="loanProductId"/>
+			</response>
+		<response name="error" type="view" value="viewloanproductdetails" />
+	</request-map>
+	<!-- end LoanProductCharge -->
+	
+	<!-- start LoanApplicationCharge -->
+		<request-map uri="NewLoanApplicationCharge">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewLoanApplicationCharge" />
+	</request-map>
+	
+	<request-map uri="createLoanApplicationCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanApplicationCharge" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanApplicationCharge"></response>
+		<response name="error" type="view" value="NewLoanApplicationCharge" />
+	</request-map>
+
+	<request-map uri="updateLoanApplicationCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanApplicationCharge" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanApplicationCharge"></response>
+		<response name="error" type="view" value="NewLoanApplicationCharge" />
+	</request-map>
+	
+	<request-map uri="deleteLoanApplicationCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLoanApplicationCharge" />
+		<response name="success" type="request-redirect-noparam"
+			value="NewLoanApplicationCharge"></response>
+		<response name="error" type="view" value="NewLoanApplicationCharge" />
+	</request-map>
+	<!-- end LoanApplicationCharge -->
+
 
         <!-- Salary Processing Date CRUD -->
         <request-map uri="createSalaryProcessingDate">
@@ -980,4 +1111,4 @@ under the License.
     -->
 
     <!-- end of view mappings -->
-</site-conf
+</site-conf>

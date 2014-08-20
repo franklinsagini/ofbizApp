@@ -189,7 +189,7 @@
 	</form>	
 		<form name="FindLeaveApprovals" type="single" target="FindLeaveApprovals"
 		odd-row-style="header-row" default-table-style="basic-table"
-		default-entity-name="EmplLeaveView">
+		default-entity-name="EmplLeave">
 		<field name="noConditionFind">
 			<hidden value="Y" /><!-- if this isn't there then with all fields 
 				empty no query will be done -->
@@ -231,23 +231,22 @@
 		</actions> -->
 	<form name="ListLeaveApprovals" list-name="listIt" type="list"
 		odd-row-style="alternate-row" header-row-style="header-row-2"
-		default-table-style="basic-table hover-bar" paginate-target="EmplLeaveView">
+		default-table-style="basic-table hover-bar" paginate-target="EmplLeave">
 		<actions>
 			<!-- <set field="entityName" value="EmplLeaveView" /> -->
-			<entity-condition entity-name="EmplLeaveView">
+			<entity-condition entity-name="EmplLeave">
 					<condition-expr field-name="responsibleEmployee"
-						operator="equals" from-field="userLogin.partyId" />
-					
-				</entity-condition>
+						operator="equals" from-field="${userLogin.partyId}" />
+			</entity-condition>
 				
-				<entity-condition entity-name="EmplLeaveView">
+			<!-- 	<entity-condition entity-name="EmplLeaveView">
 				 <condition-expr field-name="organizationUnitId"
 						operator="equals" from-field="organizationUnitId" />
-				</entity-condition>
+				</entity-condition> -->
 			<service service-name="performFind" result-map="result"
 				result-map-list="listIt">
 				<field-map field-name="inputFields" from-field="leaveApprovalCtx" />
-				<field-map field-name="entityName" value="EmplLeaveView" />
+				<field-map field-name="entityName" value="EmplLeave" />
 				<!-- <field-map field-name="orderBy" from-field="parameters.leaveId" /> -->
 				<field-map field-name="viewIndex" from-field="viewIndex" />
 				<field-map field-name="viewSize" from-field="viewSize" />

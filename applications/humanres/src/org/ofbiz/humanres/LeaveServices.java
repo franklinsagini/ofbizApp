@@ -62,6 +62,10 @@ public class LeaveServices {
 						EntityCondition.makeCondition("fromDate",
 								EntityOperator.EQUALS, new java.sql.Date(fromDate.getTime()))),
 						EntityOperator.AND);
+		
+		log.info(" Date : "+fromDate);
+		log.info(" Leave Type : "+leaveTypeId);
+		log.info(" Party : "+partyId);
 
 		try {
 			leaveApplicationELI = delegator.findList("EmplLeave",
