@@ -221,6 +221,7 @@ public class WorkflowServices {
 			nextLevelId = currentApproval.getString("nextLevel");
 			
 			if ((nextLevelId == null) || (nextLevelId.equals(""))){
+//				End Of Workflow
 				return null;
 			} else{
 				return getCurrentApprovalFromDocumentApproval(delegator,
