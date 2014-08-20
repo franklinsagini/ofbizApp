@@ -176,4 +176,103 @@
         </field>
     </form>
 
+    <!--
+        Purchase Orders Forms
+    -->
+    <form name="FindPurchaseOrders" default-map-name="purchaseOders" target="findPurchaseOrders" type="single">
+        <auto-fields-entity entity-name="PurchaseOrderHeader" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListPurchaseOrders" type="list" list-name="listIt"
+        paginate-target="findPurchaseOrders" default-entity-name="PurchaseOrderHeader"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2"
+        default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="purchaseOrderCtx" />
+                <field-map field-name="entityName" value="PurchaseOrderHeader" />
+                <field-map field-name="orderBy" from-field="parameters.sortField" />
+                <field-map field-name="viewIndex" from-field="viewIndex" />
+                <field-map field-name="viewSize" from-field="viewSize" />
+            </service>
+        </actions>
+        <field name="orderId" title="Order ID" sort-field="true" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${orderId}" target="editPurchaseQuote">
+                <parameter param-name="orderId" />
+            </hyperlink>
+        </field>
+        <field name="orderName" sort-field="true">
+            <display />
+        </field>
+        <field name="orderDate" sort-field="true">
+            <display type="date"/>
+        </field>
+        <field name="statusId" title="Status" sort-field="true">
+            <display/>
+        </field>
+        <field name="createdBy" title="Prepared By" sort-field="true">
+            <display/>
+        </field>
+        <field name="supplierId" sort-field="true">
+            <display />
+        </field>
+    </form>
+
+    <!--
+        PurchaseOrderForm
+        ListPurchaseOrderForm
+     -->
+
+    <form name="PurchaseOrderForm" type="single" target="createPurchaseOrder" focus-field-name="name"
+        header-row-style="header-row" default-table-style="basic-table" default-map-name="purchaseOrderContext">
+        <actions>
+            <entity-condition entity-name="PurchaseOrderHeader" list="purchaseOrderList">
+                <order-by field-name="orderId"/>
+            </entity-condition>
+        </actions>
+
+        <field name="orderId"><hidden/></field>
+
+        <field name="orderName" title="Order Name">
+            <text size="25"></text>
+        </field>
+
+        <field name="supplierId" title="Supplier">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+     </form>
+
+     <form name="ListPurchaseOrderForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true"
+        target="updatePurchaseOrder" paginate-target="PurchaseOrderForm" odd-row-style="alternate-row"
+        header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PurchaseOrderHeader">
+            </entity-condition>
+
+            <entity-condition entity-name="PurchaseOrderHeader" list="purchaseOrderList">
+                <order-by field-name="orderId"/>
+            </entity-condition>
+        </actions>
+        <field name="orderId"><hidden/></field>
+        <field name="orderName" title="Order Name"> <text size="25"></text> </field>
+        <field name="orderDate" sort-field="true"><display type="date"/></field>
+        <field name="statusId" title="Status" sort-field="true"><display/></field>
+        <field name="createdBy" title="Prepared By" sort-field="true"><display/></field>
+        <field name="supplierId" sort-field="true"><display /></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deletePurchaseOrder" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="orderId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
 </forms>
