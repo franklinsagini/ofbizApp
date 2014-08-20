@@ -50,6 +50,8 @@ under the License.
     <!-- Request Mappings -->
     <!-- request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map -->
 	<request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanApplication"/></request-map>
+	<request-map uri="FindLoanProduct"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanProduct"/></request-map>
+	
 	<request-map uri="FindLoanApplication"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanApplication"/></request-map>
     <!-- Example Requests -->
     <request-map uri="FindExample"><security https="true" auth="true"/><response name="success" type="view" value="FindExample"/></request-map>
@@ -790,8 +792,14 @@ under the License.
 	</request-map>
 	<!-- end ProductCharge -->
 	
+	<request-map uri="viewloanproductdetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="viewloanproductdetails"
+			save-home-view="true" />
+	</request-map>
+	
 	<!-- start LoanProductCharge -->
-		<request-map uri="NewLoanProductCharge">
+	<request-map uri="NewLoanProductCharge">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="NewLoanProductCharge" />
 	</request-map>
@@ -917,6 +925,9 @@ under the License.
 	<view-map name="viewapplicationprofile" type="screen"
 		page="component://loans/widget/loans/LoanScreens.xml#viewapplicationprofile" />
 		
+		<view-map name="viewloanproductdetails" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#viewloanproductdetails" />
+		
 		
 	<!-- Loan Processing -->
 		<view-map name="reviewLoan" type="screen"
@@ -947,8 +958,12 @@ under the License.
    
    		 <view-map name="NewProductCharge" type="screen"
 		page="component://loans/widget/loans/LoanScreens.xml#NewProductCharge" />
+		
 		<view-map name="NewLoanProductCharge" type="screen"
 		page="component://loans/widget/loans/LoanScreens.xml#NewLoanProductCharge" />
+		
+		<view-map name="FindLoanProduct" type="screen" page="component://loans/widget/loans/LoanScreens.xml#FindLoanProduct"/>
+		
 		<view-map name="NewLoanApplicationCharge" type="screen"
 		page="component://loans/widget/loans/LoanScreens.xml#NewLoanApplicationCharge" />
     <!-- Supported Content Types -->
