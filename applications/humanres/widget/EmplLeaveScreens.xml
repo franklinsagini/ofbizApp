@@ -89,6 +89,10 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
+						<entity-condition entity-name="EmplLeave">
+					<condition-expr field-name="responsibleEmployee"
+						operator="equals" from-field="${userLogin.partyId}" />
+			</entity-condition>
 
 			<entity-one entity-name="Party" value-field="party">
 				<field-map field-name="partyId" from-field="userLogin.partyId"/>
