@@ -886,5 +886,127 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
+    <!-- ProductCharge -->
+    <form name="NewProductCharge" type="single" target="createProductCharge"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
+        
+        <field name="productChargeId"><hidden/></field>
+        <field name="name" title="Name" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listProductCharge" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateProductCharge" paginate-target="NewProductCharge"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ProductCharge">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateProductCharge"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="name"> <!-- display also-hidden="false"/ --> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteProductCharge" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="productChargeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Find Loan Products -->
+    <form name="FindLoanProduct" type="single" target="FindLoanProduct"
+		default-entity-name="LoanProduct">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="name" title="Name">
+			<text-find />
+		</field>
+		<field name="code" title="Code">
+			<text-find />
+		</field>
+		<field name="maxRepaymentPeriod" title="Repayment Period">
+			<text-find />
+		</field>
+		<field name="interestRatePM" title="Interest Rate">
+			<text-find />
+		</field>
+		<field name="deductionType" title="Deduction Method">
+			<drop-down allow-empty="true">
+                <option key="LINEAR" description="Linear/Flat Rate"/>
+                <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
+            </drop-down>
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+	
+	<form name="findListLoanProduct" type="list" list-name="listIt"
+		paginate-target="FindLoanProduct" default-entity-name="LoanProduct"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="LoanProduct">
+				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+				<!-- order-by field-name="saccoProductId"/ -->
+			</entity-condition>
+
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="loanProductCtx" />
+				<field-map field-name="entityName" value="LoanProduct" />
+				<field-map field-name="orderBy" from-field="parameters.sortField" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+		<field name="loanProductId"><hidden/></field>
+        <field name="name"> <text size="20"></text> </field>
+        <field name="code"><text size="10"/></field>
+        <field name="maxRepaymentPeriod"><text size="10"/></field>
+        <field name="interestRatePM"><text size="10"/></field>
+        
+         <field name="minimumAmt"><text size="10"/></field>
+        <field name="maximumAmt"><text size="10"/></field>
+        
+        <field name="deductionType"  title="Deduction Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="LINEAR" description="Linear/Flat Rate"/>
+                <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
+            </drop-down>
+        </field>
+        
+        <field name="Edit Loan">
+        	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
+        </field>
+		
+		<field name="details">
+			<hyperlink target="viewloanproductdetails?loanProductId=${loanProductId}"
+				description="Details"></hyperlink>
+		</field>
+		
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteLoanProduct" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false">
+				<parameter param-name="loanProductId" />
+			</hyperlink>
+		</field>
+		<!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
+			button-type="button"/></field -->
+	</form>
    
 </forms>
