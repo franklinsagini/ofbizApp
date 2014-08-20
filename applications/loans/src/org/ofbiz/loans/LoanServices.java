@@ -453,5 +453,13 @@ public class LoanServices {
 		return repaymentDate;
 
 	}
+	
+	/**
+	 * @author Japheth Odonya  @when Aug 20, 2014 7:07:07 PM
+	 * Add Charges for the Product to the Product on application
+	 * **/
+	public static String addCharges(GenericValue loanApplication){
+		return "";
+	}
 
 }
