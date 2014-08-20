@@ -25,52 +25,55 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
+
     <!--
-        Purchase Order Requests
+        Supplier Requests
     -->
 
-    <request-map uri="findPurchaseOrders">
+    <request-map uri="findSupplier">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="FindPurchaseOrdersScreen"
+        <response name="success" type="view" value="FindSupplierScreen"
             save-current-view="true" />
     </request-map>
 
-    <request-map uri="purchaseOrders">
+    <request-map uri="editSupplier">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="PurchaseOrderScreen"
+        <response name="success" type="view" value="EditSupplierScreen"
             save-current-view="true" />
     </request-map>
 
 
     <!--
-        Purchase Order CRUD Operations
+        Supplier CRUD Operations
     -->
 
-    <request-map uri="createPurchaseOrder">
+    <request-map uri="createSupplier">
         <security https="true" auth="true" />
-        <event type="service" invoke="createPurchaseOrder" />
-        <response name="success" type="request-redirect-noparam" value="purchaseOrders">
+        <event type="service" invoke="createSupplier" />
+        <response name="success" type="request-redirect-noparam" value="supplier">
             </response>
-        <response name="error" type="view" value="PurchaseOrderScreen" />
+        <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
-    <request-map uri="updatePurchaseOrder">
+    <request-map uri="updateSupplier">
         <security https="true" auth="true" />
-        <event type="service" invoke="updatePurchaseOrder" />
-        <response name="success" type="request-redirect-noparam" value="purchaseOrders"></response>
-        <response name="error" type="view" value="PurchaseOrderScreen" />
+        <event type="service" invoke="updateSupplier" />
+        <response name="success" type="request-redirect-noparam" value="supplier"></response>
+        <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
-    <request-map uri="deletePurchaseOrder">
+    <request-map uri="deleteSupplier">
         <security https="true" auth="true" />
-        <event type="service" invoke="deletePurchaseOrder" />
-        <response name="success" type="request-redirect-noparam" value="purchaseOrders"></response>
-        <response name="error" type="view" value="PurchaseOrderScreen" />
+        <event type="service" invoke="deleteSupplier" />
+        <response name="success" type="request-redirect-noparam" value="supplier"></response>
+        <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
 
     <!-- Home View Mappings -->
     <view-map name="main" type="screen" page="component://purchases/widget/PurchasesScreens.xml#homeScreen"/>
+    <view-map name="FindSupplierScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindSupplierScreen"/>
+    <view-map name="EditSupplierScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditSupplierScreen"/>
 
     <!-- Utility View Maps -->
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>

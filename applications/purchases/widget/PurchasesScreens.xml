@@ -61,26 +61,26 @@
         </section>
     </screen>
 
-    <screen name="findSuppliersScreen">
+    <screen name="FindSupplierScreen">
         <section>
             <actions>
-                <set field="headerItem" value="findQuotes"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="headerItem" value="suppliers"/><!-- this highlights the selected menu-item with name "suppliers" -->
                 <set field="tabButtonItem" value="find"/>
-                <set field="purchaseQuoteCtx" from-field="parameters" />
+                <set field="supplierCtx" from-field="parameters" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSupllierDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <include-menu name="QuotesSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <include-menu name="SupplierSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                                 <container style="clear"/>
                             </decorator-section>
                             <decorator-section name="search-options">
-                                <include-form name="FindPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
+                                <include-form name="FindSupplierForm" location="component://purchases/widget/PurchasesForms.xml" />
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListPurchaseQuotes" location="component://purchases/widget/PurchasesForms.xml" />
+                                <include-form name="ListSupplierForm" location="component://purchases/widget/PurchasesForms.xml" />
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -88,99 +88,19 @@
             </widgets>
         </section>
     </screen>
-
-    <screen name="EditSuppliersScreen">
-        <section>
-            <actions><!-- this highlights the seleted menu-item with name "main" -->
-                <set field="quoteId" from-field="parameters.quoteId"/>
-                <set field="tabButtonItem" value="editQuote"/>
-                <entity-one entity-name="PrchseQteHdr" value-field="quote" />
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="Edit Quote">
-                            <include-form name="EditQuoteForm" location="component://purchases/widget/PurchasesForms.xml" />
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="EditQuoteItemsScreen">
-        <section>
-            <actions><!-- this highlights the seleted menu-item with name "main" -->
-                <set field="quoteId" from-field="parameters.quoteId"/>
-                <set field="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
-                <set field="tabButtonItem" value="editQuoteLines"/>
-                 <set field="viewIndex" from-field="parameters.viewIndex"/>
-                <set field="viewSize" from-field="parameters.viewSize"/>
-                <entity-one entity-name="PrchseQteHdr" value-field="quote" />
-                <entity-one entity-name="QuoteLines" value-field="quoteItem"/>
-                <entity-and entity-name="QuoteLines" list="quoteItems">
-                    <field-map field-name="quoteId" from-field="parameters.quoteId"/>
-                    <order-by field-name="quoteItemSeqId"/>
-                </entity-and>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="Quote Items">
-                            <include-form name="EditQuoteItemsForm" location="component://purchases/widget/PurchasesForms.xml" />
-                        </screenlet>
-                        <screenlet title="Edit Quote Items">
-                            <include-form name="EditQuoteItemForm" location="component://purchases/widget/PurchasesForms.xml" />
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="FindPurchaseOrdersScreen">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Find Purchase Orders"/>
-                <set field="headerItem" value="purchaseOrders"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <set field="purchaseOrderCtx" from-field="parameters" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="menu-bar">
-                                <include-menu name="OrderSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
-                                <container style="clear"/>
-                            </decorator-section>
-                            <decorator-section name="search-options">
-                                <include-form name="FindPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml" />
-                            </decorator-section>
-                            <decorator-section name="search-results">
-                                <include-form name="ListPurchaseOrders" location="component://purchases/widget/PurchasesForms.xml" />
-                            </decorator-section>
-                        </decorator-screen>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
 
        <!--
         Purchase Order
       -->
-    <screen name="PurchaseOrderScreen">
+    <screen name="EditSupplierScreen">
         <section>
             <actions>
-                <set field="titleProperty" value="Purchase Order"/>
-                <set field="headerItem" value="purchaseOrders"/>
+                <set field="titleProperty" value="Document Approval"/>
+                <set field="headerItem" value="documentApproval"/>
                 <set field="displayPassword" value="Y"/>
-                <set field="target" value="createPurchaseOrder"/>
+                <set field="target" value="createSupplier"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <entity-one entity-name="PurchaseOrderHeader" value-field="purchaseOrderContext"/>
+                <entity-one entity-name="Supplier" value-field="supplierContext"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -190,19 +110,18 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Document Approval">
-                                    <include-form name="PurchaseOrderForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                <screenlet title="Purchasing Management: Supplier">
+                                    <include-form name="EditSupplierForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
-
                         <section name="search-results">
                             <widgets>
                                 <screenlet title="Document Approvals">
-                                    <include-form name="ListPurchaseOrderForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                    <include-form name="SupplierListForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
