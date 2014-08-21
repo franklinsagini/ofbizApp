@@ -1009,7 +1009,7 @@ under the License.
 	
 	<!-- Loan Product Charge -->
 	<form name="NewLoanProductCharge" type="single" target="createLoanProductCharge"
-        focus-field-name="productChargeId" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanApplicationGuarantorContext">
+        focus-field-name="productChargeId" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanProductChargeContext">
         
         <actions>
         	<entity-condition entity-name="ProductCharge" list="productChargeList">
@@ -1039,7 +1039,9 @@ under the License.
     <form name="listLoanProductCharge" type="list" list-name="loanProductChargList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
-        	<entity-condition entity-name="LoanProductCharge"></entity-condition>
+        	<entity-condition entity-name="LoanProductCharge">
+        		<condition-expr field-name="loanProductId" operator="equals" from-field="parameters.loanProductId"/>
+        	</entity-condition>
         	<entity-condition entity-name="ProductCharge" list="productChargeList"></entity-condition>
         </actions>
         
