@@ -137,6 +137,10 @@ public class LoanServices {
 
 			result.put("payrollNo", member.get("payrollNumber"));
 			result.put("memberNo", member.get("memberNumber"));
+			
+			result.put("payrolNo", member.get("payrollNumber"));
+			result.put("currentStationId", member.get("stationId"));
+			
 
 			Date joinDate = member.getDate("joinDate");
 			SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
