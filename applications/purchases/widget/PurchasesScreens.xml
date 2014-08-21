@@ -96,21 +96,21 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Document Approval"/>
-                <set field="headerItem" value="documentApproval"/>
+                 <set field="tabButtonItem" value="editSupplier"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createSupplier"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <entity-one entity-name="Supplier" value-field="supplierContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSupllierDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Purchasing Management: Supplier">
+                                <screenlet title="Purchasing Management: Edit Supplier">
                                     <include-form name="EditSupplierForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -120,7 +120,7 @@
                         </section>
                         <section name="search-results">
                             <widgets>
-                                <screenlet title="Document Approvals">
+                                <screenlet title="Purchasing Management: Suppliers List">
                                     <include-form name="SupplierListForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
