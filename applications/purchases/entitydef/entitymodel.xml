@@ -24,8 +24,10 @@
   <!-- org.ofbiz.order.quote -->
 <!-- ========================================================= -->
 
+    <!--
+      Supplier Entity
+    -->
   <entity entity-name="Supplier" package-name="org.ofbiz.purchases.suppliers" title="Suppliers Entity">
-
       <field name="supplierId" type="id-ne"></field>
       <field name="isActive" type="indicator"></field>
       <field name="createdBy" type="name"></field>
@@ -39,5 +41,125 @@
       <field name="supplierStatus" type="name"></field>
       <prim-key field="supplierId"/>
   </entity>
+
+  <!--
+      ContactPerson Entity
+    -->
+  <entity entity-name="ContactPerson" package-name="org.ofbiz.purchases.suppliers" title="Contact Person Entity">
+      <field name="contactPersonId" type="id-ne"></field>
+      <field name="supplierId" type="id-ne"></field>
+      <field name="firstName" type="name"></field>
+      <field name="lastName" type="name"></field>
+      <field name="jobTitle" type="name"></field>
+      <field name="emailAddress" type="name"></field>
+      <field name="phoneNumber" type="name"></field>
+      <field name="mobileNumber" type="name"></field>
+      <field name="isActive" type="indicator"></field>
+      <field name="createdBy" type="name"></field>
+      <field name="updatedBy" type="name"></field>
+      <prim-key field="supplierId"/>
+      <prim-key field="contactPersonId"/>
+      <relation type="one" fk-name="CON_PERSN_SUPPL" rel-entity-name="Supplier">
+          <key-map field-name="supplierId"/>
+      </relation>
+  </entity>
+
+  <!--
+      Order Entity
+  -->
+
+   <entity entity-name="Order"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderTypeId" type="id"></field>
+      <field name="orderName" type="name"></field>
+      <field name="salesChannelEnumId" type="id"></field>
+      <field name="orderDate" type="date-time"></field>
+      <field name="priority" type="indicator"><description>Sets priority for Inventory Reservation</description></field>
+      <field name="entryDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
+      <field name="createdBy" type="id-vlong"></field>
+      <field name="currencyUom" type="id"></field>
+      <field name="billingAccountId" type="id"></field>
+      <field name="webSiteId" type="id"></field>
+      <field name="transactionId" type="id-long"></field>
+      <field name="remainingSubTotal" type="currency-amount"></field>
+      <field name="grandTotal" type="currency-amount"></field>
+      <prim-key field="orderId"/>
+      <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">
+        <key-map field-name="orderTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_SCENUM" title="SalesChannel" rel-entity-name="Enumeration">
+        <key-map field-name="salesChannelEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_BACCT" rel-entity-name="BillingAccount">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdBy" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_CUOM" rel-entity-name="Uom">
+        <key-map field-name="currencyUom" rel-field-name="uomId"/>
+      </relation>
+    </entity>
+
+    <!--
+
+        Order Line Entity
+     -->
+<entity entity-name="OrderLine"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Item Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderLineSeqId" type="id-ne"></field>
+      <field name="orderItemTypeId" type="id-ne"></field>
+      <field name="productId" type="id"></field>
+      <field name="quantity" type="fixed-point" enable-audit-log="true"></field>
+      <field name="cancelQuantity" type="fixed-point"></field>
+      <field name="selectedAmount" type="fixed-point"></field>
+      <field name="unitPrice" type="currency-precise" enable-audit-log="true"></field>
+      <field name="itemDescription" type="description"></field>
+      <field name="comments" type="comment"></field>
+      <field name="statusId" type="id"></field>
+      <field name="estimatedShipDate" type="date-time"></field>
+      <field name="estimatedDeliveryDate" type="date-time"></field>
+      <field name="changeByUserLoginId" type="id-vlong" enable-audit-log="true"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="orderLineSeqId"/>
+      <relation type="one" fk-name="ORDER_LINE_HDR" rel-entity-name="Order">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_LINE_ORTYP" rel-entity-name="OrderItemType">
+        <key-map field-name="orderItemTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_LINE_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_LINE_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="StatusValidChange">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_LINE_SYST" title="Sync" rel-entity-name="StatusItem">
+        <key-map field-name="syncStatusId" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_LINE_DCUL" title="DontCancelSet" rel-entity-name="UserLogin">
+        <key-map field-name="dontCancelSetUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_LINE_OGLA" title="Override" rel-entity-name="GlAccount">
+        <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_LINE_USRLGN" title="ChangeBy" rel-entity-name="UserLogin">
+            <key-map field-name="changeByUserLoginId" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>
+
 
 </entitymodel>
