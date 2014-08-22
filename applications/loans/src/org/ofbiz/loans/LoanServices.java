@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -136,6 +137,10 @@ public class LoanServices {
 
 			result.put("payrollNo", member.get("payrollNumber"));
 			result.put("memberNo", member.get("memberNumber"));
+			
+			result.put("payrolNo", member.get("payrollNumber"));
+			result.put("currentStationId", member.get("stationId"));
+			
 
 			Date joinDate = member.getDate("joinDate");
 			SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
@@ -452,6 +457,88 @@ public class LoanServices {
 		
 		return repaymentDate;
 
+	}
+	
+	/**
+	 * @author Japheth Odonya  @when Aug 20, 2014 7:07:07 PM
+	 * Add Charges for the Product to the Product on application
+	 * **/
+	public static String addCharges(GenericValue loanApplication, Map<String, String> context){
+		
+		//Map<String, Object> result = FastMap.newInstance();
+		String loanProductId = loanApplication.getString("loanProductId");
+		String partyId = (String)context.get("userLoginId");
+		log.info("The Loan Product ID is ############ " + loanProductId);
+		log.info("The Party ID is ############ " + partyId);
+
+		Delegator delegator;
+		delegator = loanApplication.getDelegator();
+		
+		
+		//Get the Charges attached to the LoanProduct
+		//GenericValue loanApplicationCharge = null;
+		List<GenericValue> loanProductChargeELI = null;
+		//List<GenericValue> listLoanApplicationCharge = new ArrayList<GenericValue>();
+		
+		try {
+			loanProductChargeELI = delegator.findList("LoanProductCharge",
+					EntityCondition.makeCondition("loanProductId",
+							loanProductId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue loanProductCharge : loanProductChargeELI) {
+			//existingLoansTotal = existingLoansTotal.add(genericValue.getBigDecimal("loanAmt"));
+			createLoanApplicationCharge(loanProductCharge, loanApplication, partyId);
+		}
+		return "";
+	}
+
+	/**
+	 * Given a LoanApplication and LoanProductCharge add a LoanApplicationCharge to 
+	 * the Application.
+	 * **/
+	private static void createLoanApplicationCharge(
+			GenericValue loanProductCharge, GenericValue loanApplication, String partyId) {
+		//Create a Loan Application Charge
+		String isFixed = loanProductCharge.getString("isFixed");
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		BigDecimal bdRateAmount = loanProductCharge.getBigDecimal("rateAmount");
+		BigDecimal bdFixedAmount = loanProductCharge.getBigDecimal("fixedAmount");
+		Delegator delegator = loanApplication.getDelegator();
+		
+		if (isFixed.equals("N")){
+			//Compute Fixed Amount
+			bdFixedAmount = bdLoanAmt.multiply(bdRateAmount).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
+		}
+		
+		GenericValue loanApplicationCharge;
+		String loanApplicationChargeId;
+		loanApplicationChargeId = delegator
+				.getNextSeqId("LoanApplicationCharge");
+
+		loanApplicationCharge = delegator.makeValidValue(
+				"LoanApplicationCharge", UtilMisc.toMap(
+						"loanApplicationChargeId",
+						loanApplicationChargeId, "isActive",
+						"Y", "createdBy", partyId, 
+						"loanApplicationId", loanApplication.getString("loanApplicationId"),
+						"productChargeId", loanProductCharge.getString("productChargeId"), 
+						"isFixed" , loanProductCharge.getString("isFixed") ,
+						"rateAmount",bdRateAmount,
+						"fixedAmount",bdFixedAmount));
+		try {
+			loanApplicationCharge = delegator
+					.createSetNextSeqId(loanApplicationCharge);
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			delegator.createOrStore(loanApplicationCharge);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

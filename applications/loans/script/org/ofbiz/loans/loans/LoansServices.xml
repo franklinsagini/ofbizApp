@@ -188,7 +188,18 @@ under the License.
         <!-- set field="productType" value="Loan"/ -->
         
         <if-empty field="parameters.loanApplicationId">
-        	<sequenced-id sequence-name="LoanApplication" field="loanApplicationId"/>
+			<call-simple-method method-name="saveLoanApplication" scope="inline"></call-simple-method>
+			<set field="charges" value="${bsh:org.ofbiz.loans.LoanServices.addCharges(newEntity, userLogin);}" type="String"/>
+        <else>
+        	<call-simple-method method-name="updateLoanApplication"></call-simple-method>
+        </else>
+        </if-empty>
+        
+        
+    </simple-method>
+    
+    <simple-method method-name="saveLoanApplication" short-description="Save a Loan Application" >
+    	        	<sequenced-id sequence-name="LoanApplication" field="loanApplicationId"/>
 	        <now-timestamp field="newEntity.createdDate"/>
 	        <set from-field="loanApplicationId" field="newEntity.loanApplicationId"/>
 	        <set field="entity.loanStatus" value="DRAFT"/>
@@ -205,12 +216,6 @@ under the License.
             <set field="partyId" from-field="userLogin.partyId"/>
             <set field="newEntity.organizationUnitId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getUserOrganizationUnit(partyId);}" type="String"/>
             <create-value value-field="newEntity"/>
-        <else>
-        	<call-simple-method method-name="updateLoanApplication"></call-simple-method>
-        </else>
-        </if-empty>
-        
-        
     </simple-method>
     
     <simple-method method-name="updateLoanApplication" short-description="Update Loan Application">
@@ -251,6 +256,7 @@ under the License.
     
      <simple-method method-name="updateLoanSecurity" short-description="Update Loan Security">
         <entity-one entity-name="LoanSecurity" value-field="lookedUpValue"/>
+        <set-pk-fields value-field="lookedUpValue"  map="parameters" />
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
