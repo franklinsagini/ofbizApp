@@ -917,18 +917,18 @@ under the License.
         <field name="accountHolderTransactionSetupId"><text default-value="MEMBERTRANSACTIONACCOUNT"></text></field>
 		
 		
-        <field name="cashAccountId" title="Cash Account" widget-style="required" required-field="true">
-       		<drop-down>
+        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         
         </field>
        <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
-       		<drop-down>
+       		<drop-down allow-empty="true">
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
        </field>
-        <field name="comments" title="Comments"><textarea/></field>
+        <field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea/></field>
         
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -946,27 +946,27 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChequeSetup"/>
 		
-		<field name="accountHolderTransactionSetupId"><display also-hidden="false"></display></field>
+		<field name="accountHolderTransactionSetupId"><text size="30"></text></field>
 		
 		
-        <field name="cashAccountId" title="Cash Account" widget-style="required" required-field="true">
-       		<!-- drop-down>
-       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down -->
-        	<display-entity entity-name="GlAccount" description="${accountName} - ${accountCode}" key-field-name="glAccountId" also-hidden="false"></display-entity>
+        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc" widget-style="required" required-field="true">
+       		<drop-down text-size="40">
+       			<list-options key-name="glAccountId" list-name="glAccountList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+        	<!-- display-entity entity-name="GlAccount" description="${accountName} - ${accountCode}" key-field-name="glAccountId" also-hidden="false"></display-entity -->
         </field>
        <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
-       		<!-- drop-down>
-       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down -->
-       		<display-entity entity-name="GlAccount" description="${accountName} - ${accountCode}" key-field-name="glAccountId" also-hidden="false"></display-entity>
+       		<drop-down text-size="40">
+       			<list-options key-name="glAccountId" list-name="glAccountList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+       		<!-- display-entity entity-name="GlAccount" description="${accountName} - ${accountCode}" key-field-name="glAccountId" also-hidden="false"></display-entity -->
        </field>
-        <field name="comments" title="Comments"><display also-hidden="false"></display></field>       
+        <field name="comments" title="Comments" widget-style="required" required-field="true"><textarea cols="30"/></field>       
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="chequeSetupId"/>
             </hyperlink>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        </field -->
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 </forms>

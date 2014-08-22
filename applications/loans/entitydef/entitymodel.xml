@@ -642,8 +642,12 @@ under the License.
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		<field name="name" type="name"></field>
+		<field name="chargeAccountId" type="id"></field>
 		
 		<prim-key field="productChargeId"/>
+		<relation type="one" fk-name="ProductCharge_ACC" rel-entity-name="GlAccount">
+            <key-map field-name="chargeAccountId" rel-field-name="glAccountId"/>
+        </relation>
 	</entity>
 	
 	<entity entity-name="LoanProductCharge" package-name="org.ofbiz.loans"

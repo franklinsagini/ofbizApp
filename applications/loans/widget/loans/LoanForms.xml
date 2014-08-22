@@ -443,13 +443,19 @@ under the License.
     
      <form name="disburseLoan" type="single" target="createDisburseLoan"
         focus-field-name="comment" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
-        
+        <actions>
+        	<entity-one entity-name="LoanApplication" value-field="loanApplication">
+        		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+        	</entity-one>
+        	
+        	<set field="applicationStatusValue" value="${loanApplication.applicationStatus}"/>
+        </actions>
         <field name="loanStatusLogId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
         <field name="applicationStatus" title="Status" required-field="true"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
         <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
-        <field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field>
-        <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <!-- field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field -->
+        <field name="submitButton" use-when="!applicationStatusValue.equals(&quot;DISBURSED&quot;)"  title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
     
@@ -892,9 +898,20 @@ under the License.
     <!-- ProductCharge -->
     <form name="NewProductCharge" type="single" target="createProductCharge"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
-        
+        <actions>
+        	<entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>	
+        </actions>
         <field name="productChargeId"><hidden/></field>
         <field name="name" title="Name" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="chargeAccountId" title="Charge Account (A/C to Credit)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+        
+        </field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -903,12 +920,23 @@ under the License.
         <actions>
             <entity-condition entity-name="ProductCharge">
             </entity-condition>
+            
+            <entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>	
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateProductCharge"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
         <field name="name"> <!-- display also-hidden="false"/ --> <text></text> </field>
+        
+        <field name="chargeAccountId" title="Charge Account (A/C to Credit)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+        
+        </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteProductCharge" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productChargeId"/>

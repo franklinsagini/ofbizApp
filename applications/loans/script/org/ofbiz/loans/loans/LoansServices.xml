@@ -479,8 +479,10 @@ under the License.
         <entity-one entity-name="LoanApplication" value-field="loanApplication">
         	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
         </entity-one>
-        <set field="repaymentStartDate" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/>
+        <!-- set field="repaymentStartDate" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/ -->
+        <set field="disbursementResult" value="${bsh:org.ofbiz.loans.LoanAccounting.postDisbursement(loanApplication, userLogin);}" type="String"/>
     </simple-method>
+    
     <simple-method method-name="saveDisbursementRecord" use-transaction="true">
     	<make-value entity-name="LoanStatusLog" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
