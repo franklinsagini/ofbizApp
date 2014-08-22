@@ -70,7 +70,7 @@
 			</service>
 
 		</actions>
-		<field name="partyId">
+		<field name="partyId" title="Staff">
 			<display-entity entity-name="PartyNameView"
 				description="${firstName} ${lastName}">
 				<sub-hyperlink target="/partymgr/control/viewprofile"
@@ -79,7 +79,7 @@
 				</sub-hyperlink>
 			</display-entity>
 		</field>
-		<field name="leaveTypeId">
+		<field name="leaveTypeId" title="Leave Type">
 			<display-entity entity-name="EmplLeaveType" />
 		</field>
 		<field name="emplLeaveReasonTypeId">
@@ -94,10 +94,13 @@
 		<field name="leaveDuration">
 			<display />
 		</field>
-		<field name="approvalStatus">
+		<field name="applicationStatus" title="Application Status">
 			<display />
 		</field>
-		<field name="responsibleEmployee">
+		<field name="approvalStatus" title="Approval Status">
+			<display />
+		</field>
+		<field name="responsibleEmployee" title="Approver">
 			<display-entity entity-name="Person" description="${firstName} ${lastName}"
 				key-field-name="partyId">
 
@@ -200,7 +203,9 @@
 		<field name="leaveStatus">
 			<hidden value="Approved" />
 		</field>
-		<field name="leaveTypeId">
+		<field name="responsibleEmployee">
+			<hidden value="${userLogin.partyId}"/>
+		</field><field name="leaveTypeId">
 			<text-find />
 		</field>
 		<field name="emplLeaveReasonTypeId">
@@ -269,55 +274,21 @@
 		<field name="ApproveLeave" title="${uiLabelMap.viewdetails}"
 			widget-style="buttontext">
 			<hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.viewdetails}">
-				<parameter param-name="partyId" />
+				<parameter param-name="partyId" value="${partyId}" />
+				<parameter param-name="fromDate" />
+				<parameter param-name="leaveTypeId" />
+			</hyperlink>
+		</field>
+		<field name="ApproveLeaves" title="${uiLabelMap.viewdetails}"
+			widget-style="buttontext">
+			<hyperlink target="viewEmplLeaveDetails" description="${uiLabelMap.viewdetails}">
+				<parameter param-name="partyId" value="${partyId}" />
 				<parameter param-name="fromDate" />
 				<parameter param-name="leaveTypeId" />
 			</hyperlink>
 		</field>
 	</form>
-	<form name="EditEmplLeaveStatus" type="single" target="approveEmplLeaveStatus"
-		default-map-name="leaveApp">
-		<field name="leaveApproved" title="${uiLabelMap.HumanResLeaveStatus}">
-			<drop-down allow-empty="false">
-				<option key="Approved" description="${uiLabelMap.ApproveLeave}" />
-				<option key="Rejected" description="${uiLabelMap.RejectLeave}" />
-			</drop-down>
-		</field>
-		<field name="leaveId">
-			<hidden />
-		</field>
-		<field name="partyId" position="1">
-			<display />
-		</field>
-		<field name="ForwardedBy" position="2">
-			<display />
-		</field>
-		<field name="leaveTypeId" position="1">
-			<display />
-		</field>
-		<field name="emplLeaveReasonTypeId" position="2">
-			<display />
-		</field>
-		<field name="fromDate" position="1">
-			<display />
-		</field>
-		<field name="thruDate" position="2">
-			<display />
-		</field>
-		<field name="description" position="1">
-			<display />
-		</field>
-		<field name="leaveDuration" position="2">
-			<display />
-		</field>
-		<field name="leaveBalance" position="1">
-			<display />
-		</field>
-		<field name="leaveStage" position="2">
-			<display />
-		</field>
-	</form>
-
+	
 	<form name="approveEmplLeaveStatus" type="single" target="forwardApplication"
 		default-map-name="leaveApp">
 		<actions>
@@ -365,4 +336,53 @@
 
 	</form>
 
+	<form name="ListPerson" list-name="person" target="" title="" type="list" paginate-target="ListPerson" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+<actions>
+			<set field="entityName" value="EmplLeave" />
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="parameters" />
+				<field-map field-name="entityName" from-field="entityName" />
+			</service>
+		</actions>
+		<field name="leaveId"><hidden /></field>
+		<field name="partyId" position="1" title="Member">
+			<display-entity entity-name="Member" key-field-name="partyId"
+				description="${partyId} ${firstName} ${lastName}">
+			</display-entity>
+		</field>
+		<field name="leaveTypeId" position="1" title="Leave Type"><display /></field>
+		<field name="emplLeaveReasonTypeId" position="2"><display /></field>
+		<field name="fromDate" position="1"><display /></field>
+		<field name="thruDate" position="2"><display /></field>
+		<field name="description" position="1"><display /></field>
+
+		<field name="leaveBalance" position="2"><display /></field>
+		<field name="leaveDuration" position="1"><display /></field>
+		<field name="leaveStage" position="2"><display /></field>
+
+    </form>	
+
+    <form name="ListMyLeaves" list-name="emplLeaves" target="" title="" type="list" paginate-target="ListMyLeaves" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<field name="partyId" position="1" title="Staff">
+			<display-entity entity-name="Person" key-field-name="partyId"
+				description="${partyId} ${firstName} ${lastName}">
+			</display-entity>
+		</field>
+    	<field name="fromDate">	<display />	</field>
+		<field name="leaveTypeId" title="Leave Type"><display-entity entity-name="EmplLeaveType" /></field>
+		<field name="emplLeaveReasonTypeId"><display-entity entity-name="EmplLeaveReasonType" /></field>
+		<field name="fromDate">	<display />	</field>
+		<field name="thruDate">	<display />	</field>
+		<field name="leaveDuration"> <display /></field>
+		<field name="applicationStatus" title="Application Status">	<display />	</field>
+		<field name="approvalStatus" title="Approval Status"><display /></field>
+    </form>
+
+    <form name="ListLeaveLogs" list-name="leaveLogs" target="" title="" type="list" paginate-target="ListLeaveLogs" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<field name="leaveId">	<display />	</field>
+		<field name="approvedBy" title="Approved By">	<display />	</field>
+		<field name="rejectedBy" title="Rejected By">	<display />	</field>
+		<field name="approvalStatus"> <display /></field>
+    </form>
 </forms>

@@ -34,7 +34,7 @@
 		 //jQuery('input[name="leaveBalance"]').show();
          var leaveTypeId = this.value;
          //console.log(leaveTypeId);
-         if (leaveTypeId =="Annual leave"){
+         if (leaveTypeId =="ANNUAL_LEAVE"){
           
          var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
          var partyId =  jQuery('input[name="partyId"]').val();
@@ -45,7 +45,7 @@
          }
 
          }
-         if(leaveTypeId !="Annual leave"){
+         if(leaveTypeId !="ANNUAL_LEAVE"){
          	jQuery('input[name="approvedLeaveSumed"]').val("");
          	jQuery('input[name="accruedLeaveDays"]').val("");
          	jQuery('input[name="leaveBalance"]').val("");
