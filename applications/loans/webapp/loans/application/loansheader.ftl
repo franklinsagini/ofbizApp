@@ -9,6 +9,12 @@
          var reqUrl = '/loans/control/memberdetails';
          sendAjaxRequest(reqUrl, memberId);
         });
+		
+	jQuery('select[name="guarantorId"]').change(function(){
+         var memberId = this.value;
+         var reqUrl = '/loans/control/memberdetails';
+         sendAjaxRequest(reqUrl, memberId);
+        });
         
    jQuery('select[name="partyId"]').change(function(){
 		 /** var memberId = jQuery('select[name="partyId"]').val;
@@ -77,6 +83,11 @@
 				 $('input[name="joinDate_i18n"]').val(data.joinDate);
 				 $('input[name="joinDate"]').val(data.inputDate);
 				 $('input[name="membershipDuration"]').val(data.membershipDuration);
+				 
+				 //for the guarantor
+				 $('input[name="memberNo"]').val(data.memberNo);
+				 $('input[name="payrolNo"]').val(data.payrolNo);
+				 $('select[name="currentStationId"]').val(data.currentStationId);
 				 
               //You handle the response here like displaying in required div etc. 
                },
