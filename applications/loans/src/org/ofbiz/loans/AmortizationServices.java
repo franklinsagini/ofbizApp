@@ -254,6 +254,7 @@ public class AmortizationServices {
 			String loanApplicationId) {
 		// Get the loan armotization entities for the loan application and
 		// delete them
+		log.info("######## Tyring to Delete ######## !!!");
 		List<GenericValue> loanAmortizationELI = null; // =
 
 		try {

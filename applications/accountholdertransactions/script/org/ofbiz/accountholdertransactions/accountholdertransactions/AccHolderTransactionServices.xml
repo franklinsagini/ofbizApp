@@ -34,6 +34,7 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" value="CASHWITHDRAWAL"/>
+        <set field="newEntity.increaseDecrease" value="D"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         
         <!-- set field="productType" value="Loan"/ -->
@@ -166,6 +167,7 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" value="CASHDEPOSIT"/>
+         <set field="newEntity.increaseDecrease" value="I"/>
         <create-value value-field="newEntity"/>
         
          <!-- Set Posting Type -->
@@ -202,10 +204,12 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" value="CHEQUEWITHDRAWAL"/>
+        <set field="newEntity.increaseDecrease" value="D"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
+        
     <simple-method method-name="updateChequeWithdrawal" short-description="Update ChequeWithdrawal">
         <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
@@ -270,6 +274,7 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" value="CHEQUEDEPOSIT"/>
+         <set field="newEntity.increaseDecrease" value="I"/>
         
         <now-timestamp field="createdDate"/>
         

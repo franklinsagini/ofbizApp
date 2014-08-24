@@ -310,6 +310,47 @@ public class AccHolderTransactionServices {
 		return bdBalance;
 	}
 
+	private static BigDecimal calculateTotalIncreaseDecrease(
+			String memberAccountId, Delegator delegator, String increaseDecrease) {
+		List<GenericValue> cashDepositELI = null;
+
+		// Conditions
+		// EntityConditionList<EntityCondition> transactionConditions =
+		// EntityCondition.makeCond
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"memberAccountId", EntityOperator.EQUALS,
+						memberAccountId), EntityCondition.makeCondition(
+						"increaseDecrease", EntityOperator.EQUALS,
+						increaseDecrease)), EntityOperator.AND);
+
+		try {
+			// cashDepositELI = delegator.findList("AccountTransaction",
+			// EntityCondition.makeCondition("memberAccountId",
+			// memberAccountId), null, null, null, false);
+
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if (cashDepositELI == null) {
+			// result.put("", "No Member Accounts");
+			log.info(" ######### This member has Cash Deposit #########"
+					+ memberAccountId);
+			return BigDecimal.ZERO;
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+
 	private static BigDecimal calculateTotalCashWithdrawals(
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> cashWithdrawalELI = null;
@@ -462,36 +503,39 @@ public class AccHolderTransactionServices {
 	 **/
 	public static BigDecimal getTotalSavings(String memberAccountId,
 			Delegator delegator) {
-		BigDecimal bdOpeningBalance = BigDecimal.ZERO;
-		BigDecimal bdTotalCashDeposit = BigDecimal.ZERO;
-		BigDecimal bdTotalCashWithdrawal = BigDecimal.ZERO;
-
-		BigDecimal bdTotalChequeDeposit = BigDecimal.ZERO;
-		BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
-		BigDecimal bdTotalChequeWithdrawal = BigDecimal.ZERO;
-		// Get Opening Balance
-		bdOpeningBalance = calculateOpeningBalance(memberAccountId, delegator);
-		// Get Total Deposits
-		bdTotalCashDeposit = calculateTotalCashDeposits(memberAccountId,
-				delegator);
-		// Get Total Withdrawals
-		bdTotalCashWithdrawal = calculateTotalCashWithdrawals(memberAccountId,
-				delegator);
-
-		bdTotalChequeDeposit = calculateTotalChequeDeposits(memberAccountId,
-				delegator);
-
-		bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(
-				memberAccountId, delegator);
-
-		bdTotalChequeWithdrawal = calculateTotalChequeWithdrawals(
-				memberAccountId, delegator);
-		// Available Amount = Total Opening Account + Total Deposits - Total
-		// Withdrawals
-		return bdOpeningBalance.add(bdTotalCashDeposit)
-				.add(bdTotalChequeDepositCleared)
-				.subtract(bdTotalCashWithdrawal)
-				.subtract(bdTotalChequeWithdrawal);
+		// BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+		// BigDecimal bdTotalCashDeposit = BigDecimal.ZERO;
+		// BigDecimal bdTotalCashWithdrawal = BigDecimal.ZERO;
+		//
+		// BigDecimal bdTotalChequeDeposit = BigDecimal.ZERO;
+		// BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
+		// BigDecimal bdTotalChequeWithdrawal = BigDecimal.ZERO;
+		// // Get Opening Balance
+		// bdOpeningBalance = calculateOpeningBalance(memberAccountId,
+		// delegator);
+		// // Get Total Deposits
+		// bdTotalCashDeposit = calculateTotalCashDeposits(memberAccountId,
+		// delegator);
+		// // Get Total Withdrawals
+		// bdTotalCashWithdrawal =
+		// calculateTotalCashWithdrawals(memberAccountId,
+		// delegator);
+		//
+		// bdTotalChequeDeposit = calculateTotalChequeDeposits(memberAccountId,
+		// delegator);
+		//
+		// bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(
+		// memberAccountId, delegator);
+		//
+		// bdTotalChequeWithdrawal = calculateTotalChequeWithdrawals(
+		// memberAccountId, delegator);
+		// // Available Amount = Total Opening Account + Total Deposits - Total
+		// // Withdrawals
+		// return bdOpeningBalance.add(bdTotalCashDeposit)
+		// .add(bdTotalChequeDepositCleared)
+		// .subtract(bdTotalCashWithdrawal)
+		// .subtract(bdTotalChequeWithdrawal);
+		return getAvailableBalanceVer2(memberAccountId, delegator);
 	}
 
 	/***
@@ -501,20 +545,61 @@ public class AccHolderTransactionServices {
 	public static BigDecimal getBookBalance(String memberAccountId,
 			Delegator delegator) {
 
-		BigDecimal bdTotalChequeDeposit = BigDecimal.ZERO;
-		BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
-		BigDecimal bdTotalSavings = getTotalSavings(memberAccountId, delegator);
+		// BigDecimal bdTotalChequeDeposit = BigDecimal.ZERO;
+		// BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
+		// BigDecimal bdTotalSavings = getTotalSavings(memberAccountId,
+		// delegator);
+		//
+		// bdTotalChequeDeposit = calculateTotalChequeDeposits(memberAccountId,
+		// delegator);
+		// bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(
+		// memberAccountId, delegator);
+		//
+		// // return
+		// // bdOpeningBalance.add(bdTotalCashDeposit).add(bdTotalChequeDeposit)
+		// //
+		// .subtract(bdTotalCashWithdrawal).subtract(bdTotalChequeWithdrawal);
+		// return bdTotalSavings.add(bdTotalChequeDeposit).subtract(
+		// bdTotalChequeDepositCleared);
+		return getBookBalanceVer2(memberAccountId, delegator);
+	}
 
-		bdTotalChequeDeposit = calculateTotalChequeDeposits(memberAccountId,
-				delegator);
-		bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(
+	public static BigDecimal getBookBalanceVer2(String memberAccountId,
+			Delegator delegator) {
+		BigDecimal bdTotalIncrease = BigDecimal.ZERO;
+		BigDecimal bdTotalDecrease = BigDecimal.ZERO;
+
+		bdTotalIncrease = calculateTotalIncreaseDecrease(memberAccountId,
+				delegator, "I");
+		bdTotalDecrease = calculateTotalIncreaseDecrease(memberAccountId,
+				delegator, "D");
+
+		return bdTotalIncrease.subtract(bdTotalDecrease);
+	}
+
+	public static BigDecimal getAvailableBalanceVer2(String memberAccountId,
+			Delegator delegator) {
+		BigDecimal bdTotalIncrease = BigDecimal.ZERO;
+		BigDecimal bdTotalDecrease = BigDecimal.ZERO;
+		BigDecimal bdTotalAvailable = BigDecimal.ZERO;
+
+		bdTotalIncrease = calculateTotalIncreaseDecrease(memberAccountId,
+				delegator, "I");
+		bdTotalDecrease = calculateTotalIncreaseDecrease(memberAccountId,
+				delegator, "D");
+
+		BigDecimal bdTotalChequeDeposit = calculateTotalChequeDeposits(
+				memberAccountId, delegator);
+		BigDecimal bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(
 				memberAccountId, delegator);
 
+		bdTotalAvailable = bdTotalIncrease.subtract(bdTotalDecrease);
+		bdTotalAvailable = bdTotalAvailable.subtract(bdTotalChequeDeposit);
+		bdTotalAvailable = bdTotalAvailable.add(bdTotalChequeDepositCleared);
+
 		// return
-		// bdOpeningBalance.add(bdTotalCashDeposit).add(bdTotalChequeDeposit)
-		// .subtract(bdTotalCashWithdrawal).subtract(bdTotalChequeWithdrawal);
-		return bdTotalSavings.add(bdTotalChequeDeposit).subtract(
-				bdTotalChequeDepositCleared);
+		// bdTotalIncrease.add(bdTotalChequeDepositCleared).subtract(bdTotalDecrease).subtract(bdTotalChequeDeposit);
+		return bdTotalAvailable;
 	}
 
 	/**
@@ -601,7 +686,8 @@ public class AccHolderTransactionServices {
 	// public static Map<String, Object>
 	// calculateChequeClearance(DispatchContext ctx,
 	// Map<String, ? extends Object> context){
-	public static Timestamp calculateChequeClearance(GenericValue accountTransaction) {
+	public static Timestamp calculateChequeClearance(
+			GenericValue accountTransaction) {
 
 		Map<String, Object> result = FastMap.newInstance();
 		String accountTransactionId = accountTransaction

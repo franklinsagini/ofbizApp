@@ -242,11 +242,13 @@ public class LoanServices {
 						.getBigDecimal("multipleOfSavingsAmt");
 			}
 
-			bdMaximumLoanAmt = bdTotalSavings.multiply(savingsMultiplier);
+			
 
 			// Get Existing Loans
 			bdExistingLoans = calculateExistingLoansTotal(memberId, delegator);
-			bdMaximumLoanAmt = bdMaximumLoanAmt.subtract(bdExistingLoans);
+			
+			bdMaximumLoanAmt = (bdTotalSavings.subtract(bdExistingLoans)).multiply(savingsMultiplier);
+			//bdMaximumLoanAmt = bdMaximumLoanAmt.subtract(bdExistingLoans);
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
 		} else {
 			System.out.println("######## Product details not found #### ");
