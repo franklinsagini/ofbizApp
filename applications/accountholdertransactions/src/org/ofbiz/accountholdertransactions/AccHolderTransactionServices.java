@@ -856,7 +856,7 @@ public class AccHolderTransactionServices {
 			delegator.createOrStore(acctgTransEntry);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
-			log.error("Could post a Loan Receivable entry");
+			log.error("Could post a Transaction");
 		}
 	}
 
