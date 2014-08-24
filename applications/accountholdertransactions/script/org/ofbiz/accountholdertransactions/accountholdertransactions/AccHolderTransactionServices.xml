@@ -196,7 +196,13 @@ under the License.
         <make-value entity-name="AccountTransaction" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
+        <call-simple-method method-name="saveChequeWithdrawal" scope="inline"> </call-simple-method>
+        <set field="postedStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.createChequeTransaction(newEntity, userLogin);}" type="String"/>
+    </simple-method>
+    
+    
+    <simple-method method-name="saveChequeWithdrawal" short-description="Saving Cheque Withdrawal Reccord, call this method in createChequeWithdrawal">
+    	<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
         <now-timestamp field="createdDate"/>
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
         

@@ -142,12 +142,12 @@ public class LoanAccounting {
 						"productChargeId", productChargeId,
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType));
-		try {
-			accountTransaction = delegator
-					.createSetNextSeqId(accountTransaction);
-		} catch (GenericEntityException e1) {
-			e1.printStackTrace();
-		}
+//		try {
+//			accountTransaction = delegator
+//					.createSetNextSeqId(accountTransaction);
+//		} catch (GenericEntityException e1) {
+//			e1.printStackTrace();
+//		}
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
