@@ -274,33 +274,36 @@
 				<property-map resource="HumanResUiLabels" map-name="uiLabelMap"
 					global="true" />
 				<set field="titleProperty" value="findLeaveApprovals" />
-				<set field="tabButtonItem" value="invoiceOverview" />
+				<!-- <set field="tabButtonItem" value="invoiceOverview" /> -->
 				<set field="partyId" from-field="parameters.partyId" />
 				<set field="fromDate" from-field="parameters.fromDate" />
 				<set field="leaveTypeId" from-field="parameters.leaveTypeId" />
 
 				<entity-one entity-name="EmplLeaveView" value-field="empleave" />
-				 
 				<entity-and entity-name="EmplLeave" list="emplLeaves">
 					<field-map from-field="parameters.partyId" field-name="partyId" />
 					<field-map from-field="parameters.fromDate" field-name="fromDate" />
 					<field-map from-field="parameters.leaveTypeId" field-name="leaveTypeId" />
-					<order-by field-name="leaveId" />
+					<!-- <order-by field-name="leaveId" /> -->
 				</entity-and>
 				<entity-and entity-name="LeaveStatusLog" list="leaveLogs">
 					<field-map from-field="parameters.partyId" field-name="partyId" />
 				</entity-and>
-				<entity-and entity-name="Person" list="emplLeaves">
+				<!-- <entity-and entity-name="Person" list="emplLeaves">
 					<field-map from-field="parameters.partyId" field-name="partyId" />
-				</entity-and>
+				</entity-and> -->
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
 						<section>
 							<widgets>
 								<screenlet title="${uiLabelMap.StaffDetails}">
+								<include-menu location="component://humanres/widget/HumanresMenus.xml"
+								name="ApproveReject" />
 									<include-form name="ListMyLeaves"
 										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 								</screenlet>
