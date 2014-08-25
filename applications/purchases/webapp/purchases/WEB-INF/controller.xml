@@ -146,6 +146,55 @@
     </request-map>
 
 
+  <!--
+        Order Lines Requests
+     -->
+    <request-map uri="editOrderLines">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="OrderLinesScreen"
+            save-current-view="true" />
+    </request-map>
+
+    <!--
+        Order Lines CRUD Operations
+    -->
+
+    <request-map uri="createOrderLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createOrderLine" />
+        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="error" type="view" value="OrderLinesScreen" />
+    </request-map>
+
+    <request-map uri="updateOrderLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updateOrderLines" />
+        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="error" type="view" value="OrderLinesScreen" />
+    </request-map>
+
+    <request-map uri="deleteOrderLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="deleteOrderLine" />
+        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="error" type="view" value="OrderLinesScreen" />
+    </request-map>
+
+
+    <!-- invoice requests -->
+
+    <!--
+        Find Invoice
+     -->
+    <request-map uri="findInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findInvoices"/>
+    </request-map>
+
+    <!-- Lookup request mappings -->
+  <request-map uri="LookupProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+
+
 
     <!-- Home View Mappings -->
     <view-map name="main" type="screen" page="component://purchases/widget/PurchasesScreens.xml#homeScreen"/>
@@ -155,14 +204,27 @@
     <view-map name="EditSupplierScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditSupplierScreen"/>
 
     <!-- Contact Person View Mappings -->
-    <view-map name="ContactPersonScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#ContactPersonScreen"/>
+    <view-map name="OrderLinesScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#OrderLinesScreen"/>
 
 
     <!-- Orders View Mappings -->
     <view-map name="FindOrdersScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindOrdersScreen"/>
     <view-map name="EditOrderScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditOrderScreen"/>
 
+        <!-- Invoice -->
+    <view-map name="invoiceOverview" type="screen" page="component://accounting/widget/InvoiceScreens.xml#invoiceOverview"/>
+    <view-map name="findInvoices" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindInvoices"/>
+    <view-map name="newInvoice" type="screen" page="component://accounting/widget/InvoiceScreens.xml#NewInvoice"/>
+    <view-map name="editInvoice" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoice"/>
+    <view-map name="listInvoiceItems" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceItems"/>
+    <view-map name="editInvoiceTimeEntries" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceTimeEntries"/>
+    <view-map name="invoiceStatus" type="screen" page="component://accounting/widget/InvoiceScreens.xml#InvoiceStatus"/>
+    <view-map name="editInvoiceApplications" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceApplications"/>
+    <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/InvoiceScreens.xml#InvoiceRoles"/>
+    <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/InvoiceScreens.xml#SendPerEmail"/>
+    <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
+
     <!-- Utility View Maps -->
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
-     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
 </site-conf>
