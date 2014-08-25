@@ -36,39 +36,6 @@ import com.google.gson.Gson;
 
 public class HumanResServices {
 	public static Logger log = Logger.getLogger(LeaveServices.class);
-/*	public static double getApprovedLeaveSum(GenericValue person){
-		double newLeaveBalance = 0;
-		String partyId = person.getString("partyId");
-		//String partyId = person.getString("fromDate");
-		String partyId = person.getString("leaveTypeId");
-		Delegator delegator = getDelegator();
-		List<GenericValue> getApprovedLeaveSumELI = null;		
-		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
-					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
-					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "NEW")),
-						EntityOperator.AND);
-
-		try {
-			getApprovedLeaveSumELI = delegator.findList("EmplLeave",
-					leaveConditions, null, null, null, false);
-		} catch (GenericEntityException e2) {
-			//e2.printStackTrace();
-			return "Cannot Get approved leaves";
-		}
-		for (GenericValue genericValue : getApprovedLeaveSumELI) {
-			newLeaveBalance += genericValue.getInteger("leaveDuration");
-		}
-		/////////////////////////////////////////////////////
-
-				
-		
-		return newLeaveBalance;
-
-	}
-	*/
 	
 	// ============================================================== 
 public static String getLeaveBalance(HttpServletRequest request,
@@ -93,7 +60,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
-					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "NEW")),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "LEAVE_APPROVED")),
 						EntityOperator.AND);
 
 		try {
