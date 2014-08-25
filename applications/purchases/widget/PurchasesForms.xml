@@ -55,7 +55,6 @@
 
     <!--
         EditSupplierForm
-        SupplierListForm
      -->
 
     <form name="EditSupplierForm" type="single" target="createSupplier" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
@@ -98,6 +97,11 @@
     </form>
 
 
+    <!--
+        ContactPersonForm
+    -->
+
+
     <form name="ContactPersonForm" type="single" target="createContactPerson" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="contactPersonContext">
         <actions>
@@ -119,7 +123,7 @@
     </form>
 
             <!--
-                SupplierListForm
+                ListContactPersonForm
             -->
     <form name="ListContactPersonForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSupplier"
         paginate-target="EditSupplierForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -144,7 +148,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 
-
+<!-- ================================================================================================================================================================================== -->
         <!--
             Find Order Form
          -->
@@ -195,5 +199,131 @@
             <display />
         </field>
     </form>
+
+
+    <!--
+        Edit Order Form
+    -->
+
+    <form name="EditOrderForm" type="single" target="createOrder" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="purchaseOrdersCtx">
+        <actions>
+            <entity-condition entity-name="Order" list="ordersList">
+                <order-by field-name="orderId"/>
+            </entity-condition>
+        </actions>
+
+
+<!--  <field name="priority" type="indicator"><description>Sets priority for Inventory Reservation</description></field>
+      <field name="entryDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>
+      <field name="createdBy" type="id-vlong"></field>
+
+      <field name="billingAccountId" type="id"></field>
+      <field name="webSiteId" type="id"></field>
+      <field name="transactionId" type="id-long"></field>
+      <field name="remainingSubTotal" type="currency-amount"></field>
+      <field name="grandTotal" type="currency-amount"></field> -->
+
+
+
+
+        <field name="orderId"><hidden/></field>
+        <field name="orderName" title="Order Name"> <text size="45"></text> </field>
+        <field name="orderDate"><date-time/></field>
+        <field name="currencyUom">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+                <entity-options
+                    entity-name="Uom"
+                    key-field-name="uomId"
+                    description="${description} - ${abbreviation}">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <!--
+        Order List Form
+     -->
+
+
+    <form name="OrderListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateOrder"
+        paginate-target="EditOrderForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="Order"></entity-condition>
+        </actions>
+        <field name="orderId"><hidden/></field>
+        <field name="orderName" title="Order Name"> <text size="25"></text> </field>
+        <field name="orderDate" title="Order Date"> <text size="25"></text> </field>
+        <field name="createdBy" title="Prepared By"> <text size="25"></text> </field>
+        <field name="statusId" title="Status"><text size="10"></text></field>
+        <field name="grandTotal" title="Total"><text size="10"></text></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="supplierId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+        <!--
+            Order Line Form
+         -->
+
+    <form name="OrderLineForm" type="single" target="createOrderLine" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="orderLineContext">
+        <actions>
+            <entity-condition entity-name="OrderLine" list="OrderLinesList">
+                <order-by field-name="orderLineSeqId"/>
+            </entity-condition>
+        </actions>
+        <field name="orderId"><hidden/></field>
+        <field name="orderLineSeqId"><hidden/></field>
+        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
+        <field name="itemDescription" title="Product Description"><text size="45"></text></field>
+        <field name="quantity" title="Quantity"><text size="10" ></text></field>
+        <field name="unitPrice" title="Unit Price"><text size="10" ></text></field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+            <!--
+                ListOrderLinesForm
+            -->
+    <form name="ListOrderLinesForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSupplier"
+        paginate-target="EditSupplierForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="Supplier"></entity-condition>
+        </actions>
+
+
+ <!--      <field name="orderItemTypeId" type="id-ne"></field>
+      <field name="cancelQuantity" type="fixed-point"></field>
+      <field name="selectedAmount" type="fixed-point"></field>
+      <field name="comments" type="comment"></field>
+      <field name="statusId" type="id"></field>
+      <field name="estimatedShipDate" type="date-time"></field>
+      <field name="estimatedDeliveryDate" type="date-time"></field>
+      <field name="changeByUserLoginId" type="id-vlong" enable-audit-log="true"></field>
+ -->
+
+
+        <field name="orderId"><hidden/></field>
+        <field name="orderLineSeqId"><hidden/></field>
+        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
+        <field name="itemDescription" title="Product Description"><text size="45"></text></field>
+        <field name="quantity" title="Quantity"><text size="10" ></text></field>
+        <field name="unitPrice" title="Unit Price"><text size="10" ></text></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="orderId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
 
 </forms>
