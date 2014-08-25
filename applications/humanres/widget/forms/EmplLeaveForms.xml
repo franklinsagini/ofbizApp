@@ -12,6 +12,77 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="ListActivelLeaves" list-name="EmplLeave" type="list"
+		odd-row-style="alternate-row" header-row-style="header-row-2"
+		paginate-target="EmplLeave" default-table-style="basic-table hover-bar">
+		<actions>
+<!-- 			<set field="today" value="${nowTimestamp}" type="Date"/>
+			<entity-condition entity-name="EmplLeave"></entity-condition>
+			 <entity-condition entity-name="EmplLeave">
+				  <condition-list>
+					 <condition-expr field-name="responsibleEmployee"
+						operator="equals" from-field="userLogin.partyId" />
+					<condition-expr field-name="fromDate" operator="less-equals"
+						from-field="today" />
+					<condition-expr field-name="thruDate" operator="greater-equals"
+						from-field="today" /> 
+				</condition-list> 
+			</entity-condition>  -->
+			<!-- <service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="leaveCtx" />
+				<field-map field-name="entityName" value="EmplLeave" />
+				<field-map field-name="orderBy" from-field="parameters.leaveId" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service> -->
+
+		</actions>
+		<field name="partyId" title="Staff">
+			<display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
+				<sub-hyperlink target="/partymgr/control/viewprofile"
+					target-type="inter-app" description="${partyId}" link-style="buttontext">
+					<parameter param-name="partyId" from-field="partyId" />
+				</sub-hyperlink>
+			</display-entity>
+		</field>
+		<field name="today" title="today">
+			<display />
+		</field>
+		<field name="leaveTypeId" title="Leave Type">
+			<display-entity entity-name="EmplLeaveType" />
+		</field>
+		<field name="emplLeaveReasonTypeId">
+			<display-entity entity-name="EmplLeaveReasonType" />
+		</field>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="thruDate">
+			<display />
+		</field>
+		<field name="leaveDuration">
+			<display />
+		</field>
+		<field name="applicationStatus" title="Application Status">
+			<display />
+		</field>
+		<field name="approvalStatus" title="Approval Status">
+			<display />
+		</field>
+		<field name="responsibleEmployee" title="Approver">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+
+			</display-entity>
+		</field>
+				<field name="description">
+			<hidden />
+		</field>
+	</form>
+
+
 	<form name="FindEmplLeaves" type="single" target="FindEmplLeaves"
 		odd-row-style="header-row" default-table-style="basic-table"
 		default-entity-name="EmplLeave">
@@ -190,8 +261,8 @@
 			widget-style="smallSubmit">
 			<submit button-type="button" />
 		</field>
-	</form>	
-		<form name="FindLeaveApprovals" type="single" target="FindLeaveApprovals"
+	</form>
+	<form name="FindLeaveApprovals" type="single" target="FindLeaveApprovals"
 		odd-row-style="header-row" default-table-style="basic-table"
 		default-entity-name="EmplLeave">
 		<field name="noConditionFind">
@@ -205,8 +276,9 @@
 			<hidden value="Approved" />
 		</field>
 		<field name="responsibleEmployee">
-			<hidden value="${userLogin.partyId}"/>
-		</field><field name="leaveTypeId">
+			<hidden value="userLogin.partyId" />
+		</field>
+		<field name="leaveTypeId">
 			<text-find />
 		</field>
 		<field name="emplLeaveReasonTypeId">
@@ -225,12 +297,11 @@
 		odd-row-style="alternate-row" header-row-style="header-row-2"
 		default-table-style="basic-table hover-bar" paginate-target="EmplLeave">
 		<actions>
-			<!-- <set field="entityName" value="EmplLeaveView" /> -->
+			<!-- <set field="entityName" value="EmplLeave" /> -->
 			<entity-condition entity-name="EmplLeave">
-					<condition-expr field-name="responsibleEmployee"
-						operator="equals" from-field="${userLogin.partyId}" />
+				<condition-expr field-name="responsibleEmployee"
+					operator="equals" from-field="userLogin.partyId" />
 			</entity-condition>
-				
 
 			<service service-name="performFind" result-map="result"
 				result-map-list="listIt">
@@ -274,7 +345,7 @@
 			</hyperlink>
 		</field>
 	</form>
-	
+
 	<form name="approveEmplLeaveStatus" type="single" target="forwardApplication"
 		default-map-name="leaveApp">
 		<actions>
@@ -322,8 +393,10 @@
 
 	</form>
 
-	<form name="ListPerson" list-name="person" target="" title="" type="list" paginate-target="ListPerson" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-<actions>
+	<form name="ListPerson" list-name="person" target="" title=""
+		type="list" paginate-target="ListPerson" odd-row-style="alternate-row"
+		default-table-style="basic-table hover-bar">
+		<actions>
 			<set field="entityName" value="EmplLeave" />
 			<service service-name="performFind" result-map="result"
 				result-map-list="listIt">
@@ -331,44 +404,90 @@
 				<field-map field-name="entityName" from-field="entityName" />
 			</service>
 		</actions>
-		<field name="leaveId"><hidden /></field>
+		<field name="leaveId">
+			<hidden />
+		</field>
 		<field name="partyId" position="1" title="Member">
 			<display-entity entity-name="Member" key-field-name="partyId"
 				description="${partyId} ${firstName} ${lastName}">
 			</display-entity>
 		</field>
-		<field name="leaveTypeId" position="1" title="Leave Type"><display /></field>
-		<field name="emplLeaveReasonTypeId" position="2"><display /></field>
-		<field name="fromDate" position="1"><display /></field>
-		<field name="thruDate" position="2"><display /></field>
-		<field name="description" position="1"><display /></field>
+		<field name="leaveTypeId" position="1" title="Leave Type">
+			<display />
+		</field>
+		<field name="emplLeaveReasonTypeId" position="2">
+			<display />
+		</field>
+		<field name="fromDate" position="1">
+			<display />
+		</field>
+		<field name="thruDate" position="2">
+			<display />
+		</field>
+		<field name="description" position="1">
+			<display />
+		</field>
 
-		<field name="leaveBalance" position="2"><display /></field>
-		<field name="leaveDuration" position="1"><display /></field>
-		<field name="leaveStage" position="2"><display /></field>
+		<field name="leaveBalance" position="2">
+			<display />
+		</field>
+		<field name="leaveDuration" position="1">
+			<display />
+		</field>
+		<field name="leaveStage" position="2">
+			<display />
+		</field>
 
-    </form>	
+	</form>
 
-    <form name="ListMyLeaves" list-name="emplLeaves" target="" title="" type="list" paginate-target="ListMyLeaves" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	<form name="ListMyLeaves" list-name="emplLeaves" target="" title=""
+		type="list" paginate-target="ListMyLeaves" odd-row-style="alternate-row"
+		default-table-style="basic-table hover-bar">
 		<field name="partyId" position="1" title="Staff">
 			<display-entity entity-name="Person" key-field-name="partyId"
 				description="${partyId} ${firstName} ${lastName}">
 			</display-entity>
 		</field>
-    	<field name="fromDate">	<display />	</field>
-		<field name="leaveTypeId" title="Leave Type"><display-entity entity-name="EmplLeaveType" /></field>
-		<field name="emplLeaveReasonTypeId"><display-entity entity-name="EmplLeaveReasonType" /></field>
-		<field name="fromDate">	<display />	</field>
-		<field name="thruDate">	<display />	</field>
-		<field name="leaveDuration"> <display /></field>
-		<field name="applicationStatus" title="Application Status">	<display />	</field>
-		<field name="approvalStatus" title="Approval Status"><display /></field>
-    </form>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="leaveTypeId" title="Leave Type">
+			<display-entity entity-name="EmplLeaveType" />
+		</field>
+		<field name="emplLeaveReasonTypeId">
+			<display-entity entity-name="EmplLeaveReasonType" />
+		</field>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="thruDate">
+			<display />
+		</field>
+		<field name="leaveDuration">
+			<display />
+		</field>
+		<field name="applicationStatus" title="Application Status">
+			<display />
+		</field>
+		<field name="approvalStatus" title="Approval Status">
+			<display />
+		</field>
+	</form>
 
-    <form name="ListLeaveLogs" list-name="leaveLogs" target="" title="" type="list" paginate-target="ListLeaveLogs" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-		<field name="leaveId">	<display />	</field>
-		<field name="approvedBy" title="Approved By">	<display />	</field>
-		<field name="rejectedBy" title="Rejected By">	<display />	</field>
-		<field name="approvalStatus"> <display /></field>
-    </form>
+	<form name="ListLeaveLogs" list-name="leaveLogs" target="" title=""
+		type="list" paginate-target="ListLeaveLogs" odd-row-style="alternate-row"
+		default-table-style="basic-table hover-bar">
+		<field name="leaveId">
+			<display />
+		</field>
+		<field name="approvedBy" title="Approved By">
+			<display />
+		</field>
+		<field name="rejectedBy" title="Rejected By">
+			<display />
+		</field>
+		<field name="approvalStatus">
+			<display />
+		</field>
+	</form>
 </forms>
