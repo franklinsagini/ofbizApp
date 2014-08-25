@@ -105,6 +105,20 @@ under the License.
 			save-current-view="true" />
 	</request-map>
 	
+	<request-map uri="chequedepositposting">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="chequedepositposting"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="postUnpostedCheques">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accountholdertransactions.ChequeProcessing" invoke="postUnpostedCheques" />
+                <response name="success" type="view"
+                        value="chequedepositposting">
+                        </response>
+                <response name="error" type="view" value="chequedepositposting" />
+	</request-map>
 	
 	<!-- CRUD CashWithdrawal -->
 	
@@ -388,6 +402,7 @@ under the License.
 	<view-map name="chequeType" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeType"/>
 	<view-map name="chequeSetup" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeSetup"/>
 	<view-map name="accountHolderTransactionSetup" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewAccountHolderTransactionSetup"/>
+	<view-map name="chequedepositposting" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#chequedepositposting"/>
 	
 	
     <!-- end of view mappings -->

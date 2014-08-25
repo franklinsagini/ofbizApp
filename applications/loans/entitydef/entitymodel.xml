@@ -635,6 +635,18 @@ under the License.
       </relation>
 	</entity>
 	
+	<entity entity-name="SalaryProcessingDate" package-name="org.ofbiz.loans"
+                title="SalaryProcessingDate Entity">
+                <field name="salaryProcessingDateId" type="id-ne"></field>
+                <field name="isActive" type="indicator"></field>
+                <field name="createdBy" type="name"></field>
+                <field name="updatedBy" type="name"></field>
+                <field name="branchId" type="name"></field>
+
+                <field name="processingDay" type="numeric"></field>
+                <prim-key field="salaryProcessingDateId"/>
+        </entity>
+	
 	<entity entity-name="ProductCharge" package-name="org.ofbiz.loans"
 		title="ProductCharge Entity">
 		<field name="productChargeId" type="id-ne"></field>
@@ -642,8 +654,12 @@ under the License.
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		<field name="name" type="name"></field>
+		<field name="chargeAccountId" type="id"></field>
 		
 		<prim-key field="productChargeId"/>
+		<relation type="one" fk-name="ProductCharge_ACC" rel-entity-name="GlAccount">
+            <key-map field-name="chargeAccountId" rel-field-name="glAccountId"/>
+        </relation>
 	</entity>
 	
 	<entity entity-name="LoanProductCharge" package-name="org.ofbiz.loans"

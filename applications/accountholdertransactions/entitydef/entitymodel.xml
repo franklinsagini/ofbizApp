@@ -78,7 +78,17 @@ under the License.
          
          <field name="clearDuration" type="numeric"></field>
          <field name="clearDate" type="date-time"></field>
+         
+         <field name="productChargeId" type="id-ne"></field>
+         <field name="increaseDecrease" type="indicator"></field>
+         <field name="isPosted" type="name"></field>
+         <field name="datePosted" type="date-time"></field>
+         
         <prim-key field="accountTransactionId"/>
+        
+        <relation type="one" fk-name="AccountTransaction_Charge" rel-entity-name="ProductCharge">
+        	<key-map field-name="productChargeId"/>
+      	</relation>
         
         <relation type="one" fk-name="ACCOUNTTRANSACTION_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
