@@ -51,6 +51,7 @@ under the License.
     <!-- request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map -->
         <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanApplication"/></request-map>
         <request-map uri="FindLoanProduct"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanProduct"/></request-map>
+        <request-map uri="FindAccountProduct"><security https="true" auth="true"/><response name="success" type="view" value="FindAccountProduct"/></request-map>
 
         <request-map uri="FindLoanApplication"><security https="true" auth="true"/><response name="success" type="view" value="FindLoanApplication"/></request-map>
     <!-- Example Requests -->
@@ -798,6 +799,12 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="viewaccountproductdetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="viewaccountproductdetails"
+			save-home-view="true" />
+	</request-map>
+	
 	<!-- start LoanProductCharge -->
 	<request-map uri="NewLoanProductCharge">
 		<security https="true" auth="true" />
@@ -834,6 +841,38 @@ under the License.
 		<response name="error" type="view" value="viewloanproductdetails" />
 	</request-map>
 	<!-- end LoanProductCharge -->
+	
+	<!-- Start AccountProductCharge -->
+	<request-map uri="createAccountProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createAccountProductCharge" />
+		<response name="success" type="request-redirect"
+			value="viewaccountproductdetails">
+				<redirect-parameter name="accountProductId"/>
+			</response>
+		<response name="error" type="view" value="viewaccountproductdetails" />
+	</request-map>
+
+	<request-map uri="updateAccountProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateAccountProductCharge" />
+		<response name="success" type="request-redirect"
+			value="viewaccountproductdetails">
+				<redirect-parameter name="accountProductId"/>
+			</response>
+		<response name="error" type="view" value="viewaccountproductdetails" />
+	</request-map>
+	
+	<request-map uri="deleteAccountProductCharge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteAccountProductCharge" />
+		<response name="success" type="request-redirect"
+			value="viewaccountproductdetails">
+				<redirect-parameter name="accountProductId"/>
+			</response>
+		<response name="error" type="view" value="viewaccountproductdetails" />
+	</request-map>
+	<!-- End AccountProductCharge -->
 	
 	<!-- start LoanApplicationCharge -->
 		<request-map uri="NewLoanApplicationCharge">
@@ -923,11 +962,11 @@ under the License.
         </request-map>
         <!-- end ProductCharge -->
 
-        <request-map uri="viewloanproductdetails">
+        <!-- request-map uri="viewloanproductdetails">
                 <security https="true" auth="true" />
                 <response name="success" type="view" value="viewloanproductdetails"
                         save-home-view="true" />
-        </request-map>
+        </request-map -->
 
         <!-- start LoanProductCharge -->
         <request-map uri="NewLoanProductCharge">
@@ -968,6 +1007,11 @@ under the License.
                 <response name="error" type="view" value="NewLoanApplicationCharge" />
         </request-map>
         <!-- end LoanApplicationCharge -->
+        
+        <request-map uri="amortizationSchedulePdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="amortizationSchedulePdf" />
+	</request-map>
 
     <!-- end of request mappings -->
 
@@ -1036,6 +1080,11 @@ under the License.
 
                 <view-map name="viewloanproductdetails" type="screen"
                 page="component://loans/widget/loans/LoanScreens.xml#viewloanproductdetails" />
+                
+                <view-map name="viewaccountproductdetails" type="screen"
+                page="component://loans/widget/loans/LoanScreens.xml#viewaccountproductdetails" />
+                
+                
 
 
         <!-- Loan Processing -->
@@ -1072,9 +1121,14 @@ under the License.
                 page="component://loans/widget/loans/LoanScreens.xml#NewLoanProductCharge" />
 
                 <view-map name="FindLoanProduct" type="screen" page="component://loans/widget/loans/LoanScreens.xml#FindLoanProduct"/>
+                <view-map name="FindAccountProduct" type="screen" page="component://loans/widget/loans/LoanScreens.xml#FindAccountProduct"/>
 
                 <view-map name="NewLoanApplicationCharge" type="screen"
                 page="component://loans/widget/loans/LoanScreens.xml#NewLoanApplicationCharge" />
+                
+                	<view-map name="amortizationSchedulePdf" type="screenfop"
+		page="component://loans/widget/loans/LoanScreens.xml#amortizationSchedulePdf"
+		content-type="application/pdf" encoding="none" />
     <!-- Supported Content Types -->
     <!--
        text/html

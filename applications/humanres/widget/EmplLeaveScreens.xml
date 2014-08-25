@@ -12,6 +12,139 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+	<screen name="LeaveBalances">
+        <section>
+            <actions>
+				<set field="titleProperty" value="HumanResFindEmplLeave" />
+				<set field="headerItem" value="Leave" />
+				<set field="tabButtonItem" value="LeaveBalances" />
+				<set field="leaveCtx" from-field="parameters"/>
+						<service service-name="humanResManagerPermission"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ADMIN" />
+				</service>
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
+					global="true" />
+			<set field="today" value="${nowTimestamp}" type="Date"/>
+			<entity-condition entity-name="LeaveBalances" list="LeaveBalances"></entity-condition>
+		<!-- 	 <entity-condition entity-name="EmplLeave" list="EmplLeave">
+				  <condition-list>
+					 <condition-expr field-name="responsibleEmployee"
+						operator="equals" from-field="userLogin.partyId" />
+					<condition-expr field-name="fromDate" operator="less-equals"
+						from-field="today" />
+					<condition-expr field-name="thruDate" operator="greater-equals"
+						from-field="today" /> 
+				</condition-list> 
+			</entity-condition> --> 
+        	
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                						<decorator-section name="pre-body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+
+                            <widgets>
+                            <section>
+								<widgets>
+									<container style="button-bar">
+										<link target="generateLeaveBalances" text="${uiLabelMap.HumanResGenerate}"
+											style="buttontext create" />
+									</container>
+								</widgets>
+							</section>
+                              <!-- <screenlet title="Search Active Leaves">
+                                        <include-form name="FindActiveLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                            	</screenlet> -->
+                                <screenlet title="Leave Balances">
+                                <include-form name="ListLeaveBalances"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+  
+	
+	<screen name="ActiveEmplLeaves">
+        <section>
+            <actions>
+				<set field="titleProperty" value="HumanResFindEmplLeave" />
+				<set field="headerItem" value="Leave" />
+				<set field="tabButtonItem" value="ActiveEmplLeaves" />
+				<set field="leaveCtx" from-field="parameters"/>
+						<service service-name="humanResManagerPermission"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ADMIN" />
+				</service>
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
+					global="true" />
+			<set field="today" value="${nowTimestamp}" type="Date"/>
+			<!-- <entity-condition entity-name="EmplLeave"></entity-condition> -->
+			 <entity-condition entity-name="EmplLeave" list="EmplLeave">
+				  <condition-list>
+					 <condition-expr field-name="responsibleEmployee"
+						operator="equals" from-field="userLogin.partyId" />
+					<condition-expr field-name="fromDate" operator="less-equals"
+						from-field="today" />
+					<condition-expr field-name="thruDate" operator="greater-equals"
+						from-field="today" /> 
+				</condition-list> 
+			</entity-condition> 
+        	
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                						<decorator-section name="pre-body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+
+                            <widgets>
+                              <!-- <screenlet title="Search Active Leaves">
+                                        <include-form name="FindActiveLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                            	</screenlet> -->
+                                <screenlet title="Active Leaves List">
+                                <include-form name="ListActivelLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 	  <screen name="FindEmplLeaves">
         <section>
             <actions>
@@ -79,6 +212,7 @@
             	<set field="titleProperty" value="PageTitleFindApprovals" />
 				<set field="tabButtonItem" value="Approval" />
 				<set field="headerItem" value="Leave" />
+				<set field="responsibleEmployee" value="${userLogin.partyId}"/>
 				
 				<set field="leaveApprovalCtx" from-field="parameters"/>
 				
@@ -89,7 +223,7 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
-						<entity-condition entity-name="EmplLeave" list="">
+			<entity-condition entity-name="EmplLeave" list="">
 					<condition-expr field-name="responsibleEmployee"
 						operator="equals" from-field="${userLogin.partyId}" />
 			</entity-condition>

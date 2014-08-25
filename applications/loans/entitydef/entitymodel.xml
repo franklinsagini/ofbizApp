@@ -713,4 +713,40 @@ under the License.
       	</relation>
 	</entity>
 	
+	<entity entity-name="AccountProductCharge" package-name="org.ofbiz.loans"
+		title="AccountProductCharge Entity">
+		<field name="accountProductChargeId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="accountProductId" type="id-ne"></field>
+		<field name="productChargeId" type="id-ne"></field>
+		
+		<field name="transactionType" type="name"></field>
+		
+		<field name="isFixed" type="indicator"></field>
+		<field name="rateAmount" type="fixed-point"></field>
+		
+		<field name="isPercentageOfOtherCharge" type="indicator"></field>
+		<field name="parentChargeId" type="id-ne"></field>
+		
+		<field name="fixedAmount" type="fixed-point"></field>
+		
+		
+		
+		<prim-key field="accountProductChargeId"/>
+		<relation type="one" fk-name="AccountProductCharge_Charge" rel-entity-name="ProductCharge">
+        	<key-map field-name="productChargeId"/>
+      	</relation>
+      	<relation type="one" fk-name="LoanProductCharge_AccountProduct" rel-entity-name="AccountProduct">
+        	<key-map field-name="accountProductId"/>
+      	</relation>
+      	
+      	<relation type="one" fk-name="AccountProductParentCharge_Charge" rel-entity-name="ProductCharge">
+        	<key-map field-name="parentChargeId"  rel-field-name="productChargeId"/>
+      	</relation>
+	</entity>
+	
 </entitymodel>
