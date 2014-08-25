@@ -34,13 +34,15 @@ import org.ofbiz.workflow.WorkflowServices;
 public class LeaveServices {
 	public static Logger log = Logger.getLogger(LeaveServices.class);
 
+	//@SuppressWarnings("null")
 	public static String forwardApplication(HttpServletRequest request,
 			HttpServletResponse response) {
+		
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
-//        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-//        GenericDelegator delegator3 = (GenericDelegator) request.getAttribute("delegator");
-//        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+       GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+		String user = userLogin.getString("partyId");
+		String approvalStatus = null;
 		// =============== primary Keys     ============//
 		
 		String partyId = (String) request.getParameter("partyId");
@@ -71,10 +73,11 @@ public class LeaveServices {
 		log.info(" Date : "+fromDate);
 		log.info(" Leave Type : "+leaveTypeId);
 		log.info(" Party : "+partyId);
+		log.info(" leaveId : "+leaveId);
+		log.info(" userLogin : "+user);
 
 		try {
-			leaveApplicationELI = delegator.findList("EmplLeave",
-					leaveConditions, null, null, null, false);
+			leaveApplicationELI = delegator.findList("EmplLeave", leaveConditions, null, null, null, false);
 		} catch (GenericEntityException e2) {
 			//e2.printStackTrace();
 			return "Cannot Get Leave Application";
@@ -89,9 +92,9 @@ public class LeaveServices {
 			String workflowDocumentTypeId = leave.getString("workflowDocumentTypeId");
 			String documentApprovalId = leave.getString("documentApprovalId");
 			
-			GenericValue documentApproval = null;
+			GenericValue documentApproval = null; GenericValue leavelog = null;
 			documentApproval =  WorkflowServices.doFoward(delegator, organizationUnitId,	workflowDocumentTypeId, documentApprovalId);
-		log.info("=====================" +documentApproval);
+		//log.info("=====================" +documentApproval);
 
 		if (documentApproval == null) {
 			// Leave Approved
@@ -101,26 +104,44 @@ public class LeaveServices {
 
 			if ((documentApproval.getString("nextLevel") == null)|| (documentApproval.getString("nextLevel").equals(""))) {
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				leave.set("applicationStatus","LEAVE_APPROVED"); // Employee to go for leave.
+				leave.set("applicationStatus","LEAVE_APPROVED");
+				approvalStatus = "LEAVE_APPROVED";
+					// Employee to go for leave.
+
 			} else {
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				leave.set("applicationStatus", "IN_PROGRESS");
+				leave.set("applicationStatus", "IN_PROGRESS");		
+				approvalStatus = "IN_PROGRESS";
 
 			}
 
+			leavelog = delegator.makeValue("LeaveStatusLog", "leaveStsLogId", delegator.getNextSeqId("LeaveStatusLog"), 
+            "approvedBy", userLogin.getString("partyId"), 
+            "partyId", partyId, 
+            "leaveId", leaveId, "approvalStatus" ,approvalStatus);
+        
+
+			try {
+				leavelog.create();
+			} catch (GenericEntityException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
 			// Set Responsible
 			// responsibleEmployee
+
 			leave.set("responsibleEmployee",	documentApproval.getString("responsibleEmployee"));
-			//}
 			try {
 				delegator.createOrStore(leave);
+				//delegator.create("LeaveStatusLog", leavelog);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			result.put("fowardMessage",	documentApproval.getString("stageAction"));
-
 		}
 
 		// return the JSON String
@@ -141,32 +162,6 @@ public class LeaveServices {
 
 	}
 	
-/*	public static Map addStatusLeaveLog(DispatchContext dctx, Map context) {
-	       Map resultMap = ServiceUtil.returnSuccess();
-           LocalDispatcher dispatcher = dctx.getDispatcher();
-           GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-//           GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-	       //this is how you fetch the values from the request
-	       String firstName = (String) context.get("firstName");
-	       String lastName = (String) context.get("lastName");
-	       String gender = (String) context.get("gender");
-	       String email = (String) context.get("email");
-
-	       try {
-	              //delegator.getNextSeqId(String EntityName) for auto-increment id
-	              Map personValue = UtilMisc.toMap("id", delegator.getNextSeqId("Person"),
-	                     "firstName", firstName,
-	                     "lastName", lastName,
-	                     "gender", gender,
-	                     "email", email);
-	      
-	             GenericValue personGV = delegator.makeValue("Person", personValue);
-	             personGV.create();    
-	       } catch (GenericEntityException e) {
-	            return ServiceUtil.returnError("Failed. " +e.getMessage());
-	       }  
-	       return resultMap;
-	}*/
 
 	public static String getWorkflowDocumentType(String documentName) {
 		Map<String, Object> result = FastMap.newInstance();

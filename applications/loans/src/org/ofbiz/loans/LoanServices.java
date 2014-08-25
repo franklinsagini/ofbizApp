@@ -34,10 +34,10 @@ import com.google.gson.Gson;
 
 public class LoanServices {
 	public static Logger log = Logger.getLogger(LoanServices.class);
-	
+
 	public static String getLoanDetails(HttpServletRequest request,
 			HttpServletResponse response) {
-		
+
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String loanProductId = (String) request.getParameter("loanProductId");
@@ -57,8 +57,9 @@ public class LoanServices {
 			result.put("maxRepaymentPeriod",
 					loanProduct.get("maxRepaymentPeriod"));
 			result.put("maximumAmt", loanProduct.get("maximumAmt"));
-			result.put("multipleOfSavingsAmt", loanProduct.get("multipleOfSavingsAmt"));
-			
+			result.put("multipleOfSavingsAmt",
+					loanProduct.get("multipleOfSavingsAmt"));
+
 			// result.put("selectedRepaymentPeriod",
 			// saccoProduct.get("selectedRepaymentPeriod"));
 		} else {
@@ -137,17 +138,17 @@ public class LoanServices {
 
 			result.put("payrollNo", member.get("payrollNumber"));
 			result.put("memberNo", member.get("memberNumber"));
-			
+
 			result.put("payrolNo", member.get("payrollNumber"));
 			result.put("currentStationId", member.get("stationId"));
-			
 
 			Date joinDate = member.getDate("joinDate");
 			SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
 			String strJoinDate = format1.format(joinDate);
 			result.put("joinDate", strJoinDate);
-			
-			SimpleDateFormat formattedDateInput = new SimpleDateFormat("yyyy-MM-dd");
+
+			SimpleDateFormat formattedDateInput = new SimpleDateFormat(
+					"yyyy-MM-dd");
 			String dateInputJoinDate = formattedDateInput.format(joinDate);
 			result.put("inputDate", dateInputJoinDate);
 			// SimpleDateFormat
@@ -241,11 +242,13 @@ public class LoanServices {
 						.getBigDecimal("multipleOfSavingsAmt");
 			}
 
-			bdMaximumLoanAmt = bdTotalSavings.multiply(savingsMultiplier);
 			
-			//Get Existing Loans
+
+			// Get Existing Loans
 			bdExistingLoans = calculateExistingLoansTotal(memberId, delegator);
-			bdMaximumLoanAmt = bdMaximumLoanAmt.subtract(bdExistingLoans);
+			
+			bdMaximumLoanAmt = (bdTotalSavings.subtract(bdExistingLoans)).multiply(savingsMultiplier);
+			//bdMaximumLoanAmt = bdMaximumLoanAmt.subtract(bdExistingLoans);
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
 		} else {
 			System.out.println("######## Product details not found #### ");
@@ -349,36 +352,41 @@ public class LoanServices {
 		return months;
 
 	}
+
 	/**
 	 * Calculate Existing Loans Total
 	 * **/
-	private static BigDecimal calculateExistingLoansTotal(String memberId, Delegator delegator){
+	private static BigDecimal calculateExistingLoansTotal(String memberId,
+			Delegator delegator) {
 		BigDecimal existingLoansTotal = BigDecimal.ZERO;
-		
+
 		List<GenericValue> loanApplicationELI = null; // =
 
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
-					EntityCondition.makeCondition("partyId",
-							memberId), null, null, null, false);
+					EntityCondition.makeCondition("partyId", memberId), null,
+					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 
-		//List<GenericValue> loansList = new LinkedList<GenericValue>();
+		// List<GenericValue> loansList = new LinkedList<GenericValue>();
 
 		for (GenericValue genericValue : loanApplicationELI) {
-			//toDeleteList.add(genericValue);
-			existingLoansTotal = existingLoansTotal.add(genericValue.getBigDecimal("loanAmt"));
+			// toDeleteList.add(genericValue);
+			existingLoansTotal = existingLoansTotal.add(genericValue
+					.getBigDecimal("loanAmt"));
 		}
 
 		return existingLoansTotal;
 	}
-	
-	public static Timestamp calculateLoanRepaymentStartDate(GenericValue loanApplication) {
+
+	public static Timestamp calculateLoanRepaymentStartDate(
+			GenericValue loanApplication) {
 
 		Map<String, Object> result = FastMap.newInstance();
-		String loanApplicationId = loanApplication.getString("loanApplicationId");// (String)context.get("loanApplicationId");
+		String loanApplicationId = loanApplication
+				.getString("loanApplicationId");// (String)context.get("loanApplicationId");
 		log.info("What we got is ############ " + loanApplicationId);
 
 		Delegator delegator;
@@ -389,97 +397,105 @@ public class LoanServices {
 		delegator = loanApplication.getDelegator();
 		// GenericValue accountTransaction = null;
 		try {
-			loanApplication = delegator
-					.findOne("LoanApplication", UtilMisc.toMap(
-							"loanApplicationId", loanApplicationId),
-							false);
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
-		//Get Salary processing day
+
+		// Get Salary processing day
 		Timestamp repaymentStartDate = getProcessingDate(delegator);
 
-		
 		// loanApplication.set("monthlyRepayment", paymentAmount);
 		loanApplication.set("repaymentStartDate", repaymentStartDate);
 		log.info("##### End Date is ######## " + repaymentStartDate);
-		log.info("##### ID is  ######## "
-				+ loanApplicationId);
+		log.info("##### ID is  ######## " + loanApplicationId);
 		loanApplication.set("repaymentStartDate", repaymentStartDate);
-		
-		 try {
-		 delegator.createOrStore(loanApplication);
-		 } catch (GenericEntityException e) {
-		 e.printStackTrace();
-		 }
+
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
 		result.put("repaymentStartDate", repaymentStartDate);
 		return repaymentStartDate;
 	}
-	
-	private static Timestamp getProcessingDate(Delegator delegator){
+
+	private static Timestamp getProcessingDate(Delegator delegator) {
 		List<GenericValue> salaryProcessingDateELI = null; // =
 		Long processingDay = 0l;
 		try {
-			salaryProcessingDateELI = delegator.findList("SalaryProcessingDate",
-					null, null, null, null, false);
+			salaryProcessingDateELI = delegator.findList(
+					"SalaryProcessingDate", null, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 
-
 		for (GenericValue genericValue : salaryProcessingDateELI) {
 			processingDay = genericValue.getLong("processingDay");
 		}
-		
+
 		log.info("##### Salary Processing Day is ######## " + processingDay);
-		
-		Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		Timestamp repaymentDate = new Timestamp(Calendar.getInstance().getTimeInMillis()); ;
-		LocalDateTime localDateCurrent = new LocalDateTime(currentDate.getTime());
-		LocalDateTime localDateRepaymentDate = new LocalDateTime(repaymentDate.getTime());
-		
-		
-		if (localDateCurrent.getDayOfMonth() < processingDay.intValue()){
-			//Repayment Date is Beginning of Next Month
+
+		Timestamp currentDate = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+		Timestamp repaymentDate = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+		;
+		LocalDateTime localDateCurrent = new LocalDateTime(
+				currentDate.getTime());
+		LocalDateTime localDateRepaymentDate = new LocalDateTime(
+				repaymentDate.getTime());
+
+		if (localDateCurrent.getDayOfMonth() < processingDay.intValue()) {
+			// Repayment Date is Beginning of Next Month
 			localDateRepaymentDate = localDateRepaymentDate.plusMonths(1);
-			//localDateRepaymentDate = localDateRepaymentDate.getD
-			//DateMidnight firstDay = new DateMidnight().withDayOfMonth(1);
-			DateTime startOfTheMonth = new DateTime().dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
-			DateTime startOfNextMonth = startOfTheMonth.plusMonths(1).dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
-			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate().toDate().getTime());
-		} else{
-			//from 15th and beyond then start paying two months later
-			DateTime startOfTheMonth = new DateTime().dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
-			DateTime startOfNextMonth = startOfTheMonth.plusMonths(2).dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
-			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate().toDate().getTime());
+			// localDateRepaymentDate = localDateRepaymentDate.getD
+			// DateMidnight firstDay = new DateMidnight().withDayOfMonth(1);
+			DateTime startOfTheMonth = new DateTime().dayOfMonth()
+					.withMinimumValue().withTimeAtStartOfDay();
+			DateTime startOfNextMonth = startOfTheMonth.plusMonths(1)
+					.dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate()
+					.toDate().getTime());
+		} else {
+			// from 15th and beyond then start paying two months later
+			DateTime startOfTheMonth = new DateTime().dayOfMonth()
+					.withMinimumValue().withTimeAtStartOfDay();
+			DateTime startOfNextMonth = startOfTheMonth.plusMonths(2)
+					.dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate()
+					.toDate().getTime());
 		}
-		
+
 		return repaymentDate;
 
 	}
-	
+
 	/**
-	 * @author Japheth Odonya  @when Aug 20, 2014 7:07:07 PM
-	 * Add Charges for the Product to the Product on application
+	 * @author Japheth Odonya @when Aug 20, 2014 7:07:07 PM Add Charges for the
+	 *         Product to the Product on application
 	 * **/
-	public static String addCharges(GenericValue loanApplication, Map<String, String> context){
-		
-		//Map<String, Object> result = FastMap.newInstance();
+	public static String addCharges(GenericValue loanApplication,
+			Map<String, String> context) {
+
+		// Map<String, Object> result = FastMap.newInstance();
 		String loanProductId = loanApplication.getString("loanProductId");
-		String partyId = (String)context.get("userLoginId");
+		String partyId = (String) context.get("userLoginId");
 		log.info("The Loan Product ID is ############ " + loanProductId);
 		log.info("The Party ID is ############ " + partyId);
+		log.info("CCC Creating Charges ############ for " + loanApplication.getBigDecimal("loanAmt"));
 
 		Delegator delegator;
 		delegator = loanApplication.getDelegator();
-		
-		
-		//Get the Charges attached to the LoanProduct
-		//GenericValue loanApplicationCharge = null;
+
+		// Get the Charges attached to the LoanProduct
+		// GenericValue loanApplicationCharge = null;
 		List<GenericValue> loanProductChargeELI = null;
-		//List<GenericValue> listLoanApplicationCharge = new ArrayList<GenericValue>();
-		
+		// List<GenericValue> listLoanApplicationCharge = new
+		// ArrayList<GenericValue>();
+
 		try {
 			loanProductChargeELI = delegator.findList("LoanProductCharge",
 					EntityCondition.makeCondition("loanProductId",
@@ -489,30 +505,41 @@ public class LoanServices {
 		}
 
 		for (GenericValue loanProductCharge : loanProductChargeELI) {
-			//existingLoansTotal = existingLoansTotal.add(genericValue.getBigDecimal("loanAmt"));
-			createLoanApplicationCharge(loanProductCharge, loanApplication, partyId);
+			// existingLoansTotal =
+			// existingLoansTotal.add(genericValue.getBigDecimal("loanAmt"));
+			
+			log.info("AAAAAA Added a charge ############ for " + loanApplication.getBigDecimal("loanAmt"));
+			createLoanApplicationCharge(loanProductCharge, loanApplication,
+					partyId);
 		}
 		return "";
 	}
 
 	/**
-	 * Given a LoanApplication and LoanProductCharge add a LoanApplicationCharge to 
-	 * the Application.
+	 * Given a LoanApplication and LoanProductCharge add a LoanApplicationCharge
+	 * to the Application.
 	 * **/
 	private static void createLoanApplicationCharge(
-			GenericValue loanProductCharge, GenericValue loanApplication, String partyId) {
-		//Create a Loan Application Charge
+			GenericValue loanProductCharge, GenericValue loanApplication,
+			String partyId) {
+		// Create a Loan Application Charge
 		String isFixed = loanProductCharge.getString("isFixed");
 		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
 		BigDecimal bdRateAmount = loanProductCharge.getBigDecimal("rateAmount");
-		BigDecimal bdFixedAmount = loanProductCharge.getBigDecimal("fixedAmount");
+		BigDecimal bdFixedAmount = loanProductCharge
+				.getBigDecimal("fixedAmount");
 		Delegator delegator = loanApplication.getDelegator();
-		
-		if (isFixed.equals("N")){
-			//Compute Fixed Amount
-			bdFixedAmount = bdLoanAmt.multiply(bdRateAmount).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
+		log.info(" LLLLLLLLLLLLL Loan Amount " + bdLoanAmt);
+		if (isFixed.equals("N")) {
+			// Compute Fixed Amount
+
+			bdFixedAmount = (bdLoanAmt.setScale(6)).multiply(
+					bdRateAmount.setScale(6)).divide(new BigDecimal(100), 6,
+					RoundingMode.HALF_UP);
+
+			log.info("FFFFFFFFFF Fixed Amount " + bdFixedAmount);
 		}
-		
+
 		GenericValue loanApplicationCharge;
 		String loanApplicationChargeId;
 		loanApplicationChargeId = delegator
@@ -520,20 +547,21 @@ public class LoanServices {
 
 		loanApplicationCharge = delegator.makeValidValue(
 				"LoanApplicationCharge", UtilMisc.toMap(
-						"loanApplicationChargeId",
-						loanApplicationChargeId, "isActive",
-						"Y", "createdBy", partyId, 
-						"loanApplicationId", loanApplication.getString("loanApplicationId"),
-						"productChargeId", loanProductCharge.getString("productChargeId"), 
-						"isFixed" , loanProductCharge.getString("isFixed") ,
-						"rateAmount",bdRateAmount,
-						"fixedAmount",bdFixedAmount));
-		try {
-			loanApplicationCharge = delegator
-					.createSetNextSeqId(loanApplicationCharge);
-		} catch (GenericEntityException e1) {
-			e1.printStackTrace();
-		}
+						"loanApplicationChargeId", loanApplicationChargeId,
+						"isActive", "Y", "createdBy", partyId,
+						"loanApplicationId",
+						loanApplication.getString("loanApplicationId"),
+						"productChargeId",
+						loanProductCharge.getString("productChargeId"),
+						"isFixed", loanProductCharge.getString("isFixed"),
+						"rateAmount", bdRateAmount, "fixedAmount",
+						bdFixedAmount));
+		// try {
+		// loanApplicationCharge = delegator
+		// .createSetNextSeqId(loanApplicationCharge);
+		// } catch (GenericEntityException e1) {
+		// e1.printStackTrace();
+		// }
 		try {
 			delegator.createOrStore(loanApplicationCharge);
 		} catch (GenericEntityException e) {

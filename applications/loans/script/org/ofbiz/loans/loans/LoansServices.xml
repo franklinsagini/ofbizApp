@@ -479,7 +479,7 @@ under the License.
         <entity-one entity-name="LoanApplication" value-field="loanApplication">
         	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
         </entity-one>
-        <!-- set field="repaymentStartDate" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/ -->
+        <set field="repaymentStartDate" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/>
         <set field="disbursementResult" value="${bsh:org.ofbiz.loans.LoanAccounting.postDisbursement(loanApplication, userLogin);}" type="String"/>
     </simple-method>
     

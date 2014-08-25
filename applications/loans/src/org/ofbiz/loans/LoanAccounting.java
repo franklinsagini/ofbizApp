@@ -15,6 +15,8 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * @author Japheth Odonya @when Aug 22, 2014 2:21:39 PM
@@ -65,11 +67,34 @@ public class LoanAccounting {
 		// Also creates a
 
 		acctgTransType = "SERVICE_CHARGES";
-
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		createChargesEntries(loanApplication, userLogin, glAcctTypeIdcharges);
-
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		createLoanDisbursementAccountingTransaction(loanApplication, userLogin);
-
+		try {
+			
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		result.put("disbursementResult", "posted");
 		return "";
 	}
@@ -87,10 +112,11 @@ public class LoanAccounting {
 		String memberAccountId = getMemberAccountId(loanApplication);
 		String transactionType = "LOANDISBURSEMENT";
 
-		createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount);
+		createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, null);
 	}
 
-	private static void createTransaction(GenericValue loanApplication, String transactionType, Map<String, String> userLogin, String memberAccountId, BigDecimal transactionAmount) {
+	private static void createTransaction(GenericValue loanApplication, String transactionType, Map<String, String> userLogin, String memberAccountId,
+			BigDecimal transactionAmount, String productChargeId) {
 		Delegator delegator = loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -99,20 +125,29 @@ public class LoanAccounting {
 		String updatedBy = (String) userLogin.get("userLoginId");
 		String branchId = (String) userLogin.get("partyId");
 		String partyId =  loanApplication.getString("partyId");
+		String increaseDecrease;
+		if (productChargeId == null){
+			increaseDecrease = "I";
+		} else{
+			increaseDecrease = "D";
+		}
 		
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId,
 						"isActive", "Y", "createdBy", createdBy, "updatedBy",
-						updatedBy, "branchId", branchId, "partyId", partyId,
+						updatedBy, "branchId", branchId,
+						"partyId", partyId,
+						"increaseDecrease", increaseDecrease,
 						"memberAccountId", memberAccountId,
+						"productChargeId", productChargeId,
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType));
-		try {
-			accountTransaction = delegator
-					.createSetNextSeqId(accountTransaction);
-		} catch (GenericEntityException e1) {
-			e1.printStackTrace();
-		}
+//		try {
+//			accountTransaction = delegator
+//					.createSetNextSeqId(accountTransaction);
+//		} catch (GenericEntityException e1) {
+//			e1.printStackTrace();
+//		}
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
@@ -184,7 +219,8 @@ public class LoanAccounting {
 			
 			transactionAmount = loanApplicationCharge.getBigDecimal("fixedAmount");
 			String transactionType = getChargeName(loanApplicationCharge);
-			createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount);
+			String productChargeId = loanApplicationCharge.getString("productChargeId");
+			createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, productChargeId);
 		}
 
 	}
