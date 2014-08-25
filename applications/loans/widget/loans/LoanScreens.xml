@@ -680,6 +680,11 @@ under the License.
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                                 
                                             </link>
+                                            
+                                            <link target="amortizationSchedulePdf" text="Print Schedule PDF" style="buttontext">
+                                                <parameter param-name="loanApplicationId"/>
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
                                             </container>
                                 		</widgets>
                                 		<fail-widgets>
@@ -985,6 +990,115 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <!-- viewaccountproductdetails -->
+     <screen name="viewaccountproductdetails">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Account Product Details"/>
+                <set field="tabButtonItem" value="viewaccountproductdetails"/>
+                <set field="headerItem" value="viewaccountproductdetails"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="accountProduct" from-field="parameters.accountProductId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <entity-one entity-name="AccountProduct" value-field="accountProduct">
+                                    <field-map field-name="accountProductId" from-field="parameters.accountProductId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       
+                        <section>
+                            <condition>
+                                <not><if-empty field="accountProduct"/></not>
+                            </condition>
+                            <widgets>
+                                <!-- section>
+                                    <condition>
+                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar button-style-2">
+                                            <link target="viewmemberprofile" text="${uiLabelMap.PartyHideOld}">
+                                                <parameter param-name="partyId" from-field="party.partyId"/>
+                                            </link>
+                                        </container>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container style="button-bar button-style-2">
+                                            <link target="viewmemberprofile" text="${uiLabelMap.PartyShowOld}">
+                                                <parameter param-name="partyId" from-field="party.partyId"/>
+                                                <parameter param-name="SHOW_OLD" value="true"/>
+                                            </link>
+                                        </container>
+                                    </fail-widgets>
+                                </section -->
+                               
+                                        <!-- include-portal-page id="PartyProfile"/ -->
+                                        
+                                   		<!-- include-portal-page id="ApplicationProfile"/ -->
+                                   		<!-- include-portal-page id="LoanProductProfile"/ -->
+                                   		<include-portal-page id="AccountProfile"/>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">Issue Display Account Product Details</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- FindAccountProduct -->
+    <screen name="FindAccountProduct">
+        <section>
+            <actions>
+                <!-- set field="headerItem" value="ExampleMenuItem"/>
+                <set field="titleProperty" value="PageTitleFindExample"/ -->
+                <set field="headerItem" value="FindAccountProduct"/>
+                <set field="titleProperty" value="Find Account Product"/>
+                <set field="accountProductCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="LOANS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                        
+                                        <!-- link target="EditExampleLayer" link-type="ajax-window" height="500" width="500" text="${uiLabelMap.ExampleNewExample}" style="buttontext create"/ -->
+                                        <link target="NewProductCharge" text="New Product Charge" style="buttontext create"></link>
+                                        
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindAccountProduct" location="component://loans/widget/loans/LoanForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="findListAccountProduct" location="component://loans/widget/loans/LoanForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">Permission Error</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- LoanProductExtraDetails -->
     <screen name="LoanProductExtraDetails">
@@ -1090,6 +1204,70 @@ under the License.
         </section>
     </screen>
     
+    <!-- AccountProductExtraDetails -->
+    <!-- AccountProductExtraDetails Begin -->
+     <screen name="AccountProductExtraDetails">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.accountProductId" from-field="parameters.accountProductId"/>
+                
+                <entity-one entity-name="AccountProduct" value-field="lookupAccountProduct">
+                    <field-map field-name="accountProductId" from-field="parameters.accountProductId"/><!-- is required -->
+                </entity-one>
+             </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupAccountProduct"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <!-- condition>
+                                <or>
+                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                                    <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
+                                </or>
+                            </condition -->
+                            <widgets>
+                                <screenlet title="Product" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
+                                           <!-- include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                                    <!-- include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/ -->
+                                    <!-- include-form name="ViewLoanApplicationDetails" location="component://loans/widget/loans/LoanForms.xml"/ -->
+                                    <section>
+                                        <!--  condition -->
+                                            <!--  not><if-empty field="partyNameHistoryList"/></not -->
+                                            
+                                            <!-- not><if-empty field="loanApplicationSecurityList"/></not -->
+                                        <!-- /condition -->
+                                        <widgets>
+                                			<container>
+                                				<label style="h3">Product Name    : ${lookupAccountProduct.name}</label>
+                                				<label style="h3">Product Code    : ${lookupAccountProduct.code}</label>
+                                            
+                                            </container>
+                                            <!-- include-form name="ViewPartyPersonHistory" location="component://party/widget/partymgr/PartyForms.xml"/ -->
+                                            <screenlet title="Add Charge">
+                                            	<include-form name="NewAccountProductCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                            </screenlet>
+                                            <screenlet title="Charges List">
+                                            	<include-form name="listAccountProductCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                            </screenlet>
+                                            
+                                            </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                            
+                        </section>
+                    </widgets>
+                </section>
+                
+            </widgets>
+        </section>
+    </screen>
+    <!-- AccountProductExtraDetails End -->
+    
     <!-- LoanApplicationCharges -->
     <screen name="LoanApplicationCharges">
         <section>
@@ -1187,4 +1365,35 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="amortizationSchedulePdf">
+		<section>
+			<actions>
+				<set field="titleProperty" value="PageTitleEditExample" />
+				<set field="tabButtonItem" value="AmortizationSchedule" />
+				<set field="loanApplicationId" from-field="parameters.loanApplicationId" />
+				<entity-one entity-name="LoanApplication" value-field="loanApplication" />
+				
+				<!-- entity-condition entity-name="LoanAmortization" list="listAmortizationSchedule" >
+            		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            	</entity-condition -->
+			</actions>
+			<widgets>
+			<screenlet>
+				<include-form name="listAmortizationSchedule"
+							location="component://loans/widget/loans/LoanForms.xml" />
+			</screenlet>
+				<!-- decorator-screen name="main-decorator"
+				
+				
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-form name="listAmortizationSchedule"
+							location="component://loans/widget/loans/LoanForms.xml" />
+					</decorator-section>
+				</decorator-screen ->
+				</decorator-screen -->
+			</widgets>
+		</section>
+	</screen>
 </screens>

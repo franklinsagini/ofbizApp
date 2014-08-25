@@ -1158,5 +1158,183 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
+    <!-- FindAccountProduct -->
+    <form name="FindAccountProduct" type="single" target="FindAccountProduct"
+		default-entity-name="AccountProduct">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="name" title="Name">
+			<text-find />
+		</field>
+		<field name="code" title="Code">
+			<text-find />
+		</field>
+        <field name="minBalanceAmt"><text-find/></field>
+        <field name="minSavingsAmt"><text-find/></field>
+        <field name="minInterestEarningAmt"><text-find/></field>
+        <field name="interestPerMonth"><text-find/></field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+    <!-- findListAccountProduct -->
+    <form name="findListAccountProduct" type="list" list-name="listIt"
+		paginate-target="FindAccountProduct" default-entity-name="AccountProduct"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="AccountProduct">
+				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+				<!-- order-by field-name="saccoProductId"/ -->
+			</entity-condition>
+
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="accountProductCtx" />
+				<field-map field-name="entityName" value="AccountProduct" />
+				<field-map field-name="orderBy" from-field="parameters.sortField" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+        <field name="accountProductId"><hidden/></field>
+        <field name="name"> <text></text> </field>
+        <field name="code"><text/></field>
+        <field name="minBalanceAmt"><text></text></field>
+        <field name="minSavingsAmt"><text></text></field>
+        <field name="minInterestEarningAmt"><text></text></field>
+        <field name="interestPerMonth"><text></text></field>
+        
+        <field name="Edit Account">
+        	<hyperlink target="AccountProduct?accountProductId=${accountProductId}" description="Edit Account"></hyperlink>
+        </field>
+		
+		<field name="details">
+			<hyperlink target="viewaccountproductdetails?accountProductId=${accountProductId}"
+				description="Details"></hyperlink>
+		</field>
+		
+	</form>
+	
+	<!-- AccountProductCharge Form and List -->
+	<form name="NewAccountProductCharge" type="single" target="createAccountProductCharge"
+        focus-field-name="productChargeId" header-row-style="header-row" default-table-style="basic-table" default-map-name="accountProductChargeContext">
+        
+        <actions>
+        	<entity-condition entity-name="ProductCharge" list="productChargeList">
+            </entity-condition>
+        </actions>
+        
+        <field name="accountProductChargeId"><hidden/></field>
+        <field name="accountProductId" parameter-name="accountProductId"><hidden/></field>
+        <field name="productChargeId" title="Charge"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="transactionType" title="Transaction Type"  widget-style="required" required-field="true">
+        	 <drop-down allow-empty="true">
+        	 	<option key="CASHWITHDRAWAL" description="CASHWITHDRAWAL"/>
+                <option key="CASHDEPOSIT" description="CASHDEPOSIT"/>
+                <option key="CHEQUEWITHDRAWAL" description="CHEQUEWITHDRAWAL"/>
+                <option key="CHEQUEDEPOSIT" description="CHEQUEDEPOSIT"/>
+            </drop-down>
+        </field>
+        <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">
+        	 <drop-down allow-empty="true">
+        	 	<option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="rateAmount" title="Rate (%)" ><text size="30" maxlength="60"/></field>
+      
+      <field name="isPercentageOfOtherCharge" title="% Of Another Charge">
+        	 <drop-down allow-empty="true">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="parentChargeId" title="Parent Charge"  required-field="false">
+        	<drop-down allow-empty="true">
+                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="fixedAmount" title="Amount (Total Charge)" ><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- form name="listAccountProductCharge" type="list" list-name="accountProductChargeList"
+       header-row-style="header-row" default-table-style="basic-table"   odd-row-style="alternate-row" -->
+      <form name="listAccountProductCharge" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAccountProductCharge" paginate-target="viewaccountproductdetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="AccountProductCharge">
+        		<condition-expr field-name="accountProductId" operator="equals" from-field="parameters.accountProductId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="ProductCharge" list="productChargeList"></entity-condition>
+        </actions>
+        <field name="accountProductChargeId"><hidden/></field>
+        <field name="accountProductId"><hidden/></field>
+        <field name="productChargeId" title="Charge" >
+        	<drop-down allow-empty="true">
+                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="transactionType" title="Transaction Type" >
+        	 <drop-down allow-empty="true" text-size="15">
+        	 	<option key="CASHWITHDRAWAL" description="CASHWITHDRAWAL"/>
+                <option key="CASHDEPOSIT" description="CASHDEPOSIT"/>
+                <option key="CHEQUEWITHDRAWAL" description="CHEQUEWITHDRAWAL"/>
+                <option key="CHEQUEDEPOSIT" description="CHEQUEDEPOSIT"/>
+            </drop-down>
+        </field>
+        
+        <field name="isFixed" title="Fixed">
+        	 <drop-down allow-empty="true" text-size="15">
+        	 	<option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="rateAmount" title="Rate (%)" ><text size="15" maxlength="60"/></field>
+      
+      <field name="isPercentageOfOtherCharge" title="% Of Another Charge">
+        	 <drop-down allow-empty="true" text-size="15">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="parentChargeId" title="Parent Charge">
+        	<drop-down allow-empty="true" text-size="15">
+                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+            </drop-down>
+        </field>
+        
+        <field name="fixedAmount" title="Amount (Total Charge)" ><text size="15" maxlength="60"/></field>
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanProductCharge" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanProductChargeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
    
 </forms>
