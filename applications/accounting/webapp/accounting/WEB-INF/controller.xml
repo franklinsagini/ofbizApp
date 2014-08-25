@@ -44,6 +44,14 @@ under the License.
         <response name="success" type="view" value="imprestType"/>
     </request-map>
 
+    <request-map uri="AccountingReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AccountingReportsScreen"/>
+    </request-map>
+
+
+
+
     <request-map uri="FindImprestType">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindImprestType"/>
@@ -240,6 +248,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findInvoices"/>
     </request-map>
+
     <request-map uri="invoiceOverview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="invoiceOverview"/>
@@ -385,7 +394,9 @@ under the License.
         <response name="error" type="view" value="EditInvoiceItemType"/>
     </request-map>
 
-    <!-- payment requests -->
+    <!--
+        payment requests
+    -->
     <request-map uri="findPayments">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findPayments"/>
@@ -2763,7 +2774,32 @@ under the License.
     </request-map>
     <!-- end of request mappings -->
 
+    <!--
+        Workflow Requests
+    -->
+
+    <request-map uri="forwardApplication">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accounting.invoice.InvoiceServices" invoke="forwardApplication" />
+        <response name="success" type="view" value="editInvoice">
+                <redirect-parameter name="invoiceId"/>
+        </response>
+        <response name="error" type="view" value="editInvoice" />
+    </request-map>
+
+    <request-map uri="forwardPaymentApproval">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accounting.payment.PaymentWorker" invoke="forwardApplication" />
+        <response name="success" type="view" value="editInvoice">
+                <redirect-parameter name="invoiceId"/>
+        </response>
+        <response name="error" type="view" value="editInvoice" />
+    </request-map>
+
+
+
     <!-- View Mappings -->
+     <view-map name="AccountingReportsScreen" type="screen" page="component://accounting/widget/ReportScreens.xml#AccountingReportsScreen"/>
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
 
     <!-- Imprest Vew Mappings -->

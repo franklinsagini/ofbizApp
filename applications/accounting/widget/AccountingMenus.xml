@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -45,6 +44,7 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}"><link target="ListBudgets"/></menu-item>
         <menu-item name="GlobalGLSettings" title="${uiLabelMap.AccountingGlobalGLSettings}"><link target="globalGLSettings"/></menu-item>
         <menu-item name="companies" title="${uiLabelMap.AccountingOrgGlSettings}"><link target="ListCompanies"/></menu-item>
+        <menu-item name="reports" title="${uiLabelMap.CommonReports}"><link target="AccountingReports"/></menu-item>
     </menu>
 
         <!-- IMPREST TAB BAR MENUS -->
@@ -221,7 +221,9 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="statusToApproved" title="${uiLabelMap.AccountingInvoiceStatusToApproved}">
             <condition>
                 <and>
-                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <not>
+                        <if-empty field="invoice.invoiceId"/>
+                    </not>
                     <or>
                         <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
                         <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT"/>
@@ -237,7 +239,9 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="statusToReceived" title="${uiLabelMap.AccountingInvoiceStatusToReceived}">
             <condition>
                 <and>
-                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <not>
+                        <if-empty field="invoice.invoiceId"/>
+                    </not>
                     <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
                     <or>
                         <if-compare field="invoice.invoiceTypeId" operator="equals" value="PURCHASE_INVOICE"/>
@@ -268,6 +272,31 @@ http://www.apache.org/licenses/LICENSE-2.0
             <link target="setInvoiceStatus" request-confirmation="true" confirmation-message="You want to change status to SENT of invoice number ${invoice.statusId}?">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
                 <parameter param-name="statusId" value="INVOICE_SENT"/>
+            </link>
+        </menu-item>
+
+        <!--
+            Workflow Invoice Approval
+        -->
+
+        <menu-item name="sentForApproval" title="Forward For Approval">
+            <condition>
+                 <not><if-empty field="invoice.invoiceId"/></not>
+             <!--    <or>
+                    <and>
+                        <not><if-empty field="invoice.invoiceId"/></not>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
+                    </and>
+                    <and>
+                        <not><if-empty field="invoice.invoiceId"/></not>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED"/>
+                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
+                    </and>
+                </or> -->
+            </condition>
+            <link target="forwardApplication" request-confirmation="true" confirmation-message="You want to change status to SENT of invoice number ${invoice.statusId}?">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
             </link>
         </menu-item>
         <menu-item name="statusToReady" title="${uiLabelMap.AccountingInvoiceStatusToReady}">
@@ -453,6 +482,11 @@ http://www.apache.org/licenses/LICENSE-2.0
                 <parameter param-name="statusId" value="PMNT_SENT"/>
             </link>
         </menu-item>
+
+        <!--
+            Workflow Payments Menu
+         -->
+
         <menu-item name="statusToReceived" title="${uiLabelMap.AccountingPaymentTabStatusToReceived}">
             <condition>
                 <and>

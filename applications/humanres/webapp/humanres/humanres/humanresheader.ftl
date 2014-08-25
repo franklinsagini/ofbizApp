@@ -34,7 +34,7 @@
 		 //jQuery('input[name="leaveBalance"]').show();
          var leaveTypeId = this.value;
          //console.log(leaveTypeId);
-         if (leaveTypeId =="Annual leave"){
+         if (leaveTypeId =="ANNUAL_LEAVE"){
           
          var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
          var partyId =  jQuery('input[name="partyId"]').val();
@@ -45,10 +45,10 @@
          }
 
          }
-         if(leaveTypeId !="Annual leave"){
-         	jQuery('input[name="balanceDay"]').val("");
-
-         	jQuery('input[name="accruedDay"]').val("");
+         if(leaveTypeId !="ANNUAL_LEAVE"){
+         	jQuery('input[name="approvedLeaveSumed"]').val("");
+         	jQuery('input[name="accruedLeaveDays"]').val("");
+         	jQuery('input[name="leaveBalance"]').val("");
          }
          
         });
@@ -115,9 +115,9 @@
 	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId ,"appointmentdate" :appointmentdate}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
-	     			//$('input[name="leaveBalance"]').val(data.leaveBalance);
-					 $('input[name="accruedDay"]').val(data.accruedDay);
-					 $('input[name="leaveBalance"]').val(data.balanceDay);
+	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
+					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
+					 $('input[name="leaveBalance"]').val(data.leaveBalance);
 					 //$('input[name="leaveBalance"]').val(data.leaveBalance);
 	               },
 	      error : function(errorData){

@@ -12,41 +12,103 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-	<screen name="FindEmplLeaves">
-		<section>
-			<actions>
+	  
+	<screen name="ActiveEmplLeaves">
+        <section>
+            <actions>
 				<set field="titleProperty" value="HumanResFindEmplLeave" />
 				<set field="headerItem" value="Leave" />
-				<set field="tabButtonItem" value="EmployeeLeave" />
-				<!-- <set field="partyId" from-field="parameters.partyId" /> <set field="leaveTypeId" 
-					from-field="parameters.leaveTypeId" /> <set field="fromDate" from-field="parameters.fromDate" 
-					/> <set field="emplLeaveCtx" from-field="parameters" /> -->
-				<service service-name="humanResManagerPermission"
+				<set field="tabButtonItem" value="ActiveEmplLeaves" />
+				<set field="leaveCtx" from-field="parameters"/>
+						<service service-name="humanResManagerPermission"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="ADMIN" />
 				</service>
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
-
-			</actions>
-			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="pre-body">
+			<set field="today" value="${nowTimestamp}" type="Date"/>
+			<!-- <entity-condition entity-name="EmplLeave"></entity-condition> -->
+			 <entity-condition entity-name="EmplLeave" list="EmplLeave">
+				  <condition-list>
+					 <condition-expr field-name="responsibleEmployee"
+						operator="equals" from-field="userLogin.partyId" />
+					<condition-expr field-name="fromDate" operator="less-equals"
+						from-field="today" />
+					<condition-expr field-name="thruDate" operator="greater-equals"
+						from-field="today" /> 
+				</condition-list> 
+			</entity-condition> 
+        	
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                						<decorator-section name="pre-body">
 						<include-menu name="EmplLeaveTabBar"
 							location="component://humanres/widget/HumanresMenus.xml" />
 					</decorator-section>
-					<decorator-section name="body">
-						<section>
-							<condition>
-								<if-has-permission permission="HUMANRES"
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="HUMANRES"
 									action="_VIEW" />
-							</condition>
-							<widgets>
-								<decorator-screen name="FindScreenDecorator"
-									location="component://common/widget/CommonScreens.xml">
-									<decorator-section name="menu-bar">
+                            </condition>
+
+                            <widgets>
+                              <!-- <screenlet title="Search Active Leaves">
+                                        <include-form name="FindActiveLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                            	</screenlet> -->
+                                <screenlet title="Active Leaves List">
+                                <include-form name="ListActivelLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+	  <screen name="FindEmplLeaves">
+        <section>
+            <actions>
+				<set field="titleProperty" value="HumanResFindEmplLeave" />
+				<set field="headerItem" value="Leave" />
+				<set field="tabButtonItem" value="EmployeeLeave" />
+				<set field="leaveCtx" from-field="parameters"/>
+						<service service-name="humanResManagerPermission"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ADMIN" />
+				</service>
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
+					global="true" />
+					
+				<entity-condition entity-name="EmplLeave" list="EmplLeave">
+        			<condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>
+        	</entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                						<decorator-section name="pre-body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+
+                            <widgets>
 										<section>
 											<widgets>
 												<container style="button-bar">
@@ -55,24 +117,92 @@
 												</container>
 											</widgets>
 										</section>
-									</decorator-section>
-									<decorator-section name="search-options">
-										<include-form name="FindEmplLeaves"
+                              <screenlet title="Search My Leaves">
+                                        <include-form name="FindEmplLeaves"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-									</decorator-section>
-									<decorator-section name="search-results">
-										<include-form name="ListEmplLeaves"
+                            	</screenlet>
+                                <screenlet title="My Leaves List">
+                                <include-form name="ListEmplLeaves"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-									</decorator-section>
-								</decorator-screen>
-							</widgets>
-						</section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+     <screen name="FindLeaveApprovals">
+        <section>
+            <actions>
+            	<set field="titleProperty" value="PageTitleFindApprovals" />
+				<set field="tabButtonItem" value="Approval" />
+				<set field="headerItem" value="Leave" />
+				<set field="responsibleEmployee" value="${userLogin.partyId}"/>
+				
+				<set field="leaveApprovalCtx" from-field="parameters"/>
+				
+						<service service-name="humanResManagerPermission"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ADMIN" />
+				</service>
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
+					global="true" />
+			<entity-condition entity-name="EmplLeave" list="">
+					<condition-expr field-name="responsibleEmployee"
+						operator="equals" from-field="${userLogin.partyId}" />
+			</entity-condition>
+
+			<entity-one entity-name="Party" value-field="party">
+				<field-map field-name="partyId" from-field="userLogin.partyId"/>
+			</entity-one>
+
+			<set field="organizationUnitId" value="${bsh:org.ofbiz.humanres.LeaveServices.getEmplUnit(party);}"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                						<decorator-section name="pre-body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
 					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="FindLeaveApprovals">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+
+                            <widgets>
+	                         <screenlet title="Search Leaves">
+                                        <include-form name="FindLeaveApprovals"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                            	</screenlet>
+                                <screenlet title="Leaves List">
+                                <include-form name="ListLeaveApprovals"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+
+	<screen name="FindLeaveApprovals2">
 		<section>
 			<actions>
 				<set field="titleProperty" value="PageTitleFindApprovals" />
@@ -208,114 +338,53 @@
 				<property-map resource="HumanResUiLabels" map-name="uiLabelMap"
 					global="true" />
 				<set field="titleProperty" value="findLeaveApprovals" />
-				<set field="tabButtonItem" value="invoiceOverview" />
+				<!-- <set field="tabButtonItem" value="invoiceOverview" /> -->
 				<set field="partyId" from-field="parameters.partyId" />
-				<entity-one entity-name="EmplLeave" value-field="empleave" />
-				<entity-and entity-name="EmplLeave" list="empLeaves">
+				<set field="fromDate" from-field="parameters.fromDate" />
+				<set field="leaveTypeId" from-field="parameters.leaveTypeId" />
+
+				<entity-one entity-name="EmplLeaveView" value-field="empleave" />
+				<entity-and entity-name="EmplLeave" list="emplLeaves">
 					<field-map from-field="parameters.partyId" field-name="partyId" />
-					<order-by field-name="leaveId" />
+					<field-map from-field="parameters.fromDate" field-name="fromDate" />
+					<field-map from-field="parameters.leaveTypeId" field-name="leaveTypeId" />
+					<!-- <order-by field-name="leaveId" /> -->
 				</entity-and>
-				<entity-and entity-name="LeaveStatusLog" list="empLeaveLogs">
-					<field-map from-field="parameters.partyId" field-name="partyId" />
-					<order-by field-name="leaveStsLogId" />
-				</entity-and>
-				<entity-and entity-name="Member" list="member">
+				<entity-and entity-name="LeaveStatusLog" list="leaveLogs">
 					<field-map from-field="parameters.partyId" field-name="partyId" />
 				</entity-and>
-				<!-- <entity-and entity-name="TimeEntry" list="timeEntries"> <field-map 
-					from-field="parameters.invoiceId" field-name="invoiceId"/> <order-by field-name="invoiceItemSeqId"/> 
-					</entity-and> -->
-				<!-- <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/CreateApplicationList.groovy"/> 
-					<set field="invoiceAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice)}" 
-					type="BigDecimal"/> <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}" 
-					type="BigDecimal"/> <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceApplied(invoice)}" 
-					type="BigDecimal"/> <entity-condition entity-name="InvItemAndOrdItem" list="invItemAndOrdItems"> 
-					<condition-expr field-name="invoiceId" operator="equals" from-field="invoiceId"/> 
-					<order-by field-name="invoiceItemSeqId"/> </entity-condition> <entity-condition 
-					entity-name="AcctgTransAndEntries" list="acctgTransAndEntries"> <condition-expr 
-					field-name="invoiceId" operator="equals" from-field="invoiceId"/> <order-by 
-					field-name="acctgTransId"/> <order-by field-name="acctgTransEntrySeqId"/> 
-					</entity-condition> -->
+				<!-- <entity-and entity-name="Person" list="emplLeaves">
+					<field-map from-field="parameters.partyId" field-name="partyId" />
+				</entity-and> -->
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
 						<section>
-							<condition>
-								<if-compare field="EmplLeave.leaveStatus" operator="equals"
-									value="CREATED" />
-							</condition>
 							<widgets>
-								<screenlet title="${uiLabelMap.EmpLeaveHeader}">
-									<link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
-										style="buttontext">
-										<parameter param-name="partyId" />
-									</link>
-									<include-form name="emplLeaves"
+								<screenlet title="${uiLabelMap.StaffDetails}">
+								<include-menu location="component://humanres/widget/HumanresMenus.xml"
+								name="ApproveReject" />
+									<include-form name="ListMyLeaves"
 										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 								</screenlet>
-								<container style="lefthalf">
-									<screenlet title="${uiLabelMap.CommonStatus}"
-										navigation-form-name="ListInvoiceStatus">
-										<include-form name="ListInvoiceStatus"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-									</screenlet>
-									<screenlet
-										title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
-										navigation-form-name="ListInvoiceApplications">
-										<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
-											style="buttontext">
-											<parameter param-name="invoiceId" />
-										</link>
-										<include-form name="ListInvoiceApplications"
+								<!-- <container style="lefthalf">
+									<screenlet title="${uiLabelMap.StaffDetails}"
+										navigation-form-name="ListMyLeaves">
+										<include-form name="ListMyLeaves"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 									</screenlet>
 								</container>
-								<container style="righthalf">
-									<screenlet title="${uiLabelMap.AccountingInvoiceRoles}"
-										navigation-form-name="invoiceRoles">
-										<container>
-											<link target="invoiceRoles" text="${uiLabelMap.CommonUpdate}"
-												style="buttontext">
-												<parameter param-name="invoiceId" />
-											</link>
-										</container>
-										<include-form name="invoiceRoles"
+								<container style="righthalf"> -->
+									<screenlet title="${uiLabelMap.LeaveLogs}"					navigation-form-name="ListLeaveLogs">
+										<include-form name="ListLeaveLogs"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 									</screenlet>
-									<screenlet title="${uiLabelMap.PartyTerms}">
-										<include-form name="ListInvoiceTerms"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-										<include-form name="ListInvoicePaymentInfo"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-									</screenlet>
-								</container>
+								<!-- </container> -->
 							</widgets>
-							<!-- <fail-widgets> <screenlet title="${uiLabelMap.AccountingInvoiceHeader}"> 
-								<include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/> 
-								</screenlet> <container style="lefthalf"> <screenlet title="${uiLabelMap.CommonStatus}" 
-								navigation-form-name="ListInvoiceStatus"> <include-form name="ListInvoiceStatus" 
-								location="component://accounting/widget/InvoiceForms.xml"/> </screenlet> 
-								<screenlet title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} 
-								${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}" 
-								navigation-form-name="ListInvoiceApplications"> <include-form name="ListInvoiceApplications" 
-								location="component://accounting/widget/InvoiceForms.xml"/> </screenlet> 
-								</container> <container style="righthalf"> <screenlet title="${uiLabelMap.AccountingInvoiceRoles}" 
-								navigation-form-name="invoiceRoles"> <include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml"/> 
-								</screenlet> <screenlet title="${uiLabelMap.PartyTerms}"> <include-form name="ListInvoiceTerms" 
-								location="component://accounting/widget/InvoiceForms.xml"/> <include-form 
-								name="ListInvoicePaymentInfo" location="component://accounting/widget/InvoiceForms.xml"/> 
-								</screenlet> </container> <container style="clear"/> <screenlet title="${uiLabelMap.AccountingInvoiceItems}" 
-								navigation-form-name="invoiceItems"> <include-form name="invoiceItems" location="component://accounting/widget/InvoiceForms.xml"/> 
-								</screenlet> <section> <condition> <not><if-empty field="timeEntries"/></not> 
-								</condition> <widgets> <screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}" 
-								navigation-form-name="ListTimeEntries"> <include-form name="ListTimeEntries" 
-								location="component://accounting/widget/InvoiceForms.xml"/> </screenlet> 
-								</widgets> </section> <screenlet title="${uiLabelMap.AccountingTransactions}" 
-								navigation-form-name="AcctgTransAndEntries"> <include-form name="AcctgTransAndEntries" 
-								location="component://accounting/widget/InvoiceForms.xml"/> </screenlet> 
-								</fail-widgets> -->
 						</section>
 					</decorator-section>
 				</decorator-screen>

@@ -29,7 +29,7 @@ under the License.
         
         <field name="loanSecurityId"><hidden/></field>
         <field name="description" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="listLoanSecurity" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanSecurity" paginate-target="findLoanSecurity"
@@ -42,6 +42,7 @@ under the License.
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
+        <field name="loanSecurityId"> <text></text> </field>
         <field name="description"> <!-- display also-hidden="false"/ --> <text></text> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanSecurity" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -117,25 +118,31 @@ under the License.
         
         <field name="loanApplicationSecurityId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
-        <field name="loanSecurityId" title="Security">
+        <field name="loanSecurityId" title="Security" widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
                 <list-options list-name="loanSecurityList"   key-name="loanSecurityId" description="${description}"/>
             </drop-down>
         </field>
+        <field name="noOfGuarantors" title="No Of Guarantors"> <text></text> </field>
         <!--  field name="loanSecurityId" title="Security">
         	<drop-down allow-empty="true">
                 <list-options list-name="loanSecurityList" key-name="loanSecurityId" description="${description}"/>
             </drop-down>
         </field -->
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ViewLoanSecurityList" type="list" list-name="loanApplicationSecurityList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        
+        <actions>
+        	<entity-condition entity-name="LoanApplicationSecurity">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId" />
+        	</entity-condition>
+        </actions>
         <field name="loanSecurityId" title="Security">
         	<display-entity description="${description}" entity-name="LoanSecurity" also-hidden="false"></display-entity>
         </field>
+        <field name="noOfGuarantors" title="No Of Guarantors"> <text></text> </field>
     </form>
     
     <!-- Loan Application Collateral-->
@@ -145,19 +152,19 @@ under the License.
         
         <field name="loanApplicationCallateralId" ><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
-        <field name="collateralValue" title="Collateral Value"><text size="30" maxlength="60"/></field>
-        <field name="valuingAgency" title="Valuing Agency"><text size="30" maxlength="60"/></field>
-        <field name="collateralType" title="Type"><text size="30" maxlength="60"/></field>
-        <field name="collateralSerialNo" title="Seraila No."><text size="30" maxlength="60"/></field>
-        <field name="collateralOwner" title="Owner"><text size="30" maxlength="60"/></field>
-        <field name="collateralStatus"  title="Status" >
+        <field name="collateralValue" title="Collateral Value" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="valuingAgency" title="Valuing Agency" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="collateralType" title="Type" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="collateralSerialNo" title="Serail No." widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="collateralOwner" title="Owner" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="collateralStatus"  title="Status" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <option key="Free" description="Free"/>
                 <option key="Tied" description="Tied"/>
             </drop-down>
         </field>
-        <field name="propotionofloanamt" title="Proportion of Loan Amount"><text size="30" maxlength="60"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="propotionofloanamt" title="Proportion of Loan Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ViewLoanCollateralList" type="list" list-name="loanApplicationCallateralList"
@@ -179,29 +186,28 @@ under the License.
         	<entity-condition entity-name="Member" list="memberList">
             </entity-condition>
             
-            <entity-condition entity-name="MemberStation" list="memberStationsList"></entity-condition>
+            <!-- entity-condition entity-name="MemberStation" list="memberStationsList"></entity-condition -->
+            <entity-condition entity-name="Station" list="stationList"></entity-condition>
         </actions>
         
         <field name="loanGuarantorId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
-        <field name="guarantorId" title="Guarantor">
+        <field name="guarantorId" title="Guarantor" widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
                 <list-options list-name="memberList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
             </drop-down>
         </field>
         
-        <field name="memberNo" title="Member No."><text size="30" maxlength="60"/></field>
-        <field name="payrolNo" title="Payrol No."><text size="30" maxlength="60"/></field>
-        <field name="depositamt" title="Deposit Amount"><text size="30" maxlength="60"/></field>
-        <field name="collateralSerialNo" title="Seraila No."><text size="30" maxlength="60"/></field>
-        <field name="collateralSerialNo" title="Seraila No."><text size="30" maxlength="60"/></field>
+        <field name="memberNo" title="Member No." widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="payrolNo" title="Payrol No." widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="depositamt" title="Deposit Amount" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
-        <field name="currentStationId" title="Current Station">
+        <field name="currentStationId" title="Current Station" widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
-                <list-options list-name="memberStationsList"   key-name="memberStationId" description="${name}"/>
+                <list-options list-name="stationList"   key-name="stationId" description="${name}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ViewLoanGuarantorsList" type="list" list-name="loanGuarantorsList"
@@ -214,8 +220,6 @@ under the License.
         <field name="memberNo" title="Member No."><display also-hidden="false"/></field>
         <field name="payrolNo" title="Payrol No."><display also-hidden="false"/></field>
         <field name="depositamt" title="Deposit Amount"><display also-hidden="false"/></field>
-        <field name="collateralSerialNo" title="Seraila No."><display also-hidden="false"/></field>
-        <field name="collateralSerialNo" title="Seraila No."><display also-hidden="false"/></field>
         <field name="currentStationId" title="Current Station">
         	 <display-entity entity-name="MemberStation" key-field-name="memberStationId"  description="${name}" also-hidden="false"/>
         </field>
@@ -439,13 +443,19 @@ under the License.
     
      <form name="disburseLoan" type="single" target="createDisburseLoan"
         focus-field-name="comment" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
-        
+        <actions>
+        	<entity-one entity-name="LoanApplication" value-field="loanApplication">
+        		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+        	</entity-one>
+        	
+        	<set field="applicationStatusValue" value="${loanApplication.applicationStatus}"/>
+        </actions>
         <field name="loanStatusLogId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
         <field name="applicationStatus" title="Status" required-field="true"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
         <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
-        <field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field>
-        <field name="submitButton" title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <!-- field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field -->
+        <field name="submitButton" use-when="!applicationStatusValue.equals(&quot;DISBURSED&quot;)"  title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
     
@@ -496,8 +506,6 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
-    
-    
     
     <!-- AccountProduct -->
     <form name="AccountProduct" type="single" target="createAccountProduct"
@@ -882,6 +890,270 @@ under the License.
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteSalaryProcessingDate" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="salaryProcessingDateId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- ProductCharge -->
+    <form name="NewProductCharge" type="single" target="createProductCharge"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
+        <actions>
+        	<entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>	
+        </actions>
+        <field name="productChargeId"><hidden/></field>
+        <field name="name" title="Name" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="chargeAccountId" title="Charge Account (A/C to Credit)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+        
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listProductCharge" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateProductCharge" paginate-target="NewProductCharge"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ProductCharge">
+            </entity-condition>
+            
+            <entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>	
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateProductCharge"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="name"> <!-- display also-hidden="false"/ --> <text></text> </field>
+        
+        <field name="chargeAccountId" title="Charge Account (A/C to Credit)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down>
+        
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteProductCharge" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="productChargeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Find Loan Products -->
+    <form name="FindLoanProduct" type="single" target="FindLoanProduct"
+		default-entity-name="LoanProduct">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="name" title="Name">
+			<text-find />
+		</field>
+		<field name="code" title="Code">
+			<text-find />
+		</field>
+		<field name="maxRepaymentPeriod" title="Repayment Period">
+			<text-find />
+		</field>
+		<field name="interestRatePM" title="Interest Rate">
+			<text-find />
+		</field>
+		<field name="deductionType" title="Deduction Method">
+			<drop-down allow-empty="true">
+                <option key="LINEAR" description="Linear/Flat Rate"/>
+                <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
+            </drop-down>
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+	
+	<form name="findListLoanProduct" type="list" list-name="listIt"
+		paginate-target="FindLoanProduct" default-entity-name="LoanProduct"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="LoanProduct">
+				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+				<!-- order-by field-name="saccoProductId"/ -->
+			</entity-condition>
+
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="loanProductCtx" />
+				<field-map field-name="entityName" value="LoanProduct" />
+				<field-map field-name="orderBy" from-field="parameters.sortField" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+		<field name="loanProductId"><hidden/></field>
+        <field name="name"> <text size="20"></text> </field>
+        <field name="code"><text size="10"/></field>
+        <field name="maxRepaymentPeriod"><text size="10"/></field>
+        <field name="interestRatePM"><text size="10"/></field>
+        
+         <field name="minimumAmt"><text size="10"/></field>
+        <field name="maximumAmt"><text size="10"/></field>
+        
+        <field name="deductionType"  title="Deduction Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="LINEAR" description="Linear/Flat Rate"/>
+                <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
+            </drop-down>
+        </field>
+        
+        <field name="Edit Loan">
+        	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
+        </field>
+		
+		<field name="details">
+			<hyperlink target="viewloanproductdetails?loanProductId=${loanProductId}"
+				description="Details"></hyperlink>
+		</field>
+		
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteLoanProduct" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false">
+				<parameter param-name="loanProductId" />
+			</hyperlink>
+		</field>
+		<!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
+			button-type="button"/></field -->
+	</form>
+	
+	<!-- Loan Product Charge -->
+	<form name="NewLoanProductCharge" type="single" target="createLoanProductCharge"
+        focus-field-name="productChargeId" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanProductChargeContext">
+        
+        <actions>
+        	<entity-condition entity-name="ProductCharge" list="productChargeList">
+            </entity-condition>
+        </actions>
+        
+        <field name="loanProductChargeId"><hidden/></field>
+        <field name="loanProductId" parameter-name="loanProductId"><hidden/></field>
+        <field name="productChargeId" title="Charge"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        
+        <field name="rateAmount" title="Rate (%)"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="fixedAmount" title="Amount (Total Charge)" ><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listLoanProductCharge" type="list" list-name="loanProductChargList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="LoanProductCharge">
+        		<condition-expr field-name="loanProductId" operator="equals" from-field="parameters.loanProductId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="ProductCharge" list="productChargeList"></entity-condition>
+        </actions>
+        
+        <field name="productChargeId" title="Charge"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        
+        <field name="rateAmount" title="Rate (%)"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="fixedAmount" title="Amount (Total Charge)"><text size="30" maxlength="60"/></field>
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanProductCharge" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanProductChargeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Loan Application Charge -->
+    <form name="NewLoanApplicationCharge" type="single" target="createLoanApplicationCharge"
+        focus-field-name="productChargeId" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanApplicationChargeContext">
+        
+        <actions>
+        	<entity-condition entity-name="ProductCharge" list="productChargeList">
+            </entity-condition>
+        </actions>
+        
+        <field name="loanApplicationChargeId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <field name="productChargeId" title="Charge"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        
+        <field name="rateAmount" title="Rate (%)"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="fixedAmount" title="Amount (Total Charge)" ><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listLoanApplicationCharge" type="list" list-name="loanApplicationChargeList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="LoanApplicationCharge">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="parameters.loanApplicationId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="ProductCharge" list="productChargeList"></entity-condition>
+        </actions>
+        
+        <field name="productChargeId" title="Charge"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+        
+        <field name="rateAmount" title="Rate (%)"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="fixedAmount" title="Amount (Total Charge)"><text size="30" maxlength="60"/></field>
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanApplicationChargee" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanApplicationChargeId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>

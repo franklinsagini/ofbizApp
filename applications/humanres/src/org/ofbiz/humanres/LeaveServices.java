@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -27,15 +28,21 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.workflow.WorkflowServices;
+//import org.ofbiz.service.LocalDispatcher;
 
 
 public class LeaveServices {
 	public static Logger log = Logger.getLogger(LeaveServices.class);
 
+	//@SuppressWarnings("null")
 	public static String forwardApplication(HttpServletRequest request,
 			HttpServletResponse response) {
+		
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
+       GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+		String user = userLogin.getString("partyId");
+		String approvalStatus = null;
 		// =============== primary Keys     ============//
 		
 		String partyId = (String) request.getParameter("partyId");
@@ -62,10 +69,15 @@ public class LeaveServices {
 						EntityCondition.makeCondition("fromDate",
 								EntityOperator.EQUALS, new java.sql.Date(fromDate.getTime()))),
 						EntityOperator.AND);
+		
+		log.info(" Date : "+fromDate);
+		log.info(" Leave Type : "+leaveTypeId);
+		log.info(" Party : "+partyId);
+		log.info(" leaveId : "+leaveId);
+		log.info(" userLogin : "+user);
 
 		try {
-			leaveApplicationELI = delegator.findList("EmplLeave",
-					leaveConditions, null, null, null, false);
+			leaveApplicationELI = delegator.findList("EmplLeave", leaveConditions, null, null, null, false);
 		} catch (GenericEntityException e2) {
 			//e2.printStackTrace();
 			return "Cannot Get Leave Application";
@@ -80,9 +92,9 @@ public class LeaveServices {
 			String workflowDocumentTypeId = leave.getString("workflowDocumentTypeId");
 			String documentApprovalId = leave.getString("documentApprovalId");
 			
-			GenericValue documentApproval = null;
+			GenericValue documentApproval = null; GenericValue leavelog = null;
 			documentApproval =  WorkflowServices.doFoward(delegator, organizationUnitId,	workflowDocumentTypeId, documentApprovalId);
-		log.info("=====================" +documentApproval);
+		//log.info("=====================" +documentApproval);
 
 		if (documentApproval == null) {
 			// Leave Approved
@@ -92,23 +104,44 @@ public class LeaveServices {
 
 			if ((documentApproval.getString("nextLevel") == null)|| (documentApproval.getString("nextLevel").equals(""))) {
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
+				leave.set("applicationStatus","LEAVE_APPROVED");
+				approvalStatus = "LEAVE_APPROVED";
+					// Employee to go for leave.
+
 			} else {
-				leave.set("approvalStatus", documentApproval.getString("stageAction")	+ " (APPROVED)");
+				leave.set("approvalStatus", documentApproval.getString("stageAction"));
+				leave.set("applicationStatus", "IN_PROGRESS");		
+				approvalStatus = "IN_PROGRESS";
+
 			}
 
+			leavelog = delegator.makeValue("LeaveStatusLog", "leaveStsLogId", delegator.getNextSeqId("LeaveStatusLog"), 
+            "approvedBy", userLogin.getString("partyId"), 
+            "partyId", partyId, 
+            "leaveId", leaveId, "approvalStatus" ,approvalStatus);
+        
+
+			try {
+				leavelog.create();
+			} catch (GenericEntityException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
 			// Set Responsible
 			// responsibleEmployee
+
 			leave.set("responsibleEmployee",	documentApproval.getString("responsibleEmployee"));
-			//}
 			try {
 				delegator.createOrStore(leave);
+				//delegator.create("LeaveStatusLog", leavelog);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			result.put("fowardMessage",	documentApproval.getString("stageAction"));
-
 		}
 
 		// return the JSON String
@@ -128,6 +161,7 @@ public class LeaveServices {
 		return "";// result.get("fowardMessage").toString();
 
 	}
+	
 
 	public static String getWorkflowDocumentType(String documentName) {
 		Map<String, Object> result = FastMap.newInstance();
@@ -237,12 +271,6 @@ public class LeaveServices {
 
 		Delegator delegator = party.getDelegator();
 
-		// try {
-		// superVisorLevel = delegator.findOne("SupervisorLevel",
-		// UtilMisc.toMap("partyId", partyId), false);
-		// } catch (GenericEntityException e2) {
-		// e2.printStackTrace();
-		// }
 
 		List<GenericValue> levelsELI = null; // =
 

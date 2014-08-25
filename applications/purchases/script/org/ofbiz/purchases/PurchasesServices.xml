@@ -121,4 +121,44 @@
         <create-value value-field="newEntity"/>
     </simple-method>
 
+    <!--
+        Purchase Orders Services
+    -->
+    <simple-method method-name="createPurchaseOrder" short-description="Create PurchaseOrderHeader">
+            <make-value entity-name="PurchaseOrderHeader" value-field="newEntity"/>
+
+
+            <if-empty field="parameters.statusId">
+                <set field="parameters.statusId" value="ORDER_IN_PROCESS"/>
+            </if-empty>
+            <!-- set the invoice date if not provided -->
+            <if-empty field="parameters.orderDate">
+                <set from-field="nowTimestamp" field="parameters.orderDate"/>
+            </if-empty>
+            <!-- Set the prepared by using the currently logged in user -->
+            <set field="parameters.createdBy" value="${userLogin.partyId}"/>
+
+
+            <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="PurchaseOrderHeader" field="orderId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="orderId" field="newEntity.orderId"/>
+            <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+            <!-- set field="productType" value="Loan"/ -->
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updatePurchaseOrder" short-description="Update PurchaseOrderHeader">
+            <entity-one entity-name="PurchaseOrderHeader" value-field="lookedUpValue"/>
+            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+            <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deletePurchaseOrder" short-description="Delete PurchaseOrderHeader">
+            <entity-one entity-name="PurchaseOrderHeader" value-field="lookedUpValue"/>
+            <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
+
 </simple-methods>

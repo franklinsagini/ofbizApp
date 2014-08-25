@@ -26,6 +26,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.payroll.TaxTracker;
 import org.ofbiz.webapp.event.EventHandlerException;
 
+
 /**
  * @author charles
  * **/
@@ -37,7 +38,7 @@ public class PayrollProcess {
 
 	/***
 	 * Values to Write
-	 * 
+	 *
 	 * */
 
 	public static BigDecimal bdEXCESSPENSIONBENEFIT;
@@ -81,7 +82,7 @@ public class PayrollProcess {
 		// try {
 		// chequeDepositELI = delegator.findList("AccountTransaction",
 		// transactionConditions, null, null, null, false);
-		//			
+		//
 		// } catch (GenericEntityException e2) {
 		// e2.printStackTrace();
 		// }
@@ -163,10 +164,11 @@ public class PayrollProcess {
 
 		// bdtotDeductions=getTotalDeductions(employee, delegator, );
 
+
 		// Save Gross Pay
 		String staffPayrollElementsSequenceId;
 		GenericValue staffPayrollElement;
-		
+
 		staffPayrollElementsSequenceId = delegator
 				.getNextSeqId("StaffPayrollElements");
 
@@ -197,7 +199,7 @@ public class PayrollProcess {
 		 * "TOTDEDUCTIONS"
 		 * */
 		/**
-		 * 	public static BigDecimal bdEXCESSPENSIONBENEFIT; 
+		 * 	public static BigDecimal bdEXCESSPENSIONBENEFIT;
 			public static BigDecimal bdINSURANCERELIEF;
 			public static BigDecimal bdLOWINTERESTBENEFIT;
 			public static BigDecimal bdMPR;
@@ -223,7 +225,7 @@ public class PayrollProcess {
 		listSystemElements.add(createElementToSave(delegator, "NSSF", bdNSSFStatutory, staffPayrollId));
 		listSystemElements.add(createElementToSave(delegator, "NSSFVOL", bdNSSFVoluntary, staffPayrollId));
 		listSystemElements.add(createElementToSave(delegator, "PENSION", bdPensionAmt, staffPayrollId));
-		
+
 		try {
 			delegator.storeAll(listSystemElements);
 		} catch (GenericEntityException e) {
@@ -232,7 +234,7 @@ public class PayrollProcess {
 		}
 
 	}
-	
+
 	private static GenericValue createElementToSave(Delegator delegator, String payrollElementId, BigDecimal elementAmount, String staffPayrollId ){
 		String staffPayrollElementsSequenceId = delegator
 		.getNextSeqId("StaffPayrollElements");
@@ -249,7 +251,7 @@ public class PayrollProcess {
 		} catch (GenericEntityException e1) {
 			e1.printStackTrace();
 		}
-		return staffPayrollElement; 
+		return staffPayrollElement;
 	}
 
 	private static BigDecimal calculateInterestAmounts(GenericValue employee,
@@ -292,6 +294,7 @@ public class PayrollProcess {
 
 	private static BigDecimal getTotalRelief(GenericValue employee,String staffPayrollId,
 			Delegator delegator) {
+
 		BigDecimal bdtotalRelief = BigDecimal.ZERO;
 		BigDecimal bdInsuranceRelief = BigDecimal.ZERO;
 		BigDecimal bdMPRAmount = BigDecimal.ZERO;
@@ -333,6 +336,7 @@ public class PayrollProcess {
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdInsRelief = BigDecimal.ZERO;
+
 		BigDecimal bdInsAmount = BigDecimal.ZERO;
 
 		EntityConditionList<EntityExpr> elementConditions = EntityCondition
@@ -509,7 +513,7 @@ public class PayrollProcess {
 
 		// for (GenericValue payrollElement : employeeELI) {
 		// //Get the amount
-		//			
+		//
 		// bdGross = bdGross.add(getElementAmount(payrollElement, delegator));
 		// }
 
@@ -543,6 +547,7 @@ public class PayrollProcess {
 		}
 		return bdDisabltyAllowanceAmount;
 	}
+
 
 	private static BigDecimal getMPRAmount(GenericValue payrollConstant,
 			Delegator delegator) {
@@ -1071,6 +1076,7 @@ public class PayrollProcess {
 					taxTracker2.getTaxPercent()));
 		}
 
+
 		log.info("##########Gross Tax :" + grossTax);
 		return grossTax;
 	}
@@ -1093,6 +1099,7 @@ public class PayrollProcess {
 		for (GenericValue genericValue : nhifTableELI) {
 			bdLowerBracket = genericValue.getBigDecimal("lowerbracket");
 			bdUpperBracket = genericValue.getBigDecimal("upperbracket");
+
 
 			if ((!(bdBasicPay.compareTo(bdLowerBracket) == -1))
 					&& (!(bdBasicPay.compareTo(bdUpperBracket) == 1))) {
@@ -1138,8 +1145,8 @@ public class PayrollProcess {
 		// Save the amount to staffPayrollElements
 		/***
 		 * payrollElementId staffPayrollId amount balance
-		 * 
-		 * 
+		 *
+		 *
 		 * */
 		// GenericValue interestPayrolElement =
 		// delegator.makeValidValue("PayrollElement", )
@@ -1175,8 +1182,8 @@ public class PayrollProcess {
 
 		/****
 		 * staffPayrollElementsId staffPayrollId payrollElementId amount
-		 * 
-		 * 
+		 *
+		 *
 		 * */
 		BigDecimal bdInterestAmt = computeInterestAmount(staffPayrollElement,
 				payrolElement, delegator);

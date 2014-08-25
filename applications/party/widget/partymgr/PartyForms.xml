@@ -80,11 +80,11 @@ under the License.
        	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
        	 </drop-down>
         </field>
-        <field name="appointmentdate" title="Appointment Date"><date-time/></field>  
-        <field name="confirmationdate" title="Confirmation Date"><date-time/></field>  
-        <field name="retirementdate" title="Retirement Date"><date-time/></field>         
+        <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>  
+        <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>  
+        <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>         
       
-        <field name="employmentStatusEnumId">
+        <field name="employmentStatusEnumId" title="Employment Status">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="EMPLOY_STTS"/>
@@ -92,14 +92,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="residenceStatusEnumId">
+        <!--field name="residenceStatusEnumId" title="Residence Status">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="PTY_RESID_STTS"/>
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field-->
         <field name="existingCustomer"><hidden/></field>
         <!-- field name="existingCustomer">
             <drop-down allow-empty="false"><option key="N" description="${uiLabelMap.CommonN}"/>
@@ -113,7 +113,16 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" use-when="person==null"><hidden/></field>
+         <field name="isDisabled" title="Disabled">
+			<drop-down allow-empty="false">
+				<option key="N" description="No"/>
+				<option key="Y" description="Yes"/>
+			</drop-down>        
+        </field>
+        <field name="disabilityDetails"><text size="40" maxlength="60"/></field>
+        
+        
+        <!--field name="statusId" use-when="person==null"><hidden/></field>
         <field name="statusId" use-when="person!=null &amp;&amp; leadDescription==null">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="StatusItem">
@@ -129,7 +138,16 @@ under the License.
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field-->
+        
+       <field name="statusId"><hidden/></field>
+        <field name="residenceStatusEnumId"><hidden/></field>
+        <field name="occupation"><hidden/></field>
+        <field name="yearsWithEmployer"><hidden/></field>
+        <field name="monthsWithEmployer"><hidden/></field>
+       <field name="height" title="Height (M)"><hidden/></field>
+        <field name="weight" title="Weight (Kg)"><hidden/></field>
+        <field name="personalTitle"><hidden/></field>
         <field name="suffix"><hidden/></field>
         <field name="nickname"><hidden/></field>
         <field name="firstNameLocal"><hidden/></field>
@@ -729,6 +747,10 @@ under the License.
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field>
+        
+        <field name="monthlySalaryAmount" title="Salary Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
+        <field name="shareAmount" title="Share Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
+        <field name="memberDepositAmount" title="Member Deposit Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
         
         <field name="memberStatus"><text default-value="NEW" disabled="true"></text></field>
        

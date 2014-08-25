@@ -221,9 +221,13 @@ under the License.
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition -->
                             <widgets>
-                                <platform-specific>
+                                <!-- platform-specific>
                                     <html><html-template location="component://loans/webapp/loans/application/listloanapplications.ftl"/></html>
-                                </platform-specific>
+                                </platform-specific -->
+                                
+                                <screenlet>
+                                	<include-form name="listLoanApplications" location="component://loans/widget/loans/ExampleForms.xml"/>
+                                </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
@@ -315,8 +319,11 @@ under the License.
                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/><!-- is required -->
                 </entity-one>
                 
-                <entity-one entity-name="SaccoProduct" value-field="lookupLoanType">
-                    <field-map field-name="saccoProductId" from-field="lookupLoanApplication.saccoProductId"/><!-- is required -->
+                <!-- entity-one entity-name="SaccoProduct" value-field="lookupLoanType">
+                    <field-map field-name="saccoProductId" from-field="lookupLoanApplication.saccoProductId"/>
+                </entity-one -->
+                <entity-one entity-name="LoanProduct" value-field="lookupLoanType">
+                    <field-map field-name="loanProductId" from-field="lookupLoanApplication.loanProductId"/><!-- is required -->
                 </entity-one>
                 
                 <entity-one entity-name="PaymentMethodType" value-field="lookupPaymentMethodType">
@@ -363,12 +370,12 @@ under the License.
                     </condition>
                     <widgets>
                         <section>
-                            <condition>
+                            <!-- condition>
                                 <or>
-                                    <!-- if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/ -->
+                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
                                     <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
                                 </or>
-                            </condition>
+                            </condition -->
                             <widgets>
                                 <screenlet title="Loan Information" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
                                            <!-- include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
@@ -401,6 +408,13 @@ under the License.
                                             </screenlet>
                                             <screenlet title="Guarantors List">
                                             	<include-form name="ViewLoanGuarantorsList" location="component://loans/widget/loans/LoanForms.xml"/>
+                                            </screenlet>
+                                            
+                                             <screenlet title="Add Charge">
+                                            	<include-form name="NewLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                            </screenlet>
+                                            <screenlet title="Charges List">
+                                            	<include-form name="listLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             
                                             </widgets>
@@ -815,6 +829,361 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- LoanProductCharge -->
+    <screen name="NewProductCharge">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create New Product Charge"/>
+                <set field="headerItem" value="productcharge"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createProductCharge"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <set field="productChargeId" from-field="parameters.productChargeId"/>
+                
+                <entity-one entity-name="ProductCharge" value-field="productChargeContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="LOANS" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Product Charge">
+                                    <include-form name="NewProductCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Charges List">
+                        			<include-form name="listProductCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- List Loan Products -->
+    <screen name="FindLoanProduct">
+        <section>
+            <actions>
+                <!-- set field="headerItem" value="ExampleMenuItem"/>
+                <set field="titleProperty" value="PageTitleFindExample"/ -->
+                <set field="headerItem" value="FindLoanProduct"/>
+                <set field="titleProperty" value="Find Loan Product"/>
+                <set field="loanProductCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="LOANS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                        
+                                        <!-- link target="EditExampleLayer" link-type="ajax-window" height="500" width="500" text="${uiLabelMap.ExampleNewExample}" style="buttontext create"/ -->
+                                        <link target="NewProductCharge" text="New Product Charge" style="buttontext create"></link>
+                                        
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindLoanProduct" location="component://loans/widget/loans/LoanForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="findListLoanProduct" location="component://loans/widget/loans/LoanForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">Permission Error</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!--  viewloanproductdetails -->
+    <screen name="viewloanproductdetails">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Product Details"/>
+                <set field="tabButtonItem" value="viewloanproductdetails"/>
+                <set field="headerItem" value="viewloanproductdetails"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="loanProductId" from-field="parameters.loanProductId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <entity-one entity-name="LoanProduct" value-field="loanProduct">
+                                    <field-map field-name="loanProductId" from-field="parameters.loanProductId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       
+                        <section>
+                            <condition>
+                                <not><if-empty field="loanProduct"/></not>
+                            </condition>
+                            <widgets>
+                                <!-- section>
+                                    <condition>
+                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar button-style-2">
+                                            <link target="viewmemberprofile" text="${uiLabelMap.PartyHideOld}">
+                                                <parameter param-name="partyId" from-field="party.partyId"/>
+                                            </link>
+                                        </container>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container style="button-bar button-style-2">
+                                            <link target="viewmemberprofile" text="${uiLabelMap.PartyShowOld}">
+                                                <parameter param-name="partyId" from-field="party.partyId"/>
+                                                <parameter param-name="SHOW_OLD" value="true"/>
+                                            </link>
+                                        </container>
+                                    </fail-widgets>
+                                </section -->
+                               
+                                        <!-- include-portal-page id="PartyProfile"/ -->
+                                        
+                                   		<!-- include-portal-page id="ApplicationProfile"/ -->
+                                   		<include-portal-page id="LoanProductProfile"/>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- LoanProductExtraDetails -->
+    <screen name="LoanProductExtraDetails">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.loanProductId" from-field="parameters.loanProductId"/>
+                
+                <entity-one entity-name="LoanProduct" value-field="lookupLoanProduct">
+                    <field-map field-name="loanProductId" from-field="parameters.loanProductId"/><!-- is required -->
+                </entity-one>
+                
+             
+             </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupLoanProduct"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <!-- condition>
+                                <or>
+                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                                    <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
+                                </or>
+                            </condition -->
+                            <widgets>
+                                <screenlet title="Product" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
+                                           <!-- include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                                    <!-- include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/ -->
+                                    <!-- include-form name="ViewLoanApplicationDetails" location="component://loans/widget/loans/LoanForms.xml"/ -->
+                                    <section>
+                                        <!--  condition -->
+                                            <!--  not><if-empty field="partyNameHistoryList"/></not -->
+                                            
+                                            <!-- not><if-empty field="loanApplicationSecurityList"/></not -->
+                                        <!-- /condition -->
+                                        <widgets>
+                                			<container>
+                                				<label style="h3">Product Name    : ${lookupLoanProduct.name}</label>
+                                				<label style="h3">Product Code    : ${lookupLoanProduct.code}</label>
+                                				<label style="h3">Maximum Repayment : ${lookupLoanProduct.maxRepaymentPeriod}</label>
+                                				<label style="h3">Interest Rate (P.M)    :  ${lookupLoanProduct.interestRatePM}</label>
+                                            
+                                            </container>
+                                            <!-- include-form name="ViewPartyPersonHistory" location="component://party/widget/partymgr/PartyForms.xml"/ -->
+                                            <screenlet title="Add Charge">
+                                            	<include-form name="NewLoanProductCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                            </screenlet>
+                                            <screenlet title="Charges List">
+                                            	<include-form name="listLoanProductCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                            </screenlet>
+                                            
+                                            </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                            
+                        </section>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupGroup"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <!-- condition>
+                                <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                               </condition -->
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" navigation-menu-name="groupUpdate" id="PartyGroupInformationPanel">
+                                    <include-menu name="groupUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" id="PartyGroupInformationPanel">
+                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- LoanApplicationCharges -->
+    <screen name="LoanApplicationCharges">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="lookupLoanApplication">
+                    <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/><!-- is required -->
+                </entity-one>
+                
+             
+             </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupLoanApplication"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <!-- condition>
+                                <or>
+                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                                    <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
+                                </or>
+                            </condition -->
+                            <widgets>
+                                <screenlet title="Product" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
+                                           <!-- include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                                    <!-- include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/ -->
+                                    <!-- include-form name="ViewLoanApplicationDetails" location="component://loans/widget/loans/LoanForms.xml"/ -->
+                                    <section>
+                                        <!--  condition -->
+                                            <!--  not><if-empty field="partyNameHistoryList"/></not -->
+                                            
+                                            <!-- not><if-empty field="loanApplicationSecurityList"/></not -->
+                                        <!-- /condition -->
+                                        <widgets>
+                                			
+                                            <!-- include-form name="ViewPartyPersonHistory" location="component://party/widget/partymgr/PartyForms.xml"/ -->
+                                            <screenlet title="Add Charge">
+                                            	<include-form name="NewLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                            </screenlet>
+                                            <screenlet title="Charges List">
+                                            	<include-form name="listLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                            </screenlet>
+                                            
+                                            </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                            
+                        </section>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupGroup"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <!-- condition>
+                                <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                               </condition -->
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" navigation-menu-name="groupUpdate" id="PartyGroupInformationPanel">
+                                    <include-menu name="groupUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" id="PartyGroupInformationPanel">
+                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

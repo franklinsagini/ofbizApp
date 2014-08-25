@@ -76,8 +76,10 @@ under the License.
         <field name="title" type="id-long"><description>Title of degree or job</description></field>
         <field name="statusId" type="id"><description>Status e.g. completed, part-time etc.</description></field>
         <field name="verifStatusId" type="id"><description>Verification done for this entry if any</description></field>
-        <field name="fromDate" type="date-time"></field>
-        <field name="thruDate" type="date-time"></field>
+        <field name="fromDate" type="date"></field>
+        <field name="thruDate" type="date"></field>
+        <field name="institute" type="name"><description>Name of Institute</description></field>
+        <field name="institutelocation" type="name"><description>Physical Location of Institute</description></field>
         <prim-key field="partyId"/>
         <prim-key field="partyQualTypeId"/>
         <prim-key field="fromDate"/>
@@ -463,7 +465,9 @@ under the License.
       <field name="leaveId" type="id"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="approvedBy" type="id-ne"></field>
-      <field name="leaveLogStatus" type="description"></field>
+      <field name="rejectedBy" type="id-ne"></field>
+      <!-- <field name="leaveLogStatus" type="description"></field> -->
+      <field name="approvalStatus" type="description"></field>
       <prim-key field="leaveStsLogId"/>
       <relation type="one" fk-name="EMPLEAVE_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
         <key-map field-name="leaveId" rel-field-name="leaveId"/>
@@ -485,12 +489,14 @@ under the License.
         <field name="leaveId" type="id"/>
         <field name="fromDate" type="date"/>
         <field name="leaveDuration" type="numeric"/>     
-        
+
         <field name="thruDate" type="date"/>
         <field name="isActive" type="indicator"></field>
         <field name="leaveBalance" type="numeric"/>
         <field name="createdBy" type="id-ne"/>
         <field name="updatedBy" type="id-ne"/>
+        <field name="leaveStatus" type="id-ne"/>
+        <field name="createdDate" type="date-time"/>
   
         <field name="workflowDocumentTypeId" type="id-ne"/>
         <field name="organizationUnitId" type="id"/>
@@ -1211,7 +1217,7 @@ under the License.
             <view-entity entity-name="EmplLeaveView" package-name="org.ofbiz.humanres">
 	    <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
 	    <member-entity entity-alias="EmploymentView" entity-name="Employment"></member-entity>
-	    <member-entity entity-alias="EmplLeaveView" entity-name="EmplLeave"></member-entity>
+	    <member-entity entity-alias="EmplLeaveV" entity-name="EmplLeave"></member-entity>
 		
 			<alias entity-alias="PersonView" name="EmplFirstName" field="firstName"/>
 			<alias entity-alias="PersonView" name="EmplFastName" field="lastName"/>
@@ -1219,23 +1225,29 @@ under the License.
 			
 			<alias entity-alias="EmploymentView" name="partyIdFrom" field="partyIdFrom"/>
 			
-			<alias entity-alias="EmplLeaveView" name="leaveTypeId" field="leaveTypeId"/>
-			<alias entity-alias="EmplLeaveView" name="emplLeaveReasonTypeId" field="emplLeaveReasonTypeId"/>
-			<alias entity-alias="EmplLeaveView" name="leaveId" field="leaveId"/>
-			<alias entity-alias="EmplLeaveView" name="fromDate" field="fromDate"/>
-			<alias entity-alias="EmplLeaveView" name="leaveDuration" field="leaveDuration"/>
-			<alias entity-alias="EmplLeaveView" name="thruDate" field="thruDate"/>
-			<alias entity-alias="EmplLeaveView" name="leaveBalance" field="leaveBalance"/>
-			<alias entity-alias="EmplLeaveView" name="forwardedBy" field="forwardedBy"/>
-			<alias entity-alias="EmplLeaveView" name="approvedBy" field="approvedBy"/>
-			<alias entity-alias="EmplLeaveView" name="leaveStatus" field="leaveStatus"/>
-			<alias entity-alias="EmplLeaveView" name="leaveStage"></alias>
-			<alias entity-alias="EmplLeaveView" name="description"></alias>	
+      
+
+      <alias entity-alias="EmplLeaveV" name="responsibleEmployee" field="responsibleEmployee"/>
+      <alias entity-alias="EmplLeaveV" name="applicationStatus" field="applicationStatus"/>
+      <alias entity-alias="EmplLeaveV" name="approvalStatus" field="approvalStatus"/>
+      <alias entity-alias="EmplLeaveV" name="organizationUnitId" field="organizationUnitId"/>
+			<alias entity-alias="EmplLeaveV" name="leaveTypeId" field="leaveTypeId"/>
+			<alias entity-alias="EmplLeaveV" name="emplLeaveReasonTypeId" field="emplLeaveReasonTypeId"/>
+			<alias entity-alias="EmplLeaveV" name="leaveId" field="leaveId"/>
+			<alias entity-alias="EmplLeaveV" name="fromDate" field="fromDate"/>
+			<alias entity-alias="EmplLeaveV" name="leaveDuration" field="leaveDuration"/>
+			<alias entity-alias="EmplLeaveV" name="thruDate" field="thruDate"/>
+			<alias entity-alias="EmplLeaveV" name="leaveBalance" field="leaveBalance"/>
+			<alias entity-alias="EmplLeaveV" name="forwardedBy" field="forwardedBy"/>
+			<alias entity-alias="EmplLeaveV" name="approvedBy" field="approvedBy"/>
+			<alias entity-alias="EmplLeaveV" name="leaveStatus" field="leaveStatus"/>
+			<alias entity-alias="EmplLeaveV" name="leaveStage"></alias>
+			<alias entity-alias="EmplLeaveV" name="description"></alias>	
 			
 	    <view-link  entity-alias="PersonView" rel-entity-alias="EmploymentView">
 	    	<key-map field-name="partyId" rel-field-name="partyIdTo"/>
 	    </view-link>
-	    <view-link entity-alias="EmploymentView" rel-entity-alias="EmplLeaveView" >
+	    <view-link entity-alias="EmploymentView" rel-entity-alias="EmplLeaveV" >
 	    	<key-map field-name="partyIdTo" rel-field-name="partyId"/>
 	    </view-link>
     </view-entity>

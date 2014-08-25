@@ -39,6 +39,11 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
+        <request-map uri="createSalaryStep">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSalaryStep"/>
+        <response name="success" type="view" value="EditSalarySteps"/>
+    </request-map>
 
 
     <!--  Request Mappings for calling leave duration and end date java functions -->
@@ -80,7 +85,7 @@ under the License.
         <response name="success" type="view" value="main"/>
     </request-map>
     <!-- ===== SupervisorLevel ==== -->
-    <request-map uri="editSupervisorLevel">
+    <!-- <request-map uri="editSupervisorLevel">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editSupervisorLevel"/>
     </request-map>
@@ -98,11 +103,15 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteSupervisorLevel"/>
         <response name="success" type="view" value="editSupervisorLevel"/>
-    </request-map>
+    </request-map> -->
 
 
     <!-- ================HumanResource==================================== -->
     <!-- ================Party Ability Group==================================== -->
+    <request-map uri="ActiveEmplLeaves">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ActiveEmplLeaves"/>
+    </request-map>    
     <request-map uri="FindPartyQuals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPartyQuals"/>
@@ -933,8 +942,8 @@ under the License.
     <request-map uri="createEmplLeaveExt">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmplLeave"/>
-        <response name="success" type="view" value="EditEmplLeave"/>
-        <response name="error" type="view" value="EditEmplLeave"/>
+        <response name="success" type="view" value="FindEmplLeaves"/>
+        <response name="error" type="view" value="FindEmplLeaves"/>
     </request-map>
     <request-map uri="updateEmplLeaveExt">
         <security https="true" auth="true"/>
@@ -1542,6 +1551,7 @@ under the License.
     <view-map name="newSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#newSupervisorLevel"/>
     <view-map name="editSupervisorLevel" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#editSupervisorLevel"/>
  
+    <view-map name="ActiveEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>
     <view-map name="FindPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#FindPartyQuals"/>
     <view-map name="NewPartyQual" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQual"/>
     <view-map name="EditPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#EditPartyQuals"/>
