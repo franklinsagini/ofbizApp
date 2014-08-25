@@ -142,17 +142,11 @@ public class LoanAccounting {
 						"productChargeId", productChargeId,
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType));
-//		try {
-//			accountTransaction = delegator
-//					.createSetNextSeqId(accountTransaction);
-//		} catch (GenericEntityException e1) {
-//			e1.printStackTrace();
-//		}
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
-			log.error("Could not create Disbursement Transaction");
+			log.error("Could not create Transaction");
 		}
 	}
 
