@@ -898,4 +898,86 @@ public class AccHolderTransactionServices {
 		return acctgTransId;
 	}
 	
+	/**
+	 * @author Japheth Odonya  @when Aug 25, 2014 7:30:31 PM
+	 * 
+	 * Add Charges to Transaction Like Cash Withdrawal or 
+	 * Cheque Withdrawal
+	 * 
+	 * **/
+	public static String addChargesToTransaction(GenericValue accountTransaction, Map<String, String> userLogin, String transactionType){
+		
+		//Get the Product by first accessing the MemberAccount
+		String accountProductId = getAccountProduct(accountTransaction);
+		
+		//Get the Charges for the Product
+		List<GenericValue> accountProductChargeELI = null;
+		accountProductChargeELI = getAccountProductCharges(accountTransaction,accountProductId, transactionType);
+		//Create a transaction in Account Transaction for each of the Charges
+		for (GenericValue accountProductCharge : accountProductChargeELI) {
+			addCharge(accountProductCharge, accountTransaction);
+		}
+		// Create an Account Transaction for each of the Charges
+		
+		return "";
+	}
+
+	private static void addCharge(GenericValue accountProductCharge,
+			GenericValue accountTransaction) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/***
+	 * Get Account Charge
+	 * */
+	private static List<GenericValue> getAccountProductCharges(
+			GenericValue accountTransaction, String accountProductId, String transactionType) {
+		
+		Delegator delegator = accountTransaction.getDelegator();
+		EntityConditionList<EntityExpr> accountChargeConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId), EntityCondition.makeCondition(
+						"transactionType", EntityOperator.EQUALS,
+						transactionType)), EntityOperator.AND);
+		List<GenericValue> accountProductChargeELI = null;
+		try {
+			accountProductChargeELI = delegator.findList("AccountProductCharge",
+					accountChargeConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		if (accountProductChargeELI == null) {
+			// result.put("", "No Member Accounts");
+			log.info(" ######### The Account Has no Charges #########");
+		}
+		return accountProductChargeELI;
+	}
+
+	/***
+	 * Get Account Product from MemberAccount with is in the
+	 * AccountTransaction
+	 * */
+	private static String getAccountProduct(GenericValue accountTransaction) {
+		
+		String memberAccountId = accountTransaction.getString("memberAccountId");
+		Delegator delegator = accountTransaction.getDelegator();
+		
+		GenericValue memberAccount = null;
+		try {
+			memberAccount = delegator
+					.findOne("MemberAccount", UtilMisc.toMap(
+							"memberAccountId", memberAccountId),
+							false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		//Get AccountProduct
+		String accountProductId = memberAccount.getString("accountProductId");
+		return accountProductId;
+	}
+	
 }

@@ -34,6 +34,7 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" value="CASHWITHDRAWAL"/>
+        <set field="transactionType" value="CASHWITHDRAWAL"/>
         <set field="newEntity.increaseDecrease" value="D"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         
@@ -48,9 +49,7 @@ under the License.
         
         <!-- Post Cash Withdrawal -->
         <call-simple-method method-name="createMemberTransaction"></call-simple-method>
-        
-       
-        
+        <set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
     </simple-method>
     <simple-method method-name="createMemberTransaction" short-description="Member Transaction Entry">
         <!-- Create Account Transaction -->
@@ -177,6 +176,7 @@ under the License.
          <!-- Post Cash Deposit -->
         <call-simple-method method-name="createMemberTransaction"></call-simple-method>
         
+        
     </simple-method>
     <simple-method method-name="updateCashDeposit" short-description="Update CashDeposit">
         <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
@@ -197,7 +197,9 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <call-simple-method method-name="saveChequeWithdrawal" scope="inline"> </call-simple-method>
+        <set field="transactionType" value="CHEQUEWITHDRAWAL"/>
         <set field="postedStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.createChequeTransaction(newEntity, userLogin);}" type="String"/>
+        <set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
     </simple-method>
     
     
