@@ -39,14 +39,26 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
-        <request-map uri="createSalaryStep">
+   <request-map uri="createSalaryStep">
         <security https="true" auth="true"/>
         <event type="service" invoke="createSalaryStep"/>
         <response name="success" type="view" value="EditSalarySteps"/>
     </request-map>
+    <request-map uri="LeaveBalances">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LeaveBalances"/>
+    </request-map>
 
 
     <!--  Request Mappings for calling leave duration and end date java functions -->
+    <request-map uri="generateLeaveBalances">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="generateLeaveBalances" />
+    <response name="success" type="view"  value="LeaveBalances"></response>
+    <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+
+
     <request-map uri="forwardApplication">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="forwardApplication" />
@@ -1590,6 +1602,7 @@ under the License.
     <view-map name="EditEmplLeaveReasonTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditEmplLeaveReasonTypes"/>
     <view-map name="FindLeaveApprovals" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindLeaveApprovals"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
+    <view-map name="LeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>
     
     <view-map name="staffLeaveBalances" type="screen" page="component://humanres/widget/EmployeeScreens.xml#StaffLeaveBalances"/>
     
