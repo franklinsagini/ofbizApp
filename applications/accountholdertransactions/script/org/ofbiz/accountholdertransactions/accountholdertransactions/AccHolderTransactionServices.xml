@@ -466,6 +466,31 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 	<!-- End -->
+	
+	<!-- Expected Payment -->
+	<simple-method method-name="createExpectedPayment" short-description="Create ExpectedPayment">
+       <make-value entity-name="ExpectedPayment" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        
+         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateExpectedPayment" short-description="Update ExpectedPayment">
+        <entity-one entity-name="ExpectedPayment" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteExpectedPayment" short-description="Delete ExpectedPayment">
+        <entity-one entity-name="ExpectedPayment" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
     
   
     
