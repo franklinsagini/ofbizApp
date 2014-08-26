@@ -14,10 +14,10 @@
         <menu-item name="orders" title="Orders">
             <link target="findPurchasingOrders"/>
         </menu-item>
-        <menu-item name="invoices" title="Invoices">
+        <menu-item name="invoices" title="Order Invoices">
             <link target="purchasingInvoices"/>
         </menu-item>
-        <menu-item name="payments" title="Payments">
+        <menu-item name="payments" title="Order Payments">
             <link target="purchasingPayments"/>
         </menu-item>
         <menu-item name="reports" title="Reports">
@@ -90,7 +90,7 @@
 
     <menu name="InvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="find" title="${uiLabelMap.CommonFind}">
-            <link target="findInvoices"/>
+            <link target="purchasingInvoices"/>
         </menu-item>
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
             <condition>
@@ -192,6 +192,159 @@
         </menu-item>
 
     </menu>
+
+            <!--
+                Payment Tab Bar
+            -->
+    <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="findPayment" title="${uiLabelMap.CommonFind}" >
+            <link target="purchasingPayments"/>
+        </menu-item>
+        <menu-item name="paymentOverview" title="${uiLabelMap.AccountingPaymentTabOverview}">
+            <condition>
+                <not><if-empty field="payment.paymentId"/></not>
+            </condition>
+            <link target="paymentOverview">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+            </link>
+        </menu-item>
+        <menu-item name="editPayment" title="${uiLabelMap.AccountingPaymentTabHeader}">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <if-compare field="payment.statusId" operator="equals" value="PMNT_NOT_PAID"/>
+                </and>
+            </condition>
+            <link target="editPayment">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+            </link>
+        </menu-item>
+        <menu-item name="editPaymentApplications" title="${uiLabelMap.AccountingPaymentTabApplications}">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <or>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_NOT_PAID"/>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_RECEIVED"/>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_SENT"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="editPaymentApplications">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <!--
+        PaymentsSubTabBar
+     -->
+
+    <menu name="PaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <actions>
+            <set field="isDisbursement" value="${bsh:if(payment!=void)return org.ofbiz.accounting.util.UtilAccounting.isDisbursement(payment)}"/>
+        </actions>
+        <menu-item name="createNew" title="${uiLabelMap.CommonCreateNew}" widget-style="buttontext create" >
+            <condition>
+                <not><if-empty field="payment.paymentId"/></not>
+            </condition>
+            <link target="newPayment"/>
+        </menu-item>
+        <menu-item name="statusToSend" title="${uiLabelMap.AccountingPaymentTabStatusToSent}">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <if-compare field="isDisbursement" operator="equals" value="true"/>
+                    <if-compare field="payment.statusId" operator="equals" value="PMNT_NOT_PAID"/>
+                </and>
+            </condition>
+            <link target="setPaymentStatus">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+                <parameter param-name="statusId" value="PMNT_SENT"/>
+            </link>
+        </menu-item>
+        <menu-item name="statusToReceived" title="${uiLabelMap.AccountingPaymentTabStatusToReceived}">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <if-compare field="isDisbursement" operator="equals" value="false"/>
+                    <if-compare field="payment.statusId" operator="equals" value="PMNT_NOT_PAID"/>
+                </and>
+            </condition>
+            <link target="setPaymentStatus">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+                <parameter param-name="statusId" value="PMNT_RECEIVED"/>
+            </link>
+        </menu-item>
+        <menu-item name="statusToCancelled" title="${uiLabelMap.AccountingPaymentTabStatusToCancelled}">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <if-compare field="payment.statusId" operator="equals" value="PMNT_NOT_PAID"/>
+                </and>
+            </condition>
+            <link target="setPaymentStatus" request-confirmation="true" confirmation-message="You want to cancel this payment number ${payment.paymentId}?">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+                <parameter param-name="statusId" value="PMNT_CANCELLED"/>
+            </link>
+        </menu-item>
+        <menu-item name="statusToConfirmed" title="${uiLabelMap.AccountingPaymentTabStatusToConfirmed}">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <or>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_RECEIVED"/>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_SENT"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="setPaymentStatus">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+                <parameter param-name="statusId" value="PMNT_CONFIRMED"/>
+            </link>
+        </menu-item>
+        <menu-item name="printAsCheck" title="${uiLabelMap.AccountingPrintAsCheck}">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <if-compare field="payment.statusId" operator="equals" value="PMNT_NOT_PAID"/>
+                </and>
+            </condition>
+            <link target="printChecks.pdf" target-window="_BLANK">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+            </link>
+        </menu-item>
+        <menu-item name="statusToVoidPayment" title="${uiLabelMap.AccountingPaymentTabStatusToVoid}">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <and>
+                        <if-compare field="payment.statusId" operator="not-equals" value="PMNT_CONFIRMED"/>
+                        <if-compare field="payment.statusId" operator="not-equals" value="PMNT_VOID"/>
+                    </and>
+                </and>
+            </condition>
+            <link target="voidPayment" request-confirmation="true" confirmation-message="You want to void this payment number ${payment.paymentId}?">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+            </link>
+        </menu-item>
+        <menu-item name="acctgTransEntriesPDF" title="Acctg Trans Entries PDF">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <or>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_RECEIVED"/>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_SENT"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="PaymentAcctgTransEntriesPdf">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+            </link>
+        </menu-item>
+    </menu>
+
 
 
 
