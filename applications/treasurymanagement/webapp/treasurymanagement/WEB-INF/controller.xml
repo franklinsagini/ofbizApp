@@ -22,7 +22,144 @@
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="treasuryType">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="treasuryType"
+			save-current-view="true" />
+	</request-map>
+	
+	<!-- Treasury Type -->
+	<request-map uri="createTreasuryType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createTreasuryType" />
+		<response name="success" type="request-redirect"
+			value="treasuryType">
+				<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="treasuryType" />
+	</request-map>
+	
+	<request-map uri="updateTreasuryType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateTreasuryType" />
+		<response name="success" type="request-redirect-noparam"
+			value="treasuryType"></response>
+		<response name="error" type="view" value="treasuryType" />
+	</request-map>
+	
+	<request-map uri="deleteTreasuryType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteTreasuryType" />
+		<response name="success" type="request-redirect-noparam"
+			value="treasuryType"></response>
+		<response name="error" type="view" value="treasuryType" />
+	</request-map>
+	
+	<!-- Treasury -->
+	<request-map uri="treasury">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="treasury"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="createTreasury">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createTreasury" />
+		<response name="success" type="request-redirect"
+			value="treasury">
+				<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="treasury" />
+	</request-map>
+	
+	<request-map uri="updateTreasury">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateTreasury" />
+		<response name="success" type="request-redirect-noparam"
+			value="treasury"></response>
+		<response name="error" type="view" value="treasury" />
+	</request-map>
+	
+	<request-map uri="deleteTreasury">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteTreasury" />
+		<response name="success" type="request-redirect-noparam"
+			value="treasury"></response>
+		<response name="error" type="view" value="treasury" />
+	</request-map>
+	
+	<!-- Treasury Transaction -->
+	<request-map uri="treasuryTransaction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="treasuryTransaction"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="createTreasuryTransaction">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createTreasuryTransaction" />
+		<response name="success" type="request-redirect"
+			value="treasuryTransaction">
+				<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="treasuryTransaction" />
+	</request-map>
+	
+	<request-map uri="updateTreasuryTransaction">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateTreasuryTransaction" />
+		<response name="success" type="request-redirect-noparam"
+			value="treasuryTransaction"></response>
+		<response name="error" type="view" value="treasuryTransaction" />
+	</request-map>
+	
+	<request-map uri="deleteTreasuryTransaction">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteTreasuryTransaction" />
+		<response name="success" type="request-redirect-noparam"
+			value="treasuryTransaction"></response>
+		<response name="error" type="view" value="treasuryTransaction" />
+	</request-map>
+	
+	<!-- Treasury Transfer -->
+	<request-map uri="treasuryTransfer">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="treasuryTransfer"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="createTreasuryTransfer">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createTreasuryTransfer" />
+		<response name="success" type="request-redirect"
+			value="treasuryTransfer">
+				<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="treasuryTransfer" />
+	</request-map>
+	
+	<request-map uri="updateTreasuryTransfer">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateTreasuryTransfer" />
+		<response name="success" type="request-redirect-noparam"
+			value="treasuryTransfer"></response>
+		<response name="error" type="view" value="treasuryTransfer" />
+	</request-map>
+	
+	<request-map uri="deleteTreasuryTransfer">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteTreasuryTransfer" />
+		<response name="success" type="request-redirect-noparam"
+			value="treasuryTransfer"></response>
+		<response name="error" type="view" value="treasuryTransfer" />
+	</request-map>
+	
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#main"/>
+	<view-map name="treasuryType" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#NewTreasuryType"/>
+	<view-map name="treasury" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#NewTreasury"/>
+	<view-map name="treasuryTransaction" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#NewTreasuryTransaction"/>	
+	<view-map name="treasuryTransfer" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#NewTreasuryTransfer"/>
+	
 </site-conf>
