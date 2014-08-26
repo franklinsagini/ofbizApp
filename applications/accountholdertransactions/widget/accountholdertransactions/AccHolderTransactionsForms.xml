@@ -1183,4 +1183,53 @@ under the License.
         <field name="datePosted" title="Date Posted"><display also-hidden="false"></display></field>
         
     </form>
+    
+    <!-- Expected Payment  -->
+      <form name="NewExpectedPayment" type="single" target="createExpectedPayment"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="expectedPaymentContext">
+        
+       
+        <field name="month" title="Month"> <text></text> </field>
+        <field name="loanNo" title="Loan No"> <text></text> </field>
+        <field name="employerNo" title="Employer No"><text></text></field>
+        
+        <field name="remitanceCode" title="Remitance Code"><text></text></field>
+        <field name="amount" title="Amount"><text></text></field>
+        <field name="remitanceDescription" title="Remitance Description"><text></text></field>
+        <field name="payrollNo" title="Payroll No"><text></text></field>
+        <field name="name" title="Employee Name"><text></text></field>
+        <field name="generatedDate" title="Generated Date"> <date-time></date-time> </field>
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listExpectedPayment" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateExpectedPayment" paginate-target="expectedPayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ExpectedPayment">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateExpectedPayment"/>
+		
+		<field name="month" title="Month"><display also-hidden="false"></display></field>
+        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+        <field name="employerNo" title="Employer No"><display also-hidden="false"></display></field>
+        
+        <field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field>
+        <field name="amount" title="Amount"><display also-hidden="false"></display></field>
+        <field name="remitanceDescription" title="Remitance Description"><display also-hidden="false"></display></field>
+        <field name="payrollNo" title="Payroll No"><display also-hidden="false"></display></field>
+        <field name="name" title="Employee Name"><display also-hidden="false"></display></field>
+        <field name="generatedDate" title="Generated Date"><display also-hidden="false"></display></field>
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
 </forms>
