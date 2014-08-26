@@ -18,7 +18,7 @@
 				<set field="titleProperty" value="HumanResFindEmplLeave" />
 				<set field="headerItem" value="Leave" />
 				<set field="tabButtonItem" value="LeaveBalances" />
-				<set field="leaveCtx" from-field="parameters"/>
+				<set field="leaveBalanceCtx" from-field="parameters"/>
 						<service service-name="humanResManagerPermission"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="ADMIN" />
@@ -26,19 +26,8 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
-			<set field="today" value="${nowTimestamp}" type="Date"/>
-			<entity-condition entity-name="LeaveBalances" list="LeaveBalances"></entity-condition>
-		<!-- 	 <entity-condition entity-name="EmplLeave" list="EmplLeave">
-				  <condition-list>
-					 <condition-expr field-name="responsibleEmployee"
-						operator="equals" from-field="userLogin.partyId" />
-					<condition-expr field-name="fromDate" operator="less-equals"
-						from-field="today" />
-					<condition-expr field-name="thruDate" operator="greater-equals"
-						from-field="today" /> 
-				</condition-list> 
-			</entity-condition> --> 
-        	
+			<entity-condition entity-name="LeaveBalances" list="listIt"></entity-condition>
+       	
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -63,10 +52,10 @@
 									</container>
 								</widgets>
 							</section>
-                              <!-- <screenlet title="Search Active Leaves">
-                                        <include-form name="FindActiveLeaves"
+                              <screenlet title="Search Leave Balances">
+                                        <include-form name="FindLeaveBalances"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-                            	</screenlet> -->
+                            	</screenlet>
                                 <screenlet title="Leave Balances">
                                 <include-form name="ListLeaveBalances"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
@@ -101,8 +90,8 @@
 			<!-- <entity-condition entity-name="EmplLeave"></entity-condition> -->
 			 <entity-condition entity-name="EmplLeave" list="EmplLeave">
 				  <condition-list>
-					 <condition-expr field-name="responsibleEmployee"
-						operator="equals" from-field="userLogin.partyId" />
+				<!-- 	 <condition-expr field-name="responsibleEmployee"
+						operator="equals" from-field="userLogin.partyId" /> -->
 					<condition-expr field-name="fromDate" operator="less-equals"
 						from-field="today" />
 					<condition-expr field-name="thruDate" operator="greater-equals"
@@ -126,10 +115,10 @@
                             </condition>
 
                             <widgets>
-                              <!-- <screenlet title="Search Active Leaves">
+                              <screenlet title="Search Active Leaves">
                                         <include-form name="FindActiveLeaves"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-                            	</screenlet> -->
+                            	</screenlet>
                                 <screenlet title="Active Leaves List">
                                 <include-form name="ListActivelLeaves"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
@@ -223,7 +212,7 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
-			<entity-condition entity-name="EmplLeave" list="">
+			<entity-condition entity-name="EmplLeave" list="listIt">
 					<condition-expr field-name="responsibleEmployee"
 						operator="equals" from-field="${userLogin.partyId}" />
 			</entity-condition>
