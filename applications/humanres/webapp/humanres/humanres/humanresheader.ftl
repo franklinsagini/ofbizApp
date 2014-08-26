@@ -1,34 +1,24 @@
 <script type="text/javascript">
    jQuery(document).ready(function(){
    // Calculate new leave balance //
-   jQuery('input[name="leaveDuration"]').change(function(){
-		 
+/*   jQuery('input[name="leaveDuration"]').change(function(){
+		 $('input[name="submitButton"]').show();
          var leaveDuration = this.value;
          var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
-               
-         var reqUrl = '/humanres/control/emplleaveNewLeaveBalance';
-          if ((leaveBalance.length > 0) && (leaveDuration.length > 0)){
-         	calculateNewLeaveBalance(reqUrl, leaveDuration, leaveBalance);
+         var diff = leaveDuration - leaveBalance;
+            //alert("You cannot apply for a leave longer than " +diff);   
+        // var reqUrl = '/humanres/control/emplleaveNewLeaveBalance';
+          if ( diff > 0){
+         	//calculateNewLeaveBalance(reqUrl, leaveDuration, leaveBalance);
+         	alert("You cannot apply for a leave longer than " +leaveBalance+" days");
+         	$('input[name="leaveDuration"]').val(leaveBalance);
+         }
+         else{
+         	$('input[name="submitButton"]').show();
          }
 
-        });
-     function calculateNewLeaveBalance(reqUrl, leaveDuration, leaveBalance){
-	    jQuery.ajax({
-	
-	     url    : reqUrl,
-	     type   : 'GET',
-	     data   : {'leaveBalance': leaveBalance, 'leaveDuration':leaveDuration}, //here you can pass the parameters to  
-	                                                   //the request if any.
-	     success : function(data){
-					 $('input[name="newLeaveBalance"]').val(data.newLeaveBalance);
-					 
-	               },
-	      error : function(errorData){
-	
-	              alert("Some error occurred while processing the request");
-	              }
-	    });
-	    } 
+        });*/
+  
    // Calculate annual leave //
    jQuery('select[name="leaveTypeId"]').change(function(){
 		 //jQuery('input[name="leaveBalance"]').show();
@@ -49,6 +39,7 @@
          	jQuery('input[name="approvedLeaveSumed"]').val("");
          	jQuery('input[name="accruedLeaveDays"]').val("");
          	jQuery('input[name="leaveBalance"]').val("");
+         	jQuery('input[name="leaveDuration"]').val("");
          }
          
         });
@@ -64,11 +55,21 @@
          }
          
          var leaveDuration = jQuery('input[name="leaveDuration"]').val();
+         var leaveBalance = jQuery('input[name="leaveBalance"]').val();
+         var excessdays =	leaveDuration - leaveBalance;
+        
          
          var reqUrlLeaveEnd = '/humanres/control/emplleaveend';
-         if ((fromDate.length > 0) && (leaveDuration.length > 0)){
+         if ((fromDate.length > 0) && (leaveDuration.length > 0) && (excessdays <= 0)){
          	calculateLeaveEndDate(reqUrlLeaveEnd, fromDate, leaveDuration);
          }
+          else if((excessdays > 0)){
+         	alert("Leave taken must be less than your leave balance of " +leaveBalance+ "days.");
+         	$('input[name="leaveDuration"]').val("");
+            $('input[name="thruDate_i18n"]').val("");
+          
+         }
+
          
          
         });
@@ -87,22 +88,25 @@
         });
         
         
-         jQuery('input[name="leaveDuration"]').change(function(){
+    jQuery('input[name="leaveDuration"]').change(function(){
 		 
          var leaveDuration = this.value;
          var fromDate =  jQuery('input[name="fromDate"]').val();
          var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
-         var leaveBalances =  parseInt(leaveBalances);
-         var leaveDurations =  parseInt(leaveDuration);
-         if (leaveDurations > leaveBalances) {
-           alert("Leave taken must be less than your leave balance")
-         }       
+         var diff = leaveDuration - leaveBalance;
+
+               
          var reqUrl = '/humanres/control/emplleaveend';
-          if ((fromDate.length > 0) && (leaveDuration.length > 0)){
+          if ((fromDate.length > 0) && (leaveDuration.length > 0) && (diff <= 0)){
          	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration);
          }
-         
-         
+         else if((diff > 0)){
+         	alert("Leave taken must be less than your leave balance of " +leaveBalance+ "days.");
+         	$('input[name="leaveDuration"]').val("");
+         $('input[name="thruDate_i18n"]').val("");
+          
+         }
+
         });
 		
 		 });
@@ -135,8 +139,20 @@
 	     data   : {'fromDate': fromDate, 'thruDate':thruDate}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
-					 $('input[name="leaveDuration"]').val(data.leaveDuration);
-					 
+	     			$('input[name="leaveDuration"]').val("");
+					var leaveBalance =  $('input[name="leaveBalance"]').val();
+					var leave =  data.leaveDuration;
+					var excessdays =leave -leaveBalance;
+					if(excessdays <= 0){
+						
+						$('input[name="leaveDuration"]').val(data.leaveDuration);
+					}
+					else if (excessdays > 0){
+					alert("Leave longer than your leave balance");
+					 $('input[name="leaveDuration"]').val("");
+					 $('input[name="thruDate_i18n"]').val("");
+
+					 }
 	               },
 	      error : function(errorData){
 	
