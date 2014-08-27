@@ -161,4 +161,43 @@
     </simple-method>
 
 
+        <!-- Supplier -->
+    <simple-method method-name="createSupplier" short-description="Create Supplier">
+            <make-value entity-name="Supplier" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="Supplier" field="supplierId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="supplierId" field="newEntity.supplierId"/>
+            <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+            <!-- set field="productType" value="Loan"/ -->
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateSupplier" short-description="Update Supplier">
+            <entity-one entity-name="Supplier" value-field="lookedUpValue"/>
+            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+            <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteSupplier" short-description="Delete Supplier">
+            <entity-one entity-name="Supplier" value-field="lookedUpValue"/>
+            <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <!-- ContactPerson Conatct Person -->
+    <simple-method method-name="createContactPerson" short-description="Create ContactPerson">
+            <make-value entity-name="ContactPerson" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="ContactPerson" field="contactPersonId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="contactPersonId" field="newEntity.contactPersonId"/>
+            <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+            <!-- set field="productType" value="Loan"/ -->
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+
+
 </simple-methods>
