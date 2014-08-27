@@ -8,5 +8,93 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+    <entity entity-name="CardApplication" package-name="org.ofbiz.atmmanagement"
+		title="CardApplication Entity">
+		<field name="cardApplicationId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="partyId" type="id-ne"></field>
+		<field name="idNumber" type="name"></field>
+		<field name="payrollNumber" type="name"></field>
+		<field name="memberAccountId" type="id-ne"></field>
+		<field name="mobilePhoneNumber" type="name"></field>
+		
+		<field name="firstName" type="name"></field>
+		<field name="middleName" type="name"></field>
+		<field name="lastName" type="name"></field>
+		<field name="cardStatus" type="name"></field> <!-- Applied, Active, Renewing, Deactivated -->
+		
+		<field name="formNo" type="name"></field>
+		
+		
+		<prim-key field="cardApplicationId"/>
+		<relation type="one" fk-name="CardApplication_Member" rel-entity-name="Member">
+        	<key-map field-name="partyId"/>
+      	</relation>
+      	<relation type="one" fk-name="CardApplication_MemberAccount" rel-entity-name="MemberAccount">
+        	<key-map field-name="memberAccountId"/>
+      	</relation>
+	</entity>
+	
+	<!-- Card Logs -->
+	<entity entity-name="CardLog" package-name="org.ofbiz.atmmanagement"
+		title="CardLog Entity">
+		
+		<field name="cardLogId" type="id-ne"></field>
+		<field name="cardApplicationId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="cardStatus" type="name"></field>
+		<field name="comment" type="description"></field>
+		
+		
+		
+		<prim-key field="cardLogId"/>
+		<relation type="one" fk-name="CardLog_CardApplication" rel-entity-name="CardApplication">
+        	<key-map field-name="cardApplicationId"/>
+      	</relation>
+      	
+	</entity>
+	
+	<entity entity-name="CardReceipt" package-name="org.ofbiz.atmmanagement"
+		title="CardReceipt Entity">
+		<!-- Based on this entity we change the status of CardApplication to Received -->
+		<field name="cardReceiptId" type="id-ne"></field>
+		<field name="cardApplicationId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="cardStatus" type="name"></field>
+		<field name="comment" type="description"></field>
+		
+		
+		
+		<prim-key field="cardReceiptId"/>
+		<relation type="one" fk-name="CardLog_CardApplication" rel-entity-name="CardApplication">
+        	<key-map field-name="cardApplicationId"/>
+      	</relation>
+      	
+	</entity>
+	
+	<!-- 
+		Card Processes
+			Generate Application
+			Generate Renewal
+			Generate Replacement
+			ReceiveCard
+			Deactivate
+	 -->
 
 </entitymodel>
