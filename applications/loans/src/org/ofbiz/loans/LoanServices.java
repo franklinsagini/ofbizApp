@@ -28,6 +28,9 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -495,19 +498,26 @@ public class LoanServices {
 		List<GenericValue> loanProductChargeELI = null;
 		// List<GenericValue> listLoanApplicationCharge = new
 		// ArrayList<GenericValue>();
-
+		
+		//Get only Upfront like negotiation fee, the other charges like insurance will be part of the
+		//amortization schedule
+		EntityConditionList<EntityExpr> chargesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanProductId", EntityOperator.EQUALS,
+						loanProductId), EntityCondition
+						.makeCondition("chargedUpfront",
+								EntityOperator.EQUALS, "Y")),
+						EntityOperator.AND);
+		
 		try {
 			loanProductChargeELI = delegator.findList("LoanProductCharge",
-					EntityCondition.makeCondition("loanProductId",
-							loanProductId), null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
+					chargesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
 		}
 
 		for (GenericValue loanProductCharge : loanProductChargeELI) {
-			// existingLoansTotal =
-			// existingLoansTotal.add(genericValue.getBigDecimal("loanAmt"));
-			
 			log.info("AAAAAA Added a charge ############ for " + loanApplication.getBigDecimal("loanAmt"));
 			createLoanApplicationCharge(loanProductCharge, loanApplication,
 					partyId);
@@ -554,6 +564,8 @@ public class LoanServices {
 						"productChargeId",
 						loanProductCharge.getString("productChargeId"),
 						"isFixed", loanProductCharge.getString("isFixed"),
+						"chargedUpfront", loanProductCharge.getString("chargedUpfront"),
+						
 						"rateAmount", bdRateAmount, "fixedAmount",
 						bdFixedAmount));
 		// try {

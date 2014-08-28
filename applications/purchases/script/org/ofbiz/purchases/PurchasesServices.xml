@@ -161,4 +161,85 @@
     </simple-method>
 
 
+        <!-- Supplier -->
+    <simple-method method-name="createSupplier" short-description="Create Supplier">
+            <make-value entity-name="Supplier" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="Supplier" field="supplierId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="supplierId" field="newEntity.supplierId"/>
+            <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+            <!-- set field="productType" value="Loan"/ -->
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateSupplier" short-description="Update Supplier">
+            <entity-one entity-name="Supplier" value-field="lookedUpValue"/>
+            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+            <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteSupplier" short-description="Delete Supplier">
+            <entity-one entity-name="Supplier" value-field="lookedUpValue"/>
+            <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <!-- ContactPerson Conatct Person -->
+    <simple-method method-name="createContactPerson" short-description="Create ContactPerson">
+            <make-value entity-name="ContactPerson" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="ContactPerson" field="contactPersonId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="contactPersonId" field="newEntity.contactPersonId"/>
+            <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+            <!-- set field="productType" value="Loan"/ -->
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <!-- Order Header Creation Service-->
+    <simple-method method-name="createNewOrder" short-description="Create Order">
+        <now-timestamp field="nowTimestamp"/>
+        <make-value entity-name="Order" value-field="newEntity"/>
+        <!-- set the order entry date -->
+        <set from-field="nowTimestamp" field="newEntity.entryDate"/>
+        <!-- Set order date if not provided -->
+        <if-empty field="parameters.orderDate">
+            <set from-field="nowTimestamp" field="parameters.orderDate"/>
+        </if-empty>
+        <!-- Set order type -->
+        <set value="PURCHASE_ORDER" field="newEntity.orderTypeId" />
+        <!-- Set sales Channel -->
+        <set value="UNKNWN_SALES_CHANNEL" field="newEntity.salesChannelEnumId" />
+        <!-- Set the prepared by using the currently logged in user -->
+        <set value="${userLogin.partyId}" field="newEntity.createdBy" />
+        <!-- Set Status of the order -->
+        <set value="OPEN_ORDER" field="newEntity.status" />
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="Order" field="orderId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="orderId" field="newEntity.orderId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <!-- Order Line Creation Service-->
+    <simple-method method-name="createOrderLine" short-description="Create OrderLine">
+        <now-timestamp field="nowTimestamp"/>
+        <make-value entity-name="OrderLine" value-field="newEntity"/>
+        <!-- Set OrderItemTypeId -->
+        <set value="PRODUCT_ORDER_ITEM" field="newEntity.orderItemTypeId" />
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="OrderLine" field="orderLineSeqId"/>
+        <set from-field="orderLineSeqId" field="newEntity.orderLineSeqId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+
 </simple-methods>

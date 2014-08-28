@@ -31,9 +31,9 @@
                                         </not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="QuotesSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                        <include-menu name="SupplierSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                                         <container style="leftclear">
-                                            <label style="h1" text="Quote From Supplier: ${quote.supplierId} of Quote ID: [${quoteId}]  ${${extraFunctionName}}"/>
+                                            <label style="h1" text="Supplier: ${supplierContext.supplierId} - ${supplierContext.name}"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -67,13 +67,13 @@
                                 <section>
                                     <condition>
                                         <not>
-                                            <if-empty field="parameters.supplierId"/>
+                                            <if-empty field="parameters.orderId"/>
                                         </not>
                                     </condition>
                                     <widgets>
                                         <include-menu name="OrderSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                                         <container style="leftclear">
-                                            <label style="h1" text="Quote From Supplier: ${quote.supplierId} of Quote ID: [${quoteId}]  ${${extraFunctionName}}"/>
+                                            <label style="h1" text="[${orderContext.orderId}] - ${orderContext.orderName} - ${orderContext.status}"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -281,8 +281,10 @@
                  <set field="tabButtonItem" value="editContactPerson"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createContactPerson"/>
+                <set field="supplierId" from-field="parameters.supplierId"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <entity-one entity-name="ContactPerson" value-field="contactPersonContext"/>
+                <entity-one entity-name="Supplier" value-field="supplierContext"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSupllierDecorator" location="${parameters.mainDecoratorLocation}">
@@ -299,7 +301,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Purchasing Management: Edit Contact Person">
+                                <screenlet title="Purchasing Management: Add Contact Person">
                                     <include-form name="ContactPersonForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -329,7 +331,7 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <include-menu name="SupplierSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <include-menu name="OrderSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                                 <container style="clear"/>
                             </decorator-section>
                             <decorator-section name="search-options">
@@ -400,8 +402,10 @@
                  <set field="tabButtonItem" value="editOrderLines"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createOrderLine"/>
+                <set field="orderId" from-field="parameters.orderId"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <entity-one entity-name="OrderLine" value-field="orderLineContext"/>
+                <entity-one entity-name="Order" value-field="orderContext"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
@@ -418,7 +422,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Purchasing Management: Edit Order Line">
+                                <screenlet title="Purchasing Management: Add Order Line">
                                     <include-form name="OrderLineForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -431,7 +435,6 @@
             </widgets>
         </section>
     </screen>
-
 
     <!--
         Invoice Screens

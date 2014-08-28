@@ -49,22 +49,21 @@
     <request-map uri="createSupplier">
         <security https="true" auth="true" />
         <event type="service" invoke="createSupplier" />
-        <response name="success" type="request-redirect-noparam" value="supplier">
-            </response>
+        <response name="success" type="request-redirect-noparam" value="editSupplier" />
         <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
     <request-map uri="updateSupplier">
         <security https="true" auth="true" />
         <event type="service" invoke="updateSupplier" />
-        <response name="success" type="request-redirect-noparam" value="supplier"></response>
+        <response name="success" type="view" value="EditSupplierScreen"></response>
         <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
     <request-map uri="deleteSupplier">
         <security https="true" auth="true" />
         <event type="service" invoke="deleteSupplier" />
-        <response name="success" type="request-redirect-noparam" value="supplier"></response>
+        <response name="success" type="request-redirect-noparam" value="editSupplier"></response>
         <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
@@ -85,21 +84,21 @@
     <request-map uri="createContactPerson">
         <security https="true" auth="true" />
         <event type="service" invoke="createContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="success" type="request-redirect" value="editContactPerson"><redirect-parameter name="supplierId"/></response>
         <response name="error" type="view" value="ContactPersonScreen" />
     </request-map>
 
     <request-map uri="updateContactPerson">
         <security https="true" auth="true" />
         <event type="service" invoke="updateContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="success" type="request-redirect-noparam" value="editContactPerson"></response>
         <response name="error" type="view" value="ContactPersonScreen" />
     </request-map>
 
     <request-map uri="deleteContactPerson">
         <security https="true" auth="true" />
         <event type="service" invoke="deleteContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="success" type="request-redirect-noparam" value="editContactPerson"></response>
         <response name="error" type="view" value="ContactPersonScreen" />
     </request-map>
 
@@ -115,8 +114,7 @@
 
     <request-map uri="editOrder">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="EditOrderScreen"
-            save-current-view="true" />
+        <response name="success" type="view" value="EditOrderScreen" save-current-view="true" />
     </request-map>
 
 <!--
@@ -125,8 +123,8 @@
 
     <request-map uri="createNewOrder">
         <security https="true" auth="true" />
-        <event type="service" invoke="createContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="createNewOrder"></response>
+        <event type="service" invoke="createNewOrder" />
+        <response name="success" type="request-redirect-noparam" value="editOrder"></response>
         <response name="error" type="view" value="EditOrderScreen" />
     </request-map>
 
@@ -161,7 +159,7 @@
     <request-map uri="createOrderLine">
         <security https="true" auth="true" />
         <event type="service" invoke="createOrderLine" />
-        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="success" type="request-redirect" value="editOrderLines"><redirect-parameter name="orderId"/></response>
         <response name="error" type="view" value="OrderLinesScreen" />
     </request-map>
 

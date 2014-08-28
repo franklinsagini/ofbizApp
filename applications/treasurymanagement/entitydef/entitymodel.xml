@@ -8,5 +8,87 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+    <entity entity-name="TreasuryType" package-name="org.ofbiz.treasurymanagement" title="TreasuryType Entity">
+        <field name="treasuryTypeId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="branchId" type="id"></field>
+        <field name="glAccountId" type="id"/>
+        <field name="name" type="name"></field>
+        <field name="limitAmount" type="fixed-point"></field>
+       
+        <prim-key field="treasuryTypeId"/>
+        <relation type="one" fk-name="TreasuryType_GlAccount" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
+        </relation> 
+    </entity>
+    
+    <entity entity-name="Treasury" package-name="org.ofbiz.treasurymanagement" title="TreasuryType Entity">
+        <field name="treasuryId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="branchId" type="id"></field>
+        <field name="treasuryTypeId" type="id"/>
+        <field name="name" type="name"></field>
+        <field name="finAccountId" type="id"/>
+        
+        <field name="employeeResponsible" type="id"/>
+       
+        <prim-key field="treasuryId"/>
+        <relation type="one" fk-name="Treasury_FinAccount" rel-entity-name="FinAccount">
+            <key-map field-name="finAccountId"/>
+        </relation>
+        <relation type="one" fk-name="Treasury_TreasuryType" rel-entity-name="TreasuryType">
+            <key-map field-name="treasuryTypeId" rel-field-name="glAccountId"/>
+        </relation>
+        
+         <relation type="one" fk-name="Treasury_Employee" rel-entity-name="Person">
+            <key-map field-name="employeeResponsible" rel-field-name="partyId"/>
+        </relation> 
+    </entity>
+    
+     <entity entity-name="TreasuryTransaction" package-name="org.ofbiz.treasurymanagement" title="TreasuryTransaction Entity">
+        <field name="treasuryTransactionId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="branchId" type="id"></field>
+        <field name="treasuryTransferId" type="id"></field>
+        <field name="treasuryId" type="id-ne"></field>
+        <field name="transactionAmount" type="fixed-point"></field>
+        <field name="transactionType" type="name"></field>
+        <field name="increaseDecrease" type="indicator"></field>
+        
+        
+       
+        <prim-key field="treasuryTransactionId"/>
+        <relation type="one" fk-name="TreasuryTransaction_Treasury" rel-entity-name="Treasury">
+            <key-map field-name="treasuryId"/>
+        </relation>   
+    </entity>
+    
+    <entity entity-name="TreasuryTransfer" package-name="org.ofbiz.treasurymanagement" title="TreasuryTransfer Entity">
+        <field name="treasuryTransferId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="branchId" type="id"></field>
+        <field name="sourceTreasury" type="id-ne"></field>
+        <field name="destinationTreasury" type="id-ne"></field>
+        <field name="transactionAmount" type="fixed-point"></field>
+        <field name="comments" type="description"></field>
+       
+        <prim-key field="treasuryTransferId"/>
+        <relation type="one" fk-name="TreasuryTransactionSource_Treasury" rel-entity-name="Treasury">
+            <key-map  field-name="sourceTreasury" rel-field-name="treasuryId"/>
+        </relation>
+        
+        <relation type="one" fk-name="TreasuryTransactionDest_Treasury" rel-entity-name="Treasury">
+            <key-map  field-name="destinationTreasury" rel-field-name="treasuryId"/>
+        </relation>   
+    </entity>
 
 </entitymodel>
