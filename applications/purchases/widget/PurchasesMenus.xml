@@ -66,11 +66,14 @@
         </menu-item>
         <menu-item name="editOrder" title="Edit Order">
             <link target="editOrder">
-                <parameter param-name="orderId" from-field="order.orderId"/>
+                <parameter param-name="orderId" from-field="orderContext.orderId"/>
             </link>
         </menu-item>
         <menu-item name="editOrderLines" title="Order Lines">
-            <link target="editOrderLines"/>
+            <link target="editOrderLines">
+                <parameter param-name="orderId" from-field="orderContext.orderId"/>
+            </link>
+
         </menu-item>
     </menu>
 
@@ -79,7 +82,7 @@
     -->
     <menu name="OrderSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
         <menu-item name="createNew" title="Create New Order" widget-style="buttontext create">
-            <link target="purchaseOrders"/>
+            <link target="editOrder"/>
         </menu-item>
     </menu>
 

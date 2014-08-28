@@ -42,4 +42,25 @@
     </service>
 
 
+    <!--
+        Create New Order
+    -->
+
+    <service name="createNewOrder" engine="simple" default-entity-name="Order"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createNewOrder" auth="true">
+        <description>Create Order</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createOrderLine" engine="simple" default-entity-name="OrderLine"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createOrderLine" auth="true">
+        <description>Create OrderLine</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+
 </services>

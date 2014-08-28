@@ -115,8 +115,12 @@
 
     <request-map uri="editOrder">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="EditOrderScreen"
-            save-current-view="true" />
+        <response name="success" type="view" value="EditOrderScreen" save-current-view="true" />
+    </request-map>
+
+    <request-map uri="editSupplier">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="EditSupplierScreen" save-current-view="true" />
     </request-map>
 
 <!--
@@ -125,8 +129,8 @@
 
     <request-map uri="createNewOrder">
         <security https="true" auth="true" />
-        <event type="service" invoke="createContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="createNewOrder"></response>
+        <event type="service" invoke="createNewOrder" />
+        <response name="success" type="request-redirect-noparam" value="editOrder"></response>
         <response name="error" type="view" value="EditOrderScreen" />
     </request-map>
 
@@ -161,7 +165,7 @@
     <request-map uri="createOrderLine">
         <security https="true" auth="true" />
         <event type="service" invoke="createOrderLine" />
-        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="success" type="request-redirect-noparam" value="editOrderLines"></response>
         <response name="error" type="view" value="OrderLinesScreen" />
     </request-map>
 
