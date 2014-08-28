@@ -47,10 +47,26 @@ under the License.
     <request-map uri="LeaveBalances">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LeaveBalances"/>
+    </request-map>    
+    <request-map uri="CloseFinacialYear">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CloseFinacialYear"/>
     </request-map>
 
 
     <!--  Request Mappings for calling leave duration and end date java functions -->
+    <request-map uri="closeFinacialYear">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="closeFinacialYear" />
+    <response name="success" type="view"  value="CloseFinacialYear"></response>
+    <response name="error" type="view" value="CloseFinacialYear" />
+    </request-map>     
+    <request-map uri="resetUnusedCarryOver">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="resetUnusedCarryOver" />
+    <response name="success" type="view"  value="CloseFinacialYear"></response>
+    <response name="error" type="view" value="CloseFinacialYear" />
+    </request-map>    
     <request-map uri="generateLeaveBalances">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="generateLeaveBalances" />
@@ -123,7 +139,15 @@ under the License.
     <request-map uri="ActiveEmplLeaves">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ActiveEmplLeaves"/>
-    </request-map>    
+    </request-map>  
+    <request-map uri="FindCarryOverLost">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindCarryOverLost"/>
+    </request-map>     
+<!--     <request-map uri="resetUnusedCarryOver">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindCarryOverLost"/>
+    </request-map>   -->  
     <request-map uri="FindActiveLeaves">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindActiveLeaves"/>
@@ -1609,10 +1633,12 @@ under the License.
     <view-map name="EditEmplLeaveReasonTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditEmplLeaveReasonTypes"/>
     <view-map name="FindLeaveApprovals" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindLeaveApprovals"/>    
     <view-map name="FindLeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>
-    <view-map name="FindActiveLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>
+    <view-map name="FindActiveLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>    
+    <view-map name="FindCarryOverLost" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
     <view-map name="ActiveEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
-    <view-map name="LeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>
+    <view-map name="LeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>    
+    <view-map name="CloseFinacialYear" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
     
     <view-map name="staffLeaveBalances" type="screen" page="component://humanres/widget/EmployeeScreens.xml#StaffLeaveBalances"/>
     

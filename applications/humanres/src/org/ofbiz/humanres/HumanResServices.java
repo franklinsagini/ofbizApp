@@ -71,11 +71,11 @@ public static String getLeaveBalance(HttpServletRequest request,
 			return "Cannot Get approved leaves";
 		}
 		log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
-	double approvedLeaveSum =0;
+	double approvedLeaveSum = 0;
 	double  usedLeaveDays = 0;
 	double lostLeaveDays = 0;
 		for (GenericValue genericValue : getApprovedLeaveSumELI) {
-			 approvedLeaveSum += genericValue.getLong("leaveDuration");
+			 approvedLeaveSum += genericValue.getDouble("leaveDuration");
 		}
 		log.info("============================================================" +approvedLeaveSum);
 		

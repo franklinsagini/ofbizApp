@@ -488,7 +488,8 @@ under the License.
         <field name="emplLeaveReasonTypeId" type="id-ne"/>
         <field name="leaveId" type="id"/>
         <field name="fromDate" type="date"/>
-        <field name="leaveDuration" type="numeric"/>     
+        <field name="leaveDuration" type="floating-point"/>     
+        <field name="carryOverUsed" type="floating-point"/>     
 
         <field name="thruDate" type="date"/>
         <field name="isActive" type="indicator"></field>
@@ -538,6 +539,23 @@ under the License.
         <field name="availableLeaveDays" type="floating-point"/>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity>    
+    <entity entity-name="EmplCarryOverLost"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Carry Over  And Lost Leave Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="financialYear" type="id-ne"/>
+        <field name="accruedDays" type="floating-point"/>
+        <field name="usedLeaveDays" type="floating-point"/>
+        <field name="lostLeaveDays" type="floating-point"/>
+        <field name="carryOverLeaveDays" type="floating-point"/>
+        <field name="resetLeaveDays" type="floating-point"/>
+
+        <prim-key field="partyId"/>
+        <!-- <prim-key field="financialYear"/> -->
+        <relation type="one" fk-name="CRRYOVER_LOST_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
     </entity>
