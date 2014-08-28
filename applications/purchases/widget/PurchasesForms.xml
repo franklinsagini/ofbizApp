@@ -264,7 +264,6 @@
         <field name="itemDescription" title="Product Description"><text size="45"></text></field>
         <field name="quantity" title="Quantity"><text size="10" ></text></field>
         <field name="unitPrice" title="Unit Price"><text size="10" ></text></field>
-
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -272,7 +271,7 @@
                 ListOrderLinesForm
             -->
     <form name="ListOrderLinesForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateOrderLine"
-        paginate-target="EditSupplierForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        paginate-target="OrderLineForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="OrderLine">
                 <condition-expr field-name="orderId" from-field="orderId"/>
@@ -281,17 +280,21 @@
         </actions>
         <field name="orderId"><hidden/></field>
         <field name="orderLineSeqId"><hidden/></field>
-        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
-        <field name="itemDescription" title="Product Description"><text size="45"></text></field>
-        <field name="quantity" title="Quantity"><text size="10" ></text></field>
-        <field name="unitPrice" title="Unit Price"><text size="10" ></text></field>
+        <field name="orderItemTypeId"><display /></field>
+        <field name="productId"><display /></field>
+        <field name="quantity" ><display /></field>
+        <field name="cancelQuantity"><display /></field>
+        <field name="selectedAmount"><display /></field>
+        <field name="unitPrice"><display /></field>
+        <field name="itemDescription"><display /></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-                <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                    <parameter param-name="orderId"/>
-                </hyperlink>
+            <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="supplierId"/>
+            </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+
 
 
 

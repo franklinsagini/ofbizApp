@@ -301,7 +301,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Purchasing Management: Edit Contact Person">
+                                <screenlet title="Purchasing Management: Add Contact Person">
                                     <include-form name="ContactPersonForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -402,6 +402,7 @@
                  <set field="tabButtonItem" value="editOrderLines"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createOrderLine"/>
+                <set field="orderId" from-field="parameters.orderId"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <entity-one entity-name="OrderLine" value-field="orderLineContext"/>
                 <entity-one entity-name="Order" value-field="orderContext"/>
@@ -421,7 +422,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Purchasing Management: Edit Order Line">
+                                <screenlet title="Purchasing Management: Add Order Line">
                                     <include-form name="OrderLineForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -434,7 +435,6 @@
             </widgets>
         </section>
     </screen>
-
 
     <!--
         Invoice Screens
