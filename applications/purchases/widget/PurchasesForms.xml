@@ -179,6 +179,9 @@
                 <field-map field-name="viewSize" from-field="viewSize" />
             </service>
         </actions>
+        <row-actions>
+            <set field="grandTotal" value="${bsh:org.ofbiz.purchases.order.OrderWorker.getOrder(delegator,orderId);}" type="BigDecimal"/>
+        </row-actions>
         <field name="orderId" title="Order Id" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${orderId}" target="editOrder">
                 <parameter param-name="orderId" />
@@ -188,7 +191,9 @@
         <field name="orderDate" title="Order Date"> <display /> </field>
         <field name="createdBy" title="Prepared By"> <display /></field>
         <field name="status" title="Status"><display /></field>
-        <field name="grandTotal" title="Total"><display /></field>
+        <field name="grandTotal" title="Total">
+            <display type="currency" currency="KES"/>
+        </field>
     </form>
 
 
@@ -278,15 +283,19 @@
                 <order-by field-name="orderLineSeqId"/>
             </entity-condition>
         </actions>
+        <row-actions>
+           <set field="total" value="${groovy: (quantity ?: 1) * (unitPrice ?: 0)}" type="BigDecimal"/>
+       </row-actions>
         <field name="orderId"><hidden/></field>
         <field name="orderLineSeqId"><hidden/></field>
         <field name="orderItemTypeId"><display /></field>
         <field name="productId"><display /></field>
-        <field name="quantity" ><display /></field>
-        <field name="cancelQuantity"><display /></field>
-        <field name="selectedAmount"><display /></field>
-        <field name="unitPrice"><display /></field>
         <field name="itemDescription"><display /></field>
+        <field name="quantity" ><display /></field>
+        <field name="unitPrice"><display /></field>
+        <field name="total" widget-area-style="align-text">
+            <display type="currency" currency="KES"/>
+        </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="supplierId"/>
