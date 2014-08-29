@@ -69,9 +69,7 @@
          var leaveTypeId =  jQuery('input[name="leaveTypeId"]').val();
          //if (leaveTypeId =="ANNUAL_LEAVE"){        
         var fromDate =  jQuery('input[name="fromDate"]').val();
-        
         var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
-
         var diff = leaveDuration - leaveBalance;
         var reqUrl = '/humanres/control/emplleaveend';
           if ((fromDate.length > 0) && (leaveDuration.length > 0) && (diff <= 0)){

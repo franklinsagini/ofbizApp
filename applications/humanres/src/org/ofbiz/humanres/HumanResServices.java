@@ -54,7 +54,17 @@ public static String getLeaveBalance(HttpServletRequest request,
 		
 		//   get current leave balance  //
 		
-		List<GenericValue> getApprovedLeaveSumELI = null;		
+		List<GenericValue> getApprovedLeaveSumELI = null;
+		GenericValue carryOverLeaveGV = null;
+	      try {
+	    	  carryOverLeaveGV = delegator.findOne("EmplCarryOverLost", 
+	             	UtilMisc.toMap("partyId", partyId), false);
+	           	log.info("++++++++++++++carryOverLeaveGV++++++++++++++++" +carryOverLeaveGV);
+	             }
+	       catch (GenericEntityException e) {
+	            e.printStackTrace();;
+	       }  
+	       double carryOverLeaveDays = carryOverLeaveGV.getDouble("carryOverLeaveDays");
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition(
@@ -109,7 +119,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 		int months = difference.getMonths();
 		String approvedLeaveSumed = Double.toString(approvedLeaveSum);
 		double accruedLeaveDay = months * accrualRate;
-		double leaveBalances =  accruedLeaveDay - approvedLeaveSum; 
+		double leaveBalances =  accruedLeaveDay + carryOverLeaveDays - approvedLeaveSum; 
 		String accruedLeaveDays = Double.toString(accruedLeaveDay);
 		String leaveBalance = Double.toString(leaveBalances);
 

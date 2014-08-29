@@ -296,9 +296,10 @@
 		<field name="applicationStatus" title="Application Status">
 			<display />
 		</field>
-		<field name="approvalStatus" title="Approval Status">
+	<field name="approvalStatus" title="Approval Status">
 			<display />
 		</field>
+
 		<field name="responsibleEmployee" title="Approver">
 			<display-entity entity-name="Person" description="${firstName} ${lastName}"
 				key-field-name="partyId">
@@ -377,7 +378,7 @@
 			<date-time type="date" />
 		</field>		
 		<field name="handedOverTo" tooltip="${uiLabelMap.CommonRequired}">
-				<drop-down allow-empty="true">
+				<drop-down allow-empty="false">
 					<entity-options description="${firstName} ${lastName}"
 					key-field-name="partyId" entity-name="LeaveBalancesView"  />
 			</drop-down>
@@ -420,10 +421,16 @@
 			<hidden value="userLogin.partyId" />
 		</field>
 		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
-			<text-find />
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
+			</drop-down>
 		</field>
-		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}" >
-			<text-find />
+		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType" />
+			</drop-down>
 		</field>
 		<field name="description">
 			<hidden />
@@ -606,12 +613,12 @@
 		</field>
 		<field name="leaveDuration">
 			<display />
+		</field>		
+		<field name="carryOverUsed">
+			<display />
 		</field>
 		<field name="applicationStatus" title="Application Status">
-			<display />
-		</field>
-		<field name="approvalStatus" title="Approval Status">
-			<display />
+			<display default-value="Approved"/>
 		</field>
 		<field name="handedOverTo" title="Handed Over To">
 			<display-entity entity-name="Person" description="${firstName} ${lastName}"
@@ -624,6 +631,12 @@
 	<form name="ListLeaveLogs" list-name="leaveLogs" target="" title=""
 		type="list" paginate-target="ListLeaveLogs" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
+<!-- 		<actions>
+			<entity-condition entity-name="LeaveStatusLog" list="leaveLogs">
+				<condition-expr field-name="leaveId"
+					operator="equals" from-field="leaveId" />
+			</entity-condition>
+		</actions> -->
 		<field name="leaveId">
 			<hidden />
 		</field>
@@ -631,6 +644,7 @@
 			<display-entity entity-name="Person" key-field-name="partyId"
 				description="${partyId} ${firstName} ${lastName}">
 			</display-entity>
+
 		</field>
 		<field name="approvedBy" title="Approved By">
 			<display />
