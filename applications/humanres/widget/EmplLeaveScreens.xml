@@ -71,7 +71,8 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen><screen name="LeaveBalances">
+    </screen>
+    <screen name="LeaveBalances">
         <section>
             <actions>
 				<set field="titleProperty" value="HumanResFindEmplLeave" />
@@ -129,6 +130,72 @@
             </widgets>
         </section>
     </screen>
+     <screen name="activeleavespdf">
+                <section>
+                        <actions>
+             <set field="today" value="${nowTimestamp}" type="Date"/>
+			<!-- <entity-condition entity-name="EmplLeave"></entity-condition> -->
+			 <entity-condition entity-name="EmplLeave" list="EmplLeave">
+				  <condition-list>
+				<!-- 	 <condition-expr field-name="responsibleEmployee"
+						operator="equals" from-field="userLogin.partyId" /> -->
+					<condition-expr field-name="fromDate" operator="less-equals"
+						from-field="today" />
+					<condition-expr field-name="thruDate" operator="greater-equals"
+						from-field="today" />
+					<condition-expr field-name="applicationStatus" operator="equals"
+						value="Approved" />
+				</condition-list> 
+			</entity-condition>
+			<set field="viewSize" value="100000"/>
+							
+                        </actions>
+                        <widgets>
+                         <decorator-screen name="FoReportDecorator"
+                            location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="body">
+                                <include-form name="ListActivelLeaves" 
+                        location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
+                                        </decorator-section>
+                                </decorator-screen>
+                        </widgets>
+                </section>
+        </screen>
+    <screen name="activeleavescsv">
+        <section>
+            <actions>
+            <set field="viewSize" value="100000"/>
+			<set field="today" value="${nowTimestamp}" type="Date"/>
+			<!-- <entity-condition entity-name="EmplLeave"></entity-condition> -->
+			 <entity-condition entity-name="EmplLeave" list="EmplLeave">
+				  <condition-list>
+					<condition-expr field-name="fromDate" operator="less-equals"
+						from-field="today" />
+					<condition-expr field-name="thruDate" operator="greater-equals"
+						from-field="today" /> 					
+					<condition-expr field-name="applicationStatus" operator="equals"
+						value="Approved" /> 
+
+				</condition-list> 
+			</entity-condition> 
+            </actions>
+            <widgets>
+           
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                   <decorator-section name="body" -->
+                     
+                        <section name="ActiveLeaves">
+                                <widgets>
+                                        <screenlet title="List Activel Leaves">
+                                                <include-form name="ActivelLeavescsv" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
+                                        </screenlet>
+                                </widgets>
+                        </section>
+                    <!-- /decorator-section>
+               </decorator-screen -->
+            </widgets>
+        </section>
+    </screen>
   
 	
 	<screen name="ActiveEmplLeaves">
@@ -154,7 +221,9 @@
 					<condition-expr field-name="fromDate" operator="less-equals"
 						from-field="today" />
 					<condition-expr field-name="thruDate" operator="greater-equals"
-						from-field="today" /> 
+						from-field="today" />
+					<condition-expr field-name="applicationStatus" operator="equals"
+						value="Approved" />
 				</condition-list> 
 			</entity-condition> 
         	
@@ -181,6 +250,19 @@
                                 <screenlet title="Active Leaves List">
                                 <include-form name="ListActivelLeaves"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                                 </screenlet>
+                    
+                                 <screenlet>
+                                 	<link target="activeleaves.csv" text="Export Excel" style="buttontext">
+                                                <parameter param-name="partyId"/>
+                                                
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                            <link target="activeleaves.pdf" text="Export Pdf" style="buttontext">
+                                                <parameter param-name="partyId"/>
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            
+                                            </link>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -320,65 +402,6 @@
 
 
 
-	<screen name="FindLeaveApprovals2">
-		<section>
-			<actions>
-				<set field="titleProperty" value="PageTitleFindApprovals" />
-				<set field="tabButtonItem" value="Approval" />
-				<set field="headerItem" value="Leave" />
-				<service service-name="humanResManagerPermission"
-					result-map="permResult">
-					<field-map field-name="mainAction" value="ADMIN" />
-				</service>
-				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
-				<set field="approverPartyId" from-field="parameters.userLogin.partyId" />
-				<set field="approver" from-field="parameters.userLogin.partyId" />
-				
-				<!-- set field="partyId" from-field="userLogin.partyId"/ -->
-			<entity-one entity-name="Party" value-field="party">
-				<field-map field-name="partyId" from-field="userLogin.partyId"/>
-			</entity-one>
-			<!-- <set field="responsibleEmployee" value="${bsh:org.ofbiz.humanres.LeaveServices.getSupervisorLevel(party);}"/> -->
-			<set field="organizationUnitId" value="${bsh:org.ofbiz.humanres.LeaveServices.getEmplUnit(party);}"/>
-			<!-- <set field="partyIdFromV" value="${bsh:org.ofbiz.humanres.LeaveServices.getpartyIdFrom(party);}"/> -->
-
-			</actions>
-			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="pre-body">
-						<include-menu name="EmplLeaveTabBar"
-							location="component://humanres/widget/HumanresMenus.xml" />
-					</decorator-section>
-					<decorator-section name="body">
-						<section>
-							<condition>
-								<if-has-permission permission="HUMANRES"
-									action="_VIEW" />
-							</condition>
-							<widgets>
-								<decorator-screen name="FindScreenDecorator"
-									location="component://common/widget/CommonScreens.xml">
-									<decorator-section name="search-options">
-										<include-form name="FindLeaveApprovals"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-									</decorator-section>
-									<decorator-section name="search-results">
-										<include-form name="ListLeaveApprovals"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-									</decorator-section>
-								</decorator-screen>
-							</widgets>
-							<fail-widgets>
-								<label style="h3">${uiLabelMap.HumanResViewPermissionError}
-								</label>
-							</fail-widgets>
-						</section>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
 	<screen name="EditEmplLeave">
 		<section>
 			<actions>
@@ -471,11 +494,13 @@
 				</entity-and>
 				<entity-and entity-name="LeaveStatusLog" list="leaveLogs">
 					<field-map from-field="parameters.partyId" field-name="partyId" />
-					<field-map from-field="parameters.leaveId" field-name="leaveId" />
+					<!-- <field-map from-field="parameters.leaveId" field-name="leaveId" /> -->
 				</entity-and>
-				<!-- <entity-and entity-name="Person" list="emplLeaves">
+				<entity-and entity-name="EmplLeave" list="listIt">
 					<field-map from-field="parameters.partyId" field-name="partyId" />
-				</entity-and> -->
+				</entity-and>
+				<entity-one entity-name="Person" value-field="memberContext"/>
+
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -485,25 +510,30 @@
 							location="component://humanres/widget/HumanresMenus.xml" />
 						<section>
 							<widgets>
-								<screenlet title="${uiLabelMap.StaffDetails}">
-								<include-menu location="component://humanres/widget/HumanresMenus.xml"
+								<screenlet>	
+									<include-menu location="component://humanres/widget/HumanresMenus.xml"
 								name="ApproveReject" />
+								</screenlet>
+								<screenlet title="${uiLabelMap.StaffLeaveDetails} : ${memberContext.firstName} ${memberContext.lastName}">
 									<include-form name="ListMyLeaves"
 										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 								</screenlet>
-								<!-- <container style="lefthalf">
-									<screenlet title="${uiLabelMap.StaffDetails}"
-										navigation-form-name="ListMyLeaves">
-										<include-form name="ListMyLeaves"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-									</screenlet>
-								</container>
-								<container style="righthalf"> -->
-									<screenlet title="${uiLabelMap.LeaveLogs}"					navigation-form-name="ListLeaveLogs">
-										<include-form name="ListLeaveLogs"
+								<screenlet>	
+								
+								</screenlet>
+								<!-- <container style="lefthalf"> -->
+									<screenlet title="${uiLabelMap.HumanResStaffHistory} : ${memberContext.firstName} ${memberContext.lastName}"
+										navigation-form-name="ListEmplLeaves">
+										<include-form name="ListEmplLeaves"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 									</screenlet>
 								<!-- </container> -->
+								<!-- <container style="righthalf"> -->
+									<screenlet title="${uiLabelMap.LeaveLogs} : ${memberContext.firstName} ${memberContext.lastName}"					navigation-form-name="ListLeaveLogs">
+										<include-form name="ListLeaveLogs"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+									</screenlet>
+								 <!-- </container>  -->
 							</widgets>
 						</section>
 					</decorator-section>
