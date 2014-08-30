@@ -1412,27 +1412,28 @@ under the License.
 				<set field="tabButtonItem" value="AmortizationSchedule" />
 				<set field="loanApplicationId" from-field="parameters.loanApplicationId" />
 				<entity-one entity-name="LoanApplication" value-field="loanApplication" />
+				<set field="viewSize" value="100000"/>
 				
 				<!-- entity-condition entity-name="LoanAmortization" list="listAmortizationSchedule" >
             		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
             	</entity-condition -->
 			</actions>
 			<widgets>
-			<screenlet>
+			<!-- screenlet>
 				<include-form name="listAmortizationSchedule"
 							location="component://loans/widget/loans/LoanForms.xml" />
-			</screenlet>
-				<!-- decorator-screen name="main-decorator"
+			</screenlet -->
+				<decorator-screen name="FoReportDecorator"
 				
 				
 					location="component://common/widget/CommonScreens.xml">
-					<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+					<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
 					<decorator-section name="body">
 						<include-form name="listAmortizationSchedule"
 							location="component://loans/widget/loans/LoanForms.xml" />
 					</decorator-section>
-				</decorator-screen ->
-				</decorator-screen -->
+				<!-- /decorator-screen -->
+				</decorator-screen>
 			</widgets>
 		</section>
 	</screen>
