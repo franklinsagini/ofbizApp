@@ -57,7 +57,14 @@ public static String closeFinacialYear(HttpServletRequest request,
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
 			appointmentdate = genericValue.getString("appointmentdate");
-			calculateCarryOverLost(partyId, appointmentdate);// call method to calculate
+
+			if (appointmentdate !=null && appointmentdate !="") {
+						log.info("-----++++++-----partyId-----------------" +appointmentdate);
+			log.info("---------------------			appointmentdate--------------------------" +partyId);
+			calculateCarryOverLost(partyId, appointmentdate);// call method to calculate	
+			}
+			
+			
 		}
 		//log.info("------------------------------------------------" +partyId);
 		return partyId;
@@ -76,7 +83,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
-					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "LEAVE_APPROVED")),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
 
 		try {
@@ -90,7 +97,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 	double  usedLeaveDays = 0, lostLeaveDays = 0 , carryOverLeaveDays = 0;
 	double MAXCARRYOVER = 15;
 		for (GenericValue genericValue : getApprovedLeaveSumELI) {
-			usedLeaveDays += genericValue.getLong("leaveDuration");
+			usedLeaveDays += genericValue.getDouble("leaveDuration");
 		}
 		//log.info("============================================================" +approvedLeaveSum);
 		
@@ -246,7 +253,7 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator;
 		delegator = DelegatorFactoryImpl.getDelegator(null);
-		String partyIds = partyId;
+		//String partyIds = partyId;
 		//   get current leave balance  //
 		
 		List<GenericValue> getApprovedLeaveSumELI = null;		
@@ -255,7 +262,7 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
-					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "LEAVE_APPROVED")),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
 
 		try {
@@ -267,7 +274,7 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		}
 		//log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
 	double approvedLeaveSum =0;
-	double  usedLeaveDays = 0;
+	//double  usedLeaveDays = 0;
 	double lostLeaveDays = 0;
 		for (GenericValue genericValue : getApprovedLeaveSumELI) {
 			 approvedLeaveSum += genericValue.getLong("leaveDuration");
@@ -347,12 +354,10 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		
 	}
 
-public static Map<String, Object> getCarryoverUsed(Delegator delegator, Double leaveDuration, String partyId) {
-	Map<String, Object> result = FastMap.newInstance();
+public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, String partyId) {
+	Map<String, Object> UsedDays = FastMap.newInstance();
 	//double carryOverLeaveDays = 0;
-	double leaveDurationRemainder = 0;
-	double carryOverRemain = 0;
-	double carryOverUsed = 0 ;
+	double leaveDurationRemainder = 0, carryOverRemain = 0, carryOverUsed = 0 ;
 
 	log.info("++++++++++partyId++++++++++++++++++++" +partyId);
 	log.info("++++++++++leaveDuration++++++++++++++++++++" +leaveDuration);
@@ -373,14 +378,14 @@ public static Map<String, Object> getCarryoverUsed(Delegator delegator, Double l
        	carryOverRemain = carryOverLeaveDays - leaveDuration;
        	leaveDurationRemainder = 0;
        }
-       if ( carryOverLeaveDays <= leaveDuration) {
-       	carryOverUsed = leaveDuration - carryOverLeaveDays;
-       	leaveDurationRemainder = carryOverLeaveDays - leaveDuration;
+       if (  leaveDuration >= carryOverLeaveDays) {
+       	carryOverUsed = carryOverLeaveDays;
+       	leaveDurationRemainder = leaveDuration - carryOverLeaveDays ;
        	carryOverRemain = 0 ;
        }
-       result.put("carryOverUsed", carryOverUsed);
-       result.put("leaveDurationRemainder", leaveDurationRemainder);
-       log.info("=======result========" +result);
+       UsedDays.put("carryOverUsed", carryOverUsed);
+       UsedDays.put("leaveDurationRemainder", leaveDurationRemainder);
+       log.info("=======result========" +UsedDays);
       try {
              GenericValue updateCarryOverGV = delegator.findOne("EmplCarryOverLost", 
              	UtilMisc.toMap("partyId", partyId), false);
@@ -391,7 +396,7 @@ public static Map<String, Object> getCarryoverUsed(Delegator delegator, Double l
        } catch (GenericEntityException e) {
             e.printStackTrace();;
        }
-	return result; 
+	return UsedDays; 
 	
 
       // return Map
@@ -411,7 +416,7 @@ public static Map<String, Object> getCarryoverUsed(Delegator delegator, Double l
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 		String user = userLogin.getString("partyId");
-		String approvalStatus = null;
+		String approvalStatuslog = null;
 		// =============== primary Keys     ============//
 		
 		String partyId = (String) request.getParameter("partyId");
@@ -461,7 +466,7 @@ public static Map<String, Object> getCarryoverUsed(Delegator delegator, Double l
 			String workflowDocumentTypeId = leave.getString("workflowDocumentTypeId");
 			String documentApprovalId = leave.getString("documentApprovalId");
 			double leaveDuration = leave.getDouble("leaveDuration");
-			Map<String, Object> carryOverLeaveDaysUsed = null;
+			Map carryOverLeaveDaysUsed = null;
 			GenericValue documentApproval = null; GenericValue leavelog = null;
 			documentApproval =  WorkflowServices.doFoward(delegator, organizationUnitId,	workflowDocumentTypeId, documentApprovalId);
 		//log.info("=====================" +documentApproval);
@@ -474,28 +479,32 @@ public static Map<String, Object> getCarryoverUsed(Delegator delegator, Double l
 
 			if ((documentApproval.getString("nextLevel") == null)|| (documentApproval.getString("nextLevel").equals(""))) {
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				leave.set("applicationStatus","LEAVE_APPROVED");
-				leave.set("approvalStatus" , "LEAVE_APPROVED");
+				leave.set("applicationStatus","Approved");
+				leave.set("approvalStatus" , "Approved");
+				approvalStatuslog = "Approved";
 					// Employee to go for leave.
 				carryOverLeaveDaysUsed = getCarryoverUsed(delegator, leaveDuration, partyId);
-				log.info("gggggggggggg            ggggggggggggggggg" +carryOverLeaveDaysUsed);
+				//log.info("gggggggggggg            ggggggggggggggggg" +carryOverLeaveDaysUsed);
 				if (carryOverLeaveDaysUsed != null) {
 					
-					leave.set("carryOverUsed", result.get("carryOverUsed"));
-					leave.set("leaveDuration", result.get("leaveDurationRemainder"));
+					leave.set("carryOverUsed", carryOverLeaveDaysUsed.get("carryOverUsed"));
+					leave.set("leaveDuration", carryOverLeaveDaysUsed.get("leaveDurationRemainder"));
+					log.info("PPPPPPPPPPPPPPPPPPPPPPPP        carryOverLeaveDaysUsed" +carryOverLeaveDaysUsed);
+					log.info("gggggggggggg            leaveDurationRemainder" +carryOverLeaveDaysUsed.get("leaveDurationRemainder"));
 				}
 
 			} else {
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				leave.set("applicationStatus", "IN_PROGRESS");		
-				leave.set("approvalStatus","IN_PROGRESS");
+				leave.set("applicationStatus", "In Progress");		
+				leave.set("approvalStatus","In Progress");
+				approvalStatuslog = "Approved";
 
 			}
 
 			leavelog = delegator.makeValue("LeaveStatusLog", "leaveStsLogId", delegator.getNextSeqId("LeaveStatusLog"), 
             "approvedBy", userLogin.getString("partyId"), 
             "partyId", partyId, 
-            "leaveId", leaveId, "approvalStatus" ,approvalStatus);
+            "leaveId", leaveId, "approvalStatus" ,approvalStatuslog);
         
 
 			try {
