@@ -26,6 +26,11 @@
         <response name="success" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="reports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="reports"/>
+    </request-map>
+
     <!--
         Supplier Requests
     -->
@@ -201,6 +206,11 @@
         <response name="success" type="view" value="findPayments"/>
     </request-map>
 
+    <!-- Reports -->
+    <request-map uri="ContactPersonReport.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="ContactPersonReport"/>
+    </request-map>
+
     <!-- Lookup request mappings -->
   <request-map uri="LookupProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
 
@@ -234,4 +244,9 @@
     <!-- Utility View Maps -->
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+
+    <!-- Reports View Map -->
+    <view-map name="reports" type="screen" page="component://purchases/widget/PurchasesScreens.xml#PurchaseReportOptions"/>
+    <view-map name="ContactPersonReport" type="screenfop" page="component://purchases/widget/PurchasesScreens.xml#ContactPersonReportpdf" content-type="application/pdf" encoding="none"/>
+
 </site-conf>

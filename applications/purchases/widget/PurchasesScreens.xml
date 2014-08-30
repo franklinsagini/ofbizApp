@@ -509,4 +509,81 @@
         </section>
     </screen>
 
+    <!-- Report Screens -->
+    <screen name="PurchaseReportOptions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="OrderReports"/>
+                <set field="headerItem" value="reports"/>
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="h3">Purchasing Management Reports</label>
+                        <include-portal-page id="PurchaseReportPage"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ContactPersonReport">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <screenlet title="Contact Persons Report">
+                    <include-form name="ContactPersonReport" location="component://purchases/widget/PurchasesForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <!-- generates the pdf for report of sales by store and customer, grouped by product -->
+    <screen name="ContactPersonReportpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Contact Persons By Supplier"/>
+                <set field="supplierId" from-field="parameters.supplierId"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-condition entity-name="OrderReportSalesGroupByProduct" list="productReportList">
+                    <condition-list combine="and">
+                        <!-- this can use the other view, so long as the filter is by SALES_ORDER and fromPartyId = ProductStore.payToPartyId if provided -->
+                        <condition-expr field-name="productStoreId" operator="equals" from-field="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="partyId" operator="equals" from-field="parameters.toPartyId" ignore-if-empty="true"/>
+                        <condition-expr field-name="roleTypeId" operator="equals" value="BILL_TO_CUSTOMER"/>
+                        <condition-expr field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
+                        <!-- possible bug: using from-field="parameters.orderStatusId" did not work for the following line -->
+                        <condition-expr field-name="orderStatusId" operator="equals" value="${parameters.orderStatusId}" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderDate" operator="greater-equals" from-field="parameters.fromOrderDate" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderDate" operator="less" from-field="parameters.thruOrderDate" ignore-if-empty="true"/>
+                    </condition-list>
+                    <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
+                    <select-field field-name="productStoreId"/>
+                    <select-field field-name="storeName"/>
+                    <select-field field-name="productId"/>
+                    <select-field field-name="internalName"/>
+                    <select-field field-name="quantityOrdered"/>
+                    <select-field field-name="unitPrice"/>
+                    <order-by field-name="storeName"/>
+                    <order-by field-name="internalName"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://order/webapp/ordermgr/reports/SalesByStoreReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
 </screens>
