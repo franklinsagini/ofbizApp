@@ -21,146 +21,6 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-
-    <simple-method method-name="createPurchaseQuote" short-description="Create File Quote">\
-        <now-timestamp field="nowTimestamp"/>
-        <!-- create new entity and create all the fields -->
-        <make-value value-field="newEntity" entity-name="PrchseQteHdr"/>
-              <!-- create a non existing ID -->
-        <sequenced-id sequence-name="PrchseQteHdr" field="quoteId"/>
-        <set from-field="quoteId" field="newEntity.quoteId"/>
-        <field-to-result field="quoteId" result-name="quoteId"/>
-        <if-empty field="parameters.statusId">
-            <set field="parameters.statusId" value="QUOTE_IN_PROCESS"/>
-        </if-empty>
-                <!-- set the invoice date if not provided -->
-        <if-empty field="parameters.quoteDate">
-            <set from-field="nowTimestamp" field="parameters.quoteDate"/>
-        </if-empty>
-        <!-- Set the prepared by using the currently logged in user -->
-        <set from-field="${userLogin.partyId}" field="parameters.partyId" />
-        <set field="parameters.partyId" value="${userLogin.partyId}"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-         <!-- finally create the record (should not exist already)-->
-        <create-value value-field="newEntity"/>
-        <!-- create new status entry, and set lastStatusUpdate date -->
-        <make-value value-field="newQuoteStatus" entity-name="PrchsQteStts"/>
-        <set from-field="newEntity.quoteId" field="newQuoteStatus.quoteId"/>
-        <set from-field="newEntity.statusId" field="newQuoteStatus.statusId"/>
-        <set from-field="nowTimestamp" field="newQuoteStatus.statusDate"/>
-        <create-value value-field="newQuoteStatus"/>
-        <check-errors/>
-    </simple-method>
-
-    <simple-method method-name="updatePurchaseQuote" short-description="Update a Quote">
-
-        <!-- find the current record -->
-        <make-value value-field="lookupPKMap" entity-name="PrchseQteHdr"/>
-        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-        <find-by-primary-key entity-name="PrchseQteHdr" map="lookupPKMap" value-field="lookedUpValue"/>
-
-        <!-- only try to update content if the status is in process.... -->
-        <if-compare field="lookedUpValue.statusId" operator="equals" value="QUOTE_IN_PROCESS">
-            <clone-value value-field="lookedUpValue" new-value-field="savedValue"/>
-            <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-
-            <!-- only save if something has changed, do not update status here -->
-            <set from-field="savedValue.statusId" field="lookedUpValue.statusId"/>  <!-- get old status back -->
-            <if-compare-field field="lookedUpValue" to-field="savedValue" operator="not-equals" type="Object">
-                <store-value value-field="lookedUpValue"/> <!-- update all non status and key fields -->
-            </if-compare-field>
-            <else>
-                <add-error>
-                    <fail-property resource="AccountingUiLabels" property="Can only update Quote, when status is in-process...current Status: ${lookedUpValue.statusId}"/>
-                </add-error>
-                <log level="error" message="Can only update Quote, when status is in-process...current Status: ${lookedUpValue.statusId}"/>
-                <check-errors/>
-            </else>
-        </if-compare>
-
-        <!-- check if there is a requested status change if yes call invoice status update service -->
-
-    </simple-method>
-
-
-    <simple-method method-name="createPurchaseQuoteItem" short-description="Create a new Invoice Item">
-        <log level="info" message=">>>>>>>>>>>>>>>>>>>In createPurchaseQuoteItem quoteId is [${parameters.quoteId}]"/>
-        <set field="quoteId" from-field="parameters.quoteId"/>
-        <log level="info" message=">>>>>>>>>>>>>>>>>>>In createPurchaseQuoteItem quoteId is [${parameters.quoteId}]"/>
-        <!-- TODO Remember to do something about statuses here -->
-        <make-value value-field="newEntity" entity-name="QuoteLines"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <if-empty field="newEntity.quoteItemSeqId">
-            <make-next-seq-id value-field="newEntity" seq-field-name="quoteItemSeqId"/> <!-- this finds the next sub-sequence ID -->
-            <field-to-result field="newEntity.quoteItemSeqId" result-name="quoteItemSeqId"/>
-        </if-empty>
-        <!-- if there is no amount and a productItem is supplied fill the amount(price) and description from the product record
-             TODO: there are return adjustments now that make this code very broken. The check for price was added as a quick fix. -->
-        <if-empty field="parameters.unitPrice">
-            <if-not-empty field="parameters.productId">
-                <entity-one entity-name="Product" value-field="product"/>
-                <set from-field="product.description" field="newEntity.description"/>
-                <set from-field="product" field="calculateProductPriceMap.product"/>
-                <call-service service-name="calculateProductPrice" in-map-name="calculateProductPriceMap">
-                    <result-to-field result-name="price" field="newEntity.unitPrice"/>
-                </call-service>
-            </if-not-empty>
-        </if-empty>
-        <if-not-empty field="parameters.productId">
-            <if-empty field="parameters.quantity">
-                <set field="newEntity.quantity" value="1.0" type="BigDecimal"/>
-             </if-empty>
-        </if-not-empty>
-        <if-empty field="newEntity.unitPrice">
-            <add-error>
-                <fail-property resource="AccountingUiLabels" property="AccountingInvoiceAmountIsMandatory"/>
-            </add-error>
-        </if-empty>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-
-    <!--
-        Purchase Orders Services
-    -->
-    <simple-method method-name="createPurchaseOrder" short-description="Create PurchaseOrderHeader">
-            <make-value entity-name="PurchaseOrderHeader" value-field="newEntity"/>
-
-
-            <if-empty field="parameters.statusId">
-                <set field="parameters.statusId" value="ORDER_IN_PROCESS"/>
-            </if-empty>
-            <!-- set the invoice date if not provided -->
-            <if-empty field="parameters.orderDate">
-                <set from-field="nowTimestamp" field="parameters.orderDate"/>
-            </if-empty>
-            <!-- Set the prepared by using the currently logged in user -->
-            <set field="parameters.createdBy" value="${userLogin.partyId}"/>
-
-
-            <set-pk-fields map="parameters" value-field="newEntity"/>
-            <set-nonpk-fields map="parameters" value-field="newEntity"/>
-            <sequenced-id sequence-name="PurchaseOrderHeader" field="orderId"/>
-            <now-timestamp field="newEntity.createdDate"/>
-            <set from-field="orderId" field="newEntity.orderId"/>
-            <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-            <!-- set field="productType" value="Loan"/ -->
-            <create-value value-field="newEntity"/>
-    </simple-method>
-
-    <simple-method method-name="updatePurchaseOrder" short-description="Update PurchaseOrderHeader">
-            <entity-one entity-name="PurchaseOrderHeader" value-field="lookedUpValue"/>
-            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-            <store-value value-field="lookedUpValue"/>
-    </simple-method>
-
-    <simple-method method-name="deletePurchaseOrder" short-description="Delete PurchaseOrderHeader">
-            <entity-one entity-name="PurchaseOrderHeader" value-field="lookedUpValue"/>
-            <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-
-
         <!-- Supplier -->
     <simple-method method-name="createSupplier" short-description="Create Supplier">
             <make-value entity-name="Supplier" value-field="newEntity"/>
@@ -181,9 +41,49 @@
     </simple-method>
 
     <simple-method method-name="deleteSupplier" short-description="Delete Supplier">
-            <entity-one entity-name="Supplier" value-field="lookedUpValue"/>
-            <remove-value value-field="lookedUpValue"/>
+        <entity-one entity-name="Supplier" value-field="lookedUpValue"/>
+        <get-related value-field="lookedUpValue" relation-name="ContactPerson" list="contactPersonValues"/>
+        <if-empty list="contactPersonValues">
+            <fail-message message="Can not Remove Supplier. Has Attached Contact Persons. Remove Conatct Persons First"/>
+            <else><!-- update global application with a null sequence number -->
+               <remove-value value-field="lookedUpValue"/>
+            </else>
+        </if-empty>
+
     </simple-method>
+
+    <simple-method method-name="getInvoice" short-description="Retrieve an invoice and the items">
+        <!-- find the invoice record -->
+        <make-value value-field="lookupPKMap" entity-name="Invoice"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+
+        <find-by-primary-key entity-name="Invoice" map="lookupPKMap" value-field="invoiceValue"/>
+        <field-to-result field="invoiceValue" result-name="invoice"/>
+        <!-- and the items -->
+        <get-related value-field="invoiceValue" relation-name="InvoiceItem" list="invoiceItemValues"/>
+        <field-to-result field="invoiceItemValues" result-name="invoiceItems"/>
+    </simple-method>
+
+
+    <simple-method method-name="removeInvoiceItem" short-description="Remove an existing Invoice Item">
+        <call-simple-method method-name="InvoiceStatusInProgress"/>
+        <set field="invoiceId" from-field="parameters.invoiceId"/>
+        <call-simple-method method-name="InvoiceStatusInProgress"/>
+
+        <set field="paymentApplicationMap.invoiceId" from-field="parameters.invoiceId"/>
+        <set field="paymentApplicationMap.invoiceItemSeqId" from-field="parameters.invoiceItemSeqId"/>
+        <if-not-empty field="parameters.invoiceItemSeqId">
+            <!-- check if there are specific item paymentApplications when yes remove those -->
+            <remove-by-and entity-name="PaymentApplication" map="paymentApplicationMap"/>
+            <else><!-- update global application with a null sequence number -->
+                <!-- TODO: reduce amount on global paymentApplication record -->
+            </else>
+        </if-not-empty>
+
+        <entity-one entity-name="InvoiceItem" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
 
     <!-- ContactPerson Conatct Person -->
     <simple-method method-name="createContactPerson" short-description="Create ContactPerson">
@@ -196,6 +96,18 @@
             <!--  set field="entity.loanStatus" value="DRAFT"/ -->
             <!-- set field="productType" value="Loan"/ -->
             <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateSupplierContact" short-description="Update ContactPerson">
+        <entity-one entity-name="ContactPerson" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteSupplierContact" short-description="Remove an existing Supplier Conatct">
+        <set field="supplierId" from-field="parameters.supplierId"/>
+        <entity-one entity-name="ContactPerson" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
     <!-- Order Header Creation Service-->
