@@ -2,7 +2,7 @@
    jQuery(document).ready(function(){
     
      jQuery('select[name="leaveTypeId"]').change(function(){
-		 //jQuery('input[name="leaveBalance"]').show();
+	
          var leaveTypeId = this.value;
          //console.log(leaveTypeId);
          if (leaveTypeId =="ANNUAL_LEAVE"){
@@ -26,8 +26,8 @@
    jQuery('input[name="fromDate"]').change(function(){
 		 
          var fromDate = this.value;
-          var leaveTypeId =  jQuery('input[name="leaveTypeId"]').val();
-        // if(leaveTypeId == "ANNUAL_LEAVE"){        
+          var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
+        if(leaveTypeId == "ANNUAL_LEAVE"){        
          var thruDate =  jQuery('input[name="thruDate"]').val();
          var reqUrl = '/humanres/control/emplleaveduration';
           if ((fromDate.length > 0) && (thruDate.length > 0)){
@@ -48,7 +48,7 @@
             $('input[name="thruDate_i18n"]').val("");
           
                  }
-         //   }
+           }
        });
         
    jQuery('input[name="thruDate"]').change(function(){
@@ -66,8 +66,8 @@
     jQuery('input[name="leaveDuration"]').change(function(){
 		 
          var leaveDuration = this.value;
-         var leaveTypeId =  jQuery('input[name="leaveTypeId"]').val();
-         //if (leaveTypeId =="ANNUAL_LEAVE"){        
+         var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
+         if (leaveTypeId =="ANNUAL_LEAVE"){        
         var fromDate =  jQuery('input[name="fromDate"]').val();
         var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
         var diff = leaveDuration - leaveBalance;
@@ -81,7 +81,7 @@
          $('input[name="thruDate_i18n"]').val("");
           
          }
-     //}
+     }
 
         });
 		
@@ -98,7 +98,7 @@
 	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
 					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
 					 $('input[name="leaveBalance"]').val(data.leaveBalance);
-					 //$('input[name="leaveBalance"]').val(data.leaveBalance);
+					 
 	               },
 	      error : function(errorData){
 	
