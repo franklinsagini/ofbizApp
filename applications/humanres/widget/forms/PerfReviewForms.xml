@@ -23,14 +23,16 @@ under the License.
     <form name="FindPerfReviews" type="single" target="FindPerfReviews" header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="PerfReview" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="perfReviewId"><lookup target-form-name="LookupPerfReview"/></field>
-        <field name="employeeRoleTypeId"><hidden/></field>
-        <field name="managerRoleTypeId"><hidden/></field>
-        <field name="employeePartyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="managerPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="perfReviewId" title="Appraisal Code"><lookup target-form-name="LookupPerfReview"/></field>
+        <field name="employeeRoleTypeId" title="Employee Role"><hidden/></field>
+        <field name="managerRoleTypeId" title="Appraiser Role"><hidden/></field>
+        <field name="employeePartyId" title="Employee"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="managerPartyId" title="Appraiser"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentId" title="${uiLabelMap.FormFieldTitle_paymentId}"><lookup target-form-name="LookupPayment"/></field>
-        <field name="emplPositionId" title="${uiLabelMap.FormFieldTitle_emplPositionId}"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="emplPositionId" title="Employee Position"><lookup target-form-name="LookupEmplPosition"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        
+        <field name="paymentId"><hidden/></field> 
     </form>
     <form name="ListPerfReviews" type="list" title="" separate-columns="true" default-entity-name="PerfReview" list-name="listIt" paginate-target="FindPerfReviews" paginate="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -44,19 +46,20 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PerfReview" default-field-type="display"/>
-        <field name="employeePartyId">
+        <field name="employeePartyId" title="Employee">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${lastName} ${firstName} ${middleName}">
                 <sub-hyperlink target="EmployeeProfile?partyId=${employeePartyId}" description="[${employeePartyId}]"/>
             </display-entity>
         </field>
-        <field name="employeeRoleTypeId"><ignored/></field>
-        <field name="managerPartyId">
+        <field name="employeeRoleTypeId" title="Employee"><ignored/></field>
+        <field name="managerPartyId" title="Appraiser">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${lastName} ${firstName} ${middleName}">
                 <sub-hyperlink target="EmployeeProfile?partyId=${managerPartyId}" description="[${managerPartyId}]"/>
             </display-entity>
         </field>
-        <field name="managerRoleTypeId"><ignored/></field>
-        <field name="perfReviewId">
+        <field name="emplPositionId" title="Employee Position"><display also-hidden="true"></display></field>
+        <field name="managerRoleTypeId" title="Appraiser Role"><ignored/></field>
+        <field name="perfReviewId" title="Appraisal Code">
            <hyperlink also-hidden="false" description="${perfReviewId}" target="EditPerfReview">
                 <parameter param-name="perfReviewId"/>
                 <parameter param-name="employeePartyId"/>
@@ -65,6 +68,7 @@ under the License.
         </field>
         <field name="fromDate"><display type="date"/></field>
         <field name="thruDate"><display type="date"/></field>
+        <field name="paymentId"><hidden/></field> 
     </form>
     <form name="EditPerfReview" type="single" target="updatePerfReview" title="" default-map-name="perfReview"
         header-row-style="header-row" default-table-style="basic-table">
@@ -74,15 +78,18 @@ under the License.
         <field name="perfReviewId" use-when="perfReview!=null"><ignored/></field>
         <field name="employeePartyId" use-when="perfReview==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
         <field name="employeePartyId" use-when="perfReview!=null"><ignored/></field>
-        <field name="employeeRoleTypeId"><hidden value="EMPLOYEE"/></field>
-        <field name="managerPartyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="managerRoleTypeId">
+        <field name="employeeRoleTypeId"><hidden value="EMPLOYEE"/></field> 
+        <field name="emplPositionId" title="Employee Position"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="managerPartyId" title="Appraiser"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="managerRoleTypeId" title="Appraiser Role">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" description="${description}" key-field-name="roleTypeId"/>
             </drop-down>
         </field>
-        <field name="paymentId" title="${uiLabelMap.FormFieldTitle_paymentId}"><lookup target-form-name="LookupPayment"/></field>
-        <field name="emplPositionId" title="${uiLabelMap.FormFieldTitle_emplPositionId}"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
+        <!--field name="paymentId" title="${uiLabelMap.FormFieldTitle_paymentId}"><lookup target-form-name="LookupPayment"/></field-->
+        <field name="paymentId"><hidden/></field>
         <field name="submitButton" use-when="perfReview==null" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="perfReview!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -98,8 +105,13 @@ under the License.
         <field name="employeePartyId"><ignored/></field>
         <field name="employeeRoleTypeId"><ignored/></field>
         <field name="perfReviewId"><ignored/></field>
-        <field name="perfReviewItemTypeId"><display-entity entity-name="PerfReviewItemType"></display-entity></field>
-        <field name="perfRatingTypeId"><display-entity entity-name="PerfRatingType"/></field>
+        <field name="perfReviewItemTypeId"><hidden/></field>
+        
+        <field name="kpiTargetId" title="Target"><display-entity entity-name="KPITargets"/></field>
+        <field name="perfRatingTypeId" title="Performance Rating"><display-entity entity-name="PerfRatingType"/></field>
+        <field name="kpiAchievementStatusId" title="Achievement Status"><display-entity entity-name="KPIAchievementStatus"/></field>
+        <field name="achievementDate" title="Achievement Date"><display type="date"></display></field>
+        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePerfReviewItem" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="perfReviewId"/>
@@ -111,25 +123,272 @@ under the License.
     </form>
     <form name="AddPerfReviewItem" type="single" target="createPerfReviewItem" title=""
         header-row-style="header-row" default-table-style="basic-table">
-        <auto-fields-service service-name="createPerfReviewItem"/>
+        <!--auto-fields-service service-name="createPerfReviewItem"/-->
         <field name="perfReviewId"><hidden/></field>
         <field name="perfReviewItemSeqId"><ignored/></field>
         <field name="employeePartyId"><hidden/></field>
         <field name="employeeRoleTypeId"><hidden/></field>
-        <field name="perfReviewItemTypeId">
-            <drop-down allow-empty="false">
-                <entity-options description="${description}" key-field-name="perfReviewItemTypeId" entity-name="PerfReviewItemType">
-                    <entity-order-by field-name="description"/>
+        <field name="perfReviewItemTypeId"><hidden/></field>
+        
+        <field name="kpiTargetId" title="Target">
+        	<drop-down allow-empty="true">
+                <entity-options description="${kpitarget}" key-field-name="kpiTargetId" entity-name="KPITargets">
+                    <entity-order-by field-name="kpiTargetId"/>
                 </entity-options>
             </drop-down>
-        </field>
-        <field name="perfRatingTypeId">
+        </field>      
+        
+        <field name="perfRatingTypeId" title="Performance Rating">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="perfRatingTypeId" entity-name="PerfRatingType">
                     <entity-order-by field-name="-perfRatingTypeId"/><!-- order from good to bad -->
                 </entity-options>
             </drop-down>
         </field>
+        <field name="comments" title="Comments"><text></text></field>
+        <field name="kpiAchievementStatusId" title="Achievement Status">
+        	<drop-down allow-empty="false">
+                <entity-options description="${achievementstatus}" key-field-name="kpiAchievementStatusId" entity-name="KPIAchievementStatus">
+                    <entity-order-by field-name="kpiAchievementStatusId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="achievementDate" title="Achievement Date"><date-time/></field>
+        <!-- field name="perfReviewItemTypeId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" key-field-name="perfReviewItemTypeId" entity-name="PerfReviewItemType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field-->
+       
         <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
     </form>
+    
+    
+     <!-- New Performance Rating Types -->
+    <form name="NewPerfRatingType" type="single" target="createPerfRatingType"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="perfRatingTypeContext">
+         <!--actions>
+            <entity-condition entity-name="PerfReviewItem">
+                <condition-expr field-name="perfReviewId" from-field="perfReviewId"/>
+                <order-by field-name="perfReviewItemSeqId"/>
+            </entity-condition>
+        </actions-->        
+        
+        <field name="perfRatingTypeId"><hidden/></field>
+        <field name="description" title="Rating" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+         <field name="parentTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="perfRatingTypeId" entity-name="PerfRatingType">
+                    <entity-order-by field-name="-perfRatingTypeId"/> <!-- order from good to bad -->
+                </entity-options>
+            </drop-down>
+        </field>        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listperfRatingType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerfRatingType" paginate-target="perfRatingType"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PerfRatingType"></entity-condition>
+        </actions>
+        <field name="perfRatingTypeId"><hidden/></field>
+        <field name="description" title="Rating"> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePerfRatingType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="perfRatingTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+     <!-- New KPI-->
+    <form name="NewKPI" type="single" target="createKPIDefinition"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="kpidefinitionContext">
+  
+        <field name="keyPerformanceIndicatorsId"><hidden/></field>
+        <field name="kpiName" title="KPI" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="measure" title="Measure" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="trackStartDate" title="Track Start Date"> <date-time/></field>
+        <field name="trackEndDate" title="Track End Date"> <date-time/></field>
+         <field name="parentTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${kpiName}" key-field-name="keyPerformanceIndicatorsId" entity-name="KeyPerformanceIndicators">
+                </entity-options>
+            </drop-down>
+        </field>        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listKPI" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateKPIDefinition" paginate-target="kpidefinition"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="KeyPerformanceIndicators"></entity-condition>
+        </actions>
+        <field name="keyPerformanceIndicatorsId"><hidden/></field>
+        <field name="kpiName" title="KPI"> <text></text> </field>
+        <field name="measure" title="Measure"> <text></text> </field>
+        <field name="trackStartDate" title="Track Start Date"><display type="date"></display></field>
+        <field name="trackEndDate" title="Track End Date"> <display type="date"></display></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteKPIDefinition" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="keyPerformanceIndicatorsId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- New KPI Achievement Status-->
+    <form name="NewKPIAchievementStat" type="single" target="createKPIAchievementStatus"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="kpiachievementstatusContext">
+  
+        <field name="kpiAchievementStatusId"><hidden/></field>
+        <field name="achievementstatus" title="Achievement Status" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listKPIAchievementStat" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateKPIAchievementStatus" paginate-target="kpiachievementstatus"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="KPIAchievementStatus"></entity-condition>
+        </actions>
+        <field name="kpiAchievementStatusId"><hidden/></field>
+        <field name="achievementstatus" title="Achievement Status"> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteKPIAchievementStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="kpiAchievementStatusId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+    <!-- New Global KPI Target-->
+    <form name="NewGlobalKPITarget" type="single" target="createGlobalKPITarget"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="kpiglobaltargetsContext">
+  
+        <field name="kpiTargetId"><hidden/></field>
+        <field name="keyPerformanceIndicatorsId" title="KPI">
+            <drop-down allow-empty="true">
+                <entity-options description="${kpiName}" key-field-name="keyPerformanceIndicatorsId" entity-name="KeyPerformanceIndicators">
+                </entity-options>
+            </drop-down>
+        </field>                
+        <field name="measure" title="Measure"> <text></text> </field>
+        <field name="kpitarget" title="KPI Target"> <textarea/></field>
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listGlobalKPITarget" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateGlobalKPITarget" paginate-target="kpiglobaltargets"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="KPITargets"></entity-condition>
+        </actions>
+        <field name="kpiTargetId"><hidden/></field>
+        <field name="keyPerformanceIndicatorsId" title="KPI">
+            <drop-down allow-empty="false">
+                <entity-options description="${kpiName}" key-field-name="keyPerformanceIndicatorsId" entity-name="KeyPerformanceIndicators">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="measure" title="Measure"><display also-hidden="true"></display></field>
+        <field name="kpitarget" title="KPI Target" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteGlobalKPITarget" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="kpiTargetId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    <!-- New Branch KPI Target-->
+    <form name="NewBranchKPITarget" type="single" target="createBranchKPITarget"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="kpibranchtargetsContext">
+  
+        <field name="kpiTargetId"><hidden/></field>
+        <field name="branchId" title="Branch"><text></text></field>
+        <field name="keyPerformanceIndicatorsId" title="KPI">
+            <drop-down allow-empty="true">
+                <entity-options description="${kpiName}" key-field-name="keyPerformanceIndicatorsId" entity-name="KeyPerformanceIndicators">
+                </entity-options>
+            </drop-down>
+        </field>                
+        <field name="measure" title="Measure"> <text></text> </field>
+        <field name="kpitarget" title="KPI Target"> <textarea/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listBranchKPITarget" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBranchKPITarget" paginate-target="kpibranchtargets"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="KPITargets"></entity-condition>
+        </actions>
+        <field name="kpiTargetId"><hidden/></field>
+        <field name="branchId" title="Branch"><text></text></field>
+        <field name="keyPerformanceIndicatorsId" title="KPI">
+            <drop-down allow-empty="false">
+                <entity-options description="${kpiName}" key-field-name="keyPerformanceIndicatorsId" entity-name="KeyPerformanceIndicators">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="measure" title="Measure"><display also-hidden="true"></display></field>
+        <field name="kpitarget" title="KPI Target" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteBranchKPITarget" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="kpiTargetId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- New Department KPI Target-->
+    <form name="NewDepartmentKPITarget" type="single" target="createDepartmentKPITarget"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="kpidepartmenttargetsContext">
+  
+        <field name="kpiTargetId"><hidden/></field>
+        <field name="branchId" title="Branch"><text></text></field>
+        <field name="deptId" title="Department"><text></text></field>
+        <field name="keyPerformanceIndicatorsId" title="KPI">
+            <drop-down allow-empty="true">
+                <entity-options description="${kpiName}" key-field-name="keyPerformanceIndicatorsId" entity-name="KeyPerformanceIndicators">
+                </entity-options>
+            </drop-down>
+        </field>                
+        <field name="measure" title="Measure"> <text></text> </field>
+        <field name="kpitarget" title="KPI Target"> <textarea/></field>
+                   
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listDepartmentKPITarget" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDepartmentKPITarget" paginate-target="kpidepartmenttargets"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="KPITargets"></entity-condition>
+        </actions>
+        <field name="kpiTargetId"><hidden/></field>
+        <field name="branchId" title="Branch"><text></text></field>
+        <field name="deptId" title="Department"><text></text></field>
+        <field name="keyPerformanceIndicatorsId" title="KPI">
+            <drop-down allow-empty="false">
+                <entity-options description="${kpiName}" key-field-name="keyPerformanceIndicatorsId" entity-name="KeyPerformanceIndicators">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="measure" title="Measure"><display also-hidden="true"></display></field>
+        <field name="kpitarget" title="KPI Target" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteDepartmentKPITarget" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="kpiTargetId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
 </forms>

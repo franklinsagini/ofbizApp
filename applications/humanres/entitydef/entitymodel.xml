@@ -109,6 +109,31 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="partyQualTypeId"/>
       </relation>
     </entity>
+    
+    <view-entity entity-name="PersonAndPartyQual" package-name="org.ofbiz.humanres.ability" 
+    	title="Employee Qualifications">
+    	<member-entity entity-alias="PERS" entity-name="Person" />
+        <member-entity entity-alias="PQL" entity-name="PartyQual" />
+        <member-entity entity-alias="PQT" entity-name="PartyQualType" />
+        <!--alias-all entity-alias="PERS" /-->
+        <!--alias-all entity-alias="PQL" /-->
+        <alias entity-alias="PERS" name="employeeNumber" field="employeeNumber"/>
+        <alias entity-alias="PERS" name="firstName" field="firstName"/>
+        <alias entity-alias="PERS" name="lastName" field="lastName"/>
+        <alias entity-alias="PQT" name="partyQualType" field="description"/>
+        <alias entity-alias="PQL" name="qualTitle" field="title"/>
+        <alias entity-alias="PQL" name="qualInstitute" field="institute"/>
+        <alias entity-alias="PQL" name="qualfromDate" field="fromDate"/>
+        <alias entity-alias="PQL" name="qualthruDate" field="thruDate"/>
+        <view-link entity-alias="PERS" rel-entity-alias="PQL">
+            <key-map field-name="partyId" />
+        </view-link>
+        <view-link entity-alias="PQL" rel-entity-alias="PQT">
+            <key-map field-name="partyQualTypeId" />
+        </view-link>
+    
+    </view-entity>
+    
     <entity entity-name="PartyResume"
             package-name="org.ofbiz.humanres.ability"
             title="Resume Entity">
@@ -143,6 +168,31 @@ under the License.
         <key-map field-name="skillTypeId"/>
       </relation>
     </entity>
+    
+    
+    <view-entity entity-name="PartyAndPartySkills" package-name="org.ofbiz.humanres.ability"
+    	title="Employee Skills">
+    	<member-entity entity-alias="PERS" entity-name="Person" />
+        <member-entity entity-alias="PSK" entity-name="PartySkill" />
+        <member-entity entity-alias="SKT" entity-name="SkillType" />
+        <!--alias-all entity-alias="PERS" /-->
+        <!--alias-all entity-alias="PSK" /-->
+        <alias entity-alias="PERS" name="employeeNumber" field="employeeNumber"/>
+        <alias entity-alias="PERS" name="firstName" field="firstName"/>
+        <alias entity-alias="PERS" name="lastName" field="lastName"/>
+        <alias entity-alias="SKT" name="skillType" field="description"/>
+        <alias entity-alias="PSK" name="yearsExperience" field="yearsExperience"/>
+        <view-link entity-alias="PERS" rel-entity-alias="PSK">
+            <key-map field-name="partyId" />
+        </view-link>
+        <view-link entity-alias="PSK" rel-entity-alias="SKT">
+            <key-map field-name="skillTypeId" />
+        </view-link>
+    </view-entity>
+    
+    
+    
+    
     <entity entity-name="PerfRatingType"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Rating Type Entity">
@@ -164,7 +214,7 @@ under the License.
       <field name="managerPartyId" type="id"></field>
       <field name="managerRoleTypeId" type="id"></field>
       <field name="paymentId" type="id"></field>
-      <field name="emplPositionId" type="id"></field>
+      <field name="emplPositionId" type="id"><description>Employee Position</description></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
@@ -199,9 +249,12 @@ under the License.
       <field name="employeeRoleTypeId" type="id"></field>
       <field name="perfReviewId" type="id-ne"></field>
       <field name="perfReviewItemSeqId" type="id-ne"></field>
-      <field name="perfReviewItemTypeId" type="id"></field>
+      <field name="kpiTargetId" type="id-ne"></field>
       <field name="perfRatingTypeId" type="id"></field>
       <field name="comments" type="comment"></field>
+      <field name="kpiAchievementStatusId" type="id-ne"></field>
+      <field name="achievementDate" type="date"></field>
+      <field name="perfReviewItemTypeId" type="id"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
@@ -237,6 +290,56 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="perfReviewItemTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="KeyPerformanceIndicators"
+            package-name="org.ofbiz.humanres.ability"
+            title="Key Performance Indicators">
+      <field name="keyPerformanceIndicatorsId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="kpiName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="measure" type="description"></field>
+      <field name="trackStartDate" type="date"></field>
+      <field name="trackEndDate" type="date"></field>
+      <prim-key field="keyPerformanceIndicatorsId"/>
+      <relation type="one" fk-name="KEY_PERF_IND" title="Parent" rel-entity-name="KeyPerformanceIndicators">
+        <key-map field-name="parentTypeId" rel-field-name="keyPerformanceIndicatorsId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="KPIAchievementStatus"
+            package-name="org.ofbiz.humanres.ability"
+            title="KPI Achievement Status">
+      <field name="kpiAchievementStatusId" type="id-ne"></field>
+      <field name="achievementstatus" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="kpiAchievementStatusId"/>
+    </entity>
+
+    
+    <entity entity-name="KPITargets"
+            package-name="org.ofbiz.humanres.ability"
+            title="KPI Targets">
+      <field name="kpiTargetId" type="id-ne"></field>
+      <field name="kpitarget" type="description"></field>
+      <field name="measure" type="description"></field>
+      <field name="keyPerformanceIndicatorsId" type="id-ne"></field>
+      <field name="targetOption" type="indicator"></field>
+      <field name="branchId" type="id-ne"></field>
+      <field name="deptId" type="id-ne"></field>
+      <prim-key field="kpiTargetId"/>
+       <relation type="one" fk-name="KPI_IND" title="KPI" rel-entity-name="KeyPerformanceIndicators">
+        <key-map field-name="parentTypeId" rel-field-name="keyPerformanceIndicatorsId"/>
+      </relation>
+      <relation type="one" fk-name="Branch_IND" title="Branch" rel-entity-name="Party">
+        <key-map field-name="partyId" rel-field-name="branchId"/>
+      </relation>
+      <relation type="one" fk-name="Department_IND" title="Department" rel-entity-name="Party">
+        <key-map field-name="partyId" rel-field-name="deptId"/>
+      </relation>
+    </entity>
+    
+    
+    
     <entity entity-name="PerformanceNote"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Note Entity">

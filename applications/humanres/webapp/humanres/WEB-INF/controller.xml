@@ -255,6 +255,157 @@ under the License.
         <response name="success" type="view" value="EditPerformanceNotes"/>
         <response name="error" type="view" value="EditPerformanceNotes"/>
     </request-map>
+    
+    <!--Additional Performance Management Views -->
+    
+    <request-map uri="kpidefinition">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="kpidefinition"
+			save-home-view="true" />
+	</request-map>	
+    <request-map uri="createKPIDefinition">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createKPIDefinition"/>
+        <response name="success" type="request-redirect-noparam" value="kpidefinition"/>
+        <response name="error" type="view" value="kpidefinition" />
+    </request-map>
+    <request-map uri="updateKPIDefinition">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateKPIDefinition"/>
+        <response name="success" type="request-redirect-noparam" value="kpidefinition"/>
+		<response name="error" type="view" value="kpidefinition" />
+    </request-map>
+    <request-map uri="deleteKPIDefinition">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteKPIDefinition"/>
+        <response name="success" type="request-redirect-noparam" value="kpidefinition"/>
+        <response name="error" type="view" value="kpidefinition" />
+    </request-map>
+    
+    <request-map uri="kpiachievementstatus">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="kpiachievementstatus"
+			save-home-view="true" />
+	</request-map>	
+    <request-map uri="createKPIAchievementStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createKPIAchievementStatus"/>
+        <response name="success" type="request-redirect-noparam" value="kpiachievementstatus"/>
+        <response name="error" type="view" value="kpiachievementstatus" />
+    </request-map>
+    <request-map uri="updateKPIAchievementStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateKPIAchievementStatus"/>
+        <response name="success" type="request-redirect-noparam" value="kpiachievementstatus"/>        
+        <response name="error" type="view" value="kpiachievementstatus" />
+    </request-map>
+    <request-map uri="deleteKPIAchievementStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteKPIAchievementStatus"/>
+        <response name="success" type="request-redirect-noparam" value="kpiachievementstatus"/>        
+        <response name="error" type="view" value="kpiachievementstatus" />
+    </request-map>
+    
+    <request-map uri="kpiglobaltargets">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="kpiglobaltargets"
+			save-home-view="true" />
+	</request-map>	
+	<request-map uri="kpibranchtargets">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="kpibranchtargets"
+			save-home-view="true" />
+	</request-map>	
+	<request-map uri="kpidepartmenttargets">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="kpidepartmenttargets"
+			save-home-view="true" />
+	</request-map>	
+	
+    <request-map uri="createGlobalKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlobalKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpiglobaltargets"/>          
+        <response name="error" type="view" value="kpiglobaltargets" />
+    </request-map>
+    <request-map uri="updateGlobalKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlobalKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpiglobaltargets"/>     
+        <response name="error" type="view" value="kpiglobaltargets" />
+    </request-map>
+    <request-map uri="deleteGlobalKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteGlobalKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpiglobaltargets"/>     
+        <response name="error" type="view" value="kpiglobaltargets" />
+    </request-map>
+    
+    <request-map uri="createBranchKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBranchKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpibranchtargets"/>          
+        <response name="error" type="view" value="kpibranchtargets" />
+    </request-map>
+    <request-map uri="updateBranchKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBranchKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpibranchtargets"/>     
+        <response name="error" type="view" value="kpibranchtargets" />
+    </request-map>
+    <request-map uri="deleteBranchKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteBranchKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpibranchtargets"/>     
+        <response name="error" type="view" value="kpibranchtargets" />
+    </request-map>
+    
+    <request-map uri="createDepartmentKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createDepartmentKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpidepartmenttargets"/>          
+        <response name="error" type="view" value="kpidepartmenttargets" />
+    </request-map>
+    <request-map uri="updateDepartmentKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateDepartmentKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpidepartmenttargets"/>     
+        <response name="error" type="view" value="kpidepartmenttargets" />
+    </request-map>
+    <request-map uri="deleteDepartmentKPITarget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteDepartmentKPITarget"/>
+        <response name="success" type="request-redirect-noparam" value="kpidepartmenttargets"/>     
+        <response name="error" type="view" value="kpidepartmenttargets" />
+    </request-map>
+    
+    <request-map uri="perfRatingType">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="perfRatingType"
+			save-home-view="true" />
+	</request-map>	
+    <request-map uri="createPerfRatingType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPerfRatingType"/>
+        <response name="success" type="request-redirect-noparam" value="perfRatingType"/>     
+        <response name="error" type="view" value="perfRatingType" />
+    </request-map>
+    <request-map uri="updatePerfRatingType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePerfRatingType"/>
+        <response name="success" type="request-redirect-noparam" value="perfRatingType"/>   
+        <response name="error" type="view" value="perfRatingType" />
+    </request-map>
+    <request-map uri="deletePerfRatingType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePerfRatingType"/>
+        <response name="success" type="request-redirect-noparam" value="perfRatingType"/>   
+        <response name="error" type="view" value="perfRatingType" />
+    </request-map>
+    
+    
+    
+    
     <!-- ================Employment Group==================================== -->
     <request-map uri="FindEmployments">
         <security https="true" auth="true"/>
@@ -1458,8 +1609,29 @@ under the License.
 		<response name="error" type="view" value="nextofkin" />
 	</request-map>
     
+    <request-map uri="StaffReportOptions"><security https="true" auth="true"/>
+        <response name="success" type="view" value="StaffReportOptions"/>
+    </request-map>
     
-    
+    <!-- ============Reports================================================ -->
+    <request-map uri="staffList">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="staffList"
+			save-home-view="true" />
+	</request-map>
+	
+	
+	<request-map uri="stafflistcsv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="stafflistcsv"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="stafflistpdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="stafflistpdf"
+			save-home-view="true" />
+	</request-map>
     
     
     
@@ -1564,6 +1736,14 @@ under the License.
     <view-map name="FindPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#FindPerfReviews"/>
     <view-map name="EditPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviews"/>
     <view-map name="EditPerfReviewItems" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviewItems"/>
+    
+    <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
+    <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>
+    <view-map name="kpiglobaltargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIGlobalTargets"/>
+    <view-map name="kpibranchtargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIBranchTargets"/>
+    <view-map name="kpidepartmenttargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDepartmentTargets"/>
+       
+    <view-map name="perfRatingType" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfRatingTypes"/>
 
     <view-map name="EditPerformanceNotes" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPerformanceNotes"/>
     <view-map name="EditSkillTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditSkillTypes"/>
@@ -1624,4 +1804,15 @@ under the License.
     <view-map name="spouse" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewSpouseDetails"/>
     <view-map name="dependant" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewDependantDetails"/>
     <view-map name="nextofkin" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewNextOfKinDetails"/>
+    
+    <!-- =================Reports Views=========================================== -->
+    <view-map name="staffList" type="screen" page="component://humanres/widget/ReportScreens.xml#StaffList"/>
+    <view-map name="StaffReportOptions" type="screen" page="component://humanres/widget/ReportScreens.xml#StaffReportOptions"/>
+    
+     <view-map name="stafflistcsv" type="screencsv" content-type="text/csv"
+               page="component://humanres/widget/ReportScreens.xml#stafflistcsv" />
+               
+     <view-map name="stafflistpdf" type="screenfop"
+page="component://humanres/widget/ReportScreens.xml#stafflistpdf"
+content-type="application/pdf" encoding="none" />
 </site-conf>
