@@ -170,7 +170,7 @@ under the License.
     </entity>
     
     
-    <view-entity entity-name="PartyAndPartySkills" package-name="org.ofbiz.humanres.ability"
+    <view-entity entity-name="PersonAndPartySkills" package-name="org.ofbiz.humanres.ability"
     	title="Employee Skills">
     	<member-entity entity-alias="PERS" entity-name="Person" />
         <member-entity entity-alias="PSK" entity-name="PartySkill" />
@@ -185,7 +185,7 @@ under the License.
         <view-link entity-alias="PERS" rel-entity-alias="PSK">
             <key-map field-name="partyId" />
         </view-link>
-        <view-link entity-alias="PSK" rel-entity-alias="SKT">
+        <view-link entity-alias="SKT" rel-entity-alias="PSK">
             <key-map field-name="skillTypeId" />
         </view-link>
     </view-entity>
@@ -1315,7 +1315,103 @@ under the License.
         <key-map field-name="countryGeoId"/>
       </relation>
         </entity>       
-            <view-entity entity-name="EmplLeaveView" package-name="org.ofbiz.humanres">
+        
+      
+       <view-entity entity-name="PartyAndSpouse" package-name="org.ofbiz.humanres.employment"
+    	title="Employee Spouse">    	
+    	<member-entity entity-alias="PERS" entity-name="Person" />
+        <member-entity entity-alias="SSP" entity-name="StaffSpouse" />
+        <member-entity entity-alias="FMR" entity-name="FamilyRelations" />
+        <member-entity entity-alias="PIT" entity-name="PartyIdentificationType" />
+        <!--alias-all entity-alias="PERS" /-->
+        <!--alias-all entity-alias="SSP" /-->
+        <alias entity-alias="PERS" name="employeeNumber" field="employeeNumber"/>
+        <alias entity-alias="PERS" name="firstName" field="firstName"/>
+        <alias entity-alias="PERS" name="lastName" field="lastName"/>
+        <alias entity-alias="SSP" name="spouseName" field="fullname"/>
+        <alias entity-alias="FMR" name="relationship" field="relationship"/>
+        <alias entity-alias="SSP" name="dob" field="dob"/>
+        <alias entity-alias="PIT" name="identificationType" field="description"/>
+        <alias entity-alias="SSP" name="idno" field="idno"/>
+        <alias entity-alias="SSP" name="phoneNo" field="phoneNo"/>
+        <view-link entity-alias="PERS" rel-entity-alias="SSP">
+            <key-map field-name="partyId" />
+        </view-link>
+        <view-link entity-alias="SSP" rel-entity-alias="FMR">
+            <key-map field-name="familyRelationsId" />
+        </view-link>
+        <view-link entity-alias="SSP" rel-entity-alias="PIT">
+            <key-map field-name="partyIdentificationTypeId" />
+        </view-link>    	
+    	</view-entity>
+        
+         <view-entity entity-name="PartyAndDependants" package-name="org.ofbiz.humanres.employment"
+    	title="Employee Dependants">    	
+    	<member-entity entity-alias="PERS" entity-name="Person" />
+        <member-entity entity-alias="SDP" entity-name="StaffDependant" />
+        <member-entity entity-alias="FMR" entity-name="FamilyRelations" />
+        <member-entity entity-alias="PIT" entity-name="PartyIdentificationType" />
+        <member-entity entity-alias="BGT" entity-name="BloodGroup" />
+        <!--alias-all entity-alias="PERS" /-->
+        <!--alias-all entity-alias="SSP" /-->
+        <alias entity-alias="PERS" name="employeeNumber" field="employeeNumber"/>
+        <alias entity-alias="PERS" name="firstName" field="firstName"/>
+        <alias entity-alias="PERS" name="lastName" field="lastName"/>
+        <alias entity-alias="SDP" name="dependantName" field="fullname"/>
+        <alias entity-alias="FMR" name="relationship" field="relationship"/>
+        <alias entity-alias="SDP" name="dob" field="dob"/>
+        <alias entity-alias="PIT" name="identificationType" field="description"/>
+        <alias entity-alias="SDP" name="idno" field="idno"/>
+        <alias entity-alias="BGT" name="bloodGroup" field="bloodGroup"/>
+        <view-link entity-alias="PERS" rel-entity-alias="SDP">
+            <key-map field-name="partyId" />
+        </view-link>
+        <view-link entity-alias="SDP" rel-entity-alias="FMR">
+            <key-map field-name="familyRelationsId" />
+        </view-link>
+        <view-link entity-alias="SDP" rel-entity-alias="PIT">
+            <key-map field-name="partyIdentificationTypeId" />
+        </view-link>    	
+         <view-link entity-alias="SDP" rel-entity-alias="BGT">
+            <key-map field-name="bloodGroupId" />
+        </view-link>    	
+    	</view-entity>
+        
+              
+        <view-entity entity-name="PartyAndNextOfKin" package-name="org.ofbiz.humanres.employment"
+    	title="Employee Next Of Kin">    	
+    	<member-entity entity-alias="PERS" entity-name="Person" />
+        <member-entity entity-alias="SNK" entity-name="StaffNextOfKin" />
+        <member-entity entity-alias="FMR" entity-name="FamilyRelations" />
+        <member-entity entity-alias="PIT" entity-name="PartyIdentificationType" />
+        <!--alias-all entity-alias="PERS" /-->
+        <!--alias-all entity-alias="SSP" /-->
+        <alias entity-alias="PERS" name="employeeNumber" field="employeeNumber"/>
+        <alias entity-alias="PERS" name="firstName" field="firstName"/>
+        <alias entity-alias="PERS" name="lastName" field="lastName"/>
+        <alias entity-alias="SNK" name="nokName" field="fullname"/>
+        <alias entity-alias="FMR" name="relationship" field="relationship"/>
+        <alias entity-alias="SNK" name="dob" field="dob"/>
+        <alias entity-alias="PIT" name="identificationType" field="description"/>
+        <alias entity-alias="SNK" name="idno" field="idno"/>
+        <alias entity-alias="SNK" name="phoneNo" field="phoneNo"/>
+        <view-link entity-alias="PERS" rel-entity-alias="SNK">
+            <key-map field-name="partyId" />
+        </view-link>
+        <view-link entity-alias="SNK" rel-entity-alias="FMR">
+            <key-map field-name="familyRelationsId" />
+        </view-link>
+        <view-link entity-alias="SNK" rel-entity-alias="PIT">
+            <key-map field-name="partyIdentificationTypeId" />
+        </view-link>    	
+    	</view-entity>
+        
+        
+        
+        
+        
+        
+        <view-entity entity-name="EmplLeaveView" package-name="org.ofbiz.humanres">
 	    <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
 	    <member-entity entity-alias="EmploymentView" entity-name="Employment"></member-entity>
 	    <member-entity entity-alias="EmplLeaveV" entity-name="EmplLeave"></member-entity>
