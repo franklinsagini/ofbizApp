@@ -36,39 +36,6 @@ import com.google.gson.Gson;
 
 public class HumanResServices {
 	public static Logger log = Logger.getLogger(LeaveServices.class);
-/*	public static double getApprovedLeaveSum(GenericValue person){
-		double newLeaveBalance = 0;
-		String partyId = person.getString("partyId");
-		//String partyId = person.getString("fromDate");
-		String partyId = person.getString("leaveTypeId");
-		Delegator delegator = getDelegator();
-		List<GenericValue> getApprovedLeaveSumELI = null;		
-		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
-					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
-					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "NEW")),
-						EntityOperator.AND);
-
-		try {
-			getApprovedLeaveSumELI = delegator.findList("EmplLeave",
-					leaveConditions, null, null, null, false);
-		} catch (GenericEntityException e2) {
-			//e2.printStackTrace();
-			return "Cannot Get approved leaves";
-		}
-		for (GenericValue genericValue : getApprovedLeaveSumELI) {
-			newLeaveBalance += genericValue.getInteger("leaveDuration");
-		}
-		/////////////////////////////////////////////////////
-
-				
-		
-		return newLeaveBalance;
-
-	}
-	*/
 	
 	// ============================================================== 
 public static String getLeaveBalance(HttpServletRequest request,
@@ -87,13 +54,23 @@ public static String getLeaveBalance(HttpServletRequest request,
 		
 		//   get current leave balance  //
 		
-		List<GenericValue> getApprovedLeaveSumELI = null;		
+		List<GenericValue> getApprovedLeaveSumELI = null;
+		GenericValue carryOverLeaveGV = null;
+	      try {
+	    	  carryOverLeaveGV = delegator.findOne("EmplCarryOverLost", 
+	             	UtilMisc.toMap("partyId", partyId), false);
+	           	log.info("++++++++++++++carryOverLeaveGV++++++++++++++++" +carryOverLeaveGV);
+	             }
+	       catch (GenericEntityException e) {
+	            e.printStackTrace();;
+	       }  
+	       double carryOverLeaveDays = carryOverLeaveGV.getDouble("carryOverLeaveDays");
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
-					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "NEW")),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "LEAVE_APPROVED")),
 						EntityOperator.AND);
 
 		try {
@@ -104,11 +81,11 @@ public static String getLeaveBalance(HttpServletRequest request,
 			return "Cannot Get approved leaves";
 		}
 		log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
-	double approvedLeaveSum =0;
+	double approvedLeaveSum = 0;
 	double  usedLeaveDays = 0;
 	double lostLeaveDays = 0;
 		for (GenericValue genericValue : getApprovedLeaveSumELI) {
-			 approvedLeaveSum += genericValue.getLong("leaveDuration");
+			 approvedLeaveSum += genericValue.getDouble("leaveDuration");
 		}
 		log.info("============================================================" +approvedLeaveSum);
 		
@@ -142,7 +119,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 		int months = difference.getMonths();
 		String approvedLeaveSumed = Double.toString(approvedLeaveSum);
 		double accruedLeaveDay = months * accrualRate;
-		double leaveBalances =  accruedLeaveDay - approvedLeaveSum; 
+		double leaveBalances =  accruedLeaveDay + carryOverLeaveDays - approvedLeaveSum; 
 		String accruedLeaveDays = Double.toString(accruedLeaveDay);
 		String leaveBalance = Double.toString(leaveBalances);
 
@@ -318,9 +295,5 @@ public static String getLeaveBalance(HttpServletRequest request,
 
 
 	}
-public static void main(String[] args){
-	
-	
-}
 }
 

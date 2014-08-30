@@ -26,14 +26,18 @@
         <response name="success" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="reports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="reports"/>
+    </request-map>
+
     <!--
         Supplier Requests
     -->
 
     <request-map uri="findSupplier">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="FindSupplierScreen"
-            save-current-view="true" />
+        <response name="success" type="view" value="FindSupplierScreen" save-current-view="true" />
     </request-map>
 
     <request-map uri="editSupplier">
@@ -50,22 +54,21 @@
     <request-map uri="createSupplier">
         <security https="true" auth="true" />
         <event type="service" invoke="createSupplier" />
-        <response name="success" type="request-redirect-noparam" value="supplier">
-            </response>
+        <response name="success" type="request-redirect-noparam" value="editSupplier" />
         <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
     <request-map uri="updateSupplier">
         <security https="true" auth="true" />
         <event type="service" invoke="updateSupplier" />
-        <response name="success" type="request-redirect-noparam" value="supplier"></response>
+        <response name="success" type="view" value="EditSupplierScreen"></response>
         <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
     <request-map uri="deleteSupplier">
         <security https="true" auth="true" />
         <event type="service" invoke="deleteSupplier" />
-        <response name="success" type="request-redirect-noparam" value="supplier"></response>
+        <response name="success" type="request-redirect-noparam" value="editSupplier"></response>
         <response name="error" type="view" value="EditSupplierScreen" />
     </request-map>
 
@@ -86,21 +89,21 @@
     <request-map uri="createContactPerson">
         <security https="true" auth="true" />
         <event type="service" invoke="createContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="success" type="request-redirect" value="editContactPerson"><redirect-parameter name="supplierId"/></response>
         <response name="error" type="view" value="ContactPersonScreen" />
     </request-map>
 
     <request-map uri="updateContactPerson">
         <security https="true" auth="true" />
         <event type="service" invoke="updateContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="success" type="request-redirect-noparam" value="editContactPerson"></response>
         <response name="error" type="view" value="ContactPersonScreen" />
     </request-map>
 
-    <request-map uri="deleteContactPerson">
+    <request-map uri="deleteSupplierContact">
         <security https="true" auth="true" />
-        <event type="service" invoke="deleteContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <event type="service" invoke="deleteSupplierContact" />
+        <response name="success" type="request-redirect" value="editContactPerson"><redirect-parameter name="supplierId"/></response>
         <response name="error" type="view" value="ContactPersonScreen" />
     </request-map>
 
@@ -116,8 +119,7 @@
 
     <request-map uri="editOrder">
         <security https="true" auth="true" />
-        <response name="success" type="view" value="EditOrderScreen"
-            save-current-view="true" />
+        <response name="success" type="view" value="EditOrderScreen" save-current-view="true" />
     </request-map>
 
 <!--
@@ -126,8 +128,8 @@
 
     <request-map uri="createNewOrder">
         <security https="true" auth="true" />
-        <event type="service" invoke="createContactPerson" />
-        <response name="success" type="request-redirect-noparam" value="createNewOrder"></response>
+        <event type="service" invoke="createNewOrder" />
+        <response name="success" type="request-redirect-noparam" value="editOrder"></response>
         <response name="error" type="view" value="EditOrderScreen" />
     </request-map>
 
@@ -146,6 +148,73 @@
     </request-map>
 
 
+  <!--
+        Order Lines Requests
+     -->
+    <request-map uri="editOrderLines">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="OrderLinesScreen"
+            save-current-view="true" />
+    </request-map>
+
+    <!--
+        Order Lines CRUD Operations
+    -->
+
+    <request-map uri="createOrderLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createOrderLine" />
+        <response name="success" type="request-redirect" value="editOrderLines"><redirect-parameter name="orderId"/></response>
+        <response name="error" type="view" value="OrderLinesScreen" />
+    </request-map>
+
+    <request-map uri="updateOrderLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updateOrderLines" />
+        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="error" type="view" value="OrderLinesScreen" />
+    </request-map>
+
+    <request-map uri="deleteOrderLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="deleteOrderLine" />
+        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="error" type="view" value="OrderLinesScreen" />
+    </request-map>
+
+
+    <!-- invoice requests -->
+
+    <!--
+        Find Invoice
+     -->
+    <request-map uri="purchasingInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findInvoices"/>
+    </request-map>
+
+    <!--
+        Payments Requests
+     -->
+
+     <!--
+        Find Payments
+      -->
+
+    <request-map uri="purchasingPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findPayments"/>
+    </request-map>
+
+    <!-- Reports -->
+    <request-map uri="ContactPersonReport.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="ContactPersonReport"/>
+    </request-map>
+
+    <!-- Lookup request mappings -->
+  <request-map uri="LookupProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+
+
 
     <!-- Home View Mappings -->
     <view-map name="main" type="screen" page="component://purchases/widget/PurchasesScreens.xml#homeScreen"/>
@@ -158,11 +227,26 @@
     <view-map name="ContactPersonScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#ContactPersonScreen"/>
 
 
+
     <!-- Orders View Mappings -->
     <view-map name="FindOrdersScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindOrdersScreen"/>
     <view-map name="EditOrderScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#EditOrderScreen"/>
 
+    <!-- Order Lines View Mappings -->
+    <view-map name="OrderLinesScreen" type="screen" page="component://purchases/widget/PurchasesScreens.xml#OrderLinesScreen"/>
+
+        <!-- Invoice -->
+    <view-map name="findInvoices" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindInvoices"/>
+
+        <!-- Payments -->
+    <view-map name="findPayments" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindPayments"/>
+
     <!-- Utility View Maps -->
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
-     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+
+    <!-- Reports View Map -->
+    <view-map name="reports" type="screen" page="component://purchases/widget/PurchasesScreens.xml#PurchaseReportOptions"/>
+    <view-map name="ContactPersonReport" type="screenfop" page="component://purchases/widget/PurchasesScreens.xml#ContactPersonReportpdf" content-type="application/pdf" encoding="none"/>
+
 </site-conf>

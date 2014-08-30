@@ -591,13 +591,16 @@ under the License.
         <field name="emplLeaveReasonTypeId" type="id-ne"/>
         <field name="leaveId" type="id"/>
         <field name="fromDate" type="date"/>
-        <field name="leaveDuration" type="numeric"/>     
+        <field name="leaveDuration" type="floating-point"/>     
+        <field name="carryOverUsed" type="floating-point"/>     
 
         <field name="thruDate" type="date"/>
         <field name="isActive" type="indicator"></field>
         <field name="leaveBalance" type="numeric"/>
         <field name="createdBy" type="id-ne"/>
         <field name="updatedBy" type="id-ne"/>
+        <field name="leaveStatus" type="id-ne"/>
+        <field name="createdDate" type="date-time"/>
   
         <field name="workflowDocumentTypeId" type="id-ne"/>
         <field name="organizationUnitId" type="id"/>
@@ -605,6 +608,7 @@ under the License.
         <field name="applicationStatus" type="name"/>
         <field name="approvalStatus" type="name"/>
         <field name="responsibleEmployee" type="id"></field>
+        <field name="handedOverTo" type="id-ne"/>
 
         <field name="description" type="description"/>
         <!-- <prim-key field="leaveId"/> -->
@@ -626,6 +630,37 @@ under the License.
         <!-- <relation type="one" fk-name="EMPL_LEAVE_STS" rel-entity-name="StatusItem">
             <key-map field-name="leaveStatus" rel-field-name="statusId"/>
         </relation> -->
+    </entity>   
+    <!-- Leave Balances Entity --> 
+    <entity entity-name="LeaveBalances"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Balances Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="accruedDays" type="floating-point"/>
+        <field name="usedLeaveDays" type="floating-point"/>
+        <field name="lostLeaveDays" type="floating-point"/>
+        <field name="availableLeaveDays" type="floating-point"/>
+        <prim-key field="partyId"/>
+        <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity>    
+    <entity entity-name="EmplCarryOverLost"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Carry Over  And Lost Leave Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="financialYear" type="id-ne"/>
+        <field name="accruedDays" type="floating-point"/>
+        <field name="usedLeaveDays" type="floating-point"/>
+        <field name="lostLeaveDays" type="floating-point"/>
+        <field name="carryOverLeaveDays" type="floating-point"/>
+        <field name="resetLeaveDays" type="floating-point"/>
+
+        <prim-key field="partyId"/>
+        <!-- <prim-key field="financialYear"/> -->
+        <relation type="one" fk-name="CRRYOVER_LOST_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
     </entity>
 
 
@@ -1473,6 +1508,23 @@ under the License.
 	    <view-link  entity-alias="StaffLeaveBalancesV" rel-entity-alias="EmplLeaveV">
 	    	<key-map field-name="partyId" rel-field-name="partyId"/>
 	    </view-link>
+    </view-entity>
+
+    <view-entity entity-name="LeaveBalancesView" package-name="org.ofbiz.humanres">
+      <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
+      <member-entity entity-alias="PartyRoleView" entity-name="PartyRole"></member-entity>
+
+      <alias entity-alias="PersonView" name="partyId" field="partyId"/>
+      <alias entity-alias="PersonView" name="appointmentdate" field="appointmentdate"/>      <alias entity-alias="PersonView" name="firstName" field="firstName"/>
+      <alias entity-alias="PersonView" name="lastName" field="lastName"/>
+      <alias entity-alias="PartyRoleView" name="roleTypeId" field="roleTypeId"/>
+        
+      <view-link  entity-alias="PersonView" rel-entity-alias="PartyRoleView">
+        <key-map field-name="partyId" rel-field-name="partyId"/>
+       <entity-condition>
+       <condition-expr field-name="roleTypeId" entity-alias="PartyRoleView" operator="equals" value="EMPLOYEE"/>
+       </entity-condition>
+      </view-link>
     </view-entity>
     
 </entitymodel>

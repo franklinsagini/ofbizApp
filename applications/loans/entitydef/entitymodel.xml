@@ -479,6 +479,7 @@ under the License.
 		<field name="paymentAmount" type="fixed-point"></field>
 		<field name="principalAmount" type="fixed-point"></field>
 		<field name="interestAmount" type="fixed-point"></field>
+		<field name="insuranceAmount" type="fixed-point"></field>
 		<field name="balanceAmount" type="fixed-point"></field>
 		<field name="isPaid" type="indicator"></field>
 		<field name="datePaid" type="date-time"></field>
@@ -635,6 +636,18 @@ under the License.
       </relation>
 	</entity>
 	
+	<entity entity-name="SalaryProcessingDate" package-name="org.ofbiz.loans"
+                title="SalaryProcessingDate Entity">
+                <field name="salaryProcessingDateId" type="id-ne"></field>
+                <field name="isActive" type="indicator"></field>
+                <field name="createdBy" type="name"></field>
+                <field name="updatedBy" type="name"></field>
+                <field name="branchId" type="name"></field>
+
+                <field name="processingDay" type="numeric"></field>
+                <prim-key field="salaryProcessingDateId"/>
+        </entity>
+	
 	<entity entity-name="ProductCharge" package-name="org.ofbiz.loans"
 		title="ProductCharge Entity">
 		<field name="productChargeId" type="id-ne"></field>
@@ -661,6 +674,7 @@ under the License.
 		<field name="loanProductId" type="id-ne"></field>
 		<field name="productChargeId" type="id-ne"></field>
 		<field name="isFixed" type="indicator"></field>
+		<field name="chargedUpfront" type="indicator"></field>
 		<field name="rateAmount" type="fixed-point"></field>
 		<field name="fixedAmount" type="fixed-point"></field>
 		
@@ -687,6 +701,7 @@ under the License.
 		<field name="loanApplicationId" type="id-ne"></field>
 		<field name="productChargeId" type="id-ne"></field>
 		<field name="isFixed" type="indicator"></field>
+		<field name="chargedUpfront" type="indicator"></field>
 		<field name="rateAmount" type="fixed-point"></field>
 		<field name="fixedAmount" type="fixed-point"></field>
 		
@@ -698,6 +713,42 @@ under the License.
       	</relation>
       	<relation type="one" fk-name="LoanProductCharge_LoanApplication" rel-entity-name="LoanApplication">
         	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
+	<entity entity-name="AccountProductCharge" package-name="org.ofbiz.loans"
+		title="AccountProductCharge Entity">
+		<field name="accountProductChargeId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="accountProductId" type="id-ne"></field>
+		<field name="productChargeId" type="id-ne"></field>
+		
+		<field name="transactionType" type="name"></field>
+		
+		<field name="isFixed" type="indicator"></field>
+		<field name="rateAmount" type="fixed-point"></field>
+		
+		<field name="isPercentageOfOtherCharge" type="indicator"></field>
+		<field name="parentChargeId" type="id-ne"></field>
+		
+		<field name="fixedAmount" type="fixed-point"></field>
+		
+		
+		
+		<prim-key field="accountProductChargeId"/>
+		<relation type="one" fk-name="AccountProductCharge_Charge" rel-entity-name="ProductCharge">
+        	<key-map field-name="productChargeId"/>
+      	</relation>
+      	<relation type="one" fk-name="LoanProductCharge_AccountProduct" rel-entity-name="AccountProduct">
+        	<key-map field-name="accountProductId"/>
+      	</relation>
+      	
+      	<relation type="one" fk-name="AccountProductParentCharge_Charge" rel-entity-name="ProductCharge">
+        	<key-map field-name="parentChargeId"  rel-field-name="productChargeId"/>
       	</relation>
 	</entity>
 	

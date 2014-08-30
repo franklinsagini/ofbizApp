@@ -13,11 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 /***
@@ -106,6 +110,10 @@ public class AmortizationServices {
 
 		Timestamp repaymentDate = null;
 		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
+		
+		//Get Insurance Rate
+		BigDecimal bdInsuranceRate = getInsuranceRate(loanApplication);
+		BigDecimal bdInsuranceAmount;
 
 		while (iAmortizationCount < iRepaymentPeriod) {
 			iAmortizationCount++;
@@ -126,7 +134,8 @@ public class AmortizationServices {
 				bdPreviousBalance = bdPreviousBalance
 					.subtract(dbRepaymentPrincipalAmt);
 			
-			
+			//Insurance Amount = insuranceRate times balance divide by 100
+			bdInsuranceAmount = bdInsuranceRate.multiply(bdPreviousBalance.setScale(6, RoundingMode.HALF_UP)).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
 			
 			loanAmortization = delegator.makeValue("LoanAmortization", UtilMisc
 					.toMap("loanAmortizationId", loanAmortizationId,
@@ -136,6 +145,8 @@ public class AmortizationServices {
 									.setScale(6, RoundingMode.HALF_UP),
 							"interestAmount", bdRepaymentInterestAmt.setScale(
 									6, RoundingMode.HALF_UP),
+									
+							"insuranceAmount", bdInsuranceAmount,
 							"principalAmount", dbRepaymentPrincipalAmt
 									.setScale(6, RoundingMode.HALF_UP),
 							"balanceAmount", bdPreviousBalance.setScale(6,
@@ -173,6 +184,63 @@ public class AmortizationServices {
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * Get Insurance Rate
+	 * 
+	 * **/
+	private static BigDecimal getInsuranceRate(GenericValue loanApplication) {
+		
+		//Get the ID for Insurance in ProductCharge
+		Delegator delegator = loanApplication.getDelegator();
+		List<GenericValue> productChargeELI = null;
+		String strName = "Insurance";
+		try {
+			productChargeELI = delegator.findList("ProductCharge",
+					EntityCondition.makeCondition("name", strName), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (productChargeELI == null) {
+			return BigDecimal.ZERO;
+		}
+		String productChargeId = "";
+		BigDecimal bdInsuranceRate = BigDecimal.ZERO;
+		for (GenericValue genericValue : productChargeELI) {
+			//productChargeId
+			productChargeId = genericValue.get("productChargeId").toString();
+			//			bdTotalSavings = bdTotalSavings.add(AccHolderTransactionServices
+			//					.getTotalSavings(genericValue.get("memberAccountId")
+			//							.toString(), delegator));
+		}
+		
+		//Get the Charge Amount for InsuranceRate in the Loan_Product_Charge
+		//LoanProductCharge
+		List<GenericValue> loanProductChargeELI = null;
+		EntityConditionList<EntityExpr> chargesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"productChargeId", EntityOperator.EQUALS,
+						productChargeId), EntityCondition
+						.makeCondition("loanProductId",
+								EntityOperator.EQUALS, loanApplication.getString("loanProductId"))),
+						EntityOperator.AND);
+		
+		try {
+			loanProductChargeELI = delegator.findList("LoanProductCharge",
+					chargesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanProductCharge : loanProductChargeELI) {
+			bdInsuranceRate = loanProductCharge.getBigDecimal("rateAmount");
+		}
+		
+		return bdInsuranceRate;
 	}
 
 	/***
@@ -254,6 +322,7 @@ public class AmortizationServices {
 			String loanApplicationId) {
 		// Get the loan armotization entities for the loan application and
 		// delete them
+		log.info("######## Tyring to Delete ######## !!!");
 		List<GenericValue> loanAmortizationELI = null; // =
 
 		try {

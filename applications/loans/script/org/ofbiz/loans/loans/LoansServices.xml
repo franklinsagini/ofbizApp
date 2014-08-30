@@ -479,7 +479,7 @@ under the License.
         <entity-one entity-name="LoanApplication" value-field="loanApplication">
         	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
         </entity-one>
-        <!-- set field="repaymentStartDate" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/ -->
+        <set field="repaymentStartDate" value="${bsh:org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication);}" type="Timestamp"/>
         <set field="disbursementResult" value="${bsh:org.ofbiz.loans.LoanAccounting.postDisbursement(loanApplication, userLogin);}" type="String"/>
     </simple-method>
     
@@ -615,6 +615,33 @@ under the License.
     
     <simple-method method-name="deleteLoanApplicationCharge" short-description="Delete LoanApplicationCharge">
         <entity-one entity-name="LoanApplicationCharge" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- AccountProductCharge -->
+     <simple-method method-name="createAccountProductCharge" short-description="Create AccountProductCharge">
+        <make-value entity-name="AccountProductCharge" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="AccountProductCharge" field="accountProductChargeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="accountProductChargeId" field="newEntity.accountProductChargeId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateAccountProductCharge" short-description="Update AccountProductCharge">
+        <entity-one entity-name="AccountProductCharge" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteAccountProductCharge" short-description="Delete AccountProductCharge">
+        <entity-one entity-name="AccountProductCharge" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     

@@ -1044,12 +1044,12 @@
         <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
         <set-pk-fields map="parameters" value-field="newEntity" />
         <set-nonpk-fields map="parameters" value-field="newEntity" />
-        <sequenced-id sequence-name="leavestatuslogSequence" stagger-max="1" field="leaveStsLogId" />
+        <sequenced-id sequence-name="LeaveStatusLog" stagger-max="1" field="leaveStsLogId" />
         <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
         <set field="newEntity.partyId" from="lookedUpValue.partyId" />
         <set field="newEntity.approvedBy" from-field="userLogin.userLoginId" />
-        <set field="newEntity.leaveLogStatus" value="Approved" />
+        <set field="newEntity.approvalStatus" value="Approved" />
         <create-value value-field="newEntity" />
         <log message="===== Leave Approved log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
 
@@ -1058,10 +1058,11 @@
         short-description="Reject Employee Leave">
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
         <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
-        <!-- <set field="lookedUpValue.forwardedBy" from-field="userLogin.userLoginId" /> -->
+        <set field="lookedUpValue.responsibleEmployee" value="" />
+        <set field="lookedUpValue.applicationStatus" value="Rejected" />
         <set field="lookedUpValue.approvalStatus" value="Rejected" />
         <store-value value-field="lookedUpValue" />
-
+			
         <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
         <set-pk-fields map="parameters" value-field="newEntity" />
         <set-nonpk-fields map="parameters" value-field="newEntity" />
@@ -1072,7 +1073,7 @@
         <set field="newEntity.approvalStatus" value="Rejected" />
         <!-- <set field="newEntity.leaveLogStatus" value="Rejected" /> -->
         <create-value value-field="newEntity" />
-
+			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
     </simple-method>
 	<simple-method method-name="createEmplLeave"
 		short-description="Create Employee Leave">
@@ -1097,11 +1098,11 @@
 		<make-value value-field="newStatusLog" entity-name="LeaveStatusLog" />
 		<set-pk-fields map="parameters" value-field="newStatusLog" />
 		<set-nonpk-fields map="parameters" value-field="newStatusLog" />
-		<sequenced-id sequence-name="leavestatuslogSequence" stagger-max="1" field="leaveStsLogId" />
+		<sequenced-id sequence-name="LeaveStatusLog" stagger-max="1" field="leaveStsLogId" />
 		<set field="newStatusLog.leaveStsLogId" from-field="leaveStsLogId" />
 		<set field="newStatusLog.leaveId" from="newEntity.leaveId" />
 		<set field="newStatusLog.partyId" from="userLogin.userLoginId" />
-		<set field="newStatusLog.leaveLogStatus" value="NEW" />
+		<set field="newStatusLog.approvalStatus" value="NEW" />
 		<create-value value-field="newStatusLog" />
 		
 	</simple-method>

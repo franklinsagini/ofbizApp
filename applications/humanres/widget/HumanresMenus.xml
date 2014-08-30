@@ -417,8 +417,20 @@
             <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="FindLeaveApprovals"/>
         </menu-item>
-        <menu-item name="staffLeaveBalances" title="Staff Leave Balances">
+<!--         <menu-item name="staffLeaveBalances" title="Staff Leave Balances">
             <link target="staffLeaveBalances"/>
+        </menu-item>   -->
+        <menu-item name="CloseFinacialYear" title="Close Finacial Year Leaves">
+            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <link target="CloseFinacialYear"/>
+        </menu-item>        
+       <menu-item name="LeaveBalances" title="Leave Balances">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <link target="LeaveBalances"/>
+        </menu-item>        
+        <menu-item name="ActiveEmplLeaves" title="Active Leaves">
+            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <link target="ActiveEmplLeaves"/>
         </menu-item>
     </menu>
     <menu name="ApproveReject" menu-container-style="button-bar button-style-2" default-selected-style="selected">
@@ -427,6 +439,7 @@
                 <parameter param-name="partyId"/>
                 <parameter param-name="fromDate"/>
                 <parameter param-name="leaveTypeId"/>
+                <parameter param-name="leaveId" />
             </link>
         </menu-item>
         <menu-item name="Reject" title="Reject Employee Leave">

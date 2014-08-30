@@ -2,6 +2,9 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+                <!--
+                DECORATOR SCREENS
+                 -->
     <screen name="CommonSupllierDecorator">
         <section>
             <actions>
@@ -28,9 +31,9 @@
                                         </not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="QuotesSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                        <include-menu name="SupplierSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                                         <container style="leftclear">
-                                            <label style="h1" text="Quote From Supplier: ${quote.supplierId} of Quote ID: [${quoteId}]  ${${extraFunctionName}}"/>
+                                            <label style="h1" text="Supplier: ${supplierContext.supplierId} - ${supplierContext.name}"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -54,7 +57,7 @@
                     <decorator-section name="pre-body">
                         <section>
                             <widgets>
-                                <include-menu name="SupplierTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <include-menu name="OrdersTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -64,13 +67,13 @@
                                 <section>
                                     <condition>
                                         <not>
-                                            <if-empty field="parameters.supplierId"/>
+                                            <if-empty field="parameters.orderId"/>
                                         </not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="QuotesSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                        <include-menu name="OrderSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                                         <container style="leftclear">
-                                            <label style="h1" text="Quote From Supplier: ${quote.supplierId} of Quote ID: [${quoteId}]  ${${extraFunctionName}}"/>
+                                            <label style="h1" text="[${orderContext.orderId}] - ${orderContext.orderName} - ${orderContext.status}"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -83,7 +86,104 @@
         </section>
     </screen>
 
+    <!-- Custom apps can use their own invoice decorator by specifying its
+         location in parameters.invoiceDecoratorLocation -->
+    <screen name="CommonInvoiceDecorator">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="headerItem" value="invoices"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="InvoiceTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not>
+                                            <if-empty field="parameters.invoiceId"/>
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                        <container style="leftclear">
+                                            <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
+
+        <!-- Payments Common Decorator -->
+    <screen name="CommonPaymentDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="payments"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="PaymentTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                            <condition>
+                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <container style="leftclear">
+                                    <label style="h1" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
+                                </container>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+        <!--
+=============================================================================================================================================================================================
+            Specific Screens
+         -->
     <screen name="homeScreen">
         <section>
             <actions>
@@ -181,8 +281,10 @@
                  <set field="tabButtonItem" value="editContactPerson"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createContactPerson"/>
+                <set field="supplierId" from-field="parameters.supplierId"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <entity-one entity-name="ContactPerson" value-field="contactPersonContext"/>
+                <entity-one entity-name="Supplier" value-field="supplierContext"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSupllierDecorator" location="${parameters.mainDecoratorLocation}">
@@ -199,7 +301,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Purchasing Management: Edit Contact Person">
+                                <screenlet title="Purchasing Management: Add Contact Person">
                                     <include-form name="ContactPersonForm" location="component://purchases/widget/PurchasesForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -229,7 +331,7 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <include-menu name="SupplierSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <include-menu name="OrderSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
                                 <container style="clear"/>
                             </decorator-section>
                             <decorator-section name="search-options">
@@ -244,5 +346,235 @@
             </widgets>
         </section>
     </screen>
+
+    <!--
+        Edit Order Screen
+     -->
+
+    <screen name="EditOrderScreen">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Order"/>
+                 <set field="tabButtonItem" value="editOrder"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createOrder"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="Order" value-field="orderContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Purchasing Management: Edit Order">
+                                    <include-form name="EditOrderForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Purchasing Management: Orders List">
+                                    <include-form name="OrderListForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <!--
+        Order Lines
+    -->
+
+    <screen name="OrderLinesScreen">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Order Lines "/>
+                 <set field="tabButtonItem" value="editOrderLines"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createOrderLine"/>
+                <set field="orderId" from-field="parameters.orderId"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="OrderLine" value-field="orderLineContext"/>
+                <entity-one entity-name="Order" value-field="orderContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Purchasing Management: Order Lines">
+                                    <include-form name="ListOrderLinesForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Purchasing Management: Add Order Line">
+                                    <include-form name="OrderLineForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!--
+        Invoice Screens
+     -->
+    <screen name="FindInvoices">
+        <section>
+            <actions>
+                <set field="headerItem" value="invoices"/>
+                <set field="tabButtonItem" value="find"/>
+                <set field="titleProperty" value="PageTitleFindInvoice"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                        <container style="clear"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindInvoices" location="component://purchases/widget/PurchasesForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListInvoices"  location="component://purchases/widget/PurchasesForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <!-- Find Payments -->
+
+    <screen name="FindPayments">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindPayment"/>
+                <set field="headerItem" value="payments"/>
+                <set field="tabButtonItem" value="findPayment"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="newPayment" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingPayment}" style="buttontext create"/>
+                                            <link target="FindSalesInvoicesByDueDate" text="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" style="buttontext search"/>
+                                            <link target="FindPurchaseInvoicesByDueDate" text="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" style="buttontext search"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindPayments" location="component://purchases/widget/PurchasesForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListPayments"  location="component://purchases/widget/PurchasesForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Report Screens -->
+    <screen name="PurchaseReportOptions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="OrderReports"/>
+                <set field="headerItem" value="reports"/>
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="h3">Purchasing Management Reports</label>
+                        <include-portal-page id="PurchaseReportPage"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ContactPersonReport">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <screenlet title="Contact Persons Report">
+                    <include-form name="ContactPersonReport" location="component://purchases/widget/PurchasesForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+    <!-- generates the pdf for report of sales by store and customer, grouped by product -->
+    <screen name="ContactPersonReportpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Contact Persons By Supplier"/>
+                <set field="supplierId" from-field="parameters.supplierId"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-condition entity-name="SupplierContactPerson" list="contactReportList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="supplierId" operator="equals" from-field="parameters.supplierId" ignore-if-empty="true"/>
+                    </condition-list>
+                    <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
+                    <select-field field-name="supplierId"/>
+                    <select-field field-name="name"/>
+                    <select-field field-name="firstName"/>
+                    <select-field field-name="lastName"/>
+                    <order-by field-name="firstName"/>
+                    <order-by field-name="lastName"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://purchases/webapp/purchases/reports/ContactPersonsReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
 
 </screens>

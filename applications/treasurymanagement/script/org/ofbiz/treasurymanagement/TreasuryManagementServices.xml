@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+		<!-- TreasuryType -->
+	<simple-method method-name="createTreasuryType" short-description="Create TreasuryType">
+       <make-value entity-name="TreasuryType" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="TreasuryType" field="treasuryTypeId"/>
+        <now-timestamp field="createdDate"/>
+        <set from-field="treasuryTypeId" field="newEntity.treasuryTypeId"/>
+        
+         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateTreasuryType" short-description="Update TreasuryType">
+        <entity-one entity-name="TreasuryType" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteTreasuryType" short-description="Delete TreasuryType">
+        <entity-one entity-name="TreasuryType" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+		<!-- Treasury -->
+		<simple-method method-name="createTreasury" short-description="Create Treasury">
+       <make-value entity-name="Treasury" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="Treasury" field="treasuryId"/>
+        <now-timestamp field="createdDate"/>
+        <set from-field="treasuryId" field="newEntity.treasuryId"/>
+        
+         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateTreasury" short-description="Update Treasury">
+        <entity-one entity-name="Treasury" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteTreasury" short-description="Delete Treasury">
+        <entity-one entity-name="Treasury" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+		<!-- TreasuryTransaction -->
+		<simple-method method-name="createTreasuryTransaction" short-description="Create TreasuryTransaction">
+       <make-value entity-name="TreasuryTransaction" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="TreasuryTransaction" field="treasuryTransactionId"/>
+        <now-timestamp field="createdDate"/>
+        <set from-field="treasuryTransactionId" field="newEntity.treasuryTransactionId"/>
+        
+         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateTreasuryTransaction" short-description="Update TreasuryTransaction">
+        <entity-one entity-name="TreasuryTransaction" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteTreasuryTransaction" short-description="Delete TreasuryTransaction">
+        <entity-one entity-name="TreasuryTransaction" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+		<!-- TreasuryTransfer -->
+	<simple-method method-name="createTreasuryTransfer" short-description="Create TreasuryTransfer">
+       <make-value entity-name="TreasuryTransfer" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="TreasuryTransfer" field="treasuryTransferId"/>
+        <now-timestamp field="createdDate"/>
+        <set from-field="treasuryTransferId" field="newEntity.treasuryTransferId"/>
+        
+         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateTreasuryTransfer" short-description="Update TreasuryTransfer">
+        <entity-one entity-name="TreasuryTransfer" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteTreasuryTransfer" short-description="Delete TreasuryTransfer">
+        <entity-one entity-name="TreasuryTransfer" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+		
+</simple-methods>

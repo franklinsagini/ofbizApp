@@ -471,4 +471,216 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <!-- Cheque Deposit Postings -->
+    <screen name="chequedepositposting">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Cheque Deposit Postings"/>
+                <set field="headerItem" value="chequedepositposting"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postUnpostedCheques"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!-- entity-one entity-name="AccountHolderTransactionSetup" value-field="accountHolderTransactionSetupContext"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            	<screenlet>
+                                	<section>
+                                		<widgets>
+                                			<container>
+                                				<label style="h3">POST Unposted Cheques (End Of Day or Start Of Day Process)</label>
+                                				<!-- label style="h3">Product(Loan Type) : ${loanProduct.name} -  ${loanProduct.code}</label>
+                                				<label style="h3">Amount    : KES ${loanApplication.loanAmt}</label>
+                                				<label style="h3">Interest(P.M.)  : ${loanApplication.interestRatePM}</label>
+                                				<label style="h3">Repayment(Months) : ${loanApplication.repaymentPeriod}</label>
+                                				<label style="h3">Deduction Method : ${loanProduct.deductionType}</label>
+                                				<label style="h3">Per Month Repayment : KES ${loanApplication.monthlyRepayment}</label>
+                                				<label style="h3">Total Repayment : KES ${loanApplication.totalRepayment}</label -->
+                                            
+                                            </container>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
+                                <screenlet>
+                                	<section>
+                                		
+                                		<widgets>
+                                			
+                                			<container style="button-bar">
+                                		
+                                            <link target="postUnpostedCheques"  text="Post Cheques" style="buttontext create">
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                                
+                                            </link>
+                                            </container>
+                                		</widgets>
+                                		<!-- fail-widgets>
+                                			<container style="button-bar">
+                                				<label style="h3"> Waiting for Disbursement to Generate Schedule</label>
+                                			</container>
+                                		</fail-widgets -->
+                                	</section>
+                                </screenlet>
+                                
+                                <screenlet title="Unposted Cleared Cheques">
+                                    <include-form name="unpostedclearedcheques" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Unposted Uncleared Cheques List">
+                                    <include-form name="unposteddepositedcheques" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                                
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Posted Cheques List">
+                        			<include-form name="postedChequesList" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Expected Payment -->
+    <screen name="expectedPayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payment"/>
+                <set field="headerItem" value="expectedPayment"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPayment"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="ExpectedPayment" value-field="expectedPaymentContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Expected Payment">
+                                    <include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        <section>
+                        	<widgets>
+                        		  <screenlet>
+                                	<section>
+                                		
+                                		<widgets>
+                                			
+                                			<container style="button-bar">
+                                		
+                                            <link target="expectedPaymentpdf" text="Print Expected Payment" style="buttontext">
+                                                <!-- parameter param-name="loanApplicationId"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                                            
+                                            <link target="expectedPaymentcsv" text="Generate Schedule CSV" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                            </container>
+                                		</widgets>
+                                		
+                                	</section>
+                                </screenlet>
+                        	</widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Expected Payment List">
+                        			<include-form name="listExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Expected Payment PDF -->
+     <screen name="expectedPaymentpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payment"/>
+                <set field="headerItem" value="expectedPayment"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPayment"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="viewSize" value="100000"/>
+                <entity-one entity-name="ExpectedPayment" value-field="expectedPaymentContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Expected Payment CSV -->
+    <screen name="expectedPaymentcsv">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payment"/>
+                <set field="headerItem" value="expectedPayment"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPayment"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="viewSize" value="100000"/>
+                <entity-one entity-name="ExpectedPayment" value-field="expectedPaymentContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body" -->
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    <!-- /decorator-section>
+                </decorator-screen -->
+            </widgets>
+        </section>
+    </screen>
 </screens>

@@ -39,14 +39,74 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
-        <request-map uri="createSalaryStep">
+   <request-map uri="createSalaryStep">
         <security https="true" auth="true"/>
         <event type="service" invoke="createSalaryStep"/>
         <response name="success" type="view" value="EditSalarySteps"/>
     </request-map>
 
+    <!-- Leave Mappings -->
+    <request-map uri="ActiveEmplLeaves">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ActiveEmplLeaves"/>
+    </request-map>  
+    <request-map uri="FindCarryOverLost">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindCarryOverLost"/>
+    </request-map>     
+    <request-map uri="FindActiveLeaves">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindActiveLeaves"/>
+    </request-map> 
+    <request-map uri="LeaveBalances">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LeaveBalances"/>
+    </request-map>    
+    <request-map uri="CloseFinacialYear">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CloseFinacialYear"/>
+    </request-map>
+<!--     <request-map uri="CloseFinacialYear.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CloseFinacialYearcsv"/>
+    </request-map> -->
+    <request-map uri="activeleaves.csv">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="activeleavescsv" />
+    </request-map>    
+    <request-map uri="activeleaves.pdf">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="activeleavespdf" />
+    </request-map>
+<!--     <request-map uri="LeaveBalances.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LeaveBalancescsv"/>
+    </request-map> -->
+         
+
+
 
     <!--  Request Mappings for calling leave duration and end date java functions -->
+    <request-map uri="closeFinacialYear">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="closeFinacialYear" />
+    <response name="success" type="view"  value="CloseFinacialYear"></response>
+    <response name="error" type="view" value="CloseFinacialYear" />
+    </request-map>     
+    <request-map uri="resetUnusedCarryOver">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="resetUnusedCarryOver" />
+    <response name="success" type="view"  value="CloseFinacialYear"></response>
+    <response name="error" type="view" value="CloseFinacialYear" />
+    </request-map>    
+    <request-map uri="generateLeaveBalances">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="generateLeaveBalances" />
+    <response name="success" type="view"  value="LeaveBalances"></response>
+    <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+
+
     <request-map uri="forwardApplication">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="forwardApplication" />
@@ -108,6 +168,7 @@ under the License.
 
     <!-- ================HumanResource==================================== -->
     <!-- ================Party Ability Group==================================== -->
+   
     <request-map uri="FindPartyQuals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPartyQuals"/>
@@ -1090,7 +1151,7 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmplLeave"/>
         <response name="success" type="view" value="FindEmplLeaves"/>
-        <response name="error" type="view" value="FindEmplLeaves"/>
+        <response name="error" type="view" value="EditEmplLeave"/>
     </request-map>
     <request-map uri="updateEmplLeaveExt">
         <security https="true" auth="true"/>
@@ -1313,6 +1374,10 @@ under the License.
     <request-map uri="FindLeaveApprovals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindLeaveApprovals"/>
+    </request-map>    
+    <request-map uri="FindLeaveBalances">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindLeaveBalances"/>
     </request-map>
     <request-map uri="EditEmplLeaveStatus">
        <security https="true" auth="true"/>
@@ -1774,8 +1839,10 @@ under the License.
     <view-map name="EditEmployeeResumes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeResumes"/>
     <view-map name="EditEmployeePerformanceNotes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeePerformanceNotes"/>
     <view-map name="EditEmployeeLeaves" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeLeaves"/>
-    
-    <view-map name="viewEmplLeaveDetails" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#viewEmplLeaveDetails"/>
+    <view-map name="activeleavescsv" type="screencsv" content-type="text/csv"
+       page="component://humanres/widget/EmplLeaveScreens.xml#activeleavescsv" />  
+    <view-map name="viewEmplLeaveDetails" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#viewEmplLeaveDetails"/>    
+    <view-map name="activeleavespdf" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#activeleavespdf"/>
 
     <view-map name="FindEmplPositions" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#FindEmplPositions"/>
     <view-map name="EditEmplPosition" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#EditEmplPosition"/>
@@ -1839,8 +1906,14 @@ under the License.
     <view-map name="EditEmplLeave" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeave"/>
     <view-map name="EditEmplLeaveTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditEmplLeaveTypes"/>
     <view-map name="EditEmplLeaveReasonTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditEmplLeaveReasonTypes"/>
-    <view-map name="FindLeaveApprovals" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindLeaveApprovals"/>
+    <view-map name="FindLeaveApprovals" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindLeaveApprovals"/>    
+    <view-map name="FindLeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>
+    <view-map name="FindActiveLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>    
+    <view-map name="FindCarryOverLost" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
+    <view-map name="ActiveEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
+    <view-map name="LeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>    
+    <view-map name="CloseFinacialYear" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
     
     <view-map name="staffLeaveBalances" type="screen" page="component://humanres/widget/EmployeeScreens.xml#StaffLeaveBalances"/>
     

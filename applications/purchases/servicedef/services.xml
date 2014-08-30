@@ -5,64 +5,76 @@
     <vendor></vendor>
     <version>1.0</version>
 
-    <service
-        name="createPurchaseQuote"
-        default-entity-name="PrchseQteHdr"
-        engine="simple"
-        invoke="createPurchaseQuote"
-        auth="true"
-        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml">
-        <description>Create a Quote</description>
-        <auto-attributes include="pk" mode="OUT" optional="false" />
-        <auto-attributes include="nonpk" mode="IN" optional="true" />
-    </service>
 
-    <service
-        name="updatePurchaseQuote" default-entity-name="PrchseQteHdr" engine="simple"
-        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml"
-        invoke="updatePurchaseQuote" auth="true">
-        <description>Update a Quote</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="false" />
-        <override name="confirmDate" optional="true"/>
-    </service>
-
-    <service name="createPurchaseQuoteItem" engine="simple"
-        default-entity-name="QuoteLines"
-        location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml"
-        invoke="createPurchaseQuoteItem">
-        <description>Create a new Quote Item Record</description>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="quoteItemSeqId" mode="INOUT" optional="true"/><!-- will optionally be assigned by the system -->
-        <override name="description" allow-html="any"/>
-    </service>
-
-
-    <!--
-        Purchase Orders Services
-    -->
-    <service name="createPurchaseOrder" engine="simple" default-entity-name="PurchaseOrderHeader"
-             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml"
-             invoke="createPurchaseOrder" auth="true">
-        <description>Create Purchase Order</description>
+                <!-- Supplier -->
+    <service name="createSupplier" engine="simple" default-entity-name="Supplier"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createSupplier" auth="true">
+        <description>Create Supplier</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-    <service name="updatePurchaseOrder" engine="simple" default-entity-name="PurchaseOrderHeader"
-             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml"
-             invoke="updatePurchaseOrder" auth="true">
-        <description>Update PurchaseOrderHeader</description>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
+    <service name="updateSupplier" engine="simple" default-entity-name="Supplier"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="updateSupplier" auth="true">
+        <description>Update Supplier</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-    <service name="deletePurchaseOrder" engine="simple" default-entity-name="PurchaseOrderHeader"
-             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" i
-             nvoke="deletePurchaseOrder" auth="true">
-        <description>Delete PurchaseOrderHeader</description>
+    <service name="deleteSupplier" engine="simple" default-entity-name="Supplier"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="deleteSupplier" auth="true">
+        <description>Delete Supplier</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
+    <!--
+        Supplier Contact Person
+    -->
+
+    <service name="createContactPerson" engine="simple" default-entity-name="ContactPerson"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createContactPerson" auth="true">
+        <description>Create ContactPerson</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+
+    <service name="updateSupplierContact" engine="simple" default-entity-name="ContactPerson"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="updateSupplier" auth="true">
+        <description>Update ContactPerson</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteSupplierContact" engine="simple" default-entity-name="ContactPerson"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="deleteSupplierContact" auth="true">
+        <description>Delete ContactPerson</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
+
+    <!--
+        Create New Order
+    -->
+
+    <service name="createNewOrder" engine="simple" default-entity-name="Order"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createNewOrder" auth="true">
+        <description>Create Order</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createOrderLine" engine="simple" default-entity-name="OrderLine"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="createOrderLine" auth="true">
+        <description>Create OrderLine</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
 
