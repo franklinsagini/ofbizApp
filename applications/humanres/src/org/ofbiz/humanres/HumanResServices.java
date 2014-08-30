@@ -295,9 +295,5 @@ public static String getLeaveBalance(HttpServletRequest request,
 
 
 	}
-public static void main(String[] args){
-	
-	
-}
 }
 

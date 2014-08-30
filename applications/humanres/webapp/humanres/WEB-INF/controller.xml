@@ -44,6 +44,20 @@ under the License.
         <event type="service" invoke="createSalaryStep"/>
         <response name="success" type="view" value="EditSalarySteps"/>
     </request-map>
+
+    <!-- Leave Mappings -->
+    <request-map uri="ActiveEmplLeaves">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ActiveEmplLeaves"/>
+    </request-map>  
+    <request-map uri="FindCarryOverLost">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindCarryOverLost"/>
+    </request-map>     
+    <request-map uri="FindActiveLeaves">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindActiveLeaves"/>
+    </request-map> 
     <request-map uri="LeaveBalances">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LeaveBalances"/>
@@ -52,6 +66,24 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CloseFinacialYear"/>
     </request-map>
+<!--     <request-map uri="CloseFinacialYear.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CloseFinacialYearcsv"/>
+    </request-map> -->
+    <request-map uri="activeleaves.csv">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="activeleavescsv" />
+    </request-map>    
+    <request-map uri="activeleaves.pdf">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="activeleavespdf" />
+    </request-map>
+<!--     <request-map uri="LeaveBalances.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LeaveBalancescsv"/>
+    </request-map> -->
+         
+
 
 
     <!--  Request Mappings for calling leave duration and end date java functions -->
@@ -136,22 +168,7 @@ under the License.
 
     <!-- ================HumanResource==================================== -->
     <!-- ================Party Ability Group==================================== -->
-    <request-map uri="ActiveEmplLeaves">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ActiveEmplLeaves"/>
-    </request-map>  
-    <request-map uri="FindCarryOverLost">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindCarryOverLost"/>
-    </request-map>     
-<!--     <request-map uri="resetUnusedCarryOver">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindCarryOverLost"/>
-    </request-map>   -->  
-    <request-map uri="FindActiveLeaves">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindActiveLeaves"/>
-    </request-map>    
+   
     <request-map uri="FindPartyQuals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPartyQuals"/>
@@ -1574,8 +1591,10 @@ under the License.
     <view-map name="EditEmployeeResumes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeResumes"/>
     <view-map name="EditEmployeePerformanceNotes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeePerformanceNotes"/>
     <view-map name="EditEmployeeLeaves" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeLeaves"/>
-    
-    <view-map name="viewEmplLeaveDetails" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#viewEmplLeaveDetails"/>
+    <view-map name="activeleavescsv" type="screencsv" content-type="text/csv"
+       page="component://humanres/widget/EmplLeaveScreens.xml#activeleavescsv" />  
+    <view-map name="viewEmplLeaveDetails" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#viewEmplLeaveDetails"/>    
+    <view-map name="activeleavespdf" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#activeleavespdf"/>
 
     <view-map name="FindEmplPositions" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#FindEmplPositions"/>
     <view-map name="EditEmplPosition" type="screen" page="component://humanres/widget/EmplPositionScreens.xml#EditEmplPosition"/>
