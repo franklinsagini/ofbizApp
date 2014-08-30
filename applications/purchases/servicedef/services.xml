@@ -42,6 +42,21 @@
     </service>
 
 
+    <service name="updateSupplierContact" engine="simple" default-entity-name="ContactPerson"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="updateSupplier" auth="true">
+        <description>Update ContactPerson</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteSupplierContact" engine="simple" default-entity-name="ContactPerson"
+             location="component://purchases/script/org/ofbiz/purchases/PurchasesServices.xml" invoke="deleteSupplierContact" auth="true">
+        <description>Delete ContactPerson</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
+
     <!--
         Create New Order
     -->
