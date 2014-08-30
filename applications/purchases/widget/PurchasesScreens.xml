@@ -544,6 +544,7 @@
     </screen>
 
 
+
     <!-- generates the pdf for report of sales by store and customer, grouped by product -->
     <screen name="ContactPersonReportpdf">
         <section>
@@ -554,32 +555,22 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <entity-condition entity-name="OrderReportSalesGroupByProduct" list="productReportList">
+                <entity-condition entity-name="SupplierContactPerson" list="contactReportList">
                     <condition-list combine="and">
-                        <!-- this can use the other view, so long as the filter is by SALES_ORDER and fromPartyId = ProductStore.payToPartyId if provided -->
-                        <condition-expr field-name="productStoreId" operator="equals" from-field="parameters.productStoreId" ignore-if-empty="true"/>
-                        <condition-expr field-name="partyId" operator="equals" from-field="parameters.toPartyId" ignore-if-empty="true"/>
-                        <condition-expr field-name="roleTypeId" operator="equals" value="BILL_TO_CUSTOMER"/>
-                        <condition-expr field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
-                        <!-- possible bug: using from-field="parameters.orderStatusId" did not work for the following line -->
-                        <condition-expr field-name="orderStatusId" operator="equals" value="${parameters.orderStatusId}" ignore-if-empty="true"/>
-                        <condition-expr field-name="orderDate" operator="greater-equals" from-field="parameters.fromOrderDate" ignore-if-empty="true"/>
-                        <condition-expr field-name="orderDate" operator="less" from-field="parameters.thruOrderDate" ignore-if-empty="true"/>
+                        <condition-expr field-name="supplierId" operator="equals" from-field="parameters.supplierId" ignore-if-empty="true"/>
                     </condition-list>
                     <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
-                    <select-field field-name="productStoreId"/>
-                    <select-field field-name="storeName"/>
-                    <select-field field-name="productId"/>
-                    <select-field field-name="internalName"/>
-                    <select-field field-name="quantityOrdered"/>
-                    <select-field field-name="unitPrice"/>
-                    <order-by field-name="storeName"/>
-                    <order-by field-name="internalName"/>
+                    <select-field field-name="supplierId"/>
+                    <select-field field-name="name"/>
+                    <select-field field-name="firstName"/>
+                    <select-field field-name="lastName"/>
+                    <order-by field-name="firstName"/>
+                    <order-by field-name="lastName"/>
                 </entity-condition>
             </actions>
             <widgets>
                 <platform-specific>
-                    <xsl-fo><html-template location="component://order/webapp/ordermgr/reports/SalesByStoreReport.fo.ftl"/></xsl-fo>
+                    <xsl-fo><html-template location="component://purchases/webapp/purchases/reports/ContactPersonsReport.fo.ftl"/></xsl-fo>
                 </platform-specific>
             </widgets>
         </section>
