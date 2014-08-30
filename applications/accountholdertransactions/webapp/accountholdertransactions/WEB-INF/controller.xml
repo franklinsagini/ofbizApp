@@ -411,6 +411,16 @@ under the License.
 			value="expectedPayment"></response>
 		<response name="error" type="view" value="expectedPayment" />
 	</request-map>
+	
+	<request-map uri="expectedPaymentpdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="expectedPaymentpdf" />
+	</request-map>
+	
+	<request-map uri="expectedPaymentcsv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="expectedPaymentcsv" />
+	</request-map>
     
 
     
@@ -436,6 +446,12 @@ under the License.
 	<view-map name="chequedepositposting" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#chequedepositposting"/>
 	<view-map name="expectedPayment" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPayment"/>
 	
+	<view-map name="expectedPaymentpdf" type="screenfop"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentpdf"
+		content-type="application/pdf" encoding="none" />
+		
+		<view-map name="expectedPaymentcsv" type="screencsv" content-type="text/csv"
+                page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentcsv" />
 	
     <!-- end of view mappings -->
 </site-conf>

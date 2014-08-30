@@ -883,25 +883,31 @@ under the License.
 	<request-map uri="createLoanApplicationCharge">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createLoanApplicationCharge" />
-		<response name="success" type="request-redirect-noparam"
-			value="NewLoanApplicationCharge"></response>
-		<response name="error" type="view" value="NewLoanApplicationCharge" />
+		<response name="success" type="request-redirect"
+			value="viewapplicationprofile">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="viewapplicationprofile" />
 	</request-map>
 
 	<request-map uri="updateLoanApplicationCharge">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateLoanApplicationCharge" />
-		<response name="success" type="request-redirect-noparam"
-			value="NewLoanApplicationCharge"></response>
-		<response name="error" type="view" value="NewLoanApplicationCharge" />
+		<response name="success" type="request-redirect"
+			value="viewapplicationprofile">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="viewapplicationprofile" />
 	</request-map>
 	
 	<request-map uri="deleteLoanApplicationCharge">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteLoanApplicationCharge" />
-		<response name="success" type="request-redirect-noparam"
-			value="NewLoanApplicationCharge"></response>
-		<response name="error" type="view" value="NewLoanApplicationCharge" />
+		<response name="success" type="request-redirect"
+			value="viewapplicationprofile">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="viewapplicationprofile" />
 	</request-map>
 	<!-- end LoanApplicationCharge -->
 
@@ -978,7 +984,7 @@ under the License.
         <!-- end LoanProductCharge -->
 
         <!-- start LoanApplicationCharge -->
-                <request-map uri="NewLoanApplicationCharge">
+        <!-- request-map uri="NewLoanApplicationCharge">
                 <security https="true" auth="true" />
                 <response name="success" type="view" value="NewLoanApplicationCharge" />
         </request-map>
@@ -1005,7 +1011,7 @@ under the License.
                 <response name="success" type="request-redirect-noparam"
                         value="NewLoanApplicationCharge"></response>
                 <response name="error" type="view" value="NewLoanApplicationCharge" />
-        </request-map>
+        </request-map -->
         <!-- end LoanApplicationCharge -->
         
      <request-map uri="amortizationSchedulePdf">
