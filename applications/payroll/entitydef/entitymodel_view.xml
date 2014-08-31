@@ -26,4 +26,53 @@ under the License.
     <title>Entity of an Open For Business Project Component</title>
     <description>None</description>
     <version>1.0</version>
+    
+     <view-entity entity-name="PayslipView"
+        package-name="org.ofbiz.payroll"
+        title="Employee Payslip">
+        
+        <member-entity entity-alias="BBR" entity-name="BankBranch"/>
+        <member-entity entity-alias="BDE" entity-name="BankDetails"/>
+        <member-entity entity-alias="PP" entity-name="PayPoint"/>
+        <member-entity entity-alias="PPE" entity-name="PayrollPeriod"/>  
+		<member-entity entity-alias="SPE" entity-name="StaffPayrollElements"/>
+        <member-entity entity-alias="SPL" entity-name="StaffPayroll"/>
+        <member-entity entity-alias="PER" entity-name="Person"/>
+        
+        <alias entity-alias="PER" name="partyId"></alias>
+        <alias entity-alias="PER" name="employeeNumber"></alias>
+        <alias entity-alias="PER" name="firstName"></alias>
+        <alias entity-alias="PER" name="lastName"></alias>
+        <alias entity-alias="PER" name="pinNumber"></alias>
+        <alias entity-alias="SPL" name="payrollPeriodId"></alias>
+        <alias entity-alias="SPE" name="amount"></alias>
+        <alias entity-alias="SPE" name="balance"></alias>
+        <alias entity-alias="PPE" name="payrollPeriodId"></alias>
+        <alias entity-alias="PPE" field="name" name="PeriodName"></alias>
+        <alias entity-alias="BBR" name="branchName"></alias>
+        <alias entity-alias="BDE" name="bankName"></alias>  
+        
+        
+  
+        <view-link entity-alias="PER" rel-entity-alias="SPL">
+            <key-map field-name="partyId"/>
+        </view-link>
+        <view-link entity-alias="SPL" rel-entity-alias="SPE">
+            <key-map field-name="staffPayrollId"/>
+        </view-link>
+         <view-link entity-alias="SPL" rel-entity-alias="PPE">
+            <key-map field-name="payrollPeriodId"/>
+        </view-link>
+        <view-link entity-alias="PER" rel-entity-alias="PP">
+            <key-map field-name="partyId"/>
+        </view-link>
+        <view-link entity-alias="PP" rel-entity-alias="BDE">
+            <key-map field-name="bankDetailsId"/>
+        </view-link>
+        <view-link entity-alias="BDE" rel-entity-alias="BBR">
+            <key-map field-name="bankDetailsId"/>
+        </view-link>
+     
+    </view-entity>
+    
 </entitymodel>
