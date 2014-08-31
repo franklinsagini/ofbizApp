@@ -1831,18 +1831,24 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateMemberAccount" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
-			value="memberAccount"></response>
-		<response name="error" type="view" value="memberAccount" />
+		<response name="success" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 
 	<request-map uri="deleteMemberAccount">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteMemberAccount" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
-			value="memberAccount"></response>
-		<response name="error" type="view" value="memberAccount" />
+		<response name="success" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 
 	<!-- CRUD for memberReferee -->

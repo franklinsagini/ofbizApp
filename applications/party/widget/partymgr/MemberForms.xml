@@ -147,20 +147,27 @@ under the License.
         <!--  auto-fields-service service-name="createUserLogin"/ -->
         <field name="partyId"><hidden/></field>
         <field name="enabled"><hidden/></field>
-        <field name="accountNo"><text default-value="5-02-"></text></field>
-        <field name="accountName"><text></text></field>
-        <field name="accountProductId" title="Account">
+        <field name="accountNo"  widget-style="required" required-field="true"><text default-value="5-02-"></text></field>
+        <field name="accountName"  widget-style="required" required-field="true"><text></text></field>
+        <field name="accountProductId" title="Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <list-options list-name="productsList" key-name="accountProductId" description="${name} - ${code}"/>
             </drop-down>
         </field>
         
-        <field name="accountStatusId" title="Account Status">
+        <field name="accountStatusId" title="Account Status"  widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <list-options list-name="accountStatusList" key-name="accountStatusId" description="${name}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <!-- no-current-selected-key="N" -->
+         <field name="withdrawable" title="Withdrawable (FOSA)"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true" >
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <!-- field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
@@ -392,22 +399,31 @@ under the License.
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
-         <field name="accountNo" title="Account No" widget-style="required"><text size="30" maxlength="60"/></field>
-         <field name="accountName" title="Account Name" widget-style="required"><text size="30" maxlength="60"/></field>
+         <field name="memberAccountId"><hidden/></field>
+         <field name="partyId" parameter-name="partyId"><hidden/></field>
+         <field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+         <field name="accountName" title="Account Name" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <!-- field name="saccoProductId" title="Account">
         	<display-entity description="${name} - ${code} " entity-name="SaccoProduct" also-hidden="true"></display-entity>
           </field -->
-          <field name="accountProductId" title="Account">
+          <field name="accountProductId" title="Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <!-- list-options list-name="productsList" key-name="saccoProductId" description="${name} - ${code}"/ -->
                 <entity-options description="${name} - ${code}" entity-name="AccountProduct"></entity-options>
             </drop-down>
         </field>
         
-        <field name="accountStatusId" title="Account Status">
+        <field name="accountStatusId" title="Account Status"  widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <!-- list-options list-name="accountStatusList" key-name="accountStatusId" description="${name}"/ -->
                 <entity-options description="${name}" entity-name="AccountStatus"></entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="withdrawable" title="Withdrawable (FOSA)"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true" >
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
             </drop-down>
         </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
