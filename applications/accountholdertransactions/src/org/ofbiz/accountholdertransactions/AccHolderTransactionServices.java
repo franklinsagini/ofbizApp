@@ -344,8 +344,12 @@ public class AccHolderTransactionServices {
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : cashDepositELI) {
+			
+			if (genericValue
+					.getBigDecimal("transactionAmount") != null){
 			bdBalance = bdBalance.add(genericValue
 					.getBigDecimal("transactionAmount"));
+			}
 		}
 		return bdBalance;
 	}
@@ -502,7 +506,7 @@ public class AccHolderTransactionServices {
 	 **/
 	public static BigDecimal getTotalSavings(String memberAccountId,
 			Delegator delegator) {
-		// BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+		 BigDecimal bdOpeningBalance = BigDecimal.ZERO;
 		// BigDecimal bdTotalCashDeposit = BigDecimal.ZERO;
 		// BigDecimal bdTotalCashWithdrawal = BigDecimal.ZERO;
 		//
@@ -510,8 +514,8 @@ public class AccHolderTransactionServices {
 		// BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
 		// BigDecimal bdTotalChequeWithdrawal = BigDecimal.ZERO;
 		// // Get Opening Balance
-		// bdOpeningBalance = calculateOpeningBalance(memberAccountId,
-		// delegator);
+		 bdOpeningBalance = calculateOpeningBalance(memberAccountId,
+		 delegator);
 		// // Get Total Deposits
 		// bdTotalCashDeposit = calculateTotalCashDeposits(memberAccountId,
 		// delegator);
@@ -534,7 +538,7 @@ public class AccHolderTransactionServices {
 		// .add(bdTotalChequeDepositCleared)
 		// .subtract(bdTotalCashWithdrawal)
 		// .subtract(bdTotalChequeWithdrawal);
-		return getAvailableBalanceVer2(memberAccountId, delegator);
+		return (getAvailableBalanceVer2(memberAccountId, delegator).add(bdOpeningBalance));
 	}
 
 	/***

@@ -684,12 +684,12 @@ under the License.
                                                 
                                             </link>
                                             
-                                            <link target="amortizationSchedulePdf" text="Print Schedule PDF" style="buttontext">
+                                            <link target="amortizationSchedulePdf.pdf" text="Print Schedule PDF" style="buttontext">
                                                 <parameter param-name="loanApplicationId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
                                             
-                                            <link target="amortizationschedulecsv" text="Generate Schedule CSV" style="buttontext">
+                                            <link target="amortizationschedulecsv.csv" text="Generate Schedule CSV" style="buttontext">
                                                 <parameter param-name="loanApplicationId"/>
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
@@ -794,7 +794,26 @@ under the License.
                                     </decorator-section>
                                     <decorator-section name="search-options">
                                         <include-form name="FindLoanApplications" location="component://loans/widget/loans/ExampleForms.xml"/>
+                                    
+                                    	<screenlet name="Print Report">
+                                    		<container style="button-bar">
+                                		
+                                            <link target="loanslistpdf.pdf" text="Print Loans PDF" style="buttontext">
+                                                <parameter param-name="loanApplicationId"/>
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                                            
+                                            <link target="loanslistcsv.csv" text="Loans CSV" style="buttontext">
+                                                <parameter param-name="loanApplicationId"/>
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                            </container>
+                                    	</screenlet>
                                     </decorator-section>
+                                   
+                                    
+                                    
                                     <decorator-section name="search-results">
                                         <include-form name="findListLoanApplications" location="component://loans/widget/loans/ExampleForms.xml"/>
                                     </decorator-section>
@@ -806,6 +825,53 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- FindLoanApplicationCSV -->
+    <screen name="loanslistcsv">
+        <section>
+            <actions>
+                <!-- set field="headerItem" value="ExampleMenuItem"/>
+                <set field="titleProperty" value="PageTitleFindExample"/ -->
+                <set field="headerItem" value="FindLoanApplication"/>
+                <set field="titleProperty" value="Find Loan Application"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                
+                                   <screenlet>
+                                   	 <include-form name="findListLoanApplicationsTrimed" location="component://loans/widget/loans/ExampleForms.xml"/>
+                                   </screenlet>
+                                       
+                    
+                            
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="loanslistpdf">
+        <section>
+            <actions>
+                <!-- set field="headerItem" value="ExampleMenuItem"/>
+                <set field="titleProperty" value="PageTitleFindExample"/ -->
+                <set field="headerItem" value="FindLoanApplication"/>
+                <set field="titleProperty" value="Find Loan Application"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+            <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+					<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+					<decorator-section name="body">
+                
+                                   <screenlet>
+                                   	 <include-form name="findListLoanApplicationsTrimed" location="component://loans/widget/loans/ExampleForms.xml"/>
+                                   </screenlet>
+                                       
+                    </decorator-section>
+                    </decorator-screen>
+                            
             </widgets>
         </section>
     </screen>

@@ -15,6 +15,9 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
@@ -194,10 +197,20 @@ public class LoanAccounting {
 		List<GenericValue> loanApplicationChargeELI = null;
 		String loanApplicationId = loanApplication
 				.getString("loanApplicationId");
+		
+		//Pick only upfront payable charges like negotiation or appraisal fee
+		// TODO - Add filter for upfront
+		//chargedUpfront
+		EntityConditionList<EntityExpr> chargesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId), EntityCondition
+						.makeCondition("chargedUpfront",
+								EntityOperator.EQUALS, "Y")),
+						EntityOperator.AND);
 		try {
 			loanApplicationChargeELI = delegator.findList(
-					"LoanApplicationCharge", EntityCondition.makeCondition(
-							"loanApplicationId", loanApplicationId), null,
+					"LoanApplicationCharge", chargesConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
