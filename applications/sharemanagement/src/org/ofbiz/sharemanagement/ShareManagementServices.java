@@ -3,6 +3,7 @@ package org.ofbiz.sharemanagement;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -85,5 +88,63 @@ public class ShareManagementServices {
 		}
 
 		return json;
+	}
+	
+	/***
+	 * Get the default Share Account (Owner Equity)
+	 * **/
+	public static String getShareAccount() {
+
+		//From ShareSetup get the glAccountId
+		// Get the Product by first accessing the MemberAccount
+		//String accountProductId = getAccountProduct(accountTransaction);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> shareSetupELI = null;
+		try {
+			shareSetupELI = delegator.findList("ShareSetup",
+					EntityCondition.makeCondition("isActive", "Y"), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (shareSetupELI == null) {
+			return "";
+		}
+		String glAccountId = "";
+		for (GenericValue genericValue : shareSetupELI) {
+			//productChargeId
+			glAccountId = genericValue.get("glAccountId").toString();
+		}
+
+
+		return glAccountId;
+	}
+	
+	/***
+	 * Get the share price
+	 * */
+	public static BigDecimal getSharePrice() {
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> shareSetupELI = null;
+		try {
+			shareSetupELI = delegator.findList("ShareSetup",
+					EntityCondition.makeCondition("isActive", "Y"), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (shareSetupELI == null) {
+			return BigDecimal.ZERO;
+		}
+		BigDecimal bdSharePrice = BigDecimal.ZERO;
+		for (GenericValue genericValue : shareSetupELI) {
+			//productChargeId
+			bdSharePrice = genericValue.getBigDecimal("sharePrice");
+		}
+
+		return bdSharePrice;
 	}
 }

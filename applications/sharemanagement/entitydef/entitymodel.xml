@@ -49,19 +49,23 @@ under the License.
     
     <entity entity-name="ShareSetup" package-name="org.ofbiz.sharemanagement" title="ShareSetup Entity">
         <field name="shareSetupId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="active" type="indicator"></field>
+        <field name="isActive" type="indicator"></field>
         <field name="sharePrice" type="currency-amount"></field>
-        <field name="shareAccountId" type="id"></field>
+        <field name="glAccountId" type="id"></field>
+        <!-- field name="shareAccountId" type="id"></field -->
         <prim-key field="shareSetupId"/>
         
-        <relation type="one" fk-name="MEMBERSHAREDEPOSIT_FINACCT" rel-entity-name="FinAccount">
+        <!-- relation type="one" fk-name="MEMBERSHAREDEPOSIT_FINACCT" rel-entity-name="FinAccount">
             <key-map field-name="shareAccountId" rel-field-name="finAccountId"/>
+        </relation -->
+        <relation type="one" fk-name="ShareSetup_GLACCOUNT" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
         </relation>
     </entity>
 
     <entity entity-name="MemberShareDeposit" package-name="org.ofbiz.sharemanagement" title="Member Share Deposit Entity">
         <field name="memberShareDepositId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="active" type="indicator"></field>
+        <field name="isActive" type="indicator"></field>
         <field name="partyId" type="id"></field>
         <field name="noOfShares" type="numeric"></field>
         <field name="sharePrice" type="currency-amount"></field>
@@ -71,17 +75,15 @@ under the License.
         
         <field name="deductibleAmount" type="fixed-point"></field>
         
-        <field name="active" type="indicator"></field>
-        <field name="shareAccountId" type="id"></field>
+        <field name="glAccountId" type="id"></field>
         
         
+        <!-- prim-key field="memberShareDepositId"/ -->
         <prim-key field="memberShareDepositId"/>
-        <!-- relation type="one" fk-name="MEMBERSHAREDEPOSIT_FINACCT" rel-entity-name="FinAccount">
-            <key-map field-name="shareAccountId" rel-field-name="finAccountId"/>
-        </relation -->
-        <relation type="one" fk-name="MEMBERSHAREDEPOSIT_FINACCT" title="Parent" rel-entity-name="GlAccount">
-        <key-map field-name="shareAccountId" rel-field-name="glAccountId"/>
-      </relation>
+       
+        <relation type="one" fk-name="ShareSetup_GLACCOUNT" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
+        </relation>
         
         <relation type="one" fk-name="MEMBERSHAREDEPOSIT_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId" />
@@ -94,7 +96,7 @@ under the License.
     
      <entity entity-name="MemberShareTransfer" package-name="org.ofbiz.sharemanagement" title="Member Share Transfer Entity">
         <field name="memberShareTransferId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="active" type="indicator"></field>
+        <field name="isActive" type="indicator"></field>
         <field name="transferType" type="name"></field> <!-- TOSELF, TOANOTHERMEMBER, TOSACCO -->
         <field name="fromMemberId" type="id"></field>
         <field name="toMemberId" type="id"></field>
@@ -127,7 +129,7 @@ under the License.
     
      <entity entity-name="MemberShareTransactions" package-name="org.ofbiz.sharemanagement" title="Member Share Transactions Entity">
         <field name="memberShareTransactionsId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="active" type="indicator"></field>
+        <field name="isActive" type="indicator"></field>
         <field name="partyId" type="id"></field>
         <field name="creditAmt" type="currency-amount"></field>
         <field name="debitAmt" type="currency-amount"></field>
