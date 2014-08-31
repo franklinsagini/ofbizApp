@@ -14,12 +14,12 @@
 </fo:layout-master-set>
 <#if security.hasEntityPermission("ORDERMGR", "_SALES_ENTRY", session)>
 
-<#if contactReportList?has_content>
+<#if payslipViewList?has_content>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-            <fo:block font-size="14pt">Contact Persons Report</fo:block>
+            <fo:block font-size="14pt">PAYSLIP</fo:block>
             <#if !showSupplier>
-                <fo:block font-size="10pt">Contact Persons For: ${parameters.supplierId} - ${contactReportList.get(0).name?if_exists}</fo:block>
+                <#-- <fo:block font-size="10pt">Payslip For: ${parameters.partyId} - ${payslipViewList.get(0).name?if_exists}</fo:block> -->
             </#if>
             <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table>
@@ -37,19 +37,19 @@
                 </fo:table-header>
                 <fo:table-body>
                     <#assign rowColor = "white">
-                    <#list contactReportList as productReport>
+                    <#list payslipViewList as payslip>
                         <fo:table-row>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${productReport.firstName?if_exists}</fo:block>
+                                    <fo:block>${payslip.firstName?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${productReport.lastName?if_exists}</fo:block>
+                                    <fo:block>${payslip.lastName?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${productReport.contactEmailAddress?if_exists}</fo:block>
+                                    <fo:block>${payslip.contactEmailAddress?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${productReport.contactMobileNumber?if_exists}</fo:block>
+                                    <fo:block>${payslip.contactMobileNumber?if_exists}</fo:block>
                                 </fo:table-cell>
                         </fo:table-row>
                         <#-- toggle the row color -->

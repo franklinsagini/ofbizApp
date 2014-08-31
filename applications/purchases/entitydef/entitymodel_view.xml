@@ -31,18 +31,20 @@ under the License.
                     package-name="org.ofbiz.purchases.suppliers"
                     never-cache="true"
                     title="Contact Persons Report">
-              <member-entity entity-alias="SU" entity-name="Supplier"/>
               <member-entity entity-alias="CP" entity-name="ContactPerson"/>
+              <member-entity entity-alias="SU" entity-name="Supplier"/>
               <alias entity-alias="SU" name="supplierId" group-by="true"/>
               <alias entity-alias="SU" name="name" group-by="true"/>
               <alias entity-alias="CP" name="firstName" group-by="true"/>
               <alias entity-alias="CP" name="lastName" group-by="true"/>
-              <alias entity-alias="CP" name="contactEmailAddress" field="emailAddress" group-by="false"/>
-              <alias entity-alias="CP" name="contactMobileNumber" field="mobileNumber" group-by="false"/>
-              <view-link entity-alias="SU" rel-entity-alias="CP">
+              <alias entity-alias="CP" name="contactEmailAddress" field="emailAddress" group-by="true"/>
+              <alias entity-alias="CP" name="contactMobileNumber" field="mobileNumber" group-by="true"/>
+              <view-link entity-alias="CP" rel-entity-alias="SU">
                 <key-map field-name="supplierId"/>
               </view-link>
         </view-entity>
+
+
 
 
 

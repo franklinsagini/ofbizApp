@@ -558,7 +558,9 @@
     <form name="NewSpouseDetails" type="single" target="createStaffSpouse"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffSpouseContext">
         <actions>
-        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<entity-condition entity-name="Person" list="personList">
+        		<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        	</entity-condition>
         	<set field="partyId" from-field="partyId"/>
 
         	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
@@ -580,14 +582,14 @@
         </field>
         <field name="fullname" title="Spouse Full Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="familyRelationsId" title="Relationship">        	
-       	 <drop-down allow-empty="false">
+       	 <drop-down allow-empty="true">
        	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
        	 </drop-down>
         </field>
         <field name="gender" title="Gender">
         <drop-down allow-empty="false"> 
-        	<option key="M" description="Male"/>
-        	<option key="F" description="Female"/>
+        	<option key="Male" description="Male"/>
+        	<option key="Female" description="Female"/>
         </drop-down>
         </field>
         <field name="dob" title="Date of Birth" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time type="timestamp"></date-time></field>
@@ -624,17 +626,17 @@
 		<field name="staffspouseId"><hidden/></field>
         <field name="fullname" title="Spouse Full Name"><text size="30" maxlength="60"/></field>
         <field name="familyRelationsId" title="Relationship">        	
-       	 <drop-down allow-empty="false">
+       	 <drop-down allow-empty="true">
        	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
        	 </drop-down>
         </field>
         <field name="gender" title="Gender">
-        <drop-down allow-empty="false"> 
-        	<option key="M" description="Male"/>
-        	<option key="F" description="Female"/>
+        <drop-down allow-empty="true"> 
+        	<option key="Male" description="Male"/>
+        	<option key="Female" description="Female"/>
         </drop-down>
         </field>
-        <field name="dob" title="Date of Birth"><date-time/></field> 
+        <field name="dob" title="Date of Birth"><display type="date"/></field> 
          <field name="countryGeoId" title="Nationality">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="countryGeoList" key-name="countryGeoId" description="${description}"/>
