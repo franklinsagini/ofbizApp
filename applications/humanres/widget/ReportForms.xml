@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        <form name="StaffListGen" type="single" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="partyId">
+            <drop-down allow-empty="false">
+                <option key="" description="- ${uiLabelMap.CommonAny} -"/>
+                <entity-options entity-name="Person" description="${partyId}">
+                    <entity-order-by field-name="partyId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="birthDate"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listStaff" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="staffList" paginate-target="staffList"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="Person">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+            
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="salutation" title="Title"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="birthDate" title="Date of Birth"> <display/> </field>
+        <!--field name="gender" title="Surname"> <display/> </field>
+        <field name="religionId" title="Employment Status">
+        	<display-entity entity-name="Religion" key-field-name="religionId" description="${religion}"></display-entity>
+        </field>
+        <field name="countyId" title="County">
+        	<display-entity entity-name="County" key-field-name="countyId" description="${county}"></display-entity>
+        </field>
+        <field name="tribeId" title="County">
+        	<display-entity entity-name="Tribe" key-field-name="tribeId" description="${tribe}"></display-entity>
+        </field>
+        <field name="employmentStatusEnumId" title="Employment Status">
+        	<display-entity entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]"></display-entity>
+        </field-->
+	    <field name="appointmentdate" title="Appointment Date"> <display/> </field>
+	    <field name="confirmationdate" title="Confirmation Date"> <display/> </field>
+	    <field name="retirementdate" title="Retirement Date"> <display/> </field>
+	    
+        
+        
+        <!--field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePayrollElement" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="payrollElementId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field-->
+    </form>
+    
+    <form name="listEmployeeQualifications" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeQualifications" paginate-target="employeeQualifications"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PersonAndPartyQual">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+            
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="partyQualType" title="Qualification Type"> <display/> </field>
+        <field name="qualTitle" title="Title"> <display/> </field>
+        <field name="qualInstitute" title="Institute"> <display/> </field>
+        <field name="qualfromDate" title="From"> <display/> </field>        
+        <field name="qualthruDate" title="To"> <display/> </field>
+    </form>
+    
+    <form name="listEmployeeSkills" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeSkills" paginate-target="employeeSkills"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PersonAndPartySkills">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+            
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="skillType" title="Skill"> <display/> </field>
+        <field name="yearsExperience" title="Years of Experience"> <display/> </field>
+    </form>
+    
+    <form name="listEmployeeSpouseDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeSpouseDetails" paginate-target="employeeSpouseDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyAndSpouse">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+            
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="spouseName" title="Spouse Name"> <display/> </field>
+        <field name="relationship" title="Relationship"> <display/> </field>
+        <field name="dob" title="Date of Birth"> <display/> </field>
+        <field name="identificationType" title="Identification Type"> <display/> </field>
+        <field name="idno" title="Number"> <display/> </field>        
+        <field name="phoneNo" title="Phone No."> <display/> </field>
+    </form>
+    
+    <form name="listEmployeeDependantDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeDependantDetails" paginate-target="employeeDependantDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyAndDependants">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+            
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="dependantName" title="Dependant Name"> <display/> </field>
+        <field name="relationship" title="Relationship"> <display/> </field>
+        <field name="dob" title="Date of Birth"> <display/> </field>    
+        <field name="bloodGroup" title="Blood Group"> <display/> </field>
+        <field name="identificationType" title="Identification Type"> <display/> </field>
+        <field name="idno" title="Number"> <display/> </field>    
+    </form>
+    
+    <form name="PersonAndNextOfKin" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeNOKDetails" paginate-target="employeeNOKDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyAndNextOfKin">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+            
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="nokName" title="Next Of Kin Name"> <display/> </field>
+        <field name="relationship" title="Relationship"> <display/> </field>
+        <field name="dob" title="Date of Birth"> <display/> </field>
+        <field name="identificationType" title="Identification Type"> <display/> </field>
+        <field name="idno" title="Number"> <display/> </field>        
+        <field name="phoneNo" title="Phone No."> <display/> </field>
+    </form>
+    
+    
+</forms>
