@@ -353,7 +353,12 @@ under the License.
 
 <!-- Loan Application Guarantor Starts Here -->
 	<simple-method method-name="createLoanApplicationGuarantor" short-description="Create Loan Application Guarantor">
-        <make-value entity-name="LoanGuarantor" value-field="newEntity"/>
+        <call-simple-method method-name="saveGuarantor" scope="inline"></call-simple-method>
+        <!-- Generate the Percentages -->
+        <set field="guaranteedPercentage" value="${bsh:org.ofbiz.loans.LoanServices.generateGuarantorPercentages(newEntity);}" type="String"/>
+    </simple-method>
+    <simple-method method-name="saveGuarantor">
+    	<make-value entity-name="LoanGuarantor" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->

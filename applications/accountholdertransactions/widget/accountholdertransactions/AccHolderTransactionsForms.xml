@@ -36,7 +36,10 @@ under the License.
         	
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
-            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
+            	</condition-list>
             </entity-condition>
         </actions>
         <field name="accountTransactionId"><hidden/></field>
@@ -95,8 +98,8 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
         <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
-        <field name="createdStamp" title="Transaction Date"><display also-hidden="false"></display></field>
-        <field name="clearDate" title="Clear By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false" type="date-time"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false" type="date-time"></display></field>
 
 		        
         
@@ -208,8 +211,8 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
         <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
-        <field name="createdStamp" title="Transaction Date"><display also-hidden="false"></display></field>
-        <field name="clearDate" title="Clear By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false" type="date-time"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false" type="date-time"></display></field>
         
         <field name="payee" title="Payee"><display also-hidden="false"></display></field>
 		<field name="bankDetailsId" title="Bank">
@@ -243,15 +246,20 @@ under the License.
         	</entity-condition>
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
-            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	<!-- condition-expr field-name="partyId" from-field="parameters.partyId"/ -->
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
+            	</condition-list>
             </entity-condition>
         </actions>
         <field name="chequeWithdrawalId"><hidden/></field>
-		<field name="partyId" title="Member"  widget-style="required" required-field="true">
+        <field name="partyId"><hidden/></field>
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
-        </field>
+        </field -->
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
@@ -310,8 +318,8 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
         <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
-        <field name="createdStamp" title="Transaction Date"><display also-hidden="false"></display></field>
-        <field name="clearDate" title="Clear By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false" type="date-time"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false" type="date-time"></display></field>
         
         <field name="payee" title="Payee"><display also-hidden="false"></display></field>
 		<field name="bankDetailsId" title="Bank">
@@ -357,12 +365,12 @@ under the License.
             </entity-condition>
         </actions>
         <field name="chequeDepositId"><hidden/></field>
-        
-		<field name="partyId" title="Member"  widget-style="required" required-field="true">
+        <field name="partyId"><hidden/></field>
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
             </drop-down>
-        </field>
+        </field -->
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
@@ -448,8 +456,8 @@ under the License.
         <field name="transactionAmount" title="Cash Amount"><display also-hidden="false"></display></field>
         
         <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
-        <field name="createdStamp" title="Transaction Date"><display also-hidden="false"></display></field>
-        <field name="clearDate" title="Clear By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false" type="date-time"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false" type="date-time"></display></field>
         
         <field name="payee" title="Payee"><display also-hidden="false"></display></field>
 		<field name="bankDetailsId" title="Bank">
@@ -488,11 +496,12 @@ under the License.
         	<entity-condition entity-name="SaccoProduct" list="saccoProductList"></entity-condition>
         </actions>
         <field name="loanRepaymentId"><hidden/></field>
-		<field name="partyId" title="Member"  widget-style="required" required-field="true">
+        <field name="partyId"><hidden/></field>
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
-        </field>
+        </field -->
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
         	<drop-down allow-empty="false">
         		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${accountNo}"/>

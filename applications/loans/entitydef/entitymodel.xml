@@ -536,6 +536,8 @@ under the License.
 		<field name="memberNo" type="name"></field>
 		<field name="payrolNo" type="name"></field>
 		<field name="depositamt" type="fixed-point"></field>
+		<field name="guaranteedPercentage" type="fixed-point"></field>
+		<field name="guaranteedValue" type="fixed-point"></field>
 		<field name="currentStationId" type="id"></field>
 		<prim-key field="loanGuarantorId"/>
 		<relation type="one" fk-name="GUARANTOR_LOANAPPLICATION_FK" rel-entity-name="LoanApplication">
@@ -544,8 +546,8 @@ under the License.
       	<relation type="one" fk-name="GUARANTOR_MEMBER_FK" rel-entity-name="Member">
        		<key-map field-name="guarantorId" rel-field-name="partyId" />
       	</relation>
-      	<relation type="one" fk-name="GUARANTOR_MEMBERSTATION_FK" rel-entity-name="MemberStation">
-       		<key-map field-name="currentStationId" rel-field-name="memberStationId" />
+      	<relation type="one" fk-name="GUARANTOR_STATION_FK" rel-entity-name="Station">
+       		<key-map field-name="currentStationId" rel-field-name="stationId" />
       	</relation>
 	</entity>
 	
