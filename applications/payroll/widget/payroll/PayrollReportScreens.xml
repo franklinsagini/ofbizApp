@@ -24,9 +24,9 @@ under the License.
         <!-- screen name="PayslipGenerator">
     	 <section>
             <actions>
-                <!--property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/->
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <screenlet title="Payslip Generator">
@@ -65,6 +65,28 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="PayslipGeneratorpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Payslip View"/>                
+                <set field="payrollPeriodId" from-field="parameters.payrollPeriodId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-condition entity-name="PayslipView" list="payslipViewList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId" ignore-if-empty="true"/>
+                        <condition-expr field-name="payrollPeriodId" operator="equals" from-field="parameters.payrollPeriodId" ignore-if-empty="true"/>
+                    </condition-list>
+                    <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://payroll/webapp/payroll/reports/payslip.fo.ftl"/></xsl-fo>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
