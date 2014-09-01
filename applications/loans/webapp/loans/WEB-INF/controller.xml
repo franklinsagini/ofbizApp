@@ -1014,14 +1014,24 @@ under the License.
         </request-map -->
         <!-- end LoanApplicationCharge -->
         
-     <request-map uri="amortizationSchedulePdf">
+     <request-map uri="amortizationSchedulePdf.pdf">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="amortizationSchedulePdf" />
 	</request-map>
 	
-	<request-map uri="amortizationschedulecsv">
+	<request-map uri="amortizationschedulecsv.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="amortizationschedulecsv" />
+	</request-map>
+	
+	 <request-map uri="loanslistpdf.pdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanslistpdf" />
+	</request-map>
+	
+	<request-map uri="loanslistcsv.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanslistcsv" />
 	</request-map>
 
     <!-- end of request mappings -->
@@ -1145,6 +1155,13 @@ under the License.
                 
                 	<view-map name="amortizationSchedulePdf" type="screenfop"
 		page="component://loans/widget/loans/LoanScreens.xml#amortizationSchedulePdf"
+		content-type="application/pdf" encoding="none" />
+		
+		<view-map name="loanslistcsv" type="screencsv" content-type="text/csv"
+                page="component://loans/widget/loans/LoanScreens.xml#loanslistcsv" />
+                
+        <view-map name="loanslistpdf" type="screenfop"
+		page="component://loans/widget/loans/LoanScreens.xml#loanslistpdf"
 		content-type="application/pdf" encoding="none" />
     <!-- Supported Content Types -->
     <!--

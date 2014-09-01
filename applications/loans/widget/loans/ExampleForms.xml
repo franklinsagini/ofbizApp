@@ -882,10 +882,10 @@
 			</drop-down>
 		</field>
 
-		<field name="saccoProductId" title="Loan Type">
+		<field name="loanProductId" title="Loan Type">
 			<drop-down allow-empty="true" current-description="">
 				<entity-options description="${name} ${code}"
-					key-field-name="saccoProductId" entity-name="SaccoProduct">
+					key-field-name="loanProductId" entity-name="LoanProduct">
 					<entity-order-by field-name="name" />
 				</entity-options>
 			</drop-down>
@@ -1069,15 +1069,81 @@
 				description="Forward Application"></hyperlink>
 		</field>
 		
-		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext">
 			<hyperlink target="deleteLoanApplication" description="${uiLabelMap.CommonDelete}"
 				also-hidden="false">
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
-		</field>
+		</field -->
 		
 		<!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
 			button-type="button"/></field -->
+	</form>
+	
+	<!-- findListLoanApplicationsTrimed -->
+		<form name="findListLoanApplicationsTrimed" type="list" list-name="listIt"
+		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="LoanApplication">
+				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+				<!-- order-by field-name="saccoProductId"/ -->
+			</entity-condition>
+
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="loanApplicationCtx" />
+				<field-map field-name="entityName" value="LoanApplication" />
+				<field-map field-name="orderBy" from-field="parameters.sortField" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+		<field name="loanNo">
+			<display also-hidden="false" />
+		</field>
+		<field name="partyId" title="Member">
+			<display-entity description="${firstName} ${middleName} ${lastName}"
+				entity-name="Member" also-hidden="false"></display-entity>
+			<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
+				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
+		</field>
+		<!-- field name="firstName"> <text></text> </field> <field name="middleName"> 
+			<text></text> </field> <field name="lastName"> <text></text> </field -->
+		<field name="loanProductId" title="Product">
+			<display-entity description="${name} ${code}"
+				entity-name="LoanProduct" also-hidden="false"></display-entity>
+			<!-- drop-down allow-empty="true"> <entity-options description="${name} 
+				${code}" entity-name="SaccoProduct"> </entity-options> </drop-down -->
+		</field>
+		<field name="loanAmt" title="Amount" widget-area-style="tabletextright">
+			<display also-hidden="false" />
+		</field>
+		<field name="interestRatePM" title="Interest Rate(P.M)" widget-area-style="tabletextright">
+			<display also-hidden="false" />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period" widget-area-style="tabletextright">
+			<display also-hidden="false" />
+		</field>
+
+		<field name="paymentMethodTypeId" title="Payment Method" widget-area-style="tabletextright">
+			<display-entity description="${description}"
+				entity-name="PaymentMethodType"></display-entity>
+		</field>
+
+		<!-- field name="loanSecurityId" title="LoanSecurity"> <drop-down allow-empty="true"> 
+			<entity-options description="${description}" entity-name="PaymentMethodType" -->
+		<!-- entity-order-by field-name="description"/ -->
+		<!-- /entity-options> </drop-down> </field -->
+		<field name="applicationStatus">
+			<display also-hidden="false" />
+		</field>
+
 	</form>
 </forms>

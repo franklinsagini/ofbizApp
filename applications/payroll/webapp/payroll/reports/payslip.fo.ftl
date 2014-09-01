@@ -40,7 +40,7 @@
                     <#list payslipViewList as payslip>
                         <fo:table-row>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${payslip.firstName?if_exists}</fo:block>
+                                    <fo:block>${payslip.partyId?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
                                     <fo:block>${payslip.lastName?if_exists}</fo:block>
