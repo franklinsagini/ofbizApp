@@ -159,4 +159,65 @@
     </entity>
 
 
+  <!--
+      Procurement Header Entity
+  -->
+
+   <entity entity-name="Procurement"
+            package-name="org.ofbiz.order.procurement"
+            never-cache="true"
+            title="Procurement Header Entity">
+      <field name="procurementId" type="id-ne"></field>
+      <field name="procurementName" type="name"></field>
+      <field name="procurementDate" type="date-time"></field>
+      <field name="priority" type="indicator"><description>Sets priority for Inventory Reservation</description></field>
+      <field name="entryDate" type="date-time"></field>
+      <field name="status" type="id"></field>
+      <field name="createdBy" type="id-vlong"></field>
+       <field name="approvedBy" type="id-vlong"></field>
+      <field name="currencyUom" type="id"></field>
+      <field name="billingAccountId" type="id"></field>
+      <field name="grandTotal" type="currency-amount"></field>
+      <prim-key field="procurementId"/>
+      <relation type="one" fk-name="PRCRMNT_BACCT" rel-entity-name="BillingAccount">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="one" fk-name="PRCRMNT_HDR_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdBy" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PRCRMNT_HDR_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="approvedBy" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PRCRMNT_HDR_CUOM" rel-entity-name="Uom">
+        <key-map field-name="currencyUom" rel-field-name="uomId"/>
+      </relation>
+    </entity>
+
+    <!--
+
+        Procurement Line Entity
+     -->
+<entity entity-name="ProcurementLine"
+            package-name="org.ofbiz.order.Procurement"
+            never-cache="true"
+            title="Procurement Line Entity">
+      <field name="procurementId" type="id-ne"></field>
+      <field name="procurementLineSeqId" type="id-ne"></field>
+      <field name="productId" type="id"></field>
+      <field name="quantity" type="fixed-point" enable-audit-log="true"></field>
+      <field name="cancelQuantity" type="fixed-point"></field>
+      <field name="unitPrice" type="currency-precise" enable-audit-log="true"></field>
+      <field name="itemDescription" type="description"></field>
+      <field name="comments" type="comment"></field>
+      <field name="estimatedDeliveryDate" type="date-time"></field>
+      <prim-key field="procurementId"/>
+      <prim-key field="procurementLineSeqId"/>
+      <relation type="one" fk-name="PRCRMT_LINE_HDR" rel-entity-name="Procurement">
+        <key-map field-name="procurementId"/>
+      </relation>
+      <relation type="one" fk-name="PRCRMT_LINE_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </entity>
+
 </entitymodel>

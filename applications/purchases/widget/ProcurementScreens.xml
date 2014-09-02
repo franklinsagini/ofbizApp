@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+                <!--
+                DECORATOR SCREENS
+                 -->
+    <screen name="CommonProcurementDecorator">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="headerItem" value="procurement"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <widgets>
+                                <include-menu name="ProcurementTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not>
+                                            <if-empty field="parameters.supplierId"/>
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="ProcurementSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                        <container style="leftclear">
+                                            <label style="h1" text="Supplier: ${procurementContext.supplierId} - ${procurementContext.name}"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="FindProcurementScreen">
+        <section>
+            <actions>
+                <set field="headerItem" value="suppliers"/><!-- this highlights the selected menu-item with name "suppliers" -->
+                <set field="tabButtonItem" value="find"/>
+                <set field="procurementCtx" from-field="parameters" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProcurementDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <include-menu name="ProcurementSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <container style="clear"/>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindProcurementForm" location="component://purchases/widget/PurchasesForms.xml" />
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListProcurementForm" location="component://purchases/widget/PurchasesForms.xml" />
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!--
+        EditSupplierScreen
+    -->
+    <screen name="EditProcurementScreen">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Document Approval"/>
+                 <set field="tabButtonItem" value="editProcurement"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createProcurement"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="Procurement" value-field="ProcurementContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProcurementDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Purchasing Management: Edit Procurement">
+                                    <include-form name="EditProcurementForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Purchasing Management: Procurement List">
+                                    <include-form name="SupplierListForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!--
+        Contact Person Screen
+    -->
+    <screen name="ProcurementLinesScreen">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Procurement"/>
+                 <set field="tabButtonItem" value="editProcurementLine"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createProcurementLine"/>
+                <set field="procurementId" from-field="parameters.procurementId"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="ProcurementLine" value-field="procurementLineContext"/>
+                <entity-one entity-name="Procurement" value-field="procurementContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProcurementDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Purchasing Management: Procurement Item">
+                                    <include-form name="ListProcurementLineForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Purchasing Management: Add Contact Person">
+                                    <include-form name="ProcurementLineForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>
