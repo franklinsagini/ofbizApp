@@ -93,15 +93,30 @@ under the License.
         	</link>
         </menu-item -->
         
-        <menu-item name="reviewLoan" title="Review"><link target="reviewLoan">
+		
+        
+        <menu-item name="reviewLoan" title="Review">
+        	<condition>
+        		<if-compare field="loanApplication.applicationStatus" operator="equals" value="NEW" />
+        	</condition>
+        	<link target="reviewLoan">
+        	
         	<parameter param-name="loanApplicationId"/>
         </link>
         </menu-item>
-        <menu-item name="appraiseLoan" title="Appraise"><link target="appraiseLoan">
+        <menu-item name="appraiseLoan" title="Appraise">
+        <condition>
+        		<if-compare field="loanApplication.applicationStatus" operator="not-equals" value="DISBURSED" />
+        	</condition>
+        <link target="appraiseLoan">
         	<parameter param-name="loanApplicationId"/>
         </link>
         </menu-item>
-        <menu-item name="approveLoan" title="Approve"><link target="approveLoan">
+        <menu-item name="approveLoan" title="Approve">
+        <condition>
+        		<if-compare field="loanApplication.applicationStatus" operator="not-equals" value="DISBURSED" />
+        	</condition>
+        <link target="approveLoan">
         	<parameter param-name="loanApplicationId"/>
         </link>
         </menu-item>
