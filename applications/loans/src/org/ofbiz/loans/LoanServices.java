@@ -265,6 +265,8 @@ public class LoanServices {
 				bdMaximumLoanAmt = BigDecimal.ZERO;
 			}
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
+			result.put("existingLoans", bdExistingLoans);
+			
 		} else {
 			System.out.println("######## Product details not found #### ");
 

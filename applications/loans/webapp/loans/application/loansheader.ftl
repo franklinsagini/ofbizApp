@@ -141,6 +141,8 @@
                                                    //the request if any.
      success : function(data){
 				 $('input[name="maxLoanAmt"]').val(data.maxLoanAmt);
+				 $('input[name="existingLoans"]').val(data.existingLoans);
+				 
                },
       error : function(errorData){
 
