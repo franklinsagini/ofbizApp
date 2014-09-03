@@ -89,6 +89,9 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
+                            	<!-- screenlet title="Accounts">
+                            		<include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" name="listMemberAccount"/>
+                            	</screenlet -->
                                 <screenlet title="Cash Deposit">
                                     <include-form name="NewCashDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                                 </screenlet>
@@ -589,6 +592,30 @@ under the License.
                                 <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
+                        <section>
+                        	<widgets>
+                        		  <screenlet>
+                                	<section>
+                                		
+                                		<widgets>
+                                			
+                                			<container style="button-bar">
+                                		
+                                            <link target="expectedPaymentpdf" text="Print Expected Payment" style="buttontext">
+                                                <!-- parameter param-name="loanApplicationId"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                                            
+                                            <link target="expectedPaymentcsv" text="Generate Schedule CSV" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                            </container>
+                                		</widgets>
+                                		
+                                	</section>
+                                </screenlet>
+                        	</widgets>
+                        </section>
                         
                         <section name="search-results">
                         	<widgets>
@@ -599,6 +626,63 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Expected Payment PDF -->
+     <screen name="expectedPaymentpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payment"/>
+                <set field="headerItem" value="expectedPayment"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPayment"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="viewSize" value="100000"/>
+                <entity-one entity-name="ExpectedPayment" value-field="expectedPaymentContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Expected Payment CSV -->
+    <screen name="expectedPaymentcsv">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payment"/>
+                <set field="headerItem" value="expectedPayment"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPayment"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="viewSize" value="100000"/>
+                <entity-one entity-name="ExpectedPayment" value-field="expectedPaymentContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body" -->
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    <!-- /decorator-section>
+                </decorator-screen -->
             </widgets>
         </section>
     </screen>

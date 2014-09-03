@@ -883,25 +883,31 @@ under the License.
 	<request-map uri="createLoanApplicationCharge">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createLoanApplicationCharge" />
-		<response name="success" type="request-redirect-noparam"
-			value="NewLoanApplicationCharge"></response>
-		<response name="error" type="view" value="NewLoanApplicationCharge" />
+		<response name="success" type="request-redirect"
+			value="viewapplicationprofile">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="viewapplicationprofile" />
 	</request-map>
 
 	<request-map uri="updateLoanApplicationCharge">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateLoanApplicationCharge" />
-		<response name="success" type="request-redirect-noparam"
-			value="NewLoanApplicationCharge"></response>
-		<response name="error" type="view" value="NewLoanApplicationCharge" />
+		<response name="success" type="request-redirect"
+			value="viewapplicationprofile">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="viewapplicationprofile" />
 	</request-map>
 	
 	<request-map uri="deleteLoanApplicationCharge">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteLoanApplicationCharge" />
-		<response name="success" type="request-redirect-noparam"
-			value="NewLoanApplicationCharge"></response>
-		<response name="error" type="view" value="NewLoanApplicationCharge" />
+		<response name="success" type="request-redirect"
+			value="viewapplicationprofile">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="viewapplicationprofile" />
 	</request-map>
 	<!-- end LoanApplicationCharge -->
 
@@ -978,7 +984,7 @@ under the License.
         <!-- end LoanProductCharge -->
 
         <!-- start LoanApplicationCharge -->
-                <request-map uri="NewLoanApplicationCharge">
+        <!-- request-map uri="NewLoanApplicationCharge">
                 <security https="true" auth="true" />
                 <response name="success" type="view" value="NewLoanApplicationCharge" />
         </request-map>
@@ -1005,17 +1011,27 @@ under the License.
                 <response name="success" type="request-redirect-noparam"
                         value="NewLoanApplicationCharge"></response>
                 <response name="error" type="view" value="NewLoanApplicationCharge" />
-        </request-map>
+        </request-map -->
         <!-- end LoanApplicationCharge -->
         
-     <request-map uri="amortizationSchedulePdf">
+     <request-map uri="amortizationSchedulePdf.pdf">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="amortizationSchedulePdf" />
 	</request-map>
 	
-	<request-map uri="amortizationschedulecsv">
+	<request-map uri="amortizationschedulecsv.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="amortizationschedulecsv" />
+	</request-map>
+	
+	 <request-map uri="loanslistpdf.pdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanslistpdf" />
+	</request-map>
+	
+	<request-map uri="loanslistcsv.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanslistcsv" />
 	</request-map>
 
     <!-- end of request mappings -->
@@ -1139,6 +1155,13 @@ under the License.
                 
                 	<view-map name="amortizationSchedulePdf" type="screenfop"
 		page="component://loans/widget/loans/LoanScreens.xml#amortizationSchedulePdf"
+		content-type="application/pdf" encoding="none" />
+		
+		<view-map name="loanslistcsv" type="screencsv" content-type="text/csv"
+                page="component://loans/widget/loans/LoanScreens.xml#loanslistcsv" />
+                
+        <view-map name="loanslistpdf" type="screenfop"
+		page="component://loans/widget/loans/LoanScreens.xml#loanslistpdf"
 		content-type="application/pdf" encoding="none" />
     <!-- Supported Content Types -->
     <!--

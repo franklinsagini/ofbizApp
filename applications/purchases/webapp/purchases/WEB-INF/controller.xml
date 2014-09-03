@@ -26,6 +26,11 @@
         <response name="success" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="reports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="reports"/>
+    </request-map>
+
     <!--
         Supplier Requests
     -->
@@ -102,6 +107,81 @@
         <response name="error" type="view" value="ContactPersonScreen" />
     </request-map>
 
+
+    <!--
+        Procurement Requests
+    -->
+
+    <request-map uri="findProcuments">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="FindProcurementScreen" save-current-view="true" />
+    </request-map>
+
+    <request-map uri="editProcurement">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="EditProcurementScreen" save-current-view="true" />
+    </request-map>
+
+<!--
+        Procurement CRUD Operations
+    -->
+
+    <request-map uri="createNewProcurement">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createNewProcurement" />
+        <response name="success" type="request-redirect-noparam" value="editProcurement"></response>
+        <response name="error" type="view" value="EditProcurementScreen" />
+    </request-map>
+
+    <request-map uri="updateProcurement">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updateProcurement" />
+        <response name="success" type="request-redirect-noparam" value="updateProcurement"></response>
+        <response name="error" type="view" value="EditProcurementScreen" />
+    </request-map>
+
+    <request-map uri="deleteProcurement">
+        <security https="true" auth="true" />
+        <event type="service" invoke="deleteProcurement" />
+        <response name="success" type="request-redirect-noparam" value="deleteProcurement"></response>
+        <response name="error" type="view" value="EditProcurementScreen" />
+    </request-map>
+
+
+  <!--
+        Procurement Lines Requests
+     -->
+    <request-map uri="editProcurementLines">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="ProcurementLinesScreen"
+            save-current-view="true" />
+    </request-map>
+
+    <!--
+        Procurement Lines CRUD Operations
+    -->
+
+    <request-map uri="createProcurementLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createProcurementLine" />
+        <response name="success" type="request-redirect" value="editProcurementLines"><redirect-parameter name="procurementId"/></response>
+        <response name="error" type="view" value="ProcurementLinesScreen" />
+    </request-map>
+
+    <request-map uri="updateProcurementLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updateProcurementLine" />
+        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="error" type="view" value="ProcurementLinesScreen" />
+    </request-map>
+
+    <request-map uri="deleteProcurementLine">
+        <security https="true" auth="true" />
+        <event type="service" invoke="deleteProcurementLine" />
+        <response name="success" type="request-redirect-noparam" value="contactPerson"></response>
+        <response name="error" type="view" value="ProcurementLinesScreen" />
+    </request-map>
+
     <!--
         Orders Requests
     -->
@@ -130,14 +210,14 @@
 
     <request-map uri="updatePurchaseOrder">
         <security https="true" auth="true" />
-        <event type="service" invoke="updateContactPerson" />
+        <event type="service" invoke="updatePurchaseOrder" />
         <response name="success" type="request-redirect-noparam" value="updatePurchaseOrder"></response>
         <response name="error" type="view" value="EditOrderScreen" />
     </request-map>
 
     <request-map uri="deletePurchaseOrder">
         <security https="true" auth="true" />
-        <event type="service" invoke="deleteContactPerson" />
+        <event type="service" invoke="deletePurchaseOrder" />
         <response name="success" type="request-redirect-noparam" value="deletePurchaseOrder"></response>
         <response name="error" type="view" value="EditOrderScreen" />
     </request-map>
@@ -192,13 +272,14 @@
         Payments Requests
      -->
 
-     <!--
-        Find Payments
-      -->
-
     <request-map uri="purchasingPayments">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findPayments"/>
+    </request-map>
+
+    <!-- Reports -->
+    <request-map uri="ContactPersonReport.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="ContactPersonReport"/>
     </request-map>
 
     <!-- Lookup request mappings -->
@@ -231,7 +312,17 @@
         <!-- Payments -->
     <view-map name="findPayments" type="screen" page="component://purchases/widget/PurchasesScreens.xml#FindPayments"/>
 
+    <!-- Procurement Screens -->
+    <view-map name="FindProcurementScreen" type="screen" page="component://purchases/widget/ProcurementScreens.xml#FindProcurementScreen"/>
+    <view-map name="EditProcurementScreen" type="screen" page="component://purchases/widget/ProcurementScreens.xml#EditProcurementScreen"/>
+    <view-map name="ProcurementLinesScreen" type="screen" page="component://purchases/widget/ProcurementScreens.xml#ProcurementLinesScreen"/>
+
     <!-- Utility View Maps -->
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+
+    <!-- Reports View Map -->
+    <view-map name="reports" type="screen" page="component://purchases/widget/PurchasesScreens.xml#PurchaseReportOptions"/>
+    <view-map name="ContactPersonReport" type="screenfop" page="component://purchases/widget/PurchasesScreens.xml#ContactPersonReportpdf" content-type="application/pdf" encoding="none"/>
+
 </site-conf>

@@ -1831,18 +1831,24 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateMemberAccount" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
-			value="memberAccount"></response>
-		<response name="error" type="view" value="memberAccount" />
+		<response name="success" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 
 	<request-map uri="deleteMemberAccount">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteMemberAccount" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
-			value="memberAccount"></response>
-		<response name="error" type="view" value="memberAccount" />
+		<response name="success" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect" value="memberAccount">
+			<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 
 	<!-- CRUD for memberReferee -->
@@ -2245,6 +2251,16 @@
 			</response>
 		<response name="error" type="view" value="enumStaffStatus" />
 	</request-map>
+	
+	<request-map uri="memberslistpdf.pdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberslistpdf" />
+	</request-map>
+	
+	<request-map uri="memberslistcsv.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberslistcsv" />
+	</request-map>
 
 
 	<!-- View Mappings -->
@@ -2551,7 +2567,13 @@
 	<view-map name="partyIdentificationType" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewPartyIdentificationType"/>
 	<view-map name="enumStaffStatus" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewenumStaffStatus"/>
 		
-
+	<!-- PDF and CSV -->
+	<view-map name="memberslistcsv" type="screencsv" content-type="text/csv"
+                page="component://party/widget/partymgr/PartyScreens.xml#memberslistcsv" />
+                
+        <view-map name="memberslistpdf" type="screenfop"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberslistpdf"
+		content-type="application/pdf" encoding="none" />
 
 	<!-- end of view mappings -->
 </site-conf>

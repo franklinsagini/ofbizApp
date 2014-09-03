@@ -1,0 +1,152 @@
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        <!--
+            FindSupplierForm
+         -->
+    <form name="FindProcurementForm" default-map-name="Procurement" target="findProcuments" type="single">
+        <auto-fields-entity entity-name="Procurement" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <!--
+           ListSupplierForm
+     -->
+
+    <form name="ListProcurementForm" type="list" list-name="listIt" target="" title="Procurement List" paginate-target="findProcuments" default-entity-name="Procurement"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="supplierCtx" />
+                <field-map field-name="entityName" value="Procurement" />
+                <field-map field-name="orderBy" from-field="parameters.sortField" />
+                <field-map field-name="viewIndex" from-field="viewIndex" />
+                <field-map field-name="viewSize" from-field="viewSize" />
+            </service>
+        </actions>
+        <field name="procurementId" title="Procurement Id" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${procurementId}" target="editProcurement">
+                <parameter param-name="procurementId" />
+            </hyperlink>
+        </field>
+        <field name="procurementName" sort-field="true">
+            <display />
+        </field>
+        <field name="procurementDate" sort-field="true">
+            <display type="date-time"/>
+        </field>
+        <field name="priority" sort-field="true">
+            <display />
+        </field>
+        <field name="status" sort-field="true">
+            <display />
+        </field>
+        <field name="createdBy" sort-field="true">
+            <display type="date-time"/>
+        </field>
+    </form>
+
+    <!--
+        Edit Procurement Form
+     -->
+
+    <form name="EditProcurementForm" type="single" target="createNewProcurement" focus-field-name="procurementName" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="ProcurementContext">
+        <alt-target use-when="ProcurementContext!=null" target="updateProcurement"/>
+        <actions>
+            <entity-condition entity-name="Procurement" list="procurementList">
+                <order-by field-name="procurementId"/>
+            </entity-condition>
+        </actions>
+        <field name="procurementId"><hidden/></field>
+        <field name="procurementId" use-when="ProcurementContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+        <field name="name" title="Name"> <text size="45"></text> </field>
+        <field name="emailAddress" title="Email Address"> <text size="25"></text> </field>
+        <field name="postalAddress" title="Postal Address"> <text size="25"></text> </field>
+        <field name="physicalAddress" title="Stage Action"> <text size="25"></text> </field>
+        <field name="phoneNumber" title="Landline Number"> <text size="25"></text> </field>
+        <field name="mobileNumber" title="Mobile Phone Number"> <text size="25"></text> </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <!-- submitButton -->
+        <field use-when="ProcurementContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="ProcurementContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+            <!--
+                ListProcurementForm
+            -->
+    <form name="ListProcurementForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateProcurement"
+        paginate-target="EditProcurementForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="Procurement"></entity-condition>
+        </actions>
+        <field name="procurementId"><hidden/></field>
+        <field name="name" title="Name"><display /></field>
+        <field name="postalAddress" title="Postal Address"><display /></field>
+        <field name="physicalAddress" title="Physical Address"><display /></field>
+        <field name="phoneNumber" title="Landline Number"><display /></field>
+        <field name="mobileNumber" title="Mobile Phone"><display /></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="procurementId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+
+    <!--
+        ContactPersonForm
+    -->
+
+
+    <form name="ProcurementLineForm" type="single" target="createContactPerson" focus-field-name="firstName" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="contactPersonContext">
+        <actions>
+            <set field="procurementId" from-field="parameters.procurementId" />
+        </actions>
+        <field name="procurementId"><hidden/></field>
+        <field name="contactPersonId"><hidden/></field>
+        <field name="firstName" title="First Name"> <text size="45"></text> </field>
+        <field name="lastName" title="Last Name"> <text size="45"></text> </field>
+        <field name="jobTitle" title="Job Title"> <text size="45"></text> </field>
+        <field name="emailAddress" title="Email Address"> <text size="25"></text> </field>
+        <field name="postalAddress" title="Postal Address"> <text size="25"></text> </field>
+        <field name="physicalAddress" title="Physical Address"> <text size="25"></text> </field>
+        <field name="phoneNumber" title="Landline Number"> <text size="25"></text> </field>
+        <field name="mobileNumber" title="Mobile Phone Number"> <text size="25"></text> </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+            <!--
+                ListContactPersonForm
+            -->
+    <form name="ListProcurementLineForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateContactPerson"
+        paginate-target="ProcurementLineForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ProcurementLine">
+                <condition-expr field-name="procurementId" from-field="procurementId"/>
+                <order-by field-name="contactPersonId"/>
+            </entity-condition>
+        </actions>
+
+        <field name="procurementId"><hidden/></field>
+        <field name="contactPersonId"><hidden/></field>
+        <field name="firstName" title="First Name"> <text size="25"></text> </field>
+        <field name="lastName" title="Last Name"> <text size="25"></text> </field>
+        <field name="jobTitle" title="Job Title"> <text size="30"></text> </field>
+        <field name="emailAddress" title="Email Address"> <text size="25"></text> </field>
+        <field name="mobileNumber" title="Mobile Phone Number"> <text size="15"></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplierContact" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="contactPersonId"/>
+                    <parameter param-name="procurementId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+
+</forms>

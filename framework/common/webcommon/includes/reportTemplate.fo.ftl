@@ -38,7 +38,7 @@ under the License.
               margin-top="0.4in" margin-bottom="0.4in"
               margin-left="0.6in" margin-right="0.4in">
             <#-- main body -->
-            <fo:region-body margin-top="1.2in" margin-bottom="0.4in"/>
+            <fo:region-body margin-top="1.2in" margin-bottom="0.4in" margin-right="0.2in"/>
             <#-- the header -->
             <fo:region-before extent="1.2in"/>
             <#-- the footer -->
@@ -54,18 +54,25 @@ under the License.
              in the left side cell the "topLeft" template is included
              in the right side cell the "topRight" template is included
         -->
+        <#assign rowColor = "green">
         <fo:static-content flow-name="xsl-region-before">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-number="1" column-width="proportional-column-width(50)"/>
                 <fo:table-column column-number="2" column-width="proportional-column-width(50)"/>
                 <fo:table-body>
-                    <fo:table-row>
-                        <fo:table-cell>
+                    <fo:table-row class="alternate-row">
+                        <fo:table-cell text-align="right" background-color="${rowColor}">
 ${sections.render("topLeft")}
                         </fo:table-cell>
-                        <fo:table-cell>
+                        <fo:table-cell text-align="right" background-color="${rowColor}">
 ${sections.render("topRight")}
                         </fo:table-cell>
+                        
+                        <#if rowColor == "green">
+                            <#assign rowColor = "#D4D0C8">
+                        <#else>
+                            <#assign rowColor = "green">
+                        </#if>
                     </fo:table-row>
                 </fo:table-body>
             </fo:table>

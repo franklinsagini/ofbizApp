@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -120,6 +121,7 @@ public class LoanServices {
 		// String firstName, middleName, lastName, idNumber, memberType,
 		// memberNumber, mobileNumber;
 		String memberDetails = "";
+		BigDecimal bdDepositamt = totalSavings(partyId, delegator);
 
 		try {
 			member = delegator.findOne("Member",
@@ -144,6 +146,7 @@ public class LoanServices {
 
 			result.put("payrolNo", member.get("payrollNumber"));
 			result.put("currentStationId", member.get("stationId"));
+			result.put("depositamt", bdDepositamt);
 
 			Date joinDate = member.getDate("joinDate");
 			SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
@@ -245,14 +248,25 @@ public class LoanServices {
 						.getBigDecimal("multipleOfSavingsAmt");
 			}
 
-			
-
 			// Get Existing Loans
 			bdExistingLoans = calculateExistingLoansTotal(memberId, delegator);
-			
-			bdMaximumLoanAmt = (bdTotalSavings.subtract(bdExistingLoans)).multiply(savingsMultiplier);
-			//bdMaximumLoanAmt = bdMaximumLoanAmt.subtract(bdExistingLoans);
+
+			bdMaximumLoanAmt = (bdTotalSavings.subtract(bdExistingLoans))
+					.multiply(savingsMultiplier);
+
+			log.info("############ The total Savings are ####### "
+					+ bdTotalSavings);
+			log.info("############ The Existing Loans are ####### "
+					+ bdExistingLoans);
+			log.info("############ The Maximum Amount is ####### "
+					+ bdMaximumLoanAmt);
+			// bdMaximumLoanAmt = bdMaximumLoanAmt.subtract(bdExistingLoans);
+			if (bdMaximumLoanAmt.compareTo(new BigDecimal(0)) == -1) {
+				bdMaximumLoanAmt = BigDecimal.ZERO;
+			}
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
+			result.put("existingLoans", bdExistingLoans);
+			
 		} else {
 			System.out.println("######## Product details not found #### ");
 
@@ -309,17 +323,17 @@ public class LoanServices {
 
 	private static BigDecimal totalSavings(String memberId, Delegator delegator) {
 		// Get Accounts for this member
-		List<GenericValue> memberAccountELI = null; // =
-													// delegator.findListIteratorByCondition("MemberAccount",
-													// new EntityExpr("partyId",
-													// EntityOperator.EQUALS,
-													// memberId),
-													// UtilMisc.toList("productId"),
-													// null);
+		List<GenericValue> memberAccountELI = null;
+		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId),
+						EntityCondition.makeCondition("withdrawable",
+								EntityOperator.EQUALS, "No")),
+						EntityOperator.AND);
+
 		try {
 			memberAccountELI = delegator.findList("MemberAccount",
-					EntityCondition.makeCondition("partyId", memberId), null,
-					null, null, false);
+					accountsConditions, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -488,7 +502,8 @@ public class LoanServices {
 		String partyId = (String) context.get("userLoginId");
 		log.info("The Loan Product ID is ############ " + loanProductId);
 		log.info("The Party ID is ############ " + partyId);
-		log.info("CCC Creating Charges ############ for " + loanApplication.getBigDecimal("loanAmt"));
+		log.info("CCC Creating Charges ############ for "
+				+ loanApplication.getBigDecimal("loanAmt"));
 
 		Delegator delegator;
 		delegator = loanApplication.getDelegator();
@@ -498,17 +513,17 @@ public class LoanServices {
 		List<GenericValue> loanProductChargeELI = null;
 		// List<GenericValue> listLoanApplicationCharge = new
 		// ArrayList<GenericValue>();
-		
-		//Get only Upfront like negotiation fee, the other charges like insurance will be part of the
-		//amortization schedule
+
+		// Get only Upfront like negotiation fee, the other charges like
+		// insurance will be part of the
+		// amortization schedule
 		EntityConditionList<EntityExpr> chargesConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"loanProductId", EntityOperator.EQUALS,
-						loanProductId), EntityCondition
-						.makeCondition("chargedUpfront",
+						"loanProductId", EntityOperator.EQUALS, loanProductId),
+						EntityCondition.makeCondition("chargedUpfront",
 								EntityOperator.EQUALS, "Y")),
 						EntityOperator.AND);
-		
+
 		try {
 			loanProductChargeELI = delegator.findList("LoanProductCharge",
 					chargesConditions, null, null, null, false);
@@ -518,7 +533,8 @@ public class LoanServices {
 		}
 
 		for (GenericValue loanProductCharge : loanProductChargeELI) {
-			log.info("AAAAAA Added a charge ############ for " + loanApplication.getBigDecimal("loanAmt"));
+			log.info("AAAAAA Added a charge ############ for "
+					+ loanApplication.getBigDecimal("loanAmt"));
 			createLoanApplicationCharge(loanProductCharge, loanApplication,
 					partyId);
 		}
@@ -564,21 +580,130 @@ public class LoanServices {
 						"productChargeId",
 						loanProductCharge.getString("productChargeId"),
 						"isFixed", loanProductCharge.getString("isFixed"),
-						"chargedUpfront", loanProductCharge.getString("chargedUpfront"),
-						
+						"chargedUpfront",
+						loanProductCharge.getString("chargedUpfront"),
+
 						"rateAmount", bdRateAmount, "fixedAmount",
 						bdFixedAmount));
-		// try {
-		// loanApplicationCharge = delegator
-		// .createSetNextSeqId(loanApplicationCharge);
-		// } catch (GenericEntityException e1) {
-		// e1.printStackTrace();
-		// }
 		try {
 			delegator.createOrStore(loanApplicationCharge);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/***
+	 * @author Japheth Odonya @when Aug 31, 2014 7:19:07 PM Generates Percentage
+	 *         of the Total Loan for each Gurantor (Equally Distributed)
+	 *         guaranteedPercentage guaranteedValue
+	 * */
+	public static String generateGuarantorPercentages(GenericValue loanGuarantor) {
+		String loanApplicationId = loanGuarantor.getString("loanApplicationId");
+		Delegator delegator = loanGuarantor.getDelegator();
+		// Get Loan Amount
+		BigDecimal bdLoanAmt = getLoanAmount(delegator, loanApplicationId);
+		// Get Number of Guarantors
+		Integer guarantersCount = getNumberOfGuarantors(delegator,
+				loanApplicationId);
+
+		// Computer, Percentage and Value for each Gurantor
+		BigDecimal bdGuaranteedPercentage = new BigDecimal(100).divide(
+				new BigDecimal(guarantersCount), 6, RoundingMode.HALF_UP);
+		BigDecimal bdGuaranteedValue = bdLoanAmt.divide(new BigDecimal(
+				guarantersCount), 6, RoundingMode.HALF_UP);
+
+		// Update Gurantors with the Value of bdGuaranteedPercentage and
+		// bdGuaranteedValue
+
+		updateGuarantors(bdGuaranteedPercentage, bdGuaranteedValue,
+				loanApplicationId, delegator);
+
+		return "";
+	}
+
+	/***
+	 * @author Japheth Odonya @when Aug 31, 2014 7:39:28 PM Update All the
+	 *         Guarantor Records for this Application
+	 * 
+	 *         The Percentages are changing as Gauarantors increase
+	 * */
+	private static void updateGuarantors(BigDecimal bdGuaranteedPercentage,
+			BigDecimal bdGuaranteedValue, String loanApplicationId,
+			Delegator delegator) {
+		List<GenericValue> loanGuarantorELI = null; // =
+
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId",
+							loanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		List<GenericValue> listToBeUpdatedGuarantors = new LinkedList<GenericValue>();
+		for (GenericValue genericValue : loanGuarantorELI) {
+			genericValue.set("guaranteedPercentage", bdGuaranteedPercentage);
+			genericValue.set("guaranteedValue", bdGuaranteedValue);
+			listToBeUpdatedGuarantors.add(genericValue);
+		}
+
+		// Save all the updated Guarantors
+		try {
+			delegator.storeAll(listToBeUpdatedGuarantors);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	/***
+	 * @author Japheth Odonya @when Aug 31, 2014 7:27:20 PM Get the number of
+	 *         guaranters for this Application TODO
+	 * */
+	private static Integer getNumberOfGuarantors(Delegator delegator,
+			String loanApplicationId) {
+		List<GenericValue> loanGuarantorELI = null; // =
+
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId",
+							loanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		Integer count = 0;
+		for (GenericValue genericValue : loanGuarantorELI) {
+			count = count + 1;
+		}
+
+		return count;
+	}
+
+	/***
+	 * @author Japheth Odonya @when Aug 31, 2014 7:25:18 PM Get Loan Amount
+	 *         given loanApplicationId
+	 * */
+	private static BigDecimal getLoanAmount(Delegator delegator,
+			String loanApplicationId) {
+
+		GenericValue loanApplication = null;
+
+		// SaccoProduct
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.info("Cannot Fing LoanApplication");
+			// return "Cannot Get Product Details";
+		}
+
+		if (loanApplication != null) {
+			return loanApplication.getBigDecimal("loanAmt");
+		}
+
+		return null;
 	}
 
 }

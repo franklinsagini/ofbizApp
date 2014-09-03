@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+	<screen name="StaffReportOptions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Staff Reports"/>
+                <set field="headerItem" value="reports"/>
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="h3">${uiLabelMap.BirtOrderReportsWarning}</label>
+                        <include-portal-page id="StaffReportsPage"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="StaffListGeneral">
+    	 <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <screenlet title="Staff List General">
+                    <include-form name="StaffListGen" location="component://humanres/widget/ReportForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="StaffList">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Staff List"/>
+                <set field="headerItem" value="staffList"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="Person" value-field="staffListContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">           
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>             
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff List">
+                        			<include-form name="listStaff" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        		<screenlet>
+                			
+                				<container style="button-bar">
+                				<link target="stafflistcsv" text="Staff List CSV" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="stafflistpdf" text="Staff List PDF" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                				</container>
+                				</screenlet>
+                        		
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- StaffList CSV -->
+    <screen name="stafflistcsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Staff List"/>
+                <set field="headerItem" value="staffList"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="Person" value-field="staffListContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>                		
+                		<screenlet>                			
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listStaff" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>                    
+                		</screenlet>	
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- StaffList PDF -->
+    <screen name="stafflistpdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Staff List"/>
+                <set field="headerItem" value="staffList"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="Person" value-field="staffListContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    		<decorator-section name="body">                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listStaff" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="EmployeeQualifications">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Qualifications"/>
+                <set field="headerItem" value="employeeQualifications"/>
+                <set field="tabButtonItem" value="employeeQualifications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeQualifications"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PersonAndPartyQual" value-field="employeeQualificationsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">           
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>             
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee Qualifications">
+                        			<include-form name="listEmployeeQualifications" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet>
+                			
+                			<container style="button-bar">
+                				<link target="employeeQualificationscsv" text="Employee Qualifications CSV" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="employeeQualificationspdf" text="Employee Qualifications PDF" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+                        		
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Qualifications CSV -->
+    <screen name="EmployeeQualificationscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Qualifications"/>
+                <set field="headerItem" value="employeeQualifications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeQualifications"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PersonAndPartyQual" value-field="employeeQualificationsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeQualifications" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Qualifications PDF -->
+    <screen name="EmployeeQualificationspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Qualifications"/>
+                <set field="headerItem" value="employeeQualifications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeQualifications"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PersonAndPartyQual" value-field="employeeQualificationsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    		<decorator-section name="body">                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeQualifications" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    <screen name="EmployeeSkills">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Skills"/>
+                <set field="headerItem" value="employeeSkills"/>
+                <set field="tabButtonItem" value="employeeSkills"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSkills"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PersonAndPartySkills" value-field="employeeSkillsContext"/ -->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">           
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>             
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee Skills">
+                        			<include-form name="listEmployeeSkills" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet>
+                			
+                			<container style="button-bar">
+                				<link target="employeeSkillscsv" text="Employee Skills CSV" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="employeeSkillspdf" text="Employee Skills PDF" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+                        		
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- EmployeeSkills CSV -->
+    <screen name="EmployeeSkillscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Skills"/>
+                <set field="headerItem" value="employeeSkills"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSkills"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PersonAndPartySkills" value-field="employeeSkillsContext"/ -->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeSkills" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- EmployeeSkills PDF -->
+    <screen name="EmployeeSkillspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="EmployeeSkills"/>
+                <set field="headerItem" value="employeeSkills"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSkills"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PersonAndPartySkills" value-field="employeeSkillsContext"/ -->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    		<decorator-section name="body">                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeSkills" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="EmployeeSpouseDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Spouse Details"/>
+                <set field="headerItem" value="employeeSpouseDetails"/>
+                <set field="tabButtonItem" value="employeeSpouseDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSpouseDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndSpouse" value-field="employeeSpouseDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">           
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>             
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee Spouse Details">
+                        			<include-form name="listEmployeeSpouseDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet>
+                			
+                			<container style="button-bar">
+                				<link target="employeeSpouseDetailscsv" text="Employee Spouse Details CSV" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="employeeSpouseDetailspdf" text="Employee Spouse Detailst PDF" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+                        		
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Spouse Details CSV -->
+    <screen name="EmployeeSpouseDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Spouse Details"/>
+                <set field="headerItem" value="employeeSpouseDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSpouseDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndSpouse" value-field="employeeSpouseDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeSpouseDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Spouse Details PDF -->
+    <screen name="EmployeeSpouseDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Spouse Details"/>
+                <set field="headerItem" value="employeeSpouseDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSpouseDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndSpouse" value-field="employeeSpouseDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    		<decorator-section name="body">                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeSpouseDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EmployeeDependantDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="employeeDependantDetails"/>
+                <set field="tabButtonItem" value="employeeDependantDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeDependantDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndDependants" value-field="employeeDependantDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">           
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>             
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee Dependant Details">
+                        			<include-form name="listEmployeeDependantDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet>
+                			
+                			<container style="button-bar">
+                				<link target="employeeDependantDetailscsv" text="Employee Dependant Details CSV" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="employeeDependantDetailspdf" text="Employee Dependant Details PDF" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+                        		
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Dependant Details CSV -->
+    <screen name="EmployeeDependantDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="employeeDependantDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeDependantDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndDependants" value-field="employeeDependantDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeDependantDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Dependant Details PDF -->
+    <screen name="EmployeeDependantDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="employeeDependantDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeDependantDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndDependants" value-field="employeeDependantDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    		<decorator-section name="body">                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeDependantDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+ 
+    <screen name="EmployeeNOKDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee NOK Details"/>
+                <set field="headerItem" value="employeeNOKDetails"/>
+                <set field="tabButtonItem" value="employeeNOKDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeNOKDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">           
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>             
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee NOK Details">
+                        			<include-form name="listEmployeeNOKDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet>
+                			
+                			<container style="button-bar">
+                				<link target="employeeNOKDetailscsv" text="Employee NOK Details CSV" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="employeeNOKDetailspdf" text="Employee NOK Details PDF" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+                        		
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee NOK Details CSV -->
+    <screen name="EmployeeNOKDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee NOK Details"/>
+                <set field="headerItem" value="employeeNOKDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeNOKDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeNOKDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee NOK Details PDF -->
+    <screen name="EmployeeNOKDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee NOK Details"/>
+                <set field="headerItem" value="employeeNOKDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeNOKDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    		<decorator-section name="body">                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeNOKDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

@@ -509,4 +509,78 @@
         </section>
     </screen>
 
+    <!-- Report Screens -->
+    <screen name="PurchaseReportOptions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="OrderReports"/>
+                <set field="headerItem" value="reports"/>
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="h3">Purchasing Management Reports</label>
+                        <include-portal-page id="PurchaseReportPage"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ContactPersonReport">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <screenlet title="Contact Persons Report">
+                    <include-form name="ContactPersonReport" location="component://purchases/widget/PurchasesForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+    <!-- generates the pdf for report of sales by store and customer, grouped by product -->
+    <screen name="ContactPersonReportpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Contact Persons By Supplier"/>
+                <set field="supplierId" from-field="parameters.supplierId"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-condition entity-name="SupplierContactPerson" list="contactReportList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="supplierId" operator="equals" from-field="parameters.supplierId" ignore-if-empty="true"/>
+                    </condition-list>
+                    <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
+                    <select-field field-name="supplierId"/>
+                    <select-field field-name="name"/>
+                    <select-field field-name="firstName"/>
+                    <select-field field-name="lastName"/>
+                    <select-field field-name="contactEmailAddress"/>
+                    <select-field field-name="contactMobileNumber"/>
+                    <order-by field-name="firstName"/>
+                    <order-by field-name="lastName"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+<!--                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body"> -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://purchases/webapp/purchases/reports/ContactPersonsReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+<!--                     </decorator-section>
+                </decorator-screen> -->
+            </widgets>
+        </section>
+    </screen>
+
+
 </screens>
