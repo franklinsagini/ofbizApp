@@ -754,13 +754,13 @@ under the License.
                 <list-options list-name="accountList" key-name="finAccountId"  description="${finAccountName}" />
             </drop-down>
         </field -->
-        <field name="branchId" title="Branch">
+        <field name="branchId" title="Branch" required-field="true" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
         
-         <field name="stationId" title="Station">
+         <field name="stationId" title="Station" required-field="true" widget-style="required">
             <drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
@@ -796,7 +796,7 @@ under the License.
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
     
-    <form name="reviewmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="BankBranch"
+    <form name="reviewmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="reviewmembers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>
@@ -1696,14 +1696,15 @@ under the License.
 	<form name="ApproveMember" type="single" target="createApproveMemberLog"
         focus-field-name="comment" header-row-style="header-row"  default-table-style="basic-table" default-map-name="memberStatusLogContext">
         <field name="memberStatusLogId"><hidden/></field>
+        
         <field name="partyId" parameter-name="partyId"><hidden/></field>
         <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
         <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
         <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
         <field name="comment" title="Comments"><textarea/></field>
+     	<!--   use-when="parameters.get(&quot;partyId&quot;)!=null&amp;&amp;sprint==null" -->
        
-       
-        <field name="approve" title="Approve" widget-style="buttontext" > <submit/> </field>
+        <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="approve" title="Approve" widget-style="buttontext" > <submit/> </field>
     </form>
     
     <form name="listApproveMember" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateApproveMemberLog" paginate-target="approveMemberLog"
@@ -1722,6 +1723,8 @@ under the License.
         </field -->
         <field name="memberStatus" title="Status"><display also-hidden="false"></display></field>
         <field name="comment" title="Comment"><display></display></field>
+        <field name="createdBy" title="Approved By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
 <!-- ReviewMember end -->
 
@@ -1778,7 +1781,7 @@ under the License.
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
     
-    <form name="activemembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="BankBranch"
+    <form name="activemembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="activemembers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>

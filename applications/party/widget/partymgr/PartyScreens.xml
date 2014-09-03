@@ -2239,13 +2239,14 @@
 	<screen name="employers">
 		<section>
 			<actions>
-				<set field="titleProperty" value="New Relationship" />
+				<set field="titleProperty" value="New Employer" />
 				<set field="tabButtonItem" value="viewprofile" />
-				<set field="labelTitleProperty" value="New Relationship" />
+				<set field="labelTitleProperty" value="New Employer" />
 				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
 					default-value="viewprofile" />
 				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
-				<set field="partyId" from-field="parameters.partyId" />
+				<!-- set field="partyId" from-field="parameters.partyId" / -->
+				<entity-one value-field="employer" entity-name="Employer"></entity-one>
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonMemberDecorator"
@@ -2539,8 +2540,12 @@
 				<property-to-field field="defaultCountryGeoId"
 					resource="general" property="KEN" default="KEN" />
 				<set field="partyId" from-field="parameters.partyId" />
-
+				
 				<entity-one entity-name="Member" value-field="memberContext" />
+				
+				<set field="memberHasNominees" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasNominees(memberContext);}" type="String"/>
+				<set field="memberHasReferees" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasReferees(memberContext);}" type="String"/>
+				
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -2552,9 +2557,34 @@
 									action="_CREATE" />
 							</condition>
 							<widgets>
+								<section>
+									<condition>
+										<if-compare operator="equals" value="N" field="memberHasNominees"/>
+									</condition>
+									<widgets>
+										<container>
+									
+												<label style="h3"> Member must have Nominees - Please Add</label>
+										</container>
+									</widgets>
+								</section>
+								
+								<section>
+									<condition>
+										<if-compare operator="equals" value="N" field="memberHasReferees"/>
+									</condition>
+									<widgets>
+										<container>
+									
+												<label style="h3"> Member must have Referees - Please Add</label>
+										</container>
+									</widgets>
+								</section>
+								
+								
+								
 
-								<screenlet
-									title="Approve Member ${memberContext.firstName} ${memberContext.lastName}">
+								<screenlet title="Approve Member ${memberContext.firstName} ${memberContext.lastName}">
 									<include-form name="ApproveMember"
 										location="component://party/widget/partymgr/PartyForms.xml" />
 								</screenlet>
