@@ -11,6 +11,9 @@
         <menu-item name="suppliers" title="Suppliers">
             <link target="findSupplier"/>
         </menu-item>
+        <menu-item name="procurement" title="Procurement">
+            <link target="findProcuments"/>
+        </menu-item>
         <menu-item name="orders" title="Orders">
             <link target="findPurchasingOrders"/>
         </menu-item>
@@ -56,6 +59,37 @@
         </menu-item>
     </menu>
 
+
+    <!--
+      Procurement Tab bar Menu
+    -->
+    <menu name="ProcurementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+
+        <menu-item name="find" title="${uiLabelMap.CommonFind}">
+            <link target="findProcuments"/>
+        </menu-item>
+
+        <menu-item name="editProcurement" title="Edit Supplier">
+            <link target="editProcurement">
+                <parameter param-name="procurementId" from-field="ProcurementContext.procurementId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="editContactPerson" title="Contact Persons">
+            <link target="editContactPerson">
+                <parameter param-name="procurementId" from-field="ProcurementContext.procurementId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <!--
+        Suppliers Sub Tab bar Menu
+    -->
+    <menu name="ProcurementSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="createNew" title="New Procurement" widget-style="buttontext create">
+            <link target="editProcurement"/>
+        </menu-item>
+    </menu>
 
     <!--
         Orders Tab bar Menu
