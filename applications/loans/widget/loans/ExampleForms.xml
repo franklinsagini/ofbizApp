@@ -925,13 +925,19 @@
 	<form name="listLoanApplications" type="list" list-name="listIt"
 		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
 		separate-columns="true" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
 			<entity-condition entity-name="LoanApplication">
 				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
 				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
+				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
+			     <!-- set field="collateralsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasCollateral(loanApplicationId);}" type="String"   />
+				<set field="guarantorsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasGuarantors(loanApplicationId);}" type="String"   />
+				<set field="guarantorsTotalDepositsEnough" value="${bsh:org.ofbiz.loans.LoanServices.guarantorTotalsEqualLoanTotal(loanApplicationId);}" type="String"   />
+				<set field="eacherGuarantorGreaterThanAverage" value="${bsh:org.ofbiz.loans.LoanServices.checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);}" type="String"   /-->
+							
 		</actions>
 		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
 		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
@@ -980,11 +986,12 @@
 			<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
 		</field>
-
-		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)">
+		
+		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" >
 			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
 		</field>
+		
 
 		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext">

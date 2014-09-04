@@ -26,6 +26,7 @@ import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -266,7 +267,7 @@ public class LoanServices {
 			}
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
 			result.put("existingLoans", bdExistingLoans);
-			
+
 		} else {
 			System.out.println("######## Product details not found #### ");
 
@@ -671,10 +672,10 @@ public class LoanServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		Integer count = 0;
-		for (GenericValue genericValue : loanGuarantorELI) {
-			count = count + 1;
-		}
+		Integer count = loanGuarantorELI.size();
+		// for (GenericValue genericValue : loanGuarantorELI) {
+		// count = count + 1;
+		// }
 
 		return count;
 	}
@@ -704,6 +705,229 @@ public class LoanServices {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @author Japheth Odonya @when Sep 4, 2014 6:39:44 PM Check if Loan has
+	 *         Collateral
+	 * **/
+	public static String loanHasCollateral(String loanApplicationId) {
+		// Map<String, Object> result = FastMap.newInstance();
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// GenericValue loanApplication;
+		// try {
+		// loanApplication = delegator.findOne("LoanApplication",
+		// UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+		// } catch (GenericEntityException e) {
+		// e.printStackTrace();
+		// //return "Cannot Get Product Details";
+		// }
+
+		// Delegator delegator = loanApplication.getDelegator();
+		// String loanApplicationId =
+		// loanApplication.getString("loanApplicationId");
+
+		List<GenericValue> loanApplicationCallateralELI = null; // =
+
+		try {
+			loanApplicationCallateralELI = delegator.findList(
+					"LoanApplicationCallateral", EntityCondition.makeCondition(
+							"loanApplicationId", loanApplicationId), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String collateralsAvailable = "";
+		if ((loanApplicationCallateralELI == null)
+				|| (loanApplicationCallateralELI.size() <= 0)) {
+			collateralsAvailable = "N";
+		} else {
+			collateralsAvailable = "Y";
+		}
+		return collateralsAvailable;
+	}
+
+	/**
+	 * @author Japheth Odonya @when Sep 4, 2014 12:45:52 AM
+	 * 
+	 *         Has Guarantors
+	 * **/
+	public static String loanHasGuarantors(String loanApplicationId) {
+		// Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// String loanApplicationId =
+		// loanApplication.getString("loanApplicationId");
+		//
+		List<GenericValue> loanGuarantorELI = null; // =
+
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId",
+							loanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		String guarantorsAvailable = "";
+		if ((loanGuarantorELI == null) || (loanGuarantorELI.size() <= 0)) {
+			guarantorsAvailable = "N";
+		} else {
+			guarantorsAvailable = "Y";
+		}
+		return guarantorsAvailable;
+	}
+
+	/***
+	 * @author Japheth Odonya @when Sep 4, 2014 6:43:32 PM Guarantor Totals
+	 *         Equal or Greater than Loan Amount
+	 * */
+	public static String guarantorTotalsEqualLoanTotal(String loanApplicationId) {
+
+		GenericValue loanApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			// return "Cannot Get Product Details";
+		}
+
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+
+		BigDecimal bdTotalDeposits = getGuarantorTotalDeposits(loanApplication);
+
+		String guarantorsTotalDepositsEnough = "";
+
+		if (bdTotalDeposits.compareTo(bdLoanAmt) == -1) {
+			guarantorsTotalDepositsEnough = "N";
+		} else {
+			guarantorsTotalDepositsEnough = "Y";
+		}
+		return guarantorsTotalDepositsEnough;
+	}
+
+	/***
+	 * Get Total Deposits for all Guarantors
+	 * 
+	 * */
+	private static BigDecimal getGuarantorTotalDeposits(
+			GenericValue loanApplication) {
+		BigDecimal bdTotalDeposits = BigDecimal.ZERO;
+		List<GenericValue> loanGuarantorELI = null;
+		Delegator delegator = loanApplication.getDelegator();
+		String loanApplicationId = loanApplication
+				.getString("loanApplicationId");
+
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId",
+							loanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		BigDecimal bdDepositamt = null;
+		for (GenericValue genericValue : loanGuarantorELI) {
+
+			bdDepositamt = genericValue.getBigDecimal("depositamt");
+
+			if (bdDepositamt != null) {
+				bdTotalDeposits = bdTotalDeposits.add(bdDepositamt);
+			}
+
+		}
+
+		return bdTotalDeposits;
+	}
+
+	/**
+	 * @author Japheth Odonya @when Sep 4, 2014 7:15:54 PM Check that Each
+	 *         Guarantor Deposit is greater than average loan amount (loan
+	 *         amount / number of guarantors)
+	 * **/
+	public static String checkEachGuarantorDepositGreaterThanAverage(
+			String loanApplicationId) {
+		String eacherGuarantorGreaterThanAverage = "Y";
+
+		GenericValue loanApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			// return "Cannot Get Product Details";
+		}
+
+		Integer noOfGuarantors = getNumberOfGuarantors(loanApplication);
+		BigDecimal loanAmt = loanApplication.getBigDecimal("loanAmt");
+
+		BigDecimal bdAverageLoanAmt = BigDecimal.ZERO;
+
+		if (noOfGuarantors > 0) {
+			bdAverageLoanAmt = loanAmt.divide(new BigDecimal(noOfGuarantors),
+					6, RoundingMode.HALF_UP);
+		} else{
+			eacherGuarantorGreaterThanAverage = "N";
+		}
+
+		List<GenericValue> loanGuarantorELI = null;
+		// Delegator delegator = loanApplication.getDelegator();
+		// String loanApplicationId =
+		// loanApplication.getString("loanApplicationId");
+
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId",
+							loanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		BigDecimal bdDepositAmt = null;
+
+		for (GenericValue genericValue : loanGuarantorELI) {
+
+			bdDepositAmt = genericValue.getBigDecimal("depositamt");
+
+			// If Deposit Amount is not provided or is less that average of
+			// loanAmount
+			if ((bdDepositAmt == null)
+					|| (bdDepositAmt.compareTo(bdAverageLoanAmt) == -1)) {
+				eacherGuarantorGreaterThanAverage = "N";
+			}
+
+		}
+		return eacherGuarantorGreaterThanAverage;
+	}
+
+	/***
+	 * Count Guarantors
+	 * */
+	private static Integer getNumberOfGuarantors(GenericValue loanApplication) {
+		List<GenericValue> loanGuarantorELI = null;
+		Delegator delegator = loanApplication.getDelegator();
+		String loanApplicationId = loanApplication
+				.getString("loanApplicationId");
+
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId",
+							loanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (loanGuarantorELI != null) {
+			return loanGuarantorELI.size();
+		} else {
+			return 0;
+		}
+
 	}
 
 }

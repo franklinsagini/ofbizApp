@@ -254,6 +254,8 @@ under the License.
                 <entity-one entity-name="LoanApplication" value-field="loanApplication">
                                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 </entity-one>
+                
+                 
             </actions>
             <widgets>
                 <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
@@ -319,6 +321,8 @@ under the License.
                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/><!-- is required -->
                 </entity-one>
                 
+                
+                
                 <!-- entity-one entity-name="SaccoProduct" value-field="lookupLoanType">
                     <field-map field-name="saccoProductId" from-field="lookupLoanApplication.saccoProductId"/>
                 </entity-one -->
@@ -362,6 +366,14 @@ under the License.
                 <set field="partyContent" value="${groovy: partyContentId!=null?&quot;/content/control/stream?contentId=&quot; + partyContentId : &quot;&quot;}"/>
                 <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
                 <set field="personalImage" from-field="partyContent"/>
+                
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                
+                <set field="collateralsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasCollateral(loanApplicationId);}" type="String"   />
+				<set field="guarantorsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasGuarantors(loanApplicationId);}" type="String"   />
+				<set field="guarantorsTotalDepositsEnough" value="${bsh:org.ofbiz.loans.LoanServices.guarantorTotalsEqualLoanTotal(loanApplicationId);}" type="String"   />
+				<set field="eacherGuarantorGreaterThanAverage" value="${bsh:org.ofbiz.loans.LoanServices.checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);}" type="String"   />
+                
             </actions>
             <widgets>
                 <section>
@@ -377,6 +389,55 @@ under the License.
                                 </or>
                             </condition -->
                             <widgets>
+                            	<section>
+									<condition>
+										<if-compare operator="equals" value="N" field="collateralsAvailable"/>
+									</condition>
+									<widgets>
+										<container>
+									
+												<label style="h3"> Loan Application must have Collateral - Please Add</label>
+										</container>
+									</widgets>
+								</section>
+								
+								<section>
+									<condition>
+										<if-compare operator="equals" value="N" field="guarantorsAvailable"/>
+									</condition>
+									<widgets>
+										<container>
+									
+												<label style="h3"> Please provide Guarantors</label>
+										</container>
+									</widgets>
+								</section>
+								
+								<section>
+									<condition>
+										<if-compare operator="equals" value="N" field="guarantorsTotalDepositsEnough"/>
+									</condition>
+									<widgets>
+										<container>
+									
+												<label style="h3"> Guarantors total deposit is not enough (Sum of Guarantor deposits must be more or equal to the loan amount)</label>
+										</container>
+									</widgets>
+								</section>
+								
+								
+								<section>
+									<condition>
+										<if-compare operator="equals" value="N" field="eacherGuarantorGreaterThanAverage"/>
+									</condition>
+									<widgets>
+										<container>
+									
+												<label style="h3"> Each Guarantor must have enough deposit for his/her share of the loan guaranteed </label>
+										</container>
+									</widgets>
+								</section>
+                            
                                 <screenlet title="Loan Information" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
                                            <!-- include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
                                     <!-- include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/ -->
