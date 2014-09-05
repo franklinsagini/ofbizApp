@@ -933,11 +933,7 @@
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
-			     <!-- set field="collateralsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasCollateral(loanApplicationId);}" type="String"   />
-				<set field="guarantorsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasGuarantors(loanApplicationId);}" type="String"   />
-				<set field="guarantorsTotalDepositsEnough" value="${bsh:org.ofbiz.loans.LoanServices.guarantorTotalsEqualLoanTotal(loanApplicationId);}" type="String"   />
-				<set field="eacherGuarantorGreaterThanAverage" value="${bsh:org.ofbiz.loans.LoanServices.checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);}" type="String"   /-->
-							
+			    							
 		</actions>
 		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
 		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
@@ -982,15 +978,22 @@
 		<field name="applicationStatus">
 			<display also-hidden="false" />
 		</field>
+		
+		
+		
 		<field name="Edit Application">
 			<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
 		</field>
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" >
+		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
+			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
 			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
+				
+				
 		</field>
+		<!-- field name="formStatus" title="Form" use-when="loanApplication.collateralsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsTotalDepositsEnough.equals(&quot;N&quot;)&amp;&amp;loanApplication.eacherGuarantorGreaterThanAverage.equals(&quot;N&quot;)"><display default-value="Form Incomplete, Provide Details (Guarantors, Collateral etc)"></display></field -->
 		
 
 		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}"
@@ -1009,6 +1012,8 @@
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
 		</field>
+		
+		
 	</form>
 
 	<!-- Find Loan Application List -->

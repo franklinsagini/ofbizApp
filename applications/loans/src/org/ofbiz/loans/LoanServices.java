@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import javolution.util.FastMap;
 
@@ -928,6 +929,156 @@ public class LoanServices {
 			return 0;
 		}
 
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Sep 5, 2014 12:10:03 AM
+	 * 
+	 * 	collateralsAvailable
+	 *  guarantorsAvailable
+	 *  guarantorsTotalDepositsEnough
+	 *  eacherGuarantorGreaterThanAverage
+	 * 
+	 * */
+	public static String validateApplicationForm(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		String loanApplicationId = (String) request.getParameter("loanApplicationId");
+
+		String collateralsAvailable = loanHasCollateral(loanApplicationId);
+		String guarantorsAvailable = loanHasGuarantors(loanApplicationId);
+		String guarantorsTotalDepositsEnough = 	guarantorTotalsEqualLoanTotal(loanApplicationId);
+		String eacherGuarantorGreaterThanAverage = checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);
+		
+		result.put("collateralsAvailable", collateralsAvailable);
+		result.put("guarantorsAvailable", guarantorsAvailable);
+		result.put("guarantorsTotalDepositsEnough", guarantorsTotalDepositsEnough);
+		result.put("eacherGuarantorGreaterThanAverage", eacherGuarantorGreaterThanAverage);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Sep 5, 2014 12:57:17 AM
+	 * forwardLoanApplication
+	 * 
+	 * Forward Loan Application to Next Stage - to Review
+	 * 
+	 * */
+	public static String forwardLoanApplication(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator)request.getAttribute("delegator");
+		String loanApplicationId = (String) request.getParameter("loanApplicationId");
+//		Map<String, String> userLogin = (Map<String, String>)request.getAttribute("userLogin");
+//		request.get
+//		String userLoginId = userLogin.get("userLoginId");
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+		String userLoginId = userLogin.getString("userLoginId");
+
+		GenericValue loanApplication = null;
+
+		// SaccoProduct
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		loanApplication.set("applicationStatus", "FORWARDED");
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		//Create a Log
+		GenericValue loanStatusLog;
+		String loanStatusLogId = delegator.getNextSeqId("LoanStatusLog", 1);
+		
+		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc
+				.toMap("loanStatusLogId", loanStatusLogId,
+						"loanApplicationId", loanApplicationId,
+						"applicationStatus", "FORWARED",
+						"createdBy", userLoginId,
+						"comment", "forwarded for review"
+				));
+		
+		try {
+			delegator.createOrStore(loanStatusLog);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
 	}
 
 }
