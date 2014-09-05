@@ -79,7 +79,13 @@ under the License.
         <section>
             <actions>
                 <set field="partyId" from-field="parameters.partyId"/>
-                <entity-one entity-name="Member" value-field="member"/>
+                <set field="memberAccountId" from-field="parameters.memberAccountId"/>
+                <entity-one entity-name="Member" value-field="member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+                <entity-one entity-name="MemberAccount" value-field="memberAccount">
+                	<field-map field-name="memberAccountId" from-field="memberAccountId"/>
+                </entity-one>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -123,12 +129,20 @@ under the License.
                                                     <image src="${member.photourl}" url-mode="content" alt="Member Photo" style="cssImgStandard"/>
                                                     <!-- label text="${uiLabelMap.PartyTheProfileOf}  ${member.firstName} ${member.middleName} ${member.lastName}"></label -->
                                                     <label text="${member.firstName} ${member.middleName} ${member.lastName}"></label>
-                                                    
                                                 </widgets>
                                                 <fail-widgets>
                                                     <label text="Sacco Member"/>
                                                   <!-- label> ${member.firstName}</label --> 
                                                 </fail-widgets>
+                                            </section>
+                                            <section>
+                                            	<condition>
+                                            		<not><if-empty field="memberAccount"/></not>
+                                            	</condition>
+                                            	<widgets>
+                                            		
+                                            		<label text="(${memberAccount.accountNo} - ${memberAccount.accountName})"></label>
+                                            	</widgets>
                                             </section>
                                         </container>
                                     </widgets>

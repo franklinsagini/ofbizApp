@@ -186,7 +186,7 @@ under the License.
         <field name="enabled"><hidden/></field>
         
         
-        <field name="refreeId" title="Referee">
+        <field name="refreeId" title="Referee"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="membersList" key-name="partyId" description="${firstName} ${lastName}" />
             </drop-down>
@@ -194,7 +194,7 @@ under the License.
        <field name="memberNo" title="Member No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
 
        <field name="payrollNo" title="Payroll No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="memberNominee" type="single" target="createMemberNominee"
@@ -206,23 +206,23 @@ under the License.
         </actions>
         <field name="partyId"><hidden/></field>
         <field name="enabled"><hidden/></field>
-        <field name="firstName"  title="First Name"><text/></field>
+        <field name="firstName"  title="First Name"  widget-style="required" required-field="true"><text/></field>
         <field name="middleName" title="Middle Name"><text/></field>
-        <field name="lastName"  title="Last Name"><text/></field>
+        <field name="lastName"  title="Last Name"  widget-style="required" required-field="true"><text/></field>
         <field name="idNumber"  title="ID No"><text/></field>
         <field name="passportNumber" title="Passport No"><text/></field>
         <field name="postalAddress"  title="Postal Address"><textarea/></field>
         <field name="telephoneNumber" title="Telephone No"><text/></field>
         <field name="mobilePhone" title="Mobile Phone"><text/></field>
-        <field name="relationshipId" title="Relationship">
+        <field name="relationshipId" title="Relationship"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="relationshipList" key-name="relationshipId" description="${name}" />
             </drop-down>
         </field>
         <field name="isAdministrator" title="Is Administrator">
             <drop-down allow-empty="false" no-current-selected-key="N">
-                <option key="Y" description="${uiLabelMap.CommonY}"/>
-                <option key="N" description="${uiLabelMap.CommonN}"/>
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
             </drop-down>
         </field>
         <field name="percentage" title="Percentage"><text/></field>
@@ -230,7 +230,7 @@ under the License.
         <field name="independentwitnessidno" title="Independent Witness ID No"><text/></field>
         <field name="witnessmobileno" title="Witness Mobile No"><text/></field>
          <field name="witnesspostaladdress" title="Witness Postal Address"><textarea/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="termsAndConditions" type="single" target="createTermsAndConditions"
@@ -259,7 +259,7 @@ under the License.
         <field name="enabled"><hidden/></field>
         <field name="name"><text/></field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
     
@@ -267,11 +267,11 @@ under the License.
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table">
         <!-- auto-fields-service service-name="createUserLogin"/ -->
         <field name="employerId"><hidden/></field>
-        <field name="active"><hidden/></field>
-        <field name="name" title="Name"><text/></field>
-        <field name="address" title="Address"><textarea/></field>
+        <field name="isActive"><hidden/></field>
+        <field name="name" title="Name" widget-style="required" required-field="true"><text/></field>
+        <field name="address" title="Address" widget-style="required" required-field="true"><textarea/></field>
        
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
       
     </form>
     
@@ -548,24 +548,26 @@ under the License.
     </form>
 	
 <!--  employers List-->
-	<form name="listEmployer" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployers" paginate-target="findEmployers"
+	<form name="listEmployer" type="list" list-name="listIt" default-entity-name="Employer" use-row-submit="true" separate-columns="true" target="updateEmployers" paginate-target="employers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="Employer">
+            <!-- entity-condition entity-name="Employer" -->
             	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
                 <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
                 <!-- order-by field-name="saccoProductId"/ -->
-            </entity-condition>
+            <!--/entity-condition -->
+            <entity-condition entity-name="Employer" list="listIt"></entity-condition>
         </actions>
-        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
-        <field name="name"><display also-hidden="false"/></field>
-         <field name="address"><display also-hidden="false"/></field>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateEmployers"/ -->
+        <field name="employerId"><hidden/></field>
+        <field name="name" title="Name"><text/></field>
+         <field name="address" title="Address"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmployers" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="employerId"/>
             </hyperlink>
         </field>
-        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
     <!-- openingBalance -->

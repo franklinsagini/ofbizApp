@@ -141,6 +141,8 @@
                                                    //the request if any.
      success : function(data){
 				 $('input[name="maxLoanAmt"]').val(data.maxLoanAmt);
+				 $('input[name="existingLoans"]').val(data.existingLoans);
+				 
                },
       error : function(errorData){
 
@@ -198,5 +200,80 @@
     	}
     	
     	return isValid;
+    }
+    
+    function loanApplicationFormComplete(loanApplicationId){
+    
+    	var isValid = true;
+    	var collateralsAvailable = '';
+    	var guarantorsAvailable = '';
+    	var guarantorsTotalDepositsEnough = '';
+    	var eacherGuarantorGreaterThanAverage = '';
+    	
+    	var reqUrl = '/loans/control/validateApplicationForm';
+    	
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'loanApplicationId': loanApplicationId}, 
+			     success : function(data){
+			     
+			     			collateralsAvailable = data.collateralsAvailable;
+					    	guarantorsAvailable = data.guarantorsAvailable;
+					    	guarantorsTotalDepositsEnough = data.guarantorsTotalDepositsEnough;
+					    	eacherGuarantorGreaterThanAverage = data.eacherGuarantorGreaterThanAverage;
+					    	
+					    	
+					    	//alert('collateralsAvailable  inanon'+collateralsAvailable);
+							//alert('guarantorsAvailable inanon'+guarantorsAvailable);
+							//alert('guarantorsTotalDepositsEnough  inanon'+guarantorsTotalDepositsEnough);
+							//alert('eacherGuarantorGreaterThanAverage  inanon '+eacherGuarantorGreaterThanAverage);
+							
+
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating loan application");
+			              }
+			
+			
+		});
+		
+		//alert('collateralsAvailable '+collateralsAvailable);
+		//alert('guarantorsAvailable '+guarantorsAvailable);
+		//alert('guarantorsTotalDepositsEnough '+guarantorsTotalDepositsEnough);
+		//alert('eacherGuarantorGreaterThanAverage '+eacherGuarantorGreaterThanAverage);
+    	
+    	var message = '';
+    	if ((collateralsAvailable == 'N') && (guarantorsAvailable == 'N')){
+    		message = "You must have Guarantors or Collateral to process the loan application ! ";
+    		isValid = false;
+    	} else{
+    		if (guarantorsAvailable == 'Y'){
+    			if (guarantorsTotalDepositsEnough == 'N'){
+    				message = message+" Total Guarantors deposits must be equal or more than the loan amount applied ";
+    				isValid = false;
+    			}
+    			
+    			if (eacherGuarantorGreaterThanAverage == 'N'){
+    				isValid = false;
+    				message = message+" Each Guarantor must be able to pay for his/her share of the loan guaranteed (Equal distribution is assumed)";
+    				
+    			}
+    		}
+    	
+    	}
+    	
+    	if (!isValid){
+    		alert(message);
+    	} else{
+    		alert(' Loan Application forwarded for review!');
+    	}
+    	
+    	
+    	return isValid;
+    
     }
    </script>

@@ -38,18 +38,18 @@ under the License.
         <!-- menu-item name="savingsproductsetup" title="Account"><link target="savingsproductsetup"/></menu-item>
         <menu-item name="loanproductsetup" title="Loan"><link target="loanproductsetup"/></menu-item -->
         
-        <menu-item name="AccountProduct" title="New Account"><link target="AccountProduct"/></menu-item>
-        <menu-item name="LoanProduct" title="New Loan"><link target="LoanProduct"/></menu-item>
+        <menu-item name="AccountProduct" title="Account Product Setup"><link target="AccountProduct"/></menu-item>
+        <menu-item name="LoanProduct" title="Loan Product Setup"><link target="LoanProduct"/></menu-item>
         
-        <menu-item name="loanapplication" title="New Application"><link target="loanapplication"/></menu-item>
+        <menu-item name="loanapplication" title="New Loan Application"><link target="loanapplication"/></menu-item>
         
         <menu-item name="placeholder" title="  "><link target="main"/></menu-item>
-        <menu-item name="loansecurity" title="New Loan Security"><link target="NewLoanSecurity"/></menu-item>
+        <menu-item name="loansecurity" title="New Loan Security Setup"><link target="NewLoanSecurity"/></menu-item>
         <menu-item name="productcharge" title="New Product Charge"><link target="NewProductCharge"/></menu-item>
         
         <menu-item name="loanstatus" title="New Loan Status"><link target="NewLoanStatus"/></menu-item>
         <menu-item name="" title=""><link target="main"/></menu-item>
-        <menu-item name="loanapplicationslist" title="Applications List"><link target="loanapplicationslist"/></menu-item>
+        <menu-item name="loanapplicationslist" title="Loan Application List"><link target="loanapplicationslist"/></menu-item>
         <menu-item name="FindLoanProduct" title="Loan Products List"><link target="FindLoanProduct"/></menu-item>
         <menu-item name="FindAccountProduct" title="Account Products List"><link target="FindAccountProduct"/></menu-item>
         
@@ -97,7 +97,7 @@ under the License.
         
         <menu-item name="reviewLoan" title="Review">
         	<condition>
-        		<if-compare field="loanApplication.applicationStatus" operator="equals" value="NEW" />
+        		<if-compare field="loanApplication.applicationStatus" operator="equals" value="FORWARDED" />
         	</condition>
         	<link target="reviewLoan">
         	
@@ -106,7 +106,7 @@ under the License.
         </menu-item>
         <menu-item name="appraiseLoan" title="Appraise">
         <condition>
-        		<if-compare field="loanApplication.applicationStatus" operator="not-equals" value="DISBURSED" />
+        		<if-compare field="loanApplication.applicationStatus" operator="equals" value="REVIEWED" />
         	</condition>
         <link target="appraiseLoan">
         	<parameter param-name="loanApplicationId"/>
@@ -114,13 +114,23 @@ under the License.
         </menu-item>
         <menu-item name="approveLoan" title="Approve">
         <condition>
-        		<if-compare field="loanApplication.applicationStatus" operator="not-equals" value="DISBURSED" />
+        		<if-compare field="loanApplication.applicationStatus" operator="equals" value="APPRAISED" />
         	</condition>
         <link target="approveLoan">
         	<parameter param-name="loanApplicationId"/>
         </link>
         </menu-item>
-        <menu-item name="disburseLoan" title="Disburse"><link target="disburseLoan">
+        <menu-item name="disburseLoan" title="Disburse">
+        
+        <condition>
+        		
+        		<or>
+        			<if-compare field="loanApplication.applicationStatus" operator="equals" value="APPROVED" />
+        			<if-compare field="loanApplication.applicationStatus" operator="equals" value="DISBURSED" />
+        		</or>
+        </condition>
+        <link target="disburseLoan">
+        	
         	<parameter param-name="loanApplicationId"/>
         </link>
          
