@@ -344,12 +344,13 @@ under the License.
 
     <request-map uri="forwardApplication">
                 <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" />
-                <response name="success" type="view"
-                        value="loanapplication">
+        <!-- event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" / -->
+        <event type="java" path="org.ofbiz.loans.LoanServices" invoke="forwardLoanApplication" />
+                <response name="success" type="request-redirect"
+                        value="loanapplicationslist"> 
                                 <redirect-parameter name="loanApplicationId"/>
                         </response>
-                <response name="error" type="view" value="loanapplication" />
+                <response name="error" type="view" value="loanapplicationslist" />
     </request-map>
 
     <request-map uri="loandetails">
@@ -364,6 +365,13 @@ under the License.
         <event type="java" path="org.ofbiz.loans.LoanServices" invoke="getLoanMaxAmount" />
                 <response name="success" type="none">
     </response>
+    </request-map>
+    
+    <!-- va -->
+    <request-map uri="validateApplicationForm">
+        <event type="java" path="org.ofbiz.loans.LoanServices" invoke="validateApplicationForm" />
+                <response name="success" type="none">
+        </response>
     </request-map>
 
     <!-- Loan Security and Loan Status Request Map -->
