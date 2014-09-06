@@ -50,9 +50,11 @@ under the License.
         <field name="scopeEnumId"><hidden value="WES_PUBLIC"/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.CommonFromDate}"><date-time input-method="time-dropdown" /></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.CommonThruDate}"><date-time input-method="time-dropdown"/></field>
+        <field name="trainingPartnerId" title="Training Partner" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="totalCost" title="Total Cost"> <display/></field>
         <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
-    <form name="AssignTraining" type="single" target="assignTraining">
+    <form name="AssignTraining" type="single" target="TrainingCalendar">
         <field name="approverId"><hidden value="${loginPartyId}"/></field>
         <field name="fromDate"><hidden/></field>
         <field name="thruDate"><hidden/></field>
@@ -83,6 +85,12 @@ under the License.
         <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="trainingRequestId" widget-style="buttontext"><display/></field>
         <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
+        <field name="addCosts" title="Add Costs" widget-style="buttontext">
+            <hyperlink target="trainingCosts" description="Add Costs" also-hidden="false">
+                <parameter param-name="partyId"/>
+                <parameter param-name="trainingClassTypeId"/>
+            </hyperlink>
+        </field>
     </form>
     <form name="FindTrainingApprovals" target="FindTrainingApprovals" title="" type="single" default-title-style="tableheadtext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="PersonTraining" default-field-type="find"/>
@@ -238,5 +246,86 @@ under the License.
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
         <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
+    </form>
+    
+        <!-- Training Cost Type -->
+    <form name="AddTrainingCostType" type="single" target="createTrainingCostType"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="trainingCostTypeContext">
+        
+        <field name="trainingCostTypesId"><hidden/></field>
+        <field name="costType" title="Training Cost Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Description" ><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listTrainingCostType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTrainingCostType" paginate-target="trainingCostType"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TrainingCostType">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateTrainingCostType"/>
+        
+       <field name="trainingCostTypesId"><hidden/></field>
+        <field name="costType" title="Training Cost Type"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Description" ><text size="30" maxlength="60"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTrainingCostType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="trainingCostTypesId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- New Training Costs-->
+    <form name="AddTrainingCosts" type="single" target="createTrainingCosts"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="trainingCostsContext">
+        
+        <actions>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+        	
+        	<entity-condition entity-name="TrainingClassType" list="trainingClassTypeList"></entity-condition>
+        	<set field="trainingClassTypeId" from-field="trainingClassTypeId"/>
+        </actions>
+
+        <field name="trainingCostId"><hidden/></field>
+        <field name="partyId" title="Employee" parameter-name="partyId"><hidden/></field>
+        <field name="trainingClassTypeId" title="Training Class Type" parameter-name="trainingClassTypeId"><hidden/></field>
+		 <field name="trainingCostTypesId" title="Training Cost Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <entity-options description="${costType}" key-field-name="trainingCostTypesId" entity-name="TrainingCostType">
+                    <entity-order-by field-name="trainingCostTypesId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="cost" title="Cost" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listTrainingCosts" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTrainingCosts" paginate-target="trainingCostTypes"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TrainingCosts">
+            	<condition-expr field-name="partyId" from-field="partyId"/>
+            </entity-condition>
+            <entity-condition entity-name="TrainingCosts">
+            	<condition-expr field-name="trainingClassTypeId" from-field="trainingClassTypeId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateTrainingCosts"/>
+
+        <field name="partyId"><hidden/></field>
+        <field name="trainingClassTypeId"><hidden/></field>
+        <field name="trainingCostTypesId" title="Training Class Type">
+        	<display-entity entity-name="TrainingCostType" key-field-name="trainingCostTypesId" description="${costType}"/>
+        </field>
+        <field name="cost"> <display/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTrainingCosts" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="trainingCostId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 </forms>

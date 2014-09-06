@@ -31,6 +31,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="institutelocation" title="Institute Location"><text></text></field>
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -62,7 +63,7 @@ under the License.
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>
         <alt-target use-when="insideEmployee==null" target="updatePartyQual"/>
-        <auto-fields-service service-name="updatePartyQual"/>
+        <!-- auto-fields-service service-name="updatePartyQual"/-->
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
                 <sub-hyperlink target="viewprofile" link-style="smallSubmit" target-type="inter-app" description="${partyId}">
@@ -71,9 +72,12 @@ under the License.
             </display-entity>
         </field>
         <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
-        <field name="qualificationDesc"><text/></field>
+        <field name="qualificationDesc"><hidden/></field>
         <field name="title"><text/></field>
+        <field name="institute" title="Institute"><text/></field>
+        <field name="institutelocation" title="Institute Location"><hidden/></field>
+        <field name="fromDate"><display/></field>
+        <field name="thruDate"><display/></field>
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -106,6 +110,7 @@ under the License.
         </actions>
         <alt-target use-when="insideEmployee != null" target="createPartyQualExt"/>
         <auto-fields-service service-name="createPartyQual"/>
+        
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="partyQual!=null"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyQualTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -115,6 +120,9 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="title" title="Title"><text></text></field>
+        <field name="institute" title="Institute Name"><text></text></field>
+         <field name="institutelocation" title="Institute Location"><text></text></field>
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
