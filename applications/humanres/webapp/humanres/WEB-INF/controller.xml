@@ -1349,6 +1349,54 @@ under the License.
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupTraining"/>
     </request-map>
+    
+    
+    <request-map uri="trainingCostType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="trainingCostType"/>
+    </request-map>
+     <request-map uri="createTrainingCostType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTrainingCostType"/>
+        <response name="success" type="request-redirect-noparam" value="trainingCostType"/>
+        <response name="error" type="request-redirect-noparam" value="trainingCostType"/>
+    </request-map>
+    <request-map uri="updateTrainingCostType">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateTrainingCostType"/>
+        <response name="success" type="request-redirect-noparam" value="trainingCostType"/>
+        <response name="error" type="request-redirect-noparam" value="trainingCostType"/>
+    </request-map>
+    <request-map uri="deleteTrainingCostType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTrainingCostType"/>
+        <response name="success" type="request-redirect-noparam" value="trainingCostType"/>
+        <response name="error" type="request-redirect-noparam" value="trainingCostType"/>
+    </request-map>
+    
+    <request-map uri="trainingCosts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="trainingCosts"/>
+    </request-map>
+     <request-map uri="createTrainingCosts">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTrainingCosts"/>
+        <response name="success" type="request-redirect" value="trainingCosts"/>
+        <response name="error" type="request-redirect" value="trainingCosts"/>
+    </request-map>
+    <request-map uri="updateTrainingCosts">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateTrainingCosts"/>
+        <response name="success" type="request-redirect" value="trainingCosts"/>
+        <response name="error" type="request-redirect" value="trainingCosts"/>
+    </request-map>
+    <request-map uri="deleteTrainingCosts">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTrainingCosts"/>
+        <response name="success" type="request-redirect" value="trainingCosts"/>
+        <response name="error" type="request-redirect" value="trainingCosts"/>
+    </request-map>
+    
     <request-map uri="EditEmplLeaveReasonTypes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmplLeaveReasonTypes"/>
@@ -1938,6 +1986,10 @@ under the License.
     <view-map name="FindTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#FindTrainingApprovals"/>
     <view-map name="EditTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#EditTrainingApprovals"/>
     <view-map name="LookupTraining" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupTraining"/>
+    
+    
+    <view-map name="trainingCostType" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#NewTrainingCostType"/>
+    <view-map name="trainingCosts" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#NewTrainingCosts"/>
     
     <!-- ==================PayRoll History View Map===================== -->
     <view-map name="PayrollHistory" type="screen" page="component://humanres/widget/EmployeeScreens.xml#PayrollHistory"/>
