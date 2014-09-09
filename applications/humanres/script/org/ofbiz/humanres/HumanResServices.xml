@@ -1405,6 +1405,55 @@
 		<entity-one entity-name="TrainingClassType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
+	
+
+	<!-- Training Cost Type Starts Here -->
+	<simple-method method-name="createTrainingCostType" short-description="Add Training Cost Type">
+        <make-value entity-name="TrainingCostType" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="TrainingCostType" field="trainingCostTypesId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="trainingCostTypesId" field="newEntity.trainingCostTypesId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateTrainingCostType" short-description="Update Training Cost Type">
+        <entity-one entity-name="TrainingCostType" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteTrainingCostType" short-description="Delete Training Cost Type">
+        <entity-one entity-name="TrainingCostType" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Training Costs Starts Here -->
+	<simple-method method-name="createTrainingCosts" short-description="Add Training Cost">
+        <make-value entity-name="TrainingCosts" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="TrainingCosts" field="trainingCostId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="trainingCostId" field="newEntity.trainingCostId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateTrainingCosts" short-description="Update Training Cost">
+        <entity-one entity-name="TrainingCosts" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteTrainingCosts" short-description="Delete Training Cost">
+        <entity-one entity-name="TrainingCosts" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
 
 	<simple-method method-name="createEmplLeaveReasonType"
 		short-description="Create a Leave Reason Type">

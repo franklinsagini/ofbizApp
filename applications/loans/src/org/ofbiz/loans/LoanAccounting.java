@@ -165,9 +165,17 @@ public class LoanAccounting {
 
 		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
 		Delegator delegator = loanApplication.getDelegator();
+		
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						memberId), EntityCondition
+						.makeCondition("withdrawable",
+								EntityOperator.EQUALS, "Yes")),
+						EntityOperator.AND);
 		try {
 			memberAccountELI = delegator.findList("MemberAccount",
-					EntityCondition.makeCondition("partyId", memberId), null,
+					memberAccountConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();

@@ -391,6 +391,31 @@ under the License.
           <key-map field-name="trainingRequestId"/>
       </relation>
     </entity>
+    
+    <entity entity-name="TrainingCostType" package-name="org.ofbiz.humanres.ability" title="Training Cost Types">    
+	    <field name="trainingCostTypesId" type="id-ne"></field>
+	    <field name="costType" type="name"></field>
+	    <field name="description" type="name"></field>
+	    <prim-key field="trainingCostTypesId"/>
+    </entity>
+     <entity entity-name="TrainingCosts" package-name="org.ofbiz.humanres.ability" title="Training Costs">
+     	<field name="trainingCostId" type="id-ne"></field>
+	    <field name="partyId" type="id-ne"></field>
+	    <field name="trainingClassTypeId" type="id-ne"></field>
+	    <field name="trainingCostTypesId" type="id-ne"></field>
+	    <field name="cost" type="currency-amount"></field>
+	    <prim-key field="trainingCostId"/>
+	      <relation type="one" fk-name="PERS_TRNG_PRTY" rel-entity-name="Party">
+	        <key-map field-name="partyId"/>
+	      </relation>
+	      <relation type="one" fk-name="PERS_TRNG_TCTP" rel-entity-name="TrainingClassType">
+	        <key-map field-name="trainingClassTypeId"/>
+	      </relation>
+	      <relation type="one" fk-name="PERS_TRNG_CST_TYPE" title="Approver" rel-entity-name="TrainingCostType">
+	          <key-map field-name="trainingCostTypesId"/>
+	      </relation>
+     </entity>
+    
     <entity entity-name="ResponsibilityType"
             package-name="org.ofbiz.humanres.ability"
             title="Responsibility Type Entity">
