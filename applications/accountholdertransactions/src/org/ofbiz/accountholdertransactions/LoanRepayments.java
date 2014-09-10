@@ -2,8 +2,10 @@ package org.ofbiz.accountholdertransactions;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +38,7 @@ public class LoanRepayments {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
 		List<GenericValue> loanAmortizationELI = null;
+		GenericValue userLogin = (GenericValue)request.getAttribute("userLogin");
 
 		Timestamp currentDate = new Timestamp(Calendar.getInstance()
 				.getTimeInMillis());
@@ -115,7 +118,7 @@ public class LoanRepayments {
 		
 		for (GenericValue loanExpectation : loanExpectationELI) {
 			//Remember to update LoanExpectation as Posted
-			postLoanExpectation(loanExpectation, delegator);
+			postLoanExpectation(loanExpectation, delegator, userLogin);
 		}
 		
 
@@ -146,9 +149,49 @@ public class LoanRepayments {
 	 * Set LoanExpectationToPosted
 	 * */
 	private static void postLoanExpectation(GenericValue loanExpectation,
-			Delegator delegator) {
+			Delegator delegator, GenericValue userLogin) {
+		
+		String repaymentName = loanExpectation.getString("repaymentName");
+		
+		if (repaymentName.equals("INTEREST")){
+			//post interest
+			//LoanAccounting.postDisbursement(loanApplication, userLogin)
+			postInterestAccrued(loanExpectation, delegator, userLogin);
+		} else if (repaymentName.equals("INSURANCE")){
+			//post insurance
+			postInsuranceCharge(loanExpectation, delegator, userLogin);
+		}else if (repaymentName.equals("PRINCIPAL")){
+			//post principal
+			postPrincipalDue(loanExpectation, delegator, userLogin);
+		}
+		
+	}
+
+	private static void postPrincipalDue(GenericValue loanExpectation,
+			Delegator delegator, GenericValue userLogin) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	private static void postInsuranceCharge(GenericValue loanExpectation,
+			Delegator delegator, GenericValue userLogin) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void postInterestAccrued(GenericValue loanExpectation,
+			Delegator delegator, GenericValue userLogin) {
+		String acctgTransType = "INTEREST_RECEIVABLE";
+//		String glAcctTypeIdMemberDepo = "CURRENT_LIABILITY";
+//		String glAcctTypeIdLoans = "CURRENT_ASSET";
+//		String glAcctTypeIdcharges = "OTHER_INCOME";
+//		String acctgTransId = createAccountingTransaction(loanExpectation,
+//				acctgTransType, userLogin, delegator);
+		
+		//log.info("### Transaction ID## "+acctgTransId);
+		// Creates a record in AcctgTransEntry for Member Deposit Account
+//		createMemberDepositEntry(loanExpectation, acctgTransId, userLogin,
+//				glAcctTypeIdMemberDepo, delegator); 
 	}
 
 	/***
@@ -158,8 +201,213 @@ public class LoanRepayments {
 	 * */
 	private static void createLoanExpectation(GenericValue loanAmortization,
 			Delegator delegator) {
-		// TODO Auto-generated method stub
+
+		GenericValue loanExpectation = null;
+		String loanExpectationId = delegator.getNextSeqId("LoanExpectation", 1L);
+		String loanApplicationId = loanAmortization.getString("loanApplicationId");
+		String employeeNo = getEmployeeNumber(loanApplicationId, delegator);
+		
+		List<GenericValue> listTobeStored = new LinkedList<GenericValue>();
+		
+		String loanNo = getLoanNo(loanApplicationId, delegator);
+		
+		//Adding PRINCIPAL
+		BigDecimal bdPrincipalAccrued = loanAmortization.getBigDecimal("principalAmount");
+		
+		//INTEREST
+		BigDecimal bdInterestAccrued = loanAmortization.getBigDecimal("interestAmount");
+		
+		//INSURANCE
+		BigDecimal bdInsuranceAccrued = loanAmortization.getBigDecimal("insuranceAmount");
+		
+		//Adding Principal
+		loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+				.toMap("loanExpectationId", loanExpectationId,
+						"loanNo", loanNo,
+						"loanApplicationId",loanApplicationId,
+						"employeeNo",employeeNo,
+						"repaymentName","PRINCIPAL",
+						"dateAccrued",new Timestamp(Calendar.getInstance().getTimeInMillis()),
+						"isPaid","N",
+						"isPosted","N",
+						
+						"amountDue",bdPrincipalAccrued,
+						"amountAccrued",bdPrincipalAccrued
+				));
+		
+		listTobeStored.add(loanExpectation);
+		
+		//Add Interest
+		loanExpectationId = delegator.getNextSeqId("LoanExpectation", 1L);
+		loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+				.toMap("loanExpectationId", loanExpectationId,
+						"loanNo", loanNo,
+						"loanApplicationId",loanApplicationId,
+						"employeeNo",employeeNo,
+						"repaymentName","INTEREST",
+						"dateAccrued",new Timestamp(Calendar.getInstance().getTimeInMillis()),
+						"isPaid","N",
+						"isPosted","N",
+						"amountDue",bdInterestAccrued,
+						"amountAccrued",bdInterestAccrued
+				));
+		listTobeStored.add(loanExpectation);
+		
+		loanExpectationId = delegator.getNextSeqId("LoanExpectation", 1L);
+		loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+				.toMap("loanExpectationId", loanExpectationId,
+						"loanNo", loanNo,
+						"loanApplicationId",loanApplicationId,
+						"employeeNo",employeeNo,
+						"repaymentName","INSURANCE",
+						"dateAccrued",new Timestamp(Calendar.getInstance().getTimeInMillis()),
+						"isPaid","N",
+						"isPosted","N",
+						"amountDue",bdInsuranceAccrued,
+						"amountAccrued",bdInsuranceAccrued
+				));
+		listTobeStored.add(loanExpectation);
+		
+		//Update Amortization
+		loanAmortization.set("isAccrued", "N");
+		loanAmortization.set("dateAccrued", new Timestamp(Calendar.getInstance().getTimeInMillis()));
+		
+		
+		
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			delegator.storeAll(listTobeStored);
+			delegator.createOrStore(loanAmortization);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		
+		
 		
 	}
+
+	private static String getEmployeeNumber(String loanApplicationId,
+			Delegator delegator) {
+		// TODO Auto-generated method stub
+		GenericValue loanApplication = null;
+		GenericValue member = null;
+		try {
+			loanApplication = delegator.findOne(
+					"LoanApplication", UtilMisc.toMap(
+							"loanApplicationId",
+							loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot get Loan  ");
+		}
+
+		String partyId = "";
+		if (loanApplication != null) {
+			partyId = loanApplication.getString("partyId");
+		} else {
+			log.error("######## cannot get Loan Application ");
+		}
+		
+		//Get Member given partyId
+		try {
+			member = delegator.findOne(
+					"Member", UtilMisc.toMap(
+							"partyId",
+							partyId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot get Member  ");
+		}
+
+		String memberNumber = "";
+		if (member != null) {
+			memberNumber = member.getString("memberNumber");
+		} else {
+			log.error("######## cannot get Member ");
+		}
+		return memberNumber;
+	}
+
+	/***
+	 * Get Loan Number given Loan Application ID
+	 * */
+	private static String getLoanNo(String loanApplicationId, Delegator delegator) {
+		// TODO Auto-generated method stub
+		GenericValue loanApplication = null;
+		try {
+			loanApplication = delegator.findOne(
+					"LoanApplication", UtilMisc.toMap(
+							"loanApplicationId",
+							loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot get Loan  ");
+		}
+
+		String loanNo = "";
+		if (loanApplication != null) {
+			loanNo = loanApplication.getString("loanNo");
+		} else {
+			log.error("######## cannot get Loan Application ");
+		}
+		return loanNo;
+	}
+	
+	private static String createAccountingTransaction(
+			GenericValue loanExpectation, String acctgTransType,
+			GenericValue userLogin, Delegator delegator) {
+
+		GenericValue acctgTrans;
+		String acctgTransId;
+		//Delegator delegator = loanApplication.getDelegator();
+		acctgTransId = delegator.getNextSeqId("AcctgTrans");
+
+		String partyId = (String) userLogin.get("partyId");
+		String createdBy = (String) userLogin.get("userLoginId");
+
+		Timestamp currentDateTime = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+		acctgTrans = delegator.makeValidValue("AcctgTrans", UtilMisc.toMap(
+				"acctgTransId", acctgTransId,
+				"acctgTransTypeId", acctgTransType,
+				"transactionDate",
+				currentDateTime, "isPosted", "Y", "postedDate",
+				currentDateTime, "glFiscalTypeId", "ACTUAL", "partyId",
+				partyId, "createdByUserLogin", createdBy, "createdDate",
+				currentDateTime, "lastModifiedDate", currentDateTime,
+				"lastModifiedByUserLogin", createdBy));
+		try {
+			delegator.createOrStore(acctgTrans);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		return acctgTransId;
+	}
+	
+//	private static void createMemberDepositEntry(GenericValue loanApplication,
+//			String acctgTransId, Map<String, String> userLogin,
+//			String acctgTransType) {
+//		Delegator delegator = loanApplication.getDelegator();
+//		// Credit Member Deposit Account
+//		String memberDepositAccount = getMemberDepositAccount(delegator);
+//		String partyId = (String) userLogin.get("partyId");
+//		String postingType = "C";
+//		String entrySequenceId = "00001";
+//		BigDecimal bdLoanAmount = loanApplication.getBigDecimal("loanAmt");
+//		postTransactionEntry(delegator, bdLoanAmount, partyId,
+//				memberDepositAccount, postingType, acctgTransId,
+//				acctgTransType, entrySequenceId);
+//	}
+
 
 }
