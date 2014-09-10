@@ -1299,4 +1299,111 @@ under the License.
         </field -->
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
+    
+    <!-- Unpaid Expected Payments - unpaidExpectedPayments -->
+    <form name="unpaidExpectedPayments" type="list" list-name="listIt" use-row-submit="true" separate-columns="true"  paginate-target="loansrepaymentexpected"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<set field="currentDate" value="${nowTimestamp}"/>
+            <entity-condition entity-name="LoanExpectation">
+            	<condition-expr field-name="isPaid" operator="equals" value="N"/>
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="transactionType" value="CHEQUEDEPOSIT"/>
+            		<condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
+            		<condition-expr field-name="clearDate" operator="greater" from-field="currentDate"/>
+					
+            	</condition-list -->
+            	<order-by field-name="-loanExpectationId"></order-by>
+            </entity-condition>
+            <!-- entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	
+        	< entity-condition entity-name="ChequeType" list="chequeTypeList">
+        	
+        	</entity-condition>
+        	<entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
+        	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition -->
+        	
+        </actions>
+ 		<!--field name="partyId" title="Member">
+        	< drop-down>
+        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        	</drop-down 
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field-->
+        <field name="loanExpectationId"><hidden/></field>
+        <field name="loanApplicationId"><hidden/></field>
+        
+        <field name="loanNo" title="Loan No"> <display also-hidden="false"></display> </field>
+        
+         <field name="dateDue" title="Date Due"><display also-hidden="false"></display></field>
+         <field name="employeeNo" title="Employee No"><display also-hidden="false"></display></field>
+         <field name="repaymentName" title="Repayment Type"><display also-hidden="false"></display></field>
+         
+          <field name="dateAccrued" title="Date Accrued"><display also-hidden="false" type="date-time"></display></field>
+          <field name="datePaid" title="Date Paid"><display also-hidden="false" type="date-time"></display></field>
+         
+         <field name="amountAccrued" title="Amount Accrued"><display also-hidden="false"></display></field>
+         <field name="amountPaid" title="Amount Paid"><display also-hidden="false"></display></field>
+        
+        
+    </form>
+    <!-- Paid Expected Payments - clearedExpectedPayments -->
+    <form name="clearedExpectedPayments" type="list" list-name="listIt" use-row-submit="true" separate-columns="true"  paginate-target="loansrepaymentexpected"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<set field="currentDate" value="${nowTimestamp}"/>
+            <entity-condition entity-name="LoanExpectation">
+            	<condition-expr field-name="isPaid" operator="equals" value="Y"/>
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="transactionType" value="CHEQUEDEPOSIT"/>
+            		<condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
+            		<condition-expr field-name="clearDate" operator="greater" from-field="currentDate"/>
+					
+            	</condition-list -->
+            	<order-by field-name="-loanExpectationId"></order-by>
+            </entity-condition>
+            <!-- entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	
+        	< entity-condition entity-name="ChequeType" list="chequeTypeList">
+        	
+        	</entity-condition>
+        	<entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
+        	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition -->
+        	
+        </actions>
+ 		<!--field name="partyId" title="Member">
+        	< drop-down>
+        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        	</drop-down 
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field-->
+        <field name="loanExpectationId"><hidden/></field>
+        <field name="loanApplicationId"><hidden/></field>
+        
+        <field name="loanNo" title="Loan No"> <display also-hidden="false"></display> </field>
+        
+         <field name="dateDue" title="Date Due"><display also-hidden="false"></display></field>
+         <field name="employeeNo" title="Employee No"><display also-hidden="false"></display></field>
+         <field name="repaymentName" title="Repayment Type"><display also-hidden="false"></display></field>
+         
+          <field name="dateAccrued" title="Date Accrued"><display also-hidden="false" type="date-time"></display></field>
+          <field name="datePaid" title="Date Paid"><display also-hidden="false" type="date-time"></display></field>
+         
+         <field name="amountAccrued" title="Amount Accrued"><display also-hidden="false"></display></field>
+         <field name="amountPaid" title="Amount Paid"><display also-hidden="false"></display></field>
+        
+        
+    </form>
 </forms>
