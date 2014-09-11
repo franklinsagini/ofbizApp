@@ -32,6 +32,7 @@ under the License.
         </actions>	        
         
         <field name="payrollElementId"><hidden/></field>
+        <field name="elementCode" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="elementType"  title="Element Type" >
             <drop-down allow-empty="true">
@@ -46,7 +47,7 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
-        <field name="hasBalance" use-when="payrollElementContext.name!=null" title="Has Balance" >
+        <field name="hasBalance" title="Has Balance" >
             <drop-down allow-empty="false">
                 <option key="N" description="No"/>                
                 <option key="Y" description="Yes"/>
@@ -158,11 +159,14 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
-        <field name="parentId" title="Parent Element">
+        
+        
+        <!-- field name="parentId" title="Parent Element">
         	<drop-down allow-empty="true">
         		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
         	</drop-down>
-        </field>
+        </field-->
+        
         <field name="childId" title="Child Element">
         	<drop-down allow-empty="true">
         		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
@@ -213,7 +217,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listBankDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankDetails" paginate-target="BankDetails"
+        <form name="listBankDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankDetails" paginate-target="bankdetails"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="BankDetails">
@@ -259,7 +263,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listBankBranch" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankBranch" paginate-target="BankBranch"
+        <form name="listBankBranch" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankBranch" paginate-target="bankbranch"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="BankBranch">
@@ -338,7 +342,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listPayPoints" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayPoint" paginate-target="PayPoint"
+        <form name="listPayPoints" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayPoint" paginate-target="paypoint"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <!-- actions>
         	<entity-condition entity-name="PayPoint" list="payPointList" ></entity-condition>
@@ -418,7 +422,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listPayrollYears" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollYear" paginate-target="PayrollYear"
+        <form name="listPayrollYears" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollYear" paginate-target="payrollyear"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollYear">
@@ -471,7 +475,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listPayrollPeriod" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollPeriod" paginate-target="PayrollPeriod"
+        <form name="listPayrollPeriod" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollPeriod" paginate-target="payrollperiod"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollPeriod">
@@ -547,7 +551,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listStaffPayroll" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffPayroll" paginate-target="StaffPayroll"
+        <form name="listStaffPayroll" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffPayroll" paginate-target="staffpayroll"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StaffPayroll">
@@ -619,14 +623,16 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listStaffPayrollElements" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffPayrollElements" paginate-target="StaffPayrollElements"
+        <form name="listStaffPayrollElements" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffPayrollElements" paginate-target="staffpayrollelements"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+        			<set field="staffPayrollId" from-field="parameters.staffPayrollId"/>
             <entity-condition entity-name="StaffPayrollElements">
             	<condition-expr field-name="staffPayrollId" operator="equals" from-field="staffPayrollId"/>
             </entity-condition>
             <entity-condition entity-name="PayrollElement" list="payrollElementList">
             </entity-condition>
+            
 
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStaffPayrollElements"/>
@@ -675,7 +681,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-      <form name="listStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="BankBranch"
+      <form name="listStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="station"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         	<entity-condition entity-name="Station"></entity-condition>
@@ -717,7 +723,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
     
-    <form name="listPayrollConstants" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollConstants" paginate-target="PayrollConstants"
+    <form name="listPayrollConstants" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollConstants" paginate-target="payrollconstants"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollConstants">
@@ -754,7 +760,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
     
-    <form name="listPAYETable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePAYETable" paginate-target="PAYETable"
+    <form name="listPAYETable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePAYETable" paginate-target="payetable"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PAYETable">
@@ -788,7 +794,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
     
-    <form name="listNHIFTable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNHIFTable" paginate-target="NHIFTable"
+    <form name="listNHIFTable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNHIFTable" paginate-target="nhiftable"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="NHIFTable">
@@ -821,7 +827,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
     
-    <form name="listNSSFTable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNSSFTable" paginate-target="NSSFTable"
+    <form name="listNSSFTable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNSSFTable" paginate-target="nssftable"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="NSSFTable">
