@@ -550,8 +550,10 @@ under the License.
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
         		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
         	</entity-condition>
-        	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
-        	<entity-condition entity-name="SaccoProduct" list="saccoProductList"></entity-condition>
+        	<entity-condition entity-name="LoanApplication" list="loanApplicationList">
+        		<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
         </actions>
         <field name="loanRepaymentId"><hidden/></field>
         <field name="partyId"><hidden/></field>
@@ -570,15 +572,15 @@ under the License.
         <field name="accountBalance" title="Account Balance"  widget-style="required" required-field="true"><text></text></field>
         
         <field name="loanApplicationId" title="Loan"  widget-style="required" required-field="true">
-        	<drop-down allow-empty="false">
+        	<drop-down allow-empty="true">
         		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
         	</drop-down>
         </field>
         
         <field name="loanNo" title="Loan No"  widget-style="required" required-field="true"><text></text></field>
         <field name="loanTypeId" title="Loan Type"  widget-style="required" required-field="true">
-        	<drop-down allow-empty="false">
-        		<list-options key-name="saccoProductId" list-name="saccoProductList" description="${name} - ${code}"/>
+        	<drop-down allow-empty="true">
+        		<list-options key-name="loanProductId" list-name="loanProductList" description="${name} - ${code}"/>
         	</drop-down>
         </field>
         
@@ -984,13 +986,13 @@ under the License.
         <field name="accountHolderTransactionSetupId"><text default-value="MEMBERTRANSACTIONACCOUNT"></text></field>
 		
 		
-        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc" widget-style="required" required-field="true">
+        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc(Debit)" widget-style="required" required-field="true">
        		<drop-down allow-empty="true">
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         
         </field>
-       <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
+       <field name="memberDepositAccId" title="Member Deposit Account (Credit)" widget-style="required" required-field="true">
        		<drop-down allow-empty="true">
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
@@ -1016,13 +1018,13 @@ under the License.
 		<field name="accountHolderTransactionSetupId"><text size="30"></text></field>
 		
 		
-        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc" widget-style="required" required-field="true">
+        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc (Debit)" widget-style="required" required-field="true">
        		<drop-down text-size="40">
        			<list-options key-name="glAccountId" list-name="glAccountList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         	<!-- display-entity entity-name="GlAccount" description="${accountName} - ${accountCode}" key-field-name="glAccountId" also-hidden="false"></display-entity -->
         </field>
-       <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
+       <field name="memberDepositAccId" title="Member Deposit Account (Credit)" widget-style="required" required-field="true">
        		<drop-down text-size="40">
        			<list-options key-name="glAccountId" list-name="glAccountList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
@@ -1340,9 +1342,12 @@ under the License.
         <field name="loanApplicationId"><hidden/></field>
         
         <field name="loanNo" title="Loan No"> <display also-hidden="false"></display> </field>
+        <field name="loanAmt" title="Loan Amount"> <display also-hidden="false"></display> </field>
         
          <field name="dateDue" title="Date Due"><display also-hidden="false"></display></field>
          <field name="employeeNo" title="Employee No"><display also-hidden="false"></display></field>
+         <field name="employeeNames" title="Member Names"><display also-hidden="false"></display></field>
+         
          <field name="repaymentName" title="Repayment Type"><display also-hidden="false"></display></field>
          
           <field name="dateAccrued" title="Date Accrued"><display also-hidden="false" type="date-time"></display></field>
@@ -1393,9 +1398,11 @@ under the License.
         <field name="loanApplicationId"><hidden/></field>
         
         <field name="loanNo" title="Loan No"> <display also-hidden="false"></display> </field>
+        <field name="loanAmt" title="Loan Amount"> <display also-hidden="false"></display> </field>
         
          <field name="dateDue" title="Date Due"><display also-hidden="false"></display></field>
          <field name="employeeNo" title="Employee No"><display also-hidden="false"></display></field>
+         <field name="employeeNames" title="Member Names"><display also-hidden="false"></display></field>
          <field name="repaymentName" title="Repayment Type"><display also-hidden="false"></display></field>
          
           <field name="dateAccrued" title="Date Accrued"><display also-hidden="false" type="date-time"></display></field>
