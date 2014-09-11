@@ -341,9 +341,19 @@ under the License.
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 <!-- LoanRepayment -->
-<simple-method method-name="createLoanRepayment" short-description="Create LoanRepayment">
-       <make-value entity-name="LoanRepayment" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
+<!-- createLoanRepayment  -->
+	<simple-method method-name="createLoanRepayment" short-description="Create LoanRepayment">
+
+        
+        <call-simple-method method-name="saveLoanRepayment" scope="inline"></call-simple-method>
+        <!-- distribute repayment -->
+        <set field="repayLoan" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
+        
+    </simple-method>
+    
+    <simple-method method-name="saveLoanRepayment">
+    	<make-value entity-name="LoanRepayment" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="LoanRepayment" field="loanRepaymentId"/>
         <now-timestamp field="createdDate"/>
@@ -357,6 +367,7 @@ under the License.
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
+    
     <simple-method method-name="updateLoanRepayment" short-description="Update LoanRepayment">
         <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
