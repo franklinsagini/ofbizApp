@@ -342,27 +342,34 @@ under the License.
     </simple-method>
 <!-- LoanRepayment -->
 <!-- createLoanRepayment  -->
-	<simple-method method-name="createLoanRepayment" short-description="Create LoanRepayment">
+	<simple-method method-name="createLoanRepayment"  short-description="Create LoanRepayment">
 
-        
-        <call-simple-method method-name="saveLoanRepayment" scope="inline"></call-simple-method>
-        <!-- distribute repayment -->
-        <set field="repayLoan" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
-        
-    </simple-method>
-    
-    <simple-method method-name="saveLoanRepayment">
-    	<make-value entity-name="LoanRepayment" value-field="newEntity"/>
+        <make-value entity-name="LoanRepayment" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="LoanRepayment" field="loanRepaymentId"/>
         <now-timestamp field="createdDate"/>
         <set from-field="loanRepaymentId" field="newEntity.loanRepaymentId"/>
-        
-         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <set field="newEntity.transactionType" from-field="LOANREPAYMENT"/>
+        
+        <call-simple-method method-name="saveLoanRepayment" scope="inline"></call-simple-method>
+        <!-- distribute repayment -->
+        
+        <entity-one entity-name="LoanRepayment" value-field="loanRepayment">
+        	 <field-map field-name="loanRepaymentId" from-field="loanRepaymentId"/>
+        </entity-one>
+        
+        <set field="repayLoan" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.repayLoan(loanRepayment, userLogin);}" type="String"/>
+        
+    </simple-method>
+    
+    <simple-method method-name="saveLoanRepayment" use-transaction="true">
+    	
+        
+         
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>

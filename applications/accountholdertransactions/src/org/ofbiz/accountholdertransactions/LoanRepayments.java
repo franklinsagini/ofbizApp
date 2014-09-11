@@ -41,7 +41,7 @@ public class LoanRepayments {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
 		List<GenericValue> loanAmortizationELI = null;
-		GenericValue userLogin = (GenericValue) request
+		Map<String, String> userLogin = (Map<String, String>) request
 				.getAttribute("userLogin");
 
 		Timestamp currentDate = new Timestamp(Calendar.getInstance()
@@ -149,7 +149,7 @@ public class LoanRepayments {
 	 *         Set LoanExpectationToPosted
 	 * */
 	private static void postLoanExpectation(GenericValue loanExpectation,
-			Delegator delegator, GenericValue userLogin) {
+			Delegator delegator, Map<String, String> userLogin) {
 
 		String repaymentName = loanExpectation.getString("repaymentName");
 		GenericValue accountHolderTransactionSetup;
@@ -226,7 +226,7 @@ public class LoanRepayments {
 	 *         Post Principal Accrued
 	 * **/
 	private static void postPrincipalDue(GenericValue loanExpectation,
-			Delegator delegator, GenericValue userLogin,
+			Delegator delegator, Map<String, String> userLogin,
 			GenericValue accountHolderTransactionSetup) {
 		String acctgTransType = "LOAN_RECEIVABLE";
 		String acctgTransId = createAccountingTransaction(loanExpectation,
@@ -271,7 +271,7 @@ public class LoanRepayments {
 	 * 
 	 * **/
 	private static void postInsuranceCharge(GenericValue loanExpectation,
-			Delegator delegator, GenericValue userLogin,
+			Delegator delegator, Map<String, String> userLogin,
 			GenericValue accountHolderTransactionSetup) {
 		String acctgTransType = "CHARGE_RECEIVABLE";
 		String acctgTransId = createAccountingTransaction(loanExpectation,
@@ -317,7 +317,7 @@ public class LoanRepayments {
 	 *         Accrued
 	 * */
 	private static void postInterestAccrued(GenericValue loanExpectation,
-			Delegator delegator, GenericValue userLogin,
+			Delegator delegator, Map<String, String> userLogin,
 			GenericValue accountHolderTransactionSetup) {
 		String acctgTransType = "INTEREST_RECEIVABLE";
 		String acctgTransId = createAccountingTransaction(loanExpectation,
@@ -586,6 +586,24 @@ public class LoanRepayments {
 		}
 		return member;
 	}
+	
+	private static GenericValue getMemberGivenParty(String partyId,
+			Delegator delegator) {
+
+
+
+		GenericValue member = null;
+		try {
+			member = delegator.findOne(
+					"Member",
+					UtilMisc.toMap("partyId",
+							partyId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot get Member  ");
+		}
+		return member;
+	}
 
 	/***
 	 * @author Japheth Odonya @when Sep 11, 2014 11:20:40 AM Create an
@@ -593,19 +611,19 @@ public class LoanRepayments {
 	 * */
 	private static String createAccountingTransaction(
 			GenericValue loanExpectation, String acctgTransType,
-			GenericValue userLogin, Delegator delegator) {
+			Map<String, String> userLogin, Delegator delegator) {
 
 		GenericValue acctgTrans;
-		GenericValue loanApplication;
 		String acctgTransId;
 		// Delegator delegator = loanApplication.getDelegator();
 		acctgTransId = delegator.getNextSeqId("AcctgTrans");
 
 		// The Member
 		String partyId;// = (String) userLogin.get("partyId");
-		loanApplication = getLoanApplication(
-				loanExpectation.getString("loanApplicationId"), delegator);
-		partyId = loanApplication.getString("partyId");
+		//loanApplication = getLoanApplication(
+		//		loanExpectation.getString("loanApplicationId"), delegator);
+		//partyId = loanApplication.getString("partyId");
+		partyId = loanExpectation.getString("partyId");
 		String createdBy = "admin";
 		// (String) userLogin.get("userLoginId");
 
@@ -937,54 +955,174 @@ public class LoanRepayments {
 	}
 
 	/***
-	 * @author Japheth Odonya  @when Sep 11, 2014 8:35:47 PM
+	 * @author Japheth Odonya @when Sep 11, 2014 8:35:47 PM
 	 * 
-	 * Loan Repayment
+	 *         Loan Repayment
 	 * 
-	 * Create an Account Transaction of type Loan Repayment
+	 *         Create an Account Transaction of type Loan Repayment
 	 * 
-	 * Deduct amount from member deposit (actually debit member deposits)
+	 *         Deduct amount from member deposit (actually debit member
+	 *         deposits)
 	 * 
-	 * Pay Interest
-	 * Pay Insurance
-	 * Pay Principal
+	 *         Pay Interest Pay Insurance Pay Principal
 	 * 
 	 * 
 	 * */
-	public static String repayLoan(GenericValue loanRepayment,
-			Map<String, String> userLogin) {
+	public static String repayLoan(GenericValue loanRepayment, Map<String, String> userLogin) {
+		log.info("FFFFFFFFF start loan repayment FFFFFFFFFF");
 
-		// Get the Product by first accessing the MemberAccount
-		// String accountProductId = getAccountProduct(accountTransaction);
+//		try {
+//			TransactionUtil.begin();
+//		} catch (GenericTransactionException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		//GenericValue currentUserLogin;
+		//currentUserLogin = new GenericValue();
+		
 
-		// Get the Charges for the Product
-		// List<GenericValue> accountProductChargeELI = null;
-		// accountProductChargeELI =
-		// getAccountProductCharges(accountTransaction,
-		// accountProductId, transactionType);
-		// log.info("NNNNNNNNNNNNNN The Number of Charges is ::::: "+accountProductChargeELI.size());
-		// Create a transaction in Account Transaction for each of the Charges
-		// for (GenericValue accountProductCharge : accountProductChargeELI) {
-		// addCharge(accountProductCharge, accountTransaction, userLogin);
-		// }
-		// Create an Account Transaction for each of the Charges
+//		currentUserLogin.set("userLoginId", userLogin.get("userLoginId"));
+//		currentUserLogin.set("partyId", userLogin.get("partyId"));
 
+		createLoanRepaymentAccountingTransaction(loanRepayment, userLogin);
+		
+		//Create Acctg Transa
+		String acctgTransType = "LOAN_RECEIVABLE";
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String acctgTransId = createAccountingTransaction(loanRepayment, acctgTransType, userLogin, delegator);
+		//		String acctgTransId = createAccountingTransaction(loanRepayment,
+		//		acctgTransType, userLogin);
+		//Debit Member Deposits with repayment amount
+		//Get MemberDepositAccount
+		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord("MEMBERTRANSACTIONACCOUNT", delegator);
+		String memberDepositAccountId = accountHolderTransactionSetup.getString("memberDepositAccId");
+		String postingType = "D";
+		String entrySequenceId = "00001";
+		// String partyId =
+		// getLoanApplication(loanExpectation.getString("loanApplicationId"),
+		// delegator).getString("partyId");
+		String partyId = getMemberGivenParty(
+				loanRepayment.getString("partyId"), delegator)
+				.getString("branchId");
+
+		log.info(" ####### Party or Branch or Company in Loan Repayment is ###### "
+				+ partyId);
+		postTransactionEntry(delegator,
+				loanRepayment.getBigDecimal("transactionAmount"), partyId,
+				memberDepositAccountId, postingType, acctgTransId, acctgTransType,
+				entrySequenceId);
+
+		//Credit Interest_receivable
+		//INTERESTPAYMENT
+		postingType = "C";
+		entrySequenceId = "00002";
+		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord("INTERESTPAYMENT", delegator);
+		String accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		// postingType, delegator);
+		postTransactionEntry(delegator,
+				loanRepayment.getBigDecimal("totalInterestDue"), partyId,
+				accountId, postingType, acctgTransId, acctgTransType,
+				entrySequenceId);
+		
+		
+		//Credit Insurance_receivable
+		//INSURANCEPAYMENT
+		postingType = "C";
+		entrySequenceId = "00003";
+		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord("INSURANCEPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		// postingType, delegator);
+		postTransactionEntry(delegator,
+				loanRepayment.getBigDecimal("totalInsuranceDue"), partyId,
+				accountId, postingType, acctgTransId, acctgTransType,
+				entrySequenceId);
+		
+		//Credit Principal Receivable
+		//PRINCIPALPAYMENT
+		postingType = "C";
+		entrySequenceId = "00004";
+		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord("PRINCIPALPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		// postingType, delegator);
+		postTransactionEntry(delegator,
+				loanRepayment.getBigDecimal("totalPrincipalDue"), partyId,
+				accountId, postingType, acctgTransId, acctgTransType,
+				entrySequenceId);
+		
+		//Mark the loan expectation as paid
+		updateExpactationAsPaid(loanRepayment.getString("partyId"));
+//		try {
+//			TransactionUtil.commit();
+//		} catch (GenericTransactionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		log.info("EEEEEEEEE end loan repayment EEEEEEEEE");
 		return "";
 	}
-	
-	private static void createLoanRepaymentAccountingTransaction(
-			GenericValue loanApplication, Map<String, String> userLogin) {
-		// Create an Account Holder Transaction for this disbursement
-		
-		BigDecimal transactionAmount = loanApplication.getBigDecimal("loanAmt");
-		//String memberAccountId = getMemberAccountId(loanApplication);
-		String transactionType = "LOANREPAYMENT";
 
-		//createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, null);
+	/***
+	 * Now mark expectation for this member as paid
+	 * */
+	private static void updateExpactationAsPaid(String partyId) {
+		//datePaid
+		//isPaid
+		List<GenericValue> loanExpectationELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+						EntityCondition.makeCondition("isPaid",
+								EntityOperator.EQUALS, "N")
+
+				), EntityOperator.AND);
+
+		try {
+			loanExpectationELI = delegator.findList("LoanExpectation",
+					loanExpectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		for (GenericValue loanExpectation : loanExpectationELI) {
+			loanExpectation.set("isPaid", "Y");
+			loanExpectation.set("datePaid", new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			try {
+				delegator.createOrStore(loanExpectation);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
-	private static void createTransaction(GenericValue loanApplication, String transactionType, Map<String, String> userLogin, String memberAccountId,
-			BigDecimal transactionAmount, String productChargeId) {
+	private static void createLoanRepaymentAccountingTransaction(
+			GenericValue loanRepayment, Map<String, String> userLogin) {
+		// Create an Account Holder Transaction for this disbursement
+
+		BigDecimal transactionAmount = loanRepayment
+				.getBigDecimal("transactionAmount");
+		// String memberAccountId = getMemberAccountId(loanApplication);
+		String memberAccountId = loanRepayment.getString("memberAccountId");
+		String transactionType = "LOANREPAYMENT";
+
+		createTransaction(loanRepayment, transactionType, userLogin,
+				memberAccountId, transactionAmount, null);
+	}
+
+	private static void createTransaction(GenericValue loanApplication,
+			String transactionType, Map<String, String> userLogin,
+			String memberAccountId, BigDecimal transactionAmount,
+			String productChargeId) {
 		Delegator delegator = loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -992,24 +1130,18 @@ public class LoanRepayments {
 		String createdBy = (String) userLogin.get("userLoginId");
 		String updatedBy = (String) userLogin.get("userLoginId");
 		String branchId = (String) userLogin.get("partyId");
-		String partyId =  loanApplication.getString("partyId");
+		String partyId = loanApplication.getString("partyId");
 		String increaseDecrease;
-		if (productChargeId == null){
-			increaseDecrease = "I";
-		} else{
-			increaseDecrease = "D";
-		}
-		
+		increaseDecrease = "D";
+
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId,
 						"isActive", "Y", "createdBy", createdBy, "updatedBy",
-						updatedBy, "branchId", branchId,
-						"partyId", partyId,
+						updatedBy, "branchId", branchId, "partyId", partyId,
 						"increaseDecrease", increaseDecrease,
-						"memberAccountId", memberAccountId,
-						"productChargeId", productChargeId,
-						"transactionAmount", transactionAmount,
-						"transactionType", transactionType));
+						"memberAccountId", memberAccountId, "productChargeId",
+						productChargeId, "transactionAmount",
+						transactionAmount, "transactionType", transactionType));
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
