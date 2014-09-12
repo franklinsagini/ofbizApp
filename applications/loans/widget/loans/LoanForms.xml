@@ -216,8 +216,14 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <form name="ViewLoanGuarantorsList" type="list" list-name="loanGuarantorsList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    <!-- form name="ViewLoanGuarantorsList" type="list" list-name="loanGuarantorsList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" -->
+        
+     <form name="ViewLoanGuarantorsList" type="list" list-name="loanGuarantorsList"
+		paginate-target="viewapplicationprofile" default-entity-name="LoanGuarantor"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanGuarantor">
+		
         <field name="loanGuarantorId"> <hidden/> </field>
         <field name="guarantorId" title="Guarantor">
                 <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
