@@ -257,11 +257,11 @@
     				isValid = false;
     			}
     			
-    			if (eacherGuarantorGreaterThanAverage == 'N'){
-    				isValid = false;
-    				message = message+" Each Guarantor must be able to pay for his/her share of the loan guaranteed (Equal distribution is assumed)";
+    			//if (eacherGuarantorGreaterThanAverage == 'N'){
+    			//	isValid = false;
+    			//	message = message+" Each Guarantor must be able to pay for his/her share of the loan guaranteed (Equal distribution is assumed)";
     				
-    			}
+    			//}
     		}
     	
     	}

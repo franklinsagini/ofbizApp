@@ -218,7 +218,7 @@ under the License.
     
     <form name="ViewLoanGuarantorsList" type="list" list-name="loanGuarantorsList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        
+        <field name="loanGuarantorId"> <hidden/> </field>
         <field name="guarantorId" title="Guarantor">
                 <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
         </field>
@@ -231,6 +231,12 @@ under the License.
         </field>
         <field name="guaranteedPercentage" title="Guaranteed %"><text size="20" maxlength="60"/></field>
 		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field> 
+		
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanApplicationGuarantor" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanGuarantorId"/>
+            </hyperlink>
+        </field>
     </form>
     
     <!-- Loan Application - the opening balance are entered here -->

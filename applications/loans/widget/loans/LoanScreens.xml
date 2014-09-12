@@ -372,7 +372,7 @@ under the License.
                 <set field="collateralsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasCollateral(loanApplicationId);}" type="String"   />
 				<set field="guarantorsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasGuarantors(loanApplicationId);}" type="String"   />
 				<set field="guarantorsTotalDepositsEnough" value="${bsh:org.ofbiz.loans.LoanServices.guarantorTotalsEqualLoanTotal(loanApplicationId);}" type="String"   />
-				<set field="eacherGuarantorGreaterThanAverage" value="${bsh:org.ofbiz.loans.LoanServices.checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);}" type="String"   />
+				<!-- set field="eacherGuarantorGreaterThanAverage" value="${bsh:org.ofbiz.loans.LoanServices.checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);}" type="String"   /-->
                 
             </actions>
             <widgets>
@@ -389,26 +389,33 @@ under the License.
                                 </or>
                             </condition -->
                             <widgets>
-                            	<section>
+                            	<!-- section>
 									<condition>
-										<if-compare operator="equals" value="N" field="collateralsAvailable"/>
+										<and>
+											<if-compare operator="equals" value="N" field="collateralsAvailable"/>
+											<if-compare operator="equals" value="N" field="guarantorsAvailable"/>
+										</and>
+										
 									</condition>
 									<widgets>
 										<container>
 									
-												<label  style="h3"> Loan Application must have Collateral - Please Add</label>
+												<label  style="h3"> Loan Application must have Collateral or Guarantors - Please Add</label>
 										</container>
 									</widgets>
-								</section>
+								</section -->
 								
 								<section>
 									<condition>
-										<if-compare operator="equals" value="N" field="guarantorsAvailable"/>
+										<and>
+											<if-compare operator="equals" value="N" field="collateralsAvailable"/>
+											<if-compare operator="equals" value="N" field="guarantorsAvailable"/>
+										</and>
 									</condition>
 									<widgets>
 										<container>
 									
-												<label style="h3"> Please provide Guarantors</label>
+												<label style="h3"> Please provide Guarantors or Collateral</label>
 										</container>
 									</widgets>
 								</section>
@@ -426,7 +433,7 @@ under the License.
 								</section>
 								
 								
-								<section>
+								<!-- section>
 									<condition>
 										<if-compare operator="equals" value="N" field="eacherGuarantorGreaterThanAverage"/>
 									</condition>
@@ -436,7 +443,7 @@ under the License.
 												<label style="h3"> Each Guarantor must have enough deposit for his/her share of the loan guaranteed </label>
 										</container>
 									</widgets>
-								</section>
+								</section -->
                             
                                 <screenlet title="Loan Information" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
                                            <!-- include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
