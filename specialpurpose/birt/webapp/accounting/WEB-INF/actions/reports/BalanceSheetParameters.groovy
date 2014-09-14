@@ -29,7 +29,7 @@ try {
     }
     birtParameters.glFiscalTypeId = parameters.glFiscalTypeId;
     birtParameters.organizationPartyId = parameters.organizationPartyId;
-    birtParameters.userLoginId = userLogin.userLoginId;
+    birtParameters.userLoginId = parameters.userLoginId;
     request.setAttribute("birtParameters", birtParameters);
 } catch (e) {
     Debug.logError(e, module);

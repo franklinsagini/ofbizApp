@@ -547,11 +547,26 @@ under the License.
         	<entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
         	</entity-condition>
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        	<!-- entity-condition entity-name="MemberAccount" list="memberAccountList">
         		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+        	</entity-condition -->
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
+            	</condition-list>
+            </entity-condition>
+        	<entity-condition entity-name="LoanApplication" list="loanApplicationList">
+        		<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
         	</entity-condition>
-        	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
-        	<entity-condition entity-name="SaccoProduct" list="saccoProductList"></entity-condition>
+        	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
+        	
+        	<set field="partyId" from-field="parameters.partyId"/>
+        	<set field="totalLoanDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalLoanDue(partyId);}" type="BigDecimal"/>
+        	<set field="totalInterestDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInterestDue(partyId);}" type="BigDecimal"/>
+        	<set field="totalInsuranceDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInsuranceDue(partyId);}" type="BigDecimal"/>
+        	<set field="totalPrincipalDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalPrincipalDue(partyId);}" type="BigDecimal"/>
         </actions>
         <field name="loanRepaymentId"><hidden/></field>
         <field name="partyId"><hidden/></field>
@@ -561,41 +576,51 @@ under the License.
         	</drop-down>
         </field -->
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
-        	<drop-down allow-empty="false">
+        	<drop-down allow-empty="true">
         		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${accountNo}"/>
         	</drop-down>
         </field>
-        <field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text></text></field>
+        <!-- field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text></text></field>
         <field name="accountName" title="Account Name"  widget-style="required" required-field="true"><text></text></field>
-        <field name="accountBalance" title="Account Balance"  widget-style="required" required-field="true"><text></text></field>
+        <field name="accountBalance" title="Account Balance"  widget-style="required" required-field="true"><text></text></field -->
+         <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
         
-        <field name="loanApplicationId" title="Loan"  widget-style="required" required-field="true">
-        	<drop-down allow-empty="false">
+        <field name="loanApplicationId" title="Loan"  >
+        	<drop-down allow-empty="true">
         		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
         	</drop-down>
         </field>
         
-        <field name="loanNo" title="Loan No"  widget-style="required" required-field="true"><text></text></field>
-        <field name="loanTypeId" title="Loan Type"  widget-style="required" required-field="true">
-        	<drop-down allow-empty="false">
-        		<list-options key-name="saccoProductId" list-name="saccoProductList" description="${name} - ${code}"/>
+        <field name="loanNo" title="Loan No"  ><text></text></field>
+        <field name="loanTypeId" title="Loan Type"  >
+        	<drop-down allow-empty="true">
+        		<list-options key-name="loanProductId" list-name="loanProductList" description="${name} - ${code}"/>
         	</drop-down>
         </field>
         
-        <field name="loanBalanceAmt" title="Loan Balance"  widget-style="required" required-field="true"><text></text></field>
+        <!-- field name="loanBalanceAmt" title="Loan Balance"  widget-style="required" required-field="true"><text></text></field>
         <field name="interestBalanceAmt" title="Interest Amount" position="2"  widget-style="required" required-field="true"><text></text></field>
         <field name="loanRepaymentAmt" title="Loan Repayment Amount"  widget-style="required" required-field="true"><text></text></field>
-        <field name="interestRepaymentAmt" title="Interest Repayment Amount" position="2"  widget-style="required" required-field="true"><text></text></field>
+        <field name="interestRepaymentAmt" title="Interest Repayment Amount" position="2"  widget-style="required" required-field="true"><text></text></field -->
+        <field name="totalLoanDue" title="Total Loan Amount"  widget-style="required" required-field="true"><text default-value="${totalLoanDue}"></text></field>
+        <field name="totalInterestDue" title="Interest Due"   widget-style="required" required-field="true"><text default-value="${totalInterestDue}"></text></field>
+        <field name="totalInsuranceDue" title="Insurance Due"   widget-style="required" required-field="true"><text default-value="${totalInsuranceDue}"></text></field>
+        <field name="totalPrincipalDue" title="Principal Due"   widget-style="required" required-field="true"><text default-value="${totalPrincipalDue}"></text></field>
         
+        <field name="transactionAmount" title="Transaction Amount"  widget-style="required" required-field="true"><text default-value="${totalLoanDue}"></text></field>
       
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
       <form name="listLoanRepayment" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanRepayment" paginate-target="loanRepayment"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="LoanRepayment">
-            	<condition-expr field-name="isActive" value="Y"/>
+            	<condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+            	</condition-list>
             </entity-condition>
             
         	<entity-condition entity-name="Member" list="membersList">
@@ -603,46 +628,55 @@ under the License.
         	</entity-condition>
         	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
-        	<entity-condition entity-name="LoanProduct" list="saccoProductList"></entity-condition>
+        	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateLoanRepayment"/>
- 		<field name="partyId" title="Member">
+        <field name="partyId"><hidden/></field>
+ 		<!-- field name="partyId" title="Member">
         	<drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
-        </field>
-        <field name="memberAccountId" title="Member Account">
+        </field -->
+        <!-- field name="memberAccountId" title="Member Account">
         	<drop-down allow-empty="false">
         		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${AccountNo}"/>
         	</drop-down>
         </field>
         <field name="accountNo" title="Account No"><text></text></field>
         <field name="accountName" title="Account Name"><text></text></field>
-        <field name="accountBalance" title="Account Balance"><text></text></field>
+        <field name="accountBalance" title="Account Balance"><text></text></field -->
         
-        <field name="loanApplicationId" title="Loan">
+        <!--field name="loanApplicationId" title="Loan">
         	<drop-down allow-empty="false">
         		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
         	</drop-down>
         </field>
         
-        <field name="loanNo" title="Loan No"><text></text></field>
+        <field name="loanNo" title="Loan No"><display></display></field>
         <field name="loanTypeId" title="Loan Type">
         	<drop-down allow-empty="false">
         		<list-options key-name="saccoProductId" list-name="saccoProductList" description="${name} - ${code}"/>
         	</drop-down>
-        </field>
+        </field -->
         
-        <field name="loanBalanceAmt" title="Loan Balance"><text></text></field>
-        <field name="interestBalanceAmt" title="Interest Amount"><text></text></field>
-        <field name="loanRepaymentAmt" title="Loan Repayment Amount"><text></text></field>
-        <field name="interestRepaymentAmt" title="Interest Repayment Amount" ><text></text></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        
+        <!-- field name="repaymentType" title="Repayment Type"><text></text></field -->
+        <field name="transactionAmount" title="Total Paid"><text></text></field>
+        
+        <!--field name="interestAmount" title="Interest Amount"><display></display></field>
+        <field name="insuranceAmount" title="Insurance Amount"><display/></field>
+        <field name="principalAmount" title="Principal Amount" ><display/></field -->
+        <field name="totalInterestDue" title="Interest Amount"><display></display></field>
+        <field name="totalInsuranceDue" title="Insurance Amount"><display/></field>
+        <field name="totalPrincipalDue" title="Principal Amount" ><display/></field>
+        <!-- field name="excessAmount" title="Excess Amount" ><display/></field -->
+        
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanRepayment" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanRepaymentId"/>
             </hyperlink>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        </field >
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
     
     <!-- NewApplyStandingOrder -->
@@ -984,13 +1018,13 @@ under the License.
         <field name="accountHolderTransactionSetupId"><text default-value="MEMBERTRANSACTIONACCOUNT"></text></field>
 		
 		
-        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc" widget-style="required" required-field="true">
+        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc(Debit)" widget-style="required" required-field="true">
        		<drop-down allow-empty="true">
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         
         </field>
-       <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
+       <field name="memberDepositAccId" title="Member Deposit Account (Credit)" widget-style="required" required-field="true">
        		<drop-down allow-empty="true">
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
@@ -1016,13 +1050,13 @@ under the License.
 		<field name="accountHolderTransactionSetupId"><text size="30"></text></field>
 		
 		
-        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc" widget-style="required" required-field="true">
+        <field name="cashAccountId" title="Cash Account/Loan Acc/ Asset Acc (Debit)" widget-style="required" required-field="true">
        		<drop-down text-size="40">
        			<list-options key-name="glAccountId" list-name="glAccountList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         	<!-- display-entity entity-name="GlAccount" description="${accountName} - ${accountCode}" key-field-name="glAccountId" also-hidden="false"></display-entity -->
         </field>
-       <field name="memberDepositAccId" title="Member Deposit Account" widget-style="required" required-field="true">
+       <field name="memberDepositAccId" title="Member Deposit Account (Credit)" widget-style="required" required-field="true">
        		<drop-down text-size="40">
        			<list-options key-name="glAccountId" list-name="glAccountList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
@@ -1298,5 +1332,117 @@ under the License.
             </hyperlink>
         </field -->
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- Unpaid Expected Payments - unpaidExpectedPayments -->
+    <form name="unpaidExpectedPayments" type="list" list-name="listIt" use-row-submit="true" separate-columns="true"  paginate-target="loansrepaymentexpected"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<set field="currentDate" value="${nowTimestamp}"/>
+            <entity-condition entity-name="LoanExpectation">
+            	<condition-expr field-name="isPaid" operator="equals" value="N"/>
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="transactionType" value="CHEQUEDEPOSIT"/>
+            		<condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
+            		<condition-expr field-name="clearDate" operator="greater" from-field="currentDate"/>
+					
+            	</condition-list -->
+            	<order-by field-name="-loanExpectationId"></order-by>
+            </entity-condition>
+            <!-- entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	
+        	< entity-condition entity-name="ChequeType" list="chequeTypeList">
+        	
+        	</entity-condition>
+        	<entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
+        	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition -->
+        	
+        </actions>
+ 		<!--field name="partyId" title="Member">
+        	< drop-down>
+        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        	</drop-down 
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field-->
+        <field name="loanExpectationId"><hidden/></field>
+        <field name="loanApplicationId"><hidden/></field>
+        
+        <field name="loanNo" title="Loan No"> <display also-hidden="false"></display> </field>
+        <field name="loanAmt" title="Loan Amount"> <display also-hidden="false"></display> </field>
+        
+         <field name="dateDue" title="Date Due"><display also-hidden="false"></display></field>
+         <field name="employeeNo" title="Employee No"><display also-hidden="false"></display></field>
+         <field name="employeeNames" title="Member Names"><display also-hidden="false"></display></field>
+         
+         <field name="repaymentName" title="Repayment Type"><display also-hidden="false"></display></field>
+         
+          <field name="dateAccrued" title="Date Accrued"><display also-hidden="false" type="date-time"></display></field>
+          <field name="datePaid" title="Date Paid"><display also-hidden="false" type="date-time"></display></field>
+         
+         <field name="amountAccrued" title="Amount Accrued"><display also-hidden="false"></display></field>
+         <field name="amountPaid" title="Amount Paid"><display also-hidden="false"></display></field>
+        
+        
+    </form>
+    <!-- Paid Expected Payments - clearedExpectedPayments -->
+    <form name="clearedExpectedPayments" type="list" list-name="listIt" use-row-submit="true" separate-columns="true"  paginate-target="loansrepaymentexpected"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<set field="currentDate" value="${nowTimestamp}"/>
+            <entity-condition entity-name="LoanExpectation">
+            	<condition-expr field-name="isPaid" operator="equals" value="Y"/>
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="transactionType" value="CHEQUEDEPOSIT"/>
+            		<condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
+            		<condition-expr field-name="clearDate" operator="greater" from-field="currentDate"/>
+					
+            	</condition-list -->
+            	<order-by field-name="-loanExpectationId"></order-by>
+            </entity-condition>
+            <!-- entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	
+        	< entity-condition entity-name="ChequeType" list="chequeTypeList">
+        	
+        	</entity-condition>
+        	<entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
+        	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition -->
+        	
+        </actions>
+ 		<!--field name="partyId" title="Member">
+        	< drop-down>
+        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        	</drop-down 
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field-->
+        <field name="loanExpectationId"><hidden/></field>
+        <field name="loanApplicationId"><hidden/></field>
+        
+        <field name="loanNo" title="Loan No"> <display also-hidden="false"></display> </field>
+        <field name="loanAmt" title="Loan Amount"> <display also-hidden="false"></display> </field>
+        
+         <field name="dateDue" title="Date Due"><display also-hidden="false"></display></field>
+         <field name="employeeNo" title="Employee No"><display also-hidden="false"></display></field>
+         <field name="employeeNames" title="Member Names"><display also-hidden="false"></display></field>
+         <field name="repaymentName" title="Repayment Type"><display also-hidden="false"></display></field>
+         
+          <field name="dateAccrued" title="Date Accrued"><display also-hidden="false" type="date-time"></display></field>
+          <field name="datePaid" title="Date Paid"><display also-hidden="false" type="date-time"></display></field>
+         
+         <field name="amountAccrued" title="Amount Accrued"><display also-hidden="false"></display></field>
+         <field name="amountPaid" title="Amount Paid"><display also-hidden="false"></display></field>
+        
+        
     </form>
 </forms>

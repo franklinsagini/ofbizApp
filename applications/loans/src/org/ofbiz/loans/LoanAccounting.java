@@ -165,9 +165,17 @@ public class LoanAccounting {
 
 		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
 		Delegator delegator = loanApplication.getDelegator();
+		
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						memberId), EntityCondition
+						.makeCondition("withdrawable",
+								EntityOperator.EQUALS, "Yes")),
+						EntityOperator.AND);
 		try {
 			memberAccountELI = delegator.findList("MemberAccount",
-					EntityCondition.makeCondition("partyId", memberId), null,
+					memberAccountConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -363,7 +371,7 @@ public class LoanAccounting {
 				acctgTransType, entrySequenceId);
 	}
 
-	private static void postTransactionEntry(Delegator delegator,
+	public static void postTransactionEntry(Delegator delegator,
 			BigDecimal bdLoanAmount, String partyId,
 			String loanReceivableAccount, String postingType,
 			String acctgTransId, String acctgTransType, String entrySequenceId) {
@@ -383,7 +391,7 @@ public class LoanAccounting {
 			delegator.createOrStore(acctgTransEntry);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
-			log.error("Could post a Loan Receivable entry");
+			log.error("Could post an entry");
 		}
 	}
 

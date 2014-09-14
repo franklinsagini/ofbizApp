@@ -151,8 +151,9 @@ public class AmortizationServices {
 									.setScale(6, RoundingMode.HALF_UP),
 							"balanceAmount", bdPreviousBalance.setScale(6,
 									RoundingMode.HALF_UP),
-							"expectedPaymentDate", repaymentDate
-
+							"expectedPaymentDate", repaymentDate,
+							"isAccrued", "N",
+							"isPaid", "N"
 					));
 			listTobeStored.add(loanAmortization);
 
