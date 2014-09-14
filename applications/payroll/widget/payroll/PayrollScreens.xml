@@ -64,6 +64,34 @@ under the License.
         </section>
     </screen>
     
+    <screen name="EditPayrollElement">
+        <section>
+            <actions>
+                <set field="headerItem" value="PayrollElement"/>
+                <set field="tabButtonItem" value="EditPayrollElement"/>
+                <set field="titleProperty" value="Edit Payroll Element"/>
+                <set field="payrollElementId" from-field="parameters.payrollElementId"/>
+                <!-- set field="employeePartyId" from-field="parameters.employeePartyId"/>
+                <set field="employeeRoleTypeId" from-field="parameters.employeeRoleTypeId"/ -->
+                <entity-one entity-name="PayrollElement" value-field="payrollelement"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <!--include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/-->
+                        <screenlet title="Edit Payroll Element">
+                            <section>
+                                <widgets>
+                                    <include-form name="EditPayrollElements" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- Bank Details -->    
     <screen name="NewBankDetails">
     <section>

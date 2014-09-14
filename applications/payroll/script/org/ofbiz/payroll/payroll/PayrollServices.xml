@@ -34,11 +34,19 @@ under the License.
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
-    <simple-method method-name="updatePayrollElement" short-description="Update Payroll Element">
+    <!-- simple-method method-name="updatePayrollElement" short-description="Update Payroll Element">
         <entity-one entity-name="PayrollElement" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
-    </simple-method>
+    </simple-method -->
+    
+    <simple-method method-name="updatePayrollElement" short-description="Update Payroll Element">
+		<entity-one entity-name="PayrollElement" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		<field-to-result field="lookedUpValue.payrollElementId"
+			result-name="perfReviewId" />
+	</simple-method>
     
     <simple-method method-name="deletePayrollElement" short-description="Delete Payroll Element">
         <entity-one entity-name="PayrollElement" value-field="lookedUpValue"/>
