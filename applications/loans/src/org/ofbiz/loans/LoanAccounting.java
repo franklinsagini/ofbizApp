@@ -471,7 +471,7 @@ public class LoanAccounting {
 	 * @author Japheth Odonya @when Aug 22, 2014 2:59:07 PM Creates a record in
 	 *         AcctgTrans
 	 * **/
-	private static String createAccountingTransaction(
+	public static String createAccountingTransaction(
 			GenericValue loanApplication, String acctgTransType,
 			Map<String, String> userLogin) {
 

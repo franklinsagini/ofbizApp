@@ -25,6 +25,8 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 /***
@@ -1064,6 +1066,10 @@ public class LoanRepayments {
 //			e.printStackTrace();
 //		}
 		log.info("EEEEEEEEE end loan repayment EEEEEEEEE");
+		
+		//RecurrenceRule.
+//		DispatchContext dctx;
+//		dctx.getDispatcher();
 		return "";
 	}
 
