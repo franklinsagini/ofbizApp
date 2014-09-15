@@ -111,6 +111,14 @@ under the License.
 			save-current-view="true" />
 	</request-map>
 	
+	<request-map uri="loansrepaymentexpected">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loansrepaymentexpected"
+			save-current-view="true" />
+	</request-map>
+	
+	
+	
 	<request-map uri="postUnpostedCheques">
                 <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.accountholdertransactions.ChequeProcessing" invoke="postUnpostedCheques" />
@@ -119,6 +127,19 @@ under the License.
                         </response>
                 <response name="error" type="view" value="chequedepositposting" />
 	</request-map>
+	
+	<!-- Generate Repayments 
+		generateLoansRepaymentExpected
+	-->
+	<request-map uri="generateLoansRepaymentExpected">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accountholdertransactions.LoanRepayments" invoke="generateLoansRepaymentExpected" />
+                <response name="success" type="view"
+                        value="loansrepaymentexpected">
+                        </response>
+                <response name="error" type="view" value="loansrepaymentexpected" />
+	</request-map>
+	
 	
 	<!-- CRUD CashWithdrawal -->
 	
@@ -421,6 +442,12 @@ under the License.
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="expectedPaymentcsv" />
 	</request-map>
+	
+	 <request-map uri="getLoanApplicationDetails">
+        <event type="java" path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" invoke="getLoanApplicationDetails" />
+                <response name="success" type="none">
+    </response>
+    </request-map>
     
 
     
@@ -444,6 +471,9 @@ under the License.
 	<view-map name="chequeSetup" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeSetup"/>
 	<view-map name="accountHolderTransactionSetup" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewAccountHolderTransactionSetup"/>
 	<view-map name="chequedepositposting" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#chequedepositposting"/>
+	
+	<view-map name="loansrepaymentexpected" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#loansrepaymentexpected"/>
+	
 	<view-map name="expectedPayment" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPayment"/>
 	
 	<view-map name="expectedPaymentpdf" type="screenfop"

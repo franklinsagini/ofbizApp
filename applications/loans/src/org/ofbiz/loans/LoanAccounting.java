@@ -371,7 +371,7 @@ public class LoanAccounting {
 				acctgTransType, entrySequenceId);
 	}
 
-	private static void postTransactionEntry(Delegator delegator,
+	public static void postTransactionEntry(Delegator delegator,
 			BigDecimal bdLoanAmount, String partyId,
 			String loanReceivableAccount, String postingType,
 			String acctgTransId, String acctgTransType, String entrySequenceId) {
@@ -391,7 +391,7 @@ public class LoanAccounting {
 			delegator.createOrStore(acctgTransEntry);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
-			log.error("Could post a Loan Receivable entry");
+			log.error("Could post an entry");
 		}
 	}
 
@@ -471,7 +471,7 @@ public class LoanAccounting {
 	 * @author Japheth Odonya @when Aug 22, 2014 2:59:07 PM Creates a record in
 	 *         AcctgTrans
 	 * **/
-	private static String createAccountingTransaction(
+	public static String createAccountingTransaction(
 			GenericValue loanApplication, String acctgTransType,
 			Map<String, String> userLogin) {
 

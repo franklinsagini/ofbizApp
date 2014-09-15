@@ -98,7 +98,12 @@ under the License.
     </simple-method>
 		<!-- TreasuryTransfer -->
 	<simple-method method-name="createTreasuryTransfer" short-description="Create TreasuryTransfer">
-       <make-value entity-name="TreasuryTransfer" value-field="newEntity"/>
+       <call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        
+        <set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/>
+    </simple-method>
+ 	<simple-method method-name="saveTreasuryTransfer" >
+ 		<make-value entity-name="TreasuryTransfer" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="TreasuryTransfer" field="treasuryTransferId"/>
@@ -109,7 +114,8 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <create-value value-field="newEntity"/>
-    </simple-method>
+ 	</simple-method>   
+ 
     <simple-method method-name="updateTreasuryTransfer" short-description="Update TreasuryTransfer">
         <entity-one entity-name="TreasuryTransfer" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>

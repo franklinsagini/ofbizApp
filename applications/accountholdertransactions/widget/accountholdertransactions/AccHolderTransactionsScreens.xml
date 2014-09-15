@@ -561,6 +561,95 @@ under the License.
         </section>
     </screen>
     
+    <!-- Loan Repayment Expected -->
+    <screen name="loansrepaymentexpected">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Loan Repayments Expected"/>
+                <set field="headerItem" value="loansrepaymentexpected"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="generateLoansRepaymentExpected"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!-- entity-one entity-name="AccountHolderTransactionSetup" value-field="accountHolderTransactionSetupContext"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            	<screenlet>
+                                	<section>
+                                		<widgets>
+                                			<container>
+                                				<label style="h3">Generate Loans Repayment Expected (Charge Interest)</label>
+                                				<!-- label style="h3">Product(Loan Type) : ${loanProduct.name} -  ${loanProduct.code}</label>
+                                				<label style="h3">Amount    : KES ${loanApplication.loanAmt}</label>
+                                				<label style="h3">Interest(P.M.)  : ${loanApplication.interestRatePM}</label>
+                                				<label style="h3">Repayment(Months) : ${loanApplication.repaymentPeriod}</label>
+                                				<label style="h3">Deduction Method : ${loanProduct.deductionType}</label>
+                                				<label style="h3">Per Month Repayment : KES ${loanApplication.monthlyRepayment}</label>
+                                				<label style="h3">Total Repayment : KES ${loanApplication.totalRepayment}</label -->
+                                            
+                                            </container>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
+                                <screenlet>
+                                	<section>
+                                		
+                                		<widgets>
+                                			
+                                			<container style="button-bar">
+                                		
+                                            <link target="generateLoansRepaymentExpected"  text="Generate Repayments Expected" style="buttontext create">
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                                
+                                            </link>
+                                            </container>
+                                		</widgets>
+                                		<!-- fail-widgets>
+                                			<container style="button-bar">
+                                				<label style="h3"> Waiting for Disbursement to Generate Schedule</label>
+                                			</container>
+                                		</fail-widgets -->
+                                	</section>
+                                </screenlet>
+                                
+                                <screenlet title="Unpaid Expected Repayments">
+                                    <!-- include-form name="unpostedclearedcheques" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
+                                    <include-form name="unpaidExpectedPayments" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                                <!-- screenlet title="Paid Expected Payments">
+                                    <include-form name="unposteddepositedcheques" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet -->
+                                
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Cleared/Paid Expected Payments">
+                        			<!-- include-form name="postedChequesList" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
+                        			<include-form name="clearedExpectedPayments" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- Expected Payment -->
     <screen name="expectedPayment">
         <section>
