@@ -60,6 +60,14 @@ under the License.
          availableAmount(reqUrl, memberAccountId);
         });
         
+        
+          jQuery('select[name="loanApplicationId"]').change(function(){
+         var loanApplicationId = this.value;
+         var reqUrl = '/accountholdertransactions/control/getLoanApplicationDetails';
+         getLoanApplicationDetails(reqUrl, loanApplicationId);
+        });
+        
+        
       
     
 		
@@ -125,5 +133,29 @@ under the License.
     		isAvailable = false;
     	}
     	return isAvailable;
+    }
+    
+    function getLoanApplicationDetails(reqUrl, loanApplicationId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'loanApplicationId': loanApplicationId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+				
+				//$.each(data, function(item, itemvalue) {
+				   
+					jQuery('input[name="loanNo"]').val(data.loanNo);
+					jQuery('select[name="loanTypeId"]').val(data.loanTypeId);
+					jQuery('input[name="loanBalanceAmt"]').val(data.loanAmt);
+					
+				//});
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+    });
     }
 </script>

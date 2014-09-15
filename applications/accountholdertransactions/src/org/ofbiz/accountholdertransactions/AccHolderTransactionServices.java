@@ -1188,5 +1188,78 @@ public class AccHolderTransactionServices {
 			log.error("Could not create Transaction");
 		}
 	}
+	
+	public static String getLoanApplicationDetails(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String loanApplicationId = (String) request.getParameter("loanApplicationId");
+		GenericValue loanApplication = null;
+
+		// SaccoProduct
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			return "Cannot Get Loan Application Details";
+		}
+
+		if (loanApplication != null) {
+			//loanNo
+			//loanType
+			//loanAmt
+			
+			result.put("loanNo", loanApplication.get("loanNo"));
+			result.put("loanTypeId",
+					loanApplication.get("loanProductId"));
+			result.put("loanAmt", loanApplication.get("loanAmt"));
+			
+
+			// result.put("selectedRepaymentPeriod",
+			// saccoProduct.get("selectedRepaymentPeriod"));
+		} else {
+			System.out.println("######## Loan Application details not found #### ");
+		}
+		// return JSONBuilder.class.
+		// JSONObject root = new JSONObject();
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
 
 }

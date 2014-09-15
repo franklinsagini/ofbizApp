@@ -698,11 +698,12 @@ under the License.
 			<entity-condition entity-name="LoanProduct" list="productList"></entity-condition>
         </actions>
         <field name="standingOrderId"><hidden/></field>
-		<field name="partyId" title="Member"  widget-style="required" required-field="true">
+        <field name="standingOrderId" parameter-name="partyId"><hidden/></field>
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
-        </field>
+        </field -->
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
@@ -725,17 +726,19 @@ under the License.
         	</drop-down>
         </field>
         
-        <field name="loanTypeId" title="Loan Type"  widget-style="required" required-field="true">
-        	<drop-down>
-        		<list-options key-name="loanProductId" list-name="productList" description="${name} - ${code}"/>
-        	</drop-down>
-        </field>
-        
+       
         <field name="loanApplicationId" title="Loan">
         	<drop-down>
         		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
         	</drop-down>
         </field>
+        
+         <field name="loanTypeId" title="Loan Type"  widget-style="required" required-field="true">
+        	<drop-down>
+        		<list-options key-name="loanProductId" list-name="productList" description="${name} - ${code}"/>
+        	</drop-down>
+        </field>
+        
 		 <field name="loanBalanceAmt" title="Loan Amount"><text></text></field>
 		 
 		 <field name="beneficiaryId" title="Beneficiary">
@@ -767,7 +770,7 @@ under the License.
       		
       	</field>
       
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
       <form name="listApplyStandingOrder" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateApplyStandingOrder" paginate-target="applyStandingOrder"
@@ -786,11 +789,12 @@ under the License.
         	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateApplyStandingOrder"/>
- 		<field name="partyId" title="Member">
+        <field name="partyId" parameter-name="partyId"><hidden/></field>
+ 		<!-- field name="partyId" title="Member">
         	<drop-down>
         		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
-        </field>
+        </field -->
         <field name="memberNo" title="Member No"><text></text></field>
         <field name="payrollNo" title="Payroll No"><text></text></field>
         <field name="standingOrderAmount" title="Standing Order Amount"><text></text></field>
