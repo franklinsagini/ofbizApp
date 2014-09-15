@@ -882,7 +882,7 @@ public class AccHolderTransactionServices {
 	 * @author Japheth Odonya @when Aug 24, 2014 8:03:52 PM Create Account Trans
 	 *         Type AcctgTrans
 	 * */
-	private static String createAccountingTransaction(
+	public static String createAccountingTransaction(
 			GenericValue accountTransaction, String acctgTransType,
 			Map<String, String> userLogin) {
 
