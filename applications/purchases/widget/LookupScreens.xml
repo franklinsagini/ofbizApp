@@ -20,27 +20,29 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="LookupSupplierOld">
+    <screen name="LookupActiveMember">
         <section>
             <condition>
                 <if-service-permission service-name="catalogPermissionCheck" main-action="VIEW"/>
             </condition>
             <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <entity-one entity-name="PartyNameView" value-field="pnv"/>
-                <set field="title" value="${uiLabelMap.PageTitleLookupSupplierProduct} ${pnv.firstName} ${pnv.middleName} ${pnv.lastName} ${pnv.groupName} [${parameters.partyId}]"/>
+               <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="Lookup Active Sacco Member"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="entityName" value="SupplierProductAndProduct"/>
-                <set field="searchFields" value="[productId, partyId, brandName, internalName]"/>
-                <set field="andCondition" value="${groovy: return org.ofbiz.entity.condition.EntityCondition.makeCondition(org.ofbiz.base.util.UtilMisc.toMap('partyId', parameters.partyId))}"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <set field="entityName" value="Member"/>
+                <set field="searchFields" value="[partyId, firstName, middleName, lastName, idNumber]"/>
+                <set field="andCondition" value="${groovy: return org.ofbiz.entity.condition.EntityCondition.makeCondition(&quot;memberStatus&quot;, &quot;ACTIVE&quot;)}"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="search-options">
-                        <include-form name="lookupSupplier" location="component://purchases/widget/FieldLookupForms.xml"/>
+                        <include-form name="lookupActiveMember" location="component://purchases/widget/FieldLookupForms.xml"/>
                     </decorator-section>
                     <decorator-section name="search-results">
-                        <include-form name="listLookupSupplier" location="component://purchases/widget/FieldLookupForms.xml"/>
+                        <include-form name="listLookupActiveMember" location="component://purchases/widget/FieldLookupForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
