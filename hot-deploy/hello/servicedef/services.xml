@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>hEllo Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service> 
+    
+    
+    
+                <!-- User -->
+    <service name="createUser" engine="simple" default-entity-name="UsersHW"
+             location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="createUser" auth="true">
+        <description>Create User</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
+    
+                <!-- Estate -->
+    <service name="createEstate" engine="simple" default-entity-name="Estate"
+             location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="createEstate" auth="true">
+        <description>Create User</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     
+    
+     <service name="updateEstate" engine="simple" default-entity-name="Estate"
+             location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="updateEstate" auth="true">
+        <description>Update estate</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
+    
+    
+     <service name="deleteEstate" engine="simple" default-entity-name="Estate"
+             location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="deleteEstate" auth="true">
+        <description>remove estate</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
+
+                        <!-- UserEstate -->
+    <service name="createUserEstate" engine="simple" default-entity-name="UserEstate"
+             location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="createUserEstate" auth="true">
+        <description>Create User Estate</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     
+    
+     <service name="updateUserEstate" engine="simple" default-entity-name="UserEstate"
+             location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="updateUserEstate" auth="true">
+        <description>Update user estate</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
+    
+    
+     <service name="deleteUserEstate" engine="simple" default-entity-name="UserEstate"
+             location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="deleteUserEstate" auth="true">
+        <description>remove user estate</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
+</services>

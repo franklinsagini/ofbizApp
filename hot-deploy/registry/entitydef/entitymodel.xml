@@ -125,12 +125,57 @@
 
 	<!-- Registry File Type Entity -->
 	<entity entity-name="FileType" package-name="org.ofbiz.registry"
-		title="File Type">
+		title="File Types">
 		<field name="fileTypeId" type="id-ne"></field>
 		<field name="fileType" type="name" not-null="true"></field>
-		<field name="fileTypeStatus" type="name"></field>
+		<field name="Description" type="description"></field>
 		<prim-key field="fileTypeId" />
 	</entity>
+	
+	<entity entity-name="FileBooks" package-name="org.ofbiz.registry"
+		title="Member File Book">
+		<field name="fileBookId" type="id-ne"></field>
+		<field name="userId" type="id-ne" not-null="true"></field>
+		<field name="FolioNo" type="id-ne" not-null="true"></field>
+		<field name="Status" type="name" not-null="true"></field>
+		<field name="Creator" type="name" not-null="true"></field>
+		<field name="filelocation" type="name" not-null="true"></field>
+		<field name="CreationDate" type="date-time"></field>
+		<prim-key field="fileBookId" />
+		<relation type="one" fk-name="PT_FBOOK" rel-entity-name="UsersHW">
+        	<key-map field-name="userId"/> 
+        </relation>
+        
+	</entity>
+	
+	  <entity entity-name="Files"
+            package-name="org.ofbiz.registry"
+            title="Member Files">
+      <field name="FileId" type="id-ne"></field>
+     <field name="fileTypeId" type="id-ne"></field>
+     <field name="fileBookId" type="id-ne"></field>
+     <field name="FolioNo" type="id-ne" not-null="true"></field>
+     <field name="Description" type="description"></field>
+     <field name="Status" type="name" not-null="true"></field>
+     <field name="ReceiptDate" type="date-time"></field>
+     <prim-key field="FileId"/>
+    </entity>
+    
+    <entity entity-name="FilesRequest" package-name="org.ofbiz.registry" title="Member Files">
+	<field name="RequestId" type="id-ne"></field>
+	<field name="fileBookId" type="id-ne"></field>
+	<field name="requester" type="id-ne"></field>
+	<field name="requesterlocation" type="id-ne" not-null="true"></field>
+	<field name="requesterdate" type="date-time"></field>
+	<field name="Status" type="name" not-null="true"></field>
+	<prim-key field="RequestId" />
+	<prim-key field="fileBookId" />
+	<relation type="one" fk-name="FR_FB" rel-entity-name="FileBooks">
+		<key-map field-name="fileBookId" />
+	</relation>
+</entity>
+	
+	<!--  -->
 </entitymodel>
 
 
