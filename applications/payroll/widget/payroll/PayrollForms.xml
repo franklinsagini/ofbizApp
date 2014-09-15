@@ -181,20 +181,21 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollElement">
+            	<order-by field-name="elementCode"/>
             </entity-condition>
             <entity-condition entity-name="PayrollElement" list="payrollElementList"></entity-condition>
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updatePayrollElement"/>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updatePayrollElement"/ -->
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
        
-       <field name="payrollElementId" >
-           <hyperlink also-hidden="false" description="${payrollElementId}" target="EditPayrollElement">
+       <field name="payrollElementId" > <hidden/>  </field>        
+        <field name="elementCode" title="Element Code"> 
+	        <hyperlink also-hidden="false" description="${elementCode}" target="EditPayrollElement">
                 <parameter param-name="payrollElementId"/>
             </hyperlink>
-        </field>
-        <field name="elementCode"> <display also-hidden="false"/> </field>
+	    </field>        
         <field name="name"> <display also-hidden="false"/> </field>
         <field name="elementType"> <display also-hidden="false"/> </field>
         <field name="payslipdisplay"> <display also-hidden="false"/> </field>
@@ -213,17 +214,164 @@ under the License.
                 <parameter param-name="payrollElementId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
     
     <form name="EditPayrollElements" type="single" target="updatePayrollElement" title="" default-map-name="payrollelement"
         header-row-style="header-row" default-table-style="basic-table">
+        
+        <actions>
+        	<entity-condition entity-name="PayrollElement"></entity-condition>
+        	<set field="payrollElementId" from-field="parameters.payrollElementId"/>
+        </actions>
         <alt-target use-when="payrollelement==null" target="createPayrollElements"/>
         <auto-fields-service service-name="updatePayrollElement" map-name="payrollelement"/>
         
         
-        <field name="payrollElementId" use-when="payrollelement==null"><text/></field>
-        <field name="payrollElementId" use-when="payrollelement!=null"><ignored/></field>
+        <!-- field name="payrollElementId" use-when="payrollelement==null"><text/></field>
+        <field name="payrollElementId" use-when="payrollelement!=null"><ignored/></field -->
+        
+        <field name="payrollElementId"> <hidden/></field>
+        <field name="elementCode" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="elementType"  title="Element Type" >
+            <drop-down allow-empty="true">
+                <option key="Payment" description="Payment"/>
+                <option key="Deduction" description="Deduction"/>
+                <option key="System Element" description="System Element"/>
+            </drop-down>
+        </field>
+        <field name="iscalulated" title="Calculated" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="hasBalance" title="Has Balance" >
+            <drop-down allow-empty="false">
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="relief"  title="Is Relief" >
+            <drop-down allow-empty="false">                
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="cummulative"  title="Is Cummulative" >
+            <drop-down allow-empty="false">
+            	 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="employercontribution"  title="Employer Contribution" >
+            <drop-down allow-empty="false">
+            	 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <!--field name="systemcontrolled"  title="Control Type" >
+            <drop-down allow-empty="false">
+            	<option key="User" description="User Controlled "/>
+                <option key="System" description="System Controlled"/>
+            </drop-down>
+        </field-->
+        
+         <field name="taxable"  title="Is Taxable" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="employertax"  title="Employer Tax" >
+            <drop-down allow-empty="false">
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="benefit"  title="Benefit Type" >
+            <drop-down allow-empty="true">
+                <option key="Cash" description="Cash Benefit"/>
+                <option key="Non-cash" description="Non-cash Benefit"/>
+            </drop-down>
+        </field>
+        <field name="insurancecontribution"  title="Insurance Contribution" >
+            <drop-down allow-empty="false">
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="hasRelief"  title="Has Relief" >
+            <drop-down allow-empty="false">
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+		<field name="recurrent"  title="Is Recurrent" >
+            <drop-down allow-empty="false">
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+         <field name="isInterest"  title="Is Interest" >
+            <drop-down allow-empty="false">
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="hasInterest"  title="Has Interest" >
+            <drop-down allow-empty="false">
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="isfixed"  title="Fixed" >
+            <drop-down allow-empty="false">
+                 <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="interestamount" title="Interest Amount"><text size="30" maxlength="60"/></field>
+        <field name="interestrate" title="Interest Rate"><text size="30" maxlength="60"/></field>
+        <field name="interestfrequency"  title="Interest Frequency" >
+            <drop-down allow-empty="false">
+                <option key="PerAnnum" description="Per Annum"/>
+                <option key="PerMonth" description="Per Month"/>
+            </drop-down>
+        </field>
+        <field name="payslipdisplay"  title="Payslip Display" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="isbold"  title="Bolded" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        
+        <!-- field name="parentId" title="Parent Element">
+        	<drop-down allow-empty="true">
+        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
+        	</drop-down>
+        </field-->
+        
+        <field name="childId" title="Child Element">
+        	<drop-down allow-empty="true">
+        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
+        	</drop-down>
+        </field>
         
   
         <!-- field name="employeePartyId" use-when="perfReview==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
@@ -518,6 +666,7 @@ under the License.
         <actions>
             <entity-condition entity-name="PayrollPeriod">
             	<condition-expr field-name="payrollYearId" from-field="payrollYearId"/>
+            	<order-by field-name="sequence_no"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updatePayrollPeriod"/>
@@ -540,7 +689,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="addPeriodStaff" title="Add Staff" widget-style="buttontext">
-            <hyperlink target="staffpayroll" description="Add Staff" also-hidden="false">
+            <hyperlink target="staffpayroll" description="Manage Staff Payroll" also-hidden="false">
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
@@ -552,8 +701,12 @@ under the License.
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="staffPayrollContext">
         
         <actions>
-        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<entity-condition entity-name="Person" list="personList">
+        		<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
         	<set field="partyId" from-field="partyId"/>
+        	
 
         	<entity-condition entity-name="PayrollPeriod" list="periodList"></entity-condition>
         	<set field="payrollPeriodId" from-field="payrollPeriodId"/>
@@ -561,27 +714,20 @@ under the License.
         </actions>
         
         <field name="staffPayrollId"><hidden/></field>
-        <field name="partyId" parameter-name="partyId"><hidden/></field>
-        <!--field name="payrollPeriodId" title="Payroll Period">        	
-       	 <drop-down allow-empty="true">
-       	 	<list-options list-name="periodList" key-name="payrollPeriodId" description="${name}"/>
-       	 </drop-down>
-        </field-->
-         <field name="payrollPeriodId" title="Payroll Period">        	
-       	 	<hidden/>
-        </field>
-        <field name="partyId">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+        <field name="partyId" title="Employee">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} ${lastName} (${employeeNumber})"/>
         	</drop-down>
         </field>
-        <!-- field name="staffNo" title="Staff No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
-        <!--field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
-        <field name="closed"  title="Closed" >
-            <drop-down allow-empty="false">
+         <!-- field name="payrollPeriodId" title="Payroll Period">        	
+       	 	<display-entity entity-name="PayrollPeriod" key-field-name="payrollPeriodId" description="${name}">
+       	 	</display-entity>           	
+        </field -->
+       <field name="closed"  title="Closed" > <hidden/>
+            <!-- drop-down allow-empty="false">
                 <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
-            </drop-down>
+            </drop-down -->
         </field>        
         <field name="pensionpercentage" title="Pension Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="nssfVolAmount" title="NSSF Vol Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -596,21 +742,19 @@ under the License.
             </entity-condition>
            <entity-condition entity-name="PayrollPeriod" list="periodList">
             </entity-condition>
-            <entity-condition entity-name="Person" list="personList"></entity-condition>
-        	<set field="partyId" from-field="partyId"/>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStaffPayroll"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
         <field name="payrollPeriodId"><hidden/></field>
-        <field name="partyId" title="Employee">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
-        	</drop-down>
-        </field>
-        <field name="pensionpercentage" title="Pension Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="nssfVolAmount" title="NSSF Vol Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+         <field name="partyId" title="Employee">
+         	<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
+         	</display-entity>
+         </field>
+
+        <field name="pensionpercentage" title="Pension Percentage"><text size="30" maxlength="60"/></field>
+        <field name="nssfVolAmount" title="NSSF Vol Amount"><text size="30" maxlength="60"/></field>
         <field name="staffNo"> <hidden/> </field>
         <field name="staffName"> <hidden/> </field>
        
@@ -885,5 +1029,26 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
+    <form name="PayrollOverview" type="single" target="payrollOverview"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollOverviewContext">
+    	
+    	<actions>
+        	<entity-condition entity-name="PayrollPeriod" list="periodList">
+        		<condition-expr field-name="currentperiod" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<set field="payrollPeriodId" from-field="payrollPeriodId" />
+        	
+        </actions>
+        
+        <field name="payrollOverViewId"><hidden/></field>
+        <field name="payrollPeriodId" title="Open Period">        
+        	<drop-down allow-empty="false">
+        		<list-options key-name="payrollPeriodId" list-name="periodList"  description="${name}"/>
+            </drop-down>   	
+        </field>
+        <field name="numberOfEmployees" title="Number Of Employees"><text/></field>   
+    </form>
+    
    
 </forms>
