@@ -35,6 +35,16 @@ under the License.
         	
         	<entity-condition entity-name="County" list="countyList"></entity-condition>
         	<set field="countyId" from-field="countyId"/>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<!-- entity-one entity-name="PartyGroup" value-field="branch">
+        		<field-map field-name="partyId" from-field="userLogin.partyId"/>
+        	</entity-one -->
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
 
         </actions>
         <alt-target use-when="personInfo==null" target="createPerson"/>        
@@ -79,6 +89,18 @@ under the License.
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
        	 </drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
+         <field name="stationId" title="Station" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down>
         </field>
         <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>  
         <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>  
