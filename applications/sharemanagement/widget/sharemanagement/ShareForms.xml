@@ -18,19 +18,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-	
+
 		<!-- Share Setup -->
 	<form name="NewShareSetup" type="single" target="createShareSetup"
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="shareSetupContext">
-        
+
         <actions>
         	<!-- entity-condition entity-name="FinAccount" list="accountList">
         		<order-by field-name="finAccountName"/>
         	</entity-condition -->
-        	
+
         	<entity-condition entity-name="GlAccount" list="accountList">
         		<order-by field-name="accountName"/>
         	</entity-condition>
@@ -44,20 +44,20 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
-        
+
       <form name="listShareSetup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateShareSetup" paginate-target="shareSetup"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="ShareSetup">
             	<condition-expr field-name="isActive" operator="equals" value="Y"/>
             </entity-condition>
-            
+
             <entity-condition entity-name="GlAccount" list="accountList">
-            	
+
             </entity-condition>
         </actions>
-        
-        
+
+
         <auto-fields-service default-field-type="hidden" service-name="updateShareSetup"/>
  		<!-- field name="isActive"  title="Active" >
             <drop-down allow-empty="false">
@@ -78,12 +78,12 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
-    
+
     <!-- MemberShareDeposit -->
     <form name="NewMemberShareDeposit" type="single" target="createMemberShareDeposit"
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="memberShareDepositContext">
-        
+
         <actions>
         	<entity-condition entity-name="GlAccount" list="accountList">
         		<order-by field-name="accountName"/>
@@ -99,7 +99,7 @@ under the License.
         </actions>
         <field name="memberShareDepositId"><hidden/></field>
         <field name="partyId"><hidden/></field>
-        
+
 		<!-- field name="isActive" title="Active"><text default-value="Y" disabled="true"></text></field -->
 		<field name="noOfShares" title="No Of Shares" widget-style="required" required-field="true"><text></text></field>
         <field name="sharePrice" title="Share Price" widget-style="required" required-field="true"><text default-value="${sharePrice}"></text></field>
@@ -110,7 +110,7 @@ under the License.
         		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
         	</drop-down>
         </field>
-        
+
         <field name="glAccountId" title="Share Account" widget-style="required" required-field="true"  map-name="memberShareDepositContext" >
         	<drop-down allow-empty="false">
         		<list-options key-name="glAccountId" list-name="accountList" description="${accountName} - ${accountCode}"/>
@@ -118,7 +118,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
-        
+
       <form name="listMemberShareDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberShareDeposit" paginate-target="memberShareDeposit"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -152,7 +152,7 @@ under the License.
         <field name="sharePrice" title="Share Price" ><text default-value="${shareSetup.sharePrice}"  size="15"></text></field>
         <field name="valueOfShares" title="Value Of Shares" ><text  size="15"></text></field>
        <!-- field name="amountInWords" title="Amount In Words" ><text></text></field -->
-       
+
         <field name="modeOfPaymentsId" title="Model Of Payment">
         	<drop-down text-size="20">
         		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
@@ -175,7 +175,7 @@ under the License.
 	<form name="NewMemberShareTransfer" type="single" target="createMemberShareTransfer"
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="memberShareTransferContext">
-        
+
         <actions>
         	<entity-condition entity-name="FinAccount" list="accountList">
         		<order-by field-name="finAccountName"/>
@@ -202,19 +202,19 @@ under the License.
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
             </drop-down>
         </field>
-        
+
         <field name="fromAccountId" title="From Account">
         	<drop-down>
         		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
         	</drop-down>
         </field>
-        
+
         <field name="toAccountId" title="To Account" position="2">
         	<drop-down>
         		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
         	</drop-down>
         </field>
-        
+
         <field name="transferAmt" title="Share Price" ><text></text></field>
         <field name="comment" title="Comment"><textarea/></field>
        <field name="approvedBy" title="Approved By" >
@@ -224,7 +224,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
        </form>
-        
+
       <form name="listMemberShareTransfer" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberShareTransfer" paginate-target="memberShareTransfer"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -239,7 +239,7 @@ under the License.
         	</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateMemberShareTransfer"/>
- 		
+
          <field name="transferType"  title="Transfer Type" >
             <drop-down allow-empty="false">
                 <option key="TOSELF" description="To SELF"/>
@@ -257,19 +257,19 @@ under the License.
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
             </drop-down>
         </field>
-        
+
         <field name="fromAccountId" title="From Account">
         	<drop-down>
         		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
         	</drop-down>
         </field>
-        
+
         <field name="toAccountId" title="To Account">
         	<drop-down>
         		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
         	</drop-down>
         </field>
-        
+
         <field name="transferAmt" title="Share Price" ><text></text></field>
         <field name="comment" title="Comment"><textarea/></field>
        <field name="approvedBy" title="Approved By" >
@@ -288,7 +288,7 @@ under the License.
 	<form name="NewMemberShareTransactions" type="single" target="createMemberShareTransactions"
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="memberShareTransactionsContext">
-        
+
         <actions>
         	<entity-condition entity-name="FinAccount" list="accountList">
         		<order-by field-name="finAccountName"/>
@@ -298,12 +298,13 @@ under the License.
         	</entity-condition>
         </actions>
         <field name="memberShareTransactionsId"><hidden/></field>
-        
-		<field name="partyId" title="Member">
+
+<!-- 		<field name="partyId" title="Member">
         	<drop-down allow-empty="true">
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
             </drop-down>
-        </field>
+        </field> -->
+         <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="creditAmt" title="Credit Amount" ><text></text></field>
         <field name="debitAmt" title="Debit Amount" ><text></text></field>
         <field name="comments" title="Comments" ><textarea/></field>
@@ -321,7 +322,7 @@ under the License.
                 <option key="OUT" description="OUT"/>
             </drop-down>
         </field>
-       <field name="sourceDocumentId" title="Source Document ID" ><text></text></field> 
+       <field name="sourceDocumentId" title="Source Document ID" ><text></text></field>
        <field name="addedBy" title="Added By">
         	<drop-down allow-empty="true">
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
@@ -334,7 +335,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
        </form>
-        
+
       <form name="listMemberShareTransactions" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberShareTransactions" paginate-target="memberShareTransactions"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -349,7 +350,7 @@ under the License.
         	</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateMemberShareTransactions"/>
- 		
+
         <field name="partyId" title="Member">
         	<drop-down allow-empty="true">
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
@@ -372,7 +373,7 @@ under the License.
                 <option key="OUT" description="OUT"/>
             </drop-down>
         </field>
-       <field name="sourceDocumentId" title="Source Document ID" ><text></text></field> 
+       <field name="sourceDocumentId" title="Source Document ID" ><text></text></field>
        <field name="addedBy" title="Added By">
         	<drop-down allow-empty="true">
                 <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
@@ -390,7 +391,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
-	
+
 	<!-- Find Member -->
 	<form name="FindMember" type="single" target="main" default-entity-name="Member">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -413,20 +414,20 @@ under the License.
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
-    
+
     <form name="members" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="members"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        
+
         <actions>
         	<entity-condition entity-name="Member">
         		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
         	</entity-condition>
-        	
+
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
-        	
+
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
@@ -438,7 +439,7 @@ under the License.
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
         <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
-   
+
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
 	     <field name="stationId" title="Station">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
@@ -446,9 +447,9 @@ under the License.
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
         </field>
-        
+
         <field name="memberStatus"><display also-hidden="false"></display></field>
-        
+
         <field name="Transactions">
         	<hyperlink target="memberShareDeposit?partyId=${partyId}" description="Shares for ${firstName} ${lastName}"></hyperlink>
         </field>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        
+        
+        
+        
+    <form name="EditFileTypeForm" type="single" target="createfiletype" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="filetypeContext">
+       
+        <actions>
+            <entity-condition entity-name="FileType" list="filetypeList">
+                <order-by field-name="fileTypeId"/>
+            </entity-condition>
+        </actions>
+         <alt-target use-when="filetypeContext!=null" target="updateFiletype"/>
+      
+        <field name="fileTypeId"><hidden/></field>
+        <field name="fileTypeId" use-when="filetypeContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+        <field name="fileType" title="Document Type"> <text size="45"></text> </field>
+        <field name="Description" title="Description"><textarea/> </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <!-- submitButton -->
+        <field use-when="filetypeContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="filetypeContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+    
+    
+     <form name="FileTypeListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFiletype"
+        paginate-target="EditFileTypeForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="FileType"></entity-condition>
+        </actions>
+       <field name="fileTypeId"><display /></field>
+       <field name="fileType" title="Document Type"> <display/> </field>
+       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="userId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+    
+    
+    <form name="EditFileBookForm" type="single" target="createFileBook" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="FileBookContext">
+        
+        <actions>
+            <entity-condition entity-name="FileBooks" list="filebooksList">
+                <order-by field-name="fileBookId"/>
+            </entity-condition>
+            <entity-condition entity-name="UsersHW" list="partydList">
+                <order-by field-name="userId"/> 
+            </entity-condition>
+        </actions>
+        <alt-target use-when="FileBookContext!=null" target="updateFileBooks"/>
+      
+        <field name="fileBookId"><hidden/></field>
+        <field name="fileBookId" use-when="FileBookContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+         <field name="userId" title="Member ID" widget-style="required" required-field="true">
+        <drop-down>
+        		<list-options key-name="userId" list-name="partydList" description="${userId}->(For member-${firstName} ${lastName})"/>
+        	</drop-down>
+        	</field>
+        
+        <field name="Status" title="File Status"> 
+            <drop-down allow-empty="false">
+                <option key="active" description="Active"/>
+                <option key="semiactive" description="Semi Active"/>
+                <option key="dormant" description="Dormant"/>
+            </drop-down>
+        </field>
+         <field name="filelocation" title="File Location"> 
+            <drop-down allow-empty="false">
+                <option key="CC" description="Customer care"/>
+                <option key="LM" description="Loans Manager"/>
+            </drop-down>
+        </field>
+        <field name="CreationDate" title="Creation Date"> <date-time/> </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <!-- submitButton -->
+        <field use-when="FileBookContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="FileBookContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+    
+    
+     <form name="FileBookListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFileBooks"
+        paginate-target="EditFileBookForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="FileBooks"></entity-condition>
+            
+        </actions>
+        <field name="FileId" title="Request File" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="Request" target="reqfileURL">
+				<parameter param-name="fileBookId" />
+            </hyperlink>
+        </field>
+       <field name="fileBookId"><display /></field>
+       <field name="userId" title="Member ID"> <display/> </field>
+       <field name="FolioNo" title="Folio Number"> <display/> </field>
+       <field name="Status" title="Status"> <display/> </field>
+       <field name="Creator" title="Created by"> <display/> </field>
+       <field name="filelocation" title="File Location"> <display/> </field>
+       <field name="CreationDate" title="Creation Date"> <display/> </field>
+       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteEstate" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="estateId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+     <form name="EditFileForm" type="single" target="createFiless" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="FileContext">
+        <actions>
+             <entity-condition entity-name="Files" list="fileList">
+             	<order-by field-name="FileId"/>
+             </entity-condition>
+           <entity-condition entity-name="FileType" list="filetypeList">
+                <order-by field-name="fileTypeId"/>
+           </entity-condition>
+           <entity-condition entity-name="FileBooks" list="filebksList">
+                <order-by field-name="fileBookId"/>
+            </entity-condition>
+        </actions>
+         <alt-target use-when="FileContext!=null" target="updateFile"/>
+      
+        <field name="FileId"><hidden/></field>
+        <field name="FileId" use-when="FileContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+        <field name="fileTypeId" title="Document Type ID" widget-style="required" required-field="true">
+        <drop-down>
+        		<list-options key-name="fileTypeId" list-name="filetypeList" description="${fileTypeId}->(For file type-${fileType})"/>
+        	</drop-down>
+        	</field>
+        	<field name="FolioNo" title="File Folio Number" widget-style="required" required-field="true">
+        <drop-down>
+        		<list-options key-name="FolioNo" list-name="filebksList" description="${FolioNo} ->(For member ID-${userId})"/>
+        	</drop-down>
+        	</field>
+        	<field name="Status" title="File Status"> 
+            <drop-down allow-empty="false">
+                <option key="rec" description="Recieved"/>
+                <option key="nonrec" description="Not Recieved"/>
+                <option key="proc" description="Proccessed"/>
+            </drop-down>
+        </field>
+         <field name="ReceiptDate" title="Recieved date"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <!-- submitButton -->
+        <field use-when="FileContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="FileContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="FileListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFile"
+        paginate-target="EditFileForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="Files"></entity-condition>
+        </actions>
+       <field name="FileId"><display /></field>
+       <field name="fileTypeId" title="Document Type ID"> <display/> </field>
+       <field name="fileBookId" title="File ID"> <display/> </field>
+       <field name="FolioNo" title="Folio Number"> <display/> </field>
+       <field name="Status" title="Status"><display/></field>
+       <field name="ReceiptDate" title="Date Recieved"><display/></field>
+       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteUserEstate" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="FileId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+    
+    
+     <form name="RequestFileForm" type="single" target="createfiletype" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="requestfileContext">
+       
+        <actions>
+            <entity-condition entity-name="FilesRequest" list="filereqList">
+                <order-by field-name="RequestId"/>
+            </entity-condition>
+            <entity-condition entity-name="FileBooks" list="filesList">
+                <order-by field-name="fileBookId"/>
+            </entity-condition>
+        </actions>
+         <alt-target use-when="requestfileContext!=null" target="updateFiletype"/>
+      
+        <field name="RequestId"><hidden/></field>
+        <field name="RequestId" use-when="requestfileContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+         <field name="fileBookId" title="File Id"> <text size="45"></text> </field>
+         <field name="requesterlocation" title="File Location"> 
+            <drop-down allow-empty="false">
+                <option key="active" description="Customer care"/>
+            </drop-down>
+        </field>
+        <field name="requesterdate" title="Date Requested"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <!-- submitButton -->
+        <field use-when="requestfileContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="requestfileContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+    
+    
+     <form name="RequestedFileListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFiletype"
+        paginate-target="RequestFileForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="FilesRequest"></entity-condition>
+        </actions>
+       <field name="RequestId"><display /></field>
+       <field name="FileId" title="Document ID"> <display/> </field>
+       <field name="requesterlocation" title="Location"> <display/> </field>
+       <field name="requesterdate" title="Date Requested"> <display/> </field>
+       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplwier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="RequestId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+    
+ 
+    
+</forms>

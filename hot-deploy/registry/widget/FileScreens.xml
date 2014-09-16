@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+          
+            
+            
+                <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    
+                      <section>
+                            <widgets>
+                                <screenlet title="Registry: MAIN">
+                                   <label>Are you sure there is nothing to show? THINK!!!</label>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    
+                    
+                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+        <!--
+        EditSupplierScreen
+    -->
+    <screen name="filetype">
+        <section>
+            <actions>
+                <set field="titleProperty" value="file type"/>
+                 <set field="headerItem" value="addfiletype"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createfiletype"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="FileType" value-field="filetypeContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Create File Type">
+                                    <include-form name="EditFileTypeForm" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="File Types List">
+                                    <include-form name="FileTypeListForm" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    
+    <screen name="filebookdecorator">
+        <section>
+            <actions>
+                <set field="titleProperty" value="File Books"/>
+                 <set field="headerItem" value="addfilebook"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createFileBook"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="FileBooks" value-field="FileBookContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <widgets>
+                                 <include-menu name="FilesTabBar" location="component://registry/widget/RegistryMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Create Files Book">
+                                    <include-form name="EditFileBookForm" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="File Books List">
+                                    <include-form name="FileBookListForm" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="requestfile">
+        <section>
+            <actions>
+                <set field="titleProperty" value="File Books"/>
+                 <set field="headerItem" value="reqfile"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createFileBook"/>
+                <set field="fileBookId" from-field="parameters.fileBookId"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="FilesRequest" value-field="requestfileContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <widgets>
+                                 <include-menu name="FilesTabBar" location="component://registry/widget/RegistryMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Request Files ">
+                                    <include-form name="RequestFileForm" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Requested Files List">
+                                    <include-form name="RequestedFileListForm" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     
+    
+    
+     
+    <screen name="file">
+        <section>
+            <actions>
+                <set field="titleProperty" value="files"/>
+                 <set field="headerItem" value="addfile"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createFiless"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="Files" value-field="FileContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Create A File">
+                                    <include-form name="EditFileForm" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Files List">
+                                    <include-form name="FileListForm" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+   
+    
+    
+    
+    
+
+</screens>
