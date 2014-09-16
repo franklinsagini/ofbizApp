@@ -34,6 +34,10 @@ under the License.
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
                 <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
+                
+                <set field="assignee" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}" type="String"/>
+                <set field="assignedteller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerName(userLogin);}" type="String"/>
+                <set field="bdTotalAllocated" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}" type="BigDecimal"/>
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -49,11 +53,11 @@ under the License.
                                 		<widgets>
                                 			<container>
                                 				<label style="h3"> Teller Assigned To : ${assignee}</label>
-                                				<label style="h3"> Teller Name : ${assignee} </label>
+                                				<label style="h3"> Teller Name : ${assignedteller} </label>
                                 				<label style="h3"> Today Transactions</label>
-                                				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. xxx</label>
+                                				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. XXX</label>
                                 				
-                                				<label style="h3"> Start of Day Transfer  : KShs. xxx</label>
+                                				<label style="h3"> Start of Day Transfer  : KShs. ${bdTotalAllocated}</label>
                                 				<label style="h3"> Total Withdrawals  : KShs. xxx</label>
                                 				<label style="h3"> Total Deposits  : KShs. xxx</label>
                                             
@@ -97,7 +101,10 @@ under the License.
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
                 
-                <set field="assignee" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}" type="String"/>
+               <set field="assignee" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}" type="String"/>
+                <set field="assignedteller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerName(userLogin);}" type="String"/>
+          		<set field="bdTotalAllocated" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}" type="BigDecimal"/>
+          	
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -116,11 +123,11 @@ under the License.
                                 		<widgets>
                                 			<container>
                                 				<label style="h3"> Teller Assigned To : ${assignee}</label>
-                                				<label style="h3"> Teller Name : ${assignee} </label>
+                                				<label style="h3"> Teller Name : ${assignedteller} </label>
                                 				<label style="h3"> Today Transactions</label>
                                 				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. xxx</label>
                                 				
-                                				<label style="h3"> Start of Day Transfer  : KShs. xxx</label>
+                                				<label style="h3"> Start of Day Transfer  : KShs. ${bdTotalAllocated}</label>
                                 				<label style="h3"> Total Withdrawals  : KShs. xxx</label>
                                 				<label style="h3"> Total Deposits  : KShs. xxx</label>
                                             
