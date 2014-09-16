@@ -44,6 +44,23 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
+                            	<screenlet>
+                                	<section>
+                                		<widgets>
+                                			<container>
+                                				<label style="h3"> Teller Assigned To : ${assignee}</label>
+                                				<label style="h3"> Teller Name : ${assignee} </label>
+                                				<label style="h3"> Today Transactions</label>
+                                				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. xxx</label>
+                                				
+                                				<label style="h3"> Start of Day Transfer  : KShs. xxx</label>
+                                				<label style="h3"> Total Withdrawals  : KShs. xxx</label>
+                                				<label style="h3"> Total Deposits  : KShs. xxx</label>
+                                            
+                                            </container>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
                                 <screenlet title="Cash Withdrawal">
                                     <include-form name="NewCashWithdrawal" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                                 </screenlet>
@@ -79,6 +96,8 @@ under the License.
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
+                
+                <set field="assignee" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}" type="String"/>
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -92,6 +111,23 @@ under the License.
                             	<!-- screenlet title="Accounts">
                             		<include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" name="listMemberAccount"/>
                             	</screenlet -->
+                            	<screenlet>
+                                	<section>
+                                		<widgets>
+                                			<container>
+                                				<label style="h3"> Teller Assigned To : ${assignee}</label>
+                                				<label style="h3"> Teller Name : ${assignee} </label>
+                                				<label style="h3"> Today Transactions</label>
+                                				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. xxx</label>
+                                				
+                                				<label style="h3"> Start of Day Transfer  : KShs. xxx</label>
+                                				<label style="h3"> Total Withdrawals  : KShs. xxx</label>
+                                				<label style="h3"> Total Deposits  : KShs. xxx</label>
+                                            
+                                            </container>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
                                 <screenlet title="Cash Deposit">
                                     <include-form name="NewCashDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                                 </screenlet>
