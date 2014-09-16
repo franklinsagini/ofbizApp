@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="hElloCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <!--
+        EditSupplierScreen
+    -->
+    <screen name="UsersScreen">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Hello World Users"/>
+                 <set field="headerItem" value="users"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createUser"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="UsersHW" value-field="usersContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="hElloCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Hello World: Edit User">
+                                    <include-form name="EditUserForm" location="component://hello/widget/hElloForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Hello World: Users List">
+                                    <include-form name="UserListForm" location="component://hello/widget/hElloForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    
+    <screen name="estate">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Hello World Estates"/>
+                 <set field="headerItem" value="estates"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createEstates"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="Estate" value-field="estateContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="hElloCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Hello World: Edit Estate">
+                                    <include-form name="EditEstateForm" location="component://hello/widget/hElloForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Hello World: Estates List">
+                                    <include-form name="EstateListForm" location="component://hello/widget/hElloForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     
+    
+    
+     
+    <screen name="userestate">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Hello World UserEstates"/>
+                 <set field="headerItem" value="userestates"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createUserEstates"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="UserEstate" value-field="userEstateContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="hElloCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Hello World: Edit User Estate">
+                                    <include-form name="EditUserEstateForm" location="component://hello/widget/hElloForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Hello World: User Estates List">
+                                    <include-form name="UserEstateListForm" location="component://hello/widget/hElloForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="finduserestates">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find User Estate"/>
+                <set field="headerItem" value="finduserestates"/>
+                <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
+                <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
+                <set field="userEstateId" from-field="parameters.userEstateId"/>
+                <set field="employmentCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="hElloCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="userestatesURL" text="Create User Estate" style="buttontext create"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindUserEstate" location="component://hello/widget/hElloForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListFindUserEstate" location="component://hello/widget/hElloForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+
+</screens>

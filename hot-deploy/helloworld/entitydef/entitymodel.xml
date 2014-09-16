@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of HelloWorld Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+    
+
+    <entity entity-name="UsersHW"
+            package-name="org.ofbiz.helloworld.users"
+            title="Users Entity">
+      <field name="userId" type="id-ne"></field>
+      <field name="firstName" type="name"></field> <!-- used to record things like the vendor's invoice number -->
+      <field name="lastName" type="name"></field> <!-- user applying for the imprest -->
+      <field name="dob" type="date-time"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="userId"/>
+    </entity>
+    
+    
+      <entity entity-name="Estate"
+            package-name="org.ofbiz.helloworld.estates"
+            title="Estate Entity">
+      <field name="estateId" type="id-ne"></field>
+      <field name="Name" type="name"></field> <!-- used to record things like the vendor's invoice number -->
+      <field name="lastName" type="name"></field> 
+      <prim-key field="estateId"/>
+      <relation type="one" fk-name="IMPREST_IMPTYP" rel-entity-name="ImprestType">
+        <key-map field-name="imprestTypeId"/>
+      </relation>
+      <relation type="one" fk-name="IMPREST_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="IMP_STTS" rel-entity-name="StatusItem">
+          <key-map field-name="statusId"/>
+      </relation>
+    </entity>
+    
+       <entity entity-name="UserEstate"
+            package-name="org.ofbiz.helloworld.userestates"
+            title="User Estate Entity">
+      <field name="userEstateId" type="id-ne"></field>
+     <field name="estateId" type="id-ne"></field>
+     <field name="userId" type="id-ne"></field>
+     <field name="std" type="date-time"></field>
+     <field name="end_date" type="date-time"></field>
+      <prim-key field="userEstateId"/>
+      <prim-key field="estateId"/>
+      <prim-key field="userId"/>
+      <relation type="one" fk-name="USER_USREST" rel-entity-name="UsersHW">
+        <key-map field-name="userId"/>
+      </relation>
+      <relation type="one" fk-name="EST_USREST" rel-entity-name="Estate">
+        <key-map field-name="estateId"/>
+      </relation>
+    </entity>
+
+</entitymodel>
