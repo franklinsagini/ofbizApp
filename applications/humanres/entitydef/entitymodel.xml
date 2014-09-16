@@ -80,6 +80,8 @@ under the License.
         <field name="thruDate" type="date"></field>
         <field name="institute" type="name"><description>Name of Institute</description></field>
         <field name="institutelocation" type="name"><description>Physical Location of Institute</description></field>
+        <field name="specialization" type="name"><description>Qualification Specialization</description></field>
+        <field name="partyQualGroupId" type="id-ne"></field>
         <prim-key field="partyId"/>
         <prim-key field="partyQualTypeId"/>
         <prim-key field="fromDate"/>
@@ -89,13 +91,25 @@ under the License.
         <relation type="one" fk-name="PARTY_QUAL_PQTYP" rel-entity-name="PartyQualType">
             <key-map field-name="partyQualTypeId"/>
         </relation>
+        <relation type="one" fk-name="PARTY_QUAL_GRP" rel-entity-name="PartyQualGroup">
+            <key-map field-name="partyQualGroupId"/>
+        </relation>
         <relation type="one" fk-name="PARTY_QUAL_STATUS" rel-entity-name="StatusItem">
             <key-map field-name="statusId"/>
         </relation>
         <relation type="one" title="Verification" fk-name="PARTY_QUAL_VERIF" rel-entity-name="StatusItem">
             <key-map field-name="verifStatusId" rel-field-name="statusId"/>
         </relation>
+        
     </entity>
+    
+    <entity entity-name="PartyQualGroup" package-name="org.ofbiz.humanres.ability"
+            title="Party Qualification Group">
+        <field name="partyQualGroupId" type="id-ne"></field>
+        <field name="pqgroup" type="name"></field>
+        <field name="qualGroupDescription" type="name"></field>
+        <prim-key field="partyQualGroupId"/>
+    </entity>        
 
     <entity entity-name="PartyQualType"
             package-name="org.ofbiz.humanres.ability"
