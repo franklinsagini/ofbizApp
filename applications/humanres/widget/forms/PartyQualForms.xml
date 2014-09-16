@@ -32,6 +32,13 @@ under the License.
             </drop-down>
         </field>
         <field name="institutelocation" title="Institute Location"><text></text></field>
+        <field name="partyQualGroupId" title="Qualification Group">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${pqgroup}" entity-name="PartyQualGroup" key-field-name="partyQualGroupId">
+        			<entity-order-by field-name="pqgroup"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -74,6 +81,7 @@ under the License.
         <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
         <field name="qualificationDesc"><hidden/></field>
         <field name="title"><text/></field>
+        <field name="specialization" title="Specialization"><text/></field>
         <field name="institute" title="Institute"><text/></field>
         <field name="institutelocation" title="Institute Location"><hidden/></field>
         <field name="fromDate"><display/></field>
@@ -103,13 +111,13 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
-    <form name="AddPartyQual" type="single" target="createPartyQual"
+    <form name="AddPartyQual" type="single" target="FindPartyQuals"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>
         <alt-target use-when="insideEmployee != null" target="createPartyQualExt"/>
-        <auto-fields-service service-name="createPartyQual"/>
+        <!-- auto-fields-service service-name="createPartyQual"/ -->
         
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="partyQual!=null"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
@@ -121,8 +129,19 @@ under the License.
             </drop-down>
         </field>
         <field name="title" title="Title"><text></text></field>
+        <field name="specialization" title="Specialization"><text/></field>
+        <field name="qualificationDesc" title="Additional Details"><text/></field>
         <field name="institute" title="Institute Name"><text></text></field>
          <field name="institutelocation" title="Institute Location"><text></text></field>
+         <field name="fromDate" title="From Date"><date-time/></field>
+        <field name="thruDate" title="Through Date"><date-time/></field>
+        <field name="partyQualGroupId" title="Qualification Group">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${pqgroup}" entity-name="PartyQualGroup" key-field-name="partyQualGroupId">
+        			<entity-order-by field-name="pqgroup"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -172,6 +191,35 @@ under the License.
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePartyQualType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyQualTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+    <form name="NewPartyQualGroup" type="single" target="createPartyQualGroup"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="partyQualGroupContext">
+        
+        <field name="partyQualGroupId"><hidden/></field>
+        <field name="pqgroup" title="Qualification Group" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+		<field name="qualGroupDescription" title="Description"><textarea/></field>        
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPartyQualGroup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartyQualGroup" paginate-target="partyQualGroup"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyQualGroup">
+            </entity-condition>
+        </actions>
+        
+        <!-- auto-fields-service default-field-type="hidden" service-name="updatePartyQualGroup"/ -->
+        <field name="partyQualGroupId"> <hidden/> </field>
+        <field name="pqgroup" title="Qualification Group"><text/></field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePartyQualGroup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="partyQualGroupId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>

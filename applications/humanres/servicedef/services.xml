@@ -109,6 +109,31 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+    <service name="createPartyQualGroup" engine="simple" default-entity-name="PartyQualGroup"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyQualGroup" auth="true">
+        <description>Create a Party Qualification Group</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <!--override name="description" optional="false"/-->
+    </service>
+
+    <service name="updatePartyQualGroup" engine="simple" default-entity-name="PartyQualGroup"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updatePartyQualGroup" auth="true">
+        <description>Update Party Qualification Group</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <!--override name="description" optional="false"/-->
+    </service>
+
+    <service name="deletePartyQualGroup" engine="simple" default-entity-name="PartyQualGroup"
+        location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deletePartyQualGroup" auth="true">
+        <description>Delete Party Qualification Group</description>
+        <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
 
     <service name="createPartyResume" engine="simple" default-entity-name="PartyResume"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyResume" auth="true">
