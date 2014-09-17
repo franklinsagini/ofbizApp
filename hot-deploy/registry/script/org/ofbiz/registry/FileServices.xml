@@ -41,8 +41,7 @@
             <set-nonpk-fields map="parameters" value-field="newEntity"/>
             <sequenced-id sequence-name="FileBooks" field="fileBookId"/>
             <set from-field="fileBookId" field="newEntity.fileBookId"/>
-            
-            <set value="FBK-${newEntity.fileBookId}" field="newEntity.FolioNo" />
+            <set value="FBK-${newEntity.fileBookId}-${newEntity.firstName}" field="newEntity.FolioNo" />
             <set value="${userLogin.partyId}" field="newEntity.Creator" />
             <create-value value-field="newEntity"/>
     </simple-method>
@@ -58,8 +57,24 @@
             <create-value value-field="newEntity"/>
     </simple-method>
     
+      <simple-method method-name="requestfiles" short-description="request File ">
+            <make-value entity-name="FilesRequest" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="FilesRequest" field="RequestId"/>
+            <set from-field="RequestId" field="newEntity.RequestId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
     
-    
+     <simple-method method-name="createfilelocation" short-description="Create File location">
+            <make-value entity-name="fileLocations" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="fileLocations" field="locationId"/>
+           
+            <set from-field="locationId" field="newEntity.locationId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
     
     
    
