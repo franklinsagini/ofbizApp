@@ -38,6 +38,11 @@ under the License.
                 <set field="assignee" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}" type="String"/>
                 <set field="assignedteller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerName(userLogin);}" type="String"/>
                 <set field="bdTotalAllocated" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}" type="BigDecimal"/>
+          
+                <set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerBalance(userLogin);}" type="BigDecimal"/>
+                <set field="totalCashWithdrawal" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawal(userLogin);}" type="BigDecimal"/>
+                <set field="totalCashDeposit" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDeposit(userLogin);}" type="BigDecimal"/>
+          
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -55,11 +60,11 @@ under the License.
                                 				<label style="h3"> Teller Assigned To : ${assignee}</label>
                                 				<label style="h3"> Teller Name : ${assignedteller} </label>
                                 				<label style="h3"> Today Transactions</label>
-                                				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. XXX</label>
+                                				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. ${tellerBalance}</label>
                                 				
                                 				<label style="h3"> Start of Day Transfer  : KShs. ${bdTotalAllocated}</label>
-                                				<label style="h3"> Total Withdrawals  : KShs. xxx</label>
-                                				<label style="h3"> Total Deposits  : KShs. xxx</label>
+                                				<label style="h3"> Total Withdrawals  : KShs. ${totalCashWithdrawal}</label>
+                                				<label style="h3"> Total Deposits  : KShs. ${totalCashDeposit}</label>
                                             
                                             </container>
                                 		</widgets>
@@ -104,7 +109,10 @@ under the License.
                <set field="assignee" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}" type="String"/>
                 <set field="assignedteller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerName(userLogin);}" type="String"/>
           		<set field="bdTotalAllocated" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}" type="BigDecimal"/>
-          	
+
+				<set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerBalance(userLogin);}" type="BigDecimal"/>
+                <set field="totalCashWithdrawal" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawal(userLogin);}" type="BigDecimal"/>
+                <set field="totalCashDeposit" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDeposit(userLogin);}" type="BigDecimal"/>          	
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -125,11 +133,11 @@ under the License.
                                 				<label style="h3"> Teller Assigned To : ${assignee}</label>
                                 				<label style="h3"> Teller Name : ${assignedteller} </label>
                                 				<label style="h3"> Today Transactions</label>
-                                				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. xxx</label>
+                                				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. ${tellerBalance}</label>
                                 				
                                 				<label style="h3"> Start of Day Transfer  : KShs. ${bdTotalAllocated}</label>
-                                				<label style="h3"> Total Withdrawals  : KShs. xxx</label>
-                                				<label style="h3"> Total Deposits  : KShs. xxx</label>
+                                				<label style="h3"> Total Withdrawals  : KShs. ${totalCashWithdrawal}</label>
+                                				<label style="h3"> Total Deposits  : KShs. ${totalCashDeposit}</label>
                                             
                                             </container>
                                 		</widgets>
@@ -432,6 +440,53 @@ under the License.
         </section>
     </screen>
     <!-- End -->
+    
+    <!-- Station Deposit -->
+    <screen name="stationDeposit">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Station Deposit"/>
+                <set field="tabButtonItem" value="stationDeposit"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createStationDeposit"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!--  set field="partyId" from-field="parameters.partyId"/ -->
+                <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Station Deposit">
+                                    <include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Transactions">
+                        			<include-form name="listStationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- End Station Deposit -->
     
     <!-- Find Members Screen -->
     <screen name="FindMember">
