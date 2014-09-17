@@ -512,8 +512,13 @@ under the License.
     
   	<!-- StationAccountingTransaction -->
      <simple-method method-name="createStationAccountTransaction" short-description="Create StationAccountTransaction">
-        <make-value entity-name="StationAccountTransaction" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
+		<call-simple-method method-name="saveStationTransaction" scope="inline"></call-simple-method>
+        
+        <set field="postStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.postStationTransaction(newEntity, userLogin);}" type="String"/>
+    </simple-method>
+    <simple-method method-name="saveStationTransaction">
+    	<make-value entity-name="StationAccountTransaction" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="StationAccountTransaction" field="stationAccountTransactionId"/>
         <now-timestamp field="createdDate"/>
