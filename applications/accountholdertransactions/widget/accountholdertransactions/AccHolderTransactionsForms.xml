@@ -1446,7 +1446,78 @@ under the License.
          
          <field name="amountAccrued" title="Amount Accrued"><display also-hidden="false"></display></field>
          <field name="amountPaid" title="Amount Paid"><display also-hidden="false"></display></field>
-        
-        
     </form>
+    
+    <!-- StationAccountTransaction Start Here -->
+    <form name="stationDeposit" type="single" target="createStationAccountTransaction"
+	focus-field-name="transactionAmount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="stationAccountTransactionContext">
+        
+        <actions>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<!-- entity-one entity-name="PartyGroup" value-field="branch">
+        		<field-map field-name="partyId" from-field="userLogin.partyId"/>
+        	</entity-one -->
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
+        <field name="stationAccountTransactionId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field -->
+        <field name="branchId" title="Branch"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="partyGroups" key-name="partyId" description="${groupName} " />
+            </drop-down>
+        </field>
+        
+        <field name="stationId" title="Station"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="stationList" key-name="stationId" description="${name} " />
+            </drop-down>
+        </field>
+        <field name="monthyear" title="Month of the Year (Month/Year)"  widget-style="required" required-field="true"><text></text></field>
+        <field name="chequeNumber" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listStationDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStationAccountTransaction" paginate-target="stationDeposit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StationAccountTransaction">
+            	<order-by field-name="-stationAccountTransactionId"></order-by>
+            </entity-condition>
+            
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<entity-one entity-name="PartyGroup" value-field="branch">
+        		<field-map field-name="partyId" from-field="userLogin.partyId"/>
+        	</entity-one>
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStationAccountTransaction"/>
+ 		
+ 		<field name="branchId" title="Branch">
+            <display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}" ></display-entity>
+        </field>
+        
+        <field name="stationId" title="Station">
+            <display-entity entity-name="Station" key-field-name="stationId" description="${name}" ></display-entity>
+        </field>
+        <field name="monthyear" title="Month of the Year (Month/Year)" ><display></display></field>
+        <field name="chequeNumber" title="Cheque No"><display></display></field>
+        <field name="transactionAmount" title="Amount"><display></display></field>
+    </form>
+    <!-- StationAccountTransaction End Here -->
 </forms>

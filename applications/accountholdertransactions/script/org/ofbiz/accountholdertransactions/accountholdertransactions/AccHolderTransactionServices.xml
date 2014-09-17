@@ -510,6 +510,26 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
-  
+  	<!-- StationAccountingTransaction -->
+     <simple-method method-name="createStationAccountTransaction" short-description="Create StationAccountTransaction">
+        <make-value entity-name="StationAccountTransaction" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="StationAccountTransaction" field="stationAccountTransactionId"/>
+        <now-timestamp field="createdDate"/>
+        <set from-field="stationAccountTransactionId" field="newEntity.stationAccountTransactionId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateStationAccountTransaction" short-description="Update StationAccountTransaction">
+        <entity-one entity-name="StationAccountTransaction" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
     
+    <simple-method method-name="deleteStationAccountTransaction" short-description="Delete StationAccountTransaction">
+        <entity-one entity-name="StationAccountTransaction" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
 </simple-methods>

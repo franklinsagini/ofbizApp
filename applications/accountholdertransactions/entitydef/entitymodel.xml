@@ -139,6 +139,29 @@ under the License.
         	<key-map field-name="memberAccountId"/>
         </relation>
     </entity>
+    
+    <entity entity-name="StationAccountTransaction" package-name="org.ofbiz.accountholdertransactions" title="StationAccountTransaction Entity">
+        <field name="stationAccountTransactionId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="branchId" type="id-ne"></field>
+         <field name="stationId" type="id-ne"></field>
+        <field name="partyId" type="id"></field>
+        <field name="slipNumber" type="name"></field>
+        <field name="monthyear" type="name"></field>
+        <field name="chequeNumber" type="name"></field>
+        <field name="transactionAmount" type="currency-amount"></field>
+       
+        <prim-key field="stationAccountTransactionId"/>
+        
+        <relation type="one" fk-name="STATIONACCOUNTTRANSACTION_PARTYGROUP" rel-entity-name="PartyGroup">
+            <key-map field-name="branchId" rel-field-name="partyId"/>
+        </relation>
+ 		<relation type="one" fk-name="STATIONACCOUNTTRANSACTION_STATION" rel-entity-name="Station">
+            <key-map field-name="stationId"/>
+        </relation>
+    </entity>
 
     <entity entity-name="CashDeposit" package-name="org.ofbiz.accountholdertransactions" title="CashDeposit Entity">
         <field name="cashDepositId" type="id-ne"><description>primary sequenced ID</description></field>

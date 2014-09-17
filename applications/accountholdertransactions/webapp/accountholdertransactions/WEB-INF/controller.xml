@@ -455,6 +455,32 @@ under the License.
     </response>
     </request-map>
     
+        <request-map uri="createStationAccountTransaction">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStationAccountTransaction" />
+		<response name="success" type="request-redirect"
+			value="stationDeposit">
+				<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="stationDeposit" />
+	</request-map>
+	
+	<request-map uri="updateStationAccountTransaction">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStationAccountTransaction" />
+		<response name="success" type="request-redirect-noparam"
+			value="stationDeposit"></response>
+		<response name="error" type="view" value="stationDeposit" />
+	</request-map>
+	
+	<request-map uri="deleteStationAccountTransaction">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStationAccountTransaction" />
+		<response name="success" type="request-redirect-noparam"
+			value="stationDeposit"></response>
+		<response name="error" type="view" value="stationDeposit" />
+	</request-map>
+    
 
     
 	
@@ -494,4 +520,5 @@ under the License.
                 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentcsv" />
 	
     <!-- end of view mappings -->
+
 </site-conf>
