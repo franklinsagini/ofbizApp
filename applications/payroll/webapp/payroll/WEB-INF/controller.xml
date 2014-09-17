@@ -48,7 +48,7 @@ under the License.
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="staffpayroll"/></request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="payrollOverview"/></request-map>
 	
 	<!-- Payroll Request Maps -->
 	<request-map uri="elementsDefinition">
@@ -77,6 +77,11 @@ under the License.
 			</response>
 		<response name="error" type="view" value="payrollelements" />
 	</request-map>
+	
+	<request-map uri="EditPayrollElement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPayrollElement"/>
+    </request-map>
 	
 	<request-map uri="deletePayrollElement">
 		<security https="true" auth="true" />
@@ -146,7 +151,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="createBankBranch" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="bankbranch">
 				<redirect-parameter name="bankDetailsId"/>
 			</response>
@@ -157,7 +162,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateBankBranch" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="bankbranch">
 			<redirect-parameter name="bankDetailsId"/>
 			</response>
@@ -168,7 +173,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteBankDetails" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="bankbranch">
 			<redirect-parameter name="bankDetailsId"/>
 			</response>
@@ -268,7 +273,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="createPayrollPeriod" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="payrollperiod">
 				<redirect-parameter name="payrollYearId"/>
 			</response>
@@ -279,7 +284,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="updatePayrollPeriod" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="payrollperiod">
 			<redirect-parameter name="payrollYearId"/>
 			</response>
@@ -290,7 +295,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="deletePayrollPeriod" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="payrollperiod">
 			<redirect-parameter name="payrollYearId"/>
 			</response>
@@ -356,7 +361,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="createStaffPayrollElements" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="staffpayrollelements">
 				<redirect-parameter name="staffPayrollId"/>
 			</response>
@@ -367,7 +372,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateStaffPayrollElements" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="staffpayrollelements">
 			<redirect-parameter name="staffPayrollId"/>
 			</response>
@@ -600,15 +605,30 @@ under the License.
 	
 	 <request-map uri="runpayroll">
 	 	<security https="true" auth="true" />
-        <event type="java" path="org.ofbiz.payroll.PayrollProcess" invoke="runPayroll" >
-        
-        </event>
-        <response name="success" type="view"
-			value="staffpayroll">
+        <event type="java" path="org.ofbiz.payroll.PayrollProcess" invoke="runPayroll" ></event>
+        <response name="success" type="view" value="staffpayroll">
 				<redirect-parameter name="payrollPeriodId"/>
-			</response>
-			<response name="error" type="view" value="staffpayroll" />
-    </request-map>
+		</response>
+		<response name="error" type="view" value="staffpayroll" />
+     </request-map>
+     
+    <request-map uri="payrollOverview">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="payrollOverview" save-home-view="true">
+			<redirect-parameter name="payrollOverViewId"/>
+		</response>
+	</request-map>
+	
+     <request-map uri="migratepayroll">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.payroll.MigratePayroll" invoke="migratePayroll" ></event>
+        <response name="success" type="view" value="payrollOverview">
+				<redirect-parameter name="payrollPeriodId"/>
+		</response>
+		<response name="error" type="view" value="payrollOverview" />
+     </request-map>
+     
+     
     
     	<!-- PDFs -->
     <request-map uri="reporttest.pdf"><security https="true" auth="true"/><response name="success" type="view" value="ReportTestPDF"/></request-map>
@@ -639,6 +659,7 @@ under the License.
 
 	<!-- Payroll -->
 	<view-map name="payrollelements" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollElement"/>
+    <view-map name="EditPayrollElement" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#EditPayrollElement"/>
 	<view-map name="bankdetails" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewBankDetails"/>
 	<view-map name="bankbranch" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewBankBranch"/>
 	<view-map name="paypoint" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayPoint"/>
@@ -651,6 +672,7 @@ under the License.
 	<view-map name="payetable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPAYETable"/>
 	<view-map name="nhiftable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewNHIFTable"/>
 	<view-map name="nssftable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewNSSFTable"/>
+	<view-map name="payrollOverview" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#PayrollOverview"/>
 	
 	 <!-- PDFs  -->
     <view-map name="ReportTestPDF" type="screenfop" page="component://payroll/widget/payroll/PayrollScreens.xml#ReportTestPDF" content-type="application/pdf" encoding="none"/>

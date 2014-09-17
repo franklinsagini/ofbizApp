@@ -227,7 +227,10 @@
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="TreasuryTransferContext">
         <actions>
-        	<entity-condition entity-name="Treasury" list="treasuryList">
+        	<entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
 			</entity-condition>
         </actions>
        
@@ -235,13 +238,13 @@
 		
 		<field name="sourceTreasury" title="From" >
        		<drop-down allow-empty="true">
-       			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
+       			<list-options key-name="treasuryId" list-name="treasuryFromList" description="${name}"/>
        		</drop-down>
         </field>
         
         <field name="destinationTreasury" title="To" >
        		<drop-down allow-empty="true">
-       			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
+       			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
        		</drop-down>
         </field>
         
@@ -256,7 +259,10 @@
             <entity-condition entity-name="TreasuryTransfer">
             </entity-condition>
             
-            <entity-condition entity-name="Treasury" list="treasuryList">
+            <entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
 			</entity-condition>
         </actions>
        
@@ -264,13 +270,13 @@
 		
 		<field name="sourceTreasury" title="From" >
        		<drop-down allow-empty="true">
-       			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
+       			<list-options key-name="treasuryId" list-name="treasuryFromList" description="${name}"/>
        		</drop-down>
         </field>
         
         <field name="destinationTreasury" title="To" >
        		<drop-down allow-empty="true" text-size="20">
-       			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
+       			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
        		</drop-down>
         </field>
         

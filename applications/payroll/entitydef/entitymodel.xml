@@ -65,7 +65,7 @@ under the License.
         <field name="isbold" type="indicator"></field>
         <field name="parentId" type="id"></field>
         <field name="childId" type="id"></field>
-        
+        <field name="elementCode" type="name"></field>
         
         <prim-key field="payrollElementId"/>
         <relation type="one" fk-name="parent_Element" rel-entity-name="PayrollElement">
@@ -257,7 +257,15 @@ under the License.
 	        <prim-key field="nssfTableId"/>
         </entity>
         
-        
+         <entity entity-name="PayrollOverview" package-name="org.ofbiz.payroll" title="Payroll Overview">
+	        <field name="payrollOverViewId" type="id-ne"><description>primary sequenced ID</description></field>
+	        <field name="payrollPeriodId" type="id-ne"></field>
+	        <field name="numberOfEmployees" type="numeric"></field>
+	        <prim-key field="payrollOverViewId"/>
+	        <relation type="one" fk-name="current_period" rel-entity-name="PayrollPeriod">
+            	<key-map field-name="payrollPeriodId"/>
+        	</relation>
+        </entity>
         
             
 	

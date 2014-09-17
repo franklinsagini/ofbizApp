@@ -68,8 +68,21 @@
     </form -->
     <form name="AddEmployee" type="single" target="createPerson" default-map-name="personInfo"
         focus-field-name="salutation" header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<!-- entity-one entity-name="PartyGroup" value-field="branch">
+        		<field-map field-name="partyId" from-field="userLogin.partyId"/>
+        	</entity-one -->
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
         <alt-target use-when="personInfo==null" target="createPerson"/>
         <auto-fields-service service-name="updatePerson"/>
+        
         <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
@@ -132,6 +145,18 @@
                     <entity-constraint name="statusId" operator="in" value="LEAD_ASSIGNED,PARTY_ENABLED,PARTY_DISABLED"/>
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
+         <field name="stationId" title="Station" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
@@ -575,9 +600,9 @@
         </actions>        
         
         <field name="staffspouseId"><hidden/></field>
-        <field name="partyId">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+         <field name="partyId" title="Employee">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} ${lastName} (${employeeNumber})"/>
         	</drop-down>
         </field>
         <field name="fullname" title="Spouse Full Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -613,7 +638,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listStaffSpouse" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffSpouse" paginate-target="StaffSpouse"
+        <form name="listStaffSpouse" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffSpouse" paginate-target="spouse"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StaffSpouse"> </entity-condition>
@@ -667,9 +692,9 @@
         </actions>        
         
         <field name="staffdependantId"><hidden/></field>
-        <field name="partyId">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+         <field name="partyId" title="Employee">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} ${lastName} (${employeeNumber})"/>
         	</drop-down>
         </field>
         <field name="fullname" title="Dependant Full Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -705,7 +730,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listStaffDependants" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffDependant" paginate-target="StaffDependant"
+        <form name="listStaffDependants" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffDependant" paginate-target="dependant"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StaffDependant"> </entity-condition>
@@ -774,14 +799,14 @@
         </actions>        
         
         <field name="staffnokId"><hidden/></field>
-        <field name="partyId">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
+         <field name="partyId" title="Employee">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="partyId" list-name="personList" description="${firstName} ${lastName} (${employeeNumber})"/>
         	</drop-down>
         </field>
         <field name="fullname" title="Next Of Kin Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="familyRelationsId" title="Relationship">        	
-       	 <drop-down allow-empty="false">
+       	 <drop-down allow-empty="true">
        	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
        	 </drop-down>
         </field>
@@ -811,7 +836,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listStaffNextOfKin" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffNextOfKin" paginate-target="StaffNextOfKin"
+        <form name="listStaffNextOfKin" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffNextOfKin" paginate-target="nextofkin"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StaffNextOfKin"> </entity-condition>
