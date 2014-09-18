@@ -581,6 +581,15 @@ under the License.
 		<response name="success" type="view" value="receivedPaymentBreakdown"
 			save-current-view="true" />
 	</request-map>
+	
+	<request-map uri="generateExpectedPaymentStations">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accountholdertransactions.RemittanceServices" invoke="generateExpectedPaymentStations" />
+                <response name="success" type="view"
+                        value="expectedPaymentStations">
+                        </response>
+                <response name="error" type="view" value="expectedPaymentStations" />
+	</request-map>
     
 	
     <!-- end of request mappings -->
