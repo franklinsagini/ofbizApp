@@ -159,7 +159,93 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- Common Expected Payment Decorator -->
+    <screen name="CommonExpectedPaymentsDecorator">
+        <section>
+            <actions>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="memberAccountId" from-field="parameters.memberAccountId"/>
+                <entity-one entity-name="Member" value-field="member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+                <entity-one entity-name="MemberAccount" value-field="memberAccount">
+                	<field-map field-name="memberAccountId" from-field="memberAccountId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                                    <not><if-empty field="member"/></not>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <!-- do check for PARTYMGR, _VIEW permission -->
+                    <decorator-section name="body">
+                        <section>
+                            
+                            <condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field="partyId"/></not></condition>
+                                    <widgets>
+                                        <!-- include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/ -->
+                                        <container style="clear"/>
+                                        <container style="page-title">
+                                            <section>
+                                                <condition>
+                                                    <or>
+                                                        <not><if-empty field="lookupPerson"/></not>
+                                                        <not><if-empty field="lookupGroup"/></not>
+                                                        <not><if-empty field="member"/></not>
+                                                    </or>
+                                                </condition>
+                                                <widgets>
+                                                    <!-- label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/ -->
+                                                    <image src="${member.photourl}" url-mode="content" alt="Member Photo" style="cssImgStandard"/>
+                                                    <!-- label text="${uiLabelMap.PartyTheProfileOf}  ${member.firstName} ${member.middleName} ${member.lastName}"></label -->
+                                                    <label text="${member.firstName} ${member.middleName} ${member.lastName}"></label>
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <label text="Sacco Member"/>
+                                                  <!-- label> ${member.firstName}</label --> 
+                                                </fail-widgets>
+                                            </section>
+                                            <section>
+                                            	<condition>
+                                            		<not><if-empty field="memberAccount"/></not>
+                                            	</condition>
+                                            	<widgets>
+                                            		
+                                            		<label text="(${memberAccount.accountNo} - ${memberAccount.accountName})"></label>
+                                            	</widgets>
+                                            </section>
+                                        </container>
+                                    </widgets>
+                                </section>
 
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ 
     <screen name="CommonExampleDecorator">
         <!-- The CommonExampleDecorator screen decorates a small group of screens that all have
             something in common. It is decorated by the main-decorator screen. To see how the

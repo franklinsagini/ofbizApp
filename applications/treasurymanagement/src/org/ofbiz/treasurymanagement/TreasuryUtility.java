@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -17,6 +18,10 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 
+/***
+ * @author Japheth Odonya  @when Sep 17, 2014 1:30:38 PM
+ * Treasury Management Utility
+ * */
 public class TreasuryUtility {
 	
 	public static final Logger log = Logger.getLogger(TreasuryUtility.class);
@@ -30,6 +35,8 @@ public class TreasuryUtility {
 		BigDecimal bdTotalAllocated = getTotalAllocated(userLogin);
 		BigDecimal bdTotalCashDeposits = getTotalCashDeposit(userLogin);
 		BigDecimal bdTotalCashWithdrawals = getTotalCashWithdrawal(userLogin);
+		
+		bdTellerBalance = bdTotalAllocated.add(bdTotalCashDeposits).subtract(bdTotalCashWithdrawals);
 		
 		
 		return bdTellerBalance;
@@ -67,9 +74,11 @@ public class TreasuryUtility {
 		calendar.set(Calendar.MILLISECOND, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		
-		
+		//UtilDateTime.
+		log.info("################## The time is "+new Timestamp(calendar.getTimeInMillis()));
+		log.info("################## The treasury is "+treasuryId);
 		
 		EntityConditionList<EntityExpr> transferConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -95,17 +104,102 @@ public class TreasuryUtility {
 		return treasuryTransfer;
 	}
 
-	private static BigDecimal getTotalCashWithdrawal(Map<String, String> userLogin) {
+	/***
+	 * Cash Amount Withdrawn today
+	 * */
+	public static BigDecimal getTotalCashWithdrawal(Map<String, String> userLogin) {
 		// TODO Auto-generated method stub
-		return null;
+		String createdBy = userLogin.get("userLoginId");
+		
+		Calendar calendar =  Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+		
+		List<GenericValue> cashWithdrawalELI = null;
+		//CASHWITHDRAWAL
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"createdBy", EntityOperator.EQUALS,
+						createdBy), EntityCondition
+						.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHWITHDRAWAL"),
+								EntityCondition
+								.makeCondition("createdStamp",
+										EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)		
+						),
+						EntityOperator.AND);
+		
+		log.info(" ############ Cash withdrawal createdBy : "+createdBy);
+		
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		try {
+			cashWithdrawalELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		log.info(" ############ withdrawals size : "+cashWithdrawalELI.size());
+
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashWithdrawalELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
 	}
 
 	/***
-	 * Amount Transferred Today
+	 * Cash Amount Deposited Today
 	 * */
-	private static BigDecimal getTotalCashDeposit(Map<String, String> userLogin) {
+	public static BigDecimal getTotalCashDeposit(Map<String, String> userLogin) {
 		// TODO Auto-generated method stub
-		return null;
+		String createdBy = userLogin.get("userLoginId");
+		
+		Calendar calendar =  Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+		
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"createdBy", EntityOperator.EQUALS,
+						createdBy), EntityCondition
+						.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHDEPOSIT"),
+								EntityCondition
+								.makeCondition("createdStamp",
+										EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)		
+						),
+						EntityOperator.AND);
+		log.info(" ############ Cash Deposit createdBy : "+createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
 	}
 	
 	/****
