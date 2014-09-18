@@ -1446,7 +1446,215 @@ under the License.
          
          <field name="amountAccrued" title="Amount Accrued"><display also-hidden="false"></display></field>
          <field name="amountPaid" title="Amount Paid"><display also-hidden="false"></display></field>
+    </form>
+    
+    <!-- StationAccountTransaction Start Here -->
+    <form name="stationDeposit" type="single" target="createStationAccountTransaction"
+	focus-field-name="transactionAmount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="stationAccountTransactionContext">
+        
+        <actions>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<!-- entity-one entity-name="PartyGroup" value-field="branch">
+        		<field-map field-name="partyId" from-field="userLogin.partyId"/>
+        	</entity-one -->
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
+        <field name="stationAccountTransactionId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field -->
+        <field name="branchId" title="Branch"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="partyGroups" key-name="partyId" description="${groupName} " />
+            </drop-down>
+        </field>
+        
+        <field name="stationId" title="Station"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="stationList" key-name="stationId" description="${name} " />
+            </drop-down>
+        </field>
+        <field name="monthyear" title="Month of the Year (MonthYear)"  widget-style="required" required-field="true"><text></text></field>
+        <field name="chequeNumber" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listStationDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStationAccountTransaction" paginate-target="stationDeposit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StationAccountTransaction">
+            	<order-by field-name="-stationAccountTransactionId"></order-by>
+            </entity-condition>
+            
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<entity-one entity-name="PartyGroup" value-field="branch">
+        		<field-map field-name="partyId" from-field="userLogin.partyId"/>
+        	</entity-one>
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStationAccountTransaction"/>
+ 		
+ 		<field name="branchId" title="Branch">
+            <display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}" ></display-entity>
+        </field>
+        
+        <field name="stationId" title="Station">
+            <display-entity entity-name="Station" key-field-name="stationId" description="${name}" ></display-entity>
+        </field>
+        <field name="monthyear" title="Month of the Year (MonthYear)" ><display></display></field>
+        <field name="chequeNumber" title="Cheque No"><display></display></field>
+        <field name="transactionAmount" title="Amount"><display></display></field>
+    </form>
+    <!-- StationAccountTransaction End Here -->
+    
+    <!-- Expected Stations -->
+    <form name="listExpectedStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStationAccountTransaction" paginate-target="stationDeposit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StationExpectation">
+            	<order-by field-name="-month"></order-by>
+            </entity-condition>
+            
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStationExpectation"/>
+ 		
+ 		<field name="stationNumber" title="Station No/Code"><text></text></field>
+ 		<field name="stationName" title="Station Name"><text></text></field>
+        <field name="month" title="Month of the Year (MonthYear)" ><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="expectedRemittance" title="Expected Remittance" widget-style="buttontext">
+            <hyperlink target="expectedPaymentBreakdown" description="Expected Remittance" also-hidden="false">
+                <parameter param-name="stationNumber"/>
+                 <parameter param-name="month"/>
+            </hyperlink>
+        </field>
+        
+         <field name="receivedRemittance" title="Received Remittance" widget-style="buttontext">
+            <hyperlink target="receivedPaymentBreakdown" description="Received Remittance" also-hidden="false">
+                <parameter param-name="stationNumber"/>
+                 <parameter param-name="month"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- Expected Payments Breakdown  -->
+    <form name="listExpectedPaymentSentBreakdown" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateExpectedPayment" paginate-target="expectedPayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ExpectedPaymentSent">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<condition-list combine="and">
+            		<condition-expr field-name="stationNumber" operator="equals" from-field="parameters.stationNumber"/>
+            		<condition-expr field-name="month" operator="equals" from-field="parameters.month"/>
+            	</condition-list>
+            	<order-by field-name="remitanceCode"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentSent"/>
+		
+		<field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
+		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
+		<field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field>
+		<field name="payrollNo" title="Payroll No"><display also-hidden="false"></display></field>
+		<field name="month" title="Month"><display also-hidden="false"></display></field>
+        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+        <field name="employerNo" title="Employer No"><display also-hidden="false"></display></field>
         
         
+        <field name="amount" title="Amount"><display also-hidden="false"></display></field>
+        <field name="remitanceDescription" title="Remitance Description"><display also-hidden="false"></display></field>
+        
+        <field name="employeeName" title="Employee Name"><display also-hidden="false"></display></field>
+        <field name="generatedDate" title="Generated Date"><display also-hidden="false"></display></field>
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- Received Payments Breakdown -->
+    <form name="listExpectedPaymentReceivedBreakdown" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateExpectedPayment" paginate-target="expectedPayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ExpectedPaymentReceived">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<condition-list combine="and">
+            		<condition-expr field-name="stationNumber" operator="equals" from-field="parameters.stationNumber"/>
+            		<condition-expr field-name="month" operator="equals" from-field="parameters.month"/>
+            	</condition-list>
+            	<order-by field-name="remitanceCode"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentReceived"/>
+		
+		<field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
+		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
+		<field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field>
+		<field name="payrollNo" title="Payroll No"><display also-hidden="false"></display></field>
+		<field name="month" title="Month"><display also-hidden="false"></display></field>
+        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+        <field name="employerNo" title="Employer No"><display also-hidden="false"></display></field>
+        
+        
+        <field name="amount" title="Amount"><display also-hidden="false"></display></field>
+        <field name="remitanceDescription" title="Remitance Description"><display also-hidden="false"></display></field>
+        
+        <field name="employeeName" title="Employee Name"><display also-hidden="false"></display></field>
+        <field name="generatedDate" title="Generated Date"><display also-hidden="false"></display></field>
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- Codes -->
+    <form name="codesSetup" type="single" target="createCodesSetup"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="codesSetupContext">
+        
+       
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field -->
+        <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
+        <field name="code" title="Code"  widget-style="required" required-field="true"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listCodesSetup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCodesSetup" paginate-target="codesSetup"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="CodesSetup">
+            </entity-condition>
+            
+        	
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateCodesSetup"/>
+ 		
+         <field name="name" title="Name" widget-style="required" required-field="true" ><text></text></field>
+        <field name="code" title="Code" widget-style="required" required-field="true"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 </forms>

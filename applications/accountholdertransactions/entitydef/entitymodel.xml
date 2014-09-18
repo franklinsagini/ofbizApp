@@ -139,6 +139,29 @@ under the License.
         	<key-map field-name="memberAccountId"/>
         </relation>
     </entity>
+    
+    <entity entity-name="StationAccountTransaction" package-name="org.ofbiz.accountholdertransactions" sequence-bank-size="1" title="StationAccountTransaction Entity">
+        <field name="stationAccountTransactionId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="branchId" type="id-ne"></field>
+         <field name="stationId" type="id-ne"></field>
+        <field name="partyId" type="id"></field>
+        <field name="slipNumber" type="name"></field>
+        <field name="monthyear" type="name"></field>
+        <field name="chequeNumber" type="name"></field>
+        <field name="transactionAmount" type="currency-amount"></field>
+       
+        <prim-key field="stationAccountTransactionId"/>
+        
+        <relation type="one" fk-name="STATIONACCOUNTTRANSACTION_PARTYGROUP" rel-entity-name="PartyGroup">
+            <key-map field-name="branchId" rel-field-name="partyId"/>
+        </relation>
+ 		<relation type="one" fk-name="STATIONACCOUNTTRANSACTION_STATION" rel-entity-name="Station">
+            <key-map field-name="stationId"/>
+        </relation>
+    </entity>
 
     <entity entity-name="CashDeposit" package-name="org.ofbiz.accountholdertransactions" title="CashDeposit Entity">
         <field name="cashDepositId" type="id-ne"><description>primary sequenced ID</description></field>
@@ -396,6 +419,108 @@ under the License.
        
         <prim-key field="remitanceCode"/>
         <prim-key field="payrollNo"/>
+        
+    </entity>
+    
+    <!-- Generate 
+    	Go through Members, pick out stations that have members
+    	then create expectation
+     -->
+    
+    <!-- Station Expectation (Station/Month) 
+    -->
+    <entity entity-name="StationExpectation" package-name="org.ofbiz.accountholdertransactions" title="StationExpectation Entity">
+        <field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="branchId" type="name"></field>
+		<field name="stationNumber" type="name"></field>
+		<field name="stationName" type="name"></field>
+		
+        <field name="month" type="name"></field>
+        
+        <prim-key field="stationNumber"/>
+        <prim-key field="month"/>
+        
+    </entity>
+    
+    <!-- Expectation Sent 
+    	Generate Expectation to send ExpectedPaymentSe
+    	
+    	Shares for each
+    	Each Account Contribution for each
+    	Each Loan Repayment 
+    		Principal
+    		Interest
+    		Insurance
+    	
+    --> 
+    <entity entity-name="ExpectedPaymentSent" package-name="org.ofbiz.accountholdertransactions" title="ExpectedPaymentSent Entity">
+        <field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="branchId" type="name"></field>
+		<field name="remitanceCode" type="name"></field>
+		<field name="stationNumber" type="name"></field>
+		<field name="stationName" type="name"></field>
+		<field name="payrollNo" type="name"></field>
+		
+        <field name="month" type="name"></field>
+        <field name="loanNo" type="name"></field>
+        <field name="employerNo" type="name"></field>
+        
+        <field name="amount" type="fixed-point"></field>
+        <field name="remitanceDescription" type="id"></field>
+        
+        <field name="employeeName" type="name"></field>
+        <field name="status" type="name"></field>
+        <field name="generatedDate" type="date-time"></field>
+
+       
+        <prim-key field="remitanceCode"/>
+        <prim-key field="payrollNo"/>
+        <prim-key field="month"/>
+        
+    </entity>
+    
+    <!-- Expectation Received -->
+     <entity entity-name="ExpectedPaymentReceived" package-name="org.ofbiz.accountholdertransactions" title="ExpectedPaymentReceived Entity">
+        <field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="branchId" type="name"></field>
+		<field name="remitanceCode" type="name"></field>
+		<field name="stationNumber" type="name"></field>
+		<field name="stationName" type="name"></field>
+		<field name="payrollNo" type="name"></field>
+		
+        <field name="month" type="name"></field>
+        <field name="loanNo" type="name"></field>
+        <field name="employerNo" type="name"></field>
+        
+        <field name="amount" type="fixed-point"></field>
+        <field name="remitanceDescription" type="id"></field>
+        
+        <field name="employeeName" type="name"></field>
+        <field name="status" type="name"></field>
+        <field name="generatedDate" type="date-time"></field>
+
+       
+        <prim-key field="remitanceCode"/>
+        <prim-key field="payrollNo"/>
+        <prim-key field="month"/>
+        
+    </entity>
+    
+     <entity entity-name="CodesSetup" package-name="org.ofbiz.accountholdertransactions" title="CodesSetup Entity">
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        
+        <field name="name" type="name"></field>
+        <field name="code" type="name"></field>
+       
+        <prim-key field="name"/>
         
     </entity>
     

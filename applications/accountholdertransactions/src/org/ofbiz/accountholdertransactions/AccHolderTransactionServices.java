@@ -21,6 +21,7 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -1260,6 +1261,81 @@ public class AccHolderTransactionServices {
 		}
 
 		return json;
+	}
+	
+	public static String postStationTransaction(
+			GenericValue stationAccountTransaction, Map<String, String> userLogin) {
+		
+		String acctgTransType = "STATION_DEPOSIT";
+
+		// Create the Account Trans Record
+		String acctgTransId = createAccountingTransaction(stationAccountTransaction,
+				acctgTransType, userLogin);
+		// Do the posting
+		Delegator delegator = stationAccountTransaction.getDelegator();
+		BigDecimal transactionAmount = stationAccountTransaction
+				.getBigDecimal("transactionAmount");
+		String partyId = (String) userLogin.get("partyId");
+		
+		//Get Member Branch
+		String branchId;
+		branchId = getBranch(partyId);
+
+		//Debit Cash/Bank Account 
+
+		String memberDepositAccountId = getMemberDepositAccount(stationAccountTransaction, "STATIONACCOUNTPAYMENT");
+		String postingType = "D";
+		String entrySequenceId = "00001";
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		postTransactionEntry(delegator, transactionAmount, branchId,
+				memberDepositAccountId, postingType, acctgTransId,
+				acctgTransType, entrySequenceId);
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		// Credit Station Deposit Account
+		String cashAccountId = getCashAccount(stationAccountTransaction, "STATIONACCOUNTPAYMENT");
+		postingType = "C";
+		entrySequenceId = "00002";
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		postTransactionEntry(delegator, transactionAmount, branchId,
+				cashAccountId, postingType, acctgTransId, acctgTransType,
+				entrySequenceId);
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+
+		return "POSTED";
+
+	}
+
+	private static String getBranch(String partyId) {
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// GenericValue accountTransaction = null;
+		GenericValue person = null;
+		try {
+			person = delegator
+					.findOne("Person", UtilMisc.toMap(
+							"partyId", partyId),
+							false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		return person.getString("branchId");
 	}
 
 }
