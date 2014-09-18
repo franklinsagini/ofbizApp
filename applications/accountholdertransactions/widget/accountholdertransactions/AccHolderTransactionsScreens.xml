@@ -491,6 +491,54 @@ under the License.
     </screen>
     <!-- End Station Deposit -->
     
+    <!-- Start CodesSetup -->
+     <screen name="codesSetup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Codes Setup"/>
+                <set field="tabButtonItem" value="codesSetup"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createCodesSetup"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!--  set field="partyId" from-field="parameters.partyId"/ -->
+                <entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Code">
+                                    <include-form name="codesSetup" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Codes">
+                        			<include-form name="listCodesSetup" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- End CodesSetup -->
+    
     <!-- Start ExpectedPaymentStations -->
     <screen name="expectedPaymentStations">
         <section>
@@ -1017,6 +1065,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
                         <!-- section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
@@ -1069,7 +1118,7 @@ under the License.
     </screen>
     
     <!-- Received Payment Breakdown -->
-    <screen name="expectedPaymentBreakdown">
+    <screen name="receivedPaymentBreakdown">
         <section>
             <actions>
                 <set field="titleProperty" value="Received Payment Breakdown"/>
@@ -1087,6 +1136,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    <include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
                         <!-- section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>

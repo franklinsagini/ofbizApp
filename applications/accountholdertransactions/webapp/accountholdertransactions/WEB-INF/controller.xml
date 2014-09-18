@@ -590,6 +590,39 @@ under the License.
                         </response>
                 <response name="error" type="view" value="expectedPaymentStations" />
 	</request-map>
+	
+	<request-map uri="codesSetup">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="codesSetup"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="createCodesSetup">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createCodesSetup" />
+		<response name="success" type="request-redirect"
+			value="codesSetup">
+			</response>
+		<response name="error" type="view" value="codesSetup" />
+	</request-map>
+	
+	<request-map uri="updateCodesSetup">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateCodesSetup" />
+		<response name="success" type="request-redirect-noparam"
+			value="codesSetup"></response>
+		<response name="error" type="view" value="codesSetup" />
+	</request-map>
+	
+	<request-map uri="deleteCodesSetup">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteCodesSetup" />
+		<response name="success" type="request-redirect-noparam"
+			value="codesSetup"></response>
+		<response name="error" type="view" value="codesSetup" />
+	</request-map>
+	
+	<!-- CRUD -->
     
 	
     <!-- end of request mappings -->
@@ -607,6 +640,7 @@ under the License.
 	<view-map name="chequeDeposit" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeDeposit"/>
 	
 	<view-map name="stationDeposit" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#stationDeposit"/>
+	<view-map name="codesSetup" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#codesSetup"/>
 
 	<view-map name="expectedPaymentStations" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentStations"/>
 	<view-map name="receivedPaymentStations" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#receivedPaymentStations"/>

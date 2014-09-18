@@ -1536,8 +1536,15 @@ under the License.
  		<field name="stationName" title="Station Name"><text></text></field>
         <field name="month" title="Month of the Year (MonthYear)" ><text></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
-        <field name="expectedRemittance" title="Payments / Remittance" widget-style="buttontext">
-            <hyperlink target="paymentsRemittance" description="Payments/Remittance" also-hidden="false">
+        <field name="expectedRemittance" title="Expected Remittance" widget-style="buttontext">
+            <hyperlink target="expectedPaymentBreakdown" description="Expected Remittance" also-hidden="false">
+                <parameter param-name="stationNumber"/>
+                 <parameter param-name="month"/>
+            </hyperlink>
+        </field>
+        
+         <field name="receivedRemittance" title="Received Remittance" widget-style="buttontext">
+            <hyperlink target="receivedPaymentBreakdown" description="Received Remittance" also-hidden="false">
                 <parameter param-name="stationNumber"/>
                  <parameter param-name="month"/>
             </hyperlink>
@@ -1554,7 +1561,7 @@ under the License.
             		<condition-expr field-name="stationNumber" operator="equals" from-field="parameters.stationNumber"/>
             		<condition-expr field-name="month" operator="equals" from-field="parameters.month"/>
             	</condition-list>
-            	<order-by field-name="remittanceCode"/>
+            	<order-by field-name="remitanceCode"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentSent"/>
@@ -1592,7 +1599,7 @@ under the License.
             		<condition-expr field-name="stationNumber" operator="equals" from-field="parameters.stationNumber"/>
             		<condition-expr field-name="month" operator="equals" from-field="parameters.month"/>
             	</condition-list>
-            	<order-by field-name="remittanceCode"/>
+            	<order-by field-name="remitanceCode"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentReceived"/>
@@ -1618,5 +1625,36 @@ under the License.
             </hyperlink>
         </field -->
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- Codes -->
+    <form name="codesSetup" type="single" target="createCodesSetup"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="codesSetupContext">
+        
+       
+		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field -->
+        <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
+        <field name="code" title="Code"  widget-style="required" required-field="true"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listCodesSetup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCodesSetup" paginate-target="codesSetup"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="CodesSetup">
+            </entity-condition>
+            
+        	
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateCodesSetup"/>
+ 		
+         <field name="name" title="Name" widget-style="required" required-field="true" ><text></text></field>
+        <field name="code" title="Code" widget-style="required" required-field="true"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 </forms>

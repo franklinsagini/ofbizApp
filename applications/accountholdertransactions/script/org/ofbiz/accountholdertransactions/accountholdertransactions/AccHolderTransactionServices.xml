@@ -597,4 +597,24 @@ under the License.
         <entity-one entity-name="ExpectedPaymentReceived" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+    
+    <simple-method method-name="createCodesSetup" short-description="Create CodesSetup">
+        <make-value entity-name="CodesSetup" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <now-timestamp field="createdDate"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateCodesSetup" short-description="Update CodesSetup">
+        <entity-one entity-name="CodesSetup" value-field="lookedUpValue"/>
+        <set-pk-fields value-field="lookedUpValue" map="parameters" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteCodesSetup" short-description="Delete CodesSetup">
+        <entity-one entity-name="CodesSetup" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
 </simple-methods>
