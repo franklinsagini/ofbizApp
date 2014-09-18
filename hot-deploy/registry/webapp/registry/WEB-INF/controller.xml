@@ -15,81 +15,140 @@
 		invoke="test"/> </postprocessor> -->
 
 	<!-- Request Mappings -->
-	
-	<request-map uri="editlocationsURL">
+
+	<request-map uri="editlocation">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="editlocation" />
 	</request-map>
-	
-	
+
+	<request-map uri="updatelocationsURL">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="editfilelocation" />
+	</request-map>
+
+
 	<request-map uri="editfiletypeURL">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="editfiletype" />
+		<response name="success" type="view" value="editfiletypeURL" />
 	</request-map>
-	
+
 	<request-map uri="editfilebookURL">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="editfilebook" />
+		<response name="success" type="view" value="editfilebookURL" />
 	</request-map>
-	
+
 	<request-map uri="editfileURL">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="editfile" />
 	</request-map>
-	
+
 	<request-map uri="main">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="main" />
 	</request-map>
-	
+
 	<request-map uri="reqfileURL">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="reqfile" />
 	</request-map>
-	
-	 <request-map uri="lookupfilelocation">
-	 <security auth="true" https="true"/>
-	 <response name="success" type="view" value="lookupfilelocation"/>
-	 </request-map>
-	
-	 <request-map uri="fileoverviewURL">
-	 <security auth="true" https="true"/>
-	 <response name="success" type="view" value="fileoverview"/>
-	 </request-map>
-	
-	
-	
-	
-	
+
+
+	<request-map uri="fileoverviewURL">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="fileoverview" />
+	</request-map>
+
+
+
+
+
 	<request-map uri="requestfiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="requestfiles" />
 		<response name="success" type="view" value="reqfile" />
 		<response name="error" type="view" value="reqfile" />
 	</request-map>
-	
-	
-	
-		<request-map uri="createfilelocation">
+
+
+
+	<request-map uri="createfilelocation">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createfilelocation" />
 		<response name="success" type="view" value="editlocation" />
 		<response name="error" type="view" value="editlocation" />
 	</request-map>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	<request-map uri="updatefilelocation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatefilelocation" />
+		<response name="success" type="request-redirect" value="editlocation">
+			<redirect-parameter name="locationId" />
+		</response>
+		<response name="error" type="view" value="editlocation" />
+	</request-map>
+
+	<request-map uri="deletefilelocation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletefilelocation" />
+		<response name="success" type="request-redirect-noparam"
+			value="editlocation"></response>
+		<response name="error" type="view" value="editlocation" />
+	</request-map>
+
+
+	<request-map uri="createfiletype">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createfiletype" />
+		<response name="success" type="view" value="editfiletypeURL" />
+		<response name="error" type="view" value="editfiletypeURL" />
+	</request-map>
+
+
+
+	<request-map uri="updatefileType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatefileType" />
+		<response name="success" type="request-redirect" value="editfiletypeURL">
+			<redirect-parameter name="fileTypeId" />
+		</response>
+		<response name="error" type="view" value="editfiletypeURL" />
+	</request-map>
+
+
+	<request-map uri="deletefileTypedfd">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletefileType" />
+		<response name="success" type="request-redirect" value="editfiletypeURL">
+			<redirect-parameter name="fileTypeId" />
+		</response>
+		<response name="error" type="view" value="editfiletypeURL" />
+	</request-map>
+
+	<request-map uri="deletefileType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletefileType" />
+		<response name="success" type="request-redirect-noparam"
+			value="editfiletypeURL"></response>
+		<response name="error" type="view" value="editfiletypeURL" />
+	</request-map>
+
+	<request-map uri="updateFileBooks">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateFileBooks" />
+		<response name="success" type="request-redirect" value="editfilebookURL">
+			<redirect-parameter name="fileBookId" />
+		</response>
+		<response name="error" type="view" value="editfilebookURL" />
+	</request-map>
+
+
+
+
+
+
+
+
+
 	<request-map uri="employers">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="employers" />
@@ -312,9 +371,9 @@
 		<response name="success" type="view" value="FileType" />
 		<response name="error" type="view" value="EditFileType" />
 	</request-map>
-	<request-map uri="updateFileType">
+	<request-map uri="updateFileTypes">
 		<security https="true" auth="true" />
-		<event type="service" invoke="updateFileType" />
+		<event type="service" invoke="updateFileTypes" />
 		<response name="success" type="request-redirect" value="EditFileType">
 			<redirect-parameter name="fileTypeId" />
 		</response>
@@ -329,23 +388,17 @@
 		</response>
 		<response name="error" type="view" value="EditFileType" />
 	</request-map>
-	
-		<request-map uri="createfiletype">
-		<security https="true" auth="true" />
-		<event type="service" path="" invoke="createfiletype" />
-		<response name="success" type="view" value="editfiletype" />
-		<response name="error" type="view" value="editfiletype" />
-	</request-map>
-	
-		<request-map uri="createFileBook">
+
+
+	<request-map uri="createFileBook">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createFileBook" />
-		<response name="success" type="view" value="editfilebook" />
-		<response name="error" type="view" value="editfilebook" />
+		<response name="success" type="view" value="editfilebookURL" />
+		<response name="error" type="view" value="editfilebookURL" />
 	</request-map>
-	
-	
-		<request-map uri="createFiless">
+
+
+	<request-map uri="createFiless">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createFile" />
 		<response name="success" type="view" value="editfileURL" />
@@ -417,39 +470,44 @@
 		page="component://registry/widget/FileTypeScreens.xml#FindFileType" />
 	<view-map name="EditFileType" type="screen"
 		page="component://registry/widget/FileTypeScreens.xml#EditFileType" />
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-		
-		
-		<view-map name="editfiletype" type="screen"	page="component://registry/widget/FileScreens.xml#filetype" />
-		<view-map name="editfilebook" type="screen"	page="component://registry/widget/FileScreens.xml#filebookdecorator" />
-		<view-map name="editfile" type="screen"	page="component://registry/widget/FileScreens.xml#file" />
-		<view-map name="findfiles" type="screen" page="component://registry/widget/FileScreens.xml#FindFile" />
-		<view-map name="reqfile" type="screen"	page="component://registry/widget/FileScreens.xml#requestfilescreen" />
-		
-		
-		 <view-map name="lookupfilelocation" page="component://registry/widget/FileScreens.xml#lookupfilelocation" type="screen"/>
-		 
-		<view-map name="main" type="screen" page="component://registry/widget/FileScreens.xml#main"/>
-		<view-map name="editlocation" type="screen" page="component://registry/widget/FileScreens.xml#filelocation"/>
-		<view-map name="fileoverview" type="screen" page="component://registry/widget/FileScreens.xml#FileOverview"/>
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<view-map name="editfiletypeURL" type="screen"
+		page="component://registry/widget/FileScreens.xml#filetype" />
+	<view-map name="editfilebookURL" type="screen"
+		page="component://registry/widget/FileScreens.xml#filebookscreen" />
+	<view-map name="editfile" type="screen"
+		page="component://registry/widget/FileScreens.xml#file" />
+	<view-map name="findfiles" type="screen"
+		page="component://registry/widget/FileScreens.xml#FindFile" />
+	<view-map name="reqfile" type="screen"
+		page="component://registry/widget/FileScreens.xml#requestfilescreen" />
+
+
+	<view-map name="main" type="screen"
+		page="component://registry/widget/FileScreens.xml#main" />
+	<view-map name="editlocation" type="screen"
+		page="component://registry/widget/FileScreens.xml#filelocationscreen" />
+	<view-map name="fileoverview" type="screen"
+		page="component://registry/widget/FileScreens.xml#FileOverview" />
+
+
+
+
+
 </site-conf>
