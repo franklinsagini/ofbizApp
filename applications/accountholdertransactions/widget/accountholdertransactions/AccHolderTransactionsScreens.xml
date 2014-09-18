@@ -365,8 +365,10 @@ under the License.
                 <entity-one entity-name="ChequeType" value-field="chequeTypeContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                	
                     <decorator-section name="body">
+                    	
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
@@ -458,8 +460,9 @@ under the License.
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
-                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
@@ -488,6 +491,102 @@ under the License.
     </screen>
     <!-- End Station Deposit -->
     
+    <!-- Start ExpectedPaymentStations -->
+    <screen name="expectedPaymentStations">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payments"/>
+                <set field="tabButtonItem" value="expectedPaymentStations"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPaymentStations"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!--  set field="partyId" from-field="parameters.partyId"/ -->
+                <!-- entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/ -->
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
+                        <!-- section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Station Deposit">
+                                    <include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section -->
+                        
+                        <section name="Expected Stations">
+                        	<widgets>
+                        		<screenlet title="Expected Stations">
+                        			<include-form name="listExpectedStations" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- End ExpectedPaymentStations-->
+    
+    <!-- Start ReceivedPaymentStations -->
+    <screen name="receivedPaymentStations">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Received Payments Per Station"/>
+                <set field="tabButtonItem" value="receivedPaymentStations"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createReceivedPaymentStation"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!--  set field="partyId" from-field="parameters.partyId"/ -->
+                <!-- entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/ -->
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
+                        <!-- section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Station Deposit">
+                                    <include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section -->
+                        
+                        <section name="Expected Stations">
+                        	<widgets>
+                        		<screenlet title="Expected Stations">
+                        			<include-form name="listExpectedStations" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- End ReceivedPaymentStations -->
+    
     <!-- Find Members Screen -->
     <screen name="FindMember">
         <section>
@@ -500,8 +599,11 @@ under the License.
                 <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                	
                     <decorator-section name="body">
+                    	  <include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
                             <condition>
@@ -544,7 +646,7 @@ under the License.
                 <entity-one entity-name="AccountHolderTransactionSetup" value-field="accountHolderTransactionSetupContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -870,6 +972,146 @@ under the License.
                         </section>
                     <!-- /decorator-section>
                 </decorator-screen -->
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Expected Payment Breakdown -->
+    <screen name="expectedPaymentBreakdown">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payment Breakdown"/>
+                <set field="headerItem" value="expectedPaymentStations"/>
+                <set field="tabButtonItem" value="expectedPaymentStations"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPaymentSent"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="ExpectedPaymentSent" value-field="expectedPaymentSentContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Expected Payment">
+                                    <include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section -->
+                        <section>
+                        	<widgets>
+                        		  <screenlet>
+                                	<section>
+                                		
+                                		<widgets>
+                                			
+                                			<container style="button-bar">
+                                		
+                                            <link target="expectedPaymentBreakdownpdf" text="Print Expected Payment Breakdown" style="buttontext">
+                                                <!-- parameter param-name="loanApplicationId"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                                            
+                                            <link target="expectedPaymentBreakdowncsv" text="Generate Expected Payment Breakdown CSV" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                            </container>
+                                		</widgets>
+                                		
+                                	</section>
+                                </screenlet>
+                        	</widgets>
+                        </section>
+                        
+                        <section name="Expected Payment Breakdown">
+                        	<widgets>
+                        		<screenlet title="Expected Payment Breakdown">
+                        			<include-form name="listExpectedPaymentSentBreakdown" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Received Payment Breakdown -->
+    <screen name="expectedPaymentBreakdown">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Received Payment Breakdown"/>
+                <set field="headerItem" value="receivedPaymentStations"/>
+                <set field="tabButtonItem" value="receivedPaymentStations"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPaymentReceived"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="ExpectedPaymentReceived" value-field="expectedPaymentReceivedContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Expected Payment">
+                                    <include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section -->
+                        <section>
+                        	<widgets>
+                        		  <screenlet>
+                                	<section>
+                                		
+                                		<widgets>
+                                			
+                                			<container style="button-bar">
+                                		
+                                            <link target="receivedPaymentBreakdownpdf" text="Print Received Payment Breakdown" style="buttontext">
+                                                <!-- parameter param-name="loanApplicationId"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                                            
+                                            <link target="receivedPaymentBreakdowncsv" text="Generate Received Payment Breakdown CSV" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                            </container>
+                                		</widgets>
+                                		
+                                	</section>
+                                </screenlet>
+                        	</widgets>
+                        </section>
+                        
+                        <section name="Received Payment Breakdown">
+                        	<widgets>
+                        		<screenlet title="Received Payment Breakdown">
+                        			<include-form name="listExpectedPaymentReceivedBreakdown" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

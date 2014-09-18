@@ -480,8 +480,107 @@ under the License.
 			value="stationDeposit"></response>
 		<response name="error" type="view" value="stationDeposit" />
 	</request-map>
-    
-
+	
+	<!-- Station Expectation CRUD -->
+	 <request-map uri="createStationExpectation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStationExpectation" />
+		<response name="success" type="request-redirect"
+			value="expectedPaymentStations">
+			</response>
+		<response name="error" type="view" value="expectedPaymentStations" />
+	</request-map>
+	
+	<request-map uri="updateStationExpectation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStationExpectation" />
+		<response name="success" type="request-redirect-noparam"
+			value="expectedPaymentStations"></response>
+		<response name="error" type="view" value="expectedPaymentStations" />
+	</request-map>
+	
+	<request-map uri="deleteStationExpectation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStationExpectation" />
+		<response name="success" type="request-redirect-noparam"
+			value="expectedPaymentStations"></response>
+		<response name="error" type="view" value="expectedPaymentStations" />
+	</request-map>
+	
+	<!-- Expected and Received -->
+    <request-map uri="expectedPaymentStations">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="expectedPaymentStations"
+			save-current-view="true" />
+	</request-map>
+	<request-map uri="receivedPaymentStations">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="receivedPaymentStations"
+			save-current-view="true" />
+	</request-map>
+	
+	<!-- ExpectedPaymentSent CRUD -->
+	<request-map uri="createExpectedPaymentSent">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createExpectedPaymentSent" />
+		<response name="success" type="request-redirect"
+			value="expectedPaymentBreakdown">
+			</response>
+		<response name="error" type="view" value="expectedPaymentBreakdown" />
+	</request-map>
+	
+	<request-map uri="updateExpectedPaymentSent">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateExpectedPaymentSent" />
+		<response name="success" type="request-redirect-noparam"
+			value="expectedPaymentBreakdown"></response>
+		<response name="error" type="view" value="expectedPaymentBreakdown" />
+	</request-map>
+	
+	<request-map uri="deleteExpectedPaymentSent">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteExpectedPaymentSent" />
+		<response name="success" type="request-redirect-noparam"
+			value="expectedPaymentBreakdown"></response>
+		<response name="error" type="view" value="expectedPaymentBreakdown" />
+	</request-map>
+	<!-- ExpectedPaymentReceived CRUD -->
+	<request-map uri="createExpectedPaymentReceived">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createExpectedPaymentReceived" />
+		<response name="success" type="request-redirect"
+			value="receivedPaymentBreakdown">
+			</response>
+		<response name="error" type="view" value="receivedPaymentBreakdown" />
+	</request-map>
+	
+	<request-map uri="updateExpectedPaymentReceived">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateExpectedPaymentReceived" />
+		<response name="success" type="request-redirect-noparam"
+			value="receivedPaymentBreakdown"></response>
+		<response name="error" type="view" value="receivedPaymentBreakdown" />
+	</request-map>
+	
+	<request-map uri="deleteExpectedPaymentReceived">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteExpectedPaymentReceived" />
+		<response name="success" type="request-redirect-noparam"
+			value="receivedPaymentBreakdown"></response>
+		<response name="error" type="view" value="receivedPaymentBreakdown" />
+	</request-map>
+	
+	<!-- Remittance Breakdown -->
+	<request-map uri="expectedPaymentBreakdown">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="expectedPaymentBreakdown"
+			save-current-view="true" />
+	</request-map>
+	<request-map uri="receivedPaymentBreakdown">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="receivedPaymentBreakdown"
+			save-current-view="true" />
+	</request-map>
     
 	
     <!-- end of request mappings -->
@@ -499,6 +598,12 @@ under the License.
 	<view-map name="chequeDeposit" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeDeposit"/>
 	
 	<view-map name="stationDeposit" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#stationDeposit"/>
+
+	<view-map name="expectedPaymentStations" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentStations"/>
+	<view-map name="receivedPaymentStations" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#receivedPaymentStations"/>
+
+	<view-map name="expectedPaymentBreakdown" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentBreakdown"/>
+	<view-map name="receivedPaymentBreakdown" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#receivedPaymentBreakdown"/>
 	
 	
 	<view-map name="loanRepayment" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewLoanRepayment"/>
