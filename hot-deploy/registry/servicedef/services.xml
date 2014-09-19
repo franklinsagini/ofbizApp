@@ -193,12 +193,12 @@
 		<!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
 		<auto-attributes mode="IN" include="pk" optional="false" />
 	</service>
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	<service name="createfiletype" engine="simple"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
 		invoke="createfiletype" auth="true">
@@ -208,26 +208,56 @@
 		<auto-attributes entity-name="FileType" include="nonpk"
 			mode="IN" optional="true" />
 	</service>
-	
+
+	<service name="updatefileType" engine="simple"
+		default-entity-name="FileType"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="updatefileType" auth="true">
+		<description>Update estate</description>
+		<auto-attributes mode="IN" include="pk" optional="false" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+
+	<service name="deletefileType" engine="simple"
+		default-entity-name="FileType"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="deletefileType" auth="true">
+		<description>remove file type</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
 	<service name="createFileBook" engine="simple"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
 		invoke="createFileBook" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes entity-name="FileBooks" include="pk" mode="IN" optional="true" />
-		<auto-attributes entity-name="FileBooks" include="nonpk" mode="IN" optional="true" />
-		<attribute name="filelocation" mode="IN" type="String" />
+		<auto-attributes entity-name="FileBooks" include="pk"
+			mode="IN" optional="true" />
+		<auto-attributes entity-name="FileBooks" include="nonpk"
+			mode="IN" optional="true" />
 	</service>
-	
+
+	<service name="updateFileBooks" engine="simple"
+		default-entity-name="FileBooks"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="updateFileBooks" auth="true">
+		<description>Update estate</description>
+		<auto-attributes mode="IN" include="pk" optional="false" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+
 	<service name="createFiless" engine="simple"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
-		invoke="createFile" auth="true">
+		invoke="createFiless" auth="true">
 		<description>Create File Request header record</description>
 		<auto-attributes entity-name="Files" include="pk"
 			mode="IN" optional="true" />
 		<auto-attributes entity-name="Files" include="nonpk"
 			mode="IN" optional="true" />
 	</service>
-	
+
 	<service name="requestfiles" engine="simple"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
 		invoke="requestfiles" auth="true">
@@ -237,7 +267,7 @@
 		<auto-attributes entity-name="Files" include="nonpk"
 			mode="IN" optional="true" />
 	</service>
-	
+
 	<service name="createfilelocation" engine="simple"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
 		invoke="createfilelocation" auth="true">
@@ -247,4 +277,24 @@
 		<auto-attributes entity-name="fileLocations" include="nonpk"
 			mode="IN" optional="true" />
 	</service>
+
+	<service name="updatefilelocation" engine="simple"
+		default-entity-name="fileLocations"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="updatefilelocation" auth="true">
+		<description>Update estate</description>
+		<auto-attributes mode="IN" include="pk" optional="false" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+	<service name="deletefilelocation" engine="simple"
+		default-entity-name="fileLocations"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="deletefilelocation" auth="true">
+		<description>remove file type</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+
 </services>
