@@ -85,7 +85,7 @@
     
      <form name="EditUserEstateForm" type="single" target="createUserEstate" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="userEstateContext">
-        <alt-target use-when="userEstateContext!=null" target="updateUserEstate"/>
+      
         <actions>
             <entity-condition entity-name="UserEstate" list="userestatesList">
                 <order-by field-name="userEstateId"/>
@@ -97,6 +97,7 @@
                 <order-by field-name="estateId"/>
             </entity-condition>
         </actions>
+          <alt-target use-when="userEstateContext!=null" target="updateUserEstate"/>
       
         <field name="userEstateId"><hidden/></field>
         <field name="userEstateId" use-when="userEstateContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>

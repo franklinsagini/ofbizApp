@@ -2,49 +2,14 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-	<screen name="main">
-		<section>
-			<actions>
-				<set field="headerItem" value="main" />
-				<set field="tabButtonItem" value="find" />
-				<set field="titleProperty" value="PageTitleFindInvoice" />
-				<set field="findFileCtx" from-field="parameters" />
-			</actions>
-			<widgets>
-				<decorator-screen name="RegistryCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-						<section>
-							<widgets>
-								<screenlet title="Search File">
-									<include-form name="FindMemberfiles"
-										location="component://registry/widget/FileForms.xml" />
-								</screenlet>
-							</widgets>
-						</section>
-						<section name="search-results">
-							<widgets>
-								<screenlet title="Search Results">
-									<include-form name="listmembersfiles"
-										location="component://registry/widget/FileForms.xml" />
-								</screenlet>
-							</widgets>
-						</section>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
+	
 
 	<screen name="CommonFilesDecorator">
 		<section>
 			<actions>
-				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
-					global="true" />
-				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
-					global="true" />
-				<set field="headerItem" value="files" />
-				<entity-one entity-name="FileBooks" value-field="FileBookContext" />
+			<set field="fileId" from-field="Files.fileId"
+					default-value="${parameters.fileId}" />
+				<entity-one entity-name="Files" value-field="FilesContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -55,7 +20,7 @@
 								<section>
 									<condition>
 										<not>
-											<if-empty field="parameters.fileBookId" />
+											<if-empty field="parameters.fileId" />
 										</not>
 									</condition>
 									<widgets>
@@ -63,7 +28,7 @@
 											<include-menu name="FileSubTabBar2"
 												location="component://registry/widget/RegistryMenus.xml" />
 											<label style="h1"
-												text="Request File:- ${FileBookContext.fileBookId} (Folio Number:- ${FileBookContext.FolioNo})" />
+												text="Request File:- ${FilesRequest.fileId} (Folio Number:- ${FilesRequest.FolioNo})" />
 										</container>
 									</widgets>
 								</section>
@@ -84,7 +49,9 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
 					global="true" />
 				<set field="headerItem" value="files" />
-				<entity-one entity-name="FileBooks" value-field="FileBookContext" />
+				<set field="fileId" from-field="Files.fileId"
+					default-value="${parameters.fileId}" />
+				<entity-one entity-name="Files" value-field="FilesContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -95,7 +62,7 @@
 								<section>
 									<condition>
 										<not>
-											<if-empty field="parameters.fileBookId" />
+											<if-empty field="parameters.fileId" />
 										</not>
 									</condition>
 									<widgets>
@@ -103,7 +70,7 @@
 											<include-menu name="FileUpdateTabBar"
 												location="component://registry/widget/RegistryMenus.xml" />
 											<label style="h1"
-												text="Update File:- ${FileBookContext.fileBookId} (Folio Number:- ${FileBookContext.FolioNo})" />
+												text="Update File:- ${fileId} (Folio Number:- ${FilesContext.FolioNo})" />
 										</container>
 									</widgets>
 								</section>
@@ -115,6 +82,202 @@
 			</widgets>
 		</section>
 	</screen>
+
+
+	<screen name="CommonFileOverviewDecorator">
+		<section>
+			<actions>
+				<set field="headerItem" value="ListFiles" />
+				<set field="fileId" from-field="Files.fileId"
+					default-value="${parameters.fileId}" />
+				<entity-one entity-name="Files" value-field="FilesContext" />
+				<entity-and list="Fileitems" entity-name="Files">
+					<field-map field-name="fileId" from-field="fileId" />
+					<order-by field-name="fileId" />
+				</entity-and>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<condition>
+										<not>
+											<if-empty field="parameters.fileId" />
+										</not>
+									</condition>
+									<widgets>
+										<include-menu name="FileoverviewTabBar"
+											location="component://registry/widget/RegistryMenus.xml" />
+										<label style="h1" text="File : [${fileId}]" />
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="CommonFilereqDecorator">
+		<section>
+			<actions>
+				<set field="headerItem" value="ListFiles" />
+				<set field="FolioNo" from-field="FilesContext.FolioNo"
+					default-value="${parameters.FolioNo}" />
+					<set field="fileId" from-field="Files.fileId"
+					default-value="${parameters.fileId}" />
+				<entity-one entity-name="Files" value-field="FilesContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<condition>
+										<not>
+											<if-empty field="parameters.fileId" />
+										</not>
+									</condition>
+									<widgets>
+										<include-menu name="FilereqTabBar"
+											location="component://registry/widget/RegistryMenus.xml" />
+										<label style="h1"
+												text="File:- ${fileId} (Folio Number:- ${FolioNo}) Successfully Requested" />
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="CommonFileissueDecorator">
+		<section>
+			<actions>
+				<set field="headerItem" value="ListFiles" />
+				<set field="FolioNo" from-field="issuefileContext.FolioNo"
+					default-value="${parameters.FolioNo}" />
+					<set field="fileId" from-field="Files.fileId"
+					default-value="${parameters.fileId}" />
+				<entity-one entity-name="Files" value-field="issuefileContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<condition>
+										<not>
+											<if-empty field="parameters.fileId" />
+										</not>
+									</condition>
+									<widgets>
+										<include-menu name="FilereqTabBar"
+											location="component://registry/widget/RegistryMenus.xml" />
+										<label style="h1"
+												text="File:- ${fileId} (Folio Number:- ${FolioNo}) Successfully Issued" />
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="CommonFilereleaseDecorator">
+		<section>
+			<actions>
+				<set field="headerItem" value="ListFiles" />
+				<set field="FolioNo" from-field="releasefileContext.FolioNo"
+					default-value="${parameters.FolioNo}" />
+					<set field="fileId" from-field="Files.fileId"
+					default-value="${parameters.fileId}" />
+				<entity-one entity-name="Files" value-field="releasefileContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<condition>
+										<not>
+											<if-empty field="parameters.fileId" />
+										</not>
+									</condition>
+									<widgets>
+										<include-menu name="FilereqTabBar"
+											location="component://registry/widget/RegistryMenus.xml" />
+										<label style="h1"
+												text="File:- ${fileId} (Folio Number:- ${FolioNo}) Successfully Released" />
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+<screen name="main">
+		<section>
+			<actions>
+				<set field="headerItem" value="main" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+            	<set field="FolioNo" from-field="parameters.FolioNo"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="RegistryCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfiles"
+										location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listmembersfiles"
+										location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 
 
 
@@ -159,15 +322,16 @@
 
 
 
-	<screen name="filebookscreen">
+	<screen name="files">
 		<section>
 			<actions>
-				<set field="titleProperty" value="File Books" />
+				<set field="titleProperty" value="Files" />
 				<set field="headerItem" value="fileheader" />
 				<set field="displayPassword" value="Y" />
-				<set field="target" value="createFileBook" />
+				<set field="target" value="creatememberFiles" />
+				<set field="fileId" from-field="parameters.fileId" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="FileBooks" value-field="FileBookContext" />
+				<entity-one entity-name="Files" value-field="FilesContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonFilesupdateDecorator"
@@ -184,16 +348,51 @@
 					<decorator-section name="body">
 						<section>
 							<widgets>
-								<screenlet title="Create Files Book">
-									<include-form name="EditFileHeaderForm"
+								<screenlet title="Create A File For A member">
+									<include-form name="EditFilesForm"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>
 						<section name="search-results">
 							<widgets>
-								<screenlet title="File Books List">
-									<include-form name="FileHeaderListForm"
+								<screenlet title="Files List">
+									<include-form name="FilesListForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="documents">
+		<section>
+			<actions>
+				<set field="titleProperty" value="files" />
+				<set field="headerItem" value="addfile" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createDocument" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<entity-one entity-name="Documents" value-field="FileContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="RegistryCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Create A Document">
+									<include-form name="EditDocumentForm"
+										location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Documents List">
+									<include-form name="documentListForm"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
@@ -204,31 +403,24 @@
 		</section>
 	</screen>
 
-	<screen name="requestfilescreen">
+
+	<screen name="requestfile">
 		<section>
 			<actions>
 				<set field="titleProperty" value="File Books" />
 				<set field="headerItem" value="reqfile" />
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="requestfiles" />
-				<set field="fileBookId" from-field="parameters.fileBookId" />
+				<set field="fileId" from-field="parameters.fileId" />
 				<set field="FolioNo" from-field="parameters.FolioNo" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
 				<entity-one entity-name="FilesRequest" value-field="requestfileContext" />
 			</actions>
 			<widgets>
-				<decorator-screen name="CommonFilesDecorator"
+				<decorator-screen name="CommonFilereqDecorator"
 					location="component://registry/widget/FileScreens.xml">
 
 					<decorator-section name="body">
-						<section>
-							<widgets>
-								<screenlet title="Request Files ">
-									<include-form name="RequestFileForm"
-										location="component://registry/widget/FileForms.xml" />
-								</screenlet>
-							</widgets>
-						</section>
 						<section name="search-results">
 							<widgets>
 								<screenlet title="Requested Files List">
@@ -242,36 +434,28 @@
 			</widgets>
 		</section>
 	</screen>
-
-
-
-
-	<screen name="file">
+	
+	<screen name="issuefileresponse">
 		<section>
 			<actions>
-				<set field="titleProperty" value="files" />
-				<set field="headerItem" value="addfile" />
+				<set field="titleProperty" value="File Books" />
+				<set field="headerItem" value="reqfile" />
 				<set field="displayPassword" value="Y" />
-				<set field="target" value="createFiless" />
+				<set field="target" value="requestfiles" />
+				<set field="fileId" from-field="parameters.fileId" />
+				<set field="FolioNo" from-field="parameters.FolioNo" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="Files" value-field="FileContext" />
+				<entity-one entity-name="FilesRequest" value-field="requestfileContext" />
 			</actions>
 			<widgets>
-				<decorator-screen name="RegistryCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="CommonFileissueDecorator"
+					location="component://registry/widget/FileScreens.xml">
+
 					<decorator-section name="body">
-						<section>
-							<widgets>
-								<screenlet title="Create A File">
-									<include-form name="EditFileForm"
-										location="component://registry/widget/FileForms.xml" />
-								</screenlet>
-							</widgets>
-						</section>
 						<section name="search-results">
 							<widgets>
-								<screenlet title="Files List">
-									<include-form name="FileListForm"
+								<screenlet title="Issued Files List">
+									<include-form name="IssuedFileListForm"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
@@ -281,6 +465,41 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="releasefilerespons">
+		<section>
+			<actions>
+				<set field="titleProperty" value="File Books" />
+				<set field="headerItem" value="reqfile" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="requestfiles" />
+				<set field="fileId" from-field="parameters.fileId" />
+				<set field="FolioNo" from-field="parameters.FolioNo" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<entity-one entity-name="FilesRequest" value-field="requestfileContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonFilereleaseDecorator"
+					location="component://registry/widget/FileScreens.xml">
+
+					<decorator-section name="body">
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Released Files List">
+									<include-form name="releasedFileListForm"
+										location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+
+
 
 
 
@@ -328,7 +547,7 @@
 				<!-- property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/ -->
 				<set field="title" value="Files Search" />
 				<set field="queryString" from-field="result.queryString" />
-				<set field="entityName" value="FileBooks" />
+				<set field="entityName" value="Files" />
 			</actions>
 			<widgets>
 				<decorator-screen name="lookupfilelocation"
@@ -354,7 +573,7 @@
 			<actions>
 				<set field="title" value="Files Search" />
 				<set field="queryString" from-field="result.queryString" />
-				<set field="entityName" value="FileBooks" />
+				<set field="entityName" value="Files" />
 			</actions>
 			<widgets>
 				<decorator-screen name="findfilelookuplocation"
@@ -383,7 +602,7 @@
 	</screen>
 
 
-	<screen name="filelocationscreen">
+	<screen name="filelocation">
 		<section>
 			<actions>
 				<set field="titleProperty" value="files" />
@@ -421,82 +640,33 @@
 		</section>
 	</screen>
 
-	<screen name="CommonFileOverviewDecorator">
+
+<screen name="issuefile">
 		<section>
 			<actions>
-				<set field="headerItem" value="ListFiles" />
-				<set field="fileBookId" from-field="FileBooks.fileBookId"
-					default-value="${parameters.fileBookId}" />
-				<entity-one entity-name="FileBooks" value-field="requestfileContext" />
-				<entity-and list="Fileitems" entity-name="Files">
-					<field-map field-name="fileBookId" from-field="fileBookId" />
-					<order-by field-name="FileId" />
-				</entity-and>
+				<set field="headerItem" value="issuefile" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
 			</actions>
 			<widgets>
-				<decorator-screen name="main-decorator"
+				<decorator-screen name="RegistryCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
-
 					<decorator-section name="body">
 						<section>
 							<widgets>
-								<section>
-									<condition>
-										<not>
-											<if-empty field="parameters.fileBookId" />
-										</not>
-									</condition>
-									<widgets>
-										<include-menu name="FileoverviewTabBar"
-											location="component://registry/widget/RegistryMenus.xml" />
-										<label style="h1" text="File : [${fileBookId}]" />
-									</widgets>
-								</section>
-								<decorator-section-include name="body" />
-							</widgets>
-						</section>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-
-
-
-	<screen name="FileOverview">
-		<section>
-			<actions>
-				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
-					global="true" />
-				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
-					global="true" />
-				<set field="titleProperty" value="File Overview" />
-				<set field="tabButtonItem" value="BudgetOverview" />
-				<set field="fileBookId" from-field="parameters.fileBookId" />
-				<entity-one entity-name="FileBooks" value-field="requestfileContext" />
-
-				<entity-and entity-name="Files" list="Fileitems">
-					<field-map from-field="parameters.fileBookId" field-name="fileBookId" />
-					<order-by field-name="FileId" />
-				</entity-and>
-
-			</actions>
-			<widgets>
-				<decorator-screen name="CommonFileOverviewDecorator"
-					location="component://registry/widget/FileScreens.xml">
-					<decorator-section name="body">
-						<section>
-							<widgets>
-								<screenlet title="File Overview">
-									<include-form name="FiletHeader"
+								<screenlet title="Search File to Issue">
+									<include-form name="issuefiles"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
-								<container style="lefthalf">
-									<screenlet title="File Items">
-										<include-form name="FileItems"
-											location="component://registry/widget/FileForms.xml" />
-									</screenlet>
-								</container>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Search Results">
+									<include-form name="listissuefiles"
+										location="component://registry/widget/FileForms.xml" />
+								</screenlet>
 							</widgets>
 						</section>
 					</decorator-section>
@@ -504,7 +674,106 @@
 			</widgets>
 		</section>
 	</screen>
-
+	
+	<screen name="releasefile">
+		<section>
+			<actions>
+				<set field="headerItem" value="releasefile" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+			</actions>
+			<widgets>
+				<decorator-screen name="RegistryCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Search File to Release">
+									<include-form name="releasefiles"
+										location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Search Results">
+									<include-form name="listreleasefiles"
+										location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="NewCashWithdrawal">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Cash Withdrawal"/>
+                <set field="headerItem" value="cashWithdrawal"/>
+                <set field="tabButtonItem" value="cashWithdrawal"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createCashWithdrawal"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="Files" value-field="FindMemberfilesContext"/>
+                
+                <set field="fileId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}" type="String"/>
+                <set field="partyId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerName(userLogin);}" type="String"/>
+                <set field="FolioNo" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}" type="BigDecimal"/>
+          
+                <set field="Status" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerBalance(userLogin);}" type="BigDecimal"/>
+                <set field="filelocation" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawal(userLogin);}" type="BigDecimal"/>
+                <set field="CreationDate" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDeposit(userLogin);}" type="BigDecimal"/>
+          
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            	<screenlet>
+                                	<section>
+                                		<widgets>
+                                			<container>
+                                				<label style="h3"> File ID : ${fileId}</label>
+                                				<label style="h3"> Member ID : ${partyId} </label>
+                                				<label style="h3"> Member Folio Number: ${FolioNo}</label>
+                                				<label style="h3"> File Status : ${Status}</label>
+                                				
+                                				<label style="h3"> Current File Location : ${filelocation}</label>
+                                				<label style="h3"> Date File Created ${CreationDate}</label>
+                                            </container>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
+                                <screenlet title="Cash Withdrawal">
+                                    <include-form name="NewCashWithdrawal" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Transactions">
+                        			<include-form name="listCashWithdrawal" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 
 </screens>

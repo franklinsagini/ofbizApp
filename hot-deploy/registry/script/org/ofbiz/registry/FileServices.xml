@@ -13,7 +13,7 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-	<!-- User -->
+	<!-- file types-->
 
 
 
@@ -45,29 +45,31 @@
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
 
-
-	<simple-method method-name="createFileBook"
+<!-- files -->
+	<simple-method method-name="creatememberFiles"
 		short-description="Create File Book">
-		<make-value entity-name="FileBooks" value-field="newEntity" />
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="Files" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="FileBooks" field="fileBookId" />
-		<set from-field="fileBookId" field="newEntity.fileBookId" />
+		<sequenced-id sequence-name="Files" field="fileId" />
+		<set from-field="fileId" field="newEntity.fileId" />
+		
 		<entity-one value-field="member" entity-name="Member">
 			<field-map field-name="partyId" value="${newEntity.partyId}"/>
 		</entity-one>
-		<set value="FBK-${newEntity.fileBookId}-${member.firstName}" field="newEntity.FolioNo" />
+		
+		<set value="FNO-${newEntity.fileId}-${member.firstName}" field="newEntity.FolioNo" />
 		<set value="REGISTRY" field="newEntity.filelocation" />
 		<set value="AVAILABLE" field="newEntity.Status" />
 		<set value="${userLogin.partyId}" field="newEntity.Creator" />
+		<set from-field="nowTimestamp" field="newEntity.CreationDate"/>
 		<create-value value-field="newEntity" />
-		
-		
 	</simple-method>
 
-	<simple-method method-name="updateFileBooks"
+	<simple-method method-name="updateFiles"
 		short-description="Update an existing Budget">
-		<entity-one entity-name="FileBooks" value-field="lookedUpValue" />
+		<entity-one entity-name="Files" value-field="lookedUpValue" />
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
@@ -75,16 +77,7 @@
 	</simple-method>
 
 
-	<simple-method method-name="createFiless"
-		short-description="Create File ">
-		<make-value entity-name="Files" value-field="newEntity" />
-		<set-pk-fields map="parameters" value-field="newEntity" />
-		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="Files" field="FileId" />
-		<set from-field="FileId" field="newEntity.FileId" />
-		<create-value value-field="newEntity" />
-	</simple-method>
-
+	
 	<simple-method method-name="requestfiles"
 		short-description="request File ">
 		<make-value entity-name="FilesRequest" value-field="newEntity" />
@@ -92,10 +85,73 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="FilesRequest" field="RequestId" />
 		<set from-field="RequestId" field="newEntity.RequestId" />
-		<set value="REQUESTED" field="newEntity.Status" />
 		<create-value value-field="newEntity" />
+		
+		
+		
+<!-- 		<set field="updateFileStatusMap.fileId" from-field="Files.fileId" value="${parameters.fileId}" />
+		<set field="updateFileStatusMap.Status" value="REQUESTED" />
+		<set field="updateFileStatusMap.partyId" from-field="Files.fileId" default-value="${parameters.partyId}" />
+		<set field="updateFileStatusMap.FolioNo" from-field="Files.fileId" default-value="${parameters.FolioNo}" /> -->
+		
+		
+		
+	
+	     <find-by-primary-key entity-name="Files" value-field="file" map="10150"/>
+		
+		
+		<set field="updateFileStatusMap.fileId" value="${newEntity.fileId}" />
+		<set field="updateFileStatusMap.Status" value="REQUESTED" />
+		<set field="updateFileStatusMap.partyId" value="${file.partyId}" />
+		<set field="updateFileStatusMap.FolioNo" value="${file.FolioNo}" />
+		
+		
+		<call-service service-name="updateFileStatus" in-map-name="updateFileStatusMap" />
+		
 	</simple-method>
 
+	<simple-method method-name="updateFileStatus" short-description="Update a file's status">
+        <make-value value-field="lookupPKMap" entity-name="Files"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+	
+	<simple-method method-name="issuefiles"
+		short-description="issue File ">
+		<make-value entity-name="FileIssue" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="FileIssue" field="FileIssueId" />
+		<set from-field="FileIssueId" field="newEntity.FileIssueId" />
+		
+		<set value="${fl.RequestId}" field="newEntity.RequestId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<simple-method method-name="releasefiles"
+		short-description="release File ">
+		<make-value entity-name="FileRelease" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="FileRelease" field="ReleaseId" />
+		<set from-field="ReleaseId" field="newEntity.ReleaseId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<!-- documents -->
+	<simple-method method-name="createDocument"
+		short-description="Create File ">
+		<make-value entity-name="Documents" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="Documents" field="DocumentId" />
+		<set from-field="DocumentId" field="newEntity.DocumentId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+<!-- locations -->
 	<simple-method method-name="createfilelocation"
 		short-description="Create File location">
 		<make-value entity-name="fileLocations" value-field="newEntity" />
@@ -126,93 +182,6 @@
 
 
 
-
-
-	<simple-method method-name="deleteEstate"
-		short-description="Remove an estate">
-		<set field="estateId" from-field="parameters.estateId" />
-		<entity-one entity-name="Estate" value-field="lookedUpValue" />
-		<remove-value value-field="lookedUpValue" />
-	</simple-method>
-
-
-
-	<simple-method method-name="updateEstate"
-		short-description="Update an existing Budget">
-		<entity-one entity-name="Estate" value-field="lookedUpValue" />
-		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
-		<set-pk-fields value-field="lookedUpValue" map="parameters" />
-		<store-value value-field="lookedUpValue" />
-
-	</simple-method>
-
-
-
-
-
-
-
-	<simple-method method-name="getInvoice"
-		short-description="Retrieve an invoice and the items">
-		<!-- find the invoice record -->
-		<make-value value-field="lookupPKMap" entity-name="Invoice" />
-		<set-pk-fields map="parameters" value-field="lookupPKMap" />
-
-		<find-by-primary-key entity-name="Invoice" map="lookupPKMap"
-			value-field="invoiceValue" />
-		<field-to-result field="invoiceValue" result-name="invoice" />
-		<!-- and the items -->
-		<get-related value-field="invoiceValue" relation-name="InvoiceItem"
-			list="invoiceItemValues" />
-		<field-to-result field="invoiceItemValues"
-			result-name="invoiceItems" />
-	</simple-method>
-
-
-
-	<simple-method method-name="createNewOrder"
-		short-description="Create Order">
-		<now-timestamp field="nowTimestamp" />
-		<make-value entity-name="Order" value-field="newEntity" />
-		<!-- set the order entry date -->
-		<set from-field="nowTimestamp" field="newEntity.entryDate" />
-		<!-- Set order date if not provided -->
-		<if-empty field="parameters.orderDate">
-			<set from-field="nowTimestamp" field="parameters.orderDate" />
-		</if-empty>
-		<!-- Set order type -->
-		<set value="PURCHASE_ORDER" field="newEntity.orderTypeId" />
-		<!-- Set sales Channel -->
-		<set value="UNKNWN_SALES_CHANNEL" field="newEntity.salesChannelEnumId" />
-		<!-- Set the prepared by using the currently logged in user -->
-		<set value="${userLogin.partyId}" field="newEntity.createdBy" />
-		<!-- Set Status of the order -->
-		<set value="OPEN_ORDER" field="newEntity.status" />
-		<set-pk-fields map="parameters" value-field="newEntity" />
-		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="Order" field="orderId" />
-		<now-timestamp field="newEntity.createdDate" />
-		<set from-field="orderId" field="newEntity.orderId" />
-		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
-		<!-- set field="productType" value="Loan"/ -->
-		<create-value value-field="newEntity" />
-	</simple-method>
-
-	<!-- Order Line Creation Service -->
-	<simple-method method-name="createOrderLine"
-		short-description="Create OrderLine">
-		<now-timestamp field="nowTimestamp" />
-		<make-value entity-name="OrderLine" value-field="newEntity" />
-		<!-- Set OrderItemTypeId -->
-		<set value="PRODUCT_ORDER_ITEM" field="newEntity.orderItemTypeId" />
-		<set-pk-fields map="parameters" value-field="newEntity" />
-		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="OrderLine" field="orderLineSeqId" />
-		<set from-field="orderLineSeqId" field="newEntity.orderLineSeqId" />
-		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
-		<!-- set field="productType" value="Loan"/ -->
-		<create-value value-field="newEntity" />
-	</simple-method>
 
 
 </simple-methods>
