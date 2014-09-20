@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
-	<!-- The controller elements that are common to all OFBiz components can 
-		be found in the following xml file. A component can override the elements 
+	<!-- The controller elements that are common to all OFBiz components can
+		be found in the following xml file. A component can override the elements
 		found in the common-controller.xml file. -->
 	<include location="component://common/webcommon/WEB-INF/common-controller.xml" />
 
@@ -11,7 +11,7 @@
 	<!-- Events to run on every request before security (chains exempt) -->
 	<!-- <preprocessor> </preprocessor> -->
 	<!-- Events to run on every request after all other processing (chains exempt) -->
-	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" 
+	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent"
 		invoke="test"/> </postprocessor> -->
 
 	<!-- Request Mappings -->
@@ -32,13 +32,13 @@
 		<response name="success" type="view" value="editfiletypeURL" />
 	</request-map>
 
-	
-	
+
+
 	<request-map uri="editfiles">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="editfiles" />
 	</request-map>
-	
+
 
 	<request-map uri="editfileURL">
 		<security https="true" auth="true" />
@@ -54,12 +54,12 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="reqfile" />
 	</request-map>
-	
+
 	<request-map uri="issuefilew">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="issuefilew" />
 	</request-map>
-	
+
 	<request-map uri="releasefilew">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="releasefilew" />
@@ -70,7 +70,7 @@
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="fileoverview" />
 	</request-map>
-	
+
 	<request-map uri="issuefile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="issuefile" />
@@ -112,8 +112,8 @@
 			value="editlocation"></response>
 		<response name="error" type="view" value="editlocation" />
 	</request-map>
-	
-	
+
+
 	<!-- File type -->
 
 
@@ -140,19 +140,19 @@
 			value="editfiletypeURL"></response>
 		<response name="error" type="view" value="editfiletypeURL" />
 	</request-map>
-	
+
 	<!-- Files -->
-	
-	
-	
+
+
+
 	<request-map uri="creatememberFiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="creatememberFiles" />
 		<response name="success" type="view" value="editfiles" />
 		<response name="error" type="view" value="editfiles" />
 	</request-map>
-	
-	
+
+
 	<request-map uri="updateFiles">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateFiles" />
@@ -162,41 +162,38 @@
 		<response name="error" type="view" value="editfiles" />
 	</request-map>
 
-	
-	
+
+
 	<request-map uri="requestfiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="requestfiles" />
-		<response name="success" type="request-redirect" value="reqfile" >
-			<redirect-parameter name="partyId"/>
-			<redirect-parameter name="FolioNo"/>
-		</response>
+		<response name="success" type="view" value="reqfile" />
 		<response name="error" type="view" value="reqfile" />
 	</request-map>
-	
+
 	<request-map uri="issuefiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="issuefiles" />
 		<response name="success" type="view" value="issuefilew" />
 		<response name="error" type="view" value="issuefilew" />
 	</request-map>
-	
+
 	<request-map uri="releasefiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="releasefiles" />
 		<response name="success" type="view" value="releasefilew" />
 		<response name="error" type="view" value="releasefilew" />
 	</request-map>
-	
 
 
-	
-	
-	
+
+
+
+
 	<!-- documents -->
-	
-	
-	
+
+
+
 <request-map uri="createDocument">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createDocument" />
@@ -204,7 +201,7 @@
 		<response name="error" type="view" value="editfile" />
 	</request-map>
 
-	
+
 
 
 	<view-map name="editfiletypeURL" type="screen"
