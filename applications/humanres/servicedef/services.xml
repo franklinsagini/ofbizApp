@@ -446,6 +446,29 @@ under the License.
         <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <service name="createEmploymentHistory" engine="simple" default-entity-name="EmploymentHistory"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createEmploymentHistory" auth="true">
+        <description>Create Employment History</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateEmploymentHistory" engine="simple" default-entity-name="EmploymentHistory"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmploymentHistory" auth="true">
+        <description>Update Employment History</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteEmploymentHistory" engine="simple" default-entity-name="EmploymentHistory"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteEmploymentHistory" auth="true">
+        <description>Delete Employment History</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 
     <service name="createPartyBenefit" engine="simple" default-entity-name="PartyBenefit"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyBenefit" auth="true">

@@ -883,5 +883,50 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
+     <!-- New Dependant Details -->
+    <form name="employmentHistory" type="single" target="createEmploymentHistory"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="employmentHistoryContext">
+        <actions>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+        </actions>        
+        <field name="employmentHistoryId"><hidden/></field>
+        <field name="partyId" parameter-name="partyId"><hidden/></field> 
+        <field name="employer" title="Employer"><text size="30" maxlength="60"/></field>
+        <field name="position" title="Job Position Held"><text size="30" maxlength="60"/></field>
+        <field name="jobDescription" title="Details"><textarea/></field>
+        <field name="startDate" title="From"><date-time/></field>
+        <field name="endDate" title="To"><date-time/></field>
+        <field name="reason" title="Reason for Separation"><textarea/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listemploymentHistory" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmploymentHistory" paginate-target="employmenthistory"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+		<!-- set field="partyId" from-field="parameters.partyId"/ -->
+            <entity-condition entity-name="EmploymentHistory">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+            </entity-condition>
+
+		</actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateEmploymentHistory"/ -->
+        
+		<field name="employmentHistoryId"><hidden/></field>
+        <field name="employer" title="Employer"><display/></field>
+        <field name="position" title="Job Position Held"><display/></field>
+        <field name="jobDescription" title="Details"><display/></field>
+        <field name="startDate" title="From"><display type="date"/></field>
+        <field name="endDate" title="To"><display type="date"/></field>
+        <field name="reason" title="Reason for Separation"><display/></field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteEmploymentHistory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="employmentHistoryId"/>
+            </hyperlink>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
 </forms>
 
