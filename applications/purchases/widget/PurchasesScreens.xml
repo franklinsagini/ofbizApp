@@ -545,16 +545,12 @@
 
 
 
-    <!-- generates the pdf for report of sales by store and customer, grouped by product -->
+    <!-- generates the pdf for report -->
     <screen name="ContactPersonReportpdf">
         <section>
             <actions>
                 <set field="titleProperty" value="Contact Persons By Supplier"/>
                 <set field="supplierId" from-field="parameters.supplierId"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="SupplierContactPerson" list="contactReportList">
                     <condition-list combine="and">
                         <condition-expr field-name="supplierId" operator="equals" from-field="parameters.supplierId" ignore-if-empty="true"/>

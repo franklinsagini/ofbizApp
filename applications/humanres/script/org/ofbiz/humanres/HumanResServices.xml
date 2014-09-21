@@ -472,6 +472,29 @@
 		<entity-one entity-name="EmploymentApp" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
+	
+	<simple-method method-name="createEmploymentHistory" short-description="Create Employment History">
+        <make-value entity-name="EmploymentHistory" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="EmploymentHistory" field="employmentHistoryId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="employmentHistoryId" field="newEntity.employmentHistoryId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateEmploymentHistory" short-description="Update Employment History">
+        <entity-one entity-name="EmploymentHistory" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteEmploymentHistory" short-description="Delete Employment History">
+        <entity-one entity-name="EmploymentHistory" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
 
 	<simple-method method-name="createPartyBenefit"
 		short-description="Create Party Benefit">
