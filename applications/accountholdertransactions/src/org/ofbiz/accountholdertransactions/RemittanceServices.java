@@ -17,6 +17,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -61,9 +62,25 @@ public class RemittanceServices {
 		String createdBy = (String) request.getAttribute("userLoginId");
 		String month = getCurrentMonth();
 		//With the set IDs create ExpectatedStation
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		for (String tempStationId : setMemberStations) {
 			createExpectedStation(tempStationId, month, createdBy);
 		}
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		//Add shares
+		String shareCode = getShareCode();
+		addExpectedShares(shareCode);
 		
 
 
@@ -81,6 +98,117 @@ public class RemittanceServices {
 			}
 		}
 		return "";
+	}
+
+	/***
+	 * Get shares code
+	 * */
+	private static String getShareCode() {
+		GenericValue codesSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			codesSetup = delegator.findOne("CodesSetup",
+					UtilMisc.toMap("name", "SHARES"),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot get CodesSetup  ");
+		}
+		return codesSetup.getString("code");
+	}
+
+	private static void addExpectedShares(String shareCode) {
+		
+		//for each member save a share expected
+		List<GenericValue> memeberELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memeberELI = delegator.findList("Member",
+					EntityCondition.makeCondition("memberStatus", "ACTIVE"), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue member : memeberELI) {
+			
+			addMemberExpectedShares(shareCode, member);
+		}
+		
+	}
+
+	private static void addMemberExpectedShares(String shareCode,
+			GenericValue member) {
+			GenericValue station = findStation(member.getString("stationId"));
+			String month = getCurrentMonth();
+			String employerName = getEmployer(station.getString("employerId"));
+			
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			//Create an expectation
+			GenericValue expectedPaymentSent = null;
+			
+			String employeeNames = "";
+
+			if (member.getString("firstName") != null) {
+				employeeNames = employeeNames + member.getString("firstName");
+			}
+
+			if (member.getString("middleName") != null) {
+				employeeNames = employeeNames + " "
+						+ member.getString("middleName");
+			}
+
+			if (member.getString("lastName") != null) {
+				employeeNames = employeeNames + " " + member.getString("lastName");
+			}
+
+			
+			try {
+				TransactionUtil.begin();
+			} catch (GenericTransactionException e1) {
+				e1.printStackTrace();
+			}
+			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
+					UtilMisc.toMap("isActive", "Y",
+							"branchId", member.getString("branchId"),
+							"remitanceCode", shareCode,
+							"stationNumber", station.getString("stationNumber"),
+							"stationName", station.getString("stationName"),
+							
+							"payrollNo", member.getString("payrollNumber"),
+							"loanNo", "0",
+							"employerNo", employerName,
+							"amount", member.getBigDecimal("shareAmount"),
+							"remitanceDescription", "SHARES",
+							"employeeName", employeeNames,
+							
+							"month",month));
+			try {
+				delegator.createOrStore(expectedPaymentSent);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				TransactionUtil.commit();
+			} catch (GenericTransactionException e) {
+				e.printStackTrace();
+			}
+			
+	}
+
+	private static String getEmployer(String employerId) {
+		GenericValue employer = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			employer = delegator.findOne("Employer",
+					UtilMisc.toMap("employerId", employerId),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot get Employer  ");
+		}
+		return employer.getString("name");
 	}
 
 	private static String getCurrentMonth() {
