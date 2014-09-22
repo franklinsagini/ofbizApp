@@ -273,6 +273,35 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="FindMemberScreen">
+        <section>
+            <actions>
+                <set field="headerItem" value="members"/><!-- this highlights the selected menu-item with name "suppliers" -->
+                <set field="tabButtonItem" value="find"/>
+                <set field="membersCtx" from-field="parameters" />
+            </actions>
+            <widgets>
+                <decorator-screen name="RegistryCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <include-menu name="SupplierSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <container style="clear"/>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindMemberForm" location="component://registry/widget/FileForms.xml" />
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListMemberForm" location="component://registry/widget/FileForms.xml" />
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 
 

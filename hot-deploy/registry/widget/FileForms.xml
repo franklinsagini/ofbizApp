@@ -74,54 +74,12 @@
 
 
 
-	<form name="EditFilesForm" type="single" target="creatememberFiles"
-		focus-field-name="name" header-row-style="header-row"
-		default-table-style="basic-table" default-map-name="FilesContext">
+	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table">
+		 
+		 <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
 
-		<actions>
-			<entity-condition entity-name="RegistryFiles" list="filebooksList">
-				<order-by field-name="fileId" />
-			</entity-condition>
-			<entity-condition entity-name="Member" list="partydList">
-				<order-by field-name="partyId" />
-			</entity-condition>
-		</actions>
-		<alt-target use-when="FilesContext!=null" target="updateFiles" />
-
-		<field name="fileId" use-when="FilesContext!=null" title="File Id"
-			tooltip="${uiLabelMap.CommonNotModifRecreat}">
-			<display />
-		</field>
-		
-		
-		<field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
-		
-		
-
-		<field use-when="FilesContext==null" name="partyId" title="Select Member ID"
-			widget-style="required" required-field="true">
-			<drop-down>
-				<list-options key-name="partyId" list-name="partydList"
-					description="${partyId}->(For member-${firstName} ${lastName})" />
-			</drop-down>
-		</field>
-
-		<field use-when="FilesContext!=null" name="partyId" title="Selected Member ID"
-			widget-style="required" required-field="true">
-			<display-entity entity-name="Member" key-field-name="partyId"
-				description="${partyId}->(For member-${firstName} ${lastName})"></display-entity>
-		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
 		<!-- submitButton -->
-		<field use-when="FilesContext==null" name="submitButton"
-			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
-		<field use-when="FilesContext!=null" name="submitButton"
-			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+		<field use-when="FilesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
 			<submit button-type="text-link" />
 		</field>
 	</form>
@@ -712,115 +670,49 @@
     </form>
     
     
-    
-    <form name="lookupmember" type="single" target="lookupmember"
-	focus-field-name="name" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="lookupmemberContext">
-
-        <actions>
-        	<entity-condition entity-name="Member" list="membersList">
-        		<order-by field-name="firstName"/>
-        	</entity-condition>
-        	<entity-condition entity-name="Member">
-            	<condition-expr field-name="isActive" operator="equals" value="Y"/>
-            </entity-condition>
-        </actions>
-        <field name="partyId"><hidden/></field>
-
-<!-- 		<field name="partyId" title="Member">
-        	<drop-down allow-empty="true">
-                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
-            </drop-down>
-        </field> -->
-         <field name="partyId"><lookup target-form-name="lookupmember"/></field>
-        <field name="firstName" title="First Name" ><text></text></field>
-        <field name="laststName" title="Last Name" ><text></text></field>
-        <field name="id" title="Comments" ><textarea/></field>
-        <field name="sourceDocumentName"  title="Source Document" >
-            <drop-down allow-empty="false">
-                <option key="DEPOSIT" description="Deposit"/>
-                <option key="TOSELF" description="To SELF"/>
-                <option key="TOANOTHERMEMBER" description="To Another Member"/>
-                <option key="TOSACCO" description="To Sacco"/>
-            </drop-down>
+     <form name="FindMemberForm" default-map-name="membersCtx" target="findmember" type="single">
+        <auto-fields-entity entity-name="Member" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
         </field>
-        <field name="transactionType"  title="Transaction Type" >
-            <drop-down allow-empty="false">
-                <option key="IN" description="IN"/>
-                <option key="OUT" description="OUT"/>
-            </drop-down>
-        </field>
-       <field name="sourceDocumentId" title="Source Document ID" ><text></text></field>
-       <field name="addedBy" title="Added By">
-        	<drop-down allow-empty="true">
-                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
-            </drop-down>
-        </field>
-        <field name="glAccountId" title="Share Account">
-        	<drop-down>
-        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
-        	</drop-down>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
-       </form>
-       
-       
-        <form name="listlookupmember" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberShareTransactions" paginate-target="memberShareTransactions"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-condition entity-name="MemberShareTransactions">
-            	<condition-expr field-name="isActive" value="Y"/>
-            </entity-condition>
-            <entity-condition entity-name="FinAccount" list="accountList">
-        		<order-by field-name="finAccountName"/>
-        	</entity-condition>
-        	<entity-condition entity-name="Member" list="membersList">
-        		<order-by field-name="firstName"/>
-        	</entity-condition>
-        </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateMemberShareTransactions"/>
-
-        <field name="partyId" title="Member">
-        	<drop-down allow-empty="true">
-                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
-            </drop-down>
-        </field>
-        <field name="creditAmt" title="Credit Amount" ><text></text></field>
-        <field name="debitAmt" title="Debit Amount" ><text></text></field>
-        <field name="comments" title="Comments" ><textarea/></field>
-        <field name="sourceDocumentName"  title="Source Document" >
-            <drop-down allow-empty="false">
-                <option key="DEPOSIT" description="Deposit"/>
-                <option key="TOSELF" description="To SELF"/>
-                <option key="TOANOTHERMEMBER" description="To Another Member"/>
-                <option key="TOSACCO" description="To Sacco"/>
-            </drop-down>
-        </field>
-        <field name="transactionType"  title="Transaction Type" >
-            <drop-down allow-empty="false">
-                <option key="IN" description="IN"/>
-                <option key="OUT" description="OUT"/>
-            </drop-down>
-        </field>
-       <field name="sourceDocumentId" title="Source Document ID" ><text></text></field>
-       <field name="addedBy" title="Added By">
-        	<drop-down allow-empty="true">
-                <list-options list-name="membersList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
-            </drop-down>
-        </field>
-        <field name="glAccountId" title="Share Account">
-        	<drop-down>
-        		<list-options key-name="finAccountId" list-name="accountList" description="${finAccountName} - ${finAccountCode}"/>
-        	</drop-down>
-        </field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteMemberShareTransactions" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="memberShareTransactionsId"/>
-            </hyperlink>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
        
-
-
+       
+        <form name="ListMemberForm" type="list" list-name="listIt" target="" title="Supplier List" paginate-target="findmember" default-entity-name="Member"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx" />
+                <field-map field-name="entityName" value="Member" />
+                <field-map field-name="orderBy" from-field="parameters.sortField" />
+                <field-map field-name="viewIndex" from-field="viewIndex" />
+                <field-map field-name="viewSize" from-field="viewSize" />
+            </service>
+        </actions>
+        <field name="partyId" title="Party Id" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${partyId}" target="supplierOverview">
+                <parameter param-name="partyId" />
+            </hyperlink>
+        </field>
+        <field name="partyId" sort-field="true">
+            <display />
+        </field>
+        <field name="fastName" sort-field="true">
+            <display />
+        </field>
+        <field name="lastName" sort-field="true">
+            <display />
+        </field>
+        <field name="idNumber" sort-field="true">
+            <display />
+        </field>
+        <field name="pinNumber" sort-field="true">
+            <display />
+        </field>
+        <field name="mobileNumber" sort-field="true">
+            <display />
+        </field>
+    </form>
 </forms>
