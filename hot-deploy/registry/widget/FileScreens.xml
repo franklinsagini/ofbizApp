@@ -7,9 +7,6 @@
 	<screen name="CommonFilesDecorator">
 		<section>
 			<actions>
-			<set field="fileId" from-field="Files.fileId"
-					default-value="${parameters.fileId}" />
-				<entity-one entity-name="Files" value-field="FilesContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -28,7 +25,7 @@
 											<include-menu name="FileSubTabBar2"
 												location="component://registry/widget/RegistryMenus.xml" />
 											<label style="h1"
-												text="Request File:- ${FilesRequest.fileId} (Folio Number:- ${FilesRequest.FolioNo})" />
+												text="Request File:- ${RegistryFilesRequest.fileId} (Folio Number:- ${RegistryFilesRequest.folioNo})" />
 										</container>
 									</widgets>
 								</section>
@@ -49,9 +46,9 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
 					global="true" />
 				<set field="headerItem" value="files" />
-				<set field="fileId" from-field="Files.fileId"
+				<set field="fileId" from-field="RegistryFiles.fileId"
 					default-value="${parameters.fileId}" />
-				<entity-one entity-name="Files" value-field="FilesContext" />
+				<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -70,7 +67,7 @@
 											<include-menu name="FileUpdateTabBar"
 												location="component://registry/widget/RegistryMenus.xml" />
 											<label style="h1"
-												text="Update File:- ${fileId} (Folio Number:- ${FilesContext.FolioNo})" />
+												text="Update File:- ${fileId} (Folio Number:- ${FilesContext.folioNo})" />
 										</container>
 									</widgets>
 								</section>
@@ -84,55 +81,18 @@
 	</screen>
 
 
-	<screen name="CommonFileOverviewDecorator">
-		<section>
-			<actions>
-				<set field="headerItem" value="ListFiles" />
-				<set field="fileId" from-field="Files.fileId" default-value="${parameters.fileId}" />
-				<entity-one entity-name="Files" value-field="FilesContext" />
-				<entity-and list="Fileitems" entity-name="Files">
-					<field-map field-name="fileId" from-field="fileId" />
-					<order-by field-name="fileId" />
-				</entity-and>
-			</actions>
-			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
 
-					<decorator-section name="body">
-						<section>
-							<widgets>
-								<section>
-									<condition>
-										<not>
-											<if-empty field="parameters.fileId" />
-										</not>
-									</condition>
-									<widgets>
-										<include-menu name="FileoverviewTabBar"
-											location="component://registry/widget/RegistryMenus.xml" />
-										<label style="h1" text="File : [${fileId}]" />
-									</widgets>
-								</section>
-								<decorator-section-include name="body" />
-							</widgets>
-						</section>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
 
 
 	<screen name="CommonFilereqDecorator">
 		<section>
 			<actions>
 				<set field="headerItem" value="ListFiles" />
-				<set field="FolioNo" from-field="FilesContext.FolioNo"
-					default-value="${parameters.FolioNo}" />
-					<set field="fileId" from-field="Files.fileId"
+				<set field="folioNo" from-field="FilesContext.folioNo"
+					default-value="${parameters.folioNo}" />
+					<set field="fileId" from-field="RegistryFiles.fileId"
 					default-value="${parameters.fileId}" />
-				<entity-one entity-name="Files" value-field="FilesContext" />
+				<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -151,7 +111,7 @@
 										<include-menu name="FilereqTabBar"
 											location="component://registry/widget/RegistryMenus.xml" />
 										<label style="h1"
-												text="File:- ${fileId} (Folio Number:- ${FolioNo}) Successfully Requested" />
+												text="File:- ${fileId} (Folio Number:- ${folioNo}) Successfully Requested" />
 									</widgets>
 								</section>
 								<decorator-section-include name="body" />
@@ -167,11 +127,11 @@
 		<section>
 			<actions>
 				<set field="headerItem" value="ListFiles" />
-				<set field="FolioNo" from-field="issuefileContext.FolioNo"
-					default-value="${parameters.FolioNo}" />
-					<set field="fileId" from-field="Files.fileId"
+				<set field="folioNo" from-field="issuefileContext.folioNo"
+					default-value="${parameters.folioNo}" />
+					<set field="fileId" from-field="RegistryFiles.fileId"
 					default-value="${parameters.fileId}" />
-				<entity-one entity-name="Files" value-field="issuefileContext" />
+				<entity-one entity-name="RegistryFiles" value-field="issuefileContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -190,7 +150,7 @@
 										<include-menu name="FilereqTabBar"
 											location="component://registry/widget/RegistryMenus.xml" />
 										<label style="h1"
-												text="File:- ${fileId} (Folio Number:- ${FolioNo}) Successfully Issued" />
+												text="File:- ${fileId} (Folio Number:- ${folioNo}) Successfully Issued" />
 									</widgets>
 								</section>
 								<decorator-section-include name="body" />
@@ -206,11 +166,11 @@
 		<section>
 			<actions>
 				<set field="headerItem" value="ListFiles" />
-				<set field="FolioNo" from-field="releasefileContext.FolioNo"
-					default-value="${parameters.FolioNo}" />
-					<set field="fileId" from-field="Files.fileId"
+				<set field="folioNo" from-field="releasefileContext.FolioNo"
+					default-value="${parameters.folioNo}" />
+					<set field="fileId" from-field="RegistryFiles.fileId"
 					default-value="${parameters.fileId}" />
-				<entity-one entity-name="Files" value-field="releasefileContext" />
+				<entity-one entity-name="RegistryFiles" value-field="releasefileContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -229,7 +189,7 @@
 										<include-menu name="FilereqTabBar"
 											location="component://registry/widget/RegistryMenus.xml" />
 										<label style="h1"
-												text="File:- ${fileId} (Folio Number:- ${FolioNo}) Successfully Released" />
+												text="File:- ${fileId} (Folio Number:- ${folioNo}) Successfully Released" />
 									</widgets>
 								</section>
 								<decorator-section-include name="body" />
@@ -286,7 +246,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createfiletype" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="FileType" value-field="filetypeContext" />
+				<entity-one entity-name="RegistryFileType" value-field="filetypeContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="RegistryCommonDecorator"
@@ -313,6 +273,35 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="FindMemberScreen">
+        <section>
+            <actions>
+                <set field="headerItem" value="members"/><!-- this highlights the selected menu-item with name "suppliers" -->
+                <set field="tabButtonItem" value="find"/>
+                <set field="membersCtx" from-field="parameters" />
+            </actions>
+            <widgets>
+                <decorator-screen name="RegistryCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <include-menu name="SupplierSubTabBar" location="component://purchases/widget/PurchasesMenus.xml"/>
+                                <container style="clear"/>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindMemberForm" location="component://registry/widget/FileForms.xml" />
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListMemberForm" location="component://registry/widget/FileForms.xml" />
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 
 
@@ -326,7 +315,7 @@
 				<set field="target" value="creatememberFiles" />
 				<set field="fileId" from-field="parameters.fileId" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="Files" value-field="FilesContext" />
+				<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonFilesupdateDecorator"
@@ -370,7 +359,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createDocument" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="Documents" value-field="FileContext" />
+				<entity-one entity-name="RegistryDocuments" value-field="FileContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="RegistryCommonDecorator"
@@ -407,9 +396,9 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="requestfiles" />
 				<set field="fileId" from-field="parameters.fileId" />
-				<set field="FolioNo" from-field="parameters.FolioNo" />
+				<set field="folioNo" from-field="parameters.folioNo" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="FilesRequest" value-field="requestfileContext" />
+				<entity-one entity-name="RegistryFilesRequest" value-field="requestfileContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonFilereqDecorator"
@@ -438,9 +427,9 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="requestfiles" />
 				<set field="fileId" from-field="parameters.fileId" />
-				<set field="FolioNo" from-field="parameters.FolioNo" />
+				<set field="folioNo" from-field="parameters.folioNo" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="FilesRequest" value-field="requestfileContext" />
+				<entity-one entity-name="RegistryFilesRequest" value-field="requestfileContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonFileissueDecorator"
@@ -469,9 +458,9 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="requestfiles" />
 				<set field="fileId" from-field="parameters.fileId" />
-				<set field="FolioNo" from-field="parameters.FolioNo" />
+				<set field="folioNo" from-field="parameters.folioNo" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="FilesRequest" value-field="requestfileContext" />
+				<entity-one entity-name="RegistryFilesRequest" value-field="requestfileContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonFilereleaseDecorator"
@@ -542,7 +531,7 @@
 				<!-- property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/ -->
 				<set field="title" value="Files Search" />
 				<set field="queryString" from-field="result.queryString" />
-				<set field="entityName" value="Files" />
+				<set field="entityName" value="RegistryFiles" />
 			</actions>
 			<widgets>
 				<decorator-screen name="lookupfilelocation"
@@ -568,7 +557,7 @@
 			<actions>
 				<set field="title" value="Files Search" />
 				<set field="queryString" from-field="result.queryString" />
-				<set field="entityName" value="Files" />
+				<set field="entityName" value="RegistryFiles" />
 			</actions>
 			<widgets>
 				<decorator-screen name="findfilelookuplocation"
@@ -605,8 +594,8 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createfilelocation" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="fileLocations" value-field="filelocationContext" />
-				<set field="locationId" from-field="fileLocations.locationId"
+				<entity-one entity-name="RegistryFileLocations" value-field="filelocationContext" />
+				<set field="locationId" from-field="RegistryFileLocations.locationId"
 					default-value="${parameters.locationId}" />
 			</actions>
 			<widgets>
@@ -707,14 +696,14 @@
         <section>
             <actions>
                 <set field="fileId" from-field="parameters.fileId"/>
-                <entity-one entity-name="Files" value-field="file"/>
-                <entity-and entity-name="Documents" list="fileDocuments">
+                <entity-one entity-name="RegistryFiles" value-field="overviewFileContext"/>
+                <entity-and entity-name="RegistryDocuments" list="fileDocuments">
                     <field-map from-field="parameters.fileId" field-name="fileId"/>
-                    <order-by field-name="DocumentId"/>
+                    <order-by field-name="documentId"/>
                 </entity-and>
-                <entity-and entity-name="FilesRequest" list="fileRequests">
+                <entity-and entity-name="RegistryFilesRequest" list="fileRequests">
                     <field-map from-field="parameters.fileId" field-name="fileId"/>
-                    <order-by field-name="RequestId"/>
+                    <order-by field-name="requestId"/>
                 </entity-and>
             </actions>
             <widgets>

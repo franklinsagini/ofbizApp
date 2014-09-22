@@ -19,10 +19,10 @@
 
 	<simple-method method-name="createfiletype"
 		short-description="Create File Type">
-		<make-value entity-name="FileType" value-field="newEntity" />
+		<make-value entity-name="RegistryFileType" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="FileType" field="fileTypeId" />
+		<sequenced-id sequence-name="RegistryFileType" field="fileTypeId" />
 
 		<set from-field="fileTypeId" field="newEntity.fileTypeId" />
 		<create-value value-field="newEntity" />
@@ -31,7 +31,7 @@
 
 	<simple-method method-name="updatefileType"
 		short-description="Update an existing Budget">
-		<entity-one entity-name="FileType" value-field="lookedUpValue" />
+		<entity-one entity-name="RegistryFileType" value-field="lookedUpValue" />
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
@@ -41,7 +41,7 @@
 	<simple-method method-name="deletefileType"
 		short-description="Remove an file type">
 		<set field="fileTypeId" from-field="parameters.fileTypeId" />
-		<entity-one entity-name="FileType" value-field="lookedUpValue" />
+		<entity-one entity-name="RegistryFileType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
 
@@ -49,27 +49,27 @@
 	<simple-method method-name="creatememberFiles"
 		short-description="Create File Book">
 		<now-timestamp field="nowTimestamp"/>
-		<make-value entity-name="Files" value-field="newEntity" />
+		<make-value entity-name="RegistryFiles" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="Files" field="fileId" />
+		<sequenced-id sequence-name="RegistryFiles" field="fileId" />
 		<set from-field="fileId" field="newEntity.fileId" />
 
 		<entity-one value-field="member" entity-name="Member">
 			<field-map field-name="partyId" value="${newEntity.partyId}"/>
 		</entity-one>
 
-		<set value="FNO-${newEntity.fileId}-${member.firstName}" field="newEntity.FolioNo" />
-		<set value="REGISTRY" field="newEntity.filelocation" />
-		<set value="AVAILABLE" field="newEntity.Status" />
-		<set value="${userLogin.partyId}" field="newEntity.Creator" />
-		<set from-field="nowTimestamp" field="newEntity.CreationDate"/>
+		<set value="FNO-${newEntity.fileId}-${member.firstName}" field="newEntity.folioNo" />
+		<set value="REGISTRY" field="newEntity.fileLocation" />
+		<set value="AVAILABLE" field="newEntity.status" />
+		<set value="${userLogin.partyId}" field="newEntity.creator" />
+		<set from-field="nowTimestamp" field="newEntity.creationDate"/>
 		<create-value value-field="newEntity" />
 	</simple-method>
 
 	<simple-method method-name="updateFiles"
 		short-description="Update an existing Budget">
-		<entity-one entity-name="Files" value-field="lookedUpValue" />
+		<entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
@@ -94,7 +94,7 @@
         </call-class-method> -->
 
 
-		<entity-one value-field="file" entity-name="Files">
+		<entity-one value-field="file" entity-name="RegistryFiles">
 			<field-map field-name="fileId" value="${newEntity.fileId}"/>
 		</entity-one>
 
@@ -109,7 +109,7 @@
 	</simple-method>
 
 	<simple-method method-name="updateFileStatus" short-description="Update a file's status">
-        <make-value value-field="lookupPKMap" entity-name="Files"/>
+        <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -121,41 +121,42 @@
 		<make-value entity-name="FileIssue" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="FileIssue" field="FileIssueId" />
-		<set from-field="FileIssueId" field="newEntity.FileIssueId" />
+		<sequenced-id sequence-name="FileIssue" field="fileIssueId" />
+		<set from-field="fileIssueId" field="newEntity.fileIssueId" />
 
-		<set value="${fl.RequestId}" field="newEntity.RequestId" />
+		<set value="${fl.fileIssueId}" field="newEntity.fileIssueId" />
 		<create-value value-field="newEntity" />
 	</simple-method>
 
 	<simple-method method-name="releasefiles"
 		short-description="release File ">
-		<make-value entity-name="FileRelease" value-field="newEntity" />
+		<make-value entity-name="RegistryFileRelease" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="FileRelease" field="ReleaseId" />
-		<set from-field="ReleaseId" field="newEntity.ReleaseId" />
+		<sequenced-id sequence-name="RegistryFileRelease" field="releaseId" />
+		<set from-field="releaseId" field="newEntity.releaseId" />
 		<create-value value-field="newEntity" />
 	</simple-method>
 
 	<!-- documents -->
 	<simple-method method-name="createDocument"
 		short-description="Create File ">
-		<make-value entity-name="Documents" value-field="newEntity" />
+		<make-value entity-name="RegistryDocuments" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="Documents" field="DocumentId" />
-		<set from-field="DocumentId" field="newEntity.DocumentId" />
+		<sequenced-id sequence-name="RegistryDocuments" field="documentId" />
+		<set from-field="documentId" field="newEntity.documentId" />
+		<set value="REF_NO_${newEntity.documentId}" field="newEntity.refNo" />
 		<create-value value-field="newEntity" />
 	</simple-method>
 
 <!-- locations -->
 	<simple-method method-name="createfilelocation"
 		short-description="Create File location">
-		<make-value entity-name="fileLocations" value-field="newEntity" />
+		<make-value entity-name="RegistryFileLocations" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="fileLocations" field="locationId" />
+		<sequenced-id sequence-name="RegistryFileLocations" field="locationId" />
 
 		<set from-field="locationId" field="newEntity.locationId" />
 		<create-value value-field="newEntity" />
@@ -163,7 +164,7 @@
 
 	<simple-method method-name="updatefilelocation"
 		short-description="Update an existing Budget">
-		<entity-one entity-name="fileLocations" value-field="lookedUpValue" />
+		<entity-one entity-name="RegistryFileLocations" value-field="lookedUpValue" />
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
@@ -173,7 +174,7 @@
 	<simple-method method-name="deletefilelocation"
 		short-description="Remove an file type">
 		<set field="locationId" from-field="parameters.locationId" />
-		<entity-one entity-name="fileLocations" value-field="lookedUpValue" />
+		<entity-one entity-name="RegistryFileLocations" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
 
