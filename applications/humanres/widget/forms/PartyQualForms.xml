@@ -23,8 +23,8 @@ under the License.
      <form name="FindPartyQuals" type="single" target="FindPartyQuals" header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="PartyQual" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyQualTypeId">
+        <field name="partyId" title="Employee"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyQualTypeId" title="Qualification Type">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
                     <entity-order-by field-name="description"/>
@@ -39,7 +39,7 @@ under the License.
         		</entity-options>
         	</drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="Status">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="HR_DEGREE_STATUS"/>
@@ -47,7 +47,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="verifStatusId">
+        <field name="verifStatusId" title="Verification">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
@@ -71,14 +71,14 @@ under the License.
         </actions>
         <alt-target use-when="insideEmployee==null" target="updatePartyQual"/>
         <!-- auto-fields-service service-name="updatePartyQual"/-->
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
-            <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
+        <field name="partyId" title="Employee">
+            <display-entity description="${firstName} ${middleName} ${lastName} (${employeeNumber})" entity-name="Person">
                 <sub-hyperlink target="viewprofile" link-style="smallSubmit" target-type="inter-app" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="partyQualTypeId"><display-entity entity-name="PartyQualType" description="${description}"/></field>
+        <field name="partyQualTypeId" title="Qualification Type"><display-entity entity-name="PartyQualType" description="${description}"/></field>
         <field name="qualificationDesc"><hidden/></field>
         <field name="title"><text/></field>
         <field name="specialization" title="Specialization"><text/></field>
@@ -86,7 +86,7 @@ under the License.
         <field name="institutelocation" title="Institute Location"><hidden/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
-        <field name="statusId">
+        <field name="statusId" title="Status">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="HR_DEGREE_STATUS"/>
@@ -94,7 +94,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="verifStatusId">
+        <field name="verifStatusId" title="Verification">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
@@ -119,9 +119,9 @@ under the License.
         <alt-target use-when="insideEmployee != null" target="createPartyQualExt"/>
         <!-- auto-fields-service service-name="createPartyQual"/ -->
         
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="partyQual!=null"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyQualTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="partyId" title="Employee" use-when="partyQual!=null"><hidden/></field>
+        <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyQualTypeId" title="Qualification Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
                     <entity-order-by field-name="description"/>
@@ -142,7 +142,7 @@ under the License.
         		</entity-options>
         	</drop-down>
         </field>
-        <field name="statusId">
+        <field name="statusId" title="Status">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="HR_DEGREE_STATUS"/>
@@ -150,7 +150,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="verifStatusId">
+        <field name="verifStatusId" title="Verification">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
