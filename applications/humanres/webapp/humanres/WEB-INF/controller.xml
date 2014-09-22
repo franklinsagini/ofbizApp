@@ -540,6 +540,29 @@ under the License.
         <event type="service" invoke="deleteEmploymentApp"/>
         <response name="success" type="view" value="FindEmploymentApps"/>
     </request-map>
+    <request-map uri="employmenthistory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="employmenthistory"/>
+    </request-map>
+    <request-map uri="createEmploymentHistory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createEmploymentHistory"/>
+        <response name="success" type="request-redirect" value="employmenthistory"/>     
+        <response name="error" type="view" value="employmenthistory" />
+    </request-map>
+    <request-map uri="updateEmploymentHistory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmploymentHistory"/>
+        <response name="success" type="request-redirect" value="employmenthistory"/>   
+        <response name="error" type="view" value="employmenthistory" />
+    </request-map>
+    <request-map uri="deleteEmploymentHistory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteEmploymentHistory"/>
+        <response name="success" type="request-redirect" value="employmenthistory"/>   
+        <response name="error" type="view" value="employmenthistory" />
+    </request-map>
+    
     <request-map uri="ListPayHistories">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListPayHistories"/>
@@ -1971,6 +1994,7 @@ under the License.
     
     <view-map name="EditPartyResumes" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyResumes"/>
     <view-map name="EditEmploymentApps" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#EditEmploymentApps"/>
+    <view-map name="employmenthistory" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewEmploymentHistory"/>
 
     <view-map name="FindEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindEmplLeaves"/>
     <view-map name="EditEmplLeave" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeave"/>

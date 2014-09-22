@@ -598,6 +598,23 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="employmentAppSourceTypeId"/>
       </relation>
     </entity>
+    
+    <entity entity-name="EmploymentHistory"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employment History">
+      <field name="employmentHistoryId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="employer" type="name"></field>
+      <field name="position" type="name"></field>
+      <field name="jobDescription" type="description"></field>
+      <field name="startDate" type="date-time"></field>
+      <field name="endDate" type="date-time"></field>
+      <field name="reason" type="description"></field>
+      <prim-key field="employmentHistoryId"/>
+      <relation type="one" fk-name="empHistory_party" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity>
 
         <!-- ===========  Leave Status Logs  =========== -->
     <entity entity-name="LeaveStatusLog"
