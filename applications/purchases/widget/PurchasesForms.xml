@@ -39,7 +39,7 @@
             </service>
         </actions>
         <field name="supplierId" title="Supplier Id" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${supplierId}" target="editSupplier">
+            <hyperlink also-hidden="false" description="${supplierId}" target="supplierOverview">
                 <parameter param-name="supplierId" />
             </hyperlink>
         </field>
@@ -164,6 +164,42 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+
+    <!-- Supplier overview form -->
+    <form name="contactsHeader" type="single" target="createSupplier" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="supplierContext">
+        <alt-target use-when="supplierContext!=null" target="updateSupplier"/>
+        <actions>
+            <entity-condition entity-name="Supplier" list="suppliersList">
+                <order-by field-name="supplierId"/>
+            </entity-condition>
+        </actions>
+        <field position="1" name="supplierId" use-when="supplierContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+        <field position="2" name="name" title="Name"> <display/> </field>
+        <field position="1" name="emailAddress" title="Email Address"> <display /></field>
+        <field position="2" name="postalAddress" title="Postal Address"> <display /></field>
+        <field position="1" name="physicalAddress" title="Physical Address"> <display /> </field>
+        <field position="2" name="phoneNumber" title="Landline Number"> <display /> </field>
+        <field position="1" name="mobileNumber" title="Mobile Phone Number"> <display /> </field>
+    </form>
+    <form name="contactDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateContactPerson"
+        paginate-target="ContactPersonForm" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ContactPerson">
+                <condition-expr field-name="supplierId" from-field="supplierId"/>
+                <order-by field-name="contactPersonId"/>
+            </entity-condition>
+        </actions>
+
+        <field name="supplierId"><hidden/></field>
+        <field name="contactPersonId"><hidden/></field>
+        <field name="firstName" title="First Name"> <display /> </field>
+        <field name="lastName" title="Last Name"> <display /> </field>
+        <field name="jobTitle" title="Job Title"> <display /> </field>
+        <field name="emailAddress" title="Email Address"> <display /> </field>
+        <field name="mobileNumber" title="Mobile Phone Number"> <display /> </field>
+    </form>
+
 
 <!-- ================================================================================================================================================================================== -->
         <!--
