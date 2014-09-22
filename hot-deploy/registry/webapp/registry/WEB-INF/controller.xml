@@ -66,10 +66,10 @@
 	</request-map>
 
 
-	<request-map uri="fileoverviewURL">
+<!-- 	<request-map uri="fileoverviewURL">
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="fileoverview" />
-	</request-map>
+	</request-map> -->
 
 	<request-map uri="issuefile">
 		<security https="true" auth="true" />
@@ -201,9 +201,13 @@
 		<response name="error" type="view" value="editfile" />
 	</request-map>
 
+	<!-- File Overview -->
+    <request-map uri="fileoverviewURL">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="fileOverviewViewMap"/>
+    </request-map>
 
-
-
+ 		<!-- View Maps -->
 	<view-map name="editfiletypeURL" type="screen"
 		page="component://registry/widget/FileScreens.xml#filetype" />
 		<view-map name="editfiles" type="screen"
@@ -234,6 +238,8 @@
 <view-map name="releasefile" type="screen"
 		page="component://registry/widget/FileScreens.xml#releasefile" />
 
+	<!-- File Overview  -->
+<view-map name="fileOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#fileOverviewScreen"/>
 
 
 </site-conf>

@@ -140,7 +140,7 @@
 			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
 		</field>
 
-		
+
 		<field name="FolioNo" title="Folio Number">
 			<display />
 		</field>
@@ -156,7 +156,7 @@
 		<field name="CreationDate" title="Creation Date">
 			<display />
 		</field>
-		
+
 		<field name="fileoverview" title="File Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview"
 				target="fileoverviewURL">
@@ -312,7 +312,7 @@
 			<display />
 		</field>
 	</form>
-	
+
 	<form name="IssueFileresponseForm" type="single" target="issuefilew"
 		focus-field-name="name" header-row-style="header-row"
 		default-table-style="basic-table" default-map-name="issuefileContext">
@@ -375,7 +375,7 @@
 			<display />
 		</field>
 	</form>
-	
+
 	<form name="ReleaseFileresponseForm" type="single" target="releasefilew"
 		focus-field-name="name" header-row-style="header-row"
 		default-table-style="basic-table" default-map-name="releasefileContext">
@@ -441,7 +441,7 @@
 			<display />
 		</field>
 	</form>
-	
+
 
 
 
@@ -517,17 +517,17 @@
 	</form>
 
 
-	
 
-	
+
+
 	 <form name="FindMemberfiles" default-map-name="FindMemberfilesContext" target="main" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table" >
-       
+
         <actions>
         	<set field="Status" value="AVAILABLE"/>
         </actions>
         <auto-fields-entity entity-name="Files" default-field-type="find"/>
-		<field name="Status"><hidden/></field> 
+		<field name="Status"><hidden/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -545,8 +545,7 @@
         </actions>
         <auto-fields-entity entity-name="Files" default-field-type="display"/>
         <field name="reqfile" title="Request File" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Request File"
-				target="requestfiles">
+			<hyperlink also-hidden="false" description="Request File" target="requestfiles">
 				<parameter param-name="fileId" />
 				<parameter param-name="FolioNo" />
 			</hyperlink>
@@ -554,18 +553,17 @@
 		<field name="partyId" title="Member Name">
 			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
 		</field>
-		
+
 		<field name="fileoverview" title="File Overview" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="File Overview"
-				target="fileoverviewURL">
+			<hyperlink also-hidden="false" description="File Overview" target="fileOverview">
 				<parameter param-name="fileId" />
 			</hyperlink>
 		</field>
-       
+
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
-    
-    
+
+
 	 <form name="issuefiles" default-map-name="issuecontext" target="issuefile" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -588,7 +586,7 @@
             </service>
         </actions>
         <auto-fields-entity entity-name="Files" default-field-type="display"/>
-        
+
 		<field name="partyId" title="Member Name">
 			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
 		</field>
@@ -602,12 +600,12 @@
 		</field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
-    
-    
+
+
 	 <form name="releasefiles" default-map-name="survey" target="releasefile" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
-        
-       
+
+
         <actions>
         	<set field="Status" value="ISSUED"/>
         </actions>
@@ -628,7 +626,7 @@
             </service>
         </actions>
         <auto-fields-entity entity-name="Files" default-field-type="display"/>
-        
+
         <field name="partyId" title="Member Name">
 			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
 		</field>
@@ -640,6 +638,61 @@
 			</hyperlink>
 		</field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
+
+    <!-- Invoice Header Form -->
+
+    <form name="fileHeaderForm" type="single" title="File General Details" default-map-name="file"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+
+        </actions>
+        <field name="fileId"><hidden/></field>
+        <field position="1" name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${lastName}"/>
+        </field>
+        <field position="2" name="FolioNo" title="Folio No">
+        	<display/>
+        </field>
+        <field position="1" name="Status">
+        	<display/>
+        </field>
+        <field position="2" name="Creator">
+        	<display/>
+        </field>
+        <field position="1" name="CreationDate">
+        	<display type="date-time"/>
+        </field>
+    </form>
+
+    <!-- File Documents List Form -->
+    <form name="ListFileDocuments" type="list"  list-name="fileDocuments" default-entity-name="Documents" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
+        target="" title="File Documents" separate-columns="false">
+        <field name="DocumentId">
+        	<display/>
+        </field>
+        <field name="fileTypeId">
+        	<display/>
+        </field>
+        <field name="ReceiptDate" encode-output="false">
+        	<display/>
+        </field>
+    </form>
+
+    <!-- File Requests List Form -->
+    <form name="ListFileRequests" type="list"  list-name="fileRequests" default-entity-name="FilesRequest" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
+        target="" title="File Requests" separate-columns="false">
+        <field name="RequestId">
+        	<display/>
+        </field>
+        <field name="requester">
+        	<display/>
+        </field>
+        <field name="reqdate" encode-output="false">
+        	<display/>
+        </field>
     </form>
 
 
