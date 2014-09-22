@@ -1657,4 +1657,47 @@ under the License.
         <field name="code" title="Code" widget-style="required" required-field="true"><text></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+    
+    <!-- Print and CSV -->
+    <form name="listExpectedPaymentSentBreakdownPrintAndCSV" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateExpectedPaymentBreakdown" paginate-target="expectedPaymentBreakdown"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<!-- set field="stationNumber" from-field="parameters.stationNumber" ></set>
+            <set field="month" from-field="parameters.month"></set -->
+            
+            <entity-condition entity-name="ExpectedPaymentSent">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<condition-list combine="and">
+            		<condition-expr field-name="stationNumber" operator="equals" value="${stationNumber}"/>
+            		<condition-expr field-name="month" operator="equals" value="${month}"/>
+            	</condition-list>
+            	<order-by field-name="remitanceCode"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentSent"/>
+		
+		<field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
+		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
+		<field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field>
+		<field name="payrollNo" title="Payroll No"><display also-hidden="false"></display></field>
+		<field name="month" title="Month"><display also-hidden="false"></display></field>
+        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+        <field name="employerNo" title="Employer No"><display also-hidden="false"></display></field>
+        
+        
+        <field name="amount" title="Amount"><display also-hidden="false"></display></field>
+        <field name="remitanceDescription" title="Remitance Description"><display also-hidden="false"></display></field>
+        
+        <field name="employeeName" title="Employee Name"><display also-hidden="false"></display></field>
+        <field name="expectationType" title="Expectation Type"><display also-hidden="false"></display></field>
+        
+        <!-- field name="generatedDate" title="Generated Date"><display also-hidden="false"></display></field -->
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
 </forms>

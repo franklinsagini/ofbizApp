@@ -574,12 +574,18 @@ under the License.
 	<request-map uri="expectedPaymentBreakdown">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="expectedPaymentBreakdown"
-			save-current-view="true" />
+			save-current-view="true">
+				<redirect-parameter name="stationNumber"/>
+			<redirect-parameter name="month"/>
+			</response>
 	</request-map>
 	<request-map uri="receivedPaymentBreakdown">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="receivedPaymentBreakdown"
-			save-current-view="true" />
+			save-current-view="true">
+				<redirect-parameter name="stationNumber"/>
+			<redirect-parameter name="month"/>
+			</response>
 	</request-map>
 	
 	<request-map uri="generateExpectedPaymentStations">
@@ -623,6 +629,21 @@ under the License.
 	</request-map>
 	
 	<!-- CRUD -->
+	<request-map uri="expectedPaymentBreakdownpdf.pdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="expectedPaymentBreakdownpdf">
+			<redirect-parameter name="stationNumber"/>
+			<redirect-parameter name="month"/>
+		</response>
+	</request-map>
+	
+	<request-map uri="expectedPaymentBreakdowncsv.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="expectedPaymentBreakdowncsv">
+			<redirect-parameter name="stationNumber"/>
+			<redirect-parameter name="month"/>
+		</response>
+	</request-map>
     
 	
     <!-- end of request mappings -->
@@ -666,6 +687,14 @@ under the License.
 		
 		<view-map name="expectedPaymentcsv" type="screencsv" content-type="text/csv"
                 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentcsv" />
+	
+	
+		<view-map name="expectedPaymentBreakdownpdf" type="screenfop"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentBreakdownpdf"
+		content-type="application/pdf" encoding="none" />
+		
+		<view-map name="expectedPaymentBreakdowncsv" type="screencsv" content-type="text/csv"
+                page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentBreakdowncsv" />
 	
     <!-- end of view mappings -->
 
