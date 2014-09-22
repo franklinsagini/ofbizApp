@@ -167,6 +167,15 @@ under the License.
                 <option key="No" description="No"/>
             </drop-down>
         </field>
+        
+        <field name="contributing" title="Contributing ?"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true" >
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
+            </drop-down>
+        </field>
+        <field name="contributingAmount" title="Contributing Amount"  widget-style="required" required-field="true"><text></text></field>
+			
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <!-- field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -391,7 +400,7 @@ under the License.
 	
 <!--  memberAccount List-->
 	
-	<form name="listMemberAccount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberAccount" paginate-target="findMemberAccount"
+	<form name="listMemberAccount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberAccount" paginate-target="memberAccount"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="MemberAccount">
@@ -401,7 +410,7 @@ under the License.
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
          <field name="memberAccountId"><hidden/></field>
          <field name="partyId" parameter-name="partyId"><hidden/></field>
-         <field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+         <field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
          <field name="accountName" title="Account Name" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <!-- field name="saccoProductId" title="Account">
         	<display-entity description="${name} - ${code} " entity-name="SaccoProduct" also-hidden="true"></display-entity>
@@ -421,11 +430,21 @@ under the License.
         </field>
         
         <field name="withdrawable" title="Withdrawable (FOSA)"  widget-style="required" required-field="true">
-            <drop-down allow-empty="true" >
+            <drop-down allow-empty="true">
                 <option key="Yes" description="Yes"/>
                 <option key="No" description="No"/>
             </drop-down>
         </field>
+        
+        <field name="contributing" title="Contributing ?"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
+            </drop-down>
+        </field>
+        <field name="contributingAmount" title="Contributing Amount"  widget-style="required" required-field="true"><text size="10"></text></field>
+        
+        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteMemberAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="memberAccountId"/>
