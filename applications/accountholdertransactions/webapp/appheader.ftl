@@ -117,6 +117,17 @@ under the License.
     });
     }
     
+    function checkRemittanceEnough(stationNumber, month){
+     var reqUrl = '/accountholdertransactions/control/checkremittance';
+    var isEnough = isRemittanceEnough(reqUrl, stationNumber, month);
+     if (isEnough == true){
+    	return isEnough;
+    } else{
+    	alert("Remitted total is less that the amount posted on cheque");
+    }
+    
+    }
+    
     function checkAvailableBalance(){
     
     	var isAvailable = false;
@@ -157,5 +168,32 @@ under the License.
               alert("Some error occurred while processing the request");
               }
     });
+    }
+    
+        function isRemittanceEnough(reqUrl, stationNumber, month){
+        var isEnough = false;
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'stationNumber': stationNumber, 'month': month}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+				
+					if (data.REMITANCEENOUGH == 'YES')
+					{
+						isEnough = true;
+					} else{
+						isEnough = false;
+					}
+				   
+				
+					
+			
+               },
+      async : false
+    });
+    
+   return isEnough;
     }
 </script>

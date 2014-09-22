@@ -1,7 +1,9 @@
 package org.ofbiz.accountholdertransactions;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -12,6 +14,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
@@ -26,6 +30,8 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.webapp.event.EventHandlerException;
+
+import com.google.gson.Gson;
 
 /**
  * @author Japheth Odonya @when Sep 18, 2014 12:39:40 PM
@@ -599,6 +605,141 @@ public class RemittanceServices {
 		}
 		stationName = station.getString("name");
 		return stationName;
+	}
+	
+	/***
+	 * Get total expected for station and month
+	 * */
+	public static BigDecimal getTotalExpected(String stationNumber, String month){
+		BigDecimal totalExpected = BigDecimal.ZERO;
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationNumber", EntityOperator.EQUALS, stationNumber),
+						EntityCondition.makeCondition(
+								"month", EntityOperator.EQUALS, month)
+
+				), EntityOperator.AND);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList("ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue expectedPaymentReceived : expectedPaymentReceivedELI) {
+			if (expectedPaymentReceived.getBigDecimal("amount") != null){
+				totalExpected = totalExpected.add(expectedPaymentReceived.getBigDecimal("amount"));
+			}
+		}
+		
+		return totalExpected;
+	}
+	
+
+	public static String isRemitanceEnough(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		
+		String stationNumber = (String) request.getParameter("stationNumber");
+		String month = (String) request.getParameter("month");
+		
+		GenericValue station = findStationGivenStationNumber(stationNumber);
+		
+		//Get 
+		List<GenericValue> stationAccountTransactionELI = null;
+		
+		//Get total amount given station and month
+		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationId", EntityOperator.EQUALS, station.getString("stationId")),
+						EntityCondition.makeCondition(
+								"monthyear", EntityOperator.EQUALS, month)
+
+				), EntityOperator.AND);
+
+		try {
+			stationAccountTransactionELI = delegator.findList("StationAccountTransaction",
+					stationAccountTransactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		//TransactionAmount
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		for (GenericValue stationAccountTransaction : stationAccountTransactionELI) {
+			if (stationAccountTransaction.getBigDecimal("transactionAmount") != null){
+				totalAmount = totalAmount.add(stationAccountTransaction.getBigDecimal("transactionAmount"));
+			}
+		}
+		
+		//Get total submitted
+		BigDecimal totalSubmitted = getTotalExpected(stationNumber, month);
+		
+		if (totalSubmitted.compareTo(totalAmount) == -1){
+			result.put("REMITANCEENOUGH", "NO");
+		} else{
+			result.put("REMITANCEENOUGH", "YES");
+		}
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		return json;
+	}
+
+	private static GenericValue findStationGivenStationNumber(
+			String stationNumber) {
+		List<GenericValue> stationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			stationELI = delegator.findList("Station", EntityCondition
+					.makeCondition("stationNumber", stationNumber), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue station = null;
+		for (GenericValue genericValue : stationELI) {
+			station = genericValue;
+		}
+		return station;
 	}
 
 }
