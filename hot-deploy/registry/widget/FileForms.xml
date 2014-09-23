@@ -74,7 +74,7 @@
 
 
 
-	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table">
+	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
 		 
 		 <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
 
@@ -121,6 +121,13 @@
 		<field name="creationDate" title="Creation Date">
 			<display />
 		</field>
+		
+		<field name="addDocument" title="Add Document To File" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Add Document To File"
+				target="editfileURL">
+				<parameter param-name="fileId" />
+			</hyperlink>
+		</field>
 
 		<field name="fileoverview" title="File Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview"
@@ -134,7 +141,7 @@
 
 	<form name="EditDocumentForm" type="single" target="createDocument"
 		focus-field-name="name" header-row-style="header-row"
-		default-table-style="basic-table" default-map-name="FileContext">
+		default-table-style="basic-table" default-map-name="documentContext">
 		<actions>
 			<entity-condition entity-name="RegistryDocuments" list="fileList">
 				<order-by field-name="documentId" />
@@ -146,29 +153,34 @@
 				<order-by field-name="fileId" />
 			</entity-condition>
 		</actions>
-		<alt-target use-when="FileContext!=null" target="updateFile" />
+		<alt-target use-when="documentContext!=null" target="updateFile" />
 
-		<field name="FileId">
-			<hidden />
-		</field>
-		<field name="FileId" use-when="FileContext!=null"
-			tooltip="${uiLabelMap.CommonNotModifRecreat}">
-			<display />
-		</field>
-		<field name="fileTypeId" title="File Type " widget-style="required"
+		<field name="fileTypeId" title="Document Type " widget-style="required"
 			required-field="true">
 			<drop-down>
 				<list-options key-name="fileTypeId" list-name="filetypeList"
 					description="${fileType}" />
 			</drop-down>
 		</field>
-		<field name="fileId" title="File ID"
+		<field name="fileId" title="File ID" use-when="documentContext==null"
 			widget-style="required" required-field="true">
 			<drop-down>
 				<list-options key-name="fileId" list-name="filebksList"
 					description="${fileId} ->(For member ID-${partyId})" />
 			</drop-down>
 		</field>
+		 
+		<field name="fileId" use-when="FilesContext!=null">
+			<display/>
+		</field>
+		
+		<field name="documentValue" title="Document Value">
+			<text/>
+		</field>
+		<field name="refNo" title="Document Reference Number">
+			<text/>
+		</field>
+		
 		<field name="receiptDate" title="Recieved date">
 			<date-time />
 		</field>
@@ -177,11 +189,11 @@
 			<submit button-type="button" />
 		</field>
 		<!-- submitButton -->
-		<field use-when="FileContext==null" name="submitButton"
+		<field use-when="documentContext==null" name="submitButton"
 			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
 			<submit button-type="text-link" />
 		</field>
-		<field use-when="FileContext!=null" name="submitButton"
+		<field use-when="documentContext!=null" name="submitButton"
 			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
 			<submit button-type="text-link" />
 		</field>
@@ -197,10 +209,10 @@
 		<field name="documentId">
 			<display />
 		</field>
-		<field name="fileTypeId" title="File Type ID">
+		<field name="fileTypeId" title="Document Type ID">
 			<display />
 		</field>
-		<field name="fileTypeId" title="File Type">
+		<field name="fileTypeId" title="Document Type">
 			<display-entity entity-name="RegistryFileType" description="${fileType}"></display-entity> 
 			</field>
 		<field name="refNo" title="Document Reference Number">
@@ -208,6 +220,9 @@
 		</field>
 		<field name="fileId" title="File Id">
 			<!-- <display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity> -->
+			<display />
+		</field>
+		<field name="documentValue" title="Document Value">
 			<display />
 		</field>
 		<field name="receiptDate" title="Date Recieved">
