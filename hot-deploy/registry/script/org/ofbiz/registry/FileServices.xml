@@ -87,27 +87,22 @@
 		<set from-field="requestId" field="newEntity.requestId" />
 		<create-value value-field="newEntity" />
 
-		<!-- Java Method to update Entity File -->
-<!--         <call-class-method class-name="org.ofbiz.registry.FileServices" method-name="updateFileStatus" >
-            <field field="newEntity" type="GenericValue"/>
-            <field field="delegator" type="org.ofbiz.entity.Delegator"/>
-        </call-class-method> -->
-
-
+		<!-- Set up parameters to be used in updating the file status -->
 		<entity-one value-field="file" entity-name="RegistryFiles">
-			<field-map field-name="fileId" value="${newEntity.fileId}"/>
+			<field-map field-name="fileId" from-field="newEntity.fileId"/>
+			<field-map field-name="partyId" from-field="newEntity.partyId"/>
 		</entity-one>
 
-<!-- 
-		<set field="updateFileStatusMap.fileId" value="${newEntity.fileId}" />
-		<set field="updateFileStatusMap.status" value="REQUESTED" /> -->
-		<!-- <set field="updateFileStatusMap.partyId" value="10010" /> -->
+		<!-- Create a map to be passed to the update servcie -->
+		<set field="updateFileStatusMap.fileId" from-field="newEntity.fileId" />
+		<set field="updateFileStatusMap.status" value="REQUESTED" />
+		<set field="updateFileStatusMap.partyId" from-field="newEntity.partyId" />
 
 
 		<call-service service-name="updateFileStatus" in-map-name="updateFileStatusMap" />
 
 	</simple-method>
-
+	<!-- Service to update File after the request is successfull -->
 	<simple-method method-name="updateFileStatus" short-description="Update a file's status">
         <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
