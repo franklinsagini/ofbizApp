@@ -50,8 +50,8 @@
 								<section>
 									<widgets>
 										<container style="leftclear">
-											<include-menu name="maintab"
-												location="component://registry/widget/RegistryMenus.xml" />
+											<!-- <include-menu name="maintab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
 										</container>
 									</widgets>
 								</section>
@@ -77,8 +77,8 @@
 								<section>
 									<widgets>
 										<container style="leftclear">
-											<include-menu name="locationstab"
-												location="component://registry/widget/RegistryMenus.xml" />
+											<!-- <include-menu name="locationstab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
 										</container>
 									</widgets>
 								</section>
@@ -104,8 +104,8 @@
 								<section>
 									<widgets>
 										<container style="leftclear">
-											<include-menu name="documentTypetab"
-												location="component://registry/widget/RegistryMenus.xml" />
+										<!-- 	<include-menu name="documentTypetab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
 										</container>
 									</widgets>
 								</section>
@@ -132,8 +132,8 @@
 								<section>
 									<widgets>
 										<container style="leftclear">
-											<include-menu name="filestab"
-												location="component://registry/widget/RegistryMenus.xml" />
+											<!-- <include-menu name="filestab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
 										</container>
 									</widgets>
 								</section>
@@ -149,6 +149,11 @@
 	<screen name="documentsDecorator">
 		<section>
 			<actions>
+			<set field="fileId" from-field="RegistryFiles.fileId"
+					default-value="${parameters.fileId}" />
+					<set field="folioNo" from-field="RegistryFiles.folioNo"
+					default-value="${parameters.folioNo}" />
+					<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -157,10 +162,51 @@
 						<section>
 							<widgets>
 								<section>
+								<condition>
+										<not>
+											<if-empty field="parameters.fileId" />
+										</not>
+									</condition>
 									<widgets>
 										<container style="leftclear">
-											<include-menu name="documentsTab"
-												location="component://registry/widget/RegistryMenus.xml" />
+												<label style="h1"
+												text="Add Document(s) To File:- ${fileId} (Folio Number:- ${folioNo})" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="fileOverviewDecorator">
+		<section>
+			<actions>
+			<set field="fileId" from-field="RegistryFiles.fileId"
+					default-value="${parameters.fileId}" />
+					<set field="folioNo" from-field="RegistryFiles.folioNo"
+					default-value="${parameters.folioNo}" />
+					<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+								<condition>
+										<not>
+											<if-empty field="parameters.fileId" />
+										</not>
+									</condition>
+									<widgets>
+										<container style="leftclear">
+												<label style="h1"
+												text="File Details For File:- ${fileId} (Folio Number:- ${folioNo})" />
 										</container>
 									</widgets>
 								</section>
@@ -186,8 +232,8 @@
 								<section>
 									<widgets>
 										<container style="leftclear">
-											<include-menu name="FileIssueTab"
-												location="component://registry/widget/RegistryMenus.xml" />
+											<!-- <include-menu name="FileIssueTab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
 										</container>
 									</widgets>
 								</section>
@@ -213,8 +259,8 @@
 								<section>
 									<widgets>
 										<container style="leftclear">
-											<include-menu name="filereleaseTab"
-												location="component://registry/widget/RegistryMenus.xml" />
+											<!-- <include-menu name="filereleaseTab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
 										</container>
 									</widgets>
 								</section>
@@ -896,7 +942,7 @@
                 <entity-one entity-name="RegistryFiles" value-field="registryFilesContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="fileOverviewDecorator" location="component://registry/widget/FileScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -931,7 +977,7 @@
                 <entity-one entity-name="RegistryFilesRequest" value-field="registryFilesRequestContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="fileOverviewDecorator" location="component://registry/widget/FileScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
