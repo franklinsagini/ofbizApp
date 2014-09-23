@@ -37,6 +37,247 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="mainDecorator">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<container style="leftclear">
+											<!-- <include-menu name="maintab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="locationsDecorator">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<container style="leftclear">
+											<!-- <include-menu name="locationstab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="ducumentTYpesDecorator">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<container style="leftclear">
+										<!-- 	<include-menu name="documentTypetab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="FilesDecorator">
+		<section>
+			<actions>
+			<set field="headerItem" value="files" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<container style="leftclear">
+											<!-- <include-menu name="filestab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="documentsDecorator">
+		<section>
+			<actions>
+			<set field="fileId" from-field="RegistryFiles.fileId"
+					default-value="${parameters.fileId}" />
+					<set field="folioNo" from-field="RegistryFiles.folioNo"
+					default-value="${parameters.folioNo}" />
+					<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+								<condition>
+										<not>
+											<if-empty field="parameters.fileId" />
+										</not>
+									</condition>
+									<widgets>
+										<container style="leftclear">
+												<label style="h1"
+												text="Add Document(s) To File:- ${fileId} (Folio Number:- ${folioNo})" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="fileOverviewDecorator">
+		<section>
+			<actions>
+			<set field="fileId" from-field="RegistryFiles.fileId"
+					default-value="${parameters.fileId}" />
+					<set field="folioNo" from-field="RegistryFiles.folioNo"
+					default-value="${parameters.folioNo}" />
+					<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+								<condition>
+										<not>
+											<if-empty field="parameters.fileId" />
+										</not>
+									</condition>
+									<widgets>
+										<container style="leftclear">
+												<label style="h1"
+												text="File Details For File:- ${fileId} (Folio Number:- ${folioNo})" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="fileIssueDecorator">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<container style="leftclear">
+											<!-- <include-menu name="FileIssueTab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="fileReleaseDecorator">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<container style="leftclear">
+											<!-- <include-menu name="filereleaseTab"
+												location="component://registry/widget/RegistryMenus.xml" /> -->
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+
+
+
+
 
 	<screen name="CommonFilesupdateDecorator">
 		<section>
@@ -211,7 +452,7 @@
 				<set field="partyId" from-field="parameters.partyId"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="mainDecorator" location="component://registry/widget/FileScreens.xml">
 					<decorator-section name="body">
 						<section>
 							<widgets>
@@ -249,8 +490,8 @@
 				<entity-one entity-name="RegistryFileType" value-field="filetypeContext" />
 			</actions>
 			<widgets>
-				<decorator-screen name="RegistryCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="ducumentTYpesDecorator"
+					location="component://registry/widget/FileScreens.xml">
 					<decorator-section name="body">
 						<section>
 							<widgets>
@@ -273,7 +514,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<screen name="FindMemberScreen">
         <section>
             <actions>
@@ -318,7 +559,7 @@
 				<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
 			</actions>
 			<widgets>
-				<decorator-screen name="CommonFilesupdateDecorator"
+				<decorator-screen name="FilesDecorator"
 					location="component://registry/widget/FileScreens.xml">
 					<decorator-section name="pre-body">
 						<section>
@@ -359,11 +600,13 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createDocument" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="RegistryDocuments" value-field="FileContext" />
+				<entity-one entity-name="RegistryDocuments" value-field="documentContext" />
+				<set field="fileId" from-field="FilesContext.fileId"
+					default-value="${FilesContext.fileId}" />
 			</actions>
 			<widgets>
-				<decorator-screen name="RegistryCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="documentsDecorator"
+					location="component://registry/widget/FileScreens.xml">
 					<decorator-section name="body">
 						<section>
 							<widgets>
@@ -599,8 +842,8 @@
 					default-value="${parameters.locationId}" />
 			</actions>
 			<widgets>
-				<decorator-screen name="RegistryCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="locationsDecorator"
+					location="component://registry/widget/FileScreens.xml">
 					<decorator-section name="body">
 						<section>
 							<widgets>
@@ -634,8 +877,8 @@
 				<set field="findFileCtx" from-field="parameters" />
 			</actions>
 			<widgets>
-				<decorator-screen name="RegistryCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="fileIssueDecorator"
+					location="component://registry/widget/FileScreens.xml">
 					<decorator-section name="body">
 						<section>
 							<widgets>
@@ -668,8 +911,8 @@
 				<set field="findFileCtx" from-field="parameters" />
 			</actions>
 			<widgets>
-				<decorator-screen name="RegistryCommonDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="fileReleaseDecorator"
+					location="component://registry/widget/FileScreens.xml">
 					<decorator-section name="body">
 						<section>
 							<widgets>
@@ -691,39 +934,31 @@
 		</section>
 	</screen>
 
-    <!-- File Overview Screen -->
-    <screen name="fileOverviewScreen">
+	<screen name="RegistryFilesOverviewScreen">
         <section>
             <actions>
                 <set field="fileId" from-field="parameters.fileId"/>
-                <entity-one entity-name="RegistryFiles" value-field="overviewFileContext"/>
-                <entity-and entity-name="RegistryDocuments" list="fileDocuments">
-                    <field-map from-field="parameters.fileId" field-name="fileId"/>
-                    <order-by field-name="documentId"/>
-                </entity-and>
-                <entity-and entity-name="RegistryFilesRequest" list="fileRequests">
-                    <field-map from-field="parameters.fileId" field-name="fileId"/>
-                    <order-by field-name="requestId"/>
-                </entity-and>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="RegistryFiles" value-field="FilesContext" />
             </actions>
             <widgets>
-                <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="fileOverviewDecorator" location="component://registry/widget/FileScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <screenlet title="File General Details">
-                                    <include-form name="fileHeaderForm" location="component://registry/widget/FileForms.xml"/>
+                                <screenlet title="File Details">
+                                    <include-form name="fileGeneralDetails" location="component://registry/widget/FileForms.xml"/>
                                 </screenlet>
-                                <container style="lefthalf">
-                                    <screenlet title="File Documents" navigation-form-name="ListFileDocuments">
-                                        <include-form name="ListFileDocuments" location="component://registry/widget/FileForms.xml"/>
-                                    </screenlet>
+                                <container style="lefthalf" >
+	                                <screenlet title="Document Details">
+	                                    <include-form name="ListFileDocuments" location="component://registry/widget/FileForms.xml"/>
+	                                </screenlet>
                                 </container>
-                                <container style="righthalf">
-                                    <screenlet title="File Requests" navigation-form-name="ListFileRequests">
-                                        <include-form name="ListFileRequests" location="component://registry/widget/FileForms.xml"/>
-                                    </screenlet>
-                                </container>
+                                <container style="righthalf" >
+	                                <screenlet title="Request Details">
+	                                    <include-form name="ListFileRequests" location="component://registry/widget/FileForms.xml"/>
+	                                </screenlet>
+                            	</container>
                                 <container style="clear"/>
                             </widgets>
                         </section>

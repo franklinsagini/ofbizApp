@@ -74,8 +74,9 @@
 
 
 
-	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table">
-		 
+	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId"
+	header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
+
 		 <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
 
 		<!-- submitButton -->
@@ -91,10 +92,7 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 		<!-- for actions file request and overview -->
-			<entity-condition entity-name="RegistryFiles"></entity-condition>
-			<set field="fileId" from-field="parameters.fileId" />
-			<set field="folioNo" from-field="parameters.folioNo" />
-		
+		<entity-condition entity-name="RegistryFiles" value-field="fileId" />
 		</actions>
 
 		<field name="fileId" title="FileID">
@@ -114,7 +112,7 @@
 		<field name="creator" title="File Created by">
 			<display />
 		</field>
-		
+
 		<field name="fileLocation" title="Current File Location">
 			<display />
 		</field>
@@ -122,10 +120,17 @@
 			<display />
 		</field>
 
-		<field name="fileoverview" title="File Overview" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="File Overview"
-				target="fileoverviewURL">
+		<field name="addDocument" title="Add Document To File" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Add Document To File" target="editfileURL">
 				<parameter param-name="fileId" />
+				<parameter param-name="folioNo" />
+			</hyperlink>
+		</field>
+
+		<field name="fileoverview" title=" " widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="fileId" />
+				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
 
@@ -134,7 +139,7 @@
 
 	<form name="EditDocumentForm" type="single" target="createDocument"
 		focus-field-name="name" header-row-style="header-row"
-		default-table-style="basic-table" default-map-name="FileContext">
+		default-table-style="basic-table" default-map-name="documentContext">
 		<actions>
 			<entity-condition entity-name="RegistryDocuments" list="fileList">
 				<order-by field-name="documentId" />
@@ -146,29 +151,33 @@
 				<order-by field-name="fileId" />
 			</entity-condition>
 		</actions>
-		<alt-target use-when="FileContext!=null" target="updateFile" />
+		<alt-target use-when="documentContext!=null" target="updateFile" />
 
-		<field name="FileId">
-			<hidden />
-		</field>
-		<field name="FileId" use-when="FileContext!=null"
-			tooltip="${uiLabelMap.CommonNotModifRecreat}">
-			<display />
-		</field>
-		<field name="fileTypeId" title="File Type " widget-style="required"
+		<field name="fileTypeId" title="Document Type " widget-style="required"
 			required-field="true">
 			<drop-down>
 				<list-options key-name="fileTypeId" list-name="filetypeList"
 					description="${fileType}" />
 			</drop-down>
 		</field>
-		<field name="fileId" title="File ID"
+		<field name="fileId" title="File ID" use-when="documentContext==null"
 			widget-style="required" required-field="true">
 			<drop-down>
 				<list-options key-name="fileId" list-name="filebksList"
 					description="${fileId} ->(For member ID-${partyId})" />
 			</drop-down>
 		</field>
+
+		<field name="fileId" use-when="FilesContext!=null">
+			<display/>
+		</field>
+		<field name="refNo" title="Reference Number">
+			<text/>
+		</field>
+		
+		<field name="documentValue" title="Document Value">
+			<text/>
+		</field>		
 		<field name="receiptDate" title="Recieved date">
 			<date-time />
 		</field>
@@ -177,11 +186,11 @@
 			<submit button-type="button" />
 		</field>
 		<!-- submitButton -->
-		<field use-when="FileContext==null" name="submitButton"
+		<field use-when="documentContext==null" name="submitButton"
 			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
 			<submit button-type="text-link" />
 		</field>
-		<field use-when="FileContext!=null" name="submitButton"
+		<field use-when="documentContext!=null" name="submitButton"
 			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
 			<submit button-type="text-link" />
 		</field>
@@ -197,17 +206,20 @@
 		<field name="documentId">
 			<display />
 		</field>
-		<field name="fileTypeId" title="File Type ID">
+		<field name="fileTypeId" title="Document Type ID">
 			<display />
 		</field>
-		<field name="fileTypeId" title="File Type">
-			<display-entity entity-name="RegistryFileType" description="${fileType}"></display-entity> 
+		<field name="fileTypeId" title="Document Type">
+			<display-entity entity-name="RegistryFileType" description="${fileType}"></display-entity>
 			</field>
 		<field name="refNo" title="Document Reference Number">
 			<display />
 		</field>
 		<field name="fileId" title="File Id">
 			<!-- <display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity> -->
+			<display />
+		</field>
+		<field name="documentValue" title="Document Value">
 			<display />
 		</field>
 		<field name="receiptDate" title="Date Recieved">
@@ -503,6 +515,9 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <!-- List Memeber Files -->
+
     <form name="listmembersfiles" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfiles"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -526,7 +541,7 @@
 		</field>
 
 		<field name="fileoverview" title="File Overview" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="File Overview" target="fileOverview">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="fileId" />
 			</hyperlink>
 		</field>
@@ -611,38 +626,49 @@
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
-    <!-- Invoice Header Form -->
 
-    <form name="fileHeaderForm"
-    	  type="single"
-    	  target="updateFile"
-    	  default-map-name="overviewFileContext"
-    	  title="File General Details"
-    	  header-row-style="header-row"
-    	 default-table-style="basic-table">
-        <field use-when="overviewFileContext==null" name="fileId"><hidden/></field>
-        <field use-when="overviewFileContext!=null" name="fileId"><display /></field>
-        <field name="partyId" position="1" title="Member">
-        	<display-entity entity-name="Member" description="${firstName} ${lastName}"/>
-        </field>
-        <field name="folioNo" position="2" title="Folio No">
-        	<display/>
-        </field>
-        <field position="1" name="status">
-        	<display/>
-        </field>
-        <field position="2" name="creator">
-        	<display/>
-        </field>
-        <field position="1" name="creationDate">
-        	<display type="date-time"/>
-        </field>
-    </form>
+
+
+
+    <!-- File Header Form -->
+	<form name="fileGeneralDetails" type="single"  header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="FilesContext">
+		<field position="1" name="fileId" title="FileID">
+			<display />
+		</field>
+		<field position="2" name="partyId" title="Member Name">
+			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+
+
+		<field position="1" name="folioNo" title="Folio Number">
+			<display />
+		</field>
+		<field position="2" name="status" title="File Status">
+			<display />
+		</field>
+		<field position="1" name="creator" title="File Created by">
+			<display />
+		</field>
+
+		<field position="2" name="fileLocation" title="Current File Location">
+			<display />
+		</field>
+		<field position="1" name="creationDate" title="Creation Date">
+			<display />
+		</field>
+	</form>
 
     <!-- File Documents List Form -->
     <form name="ListFileDocuments" type="list"  list-name="fileDocuments" default-entity-name="RegistryDocuments" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
         target="" title="File Documents" separate-columns="false">
+        <actions>
+            <entity-condition entity-name="RegistryDocuments">
+                <condition-expr field-name="fileId" from-field="fileId"/>
+                <order-by field-name="documentId"/>
+            </entity-condition>
+        </actions>
         <field name="documentId">
         	<display/>
         </field>
@@ -658,6 +684,12 @@
     <form name="ListFileRequests" type="list"  list-name="fileRequests" default-entity-name="RegistryFilesRequest" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
         target="" title="File Requests" separate-columns="false">
+      	<actions>
+            <entity-condition entity-name="RegistryFilesRequest">
+                <condition-expr field-name="fileId" from-field="fileId"/>
+                <order-by field-name="requestId"/>
+            </entity-condition>
+        </actions>
         <field name="requestId">
         	<display/>
         </field>
@@ -668,8 +700,8 @@
         	<display/>
         </field>
     </form>
-    
-    
+
+
      <form name="FindMemberForm" default-map-name="membersCtx" target="findmember" type="single">
         <auto-fields-entity entity-name="Member" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/></field>
@@ -678,8 +710,8 @@
             <submit button-type="button"/>
         </field>
     </form>
-       
-       
+
+
         <form name="ListMemberForm" type="list" list-name="listIt" target="" title="Supplier List" paginate-target="findmember" default-entity-name="Member"
         separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>

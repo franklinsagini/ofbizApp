@@ -31,7 +31,7 @@
 		<field name="partyId" type="id-ne"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="status" type="name" ></field>
-		<field name="creator" type="name"></field>
+		<field name="creator" type="id-ne"></field>
 		<field name="fileLocation" type="name"></field>
 		<field name="creationDate" type="date-time"></field>
 		<prim-key field="fileId" />
@@ -50,10 +50,11 @@
 		<field name="fileTypeId" type="id-ne"></field>
 		<field name="fileId" type="id-ne" ></field>
 		<field name="refNo" type="name" ></field>
+		<field name="documentValue" type="currency-amount" ></field>
 		<field name="receiptDate" type="date-time"></field>
 		<prim-key field="documentId" />
 		<prim-key field="fileId" />
-		<relation type="one" fk-name="FD_FB" rel-entity-name="RegistryFiles">
+		<relation type="one" fk-name="DOCUMENT_FILE" rel-entity-name="RegistryFiles">
 			<key-map field-name="fileId" />
 		</relation>
 	</entity>
@@ -75,7 +76,7 @@
 		<field name="reqdate" type="date-time"></field>
 		<prim-key field="requestId" />
 		<prim-key field="fileId" />
-		<relation type="one" fk-name="FR_FLS" rel-entity-name="RegistryFiles">
+		<relation type="one" fk-name="REQUEST_FILE" rel-entity-name="RegistryFiles">
 			<key-map field-name="fileId" />
 		</relation>
 	</entity>
@@ -89,10 +90,10 @@
 		<field name="issueDate" type="date-time"></field>
 		<prim-key field="fileIssueId" />
 		<prim-key field="requestId" />
-		<relation type="one" fk-name="FI_F" rel-entity-name="RegistryFiles">
+		<relation type="one" fk-name="FILEISSUE_FILES" rel-entity-name="RegistryFiles">
 			<key-map field-name="fileId" />
 		</relation>
-		<relation type="one" fk-name="FI_FR" rel-entity-name="RegistryFilesRequest">
+		<relation type="one" fk-name="FILEISSUE_FILEREQUEST" rel-entity-name="RegistryFilesRequest">
 			<key-map field-name="requestId" />
 		</relation>
 	</entity>
@@ -106,10 +107,10 @@
 		<field name="releaseDate" type="date-time"></field>
 		<prim-key field="releaseId" />
 		<prim-key field="fileIssueId" />
-		<relation type="one" fk-name="FR_F" rel-entity-name="RegistryFiles">
+		<relation type="one" fk-name="FILERELEASE_FILE" rel-entity-name="RegistryFiles">
 			<key-map field-name="fileId" />
 		</relation>
-		<relation type="one" fk-name="FR_FIS" rel-entity-name="RegistryFileIssue">
+		<relation type="one" fk-name="FILERELEASE_FILEISSUE" rel-entity-name="RegistryFileIssue">
 			<key-map field-name="fileIssueId" />
 		</relation>
 	</entity>
