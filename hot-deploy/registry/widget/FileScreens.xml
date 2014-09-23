@@ -889,19 +889,11 @@
 	</screen>
 
     <!-- File Overview Screen -->
-    <screen name="fileOverviewScreen">
+<!--     <screen name="fileOverviewScreen">
         <section>
             <actions>
                 <set field="fileId" from-field="parameters.fileId"/>
-                <entity-one entity-name="RegistryFiles" value-field="overviewFileContext"/>
-                <entity-and entity-name="RegistryDocuments" list="fileDocuments">
-                    <field-map from-field="parameters.fileId" field-name="fileId"/>
-                    <order-by field-name="documentId"/>
-                </entity-and>
-                <entity-and entity-name="RegistryFilesRequest" list="fileRequests">
-                    <field-map from-field="parameters.fileId" field-name="fileId"/>
-                    <order-by field-name="requestId"/>
-                </entity-and>
+                <entity-one entity-name="RegistryFiles" value-field="registryFilesContext"/>
             </actions>
             <widgets>
                 <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -909,7 +901,7 @@
                         <section>
                             <widgets>
                                 <screenlet title="File General Details">
-                                    <include-form name="fileHeaderForm" location="component://registry/widget/FileForms.xml"/>
+                                    <include-form name="fileGeneralDetails" location="component://registry/widget/FileForms.xml"/>
                                 </screenlet>
                                 <container style="lefthalf">
                                     <screenlet title="File Documents" navigation-form-name="ListFileDocuments">
@@ -921,6 +913,37 @@
                                         <include-form name="ListFileRequests" location="component://registry/widget/FileForms.xml"/>
                                     </screenlet>
                                 </container>
+                                <container style="clear"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    
+	<screen name="RegistryFilesOverviewScreen">
+        <section>
+            <actions>
+                <set field="fileId" from-field="parameters.fileId"/>
+                <entity-one entity-name="RegistryFiles" value-field="registryFilesContext"/>
+                <entity-one entity-name="RegistryDocuments" value-field="registryDocumentsContext"/>
+                <entity-one entity-name="RegistryFilesRequest" value-field="registryFilesRequestContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="RegistryCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="File Details">
+                                    <include-form name="fileGeneralDetails" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Document Details">
+                                    <include-form name="ListFileDocuments" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Request Details">
+                                    <include-form name="ListFileRequests" location="component://registry/widget/FileForms.xml"/>
+                                </screenlet>
                                 <container style="clear"/>
                             </widgets>
                         </section>
