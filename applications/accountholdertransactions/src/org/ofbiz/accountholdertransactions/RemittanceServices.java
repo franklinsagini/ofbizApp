@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -740,6 +741,96 @@ public class RemittanceServices {
 			station = genericValue;
 		}
 		return station;
+	}
+	
+	public static BigDecimal getTotalRemittedChequeAmount(String stationNumber, String month){
+		
+		GenericValue station = findStationGivenStationNumber(stationNumber);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//Get 
+		List<GenericValue> stationAccountTransactionELI = null;
+		
+		//Get total amount given station and month
+		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationId", EntityOperator.EQUALS, station.getString("stationId")),
+						EntityCondition.makeCondition(
+								"monthyear", EntityOperator.EQUALS, month)
+
+				), EntityOperator.AND);
+
+		try {
+			stationAccountTransactionELI = delegator.findList("StationAccountTransaction",
+					stationAccountTransactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		//TransactionAmount
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		for (GenericValue stationAccountTransaction : stationAccountTransactionELI) {
+			if (stationAccountTransaction.getBigDecimal("transactionAmount") != null){
+				totalAmount = totalAmount.add(stationAccountTransaction.getBigDecimal("transactionAmount"));
+			}
+		}
+		
+		return totalAmount;
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Sep 23, 2014 8:40:10 AM
+	 * 
+	 * 	Update Process Received Payments
+	 * 	
+	 * */
+	public static void processReceivedPaymentBreakdown(HttpServletRequest request, HttpServletResponse response){
+		
+		//Update Receipts to show generated and post
+		Delegator delegator = (Delegator)request.getAttribute("delegator");
+		String stationNumber = (String) request.getAttribute("stationNumber");
+		String month = (String) request.getAttribute("month");
+		/**
+		
+		<field name="processed" type="indicator"></field>
+        <field name="dateProcessed" type="date-time"></field>
+        
+        **/
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationNumber", EntityOperator.EQUALS, stationNumber),
+						EntityCondition.makeCondition(
+								"month", EntityOperator.EQUALS, month),
+						EntityCondition.makeCondition(
+										"processed", EntityOperator.EQUALS, null)
+
+				), EntityOperator.AND);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList("ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue expectedPaymentReceived : expectedPaymentReceivedELI) {
+			
+			//Post shares if shares
+			
+			//Post contribution if Account Contribution
+			
+			//Post loan repayment if loan repayment
+			
+			//Update expectedPaymentReceived to processed
+			expectedPaymentReceived.set("processed", "Y");
+			expectedPaymentReceived.set("dateProcessed", new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			
+			
+		}
+		
 	}
 
 }

@@ -597,6 +597,18 @@ under the License.
                 <response name="error" type="view" value="expectedPaymentStations" />
 	</request-map>
 	
+	<!-- processReceivedPaymentBreakdown -->
+	<request-map uri="processReceivedPaymentBreakdown">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accountholdertransactions.RemittanceServices" invoke="processReceivedPaymentBreakdown" />
+                <response name="success" type="view"
+                        value="receivedPaymentBreakdown">
+                        	<redirect-parameter name="stationNumber"/>
+                        	<redirect-parameter name="month"/>
+                        </response>
+                <response name="error" type="view" value="receivedPaymentBreakdown" />
+	</request-map>
+	
 	<request-map uri="codesSetup">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="codesSetup"
