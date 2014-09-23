@@ -23,7 +23,7 @@
     <screen name="FindEmployments">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="titleProperty" value="Find Employee Postings"/>
                 <set field="headerItem" value="Employment"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
@@ -40,7 +40,7 @@
                                 <section>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="buttontext create"/>
+                                            <link target="EditEmployment" text="New Posting" style="buttontext create"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -60,7 +60,7 @@
     <screen name="EditEmployment">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResEditEmployment"/>
+                <set field="titleProperty" value="Edit Employee Postings"/>
                 <set field="headerItem" value="Employment"/>
                 <set field="tabButtonItem" value="EditEmployment"/>
                 <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
@@ -69,7 +69,7 @@
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.HumanResEditEmployment}">
+                        <screenlet title="Edit Posting">
                             <include-form name="EditEmployment" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -80,14 +80,14 @@
     <screen name="ListEmployments">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResListEmployments"/>
+                <set field="titleProperty" value="List Employee Postings"/>
                 <set field="tabButtonItem" value="ListEmployment"/>
                 <set field="employmentCtx.partyIdTo" from-field="parameters.partyId"/>
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.HumanResEmployment}" navigation-form-name="ListEmploymentsPerson">
+                        <screenlet title="Employee Postings List" navigation-form-name="ListEmploymentsPerson">
                             <include-form name="ListEmploymentsPerson" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -128,7 +128,7 @@
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="AddPartyBenefitPanel" title="${uiLabelMap.HumanResAddPartyBenefit}" collapsible="true">
+                        <screenlet id="AddPartyBenefitPanel" title="Add Benefit" collapsible="true">
                             <include-form name="AddPartyBenefit" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                         </screenlet>
                         <include-form name="ListPartyBenefits" location="component://humanres/widget/forms/EmploymentForms.xml"/>

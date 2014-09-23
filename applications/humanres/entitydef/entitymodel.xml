@@ -504,11 +504,14 @@ under the License.
       <field name="roleTypeIdFrom" type="id-ne"></field>
       <field name="roleTypeIdTo" type="id-ne"></field>
       <field name="partyIdFrom" type="id-ne"></field>
-      <field name="partyIdTo" type="id-ne"></field>
+      <field name="partyIdTo" type="id-ne"></field>      
+      <field name="branchId" type="id"></field>
+ 	  <field name="stationId" type="id"></field> 
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="terminationReasonId" type="id"></field>
       <field name="terminationTypeId" type="id"></field>
+      <field name="isCurrentEmployment" type="indicator"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
@@ -537,6 +540,12 @@ under the License.
       <relation type="many" fk-name="EMPLMNT_AGR" rel-entity-name="Agreement">
         <key-map field-name="partyIdTo" rel-field-name="agreementId"/>
         <key-map field-name="partyIdFrom" rel-field-name="agreementId"/>
+      </relation>
+      <relation type="one" fk-name="EMP_PARTYGROUP" rel-entity-name="PartyGroup">
+         <key-map field-name="branchId" rel-field-name="partyId"/>
+      </relation>
+ 	  <relation type="one" fk-name="EMP_STATION" rel-entity-name="Station">
+        <key-map field-name="stationId"/>
       </relation>
     </entity>
     <view-entity entity-name="EmploymentAndPerson"
@@ -959,6 +968,7 @@ under the License.
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Entity">
       <field name="emplPositionId" type="id-ne"></field>
+      <field name="positionName" type="name"></field>
       <field name="statusId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="budgetId" type="id"></field>

@@ -959,10 +959,13 @@ under the License.
                                 		<widgets>
                                 			
                                 			<container style="button-bar">
+                                			
                                 		
                                             <link target="expectedPaymentpdf" text="Print Expected Payment" style="buttontext">
                                                 <!-- parameter param-name="loanApplicationId"/ -->
-                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                               
+                                                <image url-mode="raw"  src="${iconsLocation}/page_white_acrobat.png"/>
+                                                
                                             </link>
                                             
                                             <link target="expectedPaymentcsv" text="Generate Schedule CSV" style="buttontext">
@@ -1059,7 +1062,10 @@ under the License.
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+                <set field="stationNumber" from-field="parameters.stationNumber"></set>
+                <set field="stationName" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getStationName(stationNumber);}" type="String"/>
+                <set field="month"  from-field="parameters.month"/>
+                 
                 <entity-one entity-name="ExpectedPaymentSent" value-field="expectedPaymentSentContext"/>
             </actions>
             <widgets>
@@ -1087,14 +1093,16 @@ under the License.
                                 		<widgets>
                                 			
                                 			<container style="button-bar">
+                                			<label style="h3">Expected Payments from ${stationName} for ${month} </label>
                                 		
-                                            <link target="expectedPaymentBreakdownpdf" text="Print Expected Payment Breakdown" style="buttontext">
+                                            <link target="expectedPaymentBreakdownpdf.pdf?month=${month}&amp;stationNumber=${stationNumber}" text="Print Expected Payment Breakdown" style="buttontext">
                                                 <!-- parameter param-name="loanApplicationId"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
                                             
-                                            <link target="expectedPaymentBreakdowncsv" text="Generate Expected Payment Breakdown CSV" style="buttontext">
+                                            <link target="expectedPaymentBreakdowncsv.csv?month=${month}&amp;stationNumber=${stationNumber}" text="Generate Expected Payment Breakdown CSV" style="buttontext">
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                                
                                             </link>
                                             </container>
                                 		</widgets>
@@ -1130,7 +1138,11 @@ under the License.
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+                 <set field="stationNumber" from-field="parameters.stationNumber"></set>
+                <set field="stationName" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getStationName(stationNumber);}" type="String"/>
+                <set field="month"  from-field="parameters.month"/>
+                <set field="totalExpected" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalExpected(stationNumber, month);}" type="BigDecimal"/>
+                <set field="totalChequeAmount" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemittedChequeAmount(stationNumber, month);}" type="BigDecimal"/>
                 <entity-one entity-name="ExpectedPaymentReceived" value-field="expectedPaymentReceivedContext"/>
             </actions>
             <widgets>
@@ -1151,6 +1163,8 @@ under the License.
                             </fail-widgets>
                         </section -->
                         <section>
+                        	
+                        	
                         	<widgets>
                         		  <screenlet>
                                 	<section>
@@ -1158,14 +1172,16 @@ under the License.
                                 		<widgets>
                                 			
                                 			<container style="button-bar">
-                                		
-                                            <link target="receivedPaymentBreakdownpdf" text="Print Received Payment Breakdown" style="buttontext">
-                                                <!-- parameter param-name="loanApplicationId"/ -->
+                                			<label style="h3">Received Payments from ${stationName} for ${month} </label>
+                                            <!-- link target="receivedPaymentBreakdownpdf" text="Print Received Payment Breakdown" style="buttontext">
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
                                             
                                             <link target="receivedPaymentBreakdowncsv" text="Generate Received Payment Breakdown CSV" style="buttontext">
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link -->
+                                            <link target="processReceivedPaymentBreakdown?month=${month}&amp;stationNumber=${stationNumber}"  text="Process Received Payments" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
                                             </container>
                                 		</widgets>
@@ -1180,10 +1196,87 @@ under the License.
                         		<screenlet title="Received Payment Breakdown">
                         			<include-form name="listExpectedPaymentReceivedBreakdown" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                         		</screenlet>
+                        		
+                         		<screenlet>
+                        		<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
+                        		<section>
+                        			<widgets>
+                        				<container style="button-bar">
+                                			<label style="h3">Total Expected : Kshs. ${totalExpected} </label>
+                                			<label style="h3">Total Remitted (Cheque Amount)  : Kshs. ${totalChequeAmount} </label>
+                                			
+                        				
+                        				</container>
+                        			</widgets>
+                        		</section>
+                        		</screenlet>
                         	</widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- Expected Payment Breakdown PDF and CSV -->
+    <!-- PDF -->
+    <screen name="expectedPaymentBreakdownpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payment Breakdown"/>
+                <set field="headerItem" value="expectedPaymentBreakdown"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPaymentBreakdown"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="viewSize" value="100000"/>
+                <set field="stationNumber" from-field="parameters.stationNumber"></set>
+                <set field="month" from-field="parameters.month"></set>
+                <entity-one entity-name="ExpectedPaymentSent" value-field="expectedPaymentBreakdownContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listExpectedPaymentSentBreakdownPrintAndCSV" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Expected Payment BreakDown CSV -->
+    <screen name="expectedPaymentBreakdowncsv">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Expected Payment Breakdown"/>
+                <set field="headerItem" value="expectedPaymentBreakdown"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPayment"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="stationNumber" from-field="parameters.stationNumber" global="true"></set>
+                <set field="month" from-field="parameters.month" global="true"></set>
+                <set field="viewSize" value="100000"/>
+                <entity-one entity-name="ExpectedPaymentSent" value-field="expectedPaymentSentContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body" -->
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listExpectedPaymentSentBreakdownPrintAndCSV" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    <!-- /decorator-section>
+                </decorator-screen -->
             </widgets>
         </section>
     </screen>
