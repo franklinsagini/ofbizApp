@@ -80,7 +80,7 @@
 		 <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
 
 		<!-- submitButton -->
-		<field use-when="FilesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
 			<submit button-type="text-link" />
 		</field>
 	</form>
@@ -95,9 +95,6 @@
 		<entity-condition entity-name="RegistryFiles"/>
 		</actions>
 
-		<field name="fileId" title="FileID">
-			<display />
-		</field>
 		<field name="partyId" title="Member Name">
 			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
 		</field>
@@ -122,14 +119,13 @@
 
 		<field name="addDocument" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Add Document To File" target="editfileURL">
-				<parameter param-name="fileId" />
+				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" />
 			</hyperlink>
 		</field>
 
 		<field name="fileoverview" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
-				<parameter param-name="fileId" />
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
@@ -147,8 +143,8 @@
 			<entity-condition entity-name="RegistryFileType" list="filetypeList">
 				<order-by field-name="fileTypeId" />
 			</entity-condition>
-			<entity-condition entity-name="RegistryFiles" list="filebksList">
-				<order-by field-name="fileId" />
+			<entity-condition entity-name="Member" list="filebksList">
+				<order-by field-name="partyId" />
 			</entity-condition>
 		</actions>
 		<alt-target use-when="documentContext!=null" target="updateFile" />
@@ -160,15 +156,15 @@
 					description="${fileType}" />
 			</drop-down>
 		</field>
-		<field name="fileId" title="File ID" use-when="documentContext==null"
+		<field name="partyId" title="File ID" use-when="documentContext==null"
 			widget-style="required" required-field="true">
 			<drop-down>
-				<list-options key-name="fileId" list-name="filebksList"
-					description="${fileId} ->(For member ID-${partyId})" />
+				<list-options key-name="partyId" list-name="filebksList"
+					description="${partyId} ->(For member ID-${firstName} ${lastName})" />
 			</drop-down>
 		</field>
 
-		<field name="fileId" use-when="FilesContext!=null">
+		<field name="partyId" use-when="FilesContext!=null">
 			<display/>
 		</field>
 		<field name="referenceNo" title="Reference Number">
@@ -203,7 +199,7 @@
 		<actions>
 			
 			<entity-condition entity-name="RegistryDocuments">
-                <condition-expr field-name="fileId" from-field="parameters.fileId"/>
+                <condition-expr field-name="partyId" from-field="parameters.partyId"/>
                 <order-by field-name="documentId"/>
             </entity-condition>
 		</actions>
@@ -219,7 +215,7 @@
 		<field name="referenceNo" title="Document Reference Number">
 			<display />
 		</field>
-		<field name="fileId" title="File Id">
+		<field name="partyId" title="Party Id">
 			<!-- <display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity> -->
 			<display />
 		</field>
@@ -243,7 +239,7 @@
 				<order-by field-name="requestId" />
 			</entity-condition>
 			<entity-condition entity-name="RegistryFiles" list="filesList">
-				<order-by field-name="fileId" />
+				<order-by field-name="partyId" />
 			</entity-condition>
 		</actions>
 		<alt-target use-when="requestfileContext!=null" target="updateFiletype" />
@@ -254,7 +250,7 @@
 			tooltip="${uiLabelMap.CommonNotModifRecreat}">
 			<display />
 		</field>
-		<field name="fileId" title="File Id">
+		<field name="partyId" title="Party Id">
 			<hidden />
 		</field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}"
@@ -283,7 +279,7 @@
 		<field name="requestId">
 			<display />
 		</field>
-		<field name="fileId" title="File ID">
+		<field name="partyId" title="Party ID">
 			<display />
 		</field>
 		<field name="requester" title="Requested by">
@@ -306,7 +302,7 @@
 				<order-by field-name="fileIssueId" />
 			</entity-condition>
 			<entity-condition entity-name="RegistryFiles" list="filesList">
-				<order-by field-name="fileId" />
+				<order-by field-name="partyId" />
 			</entity-condition>
 		</actions>
 		<alt-target use-when="issuefileContext!=null" target="updateFiletype" />
@@ -317,7 +313,7 @@
 			tooltip="${uiLabelMap.CommonNotModifRecreat}">
 			<display />
 		</field>
-		<field name="fileId" title="File Id">
+		<field name="partyId" title="Party Id">
 			<hidden />
 		</field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}"
@@ -346,7 +342,7 @@
 		<field name="fileIssueId">
 			<display />
 		</field>
-		<field name="fileId" title="File ID">
+		<field name="partyId" title="Party ID">
 			<display />
 		</field>
 		<field name="partyId" title="Requested by">
@@ -372,7 +368,7 @@
 				<order-by field-name="fileIssueId" />
 			</entity-condition>
 			<entity-condition entity-name="RegistryFiles" list="filesList">
-				<order-by field-name="fileId" />
+				<order-by field-name="partyId" />
 			</entity-condition>
 		</actions>
 		<alt-target use-when="releasefileContext!=null" target="updateFiletype" />
@@ -383,7 +379,7 @@
 			tooltip="${uiLabelMap.CommonNotModifRecreat}">
 			<display />
 		</field>
-		<field name="fileId" title="File Id">
+		<field name="partyId" title="Party Id">
 			<hidden />
 		</field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}"
@@ -412,7 +408,7 @@
 		<field name="releaseId">
 			<display />
 		</field>
-		<field name="fileId" title="File ID">
+		<field name="partyId" title="Party ID">
 			<display />
 		</field>
 		<field name="partyId" title="Released by">
@@ -533,7 +529,7 @@
         <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
         <field name="reqfile" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Request File" target="requestfiles">
-				<parameter param-name="fileId" />
+				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" />
 			</hyperlink>
 		</field>
@@ -543,7 +539,6 @@
 
 		<field name="fileoverview" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
-				<parameter param-name="fileId" />
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
@@ -581,7 +576,7 @@
         <field name="issuefile" title="Issue File" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Issue File"
 				target="issuefiles">
-				<parameter param-name="fileId" />
+				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" />
 				<parameter param-name="requestId" />
 			</hyperlink>
@@ -621,7 +616,7 @@
         <field name="releasefile" title="Release File" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Release File"
 				target="releasefiles">
-				<parameter param-name="fileId" />
+				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" />
 			</hyperlink>
 		</field>
@@ -635,7 +630,7 @@
     <!-- File Header Form -->
 	<form name="fileGeneralDetails" type="single"  header-row-style="header-row" default-table-style="basic-table"
         default-map-name="FilesContext">
-		<field position="1" name="fileId" title="FileID">
+		<field position="1" name="partyId" title="PartyID">
 			<display />
 		</field>
 		<field position="2" name="partyId" title="Member Name">
@@ -667,7 +662,7 @@
         target="" title="File Documents" separate-columns="false">
         <actions>
             <entity-condition entity-name="RegistryDocuments">
-                <condition-expr field-name="fileId" from-field="fileId"/>
+                <condition-expr field-name="partyId" from-field="partyId"/>
                 <order-by field-name="documentId"/>
             </entity-condition>
         </actions>
@@ -691,7 +686,7 @@
         target="" title="File Requests" separate-columns="false">
       	<actions>
             <entity-condition entity-name="RegistryFilesRequest">
-                <condition-expr field-name="fileId" from-field="fileId"/>
+                <condition-expr field-name="partyId" from-field="partyId"/>
                 <order-by field-name="requestId"/>
             </entity-condition>
         </actions>

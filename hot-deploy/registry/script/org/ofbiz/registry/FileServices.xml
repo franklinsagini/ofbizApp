@@ -52,14 +52,12 @@
 		<make-value entity-name="RegistryFiles" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="RegistryFiles" field="fileId" />
-		<set from-field="fileId" field="newEntity.fileId" />
 
 		<entity-one value-field="member" entity-name="Member">
 			<field-map field-name="partyId" value="${newEntity.partyId}"/>
 		</entity-one>
 
-		<set value="FNO-${newEntity.fileId}-${member.firstName}" field="newEntity.folioNo" />
+		<set value="FNO-${newEntity.partyId}-${member.firstName}" field="newEntity.folioNo" />
 		<set value="REGISTRY" field="newEntity.fileLocation" />
 		<set value="AVAILABLE" field="newEntity.status" />
 		<set value="${userLogin.partyId}" field="newEntity.creator" />
