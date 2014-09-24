@@ -92,7 +92,7 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 		<!-- for actions file request and overview -->
-		<entity-condition entity-name="RegistryFiles" value-field="fileId" />
+		<entity-condition entity-name="RegistryFiles"/>
 		</actions>
 
 		<field name="fileId" title="FileID">
@@ -120,7 +120,7 @@
 			<display />
 		</field>
 
-		<field name="addDocument" title="Add Document To File" widget-style="buttontext">
+		<field name="addDocument" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Add Document To File" target="editfileURL">
 				<parameter param-name="fileId" />
 				<parameter param-name="folioNo" />
@@ -171,11 +171,11 @@
 		<field name="fileId" use-when="FilesContext!=null">
 			<display/>
 		</field>
-		<field name="refNo" title="Reference Number">
+		<field name="referenceNo" title="Reference Number">
 			<text/>
 		</field>
 		
-		<field name="documentValue" title="Document Value">
+		<field name="documentValue" title="Document Value" widget-style="required" tooltip="In Kenyan Shillings (KES)">
 			<text/>
 		</field>		
 		<field name="receiptDate" title="Recieved date">
@@ -201,7 +201,11 @@
 		paginate-target="EditDocumentForm" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-			<entity-condition entity-name="RegistryDocuments"></entity-condition>
+			
+			<entity-condition entity-name="RegistryDocuments">
+                <condition-expr field-name="fileId" from-field="parameters.fileId"/>
+                <order-by field-name="documentId"/>
+            </entity-condition>
 		</actions>
 		<field name="documentId">
 			<display />
@@ -212,7 +216,7 @@
 		<field name="fileTypeId" title="Document Type">
 			<display-entity entity-name="RegistryFileType" description="${fileType}"></display-entity>
 			</field>
-		<field name="refNo" title="Document Reference Number">
+		<field name="referenceNo" title="Document Reference Number">
 			<display />
 		</field>
 		<field name="fileId" title="File Id">
@@ -282,16 +286,13 @@
 		<field name="fileId" title="File ID">
 			<display />
 		</field>
-		<field name="partyId" title="Requested by">
+		<field name="requester" title="Requested by">
 			<display />
 		</field>
 		<field name="folioNo" title="File Folio Number">
 			<display />
 		</field>
-		<field name="filelocation" title="Requester Location">
-			<display />
-		</field>
-		<field name="reqdate" title="Date Requested">
+		<field name="requestDate" title="Date Requested">
 			<display />
 		</field>
 	</form>
@@ -451,7 +452,7 @@
 			tooltip="${uiLabelMap.CommonNotModifRecreat}">
 			<display />
 		</field>
-		<field name="filelocation" title="File location">
+		<field name="fileLocation" title="File location">
 			<text size="45"></text>
 		</field>
 		<field name="description" title="Description">
@@ -483,7 +484,7 @@
 		<field name="locationId">
 			<display />
 		</field>
-		<field name="filelocation" title="File Locations">
+		<field name="fileLocation" title="File Locations">
 			<display />
 		</field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
@@ -530,7 +531,7 @@
             </service>
         </actions>
         <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
-        <field name="reqfile" title="Request File" widget-style="buttontext">
+        <field name="reqfile" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Request File" target="requestfiles">
 				<parameter param-name="fileId" />
 				<parameter param-name="folioNo" />
@@ -540,9 +541,10 @@
 			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
 		</field>
 
-		<field name="fileoverview" title="File Overview" widget-style="buttontext">
+		<field name="fileoverview" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="fileId" />
+				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
 
@@ -672,7 +674,10 @@
         <field name="documentId">
         	<display/>
         </field>
-        <field name="fileTypeId">
+      <field name="fileTypeId" title="Document Type">
+			<display-entity entity-name="RegistryFileType" description="${fileType}"></display-entity>
+			</field>
+			 <field name="documentValue">
         	<display/>
         </field>
         <field name="receiptDate" encode-output="false">
@@ -696,7 +701,7 @@
         <field name="requester">
         	<display/>
         </field>
-        <field name="reqdate" encode-output="false">
+        <field name="requestDate" encode-output="false">
         	<display/>
         </field>
     </form>

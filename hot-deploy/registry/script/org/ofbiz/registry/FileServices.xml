@@ -80,31 +80,15 @@
 
 	<simple-method method-name="requestfiles"
 		short-description="request File ">
+		 <now-timestamp field="nowTimestamp"/>
 		<make-value entity-name="RegistryFilesRequest" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="RegistryFilesRequest" field="requestId" />
 		<set from-field="requestId" field="newEntity.requestId" />
+		<set value="${userLogin.partyId}" field="newEntity.requester" />
+		<set field="newEntity.requestDate" from-field="nowTimestamp" />
 		<create-value value-field="newEntity" />
-
-		<!-- Java Method to update Entity File -->
-<!--         <call-class-method class-name="org.ofbiz.registry.FileServices" method-name="updateFileStatus" >
-            <field field="newEntity" type="GenericValue"/>
-            <field field="delegator" type="org.ofbiz.entity.Delegator"/>
-        </call-class-method> -->
-
-
-		<entity-one value-field="file" entity-name="RegistryFiles">
-			<field-map field-name="fileId" value="${newEntity.fileId}"/>
-		</entity-one>
-
-<!-- 
-		<set field="updateFileStatusMap.fileId" value="${newEntity.fileId}" />
-		<set field="updateFileStatusMap.status" value="REQUESTED" /> -->
-		<!-- <set field="updateFileStatusMap.partyId" value="10010" /> -->
-
-
-		<call-service service-name="updateFileStatus" in-map-name="updateFileStatusMap" />
 
 	</simple-method>
 
