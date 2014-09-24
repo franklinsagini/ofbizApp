@@ -1280,4 +1280,134 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- remittanceByMember -->
+    <screen name="remittanceByMember">
+        <section>
+            <actions>
+                <set field="titleProperty" value="remittanceByMember"/>
+                <set field="headerItem" value="main"/>
+                <set field="tabButtonItem" value="remittanceByMember"/>
+                <set field="memberCtx" from-field="parameters"/>
+
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                	
+                    <decorator-section name="body">
+                    	  <include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <!-- platform-specific>
+                                    <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
+                                </platform-specific -->
+                                <screenlet title="Search Members">
+                                        <include-form name="remittanceByMember" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                            	</screenlet>
+                                <screenlet title="Members List">
+                                <include-form  name="remittanceByMemberList" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- remittanceByMemberEach -->
+    <screen name="remittanceByMemberEach">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Remittance By Member"/>
+                <set field="headerItem" value="remittanceByMember"/>
+                <set field="tabButtonItem" value="remittanceByMember"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createExpectedPaymentReceived"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                 <set field="stationNumber" from-field="parameters.stationNumber"></set>
+                <set field="stationName" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getStationName(stationNumber);}" type="String"/>
+                <set field="month"  from-field="parameters.month"/>
+                <set field="partyId" from-field="parameters.partyId"></set>
+                <set field="memberNames" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getMemberNames(partyId);}" type="String"/>
+                
+                <set field="payrollNo" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getPayrollNumber(partyId);}" type="String"/>
+                <set field="totalRemittance" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalByPayrollNo(payrollNo);}" type="BigDecimal"/>
+                <entity-one entity-name="ExpectedPaymentReceived" value-field="expectedPaymentReceivedContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
+                        <!-- section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Expected Payment">
+                                    <include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section -->
+                        
+                        <section>
+                        	
+                        	
+                        	<widgets>
+                        		  <screenlet>
+                                	<section>
+                                		
+                                		<widgets>
+                                			
+                                		<container style="button-bar">
+                                			<label style="h3">Remittance for ${memberNames} </label>
+                                        </container>
+                                		</widgets>
+                                		
+                                	</section>
+                                </screenlet>
+                        	</widgets>
+                        </section>
+
+                        
+                        <section name="Received Payments">
+                        	<widgets>
+                        		<screenlet title="Received Payments">
+                        			<include-form name="listExpectedPaymentReceivedBreakdownEach" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        		
+                         		<screenlet>
+                        		<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
+                        		<section>
+                        			<widgets>
+                        				<container style="button-bar">
+                                			<label style="h3">Total Remittance  : Kshs. ${totalRemittance} </label>
+                                			
+                        				
+                        				</container>
+                        			</widgets>
+                        		</section>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

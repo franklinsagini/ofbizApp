@@ -206,7 +206,7 @@ public class LoanRepayments {
 	 * @author Japheth Odonya @when Sep 11, 2014 11:37:08 AM Get the Account
 	 *         Setup Record
 	 * */
-	private static GenericValue getAccountHolderTransactionSetupRecord(
+	public static GenericValue getAccountHolderTransactionSetupRecord(
 			String setupType, Delegator delegator) {
 		GenericValue accountHolderTransactionSetup = null;
 		try {
