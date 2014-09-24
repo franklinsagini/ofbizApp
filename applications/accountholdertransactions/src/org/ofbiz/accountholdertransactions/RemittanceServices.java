@@ -819,7 +819,9 @@ public class RemittanceServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"stationNumber", EntityOperator.EQUALS, stationNumber),
 						EntityCondition.makeCondition("month",
-								EntityOperator.EQUALS, month)
+								EntityOperator.EQUALS, month),
+								EntityCondition.makeCondition("processed",
+										EntityOperator.EQUALS, null)
 
 				), EntityOperator.AND);
 
