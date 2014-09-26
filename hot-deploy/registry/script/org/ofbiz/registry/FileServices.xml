@@ -86,7 +86,40 @@
 		<set value="${userLogin.partyId}" field="newEntity.requester" />
 		<set field="newEntity.requestDate" from-field="nowTimestamp" />
 		<create-value value-field="newEntity" />
+
+
+		<set field="setStatus.partyId" from-field="newEntity.partyId"/>
+        <set field="setStatus.status" value="REQUESTED"/>
+        <call-service service-name="updateRegistryFileStatus" in-map-name="setStatus"/>
+       <!--  <field-to-result field="newEntity.partyId" result-name="partyId"/> -->
+
+
 	</simple-method>
+
+  	<!-- update Budget Status -->
+    <simple-method method-name="updateRegistryFileStatus" short-description="Update Registry File Status Status">
+
+      <!--       <entity-one value-field="registryFile" entity-name="RegistryFiles">
+                <field-map field-name="partyId" from-field="parameters.partyId"/>
+            </entity-one>
+            <if-not-empty field="registryFile">
+				<entity-one entity-name="RegistryFiles" value-field="lookedUpValue"/>
+				<set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+				<set-pk-fields value-field="lookedUpValue" map="parameters"/>
+				<store-value value-field="lookedUpValue"/>
+
+				<field-to-result field="parameters.partyId" result-name="partyId"/>
+            </if-not-empty> -->
+        <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+
+
+
 	<!-- Service to update File after the request is successfull -->
 	<simple-method method-name="updateFileStatus" short-description="Update a file's status">
         <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>

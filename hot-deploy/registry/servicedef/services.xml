@@ -62,18 +62,14 @@
 			mode="IN" optional="true" />
 	</service>
 
-	<service name="requestfiles" engine="simple"
-		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
-		invoke="requestfiles" auth="true">
+	<service name="requestfiles" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes entity-name="RegistryFilesRequest" include="pk"
-			mode="IN" optional="true" />
-		<auto-attributes entity-name="RegistryFilesRequest" include="nonpk"
-			mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryFilesRequest" include="pk" mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryFilesRequest" include="nonpk" mode="IN" optional="true" />
 	</service>
 
-	<service name="updateFileStatus" default-entity-name="Files" engine="simple"
-            location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="updateFileStatus" auth="true">
+	<service name="updateRegistryFileStatus" default-entity-name="RegistryFiles" engine="simple"
+            location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="updateRegistryFileStatus" auth="true">
         <description>Update a file's status</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
