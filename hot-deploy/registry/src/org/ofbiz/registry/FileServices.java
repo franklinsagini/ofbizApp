@@ -17,7 +17,7 @@ public class FileServices {
 		log.info("FileId Has been Fetched Guyz ################################ " + fileId + "########################################");
 		GenericValue file = null;
 		try {
-			file = delegator.findOne("Files", UtilMisc.toMap("fileId", fileId), false);
+			file = delegator.findOne("RegistryFiles", UtilMisc.toMap("fileId", fileId), false);
 			log.info("File Has been Fetched Guyz ################################ " + file + "########################################");
 		} catch (GenericModelException e) {
 			Debug.logError(e.toString(), "Cannot Primary Find File", module);

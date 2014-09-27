@@ -855,7 +855,7 @@ public class AccHolderTransactionServices {
 	/**
 	 * AcctgTransEntry
 	 * **/
-	private static void postTransactionEntry(Delegator delegator,
+	public static void postTransactionEntry(Delegator delegator,
 			BigDecimal bdLoanAmount, String partyId,
 			String loanReceivableAccount, String postingType,
 			String acctgTransId, String acctgTransType, String entrySequenceId) {

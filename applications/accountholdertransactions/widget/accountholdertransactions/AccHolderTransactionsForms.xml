@@ -1617,7 +1617,7 @@ under the License.
         <field name="remitanceDescription" title="Remitance Description"><display also-hidden="false"></display></field>
         
         <field name="employeeName" title="Employee Name"><display also-hidden="false"></display></field>
-        <field name="generatedDate" title="Generated Date"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Remittance Date"><display also-hidden="false" type="date-time"></display></field>
        
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -1626,6 +1626,29 @@ under the License.
         </field -->
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
+    
+    <form name="listExpectedPaymentReceivedBreakdownTotals" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateExpectedPayment" paginate-target="expectedPayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" >
+        <actions>
+            <set field=""/>
+        </actions>
+		
+		<field name="stationNumber" title="" ><display also-hidden="true"></display></field>
+		<field name="stationName" title=""><display also-hidden="false"></display></field>
+		<field name="remitanceCode" title=""><display also-hidden="false"></display></field>
+		<field name="payrollNo" title=""><display also-hidden="false"></display></field>
+		<field name="month" title=""><display also-hidden="false"></display></field>
+        <field name="loanNo" title=""><display also-hidden="false"></display></field>
+        <field name="employerNo" title=""><display also-hidden="false"></display></field>
+        
+        
+        <field name="amount" title="Total"><display also-hidden="false"></display></field>
+        <field name="remitanceDescription" title=""><display also-hidden="false"></display></field>
+        
+        <field name="employeeName" title=""><display also-hidden="false"></display></field>
+        <field name="generatedDate" title=""><display also-hidden="false"></display></field>
+       
+     </form>
     
     <!-- Codes -->
     <form name="codesSetup" type="single" target="createCodesSetup"
@@ -1692,6 +1715,120 @@ under the License.
         <field name="expectationType" title="Expectation Type"><display also-hidden="false"></display></field>
         
         <!-- field name="generatedDate" title="Generated Date"><display also-hidden="false"></display></field -->
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- Remittance By Members -->
+    
+    <form name="remittanceByMember" type="single" target="remittanceByMember" default-entity-name="Member">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="idNumber" title="ID Number"><text-find/></field>
+        <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
+        <field name="memberStatus" title="Status"><text-find/></field>
+        <field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    <form name="remittanceByMemberList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="remittanceByMember" paginate-target="remittanceByMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="Member">
+        		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+        
+        
+        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+        
+       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+   
+       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+	     <field name="stationId" title="Station">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+        
+        <field name="memberStatus"><display also-hidden="false"></display></field>
+        
+        <field name="Remittance">
+        	<hyperlink target="remittanceByMemberEach?partyId=${partyId}" description="Remittance By for ${firstName} ${lastName}"></hyperlink>
+        </field>
+        
+        <!--  field name="Change Member Status">
+        	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
+        </field>
+        
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
+        </field -->
+     </form>
+     
+     <!-- Received BreakDown for each member -->
+     <form name="listExpectedPaymentReceivedBreakdownEach" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateExpectedPayment" paginate-target="expectedPayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ExpectedPaymentReceived">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<condition-list combine="and">
+            		<condition-expr field-name="payrollNo" operator="equals" from-field="payrollNo"/>
+            	</condition-list>
+            	<order-by field-name="month"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentReceived"/>
+		
+		<field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
+		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
+		<field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field>
+		<field name="payrollNo" title="Payroll No"><display also-hidden="false"></display></field>
+		<field name="month" title="Month"><display also-hidden="false"></display></field>
+        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+        <field name="employerNo" title="Employer No"><display also-hidden="false"></display></field>
+        
+        
+        <field name="amount" title="Amount"><display also-hidden="false"></display></field>
+        <field name="remitanceDescription" title="Remitance Description"><display also-hidden="false"></display></field>
+        
+        <field name="employeeName" title="Employee Name"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Remittance Date"><display also-hidden="false" type="date-time"></display></field>
        
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">

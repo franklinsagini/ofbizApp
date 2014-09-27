@@ -50,6 +50,7 @@ under the License.
     <!-- Request Mappings -->
     <!-- request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="remittanceByMember"><security https="true" auth="true"/><response name="success" type="view" value="remittanceByMember"/></request-map>	
 	
 	<request-map uri="cashWithdrawal">
 		<security https="true" auth="true" />
@@ -597,6 +598,18 @@ under the License.
                 <response name="error" type="view" value="expectedPaymentStations" />
 	</request-map>
 	
+	<!-- processReceivedPaymentBreakdown -->
+	<request-map uri="processReceivedPaymentBreakdown">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accountholdertransactions.RemittanceServices" invoke="processReceivedPaymentBreakdown" />
+                <response name="success" type="view"
+                        value="receivedPaymentBreakdown">
+                        	<redirect-parameter name="stationNumber"/>
+                        	<redirect-parameter name="month"/>
+                        </response>
+                <response name="error" type="view" value="receivedPaymentBreakdown" />
+	</request-map>
+	
 	<request-map uri="codesSetup">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="codesSetup"
@@ -644,6 +657,14 @@ under the License.
 			<redirect-parameter name="month"/>
 		</response>
 	</request-map>
+	
+		<request-map uri="remittanceByMemberEach">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="remittanceByMemberEach"
+			save-current-view="true">
+				<redirect-parameter name="partyId"/>
+			</response>
+	</request-map>
     
 	
     <!-- end of request mappings -->
@@ -653,6 +674,8 @@ under the License.
     <!-- view-map name="main" type="screen" page="component://accountholdertransactions/widget://sharemanagement/LoanScreens.xml#loanapplicationslist"/ -->
     <!-- view-map name="main" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashWithdrawal"/ -->
     <view-map name="main" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#FindMember"/>
+
+    <view-map name="remittanceByMember" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#remittanceByMember"/>
 
 	<!-- Payroll -->
 	<view-map name="cashWithdrawal" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashWithdrawal"/>
@@ -667,6 +690,8 @@ under the License.
 	<view-map name="receivedPaymentStations" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#receivedPaymentStations"/>
 
 	<view-map name="expectedPaymentBreakdown" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentBreakdown"/>
+	<view-map name="receivedPaymentBreakdown" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#receivedPaymentBreakdown"/>
+	
 	<view-map name="receivedPaymentBreakdown" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#receivedPaymentBreakdown"/>
 	
 	

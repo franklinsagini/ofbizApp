@@ -52,14 +52,12 @@
 		<make-value entity-name="RegistryFiles" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="RegistryFiles" field="fileId" />
-		<set from-field="fileId" field="newEntity.fileId" />
 
 		<entity-one value-field="member" entity-name="Member">
 			<field-map field-name="partyId" value="${newEntity.partyId}"/>
 		</entity-one>
 
-		<set value="FNO-${newEntity.fileId}-${member.firstName}" field="newEntity.folioNo" />
+		<set value="FNO-${newEntity.partyId}-${member.firstName}" field="newEntity.folioNo" />
 		<set value="REGISTRY" field="newEntity.fileLocation" />
 		<set value="AVAILABLE" field="newEntity.status" />
 		<set value="${userLogin.partyId}" field="newEntity.creator" />
@@ -78,36 +76,51 @@
 
 
 
-	<simple-method method-name="requestfiles"
-		short-description="request File ">
-		<make-value entity-name="FilesRequest" value-field="newEntity" />
+	<simple-method method-name="requestfiles" short-description="request File ">
+		 <now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFilesRequest" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="FilesRequest" field="RequestId" />
-		<set from-field="RequestId" field="newEntity.RequestId" />
+		<sequenced-id sequence-name="RegistryFilesRequest" field="requestId" />
+		<set from-field="requestId" field="newEntity.requestId" />
+		<set value="${userLogin.partyId}" field="newEntity.requester" />
+		<set field="newEntity.requestDate" from-field="nowTimestamp" />
 		<create-value value-field="newEntity" />
 
-		<!-- Java Method to update Entity File -->
-<!--         <call-class-method class-name="org.ofbiz.registry.FileServices" method-name="updateFileStatus" >
-            <field field="newEntity" type="GenericValue"/>
-            <field field="delegator" type="org.ofbiz.entity.Delegator"/>
-        </call-class-method> -->
 
+		<set field="setStatus.partyId" from-field="newEntity.partyId"/>
+        <set field="setStatus.status" value="REQUESTED"/>
+        <call-service service-name="updateRegistryFileStatus" in-map-name="setStatus"/>
+       <!--  <field-to-result field="newEntity.partyId" result-name="partyId"/> -->
 
-		<entity-one value-field="file" entity-name="RegistryFiles">
-			<field-map field-name="fileId" value="${newEntity.fileId}"/>
-		</entity-one>
-
-
-		<set field="updateFileStatusMap.fileId" value="${newEntity.fileId}" />
-		<set field="updateFileStatusMap.Status" value="REQUESTED" />
-		<set field="updateFileStatusMap.partyId" value="10010" />
-
-
-		<call-service service-name="updateFileStatus" in-map-name="updateFileStatusMap" />
 
 	</simple-method>
 
+  	<!-- update Budget Status -->
+    <simple-method method-name="updateRegistryFileStatus" short-description="Update Registry File Status Status">
+
+      <!--       <entity-one value-field="registryFile" entity-name="RegistryFiles">
+                <field-map field-name="partyId" from-field="parameters.partyId"/>
+            </entity-one>
+            <if-not-empty field="registryFile">
+				<entity-one entity-name="RegistryFiles" value-field="lookedUpValue"/>
+				<set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+				<set-pk-fields value-field="lookedUpValue" map="parameters"/>
+				<store-value value-field="lookedUpValue"/>
+
+				<field-to-result field="parameters.partyId" result-name="partyId"/>
+            </if-not-empty> -->
+        <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+
+
+
+	<!-- Service to update File after the request is successfull -->
 	<simple-method method-name="updateFileStatus" short-description="Update a file's status">
         <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
@@ -116,8 +129,7 @@
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
-	<simple-method method-name="issuefiles"
-		short-description="issue File ">
+	<simple-method method-name="issuefiles" short-description="issue File ">
 		<make-value entity-name="FileIssue" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
@@ -146,7 +158,6 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="RegistryDocuments" field="documentId" />
 		<set from-field="documentId" field="newEntity.documentId" />
-		<set value="REF_NO_${newEntity.documentId}" field="newEntity.refNo" />
 		<create-value value-field="newEntity" />
 	</simple-method>
 
