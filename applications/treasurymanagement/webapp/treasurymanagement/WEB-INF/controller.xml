@@ -21,7 +21,7 @@
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="recconcileTreasury"/></request-map>
     <request-map uri="treasuryType">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="treasuryType"
@@ -128,6 +128,21 @@
 			save-current-view="true" />
 	</request-map>
 	
+	
+	<request-map uri="recconcileTreasury">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="recconcileTreasury"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="showTransactions">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="showTransactions"
+			save-current-view="true">
+				<redirect-parameter name="treasuryTransferId"/>
+			</response>
+	</request-map>
+	
 	<request-map uri="createTreasuryTransfer">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createTreasuryTransfer" />
@@ -161,5 +176,8 @@
 	<view-map name="treasury" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#NewTreasury"/>
 	<view-map name="treasuryTransaction" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#NewTreasuryTransaction"/>	
 	<view-map name="treasuryTransfer" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#NewTreasuryTransfer"/>
+	<view-map name="recconcileTreasury" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#recconcileTreasury"/>
+	<view-map name="showTransactions" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#showTransactions"/>
+	
 	
 </site-conf>
