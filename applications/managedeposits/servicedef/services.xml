@@ -9,6 +9,29 @@
         <description>
             Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
         </description>
+    </service>
+    
+        <service name="createGraduatedScale" engine="simple" default-entity-name="GraduatedScale"
+             location="component://managedeposits/script/org/ofbiz/managedeposits/ManageDepositsServices.xml" invoke="createGraduatedScale" auth="true">
+        <description>Create Loan Product</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateGraduatedScale" engine="simple" default-entity-name="GraduatedScale"
+             location="component://managedeposits/script/org/ofbiz/managedeposits/ManageDepositsServices.xml" invoke="updateGraduatedScale" auth="true">
+        <description>Update a Loan Product</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteGraduatedScale" engine="simple" default-entity-name="GraduatedScale"
+             location="component://managedeposits/script/org/ofbiz/managedeposits/ManageDepositsServices.xml" invoke="deleteGraduatedScale" auth="true">
+        <description>Delete GraduatedScale</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
     </service> 
     
 </services>
