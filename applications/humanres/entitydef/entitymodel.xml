@@ -136,6 +136,7 @@ under the License.
         <alias entity-alias="PERS" name="lastName" field="lastName"/>
         <alias entity-alias="PQT" name="partyQualType" field="description"/>
         <alias entity-alias="PQL" name="qualTitle" field="title"/>
+        <alias entity-alias="PQL" name="specialization" field="specialization"/>
         <alias entity-alias="PQL" name="qualInstitute" field="institute"/>
         <alias entity-alias="PQL" name="qualfromDate" field="fromDate"/>
         <alias entity-alias="PQL" name="qualthruDate" field="thruDate"/>
@@ -147,6 +148,53 @@ under the License.
         </view-link>
     
     </view-entity>
+    
+    
+     <view-entity entity-name="StaffListReport" package-name="org.ofbiz.humanres.ability" 
+    	title="Staff List Report">
+    	<member-entity entity-alias="PERS" entity-name="Person" />
+        <member-entity entity-alias="STA" entity-name="Station" />
+        <member-entity entity-alias="ENM" entity-name="Enumeration"></member-entity>        
+        <member-entity entity-alias="REL" entity-name="Religion"></member-entity>    
+        <member-entity entity-alias="EPF" entity-name="EmplPositionFulfillment"/>
+        <member-entity entity-alias="EMP" entity-name="EmplPosition" />
+        <!--alias-all entity-alias="PERS" /-->
+        <!--alias-all entity-alias="PQL" /-->
+        <alias entity-alias="PERS" name="employeeNumber" field="employeeNumber"/>
+        <alias entity-alias="PERS" name="salutation" field="salutation"/>
+        <alias entity-alias="PERS" name="firstName" field="firstName"/>
+        <alias entity-alias="PERS" name="lastName" field="lastName"/>
+        <alias entity-alias="PERS" name="gender" field="gender"/> 
+        <alias entity-alias="PERS" name="nationalIDNumber" field="nationalIDNumber"/>      
+        <alias entity-alias="EMP" name="positionName" field="positionName"/>        
+        <alias entity-alias="STA" name="station" field="name"/>
+        <alias entity-alias="PERS" name="birthDate" field="birthDate"/>
+        <alias entity-alias="PERS" name="appointmentdate" field="appointmentdate"/>
+        <alias entity-alias="PERS" name="confirmationdate" field="confirmationdate"/>
+        <alias entity-alias="PERS" name="retirementdate" field="retirementdate"/>  
+        <alias entity-alias="PERS" name="maritalStatus" field="maritalStatus"/> 
+        <alias entity-alias="ENM" name="empStatus" field="description"/>
+        <alias entity-alias="REL" name="religion" field="religion"/>
+        
+        
+        <view-link entity-alias="PERS" rel-entity-alias="STA">
+            <key-map field-name="stationId"/>
+        </view-link>
+        <view-link entity-alias="PERS" rel-entity-alias="ENM">
+            <key-map field-name="employmentStatusEnumId" rel-field-name="enumId"/>
+        </view-link>
+        <view-link entity-alias="PERS" rel-entity-alias="REL">
+            <key-map field-name="religionId" />
+        </view-link>
+        <view-link entity-alias="PERS" rel-entity-alias="EPF">
+            <key-map field-name="partyId" />
+        </view-link>
+        <view-link entity-alias="EPF" rel-entity-alias="EMP">
+            <key-map field-name="emplPositionId" />
+        </view-link>
+        
+    </view-entity>
+    
     
     <entity entity-name="PartyResume"
             package-name="org.ofbiz.humanres.ability"
@@ -552,11 +600,21 @@ under the License.
             package-name="org.ofbiz.humanres.employment"
             title="Employment and Person Entity">
         <member-entity entity-alias="EMPLMNT" entity-name="Employment"/>
-        <member-entity entity-alias="PERS" entity-name="Person"/>
-        <alias-all entity-alias="EMPLMNT"/>
-        <alias-all entity-alias="PERS"/>
+        <member-entity entity-alias="PERS" entity-name="Person"/>        
+        <member-entity entity-alias="STA" entity-name="Station" />
+        <alias-all entity-alias="EMPLMNT">
+        	<exclude field="stationId"/>
+        </alias-all>
+        <alias-all entity-alias="PERS">
+        	<exclude field="stationId"/>
+        </alias-all>
+        <alias entity-alias="STA" name="station" field="name"/>
+        
         <view-link entity-alias="EMPLMNT" rel-entity-alias="PERS">
             <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+        </view-link>
+        <view-link entity-alias="EMPLMNT" rel-entity-alias="STA">
+            <key-map field-name="stationId"/>
         </view-link>
     </view-entity>
 
@@ -1043,6 +1101,36 @@ under the License.
         <key-map field-name="emplPositionTypeId"/>
       </relation>
     </view-entity>
+    
+    <view-entity entity-name="PersonAndEmplPositionAndFulfillment"
+            package-name="org.ofbiz.humanres.position"
+            title="EmplPosition Fulfillment Entity">
+      <member-entity entity-alias="PERS" entity-name="Person"></member-entity>      
+      <member-entity entity-alias="EMPPOS" entity-name="EmplPosition"></member-entity>
+      <member-entity entity-alias="EPF" entity-name="EmplPositionFulfillment"></member-entity>
+      <alias-all entity-alias="EMPPOS"/>
+      <alias name="employeePartyId" entity-alias="EPF" field="partyId"/>
+      <alias name="employeefromDate" entity-alias="EPF" field="fromDate"/>
+      <alias name="employeethruDate" entity-alias="EPF" field="thruDate"/>
+      <alias name="employeeNumber" entity-alias="PERS" field="employeeNumber"></alias>
+      <alias name="firstName" entity-alias="PERS" field="firstName"></alias>
+      <alias name="lastName" entity-alias="PERS" field="lastName"></alias>
+      
+     
+      <view-link entity-alias="EMPPOS" rel-entity-alias="EPF">
+        <key-map field-name="emplPositionId"/>
+      </view-link>
+      <view-link entity-alias="EPF" rel-entity-alias="PERS">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <relation type="one" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId"/>
+      </relation>
+    </view-entity>
+    
+    
+    
+    
     <entity entity-name="EmplPositionReportingStruct"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Reporting Structure Entity">
@@ -1333,7 +1421,7 @@ under the License.
         <field name="familyRelationsId" type="id"></field>
         <field name="partyIdentificationTypeId" type="id"></field>
         <field name="fullname" type="name"></field>
-        <field name="gender" type="indicator"></field>
+        <field name="gender" type="name"></field>
         <field name="dob" type="date"></field>
         <field name="idno" type="name"></field>
         <field name="employer" type="name"></field>
@@ -1366,7 +1454,7 @@ under the License.
         <field name="familyRelationsId" type="id"></field>
         <field name="partyIdentificationTypeId" type="id"></field>
         <field name="fullname" type="name"></field>
-        <field name="gender" type="indicator"></field>
+        <field name="gender" type="name"></field>
         <field name="dob" type="date"></field>
         <field name="idno" type="name"></field>
         <field name="bloodGroupId" type="id"></field>
@@ -1394,7 +1482,7 @@ under the License.
         <field name="familyRelationsId" type="id"></field>
         <field name="partyIdentificationTypeId" type="id"></field>
         <field name="fullname" type="name"></field>
-        <field name="gender" type="indicator"></field>
+        <field name="gender" type="name"></field>
         <field name="idno" type="name"></field>
         <field name="employer" type="name"></field>
         <field name="phoneNo" type="name"></field>
