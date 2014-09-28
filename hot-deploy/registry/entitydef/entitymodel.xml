@@ -24,6 +24,14 @@
 		<field name="description" type="description"></field>
 		<prim-key field="fileTypeId" />
 	</entity>
+	
+	<entity entity-name="RegistryFileActionTypes" package-name="org.ofbiz.registry"
+		title="File Actions">
+		<field name="fileActionTypeId" type="id-ne"></field>
+		<field name="fileActionType" type="name" not-null="true"></field>
+		<field name="status" type="name"></field>
+		<prim-key field="fileActionTypeId" />
+	</entity>
 
 	<entity entity-name="RegistryFiles" package-name="org.ofbiz.registry"
 		title="Member File Book">
@@ -40,6 +48,19 @@
 		<relation type="one" fk-name="FILE_CREATOR_PERSONS" title="Creator" rel-entity-name="Person">
         	<key-map field-name="creator" rel-field-name="partyId"/>
 	     </relation>
+	</entity>
+	
+	<entity entity-name="RegistryFileActions" package-name="org.ofbiz.registry"
+		title="Member File actions">
+		<field name="actionId" type="id-ne"></field>
+		<field name="fileActionTypeId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="actionBy" type="name"></field>
+		<field name="actionDate" type="date-time"></field>
+		<prim-key field="actionId" />
+		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
+			<key-map field-name="partyId" />
+		</relation>
 	</entity>
 
 	<entity entity-name="RegistryDocuments" package-name="org.ofbiz.registry"
@@ -65,56 +86,8 @@
 		<prim-key field="locationId" />
 	</entity>
 
-	<entity entity-name="RegistryFilesRequest" package-name="org.ofbiz.registry"
-		title="Member Files">
-		<field name="requestId" type="id"></field>
-		<field name="partyId" type="id" ></field>
-		<field name="requester" type="name"></field>
-		<field name="requestDate" type="date-time"></field>
-		<prim-key field="requestId" />
-		<prim-key field="partyId" />
-		<relation type="one" fk-name="REQUEST_FILE" rel-entity-name="RegistryFiles">
-			<key-map field-name="partyId" />
-		</relation>
-	</entity>
-
-	<entity entity-name="RegistryFileIssue" package-name="org.ofbiz.registry"
-		title="Member Files">
-		<field name="fileIssueId" type="id"></field>
-		<field name="requestId" type="id"></field>
-		<field name="partyId" type="name" not-null="true"></field>
-		<field name="issuedBy" type="name"></field>
-		<field name="issueDate" type="date-time"></field>
-		<prim-key field="fileIssueId" />
-		<prim-key field="requestId" />
-		<relation type="one" fk-name="FILEISSUE_FILES" rel-entity-name="RegistryFiles">
-			<key-map field-name="partyId" />
-		</relation>
-		<relation type="one" fk-name="FILEISSUE_FILEREQUEST" rel-entity-name="RegistryFilesRequest">
-			<key-map field-name="requestId" />
-		</relation>
-	</entity>
-
-	<entity entity-name="RegistryFileRelease" package-name="org.ofbiz.registry"
-		title="Member Files">
-		<field name="releaseId" type="id"></field>
-		<field name="fileIssueId" type="id"></field>
-		<field name="partyId" type="name" not-null="true"></field>
-		<field name="releasedBy" type="name"></field>
-		<field name="releaseDate" type="date-time"></field>
-		<prim-key field="releaseId" />
-		<prim-key field="fileIssueId" />
-		<relation type="one" fk-name="FILERELEASE_FILE" rel-entity-name="RegistryFiles">
-			<key-map field-name="partyId" />
-		</relation>
-		<relation type="one" fk-name="FILERELEASE_FILEISSUE" rel-entity-name="RegistryFileIssue">
-			<key-map field-name="fileIssueId" />
-		</relation>
-	</entity>
-
-
-
-	<!-- -->
+	
+	
 </entitymodel>
 
 
