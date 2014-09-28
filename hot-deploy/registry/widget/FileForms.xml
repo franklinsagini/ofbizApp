@@ -5,131 +5,98 @@
 
 
 
-	<form name="EditFileTypeForm" type="single" target="createfiletype"
-		focus-field-name="name" header-row-style="header-row"
+	<form name="EditFileTypeForm" type="single" target="createfiletype"	focus-field-name="name" header-row-style="header-row"
 		default-table-style="basic-table" default-map-name="filetypeContext">
-
+		<alt-target use-when="filetypeContext!=null" target="updatefileType" />
 		<actions>
 			<entity-condition entity-name="RegistryFileType" list="filetypeList">
 				<order-by field-name="fileTypeId" />
 			</entity-condition>
 		</actions>
-		<alt-target use-when="filetypeContext!=null" target="updatefileType" />
-
-		<field name="fileTypeId">
-			<hidden />
-		</field>
-		<field name="fileTypeId" use-when="filetypeContext!=null"
-			tooltip="${uiLabelMap.CommonNotModifRecreat}">
-			<display />
-		</field>
-		<field name="fileType" title="File Type">
-			<text size="45"></text>
-		</field>
-		<field name="Description" title="Description">
-			<textarea />
-		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
+		<field name="fileTypeId" title="Document Type Id"><hidden /></field>
+		<field name="fileTypeId" title="Document Type Id" use-when="filetypeContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+		<field name="fileType" title="Document Type"><text size="45"></text></field>
+		<field name="Description" title="Description"><textarea /></field>
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"	widget-style="smallSubmit"><submit button-type="button" /></field>
 		<!-- submitButton -->
-		<field use-when="filetypeContext==null" name="submitButton"
-			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
-		<field use-when="filetypeContext!=null" name="submitButton"
-			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
+		<field use-when="filetypeContext==null" name="submitButton"	title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
+		<field use-when="filetypeContext!=null" name="submitButton"	title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link" /></field>
 	</form>
 
 
-	<form name="FileTypeListForm" type="list" list-name="listIt"
-		use-row-submit="true" separate-columns="true" target="updatefileType"
-		paginate-target="EditFileTypeForm" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	<form name="FileTypeListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatefileType"
+		paginate-target="EditFileTypeForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="RegistryFileType"></entity-condition>
 		</actions>
-		<field name="fileTypeId">
-			<display />
-		</field>
-		<field name="fileType" title="File Type">
-			<display />
-		</field>
-		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
-			widget-style="buttontext">
-			<hyperlink target="deletefileType" description="${uiLabelMap.CommonDelete}"
+		<field name="fileTypeId"><display /></field><field name="fileType" title="File Type"><display /></field>
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
+		<hyperlink target="deletefileType" description="${uiLabelMap.CommonDelete}"	also-hidden="false"><parameter param-name="fileTypeId" /></hyperlink></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
+	</form>
+	
+	<form name="EditFileActionTypesForm" type="single" target="createfileActionTypes"	focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="fileActionTypesContext">
+		<alt-target use-when="fileActionTypesContext!=null" target="updatefileActionTypes" />
+		<actions>
+			<entity-condition entity-name="RegistryFileActionTypes" list="fileactionList">
+				<order-by field-name="fileActionTypeId" />
+			</entity-condition>
+		</actions>		
+		<field name="fileActionTypeId"><hidden /></field>
+		<field name="fileActionTypeId" use-when="fileActionTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+		<field name="fileActionType" title="File Action Type"><text size="45"></text></field>
+		<field name="status" title="File Status"><text size="45"></text></field>
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"	widget-style="smallSubmit"><submit button-type="button" /></field>
+		<!-- submitButton -->
+		<field use-when="fileActionTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
+		<field use-when="fileActionTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link" /></field>
+	</form>
+
+
+	<form name="FileActionTypesListForm" type="list" list-name="listIt"	use-row-submit="true" separate-columns="true" target="updatefileActionTypes"
+		paginate-target="EditFileActionTypesForm" odd-row-style="alternate-row"	header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="RegistryFileActionTypes"></entity-condition>
+		</actions>
+		<field name="fileActionTypeId"><display /></field>
+		<field name="fileActionType" title="File Action Type"><display /></field>
+		<field name="status" title="File Status"><display /></field>
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
+			<hyperlink target="deletefileActionTypes" description="${uiLabelMap.CommonDelete}"
 				also-hidden="false">
-				<parameter param-name="fileTypeId" />
+				<parameter param-name="fileActionTypeId" />
 			</hyperlink>
 		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext">
-			<submit button-type="button" />
-		</field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
-
-
-
-
-	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId"
-	header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
-
+	
+   
+	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
 		 <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
-
 		<!-- submitButton -->
-		<field use-when="FilesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
+		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
 	</form>
-
-
-	<form name="FilesListForm" type="list" list-name="listIt"
-		use-row-submit="true" separate-columns="true" target="updateFiles"
-		paginate-target="EditFilesForm" odd-row-style="alternate-row" default-map-name="FilesContext"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	
+	<form name="FilesListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFiles"
+		paginate-target="EditFilesForm" odd-row-style="alternate-row" default-map-name="FilesContext" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-		<!-- for actions file request and overview -->
-		<entity-condition entity-name="RegistryFiles" value-field="fileId" />
+		<entity-condition entity-name="RegistryFiles"/>
 		</actions>
-
-		<field name="fileId" title="FileID">
-			<display />
-		</field>
-		<field name="partyId" title="Member Name">
-			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
-		</field>
-
-
-		<field name="folioNo" title="Folio Number">
-			<display />
-		</field>
-		<field name="status" title="File Status">
-			<display />
-		</field>
-		<field name="creator" title="File Created by">
-			<display />
-		</field>
-
-		<field name="fileLocation" title="Current File Location">
-			<display />
-		</field>
-		<field name="creationDate" title="Creation Date">
-			<display />
-		</field>
-
-		<field name="addDocument" title="Add Document To File" widget-style="buttontext">
+		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="folioNo" title="Folio Number"><display /></field>
+		<field name="status" title="File Status"><display /></field>
+		<field name="creator" title="File Created by"><display /></field>
+		<field name="fileLocation" title="Current File Location"><display /></field>
+		<field name="creationDate" title="Creation Date"><display /></field>
+		<field name="addDocument" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Add Document To File" target="editfileURL">
-				<parameter param-name="fileId" />
+				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" />
 			</hyperlink>
 		</field>
-
 		<field name="fileoverview" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
-				<parameter param-name="fileId" />
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
@@ -137,9 +104,7 @@
 	</form>
 
 
-	<form name="EditDocumentForm" type="single" target="createDocument"
-		focus-field-name="name" header-row-style="header-row"
-		default-table-style="basic-table" default-map-name="documentContext">
+	<form name="EditDocumentForm" type="single" target="createDocument"	focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="documentContext">
 		<actions>
 			<entity-condition entity-name="RegistryDocuments" list="fileList">
 				<order-by field-name="documentId" />
@@ -147,371 +112,136 @@
 			<entity-condition entity-name="RegistryFileType" list="filetypeList">
 				<order-by field-name="fileTypeId" />
 			</entity-condition>
-			<entity-condition entity-name="RegistryFiles" list="filebksList">
-				<order-by field-name="fileId" />
+			<entity-condition entity-name="Member" list="filebksList">
+				<order-by field-name="partyId" />
 			</entity-condition>
 		</actions>
 		<alt-target use-when="documentContext!=null" target="updateFile" />
-
-		<field name="fileTypeId" title="Document Type " widget-style="required"
-			required-field="true">
+		<field name="fileTypeId" title="Document Type " widget-style="required"	required-field="true">
 			<drop-down>
 				<list-options key-name="fileTypeId" list-name="filetypeList"
 					description="${fileType}" />
 			</drop-down>
 		</field>
-		<field name="fileId" title="File ID" use-when="documentContext==null"
-			widget-style="required" required-field="true">
+		<field name="partyId" title="File ID" use-when="documentContext==null"	widget-style="required" required-field="true">
 			<drop-down>
-				<list-options key-name="fileId" list-name="filebksList"
-					description="${fileId} ->(For member ID-${partyId})" />
+				<list-options key-name="partyId" list-name="filebksList"
+					description="${partyId} ->(For member ID-${firstName} ${lastName})" />
 			</drop-down>
 		</field>
-
-		<field name="fileId" use-when="FilesContext!=null">
-			<display/>
-		</field>
-		<field name="refNo" title="Reference Number">
-			<text/>
-		</field>
-		
-		<field name="documentValue" title="Document Value">
-			<text/>
-		</field>		
-		<field name="receiptDate" title="Recieved date">
-			<date-time />
-		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
+		<field name="partyId" use-when="FilesContext!=null"><display/></field>
+		<field name="referenceNo" title="Reference Number"><text/></field>
+		<field name="documentValue" title="Document Value" widget-style="required" tooltip="In Kenyan Shillings (KES)"><text/></field>		
+		<field name="receiptDate" title="Recieved date"><date-time /></field>
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"	widget-style="smallSubmit"><submit button-type="button" /></field>
 		<!-- submitButton -->
-		<field use-when="documentContext==null" name="submitButton"
-			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
-		<field use-when="documentContext!=null" name="submitButton"
-			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
+		<field use-when="documentContext==null" name="submitButton"	title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
+		<field use-when="documentContext!=null" name="submitButton"	title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link" /></field>
 	</form>
 
-	<form name="documentListForm" type="list" list-name="listIt"
-		use-row-submit="true" separate-columns="true" target="updateFileds"
-		paginate-target="EditDocumentForm" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	<form name="documentListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFileds"
+		paginate-target="EditDocumentForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-			<entity-condition entity-name="RegistryDocuments"></entity-condition>
+			<entity-condition entity-name="RegistryDocuments">
+                <condition-expr field-name="partyId" from-field="parameters.partyId"/>
+                <order-by field-name="documentId"/>
+            </entity-condition>
 		</actions>
-		<field name="documentId">
-			<display />
-		</field>
-		<field name="fileTypeId" title="Document Type ID">
-			<display />
-		</field>
-		<field name="fileTypeId" title="Document Type">
-			<display-entity entity-name="RegistryFileType" description="${fileType}"></display-entity>
-			</field>
-		<field name="refNo" title="Document Reference Number">
-			<display />
-		</field>
-		<field name="fileId" title="File Id">
-			<!-- <display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity> -->
-			<display />
-		</field>
-		<field name="documentValue" title="Document Value">
-			<display />
-		</field>
-		<field name="receiptDate" title="Date Recieved">
-			<display />
-		</field>
+		<field name="documentId"><display /></field>
+		<field name="fileTypeId" title="Document Type ID"><display /></field>
+		<field name="fileTypeId" title="Document Type"><display-entity entity-name="RegistryFileType" description="${fileType}"></display-entity></field>
+		<field name="referenceNo" title="Document Reference Number"><display /></field>
+		<field name="partyId" title="Party Id"><!-- <display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity> --><display /></field>
+		<field name="documentValue" title="Document Value"><display /></field>
+		<field name="receiptDate" title="Date Recieved"><display /></field>
 	</form>
 
 
-
-
-	<form name="RequestFileForm" type="single" target="requestfiles"
-		focus-field-name="name" header-row-style="header-row"
+	<form name="RequestFileForm" type="single" target="requestfiles" focus-field-name="name" header-row-style="header-row"
 		default-table-style="basic-table" default-map-name="requestfileContext">
-
 		<actions>
-			<entity-condition entity-name="RegistryFilesRequest" list="filereqList">
-				<order-by field-name="requestId" />
-			</entity-condition>
+			<entity-condition entity-name="RegistryFileActions" list="filereqList">
+				<order-by field-name="actionId" />
+			</entity-condition> 
 			<entity-condition entity-name="RegistryFiles" list="filesList">
-				<order-by field-name="fileId" />
+				<order-by field-name="partyId" />
+			</entity-condition>
+			<entity-condition entity-name="RegistryFileActionTypes" list="fileActionsList">
+				<order-by field-name="fileActionTypeId" />
 			</entity-condition>
 		</actions>
 		<alt-target use-when="requestfileContext!=null" target="updateFiletype" />
-		<field name="requestId">
-			<hidden />
+		<field name="actionId"><hidden /></field>
+		<field name="partyId" use-when="FindMemberfilesContext!=null"><display/></field>
+		<field name="fileActionTypeId" title="File Action" 	widget-style="required" required-field="true">
+			<drop-down>
+				<list-options key-name="fileActionTypeId" list-name="fileActionsList"
+					description="${fileActionType}" />
+			</drop-down>
 		</field>
-		<field name="requestId" use-when="requestfileContext!=null"
-			tooltip="${uiLabelMap.CommonNotModifRecreat}">
-			<display />
-		</field>
-		<field name="fileId" title="File Id">
-			<hidden />
-		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
-		<!-- submitButton -->
-		<field use-when="requestfileContext==null" name="submitButton"
-			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
-		<field use-when="requestfileContext!=null" name="submitButton"
-			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
+		<field name="actionId" use-when="requestfileContext!=null"	tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+		<!-- <field name="partyId" title="Party Id"><hidden /></field> -->
+		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button" /></field>
 	</form>
 
 
-	<form name="RequestedFileListForm" type="list" list-name="listIt"
-		use-row-submit="true" separate-columns="true" target="updateFiletype"
-		paginate-target="RequestFileForm" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	<form name="RequestedFileListForm" type="list" list-name="listIt"	use-row-submit="true" separate-columns="true" target="updateFiletype"
+		paginate-target="RequestFileForm" odd-row-style="alternate-row"	header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-			<entity-condition entity-name="RegistryFilesRequest"></entity-condition>
+			<entity-condition entity-name="RegistryFileActions">
+                <condition-expr field-name="partyId" from-field="parameters.partyId"/>
+                <order-by field-name="actionId"/>
+            </entity-condition>
 		</actions>
-		<field name="requestId">
-			<display />
-		</field>
-		<field name="fileId" title="File ID">
-			<display />
-		</field>
-		<field name="partyId" title="Requested by">
-			<display />
-		</field>
-		<field name="folioNo" title="File Folio Number">
-			<display />
-		</field>
-		<field name="filelocation" title="Requester Location">
-			<display />
-		</field>
-		<field name="reqdate" title="Date Requested">
-			<display />
-		</field>
-	</form>
-
-	<form name="IssueFileresponseForm" type="single" target="issuefilew"
-		focus-field-name="name" header-row-style="header-row"
-		default-table-style="basic-table" default-map-name="issuefileContext">
-
-		<actions>
-			<entity-condition entity-name="RegistryFileIssue" list="fileIssueList">
-				<order-by field-name="fileIssueId" />
-			</entity-condition>
-			<entity-condition entity-name="RegistryFiles" list="filesList">
-				<order-by field-name="fileId" />
-			</entity-condition>
-		</actions>
-		<alt-target use-when="issuefileContext!=null" target="updateFiletype" />
-		<field name="fileIssueId">
-			<hidden />
-		</field>
-		<field name="fileIssueId" use-when="issuefileContext!=null"
-			tooltip="${uiLabelMap.CommonNotModifRecreat}">
-			<display />
-		</field>
-		<field name="fileId" title="File Id">
-			<hidden />
-		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
-		<!-- submitButton -->
-		<field use-when="requestfileContext==null" name="submitButton"
-			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
-		<field use-when="requestfileContext!=null" name="submitButton"
-			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
+		<field name="actionId"><display /></field>
+    	<field name="fileActionTypeId" title="Action Type"><display-entity entity-name="RegistryFileActionTypes" description="${fileActionType}"></display-entity></field>
+		<field name="partyId" title="File Folio Number"><display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity></field>
+		<field name="actionBy"><display /></field>
+		<field name="actionDate" title="Date Requested"><display /></field>
 	</form>
 
 
-	<form name="IssuedFileListForm" type="list" list-name="listIt"
-		use-row-submit="true" separate-columns="true" target="updateFiletype"
-		paginate-target="IssueFileresponseForm" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-		<actions>
-			<entity-condition entity-name="RegistryFileIssue"></entity-condition>
-		</actions>
-		<field name="fileIssueId">
-			<display />
-		</field>
-		<field name="fileId" title="File ID">
-			<display />
-		</field>
-		<field name="partyId" title="Requested by">
-			<display />
-		</field>
-		<field name="folioNo" title="File Folio Number">
-			<display />
-		</field>
-		<field name="issueDate" title="Date Issued">
-			<display />
-		</field>
-	</form>
-
-	<form name="ReleaseFileresponseForm" type="single" target="releasefilew"
-		focus-field-name="name" header-row-style="header-row"
-		default-table-style="basic-table" default-map-name="releasefileContext">
-
-		<actions>
-			<entity-condition entity-name="RegistryFileRelease" list="filereqList">
-				<order-by field-name="releaseId" />
-			</entity-condition>
-			<entity-condition entity-name="RegistryFileIssue" list="fileissList">
-				<order-by field-name="fileIssueId" />
-			</entity-condition>
-			<entity-condition entity-name="RegistryFiles" list="filesList">
-				<order-by field-name="fileId" />
-			</entity-condition>
-		</actions>
-		<alt-target use-when="releasefileContext!=null" target="updateFiletype" />
-		<field name="releaseId">
-			<hidden />
-		</field>
-		<field name="releaseId" use-when="releasefileContext!=null"
-			tooltip="${uiLabelMap.CommonNotModifRecreat}">
-			<display />
-		</field>
-		<field name="fileId" title="File Id">
-			<hidden />
-		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
-		<!-- submitButton -->
-		<field use-when="releasefileContext==null" name="submitButton"
-			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
-		<field use-when="releasefileContext!=null" name="submitButton"
-			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
-	</form>
-
-
-	<form name="releasedFileListForm" type="list" list-name="listIt"
-		use-row-submit="true" separate-columns="true" target="updateFiletype"
-		paginate-target="RequestFileForm" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-		<actions>
-			<entity-condition entity-name="RegistryFileRelease"></entity-condition>
-		</actions>
-		<field name="releaseId">
-			<display />
-		</field>
-		<field name="fileId" title="File ID">
-			<display />
-		</field>
-		<field name="partyId" title="Released by">
-			<display />
-		</field>
-		<field name="folioNo" title="File Folio Number">
-			<display />
-		</field>
-		<field name="releaseDate" title="Date Released">
-			<display />
-		</field>
-	</form>
-
-
-
-
-
-
-
-
-
-	<form name="EditFilelocationForm" type="single" target="createfilelocation"
-		focus-field-name="name" header-row-style="header-row"
-		default-table-style="basic-table" default-map-name="filelocationContext">
-
+	<form name="EditFilelocationForm" type="single" target="createfilelocation"	focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="filelocationContext">
 		<actions>
 			<entity-condition entity-name="RegistryFileLocations" list="filelocationList">
 				<order-by field-name="locationId" />
 			</entity-condition>
 		</actions>
 		<alt-target use-when="filelocationContext!=null" target="updatefilelocation" />
-
-		<field name="locationId">
-			<hidden />
-		</field>
-		<field name="locationId" use-when="filelocationContext!=null"
-			tooltip="${uiLabelMap.CommonNotModifRecreat}">
-			<display />
-		</field>
-		<field name="filelocation" title="File location">
-			<text size="45"></text>
-		</field>
-		<field name="description" title="Description">
-			<textarea />
-		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
-		<!-- submitButton -->
-		<field use-when="filelocationContext==null" name="submitButton"
-			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
-		<field use-when="filelocationContext!=null" name="submitButton"
-			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
-			<submit button-type="text-link" />
-		</field>
+		<field name="locationId"><hidden /></field>
+		<field name="locationId" use-when="filelocationContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+		<field name="fileLocation" title="File location"><text size="45"></text></field>
+		<field name="description" title="Description"><textarea /></field>
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"	widget-style="smallSubmit"><submit button-type="button" /></field>
+		<field use-when="filelocationContext==null" name="submitButton"	title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
+		<field use-when="filelocationContext!=null" name="submitButton"	title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link" /></field>
 	</form>
 
 
-	<form name="FilelocationListForm" type="list" list-name="listIt"
-		use-row-submit="true" separate-columns="true" target="updatefilelocation"
-		paginate-target="EditFilelocationForm" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	<form name="FilelocationListForm" type="list" list-name="listIt"	use-row-submit="true" separate-columns="true" target="updatefilelocation"
+		paginate-target="EditFilelocationForm" odd-row-style="alternate-row"	header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="RegistryFileLocations"></entity-condition>
 		</actions>
-		<field name="locationId">
-			<display />
-		</field>
-		<field name="filelocation" title="File Locations">
-			<display />
-		</field>
-		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
-			widget-style="buttontext">
+		<field name="locationId"><display /></field>
+		<field name="fileLocation" title="File Locations"><display /></field>
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
 			<hyperlink target="deletefilelocation" description="${uiLabelMap.CommonDelete}"
 				also-hidden="false">
 				<parameter param-name="locationId" />
 			</hyperlink>
 		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext">
-			<submit button-type="button" />
-		</field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"	widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
 
 
-
-
-
-	 <form name="FindMemberfiles" default-map-name="FindMemberfilesContext" target="main" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table" >
-
+	 <form name="FindMemberfiles" default-map-name="FindMemberfilesContext" target="main" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
         <actions>
-        	<set field="status" value="AVAILABLE"/>
+        	<!-- <set field="status" value="AVAILABLE"/> -->
         </actions>
         <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
 		<field name="status"><hidden/></field>
-
+        <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -521,6 +251,7 @@
     <form name="listmembersfiles" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfiles"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+        <entity-condition entity-name="RegistryFiles" ></entity-condition>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="RegistryFiles"/>
@@ -528,101 +259,28 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            
         </actions>
         <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
-        <field name="reqfile" title="Request File" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Request File" target="requestfiles">
-				<parameter param-name="fileId" />
+        <field name="addDocument" title="Add Document" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Add Document" target="editfileURL">
+				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" />
 			</hyperlink>
 		</field>
-		<field name="partyId" title="Member Name">
-			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
-		</field>
 
-		<field name="fileoverview" title="File Overview" widget-style="buttontext">
+		<field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
-				<parameter param-name="fileId" />
+				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
-    </form>
-
-
-	 <form name="issuefiles" default-map-name="issuecontext" target="issuefile" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
-        <actions>
-        	<set field="status" value="REQUESTED"/>
-        </actions>
-        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
-		<field name="status"><hidden/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    <form name="listissuefiles" target="" title="" list-name="listIt" type="list" paginate-target="issuefiles"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="RegistryFiles"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-        </actions>
-        <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
-
-		<field name="partyId" title="Member Name">
-			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
-		</field>
-        <field name="issuefile" title="Issue File" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Issue File"
-				target="issuefiles">
-				<parameter param-name="fileId" />
-				<parameter param-name="folioNo" />
-				<parameter param-name="requestId" />
+        <field name="reqfile" title="File Actions" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Other File Actions" target="reqfileURL">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
 			</hyperlink>
 		</field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
-    </form>
-
-
-	 <form name="releasefiles" default-map-name="survey" target="releasefile" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
-
-
-        <actions>
-        	<set field="status" value="ISSUED"/>
-        </actions>
-        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
-		<field name="status"><hidden/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    <form name="listreleasefiles" target="" title="" list-name="listIt" type="list" paginate-target="releasefiles"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="RegistryFiles"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-        </actions>
-        <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
-
-        <field name="partyId" title="Member Name">
-			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
-		</field>
-        <field name="releasefile" title="Release File" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Release File"
-				target="releasefiles">
-				<parameter param-name="fileId" />
-				<parameter param-name="folioNo" />
-			</hyperlink>
-		</field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
@@ -631,120 +289,45 @@
 
 
     <!-- File Header Form -->
-	<form name="fileGeneralDetails" type="single"  header-row-style="header-row" default-table-style="basic-table"
-        default-map-name="FilesContext">
-		<field position="1" name="fileId" title="FileID">
-			<display />
-		</field>
-		<field position="2" name="partyId" title="Member Name">
-			<display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity>
-		</field>
-
-
-		<field position="1" name="folioNo" title="Folio Number">
-			<display />
-		</field>
-		<field position="2" name="status" title="File Status">
-			<display />
-		</field>
-		<field position="1" name="creator" title="File Created by">
-			<display />
-		</field>
-
-		<field position="2" name="fileLocation" title="Current File Location">
-			<display />
-		</field>
-		<field position="1" name="creationDate" title="Creation Date">
-			<display />
-		</field>
+	<form name="fileGeneralDetails" type="single"  header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
+		<field position="1" name="partyId" title="PartyID"><display /></field>
+		<field position="1" name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		<field position="1" name="folioNo" title="Folio Number"><display /></field>
+		<field position="1" name="status" title="File Status"><display /></field>
+		<field position="1" name="creator" title="File Created by"><display /></field>
+		<field position="1" name="fileLocation" title="Current File Location"><display /></field>
+		<field position="1" name="creationDate" title="Creation Date"><display /></field>
 	</form>
 
     <!-- File Documents List Form -->
     <form name="ListFileDocuments" type="list"  list-name="fileDocuments" default-entity-name="RegistryDocuments" use-row-submit="true"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
-        target="" title="File Documents" separate-columns="false">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  target="" title="File Documents" separate-columns="false">
         <actions>
             <entity-condition entity-name="RegistryDocuments">
-                <condition-expr field-name="fileId" from-field="fileId"/>
+                <condition-expr field-name="partyId" from-field="partyId"/>
                 <order-by field-name="documentId"/>
             </entity-condition>
         </actions>
-        <field name="documentId">
-        	<display/>
-        </field>
-        <field name="fileTypeId">
-        	<display/>
-        </field>
-        <field name="receiptDate" encode-output="false">
-        	<display/>
-        </field>
+        <field name="documentId"><display/></field>
+      <field name="fileTypeId" title="Document Type"><display-entity entity-name="RegistryFileType" description="${fileType}"></display-entity></field>
+	  <field name="documentValue"><display/></field>
+        <field name="receiptDate" encode-output="false"><display/></field>
     </form>
 
     <!-- File Requests List Form -->
     <form name="ListFileRequests" type="list"  list-name="fileRequests" default-entity-name="RegistryFilesRequest" use-row-submit="true"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
-        target="" title="File Requests" separate-columns="false">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  target="" title="File Requests" separate-columns="false">
       	<actions>
-            <entity-condition entity-name="RegistryFilesRequest">
-                <condition-expr field-name="fileId" from-field="fileId"/>
-                <order-by field-name="requestId"/>
+            <entity-condition entity-name="RegistryFileActions">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="actionId"/>
             </entity-condition>
         </actions>
-        <field name="requestId">
-        	<display/>
-        </field>
-        <field name="requester">
-        	<display/>
-        </field>
-        <field name="reqdate" encode-output="false">
-        	<display/>
-        </field>
+         <field name="actionId"><display/></field>
+        <field name="fileActionTypeId" title="File Action"><display-entity entity-name="RegistryFileActionTypes" description="${fileActionType}"></display-entity></field>
+        <field name="actionBy"><display/></field>
+        <field name="actionDate" encode-output="false"><display/></field>
     </form>
 
 
-     <form name="FindMemberForm" default-map-name="membersCtx" target="findmember" type="single">
-        <auto-fields-entity entity-name="Member" default-field-type="find"/>
-        <field name="noConditionFind"><hidden value="Y"/></field>
-        <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-
-
-        <form name="ListMemberForm" type="list" list-name="listIt" target="" title="Supplier List" paginate-target="findmember" default-entity-name="Member"
-        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="memberCtx" />
-                <field-map field-name="entityName" value="Member" />
-                <field-map field-name="orderBy" from-field="parameters.sortField" />
-                <field-map field-name="viewIndex" from-field="viewIndex" />
-                <field-map field-name="viewSize" from-field="viewSize" />
-            </service>
-        </actions>
-        <field name="partyId" title="Party Id" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${partyId}" target="supplierOverview">
-                <parameter param-name="partyId" />
-            </hyperlink>
-        </field>
-        <field name="partyId" sort-field="true">
-            <display />
-        </field>
-        <field name="fastName" sort-field="true">
-            <display />
-        </field>
-        <field name="lastName" sort-field="true">
-            <display />
-        </field>
-        <field name="idNumber" sort-field="true">
-            <display />
-        </field>
-        <field name="pinNumber" sort-field="true">
-            <display />
-        </field>
-        <field name="mobileNumber" sort-field="true">
-            <display />
-        </field>
-    </form>
 </forms>

@@ -38,6 +38,16 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="editfiles" />
 	</request-map>
+	
+	<request-map uri="editFileAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="editFileAction" />
+	</request-map>
+	
+	<request-map uri="afterAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="afterAction" />
+	</request-map>
 
 
 	<request-map uri="editfileURL">
@@ -55,32 +65,7 @@
 		<response name="success" type="view" value="reqfile" />
 	</request-map>
 
-	<request-map uri="issuefilew">
-		<security https="true" auth="true" />
-		<response name="success" type="view" value="issuefilew" />
-	</request-map>
-
-	<request-map uri="releasefilew">
-		<security https="true" auth="true" />
-		<response name="success" type="view" value="releasefilew" />
-	</request-map>
-
-
-<!-- 	<request-map uri="fileoverviewURL">
-		<security auth="true" https="true" />
-		<response name="success" type="view" value="fileoverview" />
-	</request-map> -->
-
-	<request-map uri="issuefile">
-		<security https="true" auth="true" />
-		<response name="success" type="view" value="issuefile" />
-	</request-map>
-
-
-	<request-map uri="releasefile">
-		<security auth="true" https="true" />
-		<response name="success" type="view" value="releasefile" />
-	</request-map>
+	
 
  	<request-map uri="findmember">
         <security https="true" auth="true" />
@@ -175,29 +160,41 @@
 	<request-map uri="requestfiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="requestfiles" />
-		<response name="success" type="view" value="reqfile" />
-		<response name="error" type="view" value="reqfile" />
+		<response name="success" type="view" value="afterAction" />
+		<response name="error" type="view" value="afterAction" />
 	</request-map>
 
-	<request-map uri="issuefiles">
-		<security https="true" auth="true" />
-		<event type="service" path="" invoke="issuefiles" />
-		<response name="success" type="view" value="issuefilew" />
-		<response name="error" type="view" value="issuefilew" />
-	</request-map>
-
-	<request-map uri="releasefiles">
-		<security https="true" auth="true" />
-		<event type="service" path="" invoke="releasefiles" />
-		<response name="success" type="view" value="releasefilew" />
-		<response name="error" type="view" value="releasefilew" />
-	</request-map>
 	
 	
 	<request-map uri="LookupActiveMember">
 	<security https="true" auth="true"/>
 	<response name="success" type="view" value="LookupActiveMember"/>
 	</request-map>
+	
+	<request-map uri="createfileActionTypes">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createfileActionTypes" />
+		<response name="success" type="view" value="editFileAction" />
+		<response name="error" type="view" value="editFileAction" />
+	</request-map>
+	
+	<request-map uri="updatefileActionTypes">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatefileActionTypes" />
+		<response name="success" type="request-redirect" value="editFileAction">
+			<redirect-parameter name="fileActionTypeId" />
+		</response>
+		<response name="error" type="view" value="editFileAction" />
+	</request-map>
+	
+	<request-map uri="deletefileActionTypes">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletefileActionTypes" />
+		<response name="success" type="request-redirect-noparam"
+			value="editFileAction"></response>
+		<response name="error" type="view" value="editFileAction" />
+	</request-map>
+	
 
 
 
@@ -228,15 +225,11 @@
 	<view-map name="editfile" type="screen" page="component://registry/widget/FileScreens.xml#documents" />
 	<view-map name="findfiles" type="screen" page="component://registry/widget/FileScreens.xml#FindFile" />
 	<view-map name="reqfile" type="screen" page="component://registry/widget/FileScreens.xml#requestfile" />
-	<view-map name="issuefilew" type="screen" page="component://registry/widget/FileScreens.xml#issuefileresponse" />
-	<view-map name="releasefilew" type="screen" page="component://registry/widget/FileScreens.xml#releasefilerespons" />
 	<view-map name="FindMemberScreen" type="screen" page="component://registry/widget/FileScreens.xml#FindMemberScreen"/>
 	<view-map name="main" type="screen"	page="component://registry/widget/FileScreens.xml#main" />
 	<view-map name="editlocation" type="screen"	page="component://registry/widget/FileScreens.xml#filelocation" />
-	<view-map name="issuefile" type="screen" page="component://registry/widget/FileScreens.xml#issuefile" />
-	<view-map name="releasefile" type="screen" page="component://registry/widget/FileScreens.xml#releasefile" />
-	<view-map name="issuefile" type="screen" page="component://registry/widget/FileScreens.xml#issuefile" />
-	<view-map name="releasefile" type="screen" page="component://registry/widget/FileScreens.xml#releasefile" />
+	<view-map name="editFileAction" type="screen" page="component://registry/widget/FileScreens.xml#fileActionTypeScreen" />
+	<view-map name="afterAction" type="screen" page="component://registry/widget/FileScreens.xml#afterrequestfile" />
 
 	<!-- File Overview  -->
 	<view-map name="fileOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryFilesOverviewScreen"/>

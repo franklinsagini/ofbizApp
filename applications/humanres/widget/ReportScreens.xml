@@ -133,8 +133,42 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- StaffList PDF -->
+    
     <screen name="stafflistpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Staff list"/>        
+                <set field="headerItem" value="staffList"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-condition entity-name="StaffListReport" list="staffList">
+                </entity-condition>
+                        
+                <!-- set field="payrollPeriodId" from-field="parameters.payrollPeriodId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-condition entity-name="PayslipView" list="payslipViewList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId" ignore-if-empty="true"/>
+                        <condition-expr field-name="payrollPeriodId" operator="equals" from-field="parameters.payrollPeriodId" ignore-if-empty="true"/>
+                    </condition-list>
+                    note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped
+                	<select-field field-name="partyId"/>
+                </entity-condition -->
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/stafflist.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    <!-- StaffList PDF -->
+    <!-- screen name="stafflistpdf">
 	    <section>
             <actions>
                 <set field="titleProperty" value="Staff List"/>
@@ -143,7 +177,7 @@ under the License.
                 <set field="target" value="staffList"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 
-                <!-- entity-one entity-name="Person" value-field="staffListContext"/-->
+             //<entity-one entity-name="Person" value-field="staffListContext"/>
                 
             </actions>
             <widgets>
@@ -169,7 +203,7 @@ under the License.
                 </section>
             </widgets>
         </section>
-    </screen>
+    </screen -->
     
     
     <screen name="EmployeeQualifications">
@@ -202,11 +236,11 @@ under the License.
                         		<screenlet>
                 			
                 			<container style="button-bar">
-                				<link target="employeeQualificationscsv" text="Employee Qualifications CSV" style="buttontext">
+                				<link target="employeeQualificationscsv" text="Staff Qualifications CSV" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link>
-                                <link target="employeeQualificationspdf" text="Employee Qualifications PDF" style="buttontext">
+                                <link target="employeeQualificationspdf" text="Staff Qualifications PDF" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
@@ -262,34 +296,20 @@ under the License.
     <screen name="EmployeeQualificationspdf">
 	    <section>
             <actions>
-                <set field="titleProperty" value="Employee Qualifications"/>
+                <set field="titleProperty" value="Employee Qualifications"/>        
                 <set field="headerItem" value="employeeQualifications"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="employeeQualifications"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 
-                <!-- entity-one entity-name="PersonAndPartyQual" value-field="employeeQualificationsContext"/-->
-                
-            </actions>
+                <entity-condition entity-name="PersonAndPartyQual" list="qualList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
             <widgets>
-                <section>
-                	<widgets>
-                		
-                		<screenlet>
-                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
-                    		<decorator-section name="body">                        
-                        <section name="search-results">
-                        	<widgets>
-                        		<screenlet>
-                        			<include-form name="listEmployeeQualifications" location="component://humanres/widget/ReportForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-                		</screenlet>
-                	</widgets>
-                </section>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffQualList.fo.ftl"/></xsl-fo>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -326,11 +346,11 @@ under the License.
                         		<screenlet>
                 			
                 			<container style="button-bar">
-                				<link target="employeeSkillscsv" text="Employee Skills CSV" style="buttontext">
+                				<link target="employeeSkillscsv" text="Staff Skills CSV" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link>
-                                <link target="employeeSkillspdf" text="Employee Skills PDF" style="buttontext">
+                                <link target="employeeSkillspdf" text="Staff Skills PDF" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
@@ -386,36 +406,20 @@ under the License.
     <screen name="EmployeeSkillspdf">
 	    <section>
             <actions>
-                <set field="titleProperty" value="EmployeeSkills"/>
+                <set field="titleProperty" value="Employee Skills"/>        
                 <set field="headerItem" value="employeeSkills"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="employeeSkills"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 
-                <!-- entity-one entity-name="PersonAndPartySkills" value-field="employeeSkillsContext"/ -->
-                
-            </actions>
+                <entity-condition entity-name="PersonAndPartySkills" list="skillList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
             <widgets>
-                <section>
-                	<widgets>
-                		
-                		<screenlet>
-                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
-                    		<decorator-section name="body">                        
-                        <section name="search-results">
-                        	<widgets>
-                        		<screenlet>
-                        			<include-form name="listEmployeeSkills" location="component://humanres/widget/ReportForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-                		</screenlet>
-                		
-                		
-                	</widgets>
-                </section>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffSkillList.fo.ftl"/></xsl-fo>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -451,11 +455,11 @@ under the License.
                         		<screenlet>
                 			
                 			<container style="button-bar">
-                				<link target="employeeSpouseDetailscsv" text="Employee Spouse Details CSV" style="buttontext">
+                				<link target="employeeSpouseDetailscsv" text="Staff Spouse Details CSV" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link>
-                                <link target="employeeSpouseDetailspdf" text="Employee Spouse Detailst PDF" style="buttontext">
+                                <link target="employeeSpouseDetailspdf" text="Staff Spouse Details PDF" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
@@ -513,36 +517,20 @@ under the License.
     <screen name="EmployeeSpouseDetailspdf">
 	    <section>
             <actions>
-                <set field="titleProperty" value="Employee Spouse Details"/>
+                <set field="titleProperty" value="Employee Spouse Details"/>        
                 <set field="headerItem" value="employeeSpouseDetails"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="employeeSpouseDetails"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 
-                <!-- entity-one entity-name="PartyAndSpouse" value-field="employeeSpouseDetailsContext"/-->
-                
-            </actions>
+                <entity-condition entity-name="PartyAndSpouse" list="spouseList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
             <widgets>
-                <section>
-                	<widgets>
-                		
-                		<screenlet>
-                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
-                    		<decorator-section name="body">                        
-                        <section name="search-results">
-                        	<widgets>
-                        		<screenlet>
-                        			<include-form name="listEmployeeSpouseDetails" location="component://humanres/widget/ReportForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-                		</screenlet>
-                		
-                		
-                	</widgets>
-                </section>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffSpouseList.fo.ftl"/></xsl-fo>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -577,11 +565,11 @@ under the License.
                         		<screenlet>
                 			
                 			<container style="button-bar">
-                				<link target="employeeDependantDetailscsv" text="Employee Dependant Details CSV" style="buttontext">
+                				<link target="employeeDependantDetailscsv" text="Staff Dependant Details CSV" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link>
-                                <link target="employeeDependantDetailspdf" text="Employee Dependant Details PDF" style="buttontext">
+                                <link target="employeeDependantDetailspdf" text="Staff Dependant Details PDF" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
@@ -639,34 +627,20 @@ under the License.
     <screen name="EmployeeDependantDetailspdf">
 	    <section>
             <actions>
-                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="titleProperty" value="Employee Dependant Details"/>        
                 <set field="headerItem" value="employeeDependantDetails"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="employeeDependantDetails"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 
-                <!-- entity-one entity-name="PartyAndDependants" value-field="employeeDependantDetailsContext"/-->
-                
-            </actions>
+                <entity-condition entity-name="PartyAndDependants" list="dependantList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
             <widgets>
-                <section>
-                	<widgets>
-                		
-                		<screenlet>
-                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
-                    		<decorator-section name="body">                        
-                        <section name="search-results">
-                        	<widgets>
-                        		<screenlet>
-                        			<include-form name="listEmployeeDependantDetails" location="component://humanres/widget/ReportForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-                		</screenlet>
-                	</widgets>
-                </section>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffDependantList.fo.ftl"/></xsl-fo>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -702,11 +676,11 @@ under the License.
                         		<screenlet>
                 			
                 			<container style="button-bar">
-                				<link target="employeeNOKDetailscsv" text="Employee NOK Details CSV" style="buttontext">
+                				<link target="employeeNOKDetailscsv" text="Staff NOK Details CSV" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link>
-                                <link target="employeeNOKDetailspdf" text="Employee NOK Details PDF" style="buttontext">
+                                <link target="employeeNOKDetailspdf" text="Staff NOK Details PDF" style="buttontext">
                                                 <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
@@ -762,10 +736,81 @@ under the License.
     <screen name="EmployeeNOKDetailspdf">
 	    <section>
             <actions>
-                <set field="titleProperty" value="Employee NOK Details"/>
+                <set field="titleProperty" value="Employee NOK Details"/>        
                 <set field="headerItem" value="employeeNOKDetails"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="employeeNOKDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-condition entity-name="PartyAndNextOfKin" list="nokList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffNOKList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+  
+    <screen name="PostingDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Posting Details"/>
+                <set field="headerItem" value="postingDetails"/>
+                <set field="tabButtonItem" value="postingDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postingDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">           
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>             
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee Posting Details">
+                        			<include-form name="listPostingDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet>
+                			
+                			<container style="button-bar">
+                				<link target="postingDetailscsv" text="Staff Posting Details CSV" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="postingDetailspdf" text="Staff Posting Details PDF" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+                        		
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Posting Details CSV -->
+    <screen name="PostingDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Posting Details"/>
+                <set field="headerItem" value="postingDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postingDetails"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 
                 <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
@@ -776,22 +821,152 @@ under the License.
                 	<widgets>
                 		
                 		<screenlet>
-                			<decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
-                    		<decorator-section name="body">                        
+                			
                         <section name="search-results">
                         	<widgets>
                         		<screenlet>
-                        			<include-form name="listEmployeeNOKDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        			<include-form name="listPostingDetails" location="component://humanres/widget/ReportForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>
-                    </decorator-section>
-                </decorator-screen>
-                		</screenlet>                		
+                    
+                		</screenlet>
+                		
+                		
                 	</widgets>
                 </section>
             </widgets>
         </section>
     </screen>
+    <!-- Employee Posting Details PDF -->
+    <screen name="PostingDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Posting Details"/>        
+                <set field="headerItem" value="postingDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postingDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-condition entity-name="EmploymentAndPerson" list="postingList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/postingDetailsList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="PositionDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Position Details"/>
+                <set field="headerItem" value="positionDetails"/>
+                <set field="tabButtonItem" value="positionDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="positionDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">           
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>             
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee Position Details">
+                        			<include-form name="listPositionDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet>
+                			
+                			<container style="button-bar">
+                				<link target="positionDetailscsv" text="Staff Position Details CSV" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="positionDetailspdf" text="Staff Position Details PDF" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+                        		
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Position Details CSV -->
+    <screen name="PositionDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Position Details"/>
+                <set field="headerItem" value="positionDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="positionDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+                
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		
+                		<screenlet>
+                			
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listPositionDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    
+                		</screenlet>
+                		
+                		
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Position Details PDF -->
+    <screen name="PositionDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Position Details"/>        
+                <set field="headerItem" value="positionDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="positionDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-condition entity-name="PersonAndEmplPositionAndFulfillment" list="positionList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/positionDetailsList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
 
 </screens>

@@ -72,7 +72,7 @@ under the License.
             </drop-down>
         </field>
         <field name="religionId" title="Religion">        	
-       	 <drop-down allow-empty="true">
+       	 <drop-down allow-empty="false">
        	 	<list-options list-name="religionList" key-name="religionId" description="${religion}"/>
        	 </drop-down>
         </field>
@@ -93,13 +93,13 @@ under the License.
         </field>
         
         <field name="branchId" title="Branch" required-field="true" widget-style="required">
-            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+            <drop-down allow-empty="false" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
         
          <field name="stationId" title="Station" required-field="true" widget-style="required">
-            <drop-down allow-empty="true" >
+            <drop-down allow-empty="false" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field>
@@ -108,7 +108,7 @@ under the License.
         <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>         
       
         <field name="employmentStatusEnumId" title="Employment Status">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="EMPLOY_STTS"/>
                     <entity-order-by field-name="sequenceId"/>
@@ -1911,6 +1911,7 @@ under the License.
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="enumStaffStatusContext">
         
         <field name="enum_Id"><hidden/></field>
+	    <field name="enumTypeId"><hidden value="EMPLOY_STTS"/></field>
 	    <field name="enum_code" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
       
@@ -1920,13 +1921,15 @@ under the License.
         <form name="listenumStaffStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEnumStaffStatus" paginate-target="Enumeration"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="Enumeration"></entity-condition>
+            <entity-condition entity-name="Enumeration">
+            	<condition-expr field-name="enumTypeId" operator="equals" value="EMPLOY_STTS"/>
+            </entity-condition>
          </actions>
          
         <auto-fields-service default-field-type="hidden" service-name="updateEnumStaffStatus"/>
        
         <field name="enum_Id"> <hidden/> </field>
-        <field name="enum_code"> <text></text> </field>
+        <field name="enum_code" title="Code"> <text></text> </field>
         <field name="description"> <text></text> </field>
         
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
