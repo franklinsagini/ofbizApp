@@ -1769,6 +1769,44 @@ under the License.
     <request-map uri="StaffReportOptions"><security https="true" auth="true"/>
         <response name="success" type="view" value="StaffReportOptions"/>
     </request-map>
+    <!-- Station -->
+	<request-map uri="station">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="station"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Station -->
+	<request-map uri="createStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+	
+	<request-map uri="updateStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+	
+	<request-map uri="deleteStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+    
     
     <!-- ============Reports================================================ -->
     <request-map uri="staffList">
@@ -1866,6 +1904,41 @@ under the License.
 		<response name="success" type="view" value="employeeNOKDetailspdf"
 			save-home-view="true" />
 	</request-map>
+	
+	<request-map uri="postingDetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="postingDetails"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="postingDetailscsv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="postingDetailscsv"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="postingDetailspdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="postingDetailspdf"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="positionDetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="positionDetails"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="positionDetailscsv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="positionDetailscsv"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="positionDetailspdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="positionDetailspdf"
+			save-home-view="true" />
+	</request-map>
+	
+	
+	
 	
     
     <!--==============PayRoll History Requests==================-->
@@ -2052,6 +2125,8 @@ under the License.
     <view-map name="dependant" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewDependantDetails"/>
     <view-map name="nextofkin" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewNextOfKinDetails"/>
     
+	<view-map name="station" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStation"/>
+    
     <!-- =================Reports Views=========================================== -->
     <view-map name="StaffReportOptions" type="screen" page="component://humanres/widget/ReportScreens.xml#StaffReportOptions"/>
     
@@ -2090,4 +2165,16 @@ under the License.
                page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetailscsv" />               
     <view-map name="employeeNOKDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetailspdf"
 		content-type="application/pdf" encoding="none" />					
+	
+	<view-map name="postingDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#PostingDetails"/>
+    <view-map name="postingDetailscsv" type="screencsv" content-type="text/csv"
+               page="component://humanres/widget/ReportScreens.xml#PostingDetailscsv" />               
+    <view-map name="postingDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#PostingDetailspdf"
+		content-type="application/pdf" encoding="none" />					
+		
+	<view-map name="positionDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#PositionDetails"/>
+    <view-map name="positionDetailscsv" type="screencsv" content-type="text/csv"
+               page="component://humanres/widget/ReportScreens.xml#PositionDetailscsv" />               
+    <view-map name="positionDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#PositionDetailspdf"
+		content-type="application/pdf" encoding="none" />							
 </site-conf>

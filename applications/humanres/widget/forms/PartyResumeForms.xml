@@ -23,9 +23,9 @@ under the License.
     <form name="FindPartyResumes" type="single" target="FindPartyResumes" header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="PartyResume" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="contentId"><lookup target-form-name="LookupContent"/></field>
-        <field name="resumeId"><lookup target-form-name="LookupPartyResume"/></field>
+        <field name="partyId" title="Employee"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="contentId" title="Uploaded Resume"><lookup target-form-name="LookupContent"/></field>
+        <field name="resumeId" title="Resume Code"><lookup target-form-name="LookupPartyResume"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPartyResumes" type="list" separate-columns="true" default-entity-name="PartyResume" list-name="listIt" paginate-target="FindPartyResumes" paginate="true"
@@ -40,12 +40,12 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PartyResume" default-field-type="display"/>
-        <field name="resumeId" widget-style="linktext">
+        <field name="resumeId" title="Resume Code" widget-style="linktext">
             <hyperlink also-hidden="false" description="${resumeId}" target="EditPartyResume">
                 <parameter param-name="resumeId"/>
             </hyperlink>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
+        <field name="partyId" title="Employee">
            <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
                <sub-hyperlink target="viewprofile" link-style="smallSubmit" target-type="inter-app" description="${partyId}">
                 <parameter param-name="partyId"/>
@@ -63,9 +63,9 @@ under the License.
         <alt-target use-when="partyResume != null" target="updatePartyResume"/>
         <field name="resumeId" use-when="partyResume!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="resumeId" use-when="partyResume==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="contentId"><lookup target-form-name="LookupContent"/></field>
-        <field name="partyId" use-when="partyResume!=null&amp;&amp;partyId!=null" title="${uiLabelMap.FormFieldTitle_partyId}"><hidden/></field>
-        <field name="partyId" use-when="partyResume==null&amp;&amp;partyId==null" title="${uiLabelMap.FormFieldTitle_partyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="contentId" title="Uploaded Resume"><lookup target-form-name="LookupContent"/></field>
+        <field name="partyId" use-when="partyResume!=null&amp;&amp;partyId!=null" title="Employee"><hidden/></field>
+        <field name="partyId" use-when="partyResume==null&amp;&amp;partyId==null" title="Employee"><lookup target-form-name="LookupPartyName"/></field>
         <field name="resumeDate"><date-time/></field>
         <field name="resumeText"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
