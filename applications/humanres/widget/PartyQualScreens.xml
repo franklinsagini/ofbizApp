@@ -23,7 +23,7 @@
     <screen name="FindPartyQuals">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindPartyQual"/>
+                <set field="titleProperty" value="Find Qualification"/>
                 <set field="headerItem" value="PartyQual"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualTypeId" from-field="parameters.partyQualTypeId"/>
@@ -38,7 +38,7 @@
                                 <section>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="NewPartyQual" text="${uiLabelMap.HumanResNewPartyQual}" style="buttontext create"/>
+                                            <link target="NewPartyQual" text="New Qualification" style="buttontext create"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -58,7 +58,7 @@
     <screen name="EditPartyQuals">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResEditPartyQual"/>
+                <set field="titleProperty" value="Edit Qualification"/>
                 <set field="headerItem" value="Employee"/>
                 <set field="tabButtonItem" value="EditPartyQuals"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -68,7 +68,7 @@
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="AddPartyQualPanel" title="${uiLabelMap.HumanResAddPartyQual}" collapsible="true">
+                        <screenlet id="AddPartyQualPanel" title="Add Qualification" collapsible="true">
                             <include-form name="AddPartyQual" location="component://humanres/widget/forms/PartyQualForms.xml"/>
                         </screenlet>
                         <include-form name="ListPartyQuals" location="component://humanres/widget/forms/PartyQualForms.xml"/>
@@ -86,7 +86,7 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.HumanResNewPartyQual}">
+                        <screenlet title="New Qualification">
                             <section>
                                 <widgets>
                                     <include-form name="AddPartyQual" location="component://humanres/widget/forms/PartyQualForms.xml"/>
@@ -104,6 +104,7 @@
             <actions>
                 <set field="titleProperty" value="Party Qualification Type"/>
                 <set field="headerItem" value="partyQualType"/>
+                <set field="tabButtonItem" value="partyQualType"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createPartyQualType"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -114,7 +115,7 @@
                 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -141,5 +142,50 @@
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    <screen name="NewPartyQualGroup">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Party Qualification Group"/>
+                <set field="headerItem" value="partyQualGroup"/>
+                <set field="tabButtonItem" value="partyQualGroup"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPartyQualGroup"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PartyQualGroup" value-field="partyQualGroupContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Qualification Group">
+                                    <include-form name="NewPartyQualGroup" location="component://humanres/widget/forms/PartyQualForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Qualification Group List">
+                        			<include-form name="listPartyQualGroup" location="component://humanres/widget/forms/PartyQualForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    
     </screen>
 </screens>

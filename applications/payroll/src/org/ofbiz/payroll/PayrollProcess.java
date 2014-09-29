@@ -17,6 +17,7 @@ import javolution.util.FastMap;
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -91,19 +92,26 @@ public class PayrollProcess {
 			employeesELI = delegator.findList("StaffPayroll", EntityCondition
 					.makeCondition("payrollPeriodId", payrollPeriodId), null,
 					null, null, false);
+		
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+		
+		//removeCalculatedValues(payrollPeriodId, delegator);
 
 		log.info("######### Loop through Staff");
 
-		for (GenericValue genericValue : employeesELI) {
+	for (GenericValue genericValue : employeesELI) {
+			deleteStaffSystemElements(genericValue
+					.getString("staffPayrollId"), delegator);
+			
 			processPayroll(genericValue, genericValue
 					.getString("staffPayrollId"), delegator);
 			log.info("######### Staff ID "
 					+ genericValue.getString("staffPayrollId"));
 		}
 
+	
 		Writer out;
 		try {
 			out = response.getWriter();
@@ -119,6 +127,74 @@ public class PayrollProcess {
 		}
 		return "";
 	}
+
+	private static void deleteStaffSystemElements(String staffPayrollId,
+			Delegator delegator) {
+		// TODO Auto-generated method stub
+		//Get the PayrollElementID that are system elements
+		List<GenericValue> listPayrollElementId = getSystemElements(delegator);
+		
+		//Delete from staffpayrollelements a record that is this PayrollElementID and this staffPayrollId
+		deleteStaffPayrollElement(listPayrollElementId, staffPayrollId, delegator);
+		
+		
+	}
+
+	private static void deleteStaffPayrollElement(
+			List<GenericValue> listPayrollElementId, String staffPayrollId, Delegator delegator) {
+		
+		for (GenericValue genericValue : listPayrollElementId) {
+			deleteRecord(delegator, genericValue.getString("payrollElementId"), staffPayrollId );
+		}
+		
+	}
+
+	private static void deleteRecord(Delegator delegator, String payrollElementId,
+			String staffPayrollId) {
+		// TODO Auto-generated method stub
+		List<GenericValue> StaffPayrollElementELI = null;
+		
+		EntityConditionList<EntityExpr> staffPayrollElementConditions = EntityCondition
+		.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+				"staffPayrollId", EntityOperator.EQUALS, staffPayrollId),
+				EntityCondition.makeCondition("payrollElementId",
+						EntityOperator.EQUALS, payrollElementId)),
+				EntityOperator.AND);
+		
+		try {
+			StaffPayrollElementELI = delegator.findList("StaffPayrollElements",
+					staffPayrollElementConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			delegator.removeAll(StaffPayrollElementELI);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static List<GenericValue> getSystemElements(Delegator delegator) {
+		List<GenericValue> listSystemElements = null;
+		
+		EntityConditionList<EntityExpr> PayrollElementConditions = EntityCondition
+		.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+				"elementType", EntityOperator.EQUALS, "System Element"),
+				EntityCondition.makeCondition("isInterest",
+						EntityOperator.EQUALS, "Y")),
+				EntityOperator.OR);
+		try {
+			listSystemElements = delegator.findList("PayrollElement",
+					PayrollElementConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return listSystemElements;
+	}
+
 
 	private static void processPayroll(GenericValue employee,
 			String staffPayrollId, Delegator delegator) {
@@ -583,7 +659,7 @@ public class PayrollProcess {
 		try {
 			payrollElementELI = delegator.findList("PayrollElement",
 					EntityCondition.makeCondition("payrollElementId",
-							"SALARYADVANCE"), null, null, null, false);
+							"10040"), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}

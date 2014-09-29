@@ -167,6 +167,15 @@ under the License.
                 <option key="No" description="No"/>
             </drop-down>
         </field>
+        
+        <field name="contributing" title="Contributing ?"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true" >
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
+            </drop-down>
+        </field>
+        <field name="contributingAmount" title="Contributing Amount"  widget-style="required" required-field="true"><text></text></field>
+			
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <!-- field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -204,6 +213,7 @@ under the License.
             <entity-condition entity-name="Relationship" list="relationshipList">
             </entity-condition>
         </actions>
+        <field name="memberNomineeId"><hidden/></field>
         <field name="partyId"><hidden/></field>
         <field name="enabled"><hidden/></field>
         <field name="firstName"  title="First Name"  widget-style="required" required-field="true"><text/></field>
@@ -230,6 +240,19 @@ under the License.
         <field name="independentwitnessidno" title="Independent Witness ID No"><text/></field>
         <field name="witnessmobileno" title="Witness Mobile No"><text/></field>
          <field name="witnesspostaladdress" title="Witness Postal Address"><textarea/></field>
+         
+         <field name="isUnderAge" title="Is Under Age">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="No" description="No"/>
+				<option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="administratorNames" title="Administrator Names"><text/></field>
+        <field name="administratorIdNo" title="Administrator ID No"><text/></field>
+        <field name="administratorMobileNo" title="administrator Mobile No"><text/></field>
+         <field name="administratorPostalAddress" title="administrator Postal Address"><textarea/></field>
+         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -391,7 +414,7 @@ under the License.
 	
 <!--  memberAccount List-->
 	
-	<form name="listMemberAccount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberAccount" paginate-target="findMemberAccount"
+	<form name="listMemberAccount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberAccount" paginate-target="memberAccount"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="MemberAccount">
@@ -401,7 +424,7 @@ under the License.
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
          <field name="memberAccountId"><hidden/></field>
          <field name="partyId" parameter-name="partyId"><hidden/></field>
-         <field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+         <field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
          <field name="accountName" title="Account Name" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <!-- field name="saccoProductId" title="Account">
         	<display-entity description="${name} - ${code} " entity-name="SaccoProduct" also-hidden="true"></display-entity>
@@ -421,11 +444,21 @@ under the License.
         </field>
         
         <field name="withdrawable" title="Withdrawable (FOSA)"  widget-style="required" required-field="true">
-            <drop-down allow-empty="true" >
+            <drop-down allow-empty="true">
                 <option key="Yes" description="Yes"/>
                 <option key="No" description="No"/>
             </drop-down>
         </field>
+        
+        <field name="contributing" title="Contributing ?"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
+            </drop-down>
+        </field>
+        <field name="contributingAmount" title="Contributing Amount"  widget-style="required" required-field="true"><text size="10"></text></field>
+        
+        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteMemberAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="memberAccountId"/>
@@ -472,35 +505,45 @@ under the License.
                 <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
                 <!-- order-by field-name="saccoProductId"/ -->
             </entity-condition>
+            
+            <entity-condition entity-name="Relationship" list="relationshipList">
+            </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+         <field name="memberNomineeId"><hidden/></field>
         <field name="partyId" title="Member">
         	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
           </field>
-        <field name="firstName" title="First Name"><display also-hidden="false"/></field>
-        <field name="middleName" title="Middle Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
-        <field name="idNumber" title="ID No"><display also-hidden="false"/></field>
-        <field name="passportNumber" title="Passport No."><display also-hidden="false"/></field>
-        <field name="postalAddress" title="Postal Address"><display also-hidden="false"/></field>
-        <field name="telephoneNumber" title="Telephone No."><display also-hidden="false"/></field>
-        <field name="mobilePhone" title="Mobile Phone."><display also-hidden="false"/></field>
-        <field name="relationshipId" title="Relationship">
-        	<display-entity description="${name}" entity-name="Relationship" also-hidden="false" ></display-entity>
-          </field>
-        <field name="isAdministrator" title="Is Administrator"><display also-hidden="false"/></field>
-        <field name="percentage" title="Percentage"><display also-hidden="false"/></field>
-        <field name="independentwitnessnames" title="Independent Witness Names"><display also-hidden="false"/></field>
-	    <field name="independentwitnessidno" title="Independent Witness ID No."><display also-hidden="false"/></field>
-     	<field name="witnessmobileno" title="Independent Witness Mobile No."><display also-hidden="false"/></field>
-     	<field name="witnesspostaladdress" title="Independent Witness Postal Address"><display also-hidden="false"/></field>
+        <field name="firstName" title="First Name"><text/></field>
+        <field name="middleName" title="Middle Name"><text/></field>
+        <field name="lastName" title="Last Name"><text/></field>
+        <field name="idNumber" title="ID No"><text/></field>
+        <field name="passportNumber" title="Passport No."><text/></field>
+        <field name="postalAddress" title="Postal Address"><text/></field>
+        <field name="telephoneNumber" title="Telephone No."><text/></field>
+        <field name="mobilePhone" title="Mobile Phone."><text/></field>
+        <field name="relationshipId" title="Relationship"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options list-name="relationshipList" key-name="relationshipId" description="${name}" />
+            </drop-down>
+        </field>
+        <field name="isAdministrator" title="Is Administrator"><text/></field>
+        <field name="percentage" title="Percentage"><text/></field>
+        <field name="independentwitnessnames" title="Independent Witness Names"><text/></field>
+	    <field name="independentwitnessidno" title="Independent Witness ID No."><text/></field>
+     	<field name="witnessmobileno" title="Independent Witness Mobile No."><text/></field>
+     	<field name="witnesspostaladdress" title="Independent Witness Postal Address"><textarea/></field>
         
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+         <field name="administratorNames" title="Administrator Names"><text/></field>
+        <field name="administratorIdNo" title="Administrator ID No"><text/></field>
+        <field name="administratorMobileNo" title="administrator Mobile No"><text/></field>
+         <field name="administratorPostalAddress" title="administrator Postal Address"><textarea/></field>
+        <!--field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteMemberNominee" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="memberNomineeId"/>
             </hyperlink>
-        </field>
-        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        </field -->
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 <!--  termsAndConditions List-->
 	<form name="listTermsAndConditions" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTermsAndConditions" paginate-target="findTermsAndConditions"

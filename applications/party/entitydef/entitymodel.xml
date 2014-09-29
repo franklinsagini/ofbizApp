@@ -2714,7 +2714,8 @@ under the License.
     <entity entity-name="Person"
             package-name="org.ofbiz.party.party"
             title="Person Entity">
-      <field name="partyId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>  
+      <field name="employeeNumber" type="name"></field>
       <field name="salutation" type="name"></field>
       <field name="firstName" type="name"></field>
       <field name="middleName" type="name"></field>
@@ -2727,8 +2728,8 @@ under the License.
       <field name="lastNameLocal" type="name"></field>
       <field name="otherLocal" type="name"></field>
       <field name="memberId" type="id"></field>
-      <field name="gender" type="indicator"></field>
-      <field name="maritalStatus" type="indicator"></field>
+      <field name="gender" type="name"></field>
+      <field name="maritalStatus" type="name"></field>
       <field name="birthDate" type="date"></field>
       <field name="placeofbirth" type="name"></field>
       <field name="religionId" type="id"></field>
@@ -2742,6 +2743,7 @@ under the License.
       <field name="height" type="floating-point"></field>
       <field name="weight" type="floating-point"></field>
       <field name="mothersMaidenName" type="long-varchar" encrypt="true"></field>
+      <field name="nationalIDNumber" type="name"></field>
       <field name="socialSecurityNumber" type="long-varchar" encrypt="true"></field>
       <field name="nhifNumber" type="long-varchar" encrypt="true"></field>
       <field name="pinNumber" type="long-varchar" encrypt="true"></field>
@@ -2757,8 +2759,10 @@ under the License.
       <field name="existingCustomer" type="indicator"></field>
       <field name="cardId" type="id-long" ></field>
       <field name="isDisabled" type="indicator" ></field>
-      <field name="disabilityDetails" type="long-varchar" ></field>    
-      <field name="employeeNumber" type="name"></field>      
+      <field name="disabilityDetails" type="long-varchar" ></field>  
+      
+      <field name="branchId" type="name"></field>
+ 	  <field name="stationId" type="id"></field>      
       
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
@@ -2769,6 +2773,13 @@ under the License.
       </relation>
       <relation type="one" fk-name="PERSON_RESS_ENUM" title="ResidenceStatus" rel-entity-name="Enumeration">
         <key-map field-name="residenceStatusEnumId" rel-field-name="enumId"/>
+      </relation>
+      
+      <relation type="one" fk-name="PERSON_PARTYGROUP" rel-entity-name="PartyGroup">
+         <key-map field-name="branchId" rel-field-name="partyId"/>
+      </relation>
+ 	  <relation type="one" fk-name="PERSON_STATION" rel-entity-name="Station">
+        <key-map field-name="stationId"/>
       </relation>
       <index name="FIRST_NAME_IDX">
         <index-field name="firstName"/>
@@ -3243,6 +3254,9 @@ under the License.
 			<field name="accountName" type="name"></field>
 			<field name="accountStatusId" type="id"></field>
 			<field name="withdrawable" type="name"></field>
+			
+			<field name="contributing" type="name"></field>
+			<field name="contributingAmount" type="fixed-point"></field>
 
 			<prim-key field="memberAccountId"/>
 
@@ -3308,6 +3322,12 @@ under the License.
      		<field name="independentwitnessidno" type="name"></field>
      		<field name="witnessmobileno" type="name"></field>
      		<field name="witnesspostaladdress" type="name"></field>
+     		
+     		<field name="isUnderAge" type="name"></field>
+     		<field name="administratorNames" type="name"></field>
+     		<field name="administratorIdNo" type="name"></field>
+     		<field name="administratorMobileNo" type="name"></field>
+     		<field name="administratorPostalAddress" type="name"></field>
 
      		<prim-key field="memberNomineeId"/>
 

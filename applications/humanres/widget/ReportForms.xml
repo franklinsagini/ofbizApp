@@ -37,7 +37,7 @@ under the License.
     <form name="listStaff" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="staffList" paginate-target="staffList"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="Person">
+            <entity-condition entity-name="StaffListReport">
             	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
             </entity-condition>
             
@@ -47,20 +47,12 @@ under the License.
         <field name="salutation" title="Title"> <display/> </field>
         <field name="firstName" title="First Name"> <display/> </field>
         <field name="lastName" title="Surname"> <display/> </field>
+        <field name="gender" title="Gender"> <display/> </field>
+        <field name="nationalIDNumber" title="National ID No"> <display/> </field>
+        <field name="maritalStatus" title="Marital Status"> <display/> </field>
+        <field name="positionName" title="Job Position"> <display/> </field>
+        <field name="station" title="Station"> <display/> </field>
         <field name="birthDate" title="Date of Birth"> <display/> </field>
-        <!--field name="gender" title="Surname"> <display/> </field>
-        <field name="religionId" title="Employment Status">
-        	<display-entity entity-name="Religion" key-field-name="religionId" description="${religion}"></display-entity>
-        </field>
-        <field name="countyId" title="County">
-        	<display-entity entity-name="County" key-field-name="countyId" description="${county}"></display-entity>
-        </field>
-        <field name="tribeId" title="County">
-        	<display-entity entity-name="Tribe" key-field-name="tribeId" description="${tribe}"></display-entity>
-        </field>
-        <field name="employmentStatusEnumId" title="Employment Status">
-        	<display-entity entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]"></display-entity>
-        </field-->
 	    <field name="appointmentdate" title="Appointment Date"> <display/> </field>
 	    <field name="confirmationdate" title="Confirmation Date"> <display/> </field>
 	    <field name="retirementdate" title="Retirement Date"> <display/> </field>
@@ -80,8 +72,7 @@ under the License.
         <actions>
             <entity-condition entity-name="PersonAndPartyQual">
             	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
-            </entity-condition>
-            
+            </entity-condition>            
         </actions>
 
         <field name="employeeNumber" title="Employee Number"> <display/> </field>
@@ -89,6 +80,7 @@ under the License.
         <field name="lastName" title="Surname"> <display/> </field>
         <field name="partyQualType" title="Qualification Type"> <display/> </field>
         <field name="qualTitle" title="Title"> <display/> </field>
+        <field name="specialization" title="Specialization"> <display/> </field>
         <field name="qualInstitute" title="Institute"> <display/> </field>
         <field name="qualfromDate" title="From"> <display/> </field>        
         <field name="qualthruDate" title="To"> <display/> </field>
@@ -99,8 +91,7 @@ under the License.
         <actions>
             <entity-condition entity-name="PersonAndPartySkills">
             	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
-            </entity-condition>
-            
+            </entity-condition>            
         </actions>
 
         <field name="employeeNumber" title="Employee Number"> <display/> </field>
@@ -156,7 +147,6 @@ under the License.
             <entity-condition entity-name="PartyAndNextOfKin">
             	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
             </entity-condition>
-            
         </actions>
 
         <field name="employeeNumber" title="Employee Number"> <display/> </field>
@@ -169,6 +159,35 @@ under the License.
         <field name="idno" title="Number"> <display/> </field>        
         <field name="phoneNo" title="Phone No."> <display/> </field>
     </form>
-    
-    
+    <form name="listPostingDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="postingDetails" paginate-target="postingDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="EmploymentAndPerson">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>        
+        <field name="branchId" title="Branch"> <display/> </field>
+        <field name="station" title="Station"> <display/> </field>
+        <field name="fromDate"> <display/> </field>
+        <field name="thruDate"> <display/> </field>
+    </form>
+    <form name="listPositionDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="positionDetails" paginate-target="positionDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PersonAndEmplPositionAndFulfillment">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="positionName" title="Position Name"> <display/> </field>
+        <field name="employeefromDate" title="From Date"> <display/> </field>
+        <field name="employeethruDate" title="Through Date"> <display/> </field>
+    </form>
 </forms>
