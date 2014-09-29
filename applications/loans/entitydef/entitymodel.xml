@@ -813,4 +813,19 @@ under the License.
       	</relation>
 	</entity>
 	
+	<view-entity entity-name="LoanProductClassView"
+            package-name="org.ofbiz.loans"
+            title="LoanProduct and LoanProductClass (LoanProduct, LoanProductClass, etc.) View Entity">
+      <member-entity entity-alias="LP" entity-name="LoanProduct"/>
+      <member-entity entity-alias="LPC" entity-name="LoanProductClass"/>
+      <alias entity-alias="LP" name="loanProductId"/>
+      <alias entity-alias="LPC" name="memberClass" />
+      <alias entity-alias="LP" name="name" />
+      <alias entity-alias="LP" name="code" />
+     
+      <view-link entity-alias="LP" rel-entity-alias="LPC">
+        <key-map field-name="loanProductId"/>
+      </view-link>
+    </view-entity>
+	
 </entitymodel>
