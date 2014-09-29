@@ -356,7 +356,7 @@ public class LoanServices {
 		return bdTotalSavings;
 	}
 
-	private static int getMemberDurations(Date joinDate) {
+	public static int getMemberDurations(Date joinDate) {
 
 		LocalDateTime stJoinDate = new LocalDateTime(joinDate.getTime());
 		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
@@ -370,6 +370,30 @@ public class LoanServices {
 
 		return months;
 
+	}
+	
+	public static int getMemberDuration(String partyId){
+		int durationInMonths = 0;
+		
+		//Get Member
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", partyId), false);
+		} catch (GenericEntityException e) {
+			// return ServiceUtil.returnError(UtilProperties.getMessage("",
+			// "Cannot Get Member Details",
+			// UtilMisc.toMap("errMessage", e.getMessage()), locale));
+			//System.out.println(e.printStackTrace());
+			e.printStackTrace();
+		}
+		
+		Date joinDate = member.getDate("joinDate");
+		//Date dateJoinDate = new Date(joinDate.getTime());
+		durationInMonths = getMemberDurations(joinDate);
+		
+		return durationInMonths;
 	}
 
 	/**
