@@ -1437,5 +1437,58 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
-   
+    
+    <!-- Loan Product Class -->
+	<form name="NewLoanProductClass" type="single" target="createLoanProductClass"
+        focus-field-name="memberClass" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
+        <actions>
+        	<entity-condition entity-name="LoanProduct" list="productList"></entity-condition>
+        </actions>
+        
+        <field name="loanProductId" title="Loan Product" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+				<list-options list-name="productList" key-name="loanProductId"
+					description="${name} - ${code}" />
+			</drop-down>
+		</field>
+		<field name="memberClass" title="Member Class">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="Class A" description="Class A"/>
+				<option key="Class B" description="Class B"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listLoanProductClass" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanProductClass" paginate-target="classifyProducts"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanProductClass">
+            </entity-condition>
+            
+            <entity-condition entity-name="LoanProduct" list="productList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanProductClass"/>
+       <field name="loanProductId" title="Loan Product" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+				<list-options list-name="productList" key-name="loanProductId"
+					description="${name} - ${code}" />
+			</drop-down>
+		</field>
+		<field name="memberClass" title="Member Class">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="Class A" description="Class A"/>
+				<option key="Class B" description="Class B"/>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanProductClass" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanProductId"/>
+                <parameter param-name="memberClass"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>   
 </forms>

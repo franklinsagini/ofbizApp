@@ -472,6 +472,23 @@ under the License.
       	</relation>
 	</entity>
 	
+	<!-- LoanProduct Class -->
+	
+	<entity entity-name="LoanProductClass" package-name="org.ofbiz.loans"
+		title="LoanProductClass Entity">
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="loanProductId" type="id"></field>
+		<field name="memberClass" type="very-short"></field>
+		
+		<prim-key field="loanProductId"/>
+		<prim-key field="memberClass"/>
+		<relation type="one" fk-name="LoanProductClass_LoanProduct" rel-entity-name="LoanProduct">
+        	<key-map field-name="loanProductId"/>
+      	</relation>
+      	
+	</entity>
+	
 		<!-- Loan Application Security -->
 	<entity entity-name="LoanAmortization" package-name="org.ofbiz.loans"
 		title="Loan Amortization">
