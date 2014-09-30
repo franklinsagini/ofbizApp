@@ -15,14 +15,12 @@
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
         <field name="branchId" type="id"></field>
-        <field name="glAccountId" type="id"/>
+        
         <field name="name" type="name"></field>
         <field name="limitAmount" type="fixed-point"></field>
        
         <prim-key field="treasuryTypeId"/>
-        <relation type="one" fk-name="TreasuryType_GlAccount" rel-entity-name="GlAccount">
-            <key-map field-name="glAccountId"/>
-        </relation> 
+        
     </entity>
     
     <entity entity-name="Treasury" package-name="org.ofbiz.treasurymanagement" title="TreasuryType Entity">
@@ -34,6 +32,7 @@
         <field name="treasuryTypeId" type="id"/>
         <field name="name" type="name"></field>
         <field name="finAccountId" type="id"/>
+        <field name="glAccountId" type="id"/>
         
         <field name="employeeResponsible" type="id"/>
        
@@ -47,6 +46,10 @@
         
          <relation type="one" fk-name="Treasury_Employee" rel-entity-name="Person">
             <key-map field-name="employeeResponsible" rel-field-name="partyId"/>
+        </relation> 
+        
+        <relation type="one" fk-name="TreasuryType_GlAccount" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
         </relation> 
     </entity>
     
