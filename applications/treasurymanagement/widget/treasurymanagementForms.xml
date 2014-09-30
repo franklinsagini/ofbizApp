@@ -7,9 +7,7 @@
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="treasuryTypeContext">
         <actions>
-        	<entity-condition entity-name="GlAccount" list="glAccountsList">
-				<order-by field-name="accountName"/>
-			</entity-condition>
+        	
         </actions>
        
         <field name="treasuryTypeId"><hidden/></field>
@@ -18,11 +16,7 @@
         <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
          <field name="limitAmount" title="Limit Amount"><text></text></field>
         
-        <field name="glAccountId" title="Account (Posting Account)" >
-       		<drop-down allow-empty="true">
-       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down>
-        </field>
+       
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
@@ -32,9 +26,7 @@
             <entity-condition entity-name="TreasuryType">
             </entity-condition>
             
-            <entity-condition entity-name="GlAccount" list="glAccountsList">
-				<order-by field-name="accountName"/>
-			</entity-condition>
+           
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateTreasuryType"/>
 		
@@ -45,11 +37,7 @@
         <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
          <field name="limitAmount" title="Limit Amount"  widget-style="required" required-field="true"><text></text></field>
         
-        <field name="glAccountId" title="Account (Posting Account)" >
-       		<drop-down allow-empty="true">
-       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down>
-        </field>
+        
 
        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
@@ -73,6 +61,10 @@
 			
 			<entity-condition entity-name="Person" list="employeesList">
 			</entity-condition>
+			
+			<entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>
         </actions>
        
         <field name="treasuryId"><hidden/></field>
@@ -95,6 +87,12 @@
         <field name="employeeResponsible" title="Employee Responsible" >
        		<drop-down allow-empty="true">
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
+       		</drop-down>
+        </field>
+        
+         <field name="glAccountId" title="Account (Posting Account)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         </field>
         
@@ -114,6 +112,10 @@
 			
 			<entity-condition entity-name="Person" list="employeesList">
 			</entity-condition>
+			
+			 <entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>
         </actions>
        
         <field name="treasuryId"><hidden/></field>
@@ -136,6 +138,12 @@
         <field name="employeeResponsible" title="Employee Responsible" >
        		<drop-down allow-empty="true">
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
+       		</drop-down>
+        </field>
+        
+        <field name="glAccountId" title="Account (Posting Account)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         </field>
        
@@ -166,7 +174,7 @@
        		</drop-down>
         </field>
         
-        <field name="treasuryId" title="Treasury" >
+        <field name="treasuryId" title="Treasury(Teller/Vault)" >
        		<drop-down allow-empty="true">
        			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
        		</drop-down>
@@ -249,7 +257,7 @@
         </field>
         
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
-         <field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea></textarea></field>
+         <!-- field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea></textarea></field -->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
@@ -281,7 +289,7 @@
         </field>
         
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text size="15"></text></field>
-         <field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea cols="40"></textarea></field>       
+         <!-- field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea cols="40"></textarea></field -->       
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteTreasuryTransfer" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="treasuryTransferId"/>
