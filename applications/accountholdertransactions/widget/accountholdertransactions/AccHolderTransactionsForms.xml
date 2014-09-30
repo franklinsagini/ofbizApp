@@ -84,12 +84,9 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
 		
-		<!--field name="partyId" title="Member">
-        	< drop-down>
-        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down 
-        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
-        </field-->
+        <field name="accountTransactionParentId" title="Transaction ID">
+        	<hyperlink target="#" description="Print Transaction # ${accountTransactionParentId}"></hyperlink>
+        </field>	
         <field name="memberAccountId" title="Account">
         	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" ></display-entity>
         </field>
@@ -212,6 +209,7 @@ under the License.
         	</drop-down 
         	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field-->
+      	<field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field>
         <field name="memberAccountId" title="Account">
         	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" ></display-entity>
         </field>
@@ -307,6 +305,7 @@ under the License.
         </actions>
         <field name="chequeWithdrawalId"><hidden/></field>
         <field name="partyId"><hidden/></field>
+        <field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field>
 		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
         	<drop-down>
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
@@ -353,6 +352,7 @@ under the License.
         	</drop-down 
         	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field-->
+        <field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field>
         <field name="memberAccountId" title="Account">
         	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" ></display-entity>
         </field>
@@ -506,6 +506,7 @@ under the License.
         	</drop-down 
         	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field-->
+        <field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field>
         <field name="memberAccountId" title="Account">
         	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" ></display-entity>
         </field>
@@ -661,6 +662,7 @@ under the License.
         
         
         <!-- field name="repaymentType" title="Repayment Type"><text></text></field -->
+        <field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field>
         <field name="transactionAmount" title="Total Paid"><text></text></field>
         
         <!--field name="interestAmount" title="Interest Amount"><display></display></field>
@@ -923,6 +925,7 @@ under the License.
         <actions>
         	<entity-condition entity-name="Member">
         		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        		<order-by field-name="-partyId"/>
         	</entity-condition>
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
