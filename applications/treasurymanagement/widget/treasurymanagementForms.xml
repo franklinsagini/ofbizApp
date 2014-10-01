@@ -363,24 +363,14 @@
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
 		
-		<!--field name="partyId" title="Member">
-        	< drop-down>
-        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down 
-        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
-        </field-->
+
         <field name="memberAccountId" title="Account">
         	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" ></display-entity>
         </field>
         <field name="transactionType" title="Transaction Type"><display also-hidden="false"></display></field>
         <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
         <field name="transactionAmount" title="Amount"><display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display></field>
-        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteCashWithdrawal" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="accountTransactionId"/>
-            </hyperlink>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        
         <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
         <field name="createdStamp" title="Transaction Date"><display also-hidden="false" type="date-time"></display></field>
         <field name="clearDate" title="Clear By"><display also-hidden="false" type="date-time"></display></field>
@@ -407,4 +397,85 @@
         <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
         
     </form>
+    
+    <!-- sourceOfTransfer -->
+    <form name="sourceOfTransfer" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTransferRule" paginate-target="transferrules"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TreasuryType">
+            </entity-condition>
+            
+           
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateTransferRule"/>
+		
+        <field name="treasuryTypeId"><hidden/></field>
+		
+		
+        <field name="name" title="Name"  widget-style="required" required-field="true"><display></display></field>
+        <field name="Add Destination" title="Add Destination" widget-style="buttontext">
+            <hyperlink target="transferdestinations" description="Add Possible Destinations" also-hidden="false">
+                <parameter param-name="treasuryTypeId"/>
+            </hyperlink>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- newTransferDestination -->
+    <form name="NewTransferDestination" type="single" target="createTransferRule"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="transferRuleContext">
+        <actions>
+        	<entity-condition entity-name="TreasuryType" list="treasuryTypeToList">
+			</entity-condition>
+			
+			<set field="sourceTreasuryType" from-field="parameters.treasuryTypeId"/>
+        </actions>
+       
+        <field name="transferRuleId"><hidden/></field>
+		
+		<field name="sourceTreasuryType" ><hidden/></field>
+        <field name="destinationTreasuryType" title="To" >
+       		<drop-down allow-empty="true">
+       			<list-options key-name="treasuryTypeId" list-name="treasuryTypeToList" description="${name}"/>
+       		</drop-down>
+        </field>
+        
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+    
+    <!-- transferdestinations -->
+      <form name="transferdestinations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTransferRule" paginate-target="transferrules"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TransferRule">
+            	<condition-expr field-name="sourceTreasuryType" operator="equals" from-field="parameters.treasuryTypeId"/>
+            </entity-condition>
+            
+           
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateTransferRule"/>
+		
+        <field name="transferRuleId"><hidden/></field>
+		<field name="destinationTreasuryType" title="To" >
+       		<!-- drop-down allow-empty="true">
+       			<list-options key-name="treasuryTypeId" list-name="treasuryTypeToList" description="${name}"/>
+       		</drop-down -->
+       		<display-entity entity-name="TreasuryType" key-field-name="treasuryTypeId" description="${name}"></display-entity>
+        </field>
+		
+        <!-- field name="Add Destination" title="Add Destination" widget-style="buttontext">
+            <hyperlink target="transferdestinations" description="Add Possible Destinations" also-hidden="false">
+                <parameter param-name="treasuryTypeId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTransferRule" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="transferRuleId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
 </forms>

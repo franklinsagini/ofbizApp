@@ -169,6 +169,51 @@
 		<response name="error" type="view" value="treasuryTransfer" />
 	</request-map>
 	
+	<request-map uri="transferdestinations">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="transferdestinations"
+			save-current-view="true">
+			</response>
+	</request-map>
+	
+	<request-map uri="transferrules">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="transferrules"
+			save-current-view="true">
+			</response>
+	</request-map>
+	
+	
+	
+	<request-map uri="createTransferRule">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createTransferRule" />
+		<response name="success" type="view-last"
+			value="transferdestinations">
+				<redirect-parameter name="treasuryTypeId"/>
+				
+			</response>
+		<response name="error" type="view" value="transferdestinations" />
+	</request-map>
+	
+	<request-map uri="updateTransferRule">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateTransferRule" />
+		<response name="success" type="request-redirect-noparam"
+			value="transferdestinations"></response>
+		<response name="error" type="view" value="transferdestinations" />
+	</request-map>
+	
+	<request-map uri="deleteTransferRule">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteTransferRule" />
+		<response name="success" type="request-redirect"
+			value="transferdestinations">
+				<redirect-parameter name="treasuryTypeId"/>
+			</response>
+		<response name="error" type="view" value="transferdestinations" />
+	</request-map>
+	
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#main"/>
@@ -178,6 +223,9 @@
 	<view-map name="treasuryTransfer" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#NewTreasuryTransfer"/>
 	<view-map name="recconcileTreasury" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#recconcileTreasury"/>
 	<view-map name="showTransactions" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#showTransactions"/>
+	<view-map name="transferrules" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#transferrules"/>
 	
+	
+	<view-map name="transferdestinations" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#transferdestinations"/>
 	
 </site-conf>
