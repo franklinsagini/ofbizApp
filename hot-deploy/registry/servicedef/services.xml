@@ -7,11 +7,40 @@
 
 
 
-	<service name="createfiletype" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="createfiletype" auth="true">
+	<service name="createfiletype" engine="simple" 
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" 
+	invoke="createfiletype" auth="true">
 		<description>Create File Request header record</description>
 		<auto-attributes entity-name="RegistryFileType" include="pk" mode="IN" optional="true" />
 		<auto-attributes entity-name="RegistryFileType" include="nonpk" mode="IN" optional="true" />
 	</service>
+	
+	<service name="createfileActionTypes" engine="simple" 
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" 
+	invoke="createfileActionTypes" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes entity-name="RegistryFileActionTypes" include="pk" mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryFileActionTypes" include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	<service name="updatefileActionTypes" engine="simple"
+		default-entity-name="RegistryFileActionTypes"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="updatefileActionTypes" auth="true">
+		<description>Update estate</description>
+		<auto-attributes mode="IN" include="pk" optional="false" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+	
+	<service name="deletefileActionTypes" engine="simple"
+		default-entity-name="RegistryFileActionTypes"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="deletefileActionTypes" auth="true">
+		<description>remove file type</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+	
 
 	<service name="updatefileType" engine="simple"
 		default-entity-name="RegistryFileType"
@@ -62,10 +91,16 @@
 			mode="IN" optional="true" />
 	</service>
 
-	<service name="requestfiles" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
+	<!-- <service name="requestfiles" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
 		<description>Create File Request header record</description>
 		<auto-attributes entity-name="RegistryFilesRequest" include="pk" mode="IN" optional="true" />
 		<auto-attributes entity-name="RegistryFilesRequest" include="nonpk" mode="IN" optional="true" />
+	</service> -->
+	
+	<service name="requestfiles" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes entity-name="RegistryFileActions" include="pk" mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryFileActions" include="nonpk" mode="IN" optional="true" />
 	</service>
 
 	<service name="updateRegistryFileStatus" default-entity-name="RegistryFiles" engine="simple"
@@ -75,25 +110,7 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-	<service name="issuefiles" engine="simple"
-		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
-		invoke="issuefiles" auth="true">
-		<description>Create File Request header record</description>
-		<auto-attributes entity-name="FileIssue" include="pk"
-			mode="IN" optional="true" />
-		<auto-attributes entity-name="FileIssue" include="nonpk"
-			mode="IN" optional="true" />
-	</service>
-
-	<service name="releasefiles" engine="simple"
-		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
-		invoke="releasefiles" auth="true">
-		<description>Create File Request header record</description>
-		<auto-attributes entity-name="FileRelease" include="pk"
-			mode="IN" optional="true" />
-		<auto-attributes entity-name="FileRelease" include="nonpk"
-			mode="IN" optional="true" />
-	</service>
+	
 
 	<service name="createfilelocation" engine="simple"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
