@@ -2695,7 +2695,50 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- Branches -->
+	<screen name="branches">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Branches" />
+				<set field="headerItem" value="branches" />
+				<set field="tabButtonItem" value="branches" />
+				<set field="partyGroupCtx" from-field="parameters" />
 
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW" />
+							</condition>
+							<widgets>
+								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html> 
+									</platform-specific -->
+								<!-- screenlet title="Search Members">
+									<include-form name="FindMemberActive"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet -->
+								<screenlet title="Branches List">
+									<include-form
+										location="component://party/widget/partymgr/PartyForms.xml"
+										name="branches" />
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 	<!-- Change Member Status -->
 	<screen name="ChangeMemberStatus">
 		<section>
