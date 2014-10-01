@@ -478,4 +478,55 @@
         </field>
     </form>
     
+    <!-- List Transfer Sources -->
+    <form name="listTransferSources" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasury" paginate-target="treasury"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="Treasury">
+            </entity-condition>
+        	<entity-condition entity-name="TreasuryType" list="treasuryTypeList">
+			</entity-condition>
+			
+			<entity-condition entity-name="FinAccount" list="finAccountList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Person" list="employeesList">
+			</entity-condition>
+			
+			 <entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>
+        </actions>
+       
+        <field name="treasuryId"><hidden/></field>
+		
+		
+        <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
+        
+         <field name="treasuryTypeId" title="Treasury Type" widget-style="required" required-field="true" >
+       		<drop-down allow-empty="true">
+       			<list-options key-name="treasuryTypeId" list-name="treasuryTypeList" description="${name}"/>
+       		</drop-down>
+        </field>
+        
+        <field name="finAccountId" title="Financial/Bank Account" >
+       		<drop-down allow-empty="true">
+       			<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
+       		</drop-down>
+        </field>
+        
+        <field name="employeeResponsible" title="Employee Responsible" >
+       		<drop-down allow-empty="true">
+       			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
+       		</drop-down>
+        </field>
+        
+        
+        <field name="openTransfer" title="Transfer" widget-style="buttontext">
+            <hyperlink target="treasuryTransfer" description="Transfer " also-hidden="false">
+                <parameter param-name="treasuryId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
 </forms>
