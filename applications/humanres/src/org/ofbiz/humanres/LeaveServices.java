@@ -487,10 +487,15 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			leave.set("documentApprovalId", documentApproval.getString("documentApprovalId"));
 
 			if ((documentApproval.getString("nextLevel") == null)|| (documentApproval.getString("nextLevel").equals(""))) {
+				//				leave.set("approvalStatus", documentApproval.getString("stageAction"));
+				//				leave.set("applicationStatus","Approved");
+				//				leave.set("approvalStatus" , "Approved");
+				//				approvalStatuslog = "Approved";
+				
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				leave.set("applicationStatus","Approved");
-				leave.set("approvalStatus" , "Approved");
-				approvalStatuslog = "Approved";
+				leave.set("applicationStatus",documentApproval.getString("stageAction"));
+				leave.set("approvalStatus" , documentApproval.getString("stageAction"));
+				approvalStatuslog = documentApproval.getString("stageAction");
 					// Employee to go for leave.
 				carryOverLeaveDaysUsed = getCarryoverUsed(delegator, leaveDuration, partyId);
 				//log.info("gggggggggggg            ggggggggggggggggg" +carryOverLeaveDaysUsed);
@@ -503,11 +508,14 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 				}
 
 			} else {
+				//				leave.set("approvalStatus", documentApproval.getString("stageAction"));
+				//				leave.set("applicationStatus", "In Progress");		
+				//				leave.set("approvalStatus","In Progress");
+				//				approvalStatuslog = "Approved";
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				leave.set("applicationStatus", "In Progress");		
-				leave.set("approvalStatus","In Progress");
-				approvalStatuslog = "Approved";
-
+				leave.set("applicationStatus", documentApproval.getString("stageAction"));		
+				leave.set("approvalStatus",documentApproval.getString("stageAction"));
+				approvalStatuslog =documentApproval.getString("stageAction");
 			}
 
 			leavelog = delegator.makeValue("LeaveStatusLog", "leaveStsLogId", delegator.getNextSeqId("LeaveStatusLog"), 
