@@ -131,5 +131,29 @@ under the License.
         <entity-one entity-name="TreasuryTransfer" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+    
+    <simple-method method-name="createTransferRule" short-description="Create TransferRule">
+       <make-value entity-name="TransferRule" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="TransferRule" field="transferRuleId"/>
+        <now-timestamp field="createdDate"/>
+        <set from-field="transferRuleId" field="newEntity.transferRuleId"/>
+        
+         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateTransferRule" short-description="Update TransferRule">
+        <entity-one entity-name="TransferRule" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteTransferRule" short-description="Delete TransferRule">
+        <entity-one entity-name="TransferRule" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
 		
 </simple-methods>
