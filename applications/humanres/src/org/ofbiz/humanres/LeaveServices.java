@@ -422,6 +422,8 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		String partyId = (String) request.getParameter("partyId");
 		String leaveTypeId = (String) request.getParameter("leaveTypeId");
 		String leaveId = (String) request.getParameter("leaveId");
+		
+		log.info(" LLLLLLLLLLLLLLL the leave ID is LLLLLLLLLLLLLLLLLLl "+leaveId);
 		Timestamp fromDate = null;
 		try {
 			fromDate = new Timestamp(
@@ -439,10 +441,16 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
-						EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
-						EntityCondition.makeCondition("fromDate",
-								EntityOperator.EQUALS, new java.sql.Date(fromDate.getTime()))),
+						EntityCondition.makeCondition("leaveId",EntityOperator.EQUALS, leaveId)
+						),
 						EntityOperator.AND);
+		
+		/**
+		 * 
+		 * 
+		 * EntityCondition.makeCondition("fromDate",
+								EntityOperator.EQUALS, new java.sql.Date(fromDate.getTime()))
+		 * */
 		
 		log.info(" Date : "+fromDate);
 		log.info(" Leave Type : "+leaveTypeId);
