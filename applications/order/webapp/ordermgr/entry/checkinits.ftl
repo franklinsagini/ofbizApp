@@ -31,7 +31,7 @@ under the License.
   </#if>
 </#if>
 <!-- Sales Order Entry -->
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+<#-- <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
 <#if shoppingCartOrderType != "PURCHASE_ORDER">
 <div class="screenlet">
   <div class="screenlet-title-bar">
@@ -121,7 +121,7 @@ under the License.
 </div>
 </#if>
 </#if>
-<br />
+<br /> -->
 <!-- Purchase Order Entry -->
 <#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
   <#if shoppingCartOrderType != "SALES_ORDER">

@@ -27,7 +27,7 @@ under the License.
                 <li><a href="<@ofbizUrl>findEmployees?hideFields=N${paramList}</@ofbizUrl>">${uiLabelMap.CommonShowLookupFields}</a></li>
             <#else>
             <#if partyList?exists><li><a href="<@ofbizUrl>findEmployees?hideFields=Y${paramList}</@ofbizUrl>">${uiLabelMap.CommonHideFields}</a></li></#if>
-                <li><a href="javascript:document.lookupparty.submit();">${uiLabelMap.PartyLookupParty}</a></li>
+                <li><a href="javascript:document.lookupparty.submit();">Lookup Employee</a></li>
             </#if>
         </ul>
         <br class="clear"/>
@@ -50,7 +50,7 @@ under the License.
                         <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked="checked"</#if>/>${uiLabelMap.CommonOther}&nbsp;
                     </td>
                 </tr>
-                <tr><td class='label'>${uiLabelMap.PartyPartyId}</td>
+                <tr><td class='label'>Employee</td>
                     <td>
                       <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
                     </td>
@@ -113,7 +113,7 @@ under the License.
                 <tr><td colspan="3"><hr /></td></tr>
                 <tr align="center">
                     <td>&nbsp;</td>
-                    <td><input type="submit" value="${uiLabelMap.PartyLookupParty}" onclick="javascript:document.lookupparty.submit();"/>
+                    <td><input type="submit" value="Lookup Employee" onclick="javascript:document.lookupparty.submit();"/>
                         <a href="<@ofbizUrl>findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y</@ofbizUrl>" class="smallSubmit">${uiLabelMap.CommonShowAllRecords}</a>
                     </td>
                 </tr>
@@ -134,7 +134,7 @@ under the License.
     <div id="findEmployeeResults" class="screenlet">
         <div class="screenlet-title-bar">
             <ul>
-                <li class="h3">${uiLabelMap.PartyPartiesFound}</li>
+                <li class="h3">Employees Found</li>
                 <#if (partyListSize > 0)>
                     <#if (partyListSize > highIndex)>
                         <li><a class="nav-next" href="<@ofbizUrl>findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>">${uiLabelMap.CommonNext}</a></li>
@@ -154,7 +154,7 @@ under the License.
     <#if partyList?has_content>
         <table class="basic-table" cellspacing="0">
             <tr class="header-row">
-                <td>${uiLabelMap.PartyPartyId}</td>
+                <td>Employee</td>
                 <td>${uiLabelMap.PartyUserLogin}</td>
                 <td>${uiLabelMap.PartyName}</td>
                 <#if extInfo?default("") == "P" >
@@ -223,7 +223,7 @@ under the License.
         </table>
     <#else>
         <div class="screenlet-body">
-            <span class="h3">${uiLabelMap.PartyNoPartiesFound}</span>
+            <span class="h3">No Employees Found</span>
         </div>
     </#if>
     <#if lookupErrorMessage?exists>

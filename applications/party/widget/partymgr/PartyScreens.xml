@@ -1585,6 +1585,7 @@
 				<set field="titleProperty" value="Party Identification Type" />
 				<set field="headerItem" value="partyIdentificationType" />
 				<set field="displayPassword" value="Y" />
+                <set field="tabButtonItem" value="partyIdentificationType"/>
 				<set field="target" value="createPartyIdentificationType" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
 				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
@@ -1598,8 +1599,7 @@
 
 			</actions>
 			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- include-menu name="PayrollTablesTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/ -->
 						<section>
@@ -2695,7 +2695,50 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- Branches -->
+	<screen name="branches">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Branches" />
+				<set field="headerItem" value="branches" />
+				<set field="tabButtonItem" value="branches" />
+				<set field="partyGroupCtx" from-field="parameters" />
 
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW" />
+							</condition>
+							<widgets>
+								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html> 
+									</platform-specific -->
+								<!-- screenlet title="Search Members">
+									<include-form name="FindMemberActive"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet -->
+								<screenlet title="Branches List">
+									<include-form
+										location="component://party/widget/partymgr/PartyForms.xml"
+										name="branches" />
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 	<!-- Change Member Status -->
 	<screen name="ChangeMemberStatus">
 		<section>
@@ -2748,6 +2791,7 @@
 			<actions>
 				<set field="titleProperty" value="Staff Employment Status" />
 				<set field="headerItem" value="enumStaffStatus" />
+                <set field="tabButtonItem" value="enumStaffStatus"/>
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createEnumStaffStatus" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
@@ -2761,8 +2805,7 @@
 
 			</actions>
 			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
 							<condition>
@@ -2837,6 +2880,68 @@
 					</decorator-section>
 				</decorator-screen>
 
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- Stations -->
+	<screen name="viewstations">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Stations" />
+				<set field="headerItem" value="viewstations" />
+				<set field="tabButtonItem" value="viewstations" />
+				<set field="stationCtx" from-field="parameters" />
+
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+				<entity-one value-field="branch" entity-name="PartyGroup">
+					<field-map field-name="partyId" from-field="parameters.partyId"/>
+				</entity-one>
+				
+				 <entity-condition list="employerList" entity-name="Employer">
+                	<order-by field-name="name"/>
+                </entity-condition>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW" />
+							</condition>
+							<widgets>
+								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html> 
+									</platform-specific -->
+								<!-- screenlet title="Search Members">
+									<include-form name="FindMemberActive"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet -->
+								<screenlet>
+									<container>
+										<label style="h3">${branch.groupName} Stations
+										</label>
+									</container>
+								</screenlet>
+								<screenlet title="Add station to ${branch.groupName} ">
+									<include-form
+										location="component://party/widget/partymgr/PartyForms.xml"
+										name="NewStation" />
+								</screenlet>
+								<screenlet title="${branch.groupName} Stations List">
+									<include-form
+										location="component://party/widget/partymgr/PartyForms.xml"
+										name="listStations" />
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
 			</widgets>
 		</section>
 	</screen>

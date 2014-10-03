@@ -216,6 +216,7 @@ under the License.
 		<field name="percentageOfSavings" type="name"></field>
 		<field name="percentageOfSavingsAmt" type="fixed-point"></field>
 		
+		<field name="accountProductId" type="id-ne"></field>
 		<field name="multipleOfSavings" type="name"></field>
 		<field name="multipleOfSavingsAmt" type="fixed-point"></field>
 		
@@ -242,6 +243,8 @@ under the License.
 		<field name="minimumPeriodToEligibility" type="numeric"></field>
 		
 		<field name="deductionType" type="name"></field>
+		
+		
 		<!-- 
 			LINEAR
 			REDUCING_BALANCE
@@ -249,9 +252,15 @@ under the License.
 		
 		<prim-key field="loanProductId" />
 		
+		  <relation type="one" fk-name="LoanProduct_AccountProduct" rel-entity-name="AccountProduct">
+        	<key-map field-name="accountProductId"/>
+      	</relation>
+		
 		<index name="LOAN_NAME" unique="true">
             <index-field name="name"/>
         </index>
+        
+
 	</entity>
 	
 	<entity entity-name="AccountProduct" package-name="org.ofbiz.loans"
@@ -376,6 +385,7 @@ under the License.
 		<field name="maxLoanAmt" type="fixed-point"></field>
 		
 		<field name="loanAmt" type="fixed-point"></field>
+		<field name="salaryAmt" type="fixed-point"></field>
 		<field name="existingLoans" type="fixed-point"></field>
 		
 		
@@ -422,7 +432,7 @@ under the License.
 		 <field name="workflowDocumentTypeId" type="id"></field>
 		 <field name="documentApprovalId" type="id"></field>
 		 <field name="responsibleEmployee" type="id"></field>
-		 
+		 <field name="accountProductId" type="id"></field>
 		 
 		 <field name="approvalStatus" type="name"></field> <!-- In Progress (at Level N), Approved by Level N -->
 		 
@@ -442,7 +452,9 @@ under the License.
         <key-map field-name="loanStatusId"/>
       </relation>
       
-
+	<relation type="one" fk-name="LOANAPP_AccountProduct" rel-entity-name="AccountProduct">
+        	<key-map field-name="accountProductId"/>
+      	</relation>
 
 	<relation type="one" fk-name="LOANAPP_ORGANIZATIONUNIT_FK" rel-entity-name="OrganizationUnit">
         <key-map field-name="organizationUnitId"/>
@@ -469,6 +481,23 @@ under the License.
       	<relation type="one" fk-name="LOANAPPLICATION_FK" rel-entity-name="LoanApplication">
        		<key-map field-name="loanApplicationId"/>
       	</relation>
+	</entity>
+	
+	<!-- LoanProduct Class -->
+	
+	<entity entity-name="LoanProductClass" package-name="org.ofbiz.loans"
+		title="LoanProductClass Entity">
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="loanProductId" type="id"></field>
+		<field name="memberClass" type="very-short"></field>
+		
+		<prim-key field="loanProductId"/>
+		<prim-key field="memberClass"/>
+		<relation type="one" fk-name="LoanProductClass_LoanProduct" rel-entity-name="LoanProduct">
+        	<key-map field-name="loanProductId"/>
+      	</relation>
+      	
 	</entity>
 	
 		<!-- Loan Application Security -->
@@ -794,5 +823,20 @@ under the License.
         	<key-map field-name="loanAmortizationId"/>
       	</relation>
 	</entity>
+	
+	<view-entity entity-name="LoanProductClassView"
+            package-name="org.ofbiz.loans"
+            title="LoanProduct and LoanProductClass (LoanProduct, LoanProductClass, etc.) View Entity">
+      <member-entity entity-alias="LP" entity-name="LoanProduct"/>
+      <member-entity entity-alias="LPC" entity-name="LoanProductClass"/>
+      <alias entity-alias="LP" name="loanProductId"/>
+      <alias entity-alias="LPC" name="memberClass" />
+      <alias entity-alias="LP" name="name" />
+      <alias entity-alias="LP" name="code" />
+     
+      <view-link entity-alias="LP" rel-entity-alias="LPC">
+        <key-map field-name="loanProductId"/>
+      </view-link>
+    </view-entity>
 	
 </entitymodel>

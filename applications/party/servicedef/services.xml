@@ -108,6 +108,9 @@ under the License.
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <override name="firstName" optional="false"/>
         <override name="lastName" optional="false"/>
+        <override name="nationalIDNumber" optional="false"/>
+        <override name="employeeNumber" optional="false"/>
+        
     </service>
     <service name="createPartyGroup" engine="java" default-entity-name="PartyGroup"
             location="org.ofbiz.party.party.PartyServices" invoke="createPartyGroup" auth="false">
@@ -1439,8 +1442,8 @@ under the License.
 		<attribute name="countryOfResidence" mode="IN" type="String" optional="false"></attribute>
 		
 		<attribute name="joinDate" mode="IN" type="Date" optional="false"></attribute>
-		<attribute name="registrationFee" mode="IN" type="BigDecimal" optional="false"></attribute>
-		<attribute name="paidAmount" mode="IN" type="BigDecimal" optional="false"></attribute>
+		<attribute name="registrationFee" mode="IN" type="BigDecimal" optional="true"></attribute>
+		<attribute name="paidAmount" mode="IN" type="BigDecimal" optional="true"></attribute>
 		<!-- attribute name="finAccountId" mode="IN" type="String" optional="false"></attribute -->
 		
 		
@@ -1913,6 +1916,32 @@ under the License.
         <description>Delete Staff Employment Status</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+    <!-- Station Service -->
+     <service name="createStation" engine="simple" default-entity-name="Station"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="createStation" auth="true">
+        <description>New Station</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        
+    </service>
+    
+    <service name="updateStation" engine="simple" default-entity-name="Station"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="updateStation" auth="true">
+        <description>Update Station</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteStation" engine="simple" default-entity-name="Station"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="deleteStation" auth="true">
+        <description>Delete Station</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
     

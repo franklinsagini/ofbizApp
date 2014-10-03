@@ -27,6 +27,7 @@ under the License.
     
     <!-- view handlers -->
     <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/>
+    <handler name="birt" type="view" class="org.ofbiz.birt.webapp.view.BirtViewHandler"/>
 
     <!-- Events to run on every request before security (chains exempt) -->
     <!--
@@ -39,6 +40,12 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
+    
+     <request-map uri="ViewHandler">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewHandler"/>
+    </request-map>
+    
    <request-map uri="createSalaryStep">
         <security https="true" auth="true"/>
         <event type="service" invoke="createSalaryStep"/>
@@ -115,6 +122,7 @@ under the License.
     <redirect-parameter name="partyId"/>
     <redirect-parameter name="fromDate"/>
     <redirect-parameter name="leaveTypeId"/>
+    <redirect-parameter name="leaveId"/>
     </response>
     <response name="error" type="view" value="FindEmplLeaves" />
     </request-map>
@@ -201,17 +209,38 @@ under the License.
     <request-map uri="createPartyQualType">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyQualType"/>
-        <response name="success" type="view" value="partyQualType"/>
+        <response name="success" type="request-redirect-noparam" value="partyQualType"/>
     </request-map>
     <request-map uri="updatePartyQualType">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="updatePartyQualType"/>
-        <response name="success" type="view" value="partyQualType"/>
+        <response name="success" type="request-redirect-noparam" value="partyQualType"/>
     </request-map>
     <request-map uri="deletePartyQualType">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyQualType"/>
-        <response name="success" type="view" value="partyQualType"/>
+        <response name="success" type="request-redirect-noparam" value="partyQualType"/>
+    </request-map>
+    
+     <request-map uri="partyQualGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="partyQualGroup"/>
+    </request-map>
+    
+    <request-map uri="createPartyQualGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyQualGroup"/>
+        <response name="success" type="request-redirect-noparam" value="partyQualGroup"/>
+    </request-map>
+    <request-map uri="updatePartyQualGroup">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updatePartyQualGroup"/>
+        <response name="success" type="request-redirect-noparam" value="partyQualGroup"/>
+    </request-map>
+    <request-map uri="deletePartyQualGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyQualGroup"/>
+        <response name="success" type="request-redirect-noparam" value="partyQualGroup"/>
     </request-map>
 
     <request-map uri="FindPartyResumes">
@@ -519,6 +548,29 @@ under the License.
         <event type="service" invoke="deleteEmploymentApp"/>
         <response name="success" type="view" value="FindEmploymentApps"/>
     </request-map>
+    <request-map uri="employmenthistory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="employmenthistory"/>
+    </request-map>
+    <request-map uri="createEmploymentHistory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createEmploymentHistory"/>
+        <response name="success" type="request-redirect" value="employmenthistory"/>     
+        <response name="error" type="view" value="employmenthistory" />
+    </request-map>
+    <request-map uri="updateEmploymentHistory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmploymentHistory"/>
+        <response name="success" type="request-redirect" value="employmenthistory"/>   
+        <response name="error" type="view" value="employmenthistory" />
+    </request-map>
+    <request-map uri="deleteEmploymentHistory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteEmploymentHistory"/>
+        <response name="success" type="request-redirect" value="employmenthistory"/>   
+        <response name="error" type="view" value="employmenthistory" />
+    </request-map>
+    
     <request-map uri="ListPayHistories">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListPayHistories"/>
@@ -1725,6 +1777,44 @@ under the License.
     <request-map uri="StaffReportOptions"><security https="true" auth="true"/>
         <response name="success" type="view" value="StaffReportOptions"/>
     </request-map>
+    <!-- Station -->
+	<request-map uri="station">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="station"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- Create Station -->
+	<request-map uri="createStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+	
+	<request-map uri="updateStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+	
+	<request-map uri="deleteStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="station">
+			</response>
+		<response name="error" type="view" value="station" />
+	</request-map>
+    
     
     <!-- ============Reports================================================ -->
     <request-map uri="staffList">
@@ -1823,6 +1913,41 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="postingDetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="postingDetails"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="postingDetailscsv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="postingDetailscsv"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="postingDetailspdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="postingDetailspdf"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="positionDetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="positionDetails"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="positionDetailscsv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="positionDetailscsv"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="positionDetailspdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="positionDetailspdf"
+			save-home-view="true" />
+	</request-map>
+	
+	
+	
+	
     
     <!--==============PayRoll History Requests==================-->
     <request-map uri="PayrollHistory">
@@ -1914,6 +2039,7 @@ under the License.
     <view-map name="NewPartyQual" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQual"/>
     <view-map name="EditPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#EditPartyQuals"/>
     <view-map name="partyQualType" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualType"/>
+    <view-map name="partyQualGroup" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualGroup"/>
 
     <view-map name="FindEmploymentApps" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#FindEmploymentApps"/>
     <view-map name="NewEmploymentApp" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#NewEmploymentApp"/>
@@ -1949,6 +2075,7 @@ under the License.
     
     <view-map name="EditPartyResumes" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyResumes"/>
     <view-map name="EditEmploymentApps" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#EditEmploymentApps"/>
+    <view-map name="employmenthistory" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewEmploymentHistory"/>
 
     <view-map name="FindEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindEmplLeaves"/>
     <view-map name="EditEmplLeave" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeave"/>
@@ -2006,6 +2133,8 @@ under the License.
     <view-map name="dependant" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewDependantDetails"/>
     <view-map name="nextofkin" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewNextOfKinDetails"/>
     
+	<view-map name="station" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStation"/>
+    
     <!-- =================Reports Views=========================================== -->
     <view-map name="StaffReportOptions" type="screen" page="component://humanres/widget/ReportScreens.xml#StaffReportOptions"/>
     
@@ -2044,4 +2173,22 @@ under the License.
                page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetailscsv" />               
     <view-map name="employeeNOKDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetailspdf"
 		content-type="application/pdf" encoding="none" />					
+	
+	<view-map name="postingDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#PostingDetails"/>
+    <view-map name="postingDetailscsv" type="screencsv" content-type="text/csv"
+               page="component://humanres/widget/ReportScreens.xml#PostingDetailscsv" />               
+    <view-map name="postingDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#PostingDetailspdf"
+		content-type="application/pdf" encoding="none" />					
+		
+	<view-map name="positionDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#PositionDetails"/>
+    <view-map name="positionDetailscsv" type="screencsv" content-type="text/csv"
+               page="component://humanres/widget/ReportScreens.xml#PositionDetailscsv" />               
+    <view-map name="positionDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#PositionDetailspdf"
+		content-type="application/pdf" encoding="none" />		
+		
+		<view-map name="staffOnLedfdfave" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"
+		content-type="application/pdf" encoding="none" /> 
+		    <view-map name="staffOnLeave" type="screen" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"/>
+		
+		<view-map name="ViewHandler" type="birt" page="component://humanres/webapp/humanres/reports/staffOnLeaveReport.rptdesign" content-type="application/pdf"/>					
 </site-conf>

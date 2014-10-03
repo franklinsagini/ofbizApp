@@ -7,9 +7,7 @@
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="treasuryTypeContext">
         <actions>
-        	<entity-condition entity-name="GlAccount" list="glAccountsList">
-				<order-by field-name="accountName"/>
-			</entity-condition>
+        	
         </actions>
        
         <field name="treasuryTypeId"><hidden/></field>
@@ -18,11 +16,7 @@
         <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
          <field name="limitAmount" title="Limit Amount"><text></text></field>
         
-        <field name="glAccountId" title="Account (Posting Account)" >
-       		<drop-down allow-empty="true">
-       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down>
-        </field>
+       
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
@@ -32,9 +26,7 @@
             <entity-condition entity-name="TreasuryType">
             </entity-condition>
             
-            <entity-condition entity-name="GlAccount" list="glAccountsList">
-				<order-by field-name="accountName"/>
-			</entity-condition>
+           
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateTreasuryType"/>
 		
@@ -45,11 +37,7 @@
         <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
          <field name="limitAmount" title="Limit Amount"  widget-style="required" required-field="true"><text></text></field>
         
-        <field name="glAccountId" title="Account (Posting Account)" >
-       		<drop-down allow-empty="true">
-       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down>
-        </field>
+        
 
        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
@@ -73,6 +61,10 @@
 			
 			<entity-condition entity-name="Person" list="employeesList">
 			</entity-condition>
+			
+			<entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>
         </actions>
        
         <field name="treasuryId"><hidden/></field>
@@ -95,6 +87,12 @@
         <field name="employeeResponsible" title="Employee Responsible" >
        		<drop-down allow-empty="true">
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
+       		</drop-down>
+        </field>
+        
+         <field name="glAccountId" title="Account (Posting Account)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         </field>
         
@@ -114,6 +112,10 @@
 			
 			<entity-condition entity-name="Person" list="employeesList">
 			</entity-condition>
+			
+			 <entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>
         </actions>
        
         <field name="treasuryId"><hidden/></field>
@@ -136,6 +138,12 @@
         <field name="employeeResponsible" title="Employee Responsible" >
        		<drop-down allow-empty="true">
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
+       		</drop-down>
+        </field>
+        
+        <field name="glAccountId" title="Account (Posting Account)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
        		</drop-down>
         </field>
        
@@ -166,7 +174,7 @@
        		</drop-down>
         </field>
         
-        <field name="treasuryId" title="Treasury" >
+        <field name="treasuryId" title="Treasury(Teller/Vault)" >
        		<drop-down allow-empty="true">
        			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
        		</drop-down>
@@ -227,7 +235,10 @@
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="TreasuryTransferContext">
         <actions>
-        	<entity-condition entity-name="Treasury" list="treasuryList">
+        	<entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
 			</entity-condition>
         </actions>
        
@@ -235,18 +246,18 @@
 		
 		<field name="sourceTreasury" title="From" >
        		<drop-down allow-empty="true">
-       			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
+       			<list-options key-name="treasuryId" list-name="treasuryFromList" description="${name}"/>
        		</drop-down>
         </field>
         
         <field name="destinationTreasury" title="To" >
        		<drop-down allow-empty="true">
-       			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
+       			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
        		</drop-down>
         </field>
         
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
-         <field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea></textarea></field>
+         <!-- field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea></textarea></field -->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
@@ -256,7 +267,10 @@
             <entity-condition entity-name="TreasuryTransfer">
             </entity-condition>
             
-            <entity-condition entity-name="Treasury" list="treasuryList">
+            <entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
 			</entity-condition>
         </actions>
        
@@ -264,23 +278,255 @@
 		
 		<field name="sourceTreasury" title="From" >
        		<drop-down allow-empty="true">
-       			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
+       			<list-options key-name="treasuryId" list-name="treasuryFromList" description="${name}"/>
        		</drop-down>
         </field>
         
         <field name="destinationTreasury" title="To" >
-       		<drop-down allow-empty="true">
-       			<list-options key-name="treasuryId" list-name="treasuryList" description="${name}"/>
+       		<drop-down allow-empty="true" text-size="20">
+       			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
        		</drop-down>
         </field>
         
-        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
-         <field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea></textarea></field>       
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text size="15"></text></field>
+         <!-- field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea cols="40"></textarea></field -->       
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteTreasuryType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="treasuryTypeId"/>
+            <hyperlink target="deleteTreasuryTransfer" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="treasuryTransferId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+    
+    <!-- Reconcile Treasury -->
+    <form name="listReconcileTreasury" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransfer"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TreasuryTransfer">
+            </entity-condition>
+            
+            <entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
+			</entity-condition>
+        </actions>
+       
+        <field name="treasuryTransferId"><hidden/></field>
+		
+       
+        <field name="destinationTreasury" title="To" >
+       		<!-- drop-down allow-empty="true" text-size="20">
+       			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
+       		</drop-down -->
+       		<display-entity entity-name="Treasury" key-field-name="treasuryId" description="${name}"></display-entity>
+        </field>
+        
+        <field name="transactionAmount" title="Amount Allocated" ><display></display></field>
+         <field name="comments" title="Comments"><display></display></field>   
+          <field name="createdStamp" title="Time Tranferred"><display type="date-time"></display></field> 
+           <field name="createdBy" title="Tranferred By"><display></display></field>       
+        <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
+            <hyperlink target="processReconciliation" description="Process Reconciliation" also-hidden="false">
+                <parameter param-name="processReconciliation"/>
+            </hyperlink>
+        </field -->
+        
+          <field name="showTransactions" title="Show Transactions" widget-style="buttontext">
+            <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
+                <parameter param-name="treasuryTransferId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- teller transactions -->
+    <form name="listTellerTransactions" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashWithdrawal" paginate-target="showTransactions"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	    <set field="treasuryTransferId" from-field="parameters.treasuryTransferId"/>
+                <set field="creatorId" global="true" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getUserLogin(treasuryTransferId);}" type="String"/>
+     
+            <entity-condition entity-name="AccountTransaction" >
+            	
+            	<condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<!-- condition-expr field-name="partyId" from-field="parameters.partyId"/ -->
+            		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            		<condition-expr field-name="createdBy" operator="equals" from-field="creatorId"/>
+            	</condition-list>
+            	<order-by field-name="-accountTransactionId"></order-by>
+            </entity-condition>
+            
+            <entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
+		
+
+        <field name="memberAccountId" title="Account">
+        	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" ></display-entity>
+        </field>
+        <field name="transactionType" title="Transaction Type"><display also-hidden="false"></display></field>
+        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Amount"><display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display></field>
+        
+        <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false" type="date-time"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false" type="date-time"></display></field>
+
+		        
+        
+        
+        <field name="payee" title="Payee"><display also-hidden="false"></display></field>
+		<field name="bankDetailsId" title="Bank">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankDetailsId" list-name="bankDetailsList" description="${bankName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"></display-entity>
+      	</field>
+      	
+      	<field name="bankBranchId" title="Branch">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"></display-entity>
+      		
+      	</field>      	
+        <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
+        <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
+        
+    </form>
+    
+    <!-- sourceOfTransfer -->
+    <form name="sourceOfTransfer" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTransferRule" paginate-target="transferrules"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TreasuryType">
+            </entity-condition>
+            
+           
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateTransferRule"/>
+		
+        <field name="treasuryTypeId"><hidden/></field>
+		
+		
+        <field name="name" title="Name"  widget-style="required" required-field="true"><display></display></field>
+        <field name="Add Destination" title="Add Destination" widget-style="buttontext">
+            <hyperlink target="transferdestinations" description="Add Possible Destinations" also-hidden="false">
+                <parameter param-name="treasuryTypeId"/>
+            </hyperlink>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- newTransferDestination -->
+    <form name="NewTransferDestination" type="single" target="createTransferRule"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="transferRuleContext">
+        <actions>
+        	<entity-condition entity-name="TreasuryType" list="treasuryTypeToList">
+			</entity-condition>
+			
+			<set field="sourceTreasuryType" from-field="parameters.treasuryTypeId"/>
+        </actions>
+       
+        <field name="transferRuleId"><hidden/></field>
+		
+		<field name="sourceTreasuryType" ><hidden/></field>
+        <field name="destinationTreasuryType" title="To" >
+       		<drop-down allow-empty="true">
+       			<list-options key-name="treasuryTypeId" list-name="treasuryTypeToList" description="${name}"/>
+       		</drop-down>
+        </field>
+        
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+    
+    <!-- transferdestinations -->
+      <form name="transferdestinations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTransferRule" paginate-target="transferrules"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TransferRule">
+            	<condition-expr field-name="sourceTreasuryType" operator="equals" from-field="parameters.treasuryTypeId"/>
+            </entity-condition>
+            
+           
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateTransferRule"/>
+		
+        <field name="transferRuleId"><hidden/></field>
+		<field name="destinationTreasuryType" title="To" >
+       		<!-- drop-down allow-empty="true">
+       			<list-options key-name="treasuryTypeId" list-name="treasuryTypeToList" description="${name}"/>
+       		</drop-down -->
+       		<display-entity entity-name="TreasuryType" key-field-name="treasuryTypeId" description="${name}"></display-entity>
+        </field>
+		
+        <!-- field name="Add Destination" title="Add Destination" widget-style="buttontext">
+            <hyperlink target="transferdestinations" description="Add Possible Destinations" also-hidden="false">
+                <parameter param-name="treasuryTypeId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTransferRule" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="transferRuleId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- List Transfer Sources -->
+    <form name="listTransferSources" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasury" paginate-target="treasury"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="Treasury">
+            </entity-condition>
+        	<entity-condition entity-name="TreasuryType" list="treasuryTypeList">
+			</entity-condition>
+			
+			<entity-condition entity-name="FinAccount" list="finAccountList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Person" list="employeesList">
+			</entity-condition>
+			
+			 <entity-condition entity-name="GlAccount" list="glAccountsList">
+				<order-by field-name="accountName"/>
+			</entity-condition>
+        </actions>
+       
+        <field name="treasuryId"><hidden/></field>
+		
+		
+        <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
+        
+         <field name="treasuryTypeId" title="Treasury Type" widget-style="required" required-field="true" >
+       		<drop-down allow-empty="true">
+       			<list-options key-name="treasuryTypeId" list-name="treasuryTypeList" description="${name}"/>
+       		</drop-down>
+        </field>
+        
+        <field name="finAccountId" title="Financial/Bank Account" >
+       		<drop-down allow-empty="true">
+       			<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
+       		</drop-down>
+        </field>
+        
+        <field name="employeeResponsible" title="Employee Responsible" >
+       		<drop-down allow-empty="true">
+       			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
+       		</drop-down>
+        </field>
+        
+        
+        <field name="openTransfer" title="Transfer" widget-style="buttontext">
+            <hyperlink target="treasuryTransfer" description="Transfer " also-hidden="false">
+                <parameter param-name="treasuryId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
 </forms>

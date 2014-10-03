@@ -98,7 +98,7 @@ under the License.
     </simple-method>
 		<!-- TreasuryTransfer -->
 	<simple-method method-name="createTreasuryTransfer" short-description="Create TreasuryTransfer">
-       <make-value entity-name="TreasuryTransfer" value-field="newEntity"/>
+	<make-value entity-name="TreasuryTransfer" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="TreasuryTransfer" field="treasuryTransferId"/>
@@ -107,9 +107,19 @@ under the License.
         
          <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
-        <create-value value-field="newEntity"/>
+        
+        <set field="partyId" from-field="userLogin.partyId"/>
+        <entity-one entity-name="Person" value-field="person"/>
+        
+        <set field="newEntity.branchId" from-field="person.branchId"/>
+       <call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        
+        <set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/>
     </simple-method>
+ 	<simple-method method-name="saveTreasuryTransfer" >
+        <create-value value-field="newEntity"/>
+ 	</simple-method>   
+ 
     <simple-method method-name="updateTreasuryTransfer" short-description="Update TreasuryTransfer">
         <entity-one entity-name="TreasuryTransfer" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
@@ -119,6 +129,30 @@ under the License.
     
     <simple-method method-name="deleteTreasuryTransfer" short-description="Delete TreasuryTransfer">
         <entity-one entity-name="TreasuryTransfer" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createTransferRule" short-description="Create TransferRule">
+       <make-value entity-name="TransferRule" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="TransferRule" field="transferRuleId"/>
+        <now-timestamp field="createdDate"/>
+        <set from-field="transferRuleId" field="newEntity.transferRuleId"/>
+        
+         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateTransferRule" short-description="Update TransferRule">
+        <entity-one entity-name="TransferRule" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteTransferRule" short-description="Delete TransferRule">
+        <entity-one entity-name="TransferRule" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 		

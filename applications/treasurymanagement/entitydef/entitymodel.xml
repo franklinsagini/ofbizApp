@@ -15,14 +15,12 @@
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
         <field name="branchId" type="id"></field>
-        <field name="glAccountId" type="id"/>
+        
         <field name="name" type="name"></field>
         <field name="limitAmount" type="fixed-point"></field>
        
         <prim-key field="treasuryTypeId"/>
-        <relation type="one" fk-name="TreasuryType_GlAccount" rel-entity-name="GlAccount">
-            <key-map field-name="glAccountId"/>
-        </relation> 
+        
     </entity>
     
     <entity entity-name="Treasury" package-name="org.ofbiz.treasurymanagement" title="TreasuryType Entity">
@@ -34,6 +32,7 @@
         <field name="treasuryTypeId" type="id"/>
         <field name="name" type="name"></field>
         <field name="finAccountId" type="id"/>
+        <field name="glAccountId" type="id"/>
         
         <field name="employeeResponsible" type="id"/>
        
@@ -47,6 +46,10 @@
         
          <relation type="one" fk-name="Treasury_Employee" rel-entity-name="Person">
             <key-map field-name="employeeResponsible" rel-field-name="partyId"/>
+        </relation> 
+        
+        <relation type="one" fk-name="TreasuryType_GlAccount" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
         </relation> 
     </entity>
     
@@ -80,6 +83,10 @@
         <field name="destinationTreasury" type="id-ne"></field>
         <field name="transactionAmount" type="fixed-point"></field>
         <field name="comments" type="description"></field>
+        
+        <field name="reconciled" type="indicator"></field>
+        <field name="dateProcessed" type="date-time"></field>
+        <field name="reconcileComments" type="description"></field>
        
         <prim-key field="treasuryTransferId"/>
         <relation type="one" fk-name="TreasuryTransactionSource_Treasury" rel-entity-name="Treasury">
@@ -88,6 +95,25 @@
         
         <relation type="one" fk-name="TreasuryTransactionDest_Treasury" rel-entity-name="Treasury">
             <key-map  field-name="destinationTreasury" rel-field-name="treasuryId"/>
+        </relation>   
+    </entity>
+    
+    <!-- Transfer Rules -->
+     <entity entity-name="TransferRule" package-name="org.ofbiz.treasurymanagement" title="TransferRule Entity">
+        <field name="transferRuleId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="sourceTreasuryType" type="id-ne"></field>
+        <field name="destinationTreasuryType" type="id-ne"></field>
+       
+        <prim-key field="transferRuleId"/>
+        <relation type="one" fk-name="TransferRuleSource_Treasury" rel-entity-name="TreasuryType">
+            <key-map  field-name="sourceTreasuryType" rel-field-name="treasuryTypeId"/>
+        </relation>
+        
+        <relation type="one" fk-name="TransferRuleDest_Treasury" rel-entity-name="TreasuryType">
+            <key-map  field-name="destinationTreasuryType" rel-field-name="treasuryTypeId"/>
         </relation>   
     </entity>
 

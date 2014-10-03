@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="NewScale" type="single" target="createGraduatedScale"
+		focus-field-name="partyId" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="graduatedScaleContext">
+
+		
+		<field name="graduatedScaleId">
+			<hidden />
+		</field>
+		
+		<field name="lowerValue" title="Lower Value" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		<field name="upperValue" title="Upper Value" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		
+		 <field name="isPercent" title="Is Percent ?"  widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+
+		<field name="depositAmount" title="Deposit Amount">
+			<text size="30" maxlength="60" />
+		</field>
+		<field name="depositPercent" title="Deposit Percent">
+			<text size="30" maxlength="60" />
+		</field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit" event="onclick"
+			action="javascript: return validLoanApplication();">
+			<submit button-type="button" />
+		</field>
+	</form>
+	
+	<form name="scalesList" type="list" list-name="listIt"
+		paginate-target="FindLoanApplication" default-entity-name="GraduatedScale"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="graduatedScale">
+		<actions>
+			<entity-condition entity-name="GraduatedScale">
+				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+			</entity-condition>
+				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
+			    							
+		</actions>
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+				<field name="graduatedScaleId">
+			<hidden />
+		</field>
+		
+		<field name="lowerValue" title="Lower Value" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		<field name="upperValue" title="Upper Value" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		
+		 <field name="isPercent" title="Is Percent ?"  widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
+            </drop-down>
+        </field>
+
+		<field name="depositAmount" title="Deposit Amount" >
+			<text size="30" maxlength="60" />
+		</field>
+		<field name="depositPercent" title="Deposit Percent" >
+			<text size="30" maxlength="60" />
+		</field>
+		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteLoanProduct" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false">
+				<parameter param-name="loanProductId" />
+			</hyperlink>
+		</field -->
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
+			button-type="button"/></field>
+	</form>
+	
+	<!-- Income Statement -->
+	<form name="NewIncomeScale" type="single" target="createIncomeScale"
+		focus-field-name="incomeScaleId" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="graduatedScaleContext">
+
+		
+		<field name="incomeScaleId">
+			<hidden />
+		</field>
+		
+		<field name="lowerValue" title="Lower Value" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		<field name="upperValue" title="Upper Value" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		
+		 
+		
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+	
+	<form name="incomeScaleList" type="list" list-name="listIt"
+		paginate-target="FindLoanApplication" default-entity-name="IncomeScale"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="incomeScale">
+		<actions>
+			<entity-condition entity-name="IncomeScale">
+				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+			</entity-condition>
+				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
+			    							
+		</actions>
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+				<field name="graduatedScaleId">
+			<hidden />
+		</field>
+		
+		<field name="lowerValue" title="Lower Value" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		<field name="upperValue" title="Upper Value" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		
+		
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
+			button-type="button"/></field>
+	</form>
+	
+	<!-- ShareMinimum -->
+	<form name="NewShareMinimum" type="single" target="createShareMinimum"
+		focus-field-name="memberClass" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="shareMinimumContext">
+
+		
+		<field name="shareMinimumId">
+			<hidden />
+		</field>
+		
+		<field name="memberClass" title="Member Class"  widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="Class A" description="Class A"/>
+                <option key="Class B" description="Class B"/>
+            </drop-down>
+        </field>
+		<field name="minAmount" title="Minimum Amount" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		
+		 
+		
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+	
+	<form name="shareMinimumList" type="list" list-name="listIt"
+		paginate-target="shareMinimum" default-entity-name="IncomeScale"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="shareMinimum">
+		<actions>
+			<entity-condition entity-name="ShareMinimum">
+			</entity-condition>
+				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
+			    							
+		</actions>
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+				<field name="shareMinimumId">
+			<hidden />
+		</field>
+		
+		<field name="memberClass" title="Member Class"  widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="Class A" description="Class A"/>
+                <option key="Class B" description="Class B"/>
+            </drop-down>
+        </field>
+		<field name="minAmount" title="Minimum Amount" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
+			button-type="button"/></field>
+	</form>
+</forms>

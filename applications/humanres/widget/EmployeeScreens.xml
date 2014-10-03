@@ -172,7 +172,7 @@ under the License.
     <screen name="EditEmployeeQuals">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResEditPartyQual"/>
+                <set field="titleProperty" value="Edit Qualification"/>
                 <set field="headerItem" value="Employee"/>
                 <set field="tabButtonItem" value="EditEmployeeQuals"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -183,7 +183,7 @@ under the License.
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListEmployeeQualification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
-                        <screenlet id="AddPartyQualPanel" title="${uiLabelMap.HumanResAddPartyQual}" collapsible="true">
+                        <screenlet id="AddPartyQualPanel" title="Add Qualification" collapsible="true">
                             <include-form name="AddEmployeeQualification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -414,6 +414,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="New Tribe"/>
                 <set field="headerItem" value="tribe"/>
+                <set field="tabButtonItem" value="tribe"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createTribe"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -426,7 +427,7 @@ under the License.
                 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -461,6 +462,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="New County"/>
                 <set field="headerItem" value="county"/>
+                <set field="tabButtonItem" value="county"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createCounty"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -473,7 +475,7 @@ under the License.
                 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -508,6 +510,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="New Blood Group"/>
                 <set field="headerItem" value="bloodgroup"/>
+                <set field="tabButtonItem" value="bloodgroup"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createBloodGroup"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -520,7 +523,7 @@ under the License.
                 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -555,6 +558,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="New Religion"/>
                 <set field="headerItem" value="religion"/>
+                <set field="tabButtonItem" value="religion"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createReligion"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -567,7 +571,7 @@ under the License.
                 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -602,6 +606,7 @@ under the License.
                 <set field="titleProperty" value="New Family Relations"/>
                 <set field="headerItem" value="familyrelations"/>
                 <set field="displayPassword" value="Y"/>
+                <set field="tabButtonItem" value="familyrelations"/>
                 <set field="target" value="createFamilyRelations"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
@@ -613,7 +618,7 @@ under the License.
                 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -775,6 +780,51 @@ under the License.
                         	<widgets>
                         		<screenlet title="Next Of Kin List">
                         			<include-form name="listStaffNextOfKin" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      <!-- Employee History --> 
+    <screen name="NewEmploymentHistory">
+    	<section>
+            <actions>
+                <set field="titleProperty" value="Employee History Details"/>
+                <set field="headerItem" value="employmenthistory"/>
+                <set field="tabButtonItem" value="employmenthistory"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createEmploymentHistory"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <set field="partyId" from-field="parameters.partyId"/>
+                
+                <entity-one entity-name="EmploymentHistory" value-field="employmentHistoryContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<!-- include-menu name="EmplRelationsTabBar" location="component://humanres/widget/HumanresMenus.xml"/ -->
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Employment History Details">
+                                    <include-form name="employmentHistory" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employment History List">
+                        			<include-form name="listemploymentHistory" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

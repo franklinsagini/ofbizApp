@@ -3301,7 +3301,9 @@ public class PartyServices {
 						fieldsToSelect.add("emailAddress");
 						fieldsToSelect.add("partyId");
 
-						orderBy.add("partyId");
+						orderBy.add("partyId DESC");
+						
+						
 					}
 
 					// ----
@@ -3641,7 +3643,7 @@ public class PartyServices {
 								.findListIteratorByCondition(dynamicView,
 										mainCond, null, fieldsToSelect,
 										orderBy, findOpts);
-
+						
 						// get the partial list for this page
 						partyList = pli.getPartialList(lowIndex, viewSize);
 

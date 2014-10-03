@@ -118,12 +118,14 @@ public class LoanServices {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		// request.getParameter(arg0)
 		String partyId = (String) request.getParameter("memberId");
+		String loanProductId = (String) request.getParameter("loanProductId");
+		
 		// Locale locale = (Locale) request.getParameter("locale");
 		GenericValue member = null;
 		// String firstName, middleName, lastName, idNumber, memberType,
 		// memberNumber, mobileNumber;
 		String memberDetails = "";
-		BigDecimal bdDepositamt = totalSavings(partyId, delegator);
+		BigDecimal bdDepositamt = totalSavings(partyId, loanProductId, delegator);
 
 		try {
 			member = delegator.findOne("Member",
@@ -226,7 +228,7 @@ public class LoanServices {
 		// account)
 		BigDecimal bdMaximumLoanAmt = BigDecimal.ZERO;
 		BigDecimal bdExistingLoans;
-		BigDecimal bdTotalSavings = totalSavings(memberId, delegator);
+		BigDecimal bdTotalSavings = totalSavings(memberId, loanProductId,  delegator);
 		// Get get Loan Product
 		try {
 			loanProduct = delegator.findOne("LoanProduct",
@@ -251,10 +253,12 @@ public class LoanServices {
 			}
 
 			// Get Existing Loans
-			bdExistingLoans = calculateExistingLoansTotal(memberId, delegator);
-
-			bdMaximumLoanAmt = (bdTotalSavings.subtract(bdExistingLoans))
-					.multiply(savingsMultiplier);
+			bdExistingLoans = calculateExistingLoansTotal(memberId, loanProductId, delegator);
+			
+			bdMaximumLoanAmt = (bdTotalSavings.multiply(savingsMultiplier)).subtract(bdExistingLoans);
+			
+			//Check if account has retainer
+			
 
 			log.info("############ The total Savings are ####### "
 					+ bdTotalSavings);
@@ -323,14 +327,32 @@ public class LoanServices {
 		return json;
 	}
 
-	private static BigDecimal totalSavings(String memberId, Delegator delegator) {
+	private static BigDecimal totalSavings(String memberId, String loanProductId, Delegator delegator) {
+		//Get the multiplier account - the account being used to get the maximum loan as defined in the 
+		// Loan Product Setup
+		
+		GenericValue loanProduct = null;
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", loanProductId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//The Multiplier account id
+		String accountProductId = loanProduct.getString("accountProductId");
+		
+		
+		
+		
+		
 		// Get Accounts for this member
 		List<GenericValue> memberAccountELI = null;
 		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, memberId),
-						EntityCondition.makeCondition("withdrawable",
-								EntityOperator.EQUALS, "No")),
+						EntityCondition.makeCondition("accountProductId",
+								EntityOperator.EQUALS, accountProductId)),
 						EntityOperator.AND);
 
 		try {
@@ -356,7 +378,7 @@ public class LoanServices {
 		return bdTotalSavings;
 	}
 
-	private static int getMemberDurations(Date joinDate) {
+	public static int getMemberDurations(Date joinDate) {
 
 		LocalDateTime stJoinDate = new LocalDateTime(joinDate.getTime());
 		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
@@ -371,19 +393,61 @@ public class LoanServices {
 		return months;
 
 	}
+	
+	public static int getMemberDuration(String partyId){
+		int durationInMonths = 0;
+		
+		//Get Member
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", partyId), false);
+		} catch (GenericEntityException e) {
+			// return ServiceUtil.returnError(UtilProperties.getMessage("",
+			// "Cannot Get Member Details",
+			// UtilMisc.toMap("errMessage", e.getMessage()), locale));
+			//System.out.println(e.printStackTrace());
+			e.printStackTrace();
+		}
+		
+		Date joinDate = member.getDate("joinDate");
+		//Date dateJoinDate = new Date(joinDate.getTime());
+		durationInMonths = getMemberDurations(joinDate);
+		
+		return durationInMonths;
+	}
 
 	/**
 	 * Calculate Existing Loans Total
 	 * **/
-	private static BigDecimal calculateExistingLoansTotal(String memberId,
+	private static BigDecimal calculateExistingLoansTotal(String memberId, String loanProductId,
 			Delegator delegator) {
 		BigDecimal existingLoansTotal = BigDecimal.ZERO;
+		
+		GenericValue loanProduct = null;
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", loanProductId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//The Multiplier account id
+		String accountProductId = loanProduct.getString("accountProductId");
 
 		List<GenericValue> loanApplicationELI = null; // =
+		
+		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId),
+						EntityCondition.makeCondition("accountProductId",
+								EntityOperator.EQUALS, accountProductId)),
+						EntityOperator.AND);
 
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
-					EntityCondition.makeCondition("partyId", memberId), null,
+					loanApplicationsConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();

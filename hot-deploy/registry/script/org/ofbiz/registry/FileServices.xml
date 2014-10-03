@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+	license agreements. See the NOTICE file distributed with this work for additional
+	information regarding copyright ownership. The ASF licenses this file to
+	you under the Apache License, Version 2.0 (the "License"); you may not use
+	this file except in compliance with the License. You may obtain a copy of
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
+	language governing permissions and limitations under the License. -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+	<!-- file types-->
+
+
+
+	<simple-method method-name="createfiletype"
+		short-description="Create File Type">
+		<make-value entity-name="RegistryFileType" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileType" field="fileTypeId" />
+
+		<set from-field="fileTypeId" field="newEntity.fileTypeId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	
+	<simple-method method-name="createfileActionTypes"
+		short-description="Create File Actions">
+		<make-value entity-name="RegistryFileActionTypes" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActionTypes" field="fileActionTypeId" />
+
+		<set from-field="fileActionTypeId" field="newEntity.fileActionTypeId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<simple-method method-name="deletefileActionTypes"
+		short-description="Remove an file type">
+		<set field="fileActionTypeId" from-field="parameters.fileActionTypeId" />
+		<entity-one entity-name="RegistryFileActionTypes" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	<simple-method method-name="updatefileActionTypes"
+		short-description="Update an existing action">
+		<entity-one entity-name="RegistryFileActionTypes" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+
+	</simple-method>
+	
+
+
+	<simple-method method-name="updatefileType"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="RegistryFileType" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+
+	</simple-method>
+
+	<simple-method method-name="deletefileType"
+		short-description="Remove an file type">
+		<set field="fileTypeId" from-field="parameters.fileTypeId" />
+		<entity-one entity-name="RegistryFileType" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+<!-- files -->
+	<simple-method method-name="creatememberFiles"
+		short-description="Create File Book">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFiles" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+
+		<entity-one value-field="member" entity-name="Member">
+			<field-map field-name="partyId" value="${newEntity.partyId}"/>
+		</entity-one>
+
+		<set value="FNO-${newEntity.partyId}-${member.firstName}" field="newEntity.folioNo" />
+		<set value="REGISTRY" field="newEntity.fileLocation" />
+		<set value="AVAILABLE" field="newEntity.status" />
+		<set value="${userLogin.partyId}" field="newEntity.creator" />
+		<set from-field="nowTimestamp" field="newEntity.creationDate"/>
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateFiles"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+
+	</simple-method>
+
+	
+	<simple-method method-name="requestfiles" short-description="request File ">
+		 <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
+		 
+		 <set field="partyId" value="${newEntity.partyId}"/>
+		 <set field="fileActionTypeId" value="${newEntity.fileActionTypeId}"/>
+		 
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		 
+		 <entity-one entity-name="RegistryFileActionTypes" value-field="fileActionType">
+		 	<field-map field-name="fileActionTypeId" from-field="fileActionTypeId"/>
+		 </entity-one>
+
+		 <!-- Get status -->
+		 <set field="registryFile.status" value="${fileActionType.status}"/>
+		<store-value value-field="registryFile" />
+	</simple-method>
+	
+	<simple-method method-name="saveRequestAction">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActions" field="actionId" />
+		<set from-field="actionId" field="newEntity.actionId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	
+  	<!-- update Budget Status -->
+    <simple-method method-name="updateRegistryFileStatus" short-description="Update Registry File Status Status">
+
+      <!--       <entity-one value-field="registryFile" entity-name="RegistryFiles">
+                <field-map field-name="partyId" from-field="parameters.partyId"/>
+            </entity-one>
+            <if-not-empty field="registryFile">
+				<entity-one entity-name="RegistryFiles" value-field="lookedUpValue"/>
+				<set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+				<set-pk-fields value-field="lookedUpValue" map="parameters"/>
+				<store-value value-field="lookedUpValue"/>
+
+				<field-to-result field="parameters.partyId" result-name="partyId"/>
+            </if-not-empty> -->
+        <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+
+
+
+	<!-- Service to update File after the request is successfull -->
+	<simple-method method-name="updateFileStatus" short-description="Update a file's status">
+        <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+	
+
+	<!-- documents -->
+	<simple-method method-name="createDocument"
+		short-description="Create File ">
+		<make-value entity-name="RegistryDocuments" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryDocuments" field="documentId" />
+		<set from-field="documentId" field="newEntity.documentId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+<!-- locations -->
+	<simple-method method-name="createfilelocation"
+		short-description="Create File location">
+		<make-value entity-name="RegistryFileLocations" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileLocations" field="locationId" />
+
+		<set from-field="locationId" field="newEntity.locationId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updatefilelocation"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="RegistryFileLocations" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+
+	</simple-method>
+
+	<simple-method method-name="deletefilelocation"
+		short-description="Remove an file type">
+		<set field="locationId" from-field="parameters.locationId" />
+		<entity-one entity-name="RegistryFileLocations" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+
+
+
+
+
+</simple-methods>

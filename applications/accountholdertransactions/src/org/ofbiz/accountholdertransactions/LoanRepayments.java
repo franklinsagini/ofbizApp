@@ -25,6 +25,8 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 /***
@@ -204,7 +206,7 @@ public class LoanRepayments {
 	 * @author Japheth Odonya @when Sep 11, 2014 11:37:08 AM Get the Account
 	 *         Setup Record
 	 * */
-	private static GenericValue getAccountHolderTransactionSetupRecord(
+	public static GenericValue getAccountHolderTransactionSetupRecord(
 			String setupType, Delegator delegator) {
 		GenericValue accountHolderTransactionSetup = null;
 		try {
@@ -1064,6 +1066,10 @@ public class LoanRepayments {
 //			e.printStackTrace();
 //		}
 		log.info("EEEEEEEEE end loan repayment EEEEEEEEE");
+		
+		//RecurrenceRule.
+//		DispatchContext dctx;
+//		dctx.getDispatcher();
 		return "";
 	}
 

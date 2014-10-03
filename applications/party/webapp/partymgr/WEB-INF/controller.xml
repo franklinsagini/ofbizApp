@@ -1620,6 +1620,19 @@
 		<response name="success" type="view" value="employers"
 			/>
 	</request-map>
+	
+	<request-map uri="branches">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="branches"/>
+	</request-map>
+	
+	<request-map uri="viewstations">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="viewstations"/>
+	</request-map>
+	
+	<!-- viewstations -->
+	
 
 	<request-map uri="openingBalance">
 		<security https="true" auth="true" />
@@ -2261,11 +2274,50 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="memberslistcsv" />
 	</request-map>
+	
+	<!-- Create Station -->
+	<request-map uri="createStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="viewstations">
+			</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+	
+	<request-map uri="updateStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="viewstations">
+			</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+	
+	<request-map uri="deleteStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="viewstations">
+			</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
 
 
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#findparty" />
+		
+	<view-map name="branches" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#branches" />
+		
+	<view-map name="viewstations" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#viewstations" />
+		
+		
 
 	<view-map name="findparty" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#findparty" />

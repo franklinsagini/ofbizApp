@@ -545,16 +545,12 @@
 
 
 
-    <!-- generates the pdf for report of sales by store and customer, grouped by product -->
+    <!-- generates the pdf for report -->
     <screen name="ContactPersonReportpdf">
         <section>
             <actions>
                 <set field="titleProperty" value="Contact Persons By Supplier"/>
                 <set field="supplierId" from-field="parameters.supplierId"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="SupplierContactPerson" list="contactReportList">
                     <condition-list combine="and">
                         <condition-expr field-name="supplierId" operator="equals" from-field="parameters.supplierId" ignore-if-empty="true"/>
@@ -582,5 +578,30 @@
         </section>
     </screen>
 
-
+    <screen name="SupplierOverviewScreen">
+        <section>
+            <actions>
+                <set field="supplierId" from-field="parameters.supplierId"/>
+                <entity-one entity-name="Supplier" value-field="supplierContext"/>
+                <entity-one entity-name="ContactPerson" value-field="contactsContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSupllierDecorator" location="${parameters.paymentDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Supplier Details">
+                                    <include-form name="supplierDetails" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Contact Details">
+                                    <include-form name="contactDetails" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                                <container style="clear"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
