@@ -27,6 +27,7 @@ under the License.
     
     <!-- view handlers -->
     <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/>
+    <handler name="birt" type="view" class="org.ofbiz.birt.webapp.view.BirtViewHandler"/>
 
     <!-- Events to run on every request before security (chains exempt) -->
     <!--
@@ -39,6 +40,12 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
+    
+     <request-map uri="ViewHandler">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewHandler"/>
+    </request-map>
+    
    <request-map uri="createSalaryStep">
         <security https="true" auth="true"/>
         <event type="service" invoke="createSalaryStep"/>
@@ -2177,5 +2184,11 @@ under the License.
     <view-map name="positionDetailscsv" type="screencsv" content-type="text/csv"
                page="component://humanres/widget/ReportScreens.xml#PositionDetailscsv" />               
     <view-map name="positionDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#PositionDetailspdf"
-		content-type="application/pdf" encoding="none" />							
+		content-type="application/pdf" encoding="none" />		
+		
+		<view-map name="staffOnLedfdfave" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"
+		content-type="application/pdf" encoding="none" /> 
+		    <view-map name="staffOnLeave" type="screen" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"/>
+		
+		<view-map name="ViewHandler" type="birt" page="component://humanres/webapp/humanres/reports/staffOnLeaveReport.rptdesign" content-type="application/pdf"/>					
 </site-conf>

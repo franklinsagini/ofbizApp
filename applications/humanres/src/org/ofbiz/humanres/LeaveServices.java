@@ -460,11 +460,12 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 
 		try {
 			leaveApplicationELI = delegator.findList("EmplLeave", leaveConditions, null, null, null, false);
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>We are here >>>>>>>>>>>>>>>>>>>>>");
 		} catch (GenericEntityException e2) {
 			//e2.printStackTrace();
 			return "Cannot Get Leave Application";
 		}
-		
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> leaveApplicationELI: " + leaveApplicationELI);
 		//String documentApprovalId = null, workflowDocumentTypeId = null, organizationUnitId = null;
 		for (GenericValue genericValue : leaveApplicationELI) {
 			// Get Unit and Document
@@ -477,7 +478,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			Map carryOverLeaveDaysUsed = null;
 			GenericValue documentApproval = null; GenericValue leavelog = null;
 			documentApproval =  WorkflowServices.doFoward(delegator, organizationUnitId,	workflowDocumentTypeId, documentApprovalId);
-		//log.info("=====================" +documentApproval);
+		log.info("=====================" +documentApproval);
 
 		if (documentApproval == null) {
 			// Leave Approved
