@@ -1048,7 +1048,7 @@
 								</platform-specific>
 								<screenlet title="${uiLabelMap.PartyCreateNewEmployee}">
 									<include-form name="NewUser"
-										location="component://party/widget/partymgr/PartyForms.xml" />
+										location="component://party/widget/partymgr/PartyForms.xml"/>
 								</screenlet>
 							</widgets>
 							<fail-widgets>
@@ -2945,6 +2945,45 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- memberTypes -->
+	<screen name="memberTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create Member Type"/>
+                <set field="headerItem" value="memberTypes"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createMemberType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                           
+                            <widgets>
+                                <screenlet title="New Member Type">
+                                    <include-form name="NewMemberType" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Member Types">
+                        			<include-form name="listMemberType" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 
 </screens>

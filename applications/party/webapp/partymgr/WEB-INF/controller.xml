@@ -2305,6 +2305,40 @@
 			</response>
 		<response name="error" type="view" value="viewstations" />
 	</request-map>
+	
+		<request-map uri="memberTypes">
+	<security https="true" auth="true" />
+	<response name="success" type="view" value="memberTypes"
+		save-home-view="true" />
+	</request-map>
+	
+	<!-- MemberType CRUD -->
+	
+	<request-map uri="createMemberType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMemberType" />
+		<response name="success" type="request-redirect" value="memberTypes">
+		</response>
+		<response name="error" type="view" value="memberTypes" />
+	</request-map>
+
+	<request-map uri="updateMemberType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMemberType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="memberTypes"></response>
+		<response name="error" type="view" value="memberTypes" />
+	</request-map>
+
+	<request-map uri="deleteMemberType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMemberType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="memberTypes"></response>
+		<response name="error" type="view" value="memberTypes" />
+	</request-map>
 
 
 	<!-- View Mappings -->
@@ -2626,6 +2660,9 @@
         <view-map name="memberslistpdf" type="screenfop"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberslistpdf"
 		content-type="application/pdf" encoding="none" />
+		
+		<view-map name="memberTypes" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#memberTypes" />
 
 	<!-- end of view mappings -->
 </site-conf>

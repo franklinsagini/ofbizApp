@@ -2762,7 +2762,7 @@ under the License.
       <field name="disabilityDetails" type="long-varchar" ></field>  
       
       <field name="branchId" type="name"></field>
- 	  <field name="stationId" type="id"></field>      
+ 	  <!-- field name="stationId" type="id"></field -->      
       
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
@@ -2780,6 +2780,10 @@ under the License.
       </relation>
  	  <relation type="one" fk-name="PERSON_STATION" rel-entity-name="Station">
         <key-map field-name="stationId"/>
+      </relation>
+      
+      <relation type="one" fk-name="PERSON_TRIBE" rel-entity-name="Tribe">
+        <key-map field-name="tribeId"/>
       </relation>
       <index name="FIRST_NAME_IDX">
         <index-field name="firstName"/>
@@ -3071,7 +3075,13 @@ under the License.
     	<field name="physicalAddress" type="name"></field>
     	<field name="postalAddress" type="name"></field>
     	<field name="memberClass" type="very-short"></field>
+    	
     	<field name="memberType" type="very-short"></field>
+    	
+    	
+    	<field name="memberTypeName" type="name"></field>
+    	
+    	
     	<field name="employeeNumber" type="name"></field>
     	<field name="employeeType" type="name"></field>
     	<field name="payrollNumber" type="name"></field>
@@ -3137,6 +3147,10 @@ under the License.
        
        <relation type="one" fk-name="MEMBER_STATION" rel-entity-name="Station">
             <key-map field-name="stationId"/>
+        </relation>
+        
+        <relation type="one" fk-name="MEMBER_MemberTypeName" rel-entity-name="MemberType">
+            <key-map field-name="memberTypeName" rel-field-name="name"/>
         </relation>
     </entity>
 
@@ -3376,6 +3390,12 @@ under the License.
         <key-map field-name="branchId" rel-field-name="partyId"/>
       </relation>
     </entity>
+    
+    <!-- Member Type -->
+    <entity entity-name="MemberType" package-name="org.ofbiz.party.party" title="Member Type Entity">
+     		<field name="name" type="name"></field>
+			<prim-key field="name"/>
+     </entity>
 
 
 </entitymodel>
