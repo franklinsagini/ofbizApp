@@ -1626,6 +1626,13 @@
 		<response name="success" type="view" value="branches"/>
 	</request-map>
 	
+	<request-map uri="viewstations">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="viewstations"/>
+	</request-map>
+	
+	<!-- viewstations -->
+	
 
 	<request-map uri="openingBalance">
 		<security https="true" auth="true" />
@@ -2267,6 +2274,71 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="memberslistcsv" />
 	</request-map>
+	
+	<!-- Create Station -->
+	<request-map uri="createStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="viewstations">
+			</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+	
+	<request-map uri="updateStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="viewstations">
+			</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+	
+	<request-map uri="deleteStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="viewstations">
+			</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+	
+		<request-map uri="memberTypes">
+	<security https="true" auth="true" />
+	<response name="success" type="view" value="memberTypes"
+		save-home-view="true" />
+	</request-map>
+	
+	<!-- MemberType CRUD -->
+	
+	<request-map uri="createMemberType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMemberType" />
+		<response name="success" type="request-redirect" value="memberTypes">
+		</response>
+		<response name="error" type="view" value="memberTypes" />
+	</request-map>
+
+	<request-map uri="updateMemberType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMemberType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="memberTypes"></response>
+		<response name="error" type="view" value="memberTypes" />
+	</request-map>
+
+	<request-map uri="deleteMemberType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMemberType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="memberTypes"></response>
+		<response name="error" type="view" value="memberTypes" />
+	</request-map>
 
 
 	<!-- View Mappings -->
@@ -2275,6 +2347,11 @@
 		
 	<view-map name="branches" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#branches" />
+		
+	<view-map name="viewstations" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#viewstations" />
+		
+		
 
 	<view-map name="findparty" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#findparty" />
@@ -2583,6 +2660,9 @@
         <view-map name="memberslistpdf" type="screenfop"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberslistpdf"
 		content-type="application/pdf" encoding="none" />
+		
+		<view-map name="memberTypes" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#memberTypes" />
 
 	<!-- end of view mappings -->
 </site-conf>

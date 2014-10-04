@@ -190,6 +190,14 @@ under the License.
         <if-empty field="parameters.loanApplicationId">
 			<call-simple-method method-name="saveLoanApplication" scope="inline"></call-simple-method>
 			<set field="charges" value="${bsh:org.ofbiz.loans.LoanServices.addCharges(newEntity, userLogin);}" type="String"/>
+        
+        	<!-- Get accountProductId from LoanProduct -->
+        	<entity-one value-field="loanProduct" entity-name="LoanProduct">
+        		<field-map field-name="loanProductId" value="${newEntity.loanProductId}"/>
+        	</entity-one>
+        	
+        	<set field="newEntity.accountProductId" value="${loanProduct.accountProductId}"/>
+        	<store-value value-field="newEntity"/>
         <else>
         	<call-simple-method method-name="updateLoanApplication"></call-simple-method>
         </else>
