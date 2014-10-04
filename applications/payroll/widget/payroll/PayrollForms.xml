@@ -1058,5 +1058,28 @@ under the License.
         <field name="numberOfEmployees" title="Number Of Employees"><text/></field>   
     </form>
     
+    <form name="listPayrollOverview" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="payrollOverview" paginate-target="payrollOverview"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PayrollPeriod">
+            	<condition-expr field-name="currentperiod" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <field name="payrollPeriodId"><hidden/></field>       
+        <field name="payrollYearId"> <hidden/> </field>
+        <field name="name" title="Current Period"> <display/> </field>
+        <field name="addPeriodStaff" title="Manage Payroll" widget-style="buttontext">
+            <hyperlink target="staffpayroll" description="Manage Staff Payroll" also-hidden="false" image-location="${iconsLocation}/bullet_wrench.png"> 
+                <parameter param-name="payrollPeriodId"/>
+            </hyperlink>
+        </field>
+        <field name="migratepayroll" title="Migrate Payroll" widget-style="buttontext">
+        
+            <hyperlink target="migratepayroll" description="Migrate Staff Payroll" also-hidden="false" image-location="${iconsLocation}/arrow_right.png">
+                <parameter param-name="payrollPeriodId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
    
 </forms>
