@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.3.2.v20140211-1400 Build &lt;4.3.2.v20140218-1056></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">121</property>
+        </structure>
+        <structure>
+            <property name="name">databaseName</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">username</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">password</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">URL</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">driverClass</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">jarList</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileName</property>
+            <property name="id">8</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileStorePath</property>
+            <property name="id">8</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="account_transaction_parent_id" id="122">
+            <text-property name="promptText">Transaction ID</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">1</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc.dbprofile" name="OFBIZPostgreSQL" id="8">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>org.eclipse.datatools.connectivity.db.connectionProperties</name>
+                </ex-property>
+                <ex-property>
+                    <name>org.eclipse.datatools.connectivity.oda.profile.db.provider.id</name>
+                    <value>org.eclipse.datatools.enablement.postgresql.connectionProfile</value>
+                </ex-property>
+                <ex-property>
+                    <name>org.eclipse.datatools.connectivity.db.savePWD</name>
+                    <value>true</value>
+                </ex-property>
+                <ex-property>
+                    <name>org.eclipse.datatools.connectivity.drivers.defnType</name>
+                    <value>org.eclipse.datatools.enablement.postgresql.postgresqlDriverTemplate</value>
+                </ex-property>
+                <ex-property>
+                    <name>org.eclipse.datatools.connectivity.driverDefinitionID</name>
+                    <value>DriverDefn.org.eclipse.datatools.enablement.postgresql.postgresqlDriverTemplate.PostgreSQL JDBC Driver</value>
+                </ex-property>
+                <ex-property>
+                    <name>org.eclipse.datatools.connectivity.db.version</name>
+                    <value>8.x</value>
+                </ex-property>
+                <ex-property>
+                    <name>org.eclipse.datatools.connectivity.db.vendor</name>
+                    <value>postgres</value>
+                </ex-property>
+            </list-property>
+            <property name="databaseName">ofbiz</property>
+            <property name="username">ofbiz</property>
+            <encrypted-property name="password" encryptionID="base64">b2ZiaXo=</encrypted-property>
+            <property name="URL">jdbc:postgresql://localhost:5432/ofbiz</property>
+            <property name="driverClass">org.postgresql.Driver</property>
+            <property name="jarList">/home/samphil/Documents/testproject/chaisacco/framework/entity/lib/jdbc/postgresql-9.3-1101.jdbc4.jar</property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="transaction_report" id="121">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">account_transaction_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">account_transaction_id</text-property>
+                    <text-property name="heading">account_transaction_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">created_by</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">created_by</text-property>
+                    <text-property name="heading">created_by</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">transaction_amount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">transaction_amount</text-property>
+                    <text-property name="heading">transaction_amount</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">transaction_type</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">transaction_type</text-property>
+                    <text-property name="heading">transaction_type</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">created_stamp</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">created_stamp</text-property>
+                    <text-property name="heading">created_stamp</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">account_transaction_parent_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">account_transaction_parent_id</text-property>
+                    <text-property name="heading">account_transaction_parent_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">account_no</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">account_no</text-property>
+                    <text-property name="heading">account_no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">account_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">account_name</text-property>
+                    <text-property name="heading">account_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">branchname</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">branchname</text-property>
+                    <text-property name="heading">branchname</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">idnumber</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">idnumber</text-property>
+                    <text-property name="heading">idnumber</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">account_transaction_parent_id</property>
+                    <property name="paramName">account_transaction_parent_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">0</property>
+                    <property name="position">1</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">account_transaction_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">created_by</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">transaction_amount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">transaction_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">created_stamp</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">account_transaction_parent_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">account_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">account_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">branchname</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">idnumber</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">OFBIZPostgreSQL</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">account_transaction_id</property>
+                    <property name="nativeName">account_transaction_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">created_by</property>
+                    <property name="nativeName">created_by</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">transaction_amount</property>
+                    <property name="nativeName">transaction_amount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">3</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">transaction_type</property>
+                    <property name="nativeName">transaction_type</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">created_stamp</property>
+                    <property name="nativeName">created_stamp</property>
+                    <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">account_transaction_parent_id</property>
+                    <property name="nativeName">account_transaction_parent_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">account_no</property>
+                    <property name="nativeName">account_no</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">account_name</property>
+                    <property name="nativeName">account_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">branchname</property>
+                    <property name="nativeName">branchname</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">idnumber</property>
+                    <property name="nativeName">idnumber</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select accttrans.account_transaction_id, 
+		accttrans.created_by,
+	 	accttrans.transaction_amount, 
+	 	accttrans.transaction_type as transaction_type,
+	 	accttrans.created_stamp,
+	 	accttrans.account_transaction_parent_id,
+	 	ma.account_no,
+	 	ma.account_name,
+	 	pg.group_name as branchname,
+	 	mem.id_number idnumber
+from account_transaction accttrans
+join party_group pg ON
+ (accttrans.branch_id=pg.party_id) 
+ join member_account ma ON
+ 	(accttrans.member_account_id=ma.member_account_id)
+ join member mem ON (ma.party_id=mem.party_id)
+where account_transaction_parent_id=?]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <list id="123">
+            <property name="dataSet">transaction_report</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">transaction_type</property>
+                    <text-property name="displayName">transaction_type</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["transaction_type"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">transaction_amount</property>
+                    <text-property name="displayName">transaction_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["transaction_amount"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">account_no</property>
+                    <text-property name="displayName">account_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["account_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">account_name</property>
+                    <text-property name="displayName">account_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["account_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">branchname</property>
+                    <text-property name="displayName">branchname</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["branchname"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">idnumber</property>
+                    <text-property name="displayName">idnumber</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["idnumber"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">account_transaction_parent_id</property>
+                    <text-property name="displayName">account_transaction_parent_id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["account_transaction_parent_id"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">created_by</property>
+                    <text-property name="displayName">created_by</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["created_by"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">created_stamp</property>
+                    <text-property name="displayName">created_stamp</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["created_stamp"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+            </list-property>
+            <header>
+                <grid id="134">
+                    <property name="height">2.9375in</property>
+                    <column id="135"/>
+                    <column id="136"/>
+                    <row id="228">
+                        <property name="height">0.7291666666666666in</property>
+                        <cell id="229">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <grid id="233">
+                                <property name="height">0.65625in</property>
+                                <column id="234"/>
+                                <column id="235"/>
+                                <column id="236"/>
+                                <row id="237">
+                                    <property name="height">0.65625in</property>
+                                    <cell id="238"/>
+                                    <cell id="239">
+                                        <image id="231">
+                                            <property name="height">0.53125in</property>
+                                            <property name="width">2.4791666666666665in</property>
+                                            <property name="source">embed</property>
+                                            <property name="imageName">logo.gif</property>
+                                        </image>
+                                    </cell>
+                                    <cell id="240"/>
+                                </row>
+                            </grid>
+                        </cell>
+                    </row>
+                    <row id="224">
+                        <property name="height">0.25in</property>
+                        <cell id="225">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <label id="227">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <text-property name="text">Chai Sacco Co-op Society</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                    <row id="211">
+                        <cell id="212">
+                            <label id="218">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Date Served:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="213">
+                            <data id="220">
+                                <property name="resultSetColumn">created_stamp</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="214">
+                        <cell id="215">
+                            <label id="217">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Served By:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="216">
+                            <data id="219">
+                                <property name="resultSetColumn">created_by</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="137">
+                        <property name="height">0.5208333333333334in</property>
+                        <cell id="138">
+                            <label id="210">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Transaction #:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="139">
+                            <data id="209">
+                                <property name="textAlign">left</property>
+                                <property name="resultSetColumn">account_transaction_parent_id</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="159">
+                        <cell id="160">
+                            <label id="162">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Branch Name:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="161">
+                            <data id="163">
+                                <property name="resultSetColumn">branchname</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="140">
+                        <cell id="141">
+                            <label id="148">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Account No:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="142">
+                            <data id="146">
+                                <property name="resultSetColumn">account_no</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="143">
+                        <cell id="144">
+                            <label id="149">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Account Name:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="145">
+                            <data id="147">
+                                <property name="resultSetColumn">account_name</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="150">
+                        <property name="height">0.08333333333333333in</property>
+                        <cell id="151"/>
+                        <cell id="152"/>
+                    </row>
+                </grid>
+            </header>
+            <detail>
+                <grid id="164">
+                    <property name="height">0.2604166666666667in</property>
+                    <property name="width">7.802083333333333in</property>
+                    <column id="165">
+                        <property name="width">1.09375in</property>
+                    </column>
+                    <column id="166">
+                        <property name="width">3.4583333333333335in</property>
+                    </column>
+                    <column id="167">
+                        <property name="width">1.4166666666666667in</property>
+                    </column>
+                    <column id="168">
+                        <property name="width">0.15625in</property>
+                    </column>
+                    <column id="169">
+                        <property name="width">1.6770833333333333in</property>
+                    </column>
+                    <row id="170">
+                        <property name="height">0.2604166666666667in</property>
+                        <cell id="171"/>
+                        <cell id="172">
+                            <data id="176">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">transaction_type</property>
+                            </data>
+                        </cell>
+                        <cell id="173">
+                            <data id="177">
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">transaction_amount</property>
+                            </data>
+                        </cell>
+                        <cell id="174"/>
+                        <cell id="175"/>
+                    </row>
+                </grid>
+            </detail>
+            <footer>
+                <grid id="178">
+                    <property name="height">1.1875in</property>
+                    <property name="width">7.802083333333333in</property>
+                    <column id="179">
+                        <property name="width">1.0833333333333333in</property>
+                    </column>
+                    <column id="180">
+                        <property name="width">2.7916666666666665in</property>
+                    </column>
+                    <column id="181">
+                        <property name="width">3.9270833333333335in</property>
+                    </column>
+                    <row id="182">
+                        <property name="height">0.34375in</property>
+                        <cell id="183"/>
+                        <cell id="184"/>
+                        <cell id="185"/>
+                    </row>
+                    <row id="241">
+                        <property name="height">0.3020833333333333in</property>
+                        <cell id="242"/>
+                        <cell id="243">
+                            <label id="194">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Signature:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="244"/>
+                    </row>
+                    <row id="186">
+                        <cell id="187"/>
+                        <cell id="188">
+                            <label id="195">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Name:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="189">
+                            <data id="197">
+                                <property name="resultSetColumn">account_name</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="190">
+                        <cell id="191"/>
+                        <cell id="192">
+                            <label id="196">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">right</property>
+                                <text-property name="text">ID No.:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="193">
+                            <data id="198">
+                                <property name="resultSetColumn">idnumber</property>
+                            </data>
+                        </cell>
+                    </row>
+                </grid>
+            </footer>
+        </list>
+    </body>
+    <list-property name="images">
+        <structure>
+            <property name="name">logo.gif</property>
+            <property name="type">image/gif</property>
+            <property name="data">
+                R0lGODlh7gArAOf/AGQvIGswIGE0KHMwHI0tG4kwGpAvF2s7KWc+LpUzGoU4G482How4HoQ8Im1CLZQ5
+                HHJFL35EKY9BI5s+IZRAJIZFJ5hCIZBHJotJJJxFHpdII6pFHINQK5ZLKpFNKKNKG6FKKHxUOZxNJ45R
+                LKFPJK9MIrRMHadPLZNWLolZMpxXLKZULptXMolcOq1TKrBVJqRYL5pbM45fPaxZLZFgObJYL5ViNbBb
+                MKdfMrReJcVaHJRmN7FfK6FlKJBpOJNoP6RkNc5bH7FiNKJmPJtqNr5hKqBrPsVjJ7RpKq9rKtJiIaVu
+                M6RuO7drJZ9wQbppOKxtPaJxNaFxPJd0QbFvOp90PsFtKrluPM5sI9VrGd9oHaF4OchxJsRxNNVtK6x3
+                Q75zP7l2QuVtHKp6SrJ5PcB2M59+SMZ0Pal+Sa9+Pt1zKr18PuVzJch6O9p2L8d6QfJxH+B2JOxzIO90
+                F+l2INd6McV+Rc59OLSFQfd1HfN4HcCEPcqBP8qCN7yFRvN4JrCIT9WBM6uLT8iFQcaFSOx/LbmLTfJ+
+                KeKDNNGHRc6LP9aKPM6LTe+HNOGLOL2TU9KOSbOXUvaHL/KJLuyLNK+aWfmJMa+aY7uYVsaWT9CTUvSM
+                OPeNMv2MLOiSQPSRO9WZV9iaUuaYRcmeX+GaTtCfUsaiWPSXPtCfWb6jZ8GkXsajX+CeSc2iWuChUvSd
+                QfSeSd6lWvOiS9qoW8msZ9epYeymUMavZ9OtY82vYuCrWPemTeaqWdewX/OpVvCsV/esUuuvWeWxZuGz
+                ZNG4afWwVOizX9e3at64bda6dPezXeC5Z+63ZOi5ady8b/a3WPW3X969aeq7Zea9a+29Z+2+bvW9YuTC
+                b/HAaurCcPHCcuLGe+TIcvbEZ/TEbenHc/DGbu/HdO7He/nHavLJdvnIcfTKce7Md+rOd/PLf/fMc/bM
+                evLOc+7OgPnNbfLPevnOdfbOgfjOfPXRdfXTfvjTePTThPPVePrVevzXfPrXgvrYifjaffvejv3fgf//
+                /yH+ClZlcmdlIExvZ28AIfkEAQoA/wAsAAAAAO4AKwAACP4A8QkcSLCgwYMIEypcyLChw4cQI0qcSLGi
+                xYsYM2rcyLGjR4j8QgrMh+8bPpIfU6pcybJlRmi7YAErlw+ZjBAtcKF0ybOnz58b68naRJToLwgOkjqY
+                BrSp06dQCQIrSpRTjgNKHaDZGbWr168Zy52iuslqgKxo/IFdy7Ytw25kN31CpCFCUgE/3Ord6xYu2UaH
+                4vCAgAJFC76IE0NVN5aqpEOSgDHztUsZP8WYMxusp45d0GJkOam5I2oMFF/jNEetx3Fdvdesm+qjJ1Bd
+                uHCxBcLODREesE+NgnPis8YTmS+jnBWE5w5hPeb13Emf7k4dPHzRqUu/fnngZebjxv5Jx3c5u3bpvHW7
+                i739YPTr6s5PV4dvvnR13ry9Zn6+XveC78Gmzz76rLPOO+Zg0014zQkET3zyrRfda+s519x51slDID7s
+                3KbObuSE+OFE9XSjTDHFyOILNsDYQskThuxUDzSSDHPQOJ8oEowkPPYoiSWOfDMOJz7yaMknxeT2zCeW
+                FInkPfCcUmSPuqQHjySsoMOPlJtIk149k7ACDpE9TuIjJ8dMaWQu8LyiJifA0EcQP8BIQok066hDzz70
+                vGPNKWT2+Ik1+OwCGY9m9tiILtBMUoo7nLCSHna7UJILkU362AktG3YYIjm2fUrOpA/BpswnsMjgxC+8
+                ZFOQNf5/KDLpM3lUUYwYSUSh665VXDOOHk3squsSXPxhyz34FCMHF1FUscWzZMRBBy/sSIKFsLtikp47
+                cCzCDT+TyMGGI54RVI8ei1zTBxLsYgEHF0mwm4QpeVgx7BL4RqEKpNdiW8YfopQrED+H0EEHKdmE+E49
+                1hzCRg/NQhvHIcu4wi4STfyhxsVJPPLLH3jA80kc1xg0jiRW4KIHF0Tgu8SuqeijTz3miEqONtnUPOpF
+                /IDWCAYtmGSQOiOXbO4pWWByayn37PYaPt3oscfCu10zSSDg8GNtJe+Yu4wejlwjCRfcYOe0Qe7I4S24
+                cfSRhy4AosvNN3Rz8zEec9NtDv4ckGyjz23hkNO1OpxY8Y3T54gSB1MDP/NHEoggUs2n9HwixxTJ0CbQ
+                PcHEeg/d31yjxx3EXIPMMtkA80ca69iSRysFsQONHlFko0cgx5BzWzr27OM7PerYrHs1gbvGMzSffOJJ
+                LHIWxI8seZTClTqHIHHN0ghFvYfAA72CxTRp97ENV+QVEkgvY5f9dEJprz1JIaY0UojRuqGr3EjF6IHH
+                f+bMAUk7+gjeOnhXD2xMwgrnMIgyxDCL2GxJDmYAhhxm8Sl7POYS8sAGNszBGViVIRuxqcchAnENdRho
+                HapLg58OsQhkYUcd4HhFFh4RjtsdYx0hMlDvZqYzm4XDHP4jyog1rNGMcCSkG2wIhAsFAg0t+AEdxdBC
+                KRDiDTlsD0CywMIyuiGGPaDjIK7IxDIKYYV2cIaDCYGHGPrwrUao4RbBEMMiNDebNR4DNu/whRz2x5l1
+                YEMMg0AGO+iRDt6RgxrMICNTeNPEVjzNHWywAi2YQQdFFK8dhVBDKrRBDWpIQxqI7EMUmkENc2CHDndA
+                xqfyKAfWhYMSbDhGPjhDDm/QAQm4AIcYcIfDT62DNvXopS8NRKqV3KMOSpDlQAKRA1Pg4xc6yIQ/QkLN
+                y2BDCWTgHnY8kQNcGEMHZFgiQd5xDmx4gQfbwAc96EHNzYAjCGX4lhuOkIt6BEIHpf6ox57sAU9n1Cwc
+                6yBFENKQD3aECBtBWMPh9tGPfuwjHdQwhht4MAxqgAMcsXGFDh4Bqnq4Qgk+IAc46nAEZBgoHV44Ai04
+                GVFegLIXFe0kO+qhBCSoUmGuGOiBBJqJgpJjHbwA5zTAoYM2OOM58IDHGV9jjqbmsJDpKKZK+BGKDfih
+                O+rYAA6IkQ9XbIAHbQhrWLswC3xUwwRMqEc+1poPfmCjBCpAhjA2EM6BsJUkfnxBCc7A1zeElQ/NEFgw
+                sbEBKlyDH0V4gSrgMYwS8GAZ6rCHPUxABWfgMBzqqOpWPlWNDbygr294wxkY0QxjFEEFszAGNqiBjXyo
+                4wkaaP5FiMDRhQ8IwoSQ2IAhBPiCF6xitdLgBS+M0cniWpQeJsDBTX9aVSnkqRqO5QYO19GFDHA0HJ4F
+                A1/52gU+ZONDJzwpVDXnE3A8AAZf5IcmCiCFe+QjFASwgAbmS98d1KMaExDBFcDA3yvc4AESMEM7hLEA
+                IEjjQ7F4An/5S1oQLIC+87VABzJhUeyYYx3VMAAQopGPGVhgFSYkxAPCELhwJAAI/jQQPkDxgCrUg7MG
+                kC+ENeCBXhhjBQwQwhN2/IQbTMACPljGT2cxAQ5MA4jNsIAKvqsOEHx4tczghS6YYVxqaIN3E4jBctWh
+                iQc4QR6jEsIDWmFCbSTAA7SAYf4CKDBjGuPilw8tZDugag99AMUfQmCATviB40i0FRQFmMItBk1oYuCj
+                GQC+QAcWfYELMAAFtdiHMArABGkQVxONbnQBOtAKEFSgErdQBSYw8QhMVLQa6/xpNQiw4XqsgAIg1t2r
+                a2GObBggBpZNBwBBsQAXf6oZBrBBJVShilTcIhWYkIYwcJzpRntAAhcYxacYQYAp1IMd62CHEBbgzHo4
+                GRPAHS4oNUiNaogDy1r+FJcX8GVQARoK2WZEAXaQjXWAIwEoGDax950N3vnOHnOWbDyAB8SZ8iQfsygA
+                GfhBjQKggKv8ALQh+HHXtR76ATTIBTGIkYtc4MIQBoDCO/4mXWniiuMWtOg4CDgNAgx8Ix/gwAYzVFtu
+                cUh2HeZYdatfHWtyoKLA2bD1ELZx83pootf4gDEUvqEO6+QDHqtddgUe0QpTmIIWyRgFBVTQDHJUYwUN
+                0Mks8xGLAlCB4iCYgCq84UljgJIamghFNbJxbntk2bIiOnq7zREOC4gAGa6mwG1FeuJoNP3wJvS37/6d
+                jmxUw7jgaB5L6mEB9NphAVMYmMT/QxBEG0FgTc8GCDxwDXAUAAjZuGg85HFheICABbho+Rc5A463VyMd
+                vsO5zqMR+J6HIwwGyEQ4DDD0h2oDG4xYgBTw0csMQ2EaIYoNO7CxbJfTbB3xiMc6rv6ggFqQY9IFAMEK
+                xr8CEBRABNfwxwoWoIpZFrCT2ACBCHChDZvbXcu9XHe7QWUHBqCCwCNwDMFzbyyAd59iDoXUO4sXZ49X
+                ZRXmEoTgfyIgAe1HHpt3EJ4nMAYVDitAevjwADgwez9FDzP1AFomewRhDp1UDZJlD7rHahzGc8HzU8Mg
+                AhaADMS3DekgDtWAfAtABEAUIs4HfZKHD+CwAhUgNPSAQ+BgBwrQCuZgBwXAASlQhVboAQsgTWFQAI+A
+                EvXQScxAARdAf7h3f8igM/oHZqAyDQbwBWGwAD4wgwRogCGCgIrnOzuYDg3ogKbUEoiGAwvAAV9kgQWQ
+                BuzQVP5NFXkX93nmYg4deFhXQAGoAA6pB1DmsF5SIHoXcA2ImIjmQEjEhGGsln4y6EuEUABQ8ABDt4Os
+                lXxEAA7soA7mAGxDgAzVAA6dWA9HmIQWRg4144S4UA8T0AD1dA/GaIzTsABQcA9lhwM503Th0AyEEIjL
+                sA72sINZFg1oqHdgxkHssAIiQAESUAnwMFsGAHvVkI7qmICLt4PntocOKFUboW0G8ABmgBJURQAgcAP8
+                2I9XcA74xQTaVA8u4IHN0AELcAI3IARCcAMnUAAVEAlN9gAz0I/9iArv4It6sg/DBwXc4A8u8GEz+FPh
+                AAMGkABDkAw82IoPwATYQB/3Ff5jFWmRN3AM4DADLvdCMxUO/YcLsRBsZWMQQmABy1APUMAAE7CQDfmQ
+                DWAG+HCN6RAOWXYN74BD6sAICeBcI1IPjHCSHFBvs5UAEzCT/DgDNbAK8aCA+yAObCkODgh5RigN7MB5
+                QdEKO+ADx0AQy7ADfNmXfOkD33AOXyAIA2kIU1Ay9bAMhuAENmCFP4AGq7AwgOCXffkDmOAhvzQzTgAI
+                75APhrADuDCSoFILfAkI07BarDULNgAILykQ7CAFfPkDlKkK9WCYCYQdutEKPuAMpIkJCEGauFASo8CY
+                VrgDVYAJJjFn6xAOX1AF3zAgSzgMOyAIuCkQw2AENiAIwv5EDkxAA975nd6JCWnpO/HAlnr4ltTQDLHA
+                C98wBnfgCcCQEvVATrwxn+dwn/h5n6/BDl2zGQszEPaZnwbHIeSUn/cZi7shEO9gcPVwDoEjPAeqgsY1
+                DM2ADRpooPjJGuwwoOZCNedQTA0aQgWKnwNqUCESdHvyO9emTewQdA/6KUEXozIKUClaSOLAUg6IDYbA
+                ApvgCggwA40wKKoxeaIZRNiBmnC5Frbxohu5Ic4hPFBqM/QhM+GgDfDogM3gB27gCoawCHKRGkM6eesD
+                IOBgXNggj0BRDyWWJ7ZxHXamEKIZpaJiPAKBpOj5C7LABD9wB8AADbBgGWEKFbQHRPhtEUwd9Rp0uhC0
+                JKeigkYDUaboSQ2PQAWeAAlfsAiJAAkyEaic6hKwAaClEqdQaqS6EanU8AMAMAJMIAqyUAd1IBey0A2d
+                OqtuQTNySqqPip61cAC8GgFIwAmQURSnIKu0WqxgcUaImG1S9X5Vhg0/wKtYQQJqIAmTQBWwgKbGmq21
+                CqnFhQ0ygBVJEQBWwAlxUYTaeq58QTN2aggCoBQDgAhxMQlgiq70ihiv0XQbCggIIAAhcAfkShaTYK71
+                OrB70aDXUA9TERfXSrAMmxn10BhFIaQNO7GJoQ67cArJAwuEQrEcm67lYA3dgK0dO7IkW7ImOxEBAQA7
+</property>
+        </structure>
+    </list-property>
+</report>
