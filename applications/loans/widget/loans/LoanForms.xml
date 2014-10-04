@@ -541,6 +541,7 @@ under the License.
     <form name="AccountProduct" type="single" target="createAccountProduct"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="accountContext">
         
+       
         <field name="accountProductId"><hidden/></field>
  
         <field name="name" title="Name"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
@@ -600,7 +601,10 @@ under the License.
     
     <!-- Loan Product -->
     <form name="LoanProduct" type="single" target="createLoanProduct" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanContext">
-        
+         <actions>
+        	<entity-condition entity-name="AccountProduct" list="accountProductList">
+        	</entity-condition>
+        </actions>
         <field name="loanProductId"><hidden/></field>
  
         <field name="name" title="Name"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
@@ -622,6 +626,19 @@ under the License.
                 
             </drop-down>
         </field>
+        
+        <!-- Multiplier Account Product
+        	MULTIPLE OF SAVINGS AMOUNT
+         -->
+         
+         <field name="accountProductId" title="Mutliplier Account Product" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+				<list-options list-name="accountProductList" key-name="accountProductId"
+					description="${name} - ${code}" />
+			</drop-down>
+		</field>
+        
         <field name="multipleOfSavingsAmt" title="Multiple of Savings Amount"><text size="30" maxlength="60"/></field>
         
         <field name="retention"  title="Retention?">
@@ -739,6 +756,8 @@ under the License.
             <entity-condition entity-name="LoanProduct">
             	<condition-expr field-name="isActive" operator="equals" value="Y"/>
             </entity-condition>
+            
+            <entity-condition entity-name="AccountProduct" list="accountProductList"></entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanProduct"/ -->
         <!-- field name="skillTypeId">
@@ -746,12 +765,12 @@ under the License.
         </field -->
         <field name="loanProductId"><hidden/></field>
         <field name="name"> <text size="20"></text> </field>
-        <field name="code"><text size="10"/></field>
-        <field name="maxRepaymentPeriod"><text size="10"/></field>
-        <field name="interestRatePM"><text size="10"/></field>
+        <field name="code"><text size="5"/></field>
+        <field name="maxRepaymentPeriod"><text size="5"/></field>
+        <field name="interestRatePM"><text size="5"/></field>
         
-         <field name="minimumAmt"><text size="10"/></field>
-        <field name="maximumAmt"><text size="10"/></field>
+         <field name="minimumAmt"><text size="5"/></field>
+        <field name="maximumAmt"><text size="5"/></field>
         
         <field name="deductionType"  title="Deduction Type" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
@@ -759,6 +778,14 @@ under the License.
                 <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
             </drop-down>
         </field>
+        
+        <field name="accountProductId" title="Mutliplier Account Product" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+				<list-options list-name="accountProductList" key-name="accountProductId"
+					description="${name} - ${code}" />
+			</drop-down>
+		</field>
         
         <field name="Edit Loan">
         	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
