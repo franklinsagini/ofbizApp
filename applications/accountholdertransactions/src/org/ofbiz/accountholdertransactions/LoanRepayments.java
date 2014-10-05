@@ -1027,6 +1027,8 @@ public class LoanRepayments {
 			}
 
 		}
+		
+		principalAmount = principalAmount.add(excessAmount);
 
 		loanRepayment.set("interestAmount", interestAmount);
 		loanRepayment.set("insuranceAmount", insuranceAmount);
@@ -1055,83 +1057,83 @@ public class LoanRepayments {
 
 		// createLoanRepaymentAccountingTransaction(loanRepayment, userLogin);
 
-		// //Create Acctg Transa
-		// String acctgTransType = "LOAN_RECEIVABLE";
-		// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		// String acctgTransId = createAccountingTransaction(loanRepayment,
-		// acctgTransType, userLogin, delegator);
-		// // String acctgTransId = createAccountingTransaction(loanRepayment,
-		// // acctgTransType, userLogin);
-		// //Debit Member Deposits with repayment amount
-		// //Get MemberDepositAccount
-		// GenericValue accountHolderTransactionSetup =
-		// getAccountHolderTransactionSetupRecord("MEMBERTRANSACTIONACCOUNT",
-		// delegator);
-		// String memberDepositAccountId =
-		// accountHolderTransactionSetup.getString("memberDepositAccId");
-		// String postingType = "D";
-		// String entrySequenceId = "00001";
-		// // String partyId =
-		// // getLoanApplication(loanExpectation.getString("loanApplicationId"),
-		// // delegator).getString("partyId");
-		// String partyId = getMemberGivenParty(
-		// loanRepayment.getString("partyId"), delegator)
-		// .getString("branchId");
-		//
-		// log.info(" ####### Party or Branch or Company in Loan Repayment is ###### "
-		// + partyId);
-		// postTransactionEntry(delegator,
-		// loanRepayment.getBigDecimal("transactionAmount"), partyId,
-		// memberDepositAccountId, postingType, acctgTransId, acctgTransType,
-		// entrySequenceId);
-		//
-		// //Credit Interest_receivable
-		// //INTERESTPAYMENT
-		// postingType = "C";
-		// entrySequenceId = "00002";
-		// accountHolderTransactionSetup =
-		// getAccountHolderTransactionSetupRecord("INTERESTPAYMENT", delegator);
-		// String accountId = accountHolderTransactionSetup
-		// .getString("memberDepositAccId");
-		// // createAccountingEntry(loanExpectation, acctgTransId, accountId,
-		// // postingType, delegator);
-		// postTransactionEntry(delegator,
-		// loanRepayment.getBigDecimal("totalInterestDue"), partyId,
-		// accountId, postingType, acctgTransId, acctgTransType,
-		// entrySequenceId);
-		//
-		//
-		// //Credit Insurance_receivable
-		// //INSURANCEPAYMENT
-		// postingType = "C";
-		// entrySequenceId = "00003";
-		// accountHolderTransactionSetup =
-		// getAccountHolderTransactionSetupRecord("INSURANCEPAYMENT",
-		// delegator);
-		// accountId = accountHolderTransactionSetup
-		// .getString("memberDepositAccId");
-		// // createAccountingEntry(loanExpectation, acctgTransId, accountId,
-		// // postingType, delegator);
-		// postTransactionEntry(delegator,
-		// loanRepayment.getBigDecimal("totalInsuranceDue"), partyId,
-		// accountId, postingType, acctgTransId, acctgTransType,
-		// entrySequenceId);
-		//
-		// //Credit Principal Receivable
-		// //PRINCIPALPAYMENT
-		// postingType = "C";
-		// entrySequenceId = "00004";
-		// accountHolderTransactionSetup =
-		// getAccountHolderTransactionSetupRecord("PRINCIPALPAYMENT",
-		// delegator);
-		// accountId = accountHolderTransactionSetup
-		// .getString("memberDepositAccId");
-		// // createAccountingEntry(loanExpectation, acctgTransId, accountId,
-		// // postingType, delegator);
-		// postTransactionEntry(delegator,
-		// loanRepayment.getBigDecimal("totalPrincipalDue"), partyId,
-		// accountId, postingType, acctgTransId, acctgTransType,
-		// entrySequenceId);
+		 //Create Acctg Transa
+		 String acctgTransType = "LOAN_RECEIVABLE";
+		 String acctgTransId = createAccountingTransaction(loanRepayment,
+		 acctgTransType, userLogin, delegator);
+		 // String acctgTransId = createAccountingTransaction(loanRepayment,
+		 // acctgTransType, userLogin);
+		 //Debit Member Deposits with repayment amount
+		 //Get MemberDepositAccount
+		 GenericValue accountHolderTransactionSetup =
+		 getAccountHolderTransactionSetupRecord("MEMBERTRANSACTIONACCOUNT",
+		 delegator);
+		 String memberDepositAccountId =
+		 accountHolderTransactionSetup.getString("memberDepositAccId");
+		 String postingType = "D";
+		 String entrySequenceId = "00001";
+		 // String partyId =
+		 // getLoanApplication(loanExpectation.getString("loanApplicationId"),
+		 // delegator).getString("partyId");
+		 String partyId = getMemberGivenParty(
+		 loanRepayment.getString("partyId"), delegator)
+		 .getString("branchId");
+		
+		 log.info(" ####### Party or Branch or Company in Loan Repayment is ###### "
+		 + partyId);
+		 postTransactionEntry(delegator,
+		 loanRepayment.getBigDecimal("transactionAmount"), partyId,
+		 memberDepositAccountId, postingType, acctgTransId, acctgTransType,
+		 entrySequenceId);
+		
+		 //Credit Interest_receivable
+		 //INTERESTPAYMENT
+		 postingType = "C";
+		 entrySequenceId = "00002";
+		 accountHolderTransactionSetup =
+		 getAccountHolderTransactionSetupRecord("INTERESTPAYMENT", delegator);
+		 String accountId = accountHolderTransactionSetup
+		 .getString("memberDepositAccId");
+		 // createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		 // postingType, delegator);
+		 postTransactionEntry(delegator,
+				 interestAmount, partyId,
+		 accountId, postingType, acctgTransId, acctgTransType,
+		 entrySequenceId);
+		
+		
+		 //Credit Insurance_receivable
+		 //INSURANCEPAYMENT
+		 postingType = "C";
+		 entrySequenceId = "00003";
+		 accountHolderTransactionSetup =
+		 getAccountHolderTransactionSetupRecord("INSURANCEPAYMENT",
+		 delegator);
+		 accountId = accountHolderTransactionSetup
+		 .getString("memberDepositAccId");
+		 // createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		 // postingType, delegator);
+		 postTransactionEntry(delegator,
+				 insuranceAmount, partyId,
+		 accountId, postingType, acctgTransId, acctgTransType,
+		 entrySequenceId);
+		
+		 //Credit Principal Receivable
+		 //PRINCIPALPAYMENT
+		 postingType = "C";
+		 entrySequenceId = "00004";
+		 accountHolderTransactionSetup =
+		 getAccountHolderTransactionSetupRecord("PRINCIPALPAYMENT",
+		 delegator);
+		 accountId = accountHolderTransactionSetup
+		 .getString("memberDepositAccId");
+		 // createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		 // postingType, delegator);
+		 
+		 postTransactionEntry(delegator,
+				 principalAmount, partyId,
+		 accountId, postingType, acctgTransId, acctgTransType,
+		 entrySequenceId);
 
 		// Mark the loan expectation as paid
 		updateExpactationAsPaid(loanRepayment.getString("partyId"));
