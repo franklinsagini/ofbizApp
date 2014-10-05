@@ -159,13 +159,13 @@ under the License.
 				   
 					jQuery('input[name="loanNo"]').val(data.loanNo);
 					jQuery('select[name="loanTypeId"]').val(data.loanTypeId);
-					jQuery('input[name="loanBalanceAmt"]').val(data.loanAmt);
-					
+					/** jQuery('input[name="loanBalanceAmt"]').val(data.loanAmt); **/
+					jQuery('input[name="loanAmt"]').val(data.loanAmt);
 					jQuery('input[name="totalLoanDue"]').val(data.totalLoanDue);
 					jQuery('input[name="totalInterestDue"]').val(data.totalInterestDue);
 					jQuery('input[name="totalInsuranceDue"]').val(data.totalInsuranceDue);
 					jQuery('input[name="totalPrincipalDue"]').val(data.totalPrincipalDue);
-					jQuery('input[name="transactionAmount"]').val(data.transactionAmount);
+					/** jQuery('input[name="transactionAmount"]').val(data.transactionAmount); **/
 					
 				//});
                },

@@ -1217,7 +1217,8 @@ public class AccHolderTransactionServices {
 			result.put("loanNo", loanApplication.get("loanNo"));
 			result.put("loanTypeId",
 					loanApplication.get("loanProductId"));
-			result.put("loanAmt", loanApplication.get("loanAmt"));
+			result.put("loanAmt", loanApplication.getBigDecimal("loanAmt"));
+			
 			
 			/***
 			 * loanNo
