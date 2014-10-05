@@ -1155,5 +1155,166 @@ public class LoanRepayments {
 			log.error("Could not create Transaction");
 		}
 	}
+	
+	/****
+	 * Get dues by Loan
+	 * 
+	 * getTotalLoanDue(partyId, loanApplicationId)
+	 * getTotalInterestDue(partyId, loanApplicationId)
+	 * getTotalInsuranceDue(partyId, loanApplicationId)
+	 * getTotalPrincipalDue(partyId, loanApplicationId)
+	 * */
+	/**
+	 * @author Japheth Odonya  @when Oct 5, 2014 7:00:40 PM
+	 * 
+	 * Get Total Loan Due for specific Loan
+	 * **/
+	public static BigDecimal getTotalLoanDue(String partyId, String loanApplicationId) {
 
+		BigDecimal totalDue = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
+		//loanApplicationId
+		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
+						.makeCondition("partyId", EntityOperator.EQUALS,
+								partyId), 
+								EntityCondition
+								.makeCondition("loanApplicationId", EntityOperator.EQUALS,
+										loanApplicationId)
+
+				), EntityOperator.AND);
+
+		try {
+			loanExpectationELI = delegator.findList("LoanExpectation",
+					loanExpectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanExpectation : loanExpectationELI) {
+			totalDue = totalDue.add(loanExpectation
+					.getBigDecimal("amountAccrued"));
+		}
+
+		return totalDue;
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Oct 5, 2014 7:17:14 PM
+	 * 
+	 * Get total interest for the loan
+	 * 
+	 * */
+	public static BigDecimal getTotalInterestDue(String partyId, String loanApplicationId) {
+		BigDecimal totalInterestDue = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
+						.makeCondition("repaymentName", EntityOperator.EQUALS,
+								"INTEREST"), EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+						EntityCondition.makeCondition(
+								"loanApplicationId", EntityOperator.EQUALS, loanApplicationId)
+						
+
+				), EntityOperator.AND);
+
+		try {
+			loanExpectationELI = delegator.findList("LoanExpectation",
+					loanExpectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanExpectation : loanExpectationELI) {
+			totalInterestDue = totalInterestDue.add(loanExpectation
+					.getBigDecimal("amountAccrued"));
+		}
+
+		return totalInterestDue;
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Oct 5, 2014 7:24:17 PM
+	 * 
+	 * TotalInsuranceDue for a loanApplication
+	 * */
+	public static BigDecimal getTotalInsuranceDue(String partyId,  String loanApplicationId) {
+		BigDecimal totalInsuranceDue = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
+						.makeCondition("repaymentName", EntityOperator.EQUALS,
+								"INSURANCE"), EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+						 EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS, loanApplicationId)
+
+				), EntityOperator.AND);
+
+		try {
+			loanExpectationELI = delegator.findList("LoanExpectation",
+					loanExpectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanExpectation : loanExpectationELI) {
+			totalInsuranceDue = totalInsuranceDue.add(loanExpectation
+					.getBigDecimal("amountAccrued"));
+		}
+
+		return totalInsuranceDue;
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Oct 5, 2014 7:27:39 PM
+	 * */
+	public static BigDecimal getTotalPrincipalDue(String partyId, String loanApplicationId) {
+		BigDecimal totalPrincipalDue = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
+						.makeCondition("repaymentName", EntityOperator.EQUALS,
+								"PRINCIPAL"), EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+						
+						EntityCondition.makeCondition(
+								"loanApplicationId", EntityOperator.EQUALS, loanApplicationId)
+
+				), EntityOperator.AND);
+
+		try {
+			loanExpectationELI = delegator.findList("LoanExpectation",
+					loanExpectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanExpectation : loanExpectationELI) {
+			totalPrincipalDue = totalPrincipalDue.add(loanExpectation
+					.getBigDecimal("amountAccrued"));
+		}
+
+		return totalPrincipalDue;
+	}
 }
