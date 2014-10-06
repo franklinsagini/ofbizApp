@@ -24,7 +24,7 @@ import com.google.gson.Gson;
  * @author Japheth Odonya @when Oct 6, 2014 7:09:13 PM
  * 
  *         Member Validations
- * 
+ * 		org.ofbiz.party.party.MemberValidation uniqueFieldsValidation
  *         idNumber pinNumber payrollNumber mobileNumber employeeNumber
  * */
 public class MemberValidation {
@@ -44,18 +44,29 @@ public class MemberValidation {
 		String payrollNumberState = "FREE";
 		String mobileNumberState = "FREE";
 		String employeeNumberState = "FREE";
+		String idNumberSize = "";
 
 		idNumberState = getIdNumberState(idNumber);
 		pinNumberState = getPinNumberState(pinNumber);
 		payrollNumberState = getPayrollNumberState(payrollNumber);
 		mobileNumberState = getMobileNumberState(mobileNumber);
 		employeeNumberState = getEmployeeNumberState(employeeNumber);
+		
+		
+		if (idNumber.length() < 6){
+			idNumberSize = "LESS";
+		}
+		
+		if (idNumber.length() > 8){
+			idNumberSize = "MORE";
+		}
 
 		result.put("idNumberState", idNumberState);
 		result.put("pinNumberState", pinNumberState);
 		result.put("payrollNumberState", payrollNumberState);
 		result.put("mobileNumberState", mobileNumberState);
 		result.put("employeeNumberState", employeeNumberState);
+		result.put("idNumberSize", idNumberSize);
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -152,6 +163,11 @@ public class MemberValidation {
 	}
 
 	private static String getPinNumberState(String pinNumber) {
+		
+		if ((pinNumber == null) || (pinNumber.equals(""))){
+			return "FREE";
+		}
+		
 		List<GenericValue> memberELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {

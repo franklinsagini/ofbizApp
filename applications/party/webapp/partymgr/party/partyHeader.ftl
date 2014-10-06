@@ -61,7 +61,7 @@
    	Validate Member details - ID Number, Payroll Number, Pin Number, Employee Number must all be unique
    **/
     function memberRegistrationFormValidation(){
-		alert(' Checking for unique fields ... ');
+		/** alert(' Checking for unique fields ... '); **/
 		var idNumber = jQuery('input[name="idNumber"]').val();
     	var pinNumber  = jQuery('input[name="pinNumber"]').val();
 		var payrollNumber = jQuery('input[name="payrollNumber"]').val();
@@ -74,6 +74,7 @@
     	var payrollNumberState = '';
     	var mobileNumberState = '';
 		var employeeNumberState = '';
+		var idNumberSize = '';
     	
     	var reqUrl = '/partymgr/control/memberRegistrationFormValidation';
     	
@@ -90,7 +91,7 @@
 							payrollNumberState =  data.payrollNumberState;
 							mobileNumberState =  data.mobileNumberState;
 							employeeNumberState =  data.employeeNumberState;
-							
+							idNumberSize =  data.idNumberSize;
 			     			
 					    	
 					    	//alert('collateralsAvailable  inanon'+collateralsAvailable);
@@ -133,6 +134,17 @@
     		message = "Employee Number already used, it must be unique ! ";
     		isValid = false;
     	}
+    	
+    	if ((idNumberSize == 'LESS')){
+    		message = message+"  ID Number must be greater than or equal to 6 characters ! ";
+    		isValid = false;
+    	}
+    	
+    	if ((idNumberSize == 'MORE')){
+    		message = message+"  ID Number must be less than or equal to 8 characters ! ";
+    		isValid = false;
+    	}
+    	
 
     	if (!isValid){
     		alert(message);
