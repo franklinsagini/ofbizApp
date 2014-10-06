@@ -3126,6 +3126,7 @@ under the License.
     	<field name="incomeScaleId" type="id"></field>
     	
     	<prim-key field="partyId"/>
+    	
       	<relation type="one" fk-name="MEMBER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
@@ -3153,6 +3154,14 @@ under the License.
         <relation type="one" fk-name="MEMBER_MemberTypeName" rel-entity-name="MemberType">
             <key-map field-name="memberTypeName" rel-field-name="name"/>
         </relation>
+        
+        <index unique="true" name="index_idNumber">
+    		<index-field name="idNumber"/>
+    	</index>
+    	<index unique="true" name="index_payrollNumber">
+    		<index-field name="payrollNumber"/>
+    	</index>
+        
     </entity>
 
     <!-- County -->

@@ -56,4 +56,92 @@
     });
 
    }
+   
+   /***
+   	Validate Member details - ID Number, Payroll Number, Pin Number, Employee Number must all be unique
+   **/
+    function memberRegistrationFormValidation(){
+		alert(' Checking for unique fields ... ');
+		var idNumber = jQuery('input[name="idNumber"]').val();
+    	var pinNumber  = jQuery('input[name="pinNumber"]').val();
+		var payrollNumber = jQuery('input[name="payrollNumber"]').val();
+    	var mobileNumber  = jQuery('input[name="mobileNumber"]').val();
+		var employeeNumber = jQuery('input[name="employeeNumber"]').val();
+		
+    	var isValid = true;
+    	var idNumberState = '';
+    	var pinNumberState = '';
+    	var payrollNumberState = '';
+    	var mobileNumberState = '';
+		var employeeNumberState = '';
+    	
+    	var reqUrl = '/partymgr/control/memberRegistrationFormValidation';
+    	
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'idNumber': idNumber, 'pinNumber': pinNumber, 'payrollNumber': payrollNumber, 'mobileNumber': mobileNumber, 'mobileNumber': mobileNumber}, 
+			     success : function(data){
+			     
+							idNumberState = data.idNumberState;
+							pinNumberState =  data.pinNumberState;
+							payrollNumberState =  data.payrollNumberState;
+							mobileNumberState =  data.mobileNumberState;
+							employeeNumberState =  data.employeeNumberState;
+							
+			     			
+					    	
+					    	//alert('collateralsAvailable  inanon'+collateralsAvailable);
+							//alert('guarantorsAvailable inanon'+guarantorsAvailable);
+							//alert('guarantorsTotalDepositsEnough  inanon'+guarantorsTotalDepositsEnough);
+							//alert('eacherGuarantorGreaterThanAverage  inanon '+eacherGuarantorGreaterThanAverage);
+							
+
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating member");
+			              }
+			
+			
+		});
+		
+    	var message = '';
+    	if ((idNumberState == 'USED')){
+    		message = "ID Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+		if ((pinNumberState == 'USED')){
+    		message = message+" PIN Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+		if ((payrollNumberState == 'USED')){
+    		message = message+" Payroll Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+		if ((mobileNumberState == 'USED')){
+    		message = message+" Mobile Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+		if ((employeeNumberState == 'USED')){
+    		message = "Employee Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+    	if (!isValid){
+    		alert(message);
+    	} else{
+    		alert(' Saving Member!');
+    	}
+    	
+    	
+    	return isValid;
+    
+    }
  </script>
