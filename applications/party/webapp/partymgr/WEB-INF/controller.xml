@@ -455,6 +455,20 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="EditPartyGroup" />
 	</request-map>
+	
+	<request-map uri="addBranch">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addBranch" />
+	</request-map>
+	
+	 <request-map uri="generateAccountNumber">
+        <!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+        <event type="java" path="org.ofbiz.party.party.MemberServices" invoke="generateAccountNumber" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
+	
+	
 	<request-map uri="createPartyGroup">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createPartyGroup" />
@@ -2391,6 +2405,10 @@
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPerson" />
 	<view-map name="EditPartyGroup" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup" />
+	
+	<view-map name="addBranch" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#addBranch" />
+		
 	<view-map name="EditPartyAttribute" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPartyAttribute" />
 	<view-map name="AddPartyNote" type="screen"

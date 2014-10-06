@@ -692,6 +692,34 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="addBranch">
+		<section>
+			<actions>
+				<set field="titleProperty" value="PageTitleEditGroupInformation" />
+				<set field="tabButtonItem" value="viewprofile" />
+				<set field="headerItem" value="find" />
+				<set field="labelTitleProperty" value="PageTitleEditGroupInformation" />
+
+				<set field="donePage" from-field="parameters.DONE_PAGE"
+					default-value="viewprofile" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<entity-one entity-name="PartyAndGroup" value-field="partyGroup" />
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonPartyDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="Branch Information ">
+							<include-form name="addBranch"
+								location="component://party/widget/partymgr/PartyForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	<screen name="EditUserLogin">
 		<section>
 			<actions>
@@ -2724,6 +2752,12 @@
 									<include-form name="FindMemberActive"
 										location="component://party/widget/partymgr/PartyForms.xml" />
 								</screenlet -->
+								<container style="button-bar">
+                                            <link target="addBranch"  text="New Branch" style="buttontext create">
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                                
+                                            </link>
+                                </container>
 								<screenlet title="Branches List">
 									<include-form
 										location="component://party/widget/partymgr/PartyForms.xml"
