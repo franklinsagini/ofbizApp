@@ -105,4 +105,27 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+       <service name="createTransferRule" engine="simple" default-entity-name="TransferRule"
+             location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="createTransferRule" auth="true">
+        <description>Create TransferRule</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateTransferRule" engine="simple" default-entity-name="TransferRule"
+             location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="updateTransferRule" auth="true">
+        <description>Update TransferRule</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteTransferRule" engine="simple" default-entity-name="TransferRule"
+             location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="deleteTransferRule" auth="true">
+        <description>Delete TransferRule</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
 </services>

@@ -287,7 +287,10 @@
 				<field-map field-name="viewIndex" from-field="viewIndex" />
 				<field-map field-name="viewSize" from-field="viewSize" />
 			</service> -->
-
+			<entity-condition entity-name="EmplLeave">
+				<condition-expr field-name="partyId" operator="equals"
+					from-field="userLogin.partyId" />
+			</entity-condition>
 		</actions>
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="PartyNameView"
@@ -370,6 +373,8 @@
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
 		<alt-target use-when="leaveApp==null" target="createEmplLeaveExt" />
+		<field name="leaveId"><hidden/></field>
+		<field name="createdDate"><hidden/></field>
 		<field name="partyId" title="Member">
 			<hidden value="${userLogin.partyId}" />
 		</field>
@@ -509,10 +514,10 @@
 		<field name="ApproveLeaves" title="${uiLabelMap.viewdetails}"
 			widget-style="buttontext">
 			<hyperlink target="viewEmplLeaveDetails" description="${uiLabelMap.viewdetails}">
+			    <parameter param-name="leaveId" />
 				<parameter param-name="partyId" value="${partyId}" />
 				<parameter param-name="fromDate" />
 				<parameter param-name="leaveTypeId" />
-				<parameter param-name="leaveId" />
 			</hyperlink>
 		</field>
 	</form>
@@ -654,15 +659,12 @@
 	<form name="ListLeaveLogs" list-name="leaveLogs" target="" title=""
 		type="list" paginate-target="ListLeaveLogs" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
-<!-- 		<actions>
+	<actions>
 			<entity-condition entity-name="LeaveStatusLog" list="leaveLogs">
-				<condition-expr field-name="leaveId"
-					operator="equals" from-field="leaveId" />
+				<order-by field-name="lastUpdatedStamp"/>
 			</entity-condition>
-		</actions> -->
-		<field name="leaveId">
-			<display />
-		</field>
+		</actions> 
+		
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="Person" key-field-name="partyId"
 				description="${partyId} ${firstName} ${lastName}">
@@ -670,10 +672,15 @@
 
 		</field>
 		<field name="approvedBy" title="Approved By">
-			<display />
+			<display-entity entity-name="Person" key-field-name="partyId"
+				description="${firstName} ${lastName}">
+			</display-entity>
+			<!-- </display> -->
 		</field>
 		<field name="rejectedBy" title="Rejected By">
-			<display />
+			<display-entity entity-name="Person" key-field-name="partyId"
+				description="${firstName} ${lastName}">
+			</display-entity>
 		</field>
 		<field name="approvalStatus">
 			<display />

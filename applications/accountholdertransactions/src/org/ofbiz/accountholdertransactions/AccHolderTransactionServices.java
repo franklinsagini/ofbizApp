@@ -956,7 +956,9 @@ public class AccHolderTransactionServices {
 		// = accountProductCharge.getBigDecimal("");
 		String memberAccountId = accountTransaction.getString("memberAccountId");
 		String productChargeId = accountProductCharge.getString("productChargeId");
-		createTransaction(accountTransaction, chargeName, userLogin, memberAccountId, bdChargeAmount, productChargeId);
+		
+		String accountTransactionParentId = accountTransaction.getString("accountTransactionParentId");
+		createTransaction(accountTransaction, chargeName, userLogin, memberAccountId, bdChargeAmount, productChargeId, accountTransactionParentId);
 		
 		// POST Charge
 		String acctgTransType = "OTHER_INCOME";
@@ -1158,14 +1160,14 @@ public class AccHolderTransactionServices {
 	private static void createTransaction(GenericValue loanApplication,
 			String transactionType, Map<String, String> userLogin,
 			String memberAccountId, BigDecimal transactionAmount,
-			String productChargeId) {
+			String productChargeId, String accountTransactionParentId) {
 		Delegator delegator = loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
 				.getNextSeqId("AccountTransaction");
 		String createdBy = (String) userLogin.get("userLoginId");
 		String updatedBy = (String) userLogin.get("userLoginId");
-		String branchId = (String) userLogin.get("partyId");
+		String branchId = getEmployeeBranch((String) userLogin.get("partyId"));
 		String partyId = loanApplication.getString("partyId");
 		String increaseDecrease;
 		if (productChargeId == null) {
@@ -1181,7 +1183,7 @@ public class AccHolderTransactionServices {
 						"increaseDecrease", increaseDecrease,
 						"memberAccountId", memberAccountId, "productChargeId",
 						productChargeId, "transactionAmount",
-						transactionAmount, "transactionType", transactionType));
+						transactionAmount, "transactionType", transactionType, "accountTransactionParentId", accountTransactionParentId));
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
@@ -1215,7 +1217,30 @@ public class AccHolderTransactionServices {
 			result.put("loanNo", loanApplication.get("loanNo"));
 			result.put("loanTypeId",
 					loanApplication.get("loanProductId"));
-			result.put("loanAmt", loanApplication.get("loanAmt"));
+			result.put("loanAmt", loanApplication.getBigDecimal("loanAmt"));
+			
+			
+			/***
+			 * loanNo
+				loanTypeId
+				totalLoanDue
+				totalInterestDue
+				totalInsuranceDue
+				totalPrincipalDue
+				transactionAmount
+				
+				getTotalLoanDue(partyId)
+				getTotalInterestDue(partyId)
+				getTotalInsuranceDue(partyId)
+				getTotalPrincipalDue(partyId)
+			 * */
+			BigDecimal totalLoanDue = LoanRepayments.getTotalLoanDue(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId"));
+			result.put("totalLoanDue", totalLoanDue);
+			result.put("transactionAmount", totalLoanDue);
+			
+			result.put("totalInterestDue", LoanRepayments.getTotalInterestDue(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId")));
+			result.put("totalInsuranceDue", LoanRepayments.getTotalInsuranceDue(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId")));
+			result.put("totalPrincipalDue", LoanRepayments.getTotalPrincipalDue(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId")));
 			
 
 			// result.put("selectedRepaymentPeriod",
@@ -1336,6 +1361,12 @@ public class AccHolderTransactionServices {
 		}
 
 		return person.getString("branchId");
+	}
+	
+	public static String getEmployeeBranch(String partyId){
+		String branchId = "";
+		branchId = getBranch(partyId);
+		return branchId;
 	}
 
 }

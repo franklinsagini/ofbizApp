@@ -16,5 +16,44 @@
 
                 }   
             }); 
+            
+            
+             jQuery('select[name="accountProductId"]').change(function(){
+		
+         var accountProductId = this.value;
+         var partyId = jQuery('input[name="partyId"]').val();
+        var reqUrl = '/partymgr/control/generateAccountNumber';
+         
+         if ((accountProductId.length > 0)){
+ 			
+			generateAccountNumber(reqUrl, partyId, accountProductId );
+         } 
+
         });
+        });
+        
+ /***
+ 	Generate Account Number Branch-Product-MemberNo-Sequence
+ */       
+ function generateAccountNumber(reqUrl, partyId, accountProductId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'partyId': partyId, 'accountProductId': accountProductId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+				 $('input[name="accountNo"]').val(data.accountNumber);
+				
+				 
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+
+
+    });
+
+   }
  </script>

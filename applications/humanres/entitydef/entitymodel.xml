@@ -691,6 +691,7 @@ under the License.
       <field name="leaveId" type="id"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="approvedBy" type="id-ne"></field>
+      <field name="nextApprover" type="id"></field>
       <field name="rejectedBy" type="id-ne"></field>
       <!-- <field name="leaveLogStatus" type="description"></field> -->
       <field name="approvalStatus" type="description"></field>
@@ -701,19 +702,20 @@ under the License.
       <relation type="many" fk-name="PARTY_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
         <key-map field-name="partyId" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="MEMB_STTLOGS" title="Parent" rel-entity-name="Member">
-        <key-map field-name="partyId" rel-field-name="approvedBy"/>
+      <relation type="one" fk-name="PERSON_STTLOGS" title="Parent" rel-entity-name="Person">
+        <key-map field-name="approvedBy" rel-field-name="partyId"/>
       </relation>
     </entity>
     
     <entity entity-name="EmplLeave"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Entity">
+            
+        <field name="leaveId" type="id-ne"/>
         <field name="partyId" type="id-ne"/>
         <field name="leaveTypeId" type="id-ne"/>
         <field name="emplLeaveReasonTypeId" type="id-ne"/>
-        <field name="leaveId" type="id"/>
-        <field name="fromDate" type="date"/>
+        <field name="fromDate" type="date-time"/>
         <field name="leaveDuration" type="floating-point"/>     
         <field name="carryOverUsed" type="floating-point"/>     
 
@@ -735,9 +737,10 @@ under the License.
 
         <field name="description" type="description"/>
         <!-- <prim-key field="leaveId"/> -->
-        <prim-key field="partyId"/>
+        <!-- prim-key field="partyId"/>
         <prim-key field="leaveTypeId"/>
-        <prim-key field="fromDate"/>
+        <prim-key field="createdDate"/ -->
+        <prim-key field="leaveId"/>
         <relation type="one" fk-name="EMPL_LEAVE_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>

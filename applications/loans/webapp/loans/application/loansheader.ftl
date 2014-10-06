@@ -6,22 +6,25 @@
 		 /** var memberId = jQuery('select[name="partyId"]').val;
          alert(memberId); **/
          var memberId = this.value;
+         var loanProductId = jQuery('select[name="loanProductId"]').val();
          var reqUrl = '/loans/control/memberdetails';
-         sendAjaxRequest(reqUrl, memberId);
+         sendAjaxRequest(reqUrl, memberId, loanProductId);
         });
 		
 	jQuery('select[name="guarantorId"]').change(function(){
          var memberId = this.value;
+         var loanProductId = jQuery('input[name="loanProductId"]').val();
          var reqUrl = '/loans/control/memberdetails';
-         sendAjaxRequest(reqUrl, memberId);
+         sendAjaxRequest(reqUrl, memberId, loanProductId);
         });
         
    jQuery('select[name="partyId"]').change(function(){
 		 /** var memberId = jQuery('select[name="partyId"]').val;
          alert(memberId); **/
          var memberId = this.value;
+         var loanProductId = jQuery('select[name="loanProductId"]').val();
          var reqUrl = '/loans/control/memberdetails';
-         sendAjaxRequest(reqUrl, memberId);
+         sendAjaxRequest(reqUrl, memberId, loanProductId);
          
          if ((jQuery('select[name="loanProductId"]').val().length > 0) && (memberId.length > 0)){
          	var loanProductId = jQuery('select[name="loanProductId"]').val();
@@ -63,12 +66,12 @@
      
      
 
-  function sendAjaxRequest(reqUrl, memberId){
+  function sendAjaxRequest(reqUrl, memberId, loanProductId){
     jQuery.ajax({
 
      url    : reqUrl,
      type   : 'GET',
-     data   : {'memberId': memberId}, //here you can pass the parameters to  
+     data   : {'memberId': memberId, 'loanProductId': loanProductId}, //here you can pass the parameters to  
                                                    //the request if any.
      success : function(data){
      			//alert(' ID No, Member Type, Member Number, Mobile No for '+memberId);

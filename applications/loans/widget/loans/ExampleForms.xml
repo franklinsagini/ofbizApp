@@ -729,8 +729,22 @@
 			<!-- entity-condition entity-name="SaccoProduct" list="productsList"> 
 				<condition-expr field-name="productType" operator="equals" value="Loan"/> 
 				</entity-condition -->
+				
+				<set field="partyId" from-field="parameters.partyId"/>
+				<entity-one entity-name="Member" value-field="member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
 
-			<entity-condition entity-name="LoanProduct" list="productsList">
+			<!--entity-condition entity-name="LoanProductClass" list="productClassList">
+				<condition-expr field-name="memberClass" operator="equals" value="${member.memberClass}"/>
+				<select-field field-name="loanProductId"/>
+			</entity-condition -->
+			<!-- entity-condition entity-name="LoanProduct" list="productsList">
+				<condition-expr field-name="loanProductId" operator="in" value="${productClassList}" />
+			</entity-condition -->
+			
+			<entity-condition entity-name="LoanProductClassView" list="productsList">
+				<condition-expr field-name="memberClass" operator="equals" value="${member.memberClass}"/>
 			</entity-condition>
 
 			<entity-condition entity-name="PaymentMethodType"
@@ -743,6 +757,8 @@
 
 			<!--entity-condition entity-name="LoanSecurity" list="loanSecurityList"> 
 				</entity-condition -->
+				
+				<set field="membershipDuration" value="${bsh:org.ofbiz.loans.LoanServices.getMemberDuration(partyId);}" type="Integer"   />
 		</actions>
 
 		<field name="loanApplicationId">
@@ -766,40 +782,44 @@
 			size="20"> </lookup> </field -->
 		<field name="firstName" title="First Name" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" />
+			<text size="30" maxlength="60" default-value="${member.firstName}" />
 		</field>
 		<field name="middleName" title="Middle Name">
-			<text size="30" maxlength="60" />
+			<text size="30" maxlength="60" default-value="${member.middleName}"  />
 		</field>
 		<field name="lastName" title="Last Name" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" />
+			<text size="30" maxlength="60" default-value="${member.lastName}"  />
 		</field>
 
 		<field name="idNumber" title="ID Number" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" />
+			<text size="30" maxlength="60" default-value="${member.idNumber}"  />
 		</field>
 		<field name="memberType" title="Member Type" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" />
+			<text size="30" maxlength="60" default-value="${member.memberType}"  />
+		</field>
+		<field name="memberClass" title="Member Class" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" default-value="${member.memberClass}"  />
 		</field>
 		<field name="memberNumber" title="Member Number" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" />
+			<text size="30" maxlength="60" default-value="${member.memberNumber}"  />
 		</field>
 		<field name="mobileNumber" title="Mobile Number" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" />
+			<text size="30" maxlength="60" default-value="${member.mobileNumber}"  />
 		</field>
 
 		<field name="joinDate" title="Date Joined" required-field="true"
 			widget-style="required">
-			<date-time type="date" />
+			<date-time type="date" default-value="${member.joinDate}"  />
 		</field>
 		<field name="membershipDuration" title="Membership Duration (Months)"
 			widget-style="required" required-field="true">
-			<text size="30" maxlength="60" />
+			<text size="30" maxlength="60" default-value="${membershipDuration}" />
 		</field>
 
 		<field name="loanProductId" title="Loan Type" widget-style="required"

@@ -113,9 +113,11 @@ public class SequenceUtil {
     }
 
     private class SequenceBank {
-        public static final long defaultBankSize = 10;
+        //public static final long defaultBankSize = 10;
+    	public static final long defaultBankSize = 1;
         public static final long maxBankSize = 5000;
-        public static final long startSeqId = 10000;
+        //public static final long startSeqId = 10000;
+        public static final long startSeqId = 1;
         public static final long minWaitMillis = 5;
         public static final long maxWaitMillis = 50;
         public static final int maxTries = 5;

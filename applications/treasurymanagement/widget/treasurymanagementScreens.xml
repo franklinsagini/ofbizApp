@@ -20,7 +20,7 @@
     <screen name="NewTreasuryType">
         <section>
             <actions>
-                <set field="titleProperty" value="Treasury Type"/>
+                <set field="titleProperty" value="Treasury Setup"/>
                 <set field="headerItem" value="treasuryType"/>
                 
                 <set field="displayPassword" value="Y"/>
@@ -39,7 +39,7 @@
                                 <if-has-permission permission="TREASURYMANAGEMENT" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Treasury Type">
+                                <screenlet title="Treasury Setup">
                                     <include-form name="NewTreasuryType" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -50,7 +50,7 @@
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Treasury Type List">
+                        		<screenlet title="Treasury Setup	 List">
                         			<include-form name="listTreasuryType" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
                         		</screenlet>
                         	</widgets>
@@ -84,7 +84,7 @@
                                 <if-has-permission permission="TREASURYMANAGEMENT" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Treasury">
+                                <screenlet title="Teller Management">
                                     <include-form name="NewTreasury" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -95,7 +95,7 @@
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Treasury List">
+                        		<screenlet title="Teller Management List">
                         			<include-form name="listTreasury" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
                         		</screenlet>
                         	</widgets>
@@ -302,6 +302,110 @@
                                 </screenlet>
                         		<screenlet title="Transactions">
                         			<include-form name="listTellerTransactions" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Transfer Rules -->
+    <screen name="transferrules">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Transfer Rules"/>
+                <set field="headerItem" value="transferrules"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createTransferRule"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <entity-one entity-name="TransferRule" value-field="transferRuleContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="Source of Transfer">
+                        	<widgets>
+                        		
+                        		<screenlet title="Source of Transfer ">
+                        			<include-form name="sourceOfTransfer" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- transferdestinations -->
+    <screen name="transferdestinations">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Transfer Destinations"/>
+                <set field="headerItem" value="transferdestinations"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createTransferRule"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <entity-one entity-name="TransferRule" value-field="transferRuleContext"/>
+                
+                <entity-one value-field="treasuryType" entity-name="TreasuryType">
+                	<field-map field-name="treasuryTypeId" from-field="parameters.treasuryTypeId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="Transfer Destinations">
+                        	<widgets>
+                        	<container>
+                        		<label style="h3"> Source Name : ${treasuryType.name} </label>
+                        	</container>
+                        	
+                        	
+                        		<screenlet title="Transfer Destinations ">
+                        			<include-form name="NewTransferDestination" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet title="Transfer Destinations ">
+                        			<include-form name="transferdestinations" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="transfersources">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Source Treasury"/>
+                <set field="headerItem" value="transfersources"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createTreasury"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="Treasury" value-field="treasuryContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Source Treasury">
+                        			<include-form name="listTransferSources" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

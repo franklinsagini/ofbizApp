@@ -1131,7 +1131,7 @@
 		<make-value entity-name="EmplLeave" value-field="newEntity"/>
 		<set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <now-timestamp field="newEntity.createdDate"/>
+        <now-timestamp field="createdDate"/>
 		<set field="documentName" value="LEAVE"  />
 
 		<if-empty field="parameters.workflowDocumentTypeId">
@@ -1140,6 +1140,7 @@
 		</if-empty>
 		<set field="newEntity.applicationStatus" value="NEW"/>
 		<set field="newEntity.leaveStatus" value="DRAFT"/>
+		<set field="newEntity.createdDate" from-field="createdDate"/>
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
 		<sequenced-id sequence-name="EmplLeave" field="leaveId" />

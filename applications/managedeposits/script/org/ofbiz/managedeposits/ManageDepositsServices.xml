@@ -46,4 +46,53 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- Income Scale -->
+    <simple-method method-name="createIncomeScale" short-description="Create IncomeScale">
+        <make-value entity-name="IncomeScale" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="IncomeScale" field="incomeScaleId"/>
+        <set from-field="incomeScaleId" field="newEntity.incomeScaleId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateIncomeScale" short-description="Update IncomeScale">
+        <entity-one entity-name="IncomeScale" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteIncomeScale" short-description="Delete IncomeScale">
+        <entity-one entity-name="IncomeScale" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createShareMinimum" short-description="Create ShareMinimum">
+        <make-value entity-name="ShareMinimum" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="ShareMinimum" field="shareMinimumId"/>
+        <set from-field="shareMinimumId" field="newEntity.shareMinimumId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateShareMinimum" short-description="Update ShareMinimum">
+        <entity-one entity-name="ShareMinimum" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteShareMinimum" short-description="Delete ShareMinimum">
+        <entity-one entity-name="ShareMinimum" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

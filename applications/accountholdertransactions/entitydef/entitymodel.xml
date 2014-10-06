@@ -48,8 +48,9 @@ under the License.
     -->
     	
     <!-- ========================================================= -->
-    <entity entity-name="AccountTransaction" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
+    <entity entity-name="AccountTransaction" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
         <field name="accountTransactionId" type="id-ne"><description>primary sequenced ID</description></field>
+		<field name="accountTransactionParentId" type="id"></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
@@ -89,6 +90,10 @@ under the License.
         <relation type="one" fk-name="AccountTransaction_Charge" rel-entity-name="ProductCharge">
         	<key-map field-name="productChargeId"/>
       	</relation>
+      	
+      	<relation type="one" fk-name="AccountTransaction_Parent" rel-entity-name="AccountTransactionParent">
+        	<key-map field-name="accountTransactionParentId"/>
+      	</relation>
         
         <relation type="one" fk-name="ACCOUNTTRANSACTION_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
@@ -117,6 +122,34 @@ under the License.
             <key-map field-name="bankBranchId"/>
         </relation>
     </entity>
+    
+    <entity entity-name="AccountTransactionParent" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
+        <field name="accountTransactionParentId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="branchId" type="id"></field>
+        <field name="partyId" type="id"></field>
+        <field name="memberAccountId" type="id"></field>
+        
+        <field name="approved" type="name"></field>
+        <field name="approvedBy" type="name"></field>
+        <field name="dateApproved" type="date-time"></field>
+        
+        <field name="rejected" type="name"></field>
+        <field name="rejectedBy" type="name"></field>
+        <field name="dateRejected" type="date-time"></field>
+        
+        <field name="posted" type="name"></field>
+        <field name="datePosted" type="date-time"></field>
+        
+        <field name="comments" type="name"></field>
+        
+        <prim-key field="accountTransactionParentId"/>
+        <relation type="one" fk-name="ACCOUNTTRANSACTIONPARENT_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+     </entity>
     
     <entity entity-name="CashWithdrawal" package-name="org.ofbiz.accountholdertransactions" title="CashWithdrawal Entity">
         <field name="cashWithdrawalId" type="id-ne"><description>primary sequenced ID</description></field>
@@ -287,6 +320,8 @@ under the License.
          <field name="loanApplicationId" type="id"></field>
          <field name="loanNo" type="name"></field>
          <field name="loanTypeId" type="id"></field> <!-- Sacco Product Id type of LOAN -->
+         
+         <field name="loanAmt" type="currency-amount"></field>
          <field name="loanBalanceAmt" type="currency-amount"></field>
          <field name="interestBalanceAmt" type="currency-amount"></field>
          <field name="loanRepaymentAmt" type="currency-amount"></field>

@@ -168,17 +168,19 @@
 			</entity-condition>
 			<entity-condition entity-name="RegistryFileActionTypes" list="fileActionsList">
 				<order-by field-name="fileActionTypeId" />
-			</entity-condition>
+			</entity-condition>	
+			
 		</actions>
 		<alt-target use-when="requestfileContext!=null" target="updateFiletype" />
-		<field name="actionId"><hidden /></field>
-		<field name="partyId" use-when="FindMemberfilesContext!=null"><display/></field>
+		<field name="actionId" ><hidden /></field>
+		<field name="actionId" ><hidden /></field>
 		<field name="fileActionTypeId" title="File Action" 	widget-style="required" required-field="true">
 			<drop-down>
 				<list-options key-name="fileActionTypeId" list-name="fileActionsList"
 					description="${fileActionType}" />
 			</drop-down>
-		</field>
+		</field> 
+		
 		<field name="actionId" use-when="requestfileContext!=null"	tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
 		<!-- <field name="partyId" title="Party Id"><hidden /></field> -->
 		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button" /></field>
@@ -197,7 +199,7 @@
     	<field name="fileActionTypeId" title="Action Type"><display-entity entity-name="RegistryFileActionTypes" description="${fileActionType}"></display-entity></field>
 		<field name="partyId" title="File Folio Number"><display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity></field>
 		<field name="actionBy"><display /></field>
-		<field name="actionDate" title="Date Requested"><display /></field>
+		<field name="actionDate"><display /></field>
 	</form>
 
 
@@ -278,6 +280,7 @@
 			<hyperlink also-hidden="false" description="Other File Actions" target="reqfileURL">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
 			</hyperlink>
 		</field>
 		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>

@@ -103,27 +103,6 @@
 
 	</simple-method>
 
-
-<!-- 
-	<simple-method method-name="requestfiles" short-description="request File ">
-		 <now-timestamp field="nowTimestamp"/>
-		<make-value entity-name="RegistryFilesRequest" value-field="newEntity" />
-		<set-pk-fields map="parameters" value-field="newEntity" />
-		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="RegistryFilesRequest" field="requestId" />
-		<set from-field="requestId" field="newEntity.requestId" />
-		<set value="${userLogin.partyId}" field="newEntity.requester" />
-		<set field="newEntity.requestDate" from-field="nowTimestamp" />
-		<create-value value-field="newEntity" />
-
-
-		<set field="setStatus.partyId" from-field="newEntity.partyId"/>
-        <set field="setStatus.status" value="REQUESTED"/>
-        <call-service service-name="updateRegistryFileStatus" in-map-name="setStatus"/>
-        <field-to-result field="newEntity.partyId" result-name="partyId"/>
-
-
-	</simple-method> -->
 	
 	<simple-method method-name="requestfiles" short-description="request File ">
 		 <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
@@ -138,7 +117,7 @@
 		 <entity-one entity-name="RegistryFileActionTypes" value-field="fileActionType">
 		 	<field-map field-name="fileActionTypeId" from-field="fileActionTypeId"/>
 		 </entity-one>
-		 
+
 		 <!-- Get status -->
 		 <set field="registryFile.status" value="${fileActionType.status}"/>
 		<store-value value-field="registryFile" />

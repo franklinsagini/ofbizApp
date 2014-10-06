@@ -541,6 +541,7 @@ under the License.
     <form name="AccountProduct" type="single" target="createAccountProduct"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="accountContext">
         
+       
         <field name="accountProductId"><hidden/></field>
  
         <field name="name" title="Name"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
@@ -600,7 +601,10 @@ under the License.
     
     <!-- Loan Product -->
     <form name="LoanProduct" type="single" target="createLoanProduct" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanContext">
-        
+         <actions>
+        	<entity-condition entity-name="AccountProduct" list="accountProductList">
+        	</entity-condition>
+        </actions>
         <field name="loanProductId"><hidden/></field>
  
         <field name="name" title="Name"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
@@ -622,6 +626,19 @@ under the License.
                 
             </drop-down>
         </field>
+        
+        <!-- Multiplier Account Product
+        	MULTIPLE OF SAVINGS AMOUNT
+         -->
+         
+         <field name="accountProductId" title="Mutliplier Account Product" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+				<list-options list-name="accountProductList" key-name="accountProductId"
+					description="${name} - ${code}" />
+			</drop-down>
+		</field>
+        
         <field name="multipleOfSavingsAmt" title="Multiple of Savings Amount"><text size="30" maxlength="60"/></field>
         
         <field name="retention"  title="Retention?">
@@ -739,6 +756,8 @@ under the License.
             <entity-condition entity-name="LoanProduct">
             	<condition-expr field-name="isActive" operator="equals" value="Y"/>
             </entity-condition>
+            
+            <entity-condition entity-name="AccountProduct" list="accountProductList"></entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanProduct"/ -->
         <!-- field name="skillTypeId">
@@ -746,12 +765,12 @@ under the License.
         </field -->
         <field name="loanProductId"><hidden/></field>
         <field name="name"> <text size="20"></text> </field>
-        <field name="code"><text size="10"/></field>
-        <field name="maxRepaymentPeriod"><text size="10"/></field>
-        <field name="interestRatePM"><text size="10"/></field>
+        <field name="code"><text size="5"/></field>
+        <field name="maxRepaymentPeriod"><text size="5"/></field>
+        <field name="interestRatePM"><text size="5"/></field>
         
-         <field name="minimumAmt"><text size="10"/></field>
-        <field name="maximumAmt"><text size="10"/></field>
+         <field name="minimumAmt"><text size="5"/></field>
+        <field name="maximumAmt"><text size="5"/></field>
         
         <field name="deductionType"  title="Deduction Type" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
@@ -759,6 +778,14 @@ under the License.
                 <option key="REDUCING_BALANCE" description="Reducing/Declining Balance"/>
             </drop-down>
         </field>
+        
+        <field name="accountProductId" title="Mutliplier Account Product" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+				<list-options list-name="accountProductList" key-name="accountProductId"
+					description="${name} - ${code}" />
+			</drop-down>
+		</field>
         
         <field name="Edit Loan">
         	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
@@ -1437,5 +1464,122 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
+    <!-- Loan Product Class -->
+	<form name="NewLoanProductClass" type="single" target="createLoanProductClass"
+        focus-field-name="memberClass" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanSecurityContext">
+        <actions>
+        	<entity-condition entity-name="LoanProduct" list="productList"></entity-condition>
+        </actions>
+        
+        <field name="loanProductId" title="Loan Product" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+				<list-options list-name="productList" key-name="loanProductId"
+					description="${name} - ${code}" />
+			</drop-down>
+		</field>
+		<field name="memberClass" title="Member Class">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="Class A" description="Class A"/>
+				<option key="Class B" description="Class B"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listLoanProductClass" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanProductClass" paginate-target="classifyProducts"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanProductClass">
+            </entity-condition>
+            
+            <entity-condition entity-name="LoanProduct" list="productList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanProductClass"/>
+       <field name="loanProductId" title="Loan Product" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+				<list-options list-name="productList" key-name="loanProductId"
+					description="${name} - ${code}" />
+			</drop-down>
+		</field>
+		<field name="memberClass" title="Member Class">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="Class A" description="Class A"/>
+				<option key="Class B" description="Class B"/>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanProductClass" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanProductId"/>
+                <parameter param-name="memberClass"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Add Find Member Form -->
+    <form name="FindMember" type="single" target="main" default-entity-name="Member">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="idNumber" title="ID Number"><text-find/></field>
+        <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
+        <field name="memberStatus" title="Status"><text-find/></field>
+        <field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    <form name="members" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMember" paginate-target="members"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="Member">
+        		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        		<order-by field-name="-partyId"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
    
+       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+	     <field name="stationId" title="Station">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+        
+        <field name="memberStatus"><display also-hidden="false"></display></field>
+        
+        <field name="Loan Application">
+        	<hyperlink target="loanapplication?partyId=${partyId}" description="Loan Application for ${firstName} ${lastName}"></hyperlink>
+        </field>
+     </form>  
 </forms>
