@@ -1983,6 +1983,11 @@ under the License.
     
     <!-- Active Members -->
     <form name="FindMemberActive" type="single" target="activemembers" default-entity-name="Member">
+        <actions>
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
@@ -2205,7 +2210,7 @@ under the License.
         </actions>
 		<field name="partyId"><hidden value="${partyIdParam}"/></field>
         <field name="stationId"><hidden/></field>
-        <field name="stationNumber" title="Station No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="stationNumber" title="Station Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="employerId" title="Employer" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
         <drop-down allow-empty="true">
