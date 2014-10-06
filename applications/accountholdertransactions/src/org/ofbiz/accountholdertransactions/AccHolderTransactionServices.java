@@ -1217,7 +1217,30 @@ public class AccHolderTransactionServices {
 			result.put("loanNo", loanApplication.get("loanNo"));
 			result.put("loanTypeId",
 					loanApplication.get("loanProductId"));
-			result.put("loanAmt", loanApplication.get("loanAmt"));
+			result.put("loanAmt", loanApplication.getBigDecimal("loanAmt"));
+			
+			
+			/***
+			 * loanNo
+				loanTypeId
+				totalLoanDue
+				totalInterestDue
+				totalInsuranceDue
+				totalPrincipalDue
+				transactionAmount
+				
+				getTotalLoanDue(partyId)
+				getTotalInterestDue(partyId)
+				getTotalInsuranceDue(partyId)
+				getTotalPrincipalDue(partyId)
+			 * */
+			BigDecimal totalLoanDue = LoanRepayments.getTotalLoanDue(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId"));
+			result.put("totalLoanDue", totalLoanDue);
+			result.put("transactionAmount", totalLoanDue);
+			
+			result.put("totalInterestDue", LoanRepayments.getTotalInterestDue(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId")));
+			result.put("totalInsuranceDue", LoanRepayments.getTotalInsuranceDue(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId")));
+			result.put("totalPrincipalDue", LoanRepayments.getTotalPrincipalDue(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId")));
 			
 
 			// result.put("selectedRepaymentPeriod",
