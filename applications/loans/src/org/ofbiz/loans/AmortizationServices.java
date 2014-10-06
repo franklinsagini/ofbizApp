@@ -191,7 +191,7 @@ public class AmortizationServices {
 	 * Get Insurance Rate
 	 * 
 	 * **/
-	private static BigDecimal getInsuranceRate(GenericValue loanApplication) {
+	public static BigDecimal getInsuranceRate(GenericValue loanApplication) {
 		
 		//Get the ID for Insurance in ProductCharge
 		Delegator delegator = loanApplication.getDelegator();
@@ -250,7 +250,7 @@ public class AmortizationServices {
 	 * @author Japheth Odonya @when Aug 7, 2014 12:21:55 AM
 	 * 
 	 * */
-	private static BigDecimal calculateReducingBalancePaymentAmount(
+	public static BigDecimal calculateReducingBalancePaymentAmount(
 			BigDecimal loanAmt, BigDecimal interestRatePM, int repaymentPeriod) {
 
 		BigDecimal bdPaymentAmount;
