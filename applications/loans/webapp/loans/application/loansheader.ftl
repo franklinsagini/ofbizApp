@@ -13,7 +13,7 @@
 		
 	jQuery('select[name="guarantorId"]').change(function(){
          var memberId = this.value;
-         var loanProductId = jQuery('select[name="loanProductId"]').val();
+         var loanProductId = jQuery('input[name="loanProductId"]').val();
          var reqUrl = '/loans/control/memberdetails';
          sendAjaxRequest(reqUrl, memberId, loanProductId);
         });
