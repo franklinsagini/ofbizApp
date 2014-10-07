@@ -496,10 +496,13 @@ under the License.
         <field name="partyId" parameter-name="partyId"><hidden/></field>
         <!-- field name="staffNo" title="Staff No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="20"/></field>
         <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-         <field name="partyId">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
-        	</drop-down>
+         <field name="partyId" title="Employee">
+            <drop-down allow-empty="true" no-current-selected-key="${firstName}  ${lastName}">
+                <entity-options  entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
+                    <entity-constraint name="employeeNumber" operator="not-equals" value=""/>
+                    <entity-order-by field-name="firstName"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="bankDetailsId" title="Bank">        	
        	 <drop-down allow-empty="true">
@@ -527,17 +530,9 @@ under the License.
         
         <form name="listPayPoints" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayPoint" paginate-target="paypoint"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <!-- actions>
-        	<entity-condition entity-name="PayPoint" list="payPointList" ></entity-condition>
-            <entity-condition entity-name="BankDetails">
-            </entity-condition>
-            <entity-condition entity-name="BankBranch">
-            </entity-condition>
-        </actions -->
-        <actions>
-        	
-        	
-        	 <entity-condition entity-name="PayPoint"></entity-condition>
+       <actions>
+        
+        	<entity-condition entity-name="PayPoint"></entity-condition>
         	<entity-condition entity-name="BankDetails" list="bankList">
             </entity-condition>
             <entity-condition entity-name="BankBranch" list="branchList">
@@ -545,19 +540,14 @@ under the License.
            
              
         </actions>
-        <!-- auto-fields-service default-field-type="hidden" service-name="updatePayPoint"/ -->
-        <!-- field name="skillTypeId">
-            <display-entity entity-name="SkillType" description="${description}"/>
-        </field -->
-        <!-- field name="bankDetailsId" title="Bank">
-        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
-        </field -->
-        <!-- field name="staffNo" title="Staff No." ><text size="30" maxlength="20"/></field>
-        <field name="staffName" title="Staff Name" ><text size="30" maxlength="60"/></field -->
-         <field name="partyId">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
-        	</drop-down>
+		<field name="payPointId"><hidden/></field>
+         <field name="partyId" title="Employee">
+            <drop-down allow-empty="true" no-current-selected-key="${firstName}  ${lastName}">
+                <entity-options  entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
+                    <entity-constraint name="employeeNumber" operator="not-equals" value=""/>
+                    <entity-order-by field-name="firstName"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="bankDetailsId" title="Bank">        	
        	 <drop-down allow-empty="true">
@@ -714,9 +704,9 @@ under the License.
         
         <field name="staffPayrollId"><hidden/></field>
         <field name="partyId" title="Employee">
-            <drop-down allow-empty="false" no-current-selected-key="${firstName}  ${lastName}">
-                <entity-options  entity-name="RolesView" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
-                    <entity-constraint name="roleTypeId" operator="equals" value="EMPLOYEE"/>
+            <drop-down allow-empty="true" no-current-selected-key="${firstName}  ${lastName}">
+                <entity-options  entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
+                    <entity-constraint name="employeeNumber" operator="not-equals" value=""/>
                     <entity-order-by field-name="firstName"/>
                 </entity-options>
             </drop-down>
@@ -950,6 +940,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PAYETable">
+            	<order-by field-name="lowerbracket"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updatePAYETable"/>
@@ -983,7 +974,8 @@ under the License.
     <form name="listNHIFTable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNHIFTable" paginate-target="nhiftable"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="NHIFTable">
+            <entity-condition entity-name="NHIFTable">            
+            	<order-by field-name="lowerbracket"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateNHIFTable"/>
@@ -1017,6 +1009,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="NSSFTable">
+            	<order-by field-name="upperbracket"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateNSSFTable"/>
@@ -1076,7 +1069,7 @@ under the License.
         </field>
     </form>
     
-    <!-- form name="listClosedPayrollOverview" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="payrollOverview" paginate-target="payrollOverview"
+    <form name="listClosedPayrollOverview" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="payrollOverview" paginate-target="payrollOverview"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollPeriod">
@@ -1087,12 +1080,12 @@ under the License.
         <field name="payrollPeriodId"><hidden/></field>       
         <field name="payrollYearId"> <hidden/> </field>
         <field name="name" title="Period"> <display/> </field>
-        <field name="addPeriodStaff" title="vieV Payroll" widget-style="buttontext">
+        <field name="addPeriodStaff" title="view Payroll" widget-style="buttontext">
             <hyperlink target="staffpayroll" description="View Staff Payroll" also-hidden="false"> 
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
-    </form -->
+    </form>
     
    
 </forms>
