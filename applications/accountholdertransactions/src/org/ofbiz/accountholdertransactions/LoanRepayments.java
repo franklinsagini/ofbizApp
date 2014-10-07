@@ -182,14 +182,17 @@ public class LoanRepayments {
 					setupType, delegator);
 			postInsuranceCharge(loanExpectation, delegator, userLogin,
 					accountHolderTransactionSetup);
-		} else if (repaymentName.equals("PRINCIPAL")) {
-			// post principal
-			setupType = "PRINCIPALACCRUAL";
-			accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord(
-					setupType, delegator);
-			postPrincipalDue(loanExpectation, delegator, userLogin,
-					accountHolderTransactionSetup);
 		}
+		//
+		// else if (repaymentName.equals("PRINCIPAL")) {
+		// // post principal
+		// setupType = "PRINCIPALACCRUAL";
+		// accountHolderTransactionSetup =
+		// getAccountHolderTransactionSetupRecord(
+		// setupType, delegator);
+		// postPrincipalDue(loanExpectation, delegator, userLogin,
+		// accountHolderTransactionSetup);
+		// }
 
 		loanExpectation.set("isPosted", "Y");
 		try {
@@ -406,103 +409,110 @@ public class LoanRepayments {
 
 		// +" "+member.getString("middleName")+" "+member.getString("lastName");
 		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
-		
-		//BigDecimal interestRatePM = loanApplication.getBigDecimal("interestRatePM");
+
+		// BigDecimal interestRatePM =
+		// loanApplication.getBigDecimal("interestRatePM");
 		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
 				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
 		int repaymentPeriod = loanApplication.getInteger("repaymentPeriod");
-		
-		BigDecimal monthlyPayable = AmortizationServices.calculateReducingBalancePaymentAmount(bdLoanAmt, bdInterestRatePM, repaymentPeriod);
 
+		BigDecimal monthlyPayable = AmortizationServices
+				.calculateReducingBalancePaymentAmount(bdLoanAmt,
+						bdInterestRatePM, repaymentPeriod);
 
-		
+		BigDecimal bdLoanBalance = calculateLoanBalance(
+				loanApplication.getString("partyId"),
+				loanApplication.getString("loanApplicationId"), bdLoanAmt);
 
-		BigDecimal bdLoanBalance = calculateLoanBalance(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId"), bdLoanAmt);
-		
+		if (bdLoanBalance.compareTo(BigDecimal.ZERO) == 1) {
 
-		
-		// INTEREST
-		//		BigDecimal bdInterestAccrued = loanAmortization
-		//				.getBigDecimal("interestAmount");
-		BigDecimal bdInterestAccrued =  bdLoanBalance.multiply(bdInterestRatePM);
-		
-		// Adding PRINCIPAL
-		//		BigDecimal bdPrincipalAccrued = loanAmortization
-		//				.getBigDecimal("principalAmount");
-		BigDecimal bdPrincipalAccrued = BigDecimal.ZERO;
-		bdPrincipalAccrued = monthlyPayable.subtract(bdInterestAccrued);
+			// INTEREST
+			// BigDecimal bdInterestAccrued = loanAmortization
+			// .getBigDecimal("interestAmount");
+			BigDecimal bdInterestAccrued = bdLoanBalance
+					.multiply(bdInterestRatePM);
 
-		// INSURANCE
-//		BigDecimal bdInsuranceAccrued = loanAmortization
-//				.getBigDecimal("insuranceAmount");
-		BigDecimal bdInsuranceRate = AmortizationServices.getInsuranceRate(loanApplication);
-		BigDecimal bdInsuranceAccrued = bdInsuranceRate.multiply(bdLoanBalance.setScale(6, RoundingMode.HALF_UP)).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
+			// Adding PRINCIPAL
+			// BigDecimal bdPrincipalAccrued = loanAmortization
+			// .getBigDecimal("principalAmount");
+			BigDecimal bdPrincipalAccrued = BigDecimal.ZERO;
+			bdPrincipalAccrued = monthlyPayable.subtract(bdInterestAccrued);
 
-		// Adding Principal
-		loanExpectation = delegator.makeValue("LoanExpectation",
-				UtilMisc.toMap("loanExpectationId", loanExpectationId,
-						"loanNo", loanNo, "loanApplicationId",
-						loanApplicationId, "employeeNo", employeeNo,
-						"repaymentName", "PRINCIPAL", "employeeNames",
-						employeeNames, "dateAccrued", new Timestamp(Calendar
-								.getInstance().getTimeInMillis()), "isPaid",
-						"N", "isPosted", "N",
+			// INSURANCE
+			// BigDecimal bdInsuranceAccrued = loanAmortization
+			// .getBigDecimal("insuranceAmount");
+			BigDecimal bdInsuranceRate = AmortizationServices
+					.getInsuranceRate(loanApplication);
+			BigDecimal bdInsuranceAccrued = bdInsuranceRate.multiply(
+					bdLoanBalance.setScale(6, RoundingMode.HALF_UP)).divide(
+					new BigDecimal(100), 6, RoundingMode.HALF_UP);
 
-						"amountDue", bdPrincipalAccrued, "amountAccrued",
-						bdPrincipalAccrued,
+			// Adding Principal
+			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+					.toMap("loanExpectationId", loanExpectationId, "loanNo",
+							loanNo, "loanApplicationId", loanApplicationId,
+							"employeeNo", employeeNo, "repaymentName",
+							"PRINCIPAL", "employeeNames", employeeNames,
+							"dateAccrued", new Timestamp(Calendar.getInstance()
+									.getTimeInMillis()), "isPaid", "N",
+							"isPosted", "N",
 
-						"partyId", member.getString("partyId"), "loanAmt",
-						bdLoanAmt));
+							"amountDue", bdPrincipalAccrued, "amountAccrued",
+							bdPrincipalAccrued,
 
-		listTobeStored.add(loanExpectation);
+							"partyId", member.getString("partyId"), "loanAmt",
+							bdLoanAmt));
 
-		// Add Interest
-		loanExpectationId = delegator.getNextSeqId("LoanExpectation", 1L);
-		loanExpectation = delegator.makeValue("LoanExpectation",
-				UtilMisc.toMap("loanExpectationId", loanExpectationId,
-						"loanNo", loanNo, "loanApplicationId",
-						loanApplicationId, "employeeNo", employeeNo,
-						"repaymentName", "INTEREST", "employeeNames",
-						employeeNames, "dateAccrued", new Timestamp(Calendar
-								.getInstance().getTimeInMillis()), "isPaid",
-						"N", "isPosted", "N", "amountDue", bdInterestAccrued,
-						"amountAccrued", bdInterestAccrued, "partyId", member
-								.getString("partyId"), "loanAmt", bdLoanAmt));
-		listTobeStored.add(loanExpectation);
+			listTobeStored.add(loanExpectation);
 
-		loanExpectationId = delegator.getNextSeqId("LoanExpectation", 1L);
-		loanExpectation = delegator.makeValue("LoanExpectation",
-				UtilMisc.toMap("loanExpectationId", loanExpectationId,
-						"loanNo", loanNo, "loanApplicationId",
-						loanApplicationId, "employeeNo", employeeNo,
-						"repaymentName", "INSURANCE", "employeeNames",
-						employeeNames, "dateAccrued", new Timestamp(Calendar
-								.getInstance().getTimeInMillis()), "isPaid",
-						"N", "isPosted", "N", "amountDue", bdInsuranceAccrued,
-						"amountAccrued", bdInsuranceAccrued, "partyId", member
-								.getString("partyId"), "loanAmt", bdLoanAmt));
-		listTobeStored.add(loanExpectation);
+			// Add Interest
+			loanExpectationId = delegator.getNextSeqId("LoanExpectation", 1L);
+			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+					.toMap("loanExpectationId", loanExpectationId, "loanNo",
+							loanNo, "loanApplicationId", loanApplicationId,
+							"employeeNo", employeeNo, "repaymentName",
+							"INTEREST", "employeeNames", employeeNames,
+							"dateAccrued", new Timestamp(Calendar.getInstance()
+									.getTimeInMillis()), "isPaid", "N",
+							"isPosted", "N", "amountDue", bdInterestAccrued,
+							"amountAccrued", bdInterestAccrued, "partyId",
+							member.getString("partyId"), "loanAmt", bdLoanAmt));
+			listTobeStored.add(loanExpectation);
 
-		// Update Amortization
-		loanAmortization.set("isAccrued", "Y");
-		loanAmortization.set("dateAccrued", new Timestamp(Calendar
-				.getInstance().getTimeInMillis()));
+			loanExpectationId = delegator.getNextSeqId("LoanExpectation", 1L);
+			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+					.toMap("loanExpectationId", loanExpectationId, "loanNo",
+							loanNo, "loanApplicationId", loanApplicationId,
+							"employeeNo", employeeNo, "repaymentName",
+							"INSURANCE", "employeeNames", employeeNames,
+							"dateAccrued", new Timestamp(Calendar.getInstance()
+									.getTimeInMillis()), "isPaid", "N",
+							"isPosted", "N", "amountDue", bdInsuranceAccrued,
+							"amountAccrued", bdInsuranceAccrued, "partyId",
+							member.getString("partyId"), "loanAmt", bdLoanAmt));
+			listTobeStored.add(loanExpectation);
 
-		try {
-			TransactionUtil.begin();
-		} catch (GenericTransactionException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			delegator.storeAll(listTobeStored);
-			delegator.createOrStore(loanAmortization);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		try {
-			TransactionUtil.commit();
-		} catch (GenericTransactionException e) {
-			e.printStackTrace();
+			// Update Amortization
+			loanAmortization.set("isAccrued", "Y");
+			loanAmortization.set("dateAccrued", new Timestamp(Calendar
+					.getInstance().getTimeInMillis()));
+
+			try {
+				TransactionUtil.begin();
+			} catch (GenericTransactionException e1) {
+				e1.printStackTrace();
+			}
+			try {
+				delegator.storeAll(listTobeStored);
+				delegator.createOrStore(loanAmortization);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			try {
+				TransactionUtil.commit();
+			} catch (GenericTransactionException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
