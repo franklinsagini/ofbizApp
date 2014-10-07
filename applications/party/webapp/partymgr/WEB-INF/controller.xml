@@ -455,6 +455,20 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="EditPartyGroup" />
 	</request-map>
+	
+	<request-map uri="addBranch">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addBranch" />
+	</request-map>
+	
+	 <request-map uri="generateAccountNumber">
+        <!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+        <event type="java" path="org.ofbiz.party.party.MemberServices" invoke="generateAccountNumber" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
+	
+	
 	<request-map uri="createPartyGroup">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createPartyGroup" />
@@ -2107,6 +2121,161 @@
 		<response name="error" type="view" value="ApproveMember" />
 	</request-map>
 	
+
+	<!-- ChangeMemberStation  -->
+	<request-map uri="createChangeMemberStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChangeMemberStation" />
+		<response name="success" type="request-redirect" value="changeMember">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="updateChangeMemberStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateChangeMemberStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="deleteChangeMemberStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteChangeMemberStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+		
+	<!-- ChangeMemberEmploymentType  -->
+	<request-map uri="createChangeMemberEmploymentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChangeMemberEmploymentType" />
+		<response name="success" type="request-redirect" value="changeMember">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="updateChangeMemberEmploymentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateChangeMemberEmploymentType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="deleteChangeMemberEmploymentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteChangeMemberEmploymentType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+	<!-- ChangeMemberEmployeeNumber  -->
+	<request-map uri="createChangeMemberEmployeeNumber">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChangeMemberEmployeeNumber" />
+		<response name="success" type="request-redirect" value="changeMember">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="updateChangeMemberEmployeeNumber">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateChangeMemberEmployeeNumber" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="deleteChangeMemberEmployeeNumber">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteChangeMemberEmployeeNumber" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+	<!-- ChangeMemberBranch  -->
+	<request-map uri="createChangeMemberBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChangeMemberBranch" />
+		<response name="success" type="request-redirect" value="changeMember">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="updateChangeMemberBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateChangeMemberBranch" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="deleteChangeMemberBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteChangeMemberBranch" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+	<!-- ChangeMemberShareAmount  -->
+	<request-map uri="createChangeMemberShareAmount">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChangeMemberShareAmount" />
+		<response name="success" type="request-redirect" value="changeMember">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="updateChangeMemberShareAmount">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateChangeMemberShareAmount" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+
+	<request-map uri="deleteChangeMemberShareAmount">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteChangeMemberShareAmount" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="changeMember"></response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map>
+	
+	<!-- Change Member -->
+	<!-- request-map uri="changeMember">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChangeMemberStation" />
+		<response name="success" type="request-redirect" value="changeMember">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="changeMember" />
+	</request-map -->
+	
+		<request-map uri="changeMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="changeMember"/>
+	</request-map>
+	
+	
+	
 	<!-- Approve Member CRUD -->
 	<request-map uri="createApproveMemberLog">
 		<security https="true" auth="true" />
@@ -2280,8 +2449,9 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createStation" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect"
 			value="viewstations">
+				<redirect-parameter name="partyId"/>
 			</response>
 		<response name="error" type="view" value="viewstations" />
 	</request-map>
@@ -2339,6 +2509,12 @@
 			value="memberTypes"></response>
 		<response name="error" type="view" value="memberTypes" />
 	</request-map>
+	
+	  <request-map uri="memberRegistrationFormValidation">
+        <event type="java" path="org.ofbiz.party.party.MemberValidation" invoke="uniqueFieldsValidation" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
 
 
 	<!-- View Mappings -->
@@ -2391,6 +2567,10 @@
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPerson" />
 	<view-map name="EditPartyGroup" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup" />
+	
+	<view-map name="addBranch" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#addBranch" />
+		
 	<view-map name="EditPartyAttribute" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPartyAttribute" />
 	<view-map name="AddPartyNote" type="screen"
@@ -2585,8 +2765,11 @@
 	<!-- Member -->
 	<view-map name="NewMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#NewMember" />
+	<!--view-map name="listsaccomembers" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#listsaccomembers" /-->
 	<view-map name="listsaccomembers" type="screen"
-		page="component://party/widget/partymgr/PartyScreens.xml#listsaccomembers" />
+		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />
+		
 	
 	<view-map name="reviewmembers" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />	
@@ -2596,6 +2779,9 @@
 		
 	<view-map name="ApproveMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#ApproveMember" />
+		
+	<view-map name="changeMember" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#changeMember" />
 		
 	<view-map name="RejectMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#RejectMember" />	

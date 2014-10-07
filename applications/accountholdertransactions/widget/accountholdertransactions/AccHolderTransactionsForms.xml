@@ -606,16 +606,16 @@ under the License.
         		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
         	</drop-down>
         </field -->
-        <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
+        <!-- field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
         		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${accountNo}"/>
         	</drop-down>
-        </field>
+        </field -->
         <!-- field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text></text></field>
         <field name="accountName" title="Account Name"  widget-style="required" required-field="true"><text></text></field>
         <field name="accountBalance" title="Account Balance"  widget-style="required" required-field="true"><text></text></field -->
-         <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
-		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+         <!-- field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field -->
         
         <field name="loanApplicationId" title="Loan"  >
         	<drop-down allow-empty="true">
@@ -624,22 +624,27 @@ under the License.
         </field>
         
         <field name="loanNo" title="Loan No"  ><text></text></field>
-        <field name="loanTypeId" title="Loan Type"  >
+        <field name="loanTypeId" title="Loan Type">
         	<drop-down allow-empty="true">
-        		<list-options key-name="loanProductId" list-name="loanProductList" description="${name} - ${code}"/>
+        		<list-options key-name="loanProductId" list-name="loanProductList" description="${name} - ${code}">
+        			
+        		</list-options>
         	</drop-down>
+        	<!-- display-entity entity-name="LoanProduct"  key-field-name="loanProductId" description="${name} - ${code}"></display-entity -->
         </field>
+        <field name="loanAmt" title="Loan Amount"  widget-style="required" required-field="true"><text></text></field>
+        
         
         <!-- field name="loanBalanceAmt" title="Loan Balance"  widget-style="required" required-field="true"><text></text></field>
         <field name="interestBalanceAmt" title="Interest Amount" position="2"  widget-style="required" required-field="true"><text></text></field>
         <field name="loanRepaymentAmt" title="Loan Repayment Amount"  widget-style="required" required-field="true"><text></text></field>
         <field name="interestRepaymentAmt" title="Interest Repayment Amount" position="2"  widget-style="required" required-field="true"><text></text></field -->
-        <field name="totalLoanDue" title="Total Loan Amount"  widget-style="required" required-field="true"><text default-value="${totalLoanDue}"></text></field>
+        <field name="totalLoanDue" title="Total Expected Loan Amount"  widget-style="required" required-field="true"><text default-value="${totalLoanDue}"></text></field>
         <field name="totalInterestDue" title="Interest Due"   widget-style="required" required-field="true"><text default-value="${totalInterestDue}"></text></field>
         <field name="totalInsuranceDue" title="Insurance Due"   widget-style="required" required-field="true"><text default-value="${totalInsuranceDue}"></text></field>
         <field name="totalPrincipalDue" title="Principal Due"   widget-style="required" required-field="true"><text default-value="${totalPrincipalDue}"></text></field>
         
-        <field name="transactionAmount" title="Transaction Amount"  widget-style="required" required-field="true"><text default-value="${totalLoanDue}"></text></field>
+        <field name="transactionAmount" title="Amount Paid"  widget-style="required" required-field="true"><text></text></field>
       
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
@@ -661,7 +666,7 @@ under the License.
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
         	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateLoanRepayment"/>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanRepayment"/ -->
         <field name="partyId"><hidden/></field>
  		<!-- field name="partyId" title="Member">
         	<drop-down>
@@ -692,15 +697,20 @@ under the License.
         
         
         <!-- field name="repaymentType" title="Repayment Type"><text></text></field -->
-        <field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field>
-        <field name="transactionAmount" title="Total Paid"><text></text></field>
+        <field name="loanNo" title="Loan No"  ><display></display></field>
+        
+        <field name="createdStamp" title="Date/Time Paid"  ><display type="date-time"></display></field>
+        <!-- field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field -->
+        <!-- field name="transactionAmount" title="Total Paid"><text></text></field -->
         
         <!--field name="interestAmount" title="Interest Amount"><display></display></field>
         <field name="insuranceAmount" title="Insurance Amount"><display/></field>
         <field name="principalAmount" title="Principal Amount" ><display/></field -->
-        <field name="totalInterestDue" title="Interest Amount"><display></display></field>
-        <field name="totalInsuranceDue" title="Insurance Amount"><display/></field>
-        <field name="totalPrincipalDue" title="Principal Amount" ><display/></field>
+        
+        <field name="insuranceAmount" title="Insurance Amount"><display/></field>
+        <field name="interestAmount" title="Interest Amount"><display></display></field>
+        <field name="principalAmount" title="Principal Amount" ><display/></field>
+        <field name="excessAmount" title="Excess Amount"  ><display type="accounting-number"></display></field>
         <!-- field name="excessAmount" title="Excess Amount" ><display/></field -->
         
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">

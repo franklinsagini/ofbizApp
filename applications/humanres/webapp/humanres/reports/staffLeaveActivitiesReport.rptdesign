@@ -29,9 +29,6 @@
             <expression name="labelExpr" type="javascript">dataSetRow["party_id"]</expression>
             <property name="dataType">string</property>
             <property name="distinct">true</property>
-            <simple-property-list name="defaultValue">
-                <value type="javascript">params["partyid"].value</value>
-            </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
@@ -308,8 +305,8 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT leave_status_log.leave_sts_log_id,
-    leave_status_log.leave_id, 
-    leave_status_log.party_id, 
+    leave_status_log.leave_id,
+    leave_status_log.party_id,
     leave_status_log.approved_by,
      leave_status_log.rejected_by,
     leave_status_log.approval_status,
@@ -320,11 +317,12 @@
     empl_leave.empl_leave_reason_type_id,
     empl_leave.leave_duration
 
-  FROM 
-  leave_status_log 
+  FROM
+  leave_status_log
   INNER JOIN Person ON leave_status_log.party_id= Person.party_id
   INNER JOIN empl_leave ON empl_leave.leave_id= leave_status_log.leave_id
-  WHERE leave_status_log.party_id=?]]></xml-property>
+  WHERE leave_status_log.party_id=?
+]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -385,7 +383,7 @@
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="topMargin">0.03125in</property>
-            <property name="leftMargin">0.0625in</property>
+            <property name="leftMargin">0.09375in</property>
             <property name="rightMargin">0.07291666666666667in</property>
             <page-footer>
                 <text id="3">
@@ -395,323 +393,6 @@
             </page-footer>
         </simple-master-page>
     </page-setup>
-    <body>
-        <table id="128">
-            <property name="width">8.3125in</property>
-            <property name="dataSet">leaveLogs</property>
-            <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">leave_sts_log_id</property>
-                    <text-property name="displayName">leave_sts_log_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["leave_sts_log_id"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">leave_id</property>
-                    <text-property name="displayName">leave_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["leave_id"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">party_id</property>
-                    <text-property name="displayName">party_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["party_id"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">approved_by</property>
-                    <text-property name="displayName">approved_by</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["approved_by"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">rejected_by</property>
-                    <text-property name="displayName">rejected_by</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["rejected_by"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">approval_status</property>
-                    <text-property name="displayName">approval_status</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["approval_status"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">last_updated_stamp</property>
-                    <text-property name="displayName">last_updated_stamp</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["last_updated_stamp"]</expression>
-                    <property name="dataType">date-time</property>
-                </structure>
-                <structure>
-                    <property name="name">first_name</property>
-                    <text-property name="displayName">first_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["first_name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">last_name</property>
-                    <text-property name="displayName">last_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["last_name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">leave_type_id</property>
-                    <text-property name="displayName">leave_type_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["leave_type_id"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">empl_leave_reason_type_id</property>
-                    <text-property name="displayName">empl_leave_reason_type_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["empl_leave_reason_type_id"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">leave_duration</property>
-                    <text-property name="displayName">leave_duration</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["leave_duration"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-            </list-property>
-            <column id="159">
-                <property name="width">0.8020833333333334in</property>
-            </column>
-            <column id="160">
-                <property name="width">0.8020833333333334in</property>
-            </column>
-            <column id="161">
-                <property name="width">1.0416666666666667in</property>
-            </column>
-            <column id="162">
-                <property name="width">1.1145833333333333in</property>
-            </column>
-            <column id="163">
-                <property name="width">1.09375in</property>
-            </column>
-            <column id="164">
-                <property name="width">0.8333333333333334in</property>
-            </column>
-            <column id="165">
-                <property name="width">0.9583333333333334in</property>
-            </column>
-            <column id="166">
-                <property name="width">1.03125in</property>
-            </column>
-            <column id="167">
-                <property name="width">0.6354166666666666in</property>
-            </column>
-            <header>
-                <row id="196">
-                    <property name="fontSize">14pt</property>
-                    <property name="color">black</property>
-                    <property name="verticalAlign">middle</property>
-                    <property name="height">1.6354166666666667in</property>
-                    <cell id="197"/>
-                    <cell id="198"/>
-                    <cell id="199"/>
-                    <cell id="200">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <image id="254">
-                            <property name="height">1.5625in</property>
-                            <property name="width">1.5208333333333333in</property>
-                            <property name="source">embed</property>
-                            <property name="imageName">ofbiz_logo_2.gif</property>
-                        </image>
-                    </cell>
-                    <cell id="202"/>
-                    <cell id="203"/>
-                    <cell id="204"/>
-                    <cell id="205"/>
-                </row>
-                <row id="243">
-                    <property name="fontSize">14pt</property>
-                    <property name="color">black</property>
-                    <property name="verticalAlign">middle</property>
-                    <property name="height">0.3229166666666667in</property>
-                    <cell id="244"/>
-                    <cell id="245"/>
-                    <cell id="246">
-                        <property name="colSpan">4</property>
-                        <property name="rowSpan">1</property>
-                        <label id="253">
-                            <property name="fontSize">16pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textUnderline">underline</property>
-                            <text-property name="text">Employee Leave Logs Statement</text-property>
-                        </label>
-                    </cell>
-                    <cell id="250"/>
-                    <cell id="251"/>
-                    <cell id="252"/>
-                </row>
-                <row id="207">
-                    <property name="fontSize">14pt</property>
-                    <property name="color">black</property>
-                    <property name="verticalAlign">middle</property>
-                    <property name="height">0.28125in</property>
-                    <cell id="208"/>
-                    <cell id="209"/>
-                    <cell id="210">
-                        <label id="230">
-                            <text-property name="text">ID</text-property>
-                        </label>
-                    </cell>
-                    <cell id="211">
-                        <data id="227">
-                            <property name="resultSetColumn">party_id</property>
-                        </data>
-                    </cell>
-                    <cell id="212"/>
-                    <cell id="213"/>
-                    <cell id="214"/>
-                    <cell id="215"/>
-                    <cell id="216"/>
-                </row>
-                <row id="217">
-                    <property name="fontSize">14pt</property>
-                    <property name="color">black</property>
-                    <property name="verticalAlign">middle</property>
-                    <property name="height">0.3020833333333333in</property>
-                    <cell id="218"/>
-                    <cell id="219"/>
-                    <cell id="220">
-                        <label id="231">
-                            <text-property name="text">Name</text-property>
-                        </label>
-                    </cell>
-                    <cell id="221">
-                        <data id="228">
-                            <property name="resultSetColumn">first_name</property>
-                        </data>
-                    </cell>
-                    <cell id="222">
-                        <data id="229">
-                            <property name="resultSetColumn">last_name</property>
-                        </data>
-                    </cell>
-                    <cell id="223"/>
-                    <cell id="224"/>
-                    <cell id="225"/>
-                    <cell id="226"/>
-                </row>
-                <row id="129">
-                    <property name="backgroundColor">green</property>
-                    <property name="fontSize">14pt</property>
-                    <property name="color">yellow</property>
-                    <property name="textAlign">left</property>
-                    <property name="verticalAlign">middle</property>
-                    <cell id="130">
-                        <label id="168">
-                            <text-property name="text">Log Id</text-property>
-                        </label>
-                    </cell>
-                    <cell id="131">
-                        <label id="170">
-                            <text-property name="text">Leave Id</text-property>
-                        </label>
-                    </cell>
-                    <cell id="132">
-                        <label id="172">
-                            <text-property name="text">Leave Type</text-property>
-                        </label>
-                    </cell>
-                    <cell id="133">
-                        <label id="176">
-                            <text-property name="text">Leave Reason</text-property>
-                        </label>
-                    </cell>
-                    <cell id="134">
-                        <label id="178">
-                            <text-property name="text">Leave Duration</text-property>
-                        </label>
-                    </cell>
-                    <cell id="135">
-                        <label id="180">
-                            <text-property name="text">Approval Status</text-property>
-                        </label>
-                    </cell>
-                    <cell id="136">
-                        <label id="182">
-                            <text-property name="text">Approved By</text-property>
-                        </label>
-                    </cell>
-                    <cell id="137">
-                        <label id="184">
-                            <text-property name="text">Rejected By</text-property>
-                        </label>
-                    </cell>
-                    <cell id="138">
-                        <label id="174">
-                            <text-property name="text">Date</text-property>
-                        </label>
-                    </cell>
-                </row>
-            </header>
-            <detail>
-                <row id="139">
-                    <cell id="140">
-                        <data id="169">
-                            <property name="resultSetColumn">leave_sts_log_id</property>
-                        </data>
-                    </cell>
-                    <cell id="141">
-                        <data id="171">
-                            <property name="resultSetColumn">leave_id</property>
-                        </data>
-                    </cell>
-                    <cell id="142">
-                        <data id="173">
-                            <property name="resultSetColumn">leave_type_id</property>
-                        </data>
-                    </cell>
-                    <cell id="143">
-                        <data id="177">
-                            <property name="resultSetColumn">empl_leave_reason_type_id</property>
-                        </data>
-                    </cell>
-                    <cell id="144">
-                        <data id="179">
-                            <property name="resultSetColumn">leave_duration</property>
-                        </data>
-                    </cell>
-                    <cell id="145">
-                        <data id="181">
-                            <property name="resultSetColumn">approval_status</property>
-                        </data>
-                    </cell>
-                    <cell id="146">
-                        <data id="183">
-                            <property name="resultSetColumn">approved_by</property>
-                        </data>
-                    </cell>
-                    <cell id="147">
-                        <data id="185">
-                            <property name="resultSetColumn">rejected_by</property>
-                        </data>
-                    </cell>
-                    <cell id="148">
-                        <data id="175">
-                            <property name="resultSetColumn">last_updated_stamp</property>
-                        </data>
-                    </cell>
-                </row>
-            </detail>
-            <footer>
-                <row id="149">
-                    <cell id="150"/>
-                    <cell id="151"/>
-                    <cell id="152"/>
-                    <cell id="153"/>
-                    <cell id="154"/>
-                    <cell id="155"/>
-                    <cell id="156"/>
-                    <cell id="157"/>
-                    <cell id="158"/>
-                </row>
-            </footer>
-        </table>
-    </body>
     <list-property name="images">
         <structure>
             <property name="name">ofbiz_logo_2.gif</property>

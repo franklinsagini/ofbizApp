@@ -486,12 +486,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		} else {
 			leave.set("documentApprovalId", documentApproval.getString("documentApprovalId"));
 
-			if ((documentApproval.getString("nextLevel") == null)|| (documentApproval.getString("nextLevel").equals(""))) {
-				//				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				//				leave.set("applicationStatus","Approved");
-				//				leave.set("approvalStatus" , "Approved");
-				//				approvalStatuslog = "Approved";
-				
+			
 				leave.set("approvalStatus", documentApproval.getString("stageAction"));
 				leave.set("applicationStatus",documentApproval.getString("stageAction"));
 				leave.set("approvalStatus" , documentApproval.getString("stageAction"));
@@ -507,19 +502,10 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 					log.info("gggggggggggg            leaveDurationRemainder" +carryOverLeaveDaysUsed.get("leaveDurationRemainder"));
 				}
 
-			} else {
-				//				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				//				leave.set("applicationStatus", "In Progress");		
-				//				leave.set("approvalStatus","In Progress");
-				//				approvalStatuslog = "Approved";
-				leave.set("approvalStatus", documentApproval.getString("stageAction"));
-				leave.set("applicationStatus", documentApproval.getString("stageAction"));		
-				leave.set("approvalStatus",documentApproval.getString("stageAction"));
-				approvalStatuslog =documentApproval.getString("stageAction");
-			}
 
 			leavelog = delegator.makeValue("LeaveStatusLog", "leaveStsLogId", delegator.getNextSeqId("LeaveStatusLog"), 
             "approvedBy", userLogin.getString("partyId"), 
+            "nextApprover", documentApproval.getString("responsibleEmployee"),
             "partyId", partyId, 
             "leaveId", leaveId, "approvalStatus" ,approvalStatuslog);
         
