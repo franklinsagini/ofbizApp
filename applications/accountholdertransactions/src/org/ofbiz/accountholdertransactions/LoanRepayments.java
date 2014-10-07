@@ -26,6 +26,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.loans.AmortizationServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -37,6 +38,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
  * **/
 public class LoanRepayments {
 	public static Logger log = Logger.getLogger(LoanRepayments.class);
+	private static int ONEHUNDRED = 100;
 
 	public static String generateLoansRepaymentExpected(
 			HttpServletRequest request, HttpServletResponse response) {
@@ -404,17 +406,37 @@ public class LoanRepayments {
 
 		// +" "+member.getString("middleName")+" "+member.getString("lastName");
 		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
-		// Adding PRINCIPAL
-		BigDecimal bdPrincipalAccrued = loanAmortization
-				.getBigDecimal("principalAmount");
+		
+		//BigDecimal interestRatePM = loanApplication.getBigDecimal("interestRatePM");
+		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
+				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
+		int repaymentPeriod = loanApplication.getInteger("repaymentPeriod");
+		
+		BigDecimal monthlyPayable = AmortizationServices.calculateReducingBalancePaymentAmount(bdLoanAmt, bdInterestRatePM, repaymentPeriod);
 
+
+		
+
+		BigDecimal bdLoanBalance = calculateLoanBalance(loanApplication.getString("partyId"), loanApplication.getString("loanApplicationId"), bdLoanAmt);
+		
+
+		
 		// INTEREST
-		BigDecimal bdInterestAccrued = loanAmortization
-				.getBigDecimal("interestAmount");
+		//		BigDecimal bdInterestAccrued = loanAmortization
+		//				.getBigDecimal("interestAmount");
+		BigDecimal bdInterestAccrued =  bdLoanBalance.multiply(bdInterestRatePM);
+		
+		// Adding PRINCIPAL
+		//		BigDecimal bdPrincipalAccrued = loanAmortization
+		//				.getBigDecimal("principalAmount");
+		BigDecimal bdPrincipalAccrued = BigDecimal.ZERO;
+		bdPrincipalAccrued = monthlyPayable.subtract(bdInterestAccrued);
 
 		// INSURANCE
-		BigDecimal bdInsuranceAccrued = loanAmortization
-				.getBigDecimal("insuranceAmount");
+//		BigDecimal bdInsuranceAccrued = loanAmortization
+//				.getBigDecimal("insuranceAmount");
+		BigDecimal bdInsuranceRate = AmortizationServices.getInsuranceRate(loanApplication);
+		BigDecimal bdInsuranceAccrued = bdInsuranceRate.multiply(bdLoanBalance.setScale(6, RoundingMode.HALF_UP)).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
 
 		// Adding Principal
 		loanExpectation = delegator.makeValue("LoanExpectation",
@@ -483,6 +505,19 @@ public class LoanRepayments {
 			e.printStackTrace();
 		}
 
+	}
+
+	/****
+	 * @author Japheth Odonya @when Oct 7, 2014 10:52:06 PM Loan Amount - Total
+	 *         Principal Paid
+	 * **/
+	private static BigDecimal calculateLoanBalance(String partyId,
+			String loanApplicationId, BigDecimal loanAmt) {
+
+		BigDecimal bdTotalLoanBalance = BigDecimal.ZERO;
+		bdTotalLoanBalance = loanAmt.subtract(getTotalPrincipalPaid(partyId,
+				loanApplicationId));
+		return bdTotalLoanBalance;
 	}
 
 	private static String getEmployeeNumber(String loanApplicationId,
@@ -1007,27 +1042,29 @@ public class LoanRepayments {
 			}
 
 			// Remove Interest
-			if (totalInterestDue.compareTo(BigDecimal.ZERO) == 1){
-			if (amountRemaining.compareTo(totalInterestDue) >= 0) {
-				interestAmount = totalInterestDue;
-				amountRemaining = amountRemaining.subtract(totalInterestDue);
-			} else {
-				interestAmount = amountRemaining;
-				amountRemaining = BigDecimal.ZERO;
+			if (totalInterestDue.compareTo(BigDecimal.ZERO) == 1) {
+				if (amountRemaining.compareTo(totalInterestDue) >= 0) {
+					interestAmount = totalInterestDue;
+					amountRemaining = amountRemaining
+							.subtract(totalInterestDue);
+				} else {
+					interestAmount = amountRemaining;
+					amountRemaining = BigDecimal.ZERO;
 
-			}
+				}
 			}
 
 			// Remove Principal
-			if (totalPrincipalDue.compareTo(BigDecimal.ZERO) ==1){
-			if (amountRemaining.compareTo(totalPrincipalDue) >= 0) {
-				principalAmount = totalPrincipalDue;
-				amountRemaining = amountRemaining.subtract(totalPrincipalDue);
-			} else {
-				principalAmount = amountRemaining;
-				amountRemaining = BigDecimal.ZERO;
+			if (totalPrincipalDue.compareTo(BigDecimal.ZERO) == 1) {
+				if (amountRemaining.compareTo(totalPrincipalDue) >= 0) {
+					principalAmount = totalPrincipalDue;
+					amountRemaining = amountRemaining
+							.subtract(totalPrincipalDue);
+				} else {
+					principalAmount = amountRemaining;
+					amountRemaining = BigDecimal.ZERO;
 
-			}
+				}
 			}
 
 			if (amountRemaining.compareTo(BigDecimal.ZERO) >= 0) {
@@ -1062,8 +1099,9 @@ public class LoanRepayments {
 
 		// createLoanRepaymentAccountingTransaction(loanRepayment, userLogin);
 
-		//Return if amount provided is zero
-		if (loanRepayment.getBigDecimal("transactionAmount").compareTo(BigDecimal.ZERO) != 1){
+		// Return if amount provided is zero
+		if (loanRepayment.getBigDecimal("transactionAmount").compareTo(
+				BigDecimal.ZERO) != 1) {
 			return "";
 		}
 		// Create Acctg Transa
@@ -1104,9 +1142,9 @@ public class LoanRepayments {
 				.getString("memberDepositAccId");
 		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
 		// postingType, delegator);
-		if (interestAmount.compareTo(BigDecimal.ZERO) == 1){
-		postTransactionEntry(delegator, interestAmount, partyId, accountId,
-				postingType, acctgTransId, acctgTransType, entrySequenceId);
+		if (interestAmount.compareTo(BigDecimal.ZERO) == 1) {
+			postTransactionEntry(delegator, interestAmount, partyId, accountId,
+					postingType, acctgTransId, acctgTransType, entrySequenceId);
 		}
 
 		// Credit Insurance_receivable
@@ -1119,9 +1157,10 @@ public class LoanRepayments {
 				.getString("memberDepositAccId");
 		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
 		// postingType, delegator);
-		if (insuranceAmount.compareTo(BigDecimal.ZERO) == 1){
-		postTransactionEntry(delegator, insuranceAmount, partyId, accountId,
-				postingType, acctgTransId, acctgTransType, entrySequenceId);
+		if (insuranceAmount.compareTo(BigDecimal.ZERO) == 1) {
+			postTransactionEntry(delegator, insuranceAmount, partyId,
+					accountId, postingType, acctgTransId, acctgTransType,
+					entrySequenceId);
 		}
 		// Credit Principal Receivable
 		// PRINCIPALPAYMENT
@@ -1134,9 +1173,10 @@ public class LoanRepayments {
 		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
 		// postingType, delegator);
 
-		if (principalAmount.compareTo(BigDecimal.ZERO) == 1){
-		postTransactionEntry(delegator, principalAmount, partyId, accountId,
-				postingType, acctgTransId, acctgTransType, entrySequenceId);
+		if (principalAmount.compareTo(BigDecimal.ZERO) == 1) {
+			postTransactionEntry(delegator, principalAmount, partyId,
+					accountId, postingType, acctgTransId, acctgTransType,
+					entrySequenceId);
 		}
 
 		// Mark the loan expectation as paid
