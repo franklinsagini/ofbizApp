@@ -3125,7 +3125,11 @@ under the License.
     	
     	<field name="incomeScaleId" type="id"></field>
     	
+    	<field name="atmApplication" type="name"></field>
+    	<field name="msaccoApplication" type="name"></field>
+    	
     	<prim-key field="partyId"/>
+    	
       	<relation type="one" fk-name="MEMBER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
@@ -3153,6 +3157,14 @@ under the License.
         <relation type="one" fk-name="MEMBER_MemberTypeName" rel-entity-name="MemberType">
             <key-map field-name="memberTypeName" rel-field-name="name"/>
         </relation>
+        
+        <index unique="true" name="index_idNumber">
+    		<index-field name="idNumber"/>
+    	</index>
+    	<index unique="true" name="index_payrollNumber">
+    		<index-field name="payrollNumber"/>
+    	</index>
+        
     </entity>
 
     <!-- County -->
@@ -3397,6 +3409,93 @@ under the License.
      		<field name="name" type="name"></field>
 			<prim-key field="name"/>
      </entity>
+     
+     <!-- ChangeMemberStation -->
+     <entity entity-name="ChangeMemberStation" package-name="org.ofbiz.party.party" title="ChangeMemberStation">
+    	<field name="changeMemberStationId" type="id-ne"></field>
+    	<field name="partyId" type="id"></field>
+    	<field name="fromStation" type="id"></field>
+    	<field name="toStation" type="id"></field>
+    	<field name="changedBy" type="name"></field>
+
+    	<!-- Add attachment field -->
+    	<prim-key field="changeMemberStationId"/>
+    	<relation type="one" fk-name="CHANGESTATION_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="CHANGESTATION_FROMSTATION" rel-entity-name="Station">
+        <key-map  field-name="fromStation" rel-field-name="stationId"/>
+      </relation>
+      <relation type="one" fk-name="CHANGESTATION_TOSTATION" rel-entity-name="Station">
+        <key-map  field-name="toStation" rel-field-name="stationId"/>
+      </relation>
+    </entity>
+     <!-- ChangeMemberEmploymentType -->
+     <entity entity-name="ChangeMemberEmploymentType" package-name="org.ofbiz.party.party" title="ChangeMemberEmploymentType">
+    	<field name="changeMemberEmploymentTypeId" type="id-ne"></field>
+    	<field name="partyId" type="id"></field>
+    	<field name="fromEmploymentType" type="name"></field>
+    	<field name="toEmploymentType" type="name"></field>
+    	<field name="changedBy" type="name"></field>
+
+    	<!-- Add attachment field -->
+    	<prim-key field="changeMemberEmploymentTypeId"/>
+    	<relation type="one" fk-name="CHANGEEMPLOYMENTTYPE_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        
+    </entity>
+     <!-- ChangeMemberEmployeeNumber -->
+     <entity entity-name="ChangeMemberEmployeeNumber" package-name="org.ofbiz.party.party" title="ChangeMemberEmployeeNumber">
+    	<field name="changeMemberEmployeeNumberId" type="id-ne"></field>
+    	<field name="partyId" type="id"></field>
+    	<field name="fromEmployeeNumber" type="name"></field>
+    	<field name="toEmployeeNumber" type="name"></field>
+    	<field name="changedBy" type="name"></field>
+
+    	<!-- Add attachment field -->
+    	<prim-key field="changeMemberEmployeeNumberId"/>
+    	<relation type="one" fk-name="CHANGEEMPLOYEENUMBER_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        
+    </entity>
+     <!-- ChangeMemberBranch -->
+     <entity entity-name="ChangeMemberBranch" package-name="org.ofbiz.party.party" title="ChangeMemberBranch">
+    	<field name="changeMemberBranchId" type="id-ne"></field>
+    	<field name="partyId" type="id"></field>
+    	<field name="fromBranch" type="id"></field>
+    	<field name="toBranch" type="id"></field>
+    	<field name="changedBy" type="name"></field>
+
+    	<!-- Add attachment field -->
+    	<prim-key field="changeMemberBranchId"/>
+    	<relation type="one" fk-name="CHANGEBRANCH_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        
+         <relation type="one" fk-name="CHANGEBRANCH_FROMBRANCH" rel-entity-name="PartyGroup">
+        <key-map  field-name="fromBranch" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="CHANGEBRANCH_TOBRANCH" rel-entity-name="PartyGroup">
+        <key-map  field-name="toBranch" rel-field-name="partyId"/>
+      </relation>
+        
+    </entity>
+     <!-- ChangeMemberShareAmount -->
+     <entity entity-name="ChangeMemberShareAmount" package-name="org.ofbiz.party.party" title="ChangeMemberShareAmount">
+    	<field name="changeMemberShareAmountId" type="id-ne"></field>
+    	<field name="partyId" type="id"></field>
+    	<field name="fromShareAmount" type="fixed-point"></field>
+    	<field name="toShareAmount" type="fixed-point"></field>
+    	<field name="changedBy" type="name"></field>
+
+    	<!-- Add attachment field -->
+    	<prim-key field="changeMemberShareAmountId"/>
+    	<relation type="one" fk-name="CHANGESHAREAMOUNT_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity>
 
 
 </entitymodel>

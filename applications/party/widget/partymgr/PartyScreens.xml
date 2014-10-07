@@ -88,6 +88,44 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- List All Members -->
+		<screen name="listAllSaccomembers">
+		<section>
+			<actions>
+				<set field="titleProperty" value="List Sacco Members" />
+				<set field="headerItem" value="listsaccomembers" />
+				<set field="tabButtonItem" value="findparty" />
+
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters" / -->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW" />
+							</condition>
+							<widgets>
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://party/webapp/partymgr/party/listsaccomembers.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 	<!-- reviewmembers -->
 	<screen name="reviewmembers">
@@ -118,6 +156,18 @@
 							<widgets>
 								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html> 
 									</platform-specific -->
+								<screenlet>
+									<container style="button-bar">
+										<link target="NewMember" text="New Member"
+											style="buttontext">
+											<!-- parameter param-name="loanApplicationId"/ -->
+											<image url-mode="raw"
+												src="${iconsLocation}/add.png" />
+										</link>
+										
+									</container>
+								</screenlet>
+									
 								<screenlet title="Search Members">
 									<include-form name="FindMember"
 										location="component://party/widget/partymgr/PartyForms.xml" />

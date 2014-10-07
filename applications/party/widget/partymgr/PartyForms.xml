@@ -874,7 +874,7 @@ under the License.
         </field>
         
         <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="idNumber"  title="${uiLabelMap.MemberIDNumber}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="pinNumber" title="${uiLabelMap.MemberPINNumber}"><text size="30" maxlength="60"/></field>
         <field name="passportNumber" title="${uiLabelMap.MemberPassportNumber}" ><text size="30" maxlength="60"/></field>
 		<field name="MemberAddressDetails" title="${uiLabelMap.MemberAddressDetails}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>       
@@ -889,16 +889,6 @@ under the License.
                 <option key="Class B" description="Class B"/>
             </drop-down>
         </field>
-
-       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-        <!-- field name="memberType" title="${uiLabelMap.MemberType}" widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
-                <option key="Corporate" description="Corporate"/>
-                <option key="KTDA" description="KTDA"/>
-                <option key="Business" description="Business"/>
-                <option key="Group Investor" description="Group Investor"/>
-            </drop-down>
-        </field -->
         
        <field name="memberTypeName" title="${uiLabelMap.MemberType}" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
@@ -921,9 +911,9 @@ under the License.
        
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="memberNumber" title="${uiLabelMap.MemberNumber}"  required-field="true" widget-style="required"><text size="30" maxlength="60" disabled="true" default-value="**GENERATED**"/></field>
-       <field name="mobileNumber" title="${uiLabelMap.MemberMobileNumber}" required-field="true" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="mobileNumber" title="${uiLabelMap.MemberMobileNumber}" required-field="true" widget-style="required"><text default-value="254" size="30" maxlength="60"/></field>
        <field name="birthDate" title="${uiLabelMap.MemberBirthDate}" required-field="true" widget-style="required"><date-time type="date"/></field>
-       <field name="permanentAddress" title="${uiLabelMap.MemberPermanentAddress}" required-field="true" widget-style="required"><textarea cols="30"/></field>
+       <field name="permanentAddress" title="Permanent Address" required-field="true" widget-style="required"><textarea cols="30"/></field>
        <field name="currentAddress" title="${uiLabelMap.MemberCurrentAddress}" required-field="true" widget-style="required"><textarea cols="30"/></field>
        
        <!-- field name="MEMBER_COUNTRY_OF_RESIDENCE" title="${uiLabelMap.MemberCountryOfResidence}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
@@ -984,14 +974,28 @@ under the License.
             </drop-down>
         </field>
         
-        <field name="monthlySalaryAmount" title="Salary Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
+        <!--field name="monthlySalaryAmount" title="Salary Amount"  required-field="true" widget-style="required"  position="1"><text/></field -->
         <field name="shareAmount" title="Share Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
         <field name="memberDepositAmount" title="Member Deposit Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
+        
+        <field name="atmApplication" title="ATL Application" required-field="true" widget-style="required">
+            <drop-down allow-empty="false">
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
+            </drop-down>
+        </field>
+        
+         <field name="msaccoApplication" title="MSACCO Application" required-field="true" widget-style="required">
+            <drop-down allow-empty="false">
+                <option key="Yes" description="Yes"/>
+                <option key="No" description="No"/>
+            </drop-down>
+        </field>           	
         
         <field name="memberStatus"><text default-value="NEW" disabled="true"></text></field>
        
        <!-- field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onClick" action="javascript: return confirm('Are you Sure do you want to continue ?');"><submit button-type="text-link"/></field -->
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return memberRegistrationFormValidation();"><submit button-type="button"/></field>
     </form>
     
     <form name="FindMember" type="single" target="reviewmembers" default-entity-name="Member">
@@ -1044,28 +1048,36 @@ under the License.
         
        <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
    
-       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
-	     <field name="stationId" title="Station">
+       <field name="payrollNumber" title="Payroll No"><display also-hidden="false"></display></field>
+	   
+	    <field name="branchId" title="Branch">
+            <!-- drop-down allow-empty="false">
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down -->
+            <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
+        </field>
+	   
+	   <field name="stationId" title="Station">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
             <!-- drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
         </field>
         
-        <field name="memberNumber" title="${uiLabelMap.MemberNumber}"><display></display></field>
-        
-        <field name="memberStatus"><display also-hidden="false"></display></field>
+        <field name="memberNumber" title="Member #"><display></display></field>
+
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
         
         <field name="Edit">
-        	<hyperlink target="NewMember?partyId=${partyId}" description="Edit Member"></hyperlink>
+        	<hyperlink target="NewMember?partyId=${partyId}" description="Edit"></hyperlink>
         </field>
         
-        <field name="Approve Member">
-        	<hyperlink target="ApproveMember?partyId=${partyId}" description="Approve Member"></hyperlink>
+        <field name="Approve">
+        	<hyperlink target="ApproveMember?partyId=${partyId}" description="Approve"></hyperlink>
         </field>
         
-        <field name="Reject Member">
-        	<hyperlink target="RejectMember?partyId=${partyId}" description="Reject Member"></hyperlink>
+        <field name="Reject">
+        	<hyperlink target="RejectMember?partyId=${partyId}" description="Reject"></hyperlink>
         </field>
         
          <field name="Details">
@@ -2040,12 +2052,21 @@ under the License.
        <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
    
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
-	     <field name="stationId" title="Station">
+	     <field name="branchId" title="Branch">
+            <!-- drop-down allow-empty="false">
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down -->
+            <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
+        </field>
+	   
+	   <field name="stationId" title="Station">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
             <!-- drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
         </field>
+        
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
         <field name="memberNumber" title="${uiLabelMap.MemberNumber}"><display></display></field>
         
         <field name="memberStatus"><display also-hidden="false"></display></field>
