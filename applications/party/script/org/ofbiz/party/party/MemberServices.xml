@@ -483,11 +483,21 @@
     
     <!-- ChangeMemberStation -->
      <simple-method method-name="createChangeMemberStation" short-description="Create ChangeMemberStation">
-        <make-value entity-name="ChangeMemberStation" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
+		<call-simple-method method-name="saveMemberStation" scope="inline"></call-simple-method>
+		<!-- Update Member with new station -->
+		<entity-one value-field="member" entity-name="Member">
+			<field-map field-name="partyId" value="${newEntity.partyId}"/>
+		</entity-one>
+		<set field="member.stationId" value="${newEntity.toStation}"/>
+		<store-value value-field="member"/>
+    </simple-method>
+    <simple-method method-name="saveMemberStation">
+    	<make-value entity-name="ChangeMemberStation" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="ChangeMemberStation" field="changeMemberStationId"/>
         <set from-field="changeMemberStationId" field="newEntity.changeMemberStationId"/>
+        <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -503,11 +513,23 @@
     </simple-method>
     <!-- ChangeMemberEmploymentType -->
      <simple-method method-name="createChangeMemberEmploymentType" short-description="Create ChangeMemberEmploymentType">
-        <make-value entity-name="ChangeMemberEmploymentType" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
+        
+        <call-simple-method method-name="saveEmployeeType" scope="inline"></call-simple-method>
+		<!-- Update Member with new station -->
+		<entity-one value-field="member" entity-name="Member">
+			<field-map field-name="partyId" value="${newEntity.partyId}"/>
+		</entity-one>
+		<set field="member.employeeType" value="${newEntity.toEmploymentType}"/>
+		<store-value value-field="member"/>
+    </simple-method>
+    
+    <simple-method method-name="saveEmployeeType">
+    	<make-value entity-name="ChangeMemberEmploymentType" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="ChangeMemberEmploymentType" field="changeMemberEmploymentTypeId"/>
         <set from-field="changeMemberEmploymentTypeId" field="newEntity.changeMemberEmploymentTypeId"/>
+        <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -523,12 +545,22 @@
     </simple-method>
     <!-- ChangeMemberEmployeeNumber -->
      <simple-method method-name="createChangeMemberEmployeeNumber" short-description="Create ChangeMemberEmployeeNumber">
-        <make-value entity-name="ChangeMemberEmployeeNumber" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="ChangeMemberEmployeeNumber" field="changeMemberEmployeeNumberId"/>
-        <set from-field="changeMemberEmployeeNumberId" field="newEntity.changeMemberEmployeeNumberId"/>
-        <create-value value-field="newEntity"/>
+        <call-simple-method method-name="saveEmployeeNumber" scope="inline"></call-simple-method>
+		<!-- Update Member with new station -->
+		<entity-one value-field="member" entity-name="Member">
+			<field-map field-name="partyId" value="${newEntity.partyId}"/>
+		</entity-one>
+		<set field="member.employeeNumber" value="${newEntity.toEmployeeNumber}"/>
+		<store-value value-field="member"/>
+    </simple-method>
+    <simple-method method-name="saveEmployeeNumber">
+    	 	<make-value entity-name="ChangeMemberEmployeeNumber" value-field="newEntity"/>
+        	<set-pk-fields map="parameters" value-field="newEntity"/>
+        	<set-nonpk-fields map="parameters" value-field="newEntity"/>
+        	<sequenced-id sequence-name="ChangeMemberEmployeeNumber" field="changeMemberEmployeeNumberId"/>
+        	<set from-field="changeMemberEmployeeNumberId" field="newEntity.changeMemberEmployeeNumberId"/>
+        	<set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
+        	<create-value value-field="newEntity"/>
     </simple-method>
     
     <simple-method method-name="updateChangeMemberEmployeeNumber" short-description="Update ChangeMemberEmployeeNumber">
@@ -541,13 +573,25 @@
         <entity-one entity-name="ChangeMemberEmployeeNumber" value-field="lookUpValue"/>
         <remove-value value-field="lookUpValue"/>
     </simple-method>
+    
     <!-- ChangeMemberBranch -->
      <simple-method method-name="createChangeMemberBranch" short-description="Create ChangeMemberBranch">
-        <make-value entity-name="ChangeMemberBranch" value-field="newEntity"/>
+     	<call-simple-method method-name="saveMemberBranch" scope="inline"></call-simple-method>
+		<!-- Update Member with new station -->
+		<entity-one value-field="member" entity-name="Member">
+			<field-map field-name="partyId" value="${newEntity.partyId}"/>
+		</entity-one>
+		<set field="member.branchId" value="${newEntity.toBranch}"/>
+		<store-value value-field="member"/>
+    </simple-method>
+    
+    <simple-method method-name="saveMemberBranch">
+    	<make-value entity-name="ChangeMemberBranch" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="ChangeMemberBranch" field="changeMemberBranchId"/>
         <set from-field="changeMemberBranchId" field="newEntity.changeMemberBranchId"/>
+        <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -563,11 +607,22 @@
     </simple-method>
     <!-- ChangeMemberShareAmount -->
      <simple-method method-name="createChangeMemberShareAmount" short-description="Create ChangeMemberShareAmount">
-        <make-value entity-name="ChangeMemberShareAmount" value-field="newEntity"/>
+     	<call-simple-method method-name="saveShareAmount" scope="inline"></call-simple-method>
+		<!-- Update Member with new station -->
+		<entity-one value-field="member" entity-name="Member">
+			<field-map field-name="partyId" value="${newEntity.partyId}"/>
+		</entity-one>
+		<set field="member.shareAmount" value="${newEntity.toShareAmount}"/>
+		<store-value value-field="member"/>
+    </simple-method>
+    
+    <simple-method method-name="saveShareAmount">
+    	<make-value entity-name="ChangeMemberShareAmount" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="ChangeMemberShareAmount" field="changeMemberShareAmountId"/>
         <set from-field="changeMemberShareAmountId" field="newEntity.changeMemberShareAmountId"/>
+        <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     
