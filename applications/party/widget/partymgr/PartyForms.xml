@@ -1080,6 +1080,10 @@ under the License.
         	<hyperlink target="RejectMember?partyId=${partyId}" description="Reject"></hyperlink>
         </field>
         
+        <field name="Change">
+        	<hyperlink target="changeMember?partyId=${partyId}" description="Change"></hyperlink>
+        </field>
+        
          <field name="Details">
         	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${lastName} Details"></hyperlink>
         </field>
@@ -2342,4 +2346,257 @@ under the License.
         </field -->
     </form>
     
+    <!--Begin ChangeMemberStation -->
+    <form name="ChangeMemberStation" type="single" target="createChangeMemberStation"
+        focus-field-name="fromStation" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
+        <actions>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	<set field="fromStation" value="${memberContext.stationId}"/>
+        </actions>
+        <field name="changeMemberStationId"><hidden/></field>
+        
+        <field name="partyId"><hidden value="${partyId}"/></field>
+        
+        <field name="fromStation" title="From">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="toStation" title="To">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+       
+        <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listChangeMemberStation" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberStation" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="ChangeMemberStation">
+        		<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberStation"/>
+        <field name="changeMemberStationId"><hidden/></field>
+        
+        <field name="partyId"><hidden/></field>
+       <field name="fromStation" title="From">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+       <field name="toStation" title="To">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+    <!--End ChangeMemberStation -->
+    
+    <!--Begin ChangeMemberEmploymentType -->
+    <form name="ChangeMemberEmploymentType" type="single" target="createChangeMemberEmploymentType"
+        focus-field-name="toEmploymentType" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
+        <actions>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	<set field="fromEmploymentType" value="${memberContext.employeeType}"/>
+        </actions>
+        <field name="changeMemberStationId"><hidden/></field>
+        
+       <field name="partyId"><hidden value="${partyId}"/></field>
+        
+        <field name="fromEmploymentType" title="Old Employment Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="toEmploymentType" title="New Employment Type">
+        	<drop-down>
+        		<option key="Permanent" description="Permanent"/>
+        		<option key="Seasonal" description="Seasonal"/>
+        		<option key="Contract" description="Contract"/>
+        	</drop-down>
+        </field>
+       
+        <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listChangeMemberEmploymentType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberEmploymentType" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="ChangeMemberEmploymentType">
+        		<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberEmploymentType"/>
+        <field name="changeMemberEmploymentTypeId"><hidden/></field>
+        
+        <field name="partyId"><hidden/></field>
+      <field name="fromEmploymentType" title="Old Employment Type"><display></display></field>
+      <field name="toEmploymentType" title="New Employment Type"><display></display></field>  
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+    <!--End ChangeMemberEmploymentType -->
+    
+    <!--Begin ChangeMemberEmployeeNumber -->
+    	<form name="ChangeMemberEmployeeNumber" type="single" target="createChangeMemberEmployeeNumber"
+        focus-field-name="toEmployeeNumber" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
+        <actions>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	<set field="fromEmployeeNumber" value="${memberContext.employeeNumber}"/>
+        </actions>
+        <field name="changeMemberEmploymentTypeId"><hidden/></field>
+        
+       <field name="partyId"><hidden value="${partyId}"/></field>
+        
+        <field name="fromEmployeeNumber" title="Old Employee Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="toEmployeeNumber" title="New Employee Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       
+       
+        <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listChangeMemberEmployeeNumber" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberEmployeeNumber" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="ChangeMemberEmployeeNumber">
+        		<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberEmployeeNumber"/>
+        <field name="changeMemberEmployeeNumberId"><hidden/></field>
+        
+        <field name="partyId"><hidden/></field>
+      <field name="fromEmployeeNumber" title="Old Employee Number"><display></display></field>
+      <field name="toEmployeeNumber" title="New Employee Number"><display></display></field>  
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+    <!--End ChangeMemberEmployeeNumber -->
+    
+    <!--Begin ChangeMemberBranch -->
+    <form name="ChangeMemberBranch" type="single" target="createChangeMemberBranch"
+        focus-field-name="toBranch" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
+        <actions>
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"></condition-expr>
+        	</entity-condition>
+        	<set field="fromBranch" value="${memberContext.branchId}"/>
+        </actions>
+        <field name="changeMemberBranchId"><hidden/></field>
+        
+       <field name="partyId"><hidden value="${partyId}"/></field>
+        
+       <field name="fromBranch" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+                    <entity-order-by field-name="groupName"/>
+                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="toBranch" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+                    <entity-order-by field-name="groupName"/>
+                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+ 		               
+        <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listChangeMemberBranch" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberBranch" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="ChangeMemberBranch">
+        		<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberBranch"/>
+        <field name="changeMemberBranchId"><hidden/></field>
+        
+        <field name="partyId"><hidden/></field>
+      <field name="fromBranch" title="From">
+	     	<display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+       <field name="toBranch" title="To">
+	     	<display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+    <!--End ChangeMemberBranch -->
+    
+    <!--Begin ChangeMemberShareAmount -->
+    	<form name="ChangeMemberShareAmount" type="single" target="createChangeMemberShareAmount"
+        focus-field-name="toShareAmount" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
+        <actions>
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"></condition-expr>
+        	</entity-condition>
+        	<set field="fromShareAmount" value="${memberContext.shareAmount}"/>
+        </actions>
+        <field name="changeMemberShareAmountId"><hidden/></field>
+        
+       <field name="partyId"><hidden value="${partyId}"/></field>
+        
+      <field name="fromShareAmount" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="toShareAmount" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+ 		               
+        <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listChangeMemberShareAmount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberShareAmount" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="ChangeMemberShareAmount">
+        		<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberShareAmount"/>
+        <field name="changeMemberShareAmountId"><hidden/></field>
+        
+        <field name="partyId"><hidden/></field>
+		<field name="fromShareAmount" title="From"><display></display></field>
+		<field name="toShareAmount" title="To"><display></display></field>
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+    <!--End ChangeMemberShareAmount -->
+
+
+
+
 </forms>
