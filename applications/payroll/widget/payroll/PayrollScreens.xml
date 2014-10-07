@@ -151,6 +151,7 @@ under the License.
                 <set field="bankDetailsId" from-field="parameters.bankDetailsId"/>
                 
                 <entity-one entity-name="BankBranch" value-field="bankBranchContext"/>
+                
                 <entity-one value-field="bank" entity-name="BankDetails">
                 	<field-map field-name="bankDetailsId" from-field="bankDetailsId"/>
                 </entity-one>
@@ -761,8 +762,21 @@ under the License.
                     <decorator-section name="body">                        
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Payroll Overview">
+                        		<screenlet title="Open Payroll Period">
                         			<include-form name="listPayrollOverview" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Closed Payroll Periods">
+                        			<include-form name="listClosedPayrollOverview" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Open Payroll Period">
+                        			<include-form name="listPayrollOverview" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Closed Payroll Periods">
+                        			<include-form name="listClosedPayrollOverview" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

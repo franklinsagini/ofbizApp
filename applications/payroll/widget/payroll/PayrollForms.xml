@@ -453,24 +453,21 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="BankBranch">
-            	<condition-expr field-name="bankDetailsId" from-field="bankDetailsId"/>
+            	<condition-expr field-name="bankDetailsId" from-field="parameters.bankDetailsId"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateBankBranch"/>
-        <!-- field name="skillTypeId">
-            <display-entity entity-name="SkillType" description="${description}"/>
-        </field -->
-        <!-- field name="bankDetailsId" title="Bank">
-        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
-        </field -->
+        <field name="bankBranchId"> <hidden/> </field>
         <field name="bankDetailsId"> <hidden/> </field>
         <field name="branchName"> <text></text> </field>
         <field name="swiftCode"> <text></text> </field>
         <field name="branchNo"> <text></text> </field>
         <field name="location"> <text></text> </field>
+        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteBankBranch" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="bankBranchId"/>
+                <parameter param-name="bankDetailsId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
@@ -647,12 +644,19 @@ under the License.
         <field name="payrollYearId" parameter-name="payrollYearId"><hidden/></field>
         <field name="payrollPeriodId"><hidden/></field>        
         <field name="sequence_no" title="Sequence No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="name" title="Payroll Period" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="name" title="Period" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="currentperiod"  title="Current Period" >
             <drop-down allow-empty="false">
                 <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
             </drop-down>
+        </field>
+        <field name="status"  title="Status" >
+            <drop-down allow-empty="false">
+                <option key="Inactve" description="Inactve"/>
+                <option key="Open" description="Open"/>
+                <option key="Closed" description="Closed"/>
+			</drop-down>
         </field>
         <field name="startDate"><date-time type="date"/></field> 
         <field name="endDate"><date-time type="date"/></field>
@@ -670,17 +674,12 @@ under the License.
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updatePayrollPeriod"/>
-        <!-- field name="skillTypeId">
-            <display-entity entity-name="SkillType" description="${description}"/>
-        </field -->
-        <!-- field name="bankDetailsId" title="Bank">
-        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
-        </field -->
         <field name="payrollPeriodId"><hidden/></field>       
         <field name="payrollYearId"> <hidden/> </field>
         <field name="sequence_no" title="Sequence No"> <display also-hidden="false"/> </field>
-        <field name="name"> <text ></text> </field>
+        <field name="name" title="Period" > <text ></text> </field>
         <field name="currentperiod" title="Current Period"> <text disabled="false"></text> </field>
+        <field name="status" title="Status"> <display also-hidden="false"/> </field>
         <field name="startDate"><date-time type="date"/></field>
         <field name="endDate"><date-time type="date"/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
@@ -747,6 +746,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="StaffPayroll">
+            	<condition-expr field-name="payrollPeriodId" from-field="parameters.payrollPeriodId"/>
             </entity-condition>
            <entity-condition entity-name="PayrollPeriod" list="periodList">
             </entity-condition>
@@ -815,10 +815,9 @@ under the License.
         
         <form name="listStaffPayrollElements" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffPayrollElements" paginate-target="staffpayrollelements"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-        			<set field="staffPayrollId" from-field="parameters.staffPayrollId"/>
+        <actions>        			
             <entity-condition entity-name="StaffPayrollElements">
-            	<condition-expr field-name="staffPayrollId" operator="equals" from-field="staffPayrollId"/>
+            	<condition-expr field-name="staffPayrollId" from-field="parameters.staffPayrollId"/>
             </entity-condition>
             <entity-condition entity-name="PayrollElement" list="payrollElementList">
             </entity-condition>
@@ -826,12 +825,7 @@ under the License.
 
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStaffPayrollElements"/>
-        <!-- field name="skillTypeId">
-            <display-entity entity-name="SkillType" description="${description}"/>
-        </field -->
-        <!-- field name="bankDetailsId" title="Bank">
-        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
-        </field -->
+        
         <field name="staffPayrollId"> <hidden/> </field>
         <field name="payrollYearId"> <hidden/> </field>
         <field name="payrollElementId" title="Payroll Element"> 
@@ -844,10 +838,12 @@ under the License.
         <field name="recurrencyExpiry"><date-time/></field>
         
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteStaffPayrollElements?${staffPayrollId}" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="staffPayrollElementsId"/>
-            </hyperlink>
+                <hyperlink target="deleteStaffPayrollElements" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="staffPayrollElementsId"/>
+                    <parameter param-name="staffPayrollId"/>
+                </hyperlink>
         </field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
@@ -1038,7 +1034,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
-    <form name="PayrollOverview" type="single" target="payrollOverview"
+    <!-- form name="PayrollOverview" type="single" target="payrollOverview"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollOverviewContext">
     	
     	<actions>
@@ -1056,13 +1052,13 @@ under the License.
             </drop-down>   	
         </field>
         <field name="numberOfEmployees" title="Number Of Employees"><text/></field>   
-    </form>
+    </form -->
     
     <form name="listPayrollOverview" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="payrollOverview" paginate-target="payrollOverview"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollPeriod">
-            	<condition-expr field-name="currentperiod" operator="equals" value="Y"/>
+            	<condition-expr field-name="status" operator="equals" value="Open"/>
             </entity-condition>
         </actions>
         <field name="payrollPeriodId"><hidden/></field>       
@@ -1073,13 +1069,30 @@ under the License.
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
-        <field name="migratepayroll" title="Migrate Payroll" widget-style="buttontext">
-        
+        <field name="migratepayroll" title="Migrate Payroll" widget-style="buttontext">        
             <hyperlink target="migratepayroll" description="Migrate Staff Payroll" also-hidden="false" image-location="${iconsLocation}/arrow_right.png">
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
     </form>
+    
+    <!-- form name="listClosedPayrollOverview" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="payrollOverview" paginate-target="payrollOverview"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PayrollPeriod">
+            	<condition-expr field-name="status" operator="equals" value="Closed"/>
+            	<order-by field-name="sequence_no"/>
+            </entity-condition>
+        </actions>
+        <field name="payrollPeriodId"><hidden/></field>       
+        <field name="payrollYearId"> <hidden/> </field>
+        <field name="name" title="Period"> <display/> </field>
+        <field name="addPeriodStaff" title="vieV Payroll" widget-style="buttontext">
+            <hyperlink target="staffpayroll" description="View Staff Payroll" also-hidden="false"> 
+                <parameter param-name="payrollPeriodId"/>
+            </hyperlink>
+        </field>
+    </form -->
     
    
 </forms>

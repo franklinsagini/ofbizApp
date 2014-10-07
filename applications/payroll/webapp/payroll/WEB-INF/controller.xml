@@ -151,8 +151,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="createBankBranch" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="bankbranch">
+		<response name="success" type="request-redirect" value="bankbranch">
 				<redirect-parameter name="bankDetailsId"/>
 			</response>
 		<response name="error" type="view" value="bankbranch" />
@@ -162,8 +161,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateBankBranch" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="bankbranch">
+		<response name="success" type="request-redirect" value="bankbranch">
 			<redirect-parameter name="bankDetailsId"/>
 			</response>
 		<response name="error" type="view" value="bankbranch" />
@@ -171,15 +169,13 @@ under the License.
 	
 	<request-map uri="deleteBankBranch">
 		<security https="true" auth="true" />
-		<event type="service" invoke="deleteBankDetails" />
-		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="bankbranch">
+		<event type="service" invoke="deleteBankBranch" />
+		<response name="success" type="request-redirect" 
+		value="bankbranch" save-current-view="true" save-last-view="true">
 			<redirect-parameter name="bankDetailsId"/>
 			</response>
 		<response name="error" type="view" value="bankbranch" />
 	</request-map>
-	
 	
 	<request-map uri="paypoint">
 		<security https="true" auth="true" />
@@ -610,6 +606,8 @@ under the License.
 	
     <request-map uri="payslipView"><security https="true" auth="true"/><response name="success" type="view" value="payslipView"/></request-map>
     <request-map uri="payslipViewpdf"><security https="true" auth="true"/><response name="success" type="view" value="payslipViewpdf"/></request-map>
+ 	
+ 	<request-map uri="payrollElementsView"><security https="true" auth="true"/><response name="success" type="view" value="payrollElementsView"/></request-map>   
 	
 	
 	
@@ -646,6 +644,8 @@ under the License.
     
     <view-map name="payslipView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayslipGenerator"/>
     <view-map name="payslipViewpdf" type="screenfop" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayslipGeneratorpdf" content-type="application/pdf" encoding="none"/>
+    
+    <view-map name="payrollElementsView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayrollElementReport"/>
 	
 	
 		

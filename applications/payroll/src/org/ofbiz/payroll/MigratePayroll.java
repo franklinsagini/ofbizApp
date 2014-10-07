@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,9 @@ import org.ofbiz.webapp.event.EventHandlerException;
  * **/
 public class MigratePayroll {
 	private static Logger log = Logger.getLogger(PayrollProcess.class);
+	
+	static Timestamp curTimeStamp = null;
+	static Timestamp newPeriodEndDate = null;
 
 	public static String migratePayroll(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -48,6 +53,9 @@ public class MigratePayroll {
 		
 		newPayrollPeriodId = getNewPayrollPeriodID(oldPayrollPeriodId, delegator);
 		log.info("######### New payrollPeriodId is :::: " + newPayrollPeriodId);
+		
+		curTimeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		newPeriodEndDate = getPeriodEndDate(newPayrollPeriodId, delegator);
 
 		try {
 			employeesELI = delegator.findList("StaffPayroll", EntityCondition
@@ -58,12 +66,27 @@ public class MigratePayroll {
 			e.printStackTrace();
 		}
 		
-		
 
-	for (GenericValue genericValue : employeesELI) {
+		for (GenericValue genericValue : employeesELI) {
+				
+			if(!(genericValue.getString("closed").equals("Y")))
+			{
+				rollOverPayroll(genericValue, genericValue.getString("staffPayrollId"), newPayrollPeriodId, delegator);
+				log.info("######### Staff ID "+ genericValue.getString("staffPayrollId"));
+				
+				genericValue.setString("closed", "Y");
+				try {
+					delegator.createOrStore(genericValue);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else
+			{
+				log.info(">>>>>>>>>>>>>>>>>>>>>>>>>Period Already Closed<<<<<<<<<<<<<<<<<<<<<<<<<");
+			}
 			
-			rollOverPayroll(genericValue, genericValue.getString("staffPayrollId"), newPayrollPeriodId, delegator);
-			log.info("######### Staff ID "+ genericValue.getString("staffPayrollId"));
+			
 		}
 
 	
@@ -83,6 +106,25 @@ public class MigratePayroll {
 		return "";				
 	}
 
+	private static Timestamp getPeriodEndDate(String newPayrollPeriodId, Delegator delegator) {
+		List<GenericValue> payrollPeriodELI = null;
+		Timestamp endDate = null;
+		try {
+			payrollPeriodELI = delegator.findList("PayrollPeriod",
+					EntityCondition.makeCondition("payrollPeriodId",
+							newPayrollPeriodId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue payrollPeriod : payrollPeriodELI) {
+			
+			endDate=payrollPeriod.getTimestamp("endDate");			
+		}
+
+		return endDate;
+	}
+
 	private static String getNewPayrollPeriodID(String oldPayrollPeriodId,
 			Delegator delegator) {
 		List<GenericValue> payrollPeriodELI = null;
@@ -96,10 +138,19 @@ public class MigratePayroll {
 		}
 
 		for (GenericValue payrollPeriod : payrollPeriodELI) {
-			// Get the amount
+	
 			log.info("#########>>>>>>>>>1 2 pakb>>>>>>>>>>>>"+payrollPeriod.getLong(("sequence_no")));
 
 			newPPID = getNewPeriod(payrollPeriod, payrollPeriod.getLong("sequence_no"), delegator);
+			
+			payrollPeriod.setString("currentperiod", "N");
+			payrollPeriod.setString("status", "Closed");
+			try {
+				delegator.createOrStore(payrollPeriod);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		return newPPID;
@@ -121,6 +172,15 @@ public class MigratePayroll {
 			// Get the amount
 			log.info("######### 2>>>>>>>>>>>>>>>>>>"+period.getString("payrollPeriodId"));
 			pId = period.getString("payrollPeriodId");
+			
+			period.setString("currentperiod", "Y");
+			period.setString("status", "Open");
+			try {
+				delegator.createOrStore(period);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return pId;
 	}
@@ -147,7 +207,7 @@ public class MigratePayroll {
 				delegator.store(newStaffPayroll);
 				log.info("New Staff Payroll ID = >>>>>>>>>>>>"+newStaffPayroll.getString("staffPayrollId"));
 				
-				rollOverParameters(employee, staffPayrollId, newStaffPayroll.getString("staffPayrollId"), delegator);
+				rollOverParameters(employee, staffPayrollId, newStaffPayroll.getString("staffPayrollId"), newPayrollPeriodId, delegator);
 				
 				
 				
@@ -160,32 +220,45 @@ public class MigratePayroll {
 		}
 	}
 	private static void rollOverParameters(GenericValue employee,
-			String OldStaffPayrollId, String NewStaffPayrollId, Delegator delegator) {
+			String OldStaffPayrollId, String NewStaffPayrollId, String newPayrollPeriodId, Delegator delegator) {
 		List<GenericValue> staffPayrollElementDetailsELI = null;
-		//staffpayroll - type != 'Sys Elem'
-		
-//		cont here!!!!!!!!!!!!
-		
-		
+		Timestamp recurrencyDate = null;
 		
 		EntityConditionList<EntityExpr> elementConditions = EntityCondition.makeCondition(UtilMisc.toList
 				(EntityCondition.makeCondition("staffPayrollId", EntityOperator.EQUALS, OldStaffPayrollId), 
-						EntityCondition.makeCondition("payrollElementId", EntityOperator.NOT_IN, getSystemElements(delegator))), EntityOperator.AND);
+						EntityCondition.makeCondition("elementType", EntityOperator.NOT_EQUAL, "System Element")), EntityOperator.AND);
 		
 		try {
-			staffPayrollElementDetailsELI = delegator.findList("StaffPayrollElement",
+			staffPayrollElementDetailsELI = delegator.findList("PayrollElementAndStaffPayrollElement",
 					elementConditions, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 		
 		List<GenericValue> listSystemElements = new ArrayList<GenericValue>();
-		GenericValue systemElement;
+//		GenericValue systemElement;
+		
 		
 		for (GenericValue staffPayrollElementDetails : staffPayrollElementDetailsELI) {
 
+			/*if(staffPayrollElementDetails.getTimestamp("recurrencyExpiry").equals(null))
+			{
+				recurrencyDate=null;
+			}
+			else if(staffPayrollElementDetails.getTimestamp("recurrencyExpiry").after(newPeriodEndDate))
+			{
+				recurrencyDate=staffPayrollElementDetails.getTimestamp("recurrencyExpiry");
+			}
+			else 
+			{
+				recurrencyDate=null;
+			}*/
+
 			listSystemElements.add(createElementToSave(delegator, staffPayrollElementDetails.getString("payrollElementId"), 
-					staffPayrollElementDetails.getBigDecimal("amount"), staffPayrollElementDetails.getBigDecimal("balance"), NewStaffPayrollId));
+					staffPayrollElementDetails.getBigDecimal("amount"), staffPayrollElementDetails.getBigDecimal("balance"), 
+					recurrencyDate, NewStaffPayrollId));
+
+			
 		}
 		try {
 			delegator.storeAll(listSystemElements);
@@ -194,18 +267,6 @@ public class MigratePayroll {
 			e.printStackTrace();
 		}
 		
-	}
-
-	private static List<GenericValue> getSystemElements(Delegator delegator) {
-		List<GenericValue> systemElementELI = null;
-		try {
-			systemElementELI = delegator.findList("PayrollElement",
-					EntityCondition.makeCondition("elementType",
-							"System Element"), null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-			}
-		return systemElementELI;
 	}
 
 	private static GenericValue createStaffToSave(Delegator delegator, String partyId, BigDecimal pensionPercentage, BigDecimal nssfVolAmt,
@@ -228,20 +289,22 @@ public class MigratePayroll {
 		return staffPayroll;
 	}
 	
-	private static GenericValue createElementToSave(Delegator delegator, String payrollElementId, BigDecimal elementAmount, BigDecimal elementBalance, 
-			String staffPayrollId ){
-		String staffPayrollElementsSequenceId = delegator
-		.getNextSeqId("StaffPayrollElements");
+	private static GenericValue createElementToSave(Delegator delegator, String payrollElementId, BigDecimal Amount, BigDecimal Balance, 
+			Timestamp recurrencyDate, String newStaffPayrollId ){
+		
+		String staffPayrollElementsSequenceId = delegator.getNextSeqId("StaffPayrollElements");
 
 		GenericValue staffPayrollElement = delegator.makeValidValue(
 				"StaffPayrollElements", UtilMisc.toMap(
-						"staffPayrollElementsId",
-						staffPayrollElementsSequenceId, "payrollElementId",
-						payrollElementId, "amount", elementAmount, "staffPayrollId",
-						staffPayrollId, "valueChanged", "N", "balance", BigDecimal.valueOf(0.0)));
+						"staffPayrollElementsId", staffPayrollElementsSequenceId, 
+						"payrollElementId", payrollElementId, 
+						"amount", Amount, 
+						"staffPayrollId", newStaffPayrollId, 
+						"valueChanged", "N", 
+						"balance", Balance,
+						"recurrencyExpiry", recurrencyDate));
 		try {
-			staffPayrollElement = delegator
-					.createSetNextSeqId(staffPayrollElement);
+			staffPayrollElement = delegator.createSetNextSeqId(staffPayrollElement);
 		} catch (GenericEntityException e1) {
 			e1.printStackTrace();
 		}
