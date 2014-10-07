@@ -2354,6 +2354,12 @@
 			value="memberTypes"></response>
 		<response name="error" type="view" value="memberTypes" />
 	</request-map>
+	
+	  <request-map uri="memberRegistrationFormValidation">
+        <event type="java" path="org.ofbiz.party.party.MemberValidation" invoke="uniqueFieldsValidation" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
 
 
 	<!-- View Mappings -->
@@ -2604,8 +2610,11 @@
 	<!-- Member -->
 	<view-map name="NewMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#NewMember" />
+	<!--view-map name="listsaccomembers" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#listsaccomembers" /-->
 	<view-map name="listsaccomembers" type="screen"
-		page="component://party/widget/partymgr/PartyScreens.xml#listsaccomembers" />
+		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />
+		
 	
 	<view-map name="reviewmembers" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />	
