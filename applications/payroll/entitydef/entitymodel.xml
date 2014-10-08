@@ -157,6 +157,7 @@ under the License.
        <field name="sequence_no" type="numeric"></field>
        <field name="name" type="name"></field>
        <field name="currentperiod" type="indicator"></field>
+       <field name="status" type="name"></field>
         <field name="startDate" type="date-time"></field>
         <field name="endDate" type="date-time"></field>
         <prim-key field="payrollPeriodId"/>
@@ -262,7 +263,19 @@ under the License.
 	        <prim-key field="nssfTableId"/>
         </entity>
         
-         <entity entity-name="PayrollOverview" package-name="org.ofbiz.payroll" title="Payroll Overview">
+        <view-entity entity-name="PayrollElementAndStaffPayrollElement" package-name="org.ofbiz.payroll" 
+    	title="Staff Payroll Elements">
+        <member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+    	<member-entity entity-alias="PE" entity-name="PayrollElement" />
+        <alias-all entity-alias="SPE"/>
+        <alias-all entity-alias="PE" />        
+        <view-link entity-alias="SPE" rel-entity-alias="PE">
+            <key-map field-name="payrollElementId" />
+        </view-link>
+    
+    </view-entity>
+        
+         <!-- entity entity-name="PayrollOverview" package-name="org.ofbiz.payroll" title="Payroll Overview">
 	        <field name="payrollOverViewId" type="id-ne"><description>primary sequenced ID</description></field>
 	        <field name="payrollPeriodId" type="id-ne"></field>
 	        <field name="numberOfEmployees" type="numeric"></field>
@@ -270,7 +283,7 @@ under the License.
 	        <relation type="one" fk-name="current_period" rel-entity-name="PayrollPeriod">
             	<key-map field-name="payrollPeriodId"/>
         	</relation>
-        </entity>
+        </entity -->
         
             
 	

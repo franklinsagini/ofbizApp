@@ -151,6 +151,7 @@ under the License.
                 <set field="bankDetailsId" from-field="parameters.bankDetailsId"/>
                 
                 <entity-one entity-name="BankBranch" value-field="bankBranchContext"/>
+                
                 <entity-one value-field="bank" entity-name="BankDetails">
                 	<field-map field-name="bankDetailsId" from-field="bankDetailsId"/>
                 </entity-one>
@@ -685,7 +686,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="PayrollOverview">
+    <!-- screen name="PayrollOverview">
     <section>
             <actions>
                 <set field="titleProperty" value="Payroll Overview"/>
@@ -693,8 +694,6 @@ under the License.
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="payrollOverview"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
-                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
                 <set field="payrollPeriodId" from-field="parameters.payrollPeriodId" />
                 
@@ -735,6 +734,45 @@ under the License.
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen -->
+    
+    <screen name="PayrollOverview">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Payroll Overview"/>
+                <set field="headerItem" value="payrollOverview"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="payrollOverview"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="payrollYearId" from-field="parameters.payrollYearId"/>
+                
+                <entity-one entity-name="PayrollPeriod" value-field="payrollPeriodContext"/>
+                <entity-one value-field="year" entity-name="PayrollYear">                	
+                	<field-map field-name="payrollYearId" from-field="payrollYearId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Open Payroll Period">
+                        			<include-form name="listPayrollOverview" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Closed Payroll Periods">
+                        			<include-form name="listClosedPayrollOverview" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>

@@ -85,10 +85,17 @@ under the License.
         <security https="true" auth="true" />
         <response name="success" type="view" value="activeleavespdf" />
     </request-map>
-<!--     <request-map uri="LeaveBalances.csv">
+    
+    <request-map uri="advanceSalary">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="LeaveBalancescsv"/>
-    </request-map> -->
+        <response name="success" type="view" value="advanceSalary"/>
+    </request-map> 
+    
+     <request-map uri="EditSalaryAdvanceTypes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditSalaryAdvanceTypes"/>
+    </request-map> 
+         
          
 
 
@@ -139,6 +146,12 @@ under the License.
     </request-map>
     <request-map uri="emplleaveend">
         <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveEnd" />
+        <response name="success" type="none">
+    </response>
+    </request-map>
+    
+     <request-map uri="emplresume">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getResumeDate" />
         <response name="success" type="none">
     </response>
     </request-map>
@@ -2189,6 +2202,7 @@ under the License.
 		<view-map name="staffOnLedfdfave" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"
 		content-type="application/pdf" encoding="none" /> 
 		    <view-map name="staffOnLeave" type="screen" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"/>
-		
-		<view-map name="ViewHandler" type="birt" page="component://humanres/webapp/humanres/reports/staffOnLeaveReport.rptdesign" content-type="application/pdf"/>					
+		    	<view-map name="advanceSalary" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
+		    	<view-map name="EditSalaryAdvanceTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
+						
 </site-conf>

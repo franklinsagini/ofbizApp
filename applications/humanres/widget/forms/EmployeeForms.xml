@@ -595,7 +595,7 @@
         	<set field="partyIdentificationTypeId" from-field="partyIdentificationTypeId"/>
         	
         	<entity-condition entity-name="Geo" list="countryGeoList"></entity-condition>
-        	<set field="countryGeoId" from-field="countryGeoId"/>
+        	<set field="geoId" from-field="geoId"/>
        
         </actions>        
         
@@ -620,7 +620,7 @@
         <field name="dob" title="Date of Birth" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time type="timestamp"></date-time></field>
          <!-- field name="countryGeoId" title="Nationality">        	
        	 <drop-down allow-empty="true">
-       	 	<list-options list-name="countryGeoList" key-name="countryGeoId" description="${description}"/>
+       	 	<list-options list-name="countryGeoList" key-name="" description="${description}"/>
        	 </drop-down>
         </field-->
         <field name="partyIdentificationTypeId" title="Identification Type">        	
@@ -794,7 +794,7 @@
         	<set field="partyIdentificationTypeId" from-field="partyIdentificationTypeId"/>
         	
         	<entity-condition entity-name="Geo" list="countryGeoList"></entity-condition>
-        	<set field="countryGeoId" from-field="countryGeoId"/>
+        	<set field="geoId" from-field="geoId"/>
        
         </actions>        
         
@@ -816,11 +816,12 @@
         	<option key="F" description="Female"/>
         </drop-down>
         </field>
-        <field name="countryGeoId" title="Nationality">        	
-       	 <drop-down allow-empty="true">
-       	 	<list-options list-name="countryGeoList" key-name="countryGeoId" description="${description}"/>
-       	 </drop-down>
-        </field>
+        <field name="geoId" title="Nationality" widget-style="required"	required-field="true">
+			<drop-down>
+				<list-options key-name="geoId" list-name="countryGeoList"
+					description="${geoName}" />
+			</drop-down>
+		</field>
         <field name="partyIdentificationTypeId" title="Identification Type">        	
        	 <drop-down allow-empty="false">
        	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
@@ -859,9 +860,9 @@
         	<option key="F" description="Female"/>
         </drop-down>
         </field> 
-         <field name="countryGeoId" title="Nationality">        	
+         <field name="geoId" title="Nationality">        	
        	 <drop-down allow-empty="true">
-       	 	<list-options list-name="countryGeoList" key-name="countryGeoId" description="${description}"/>
+       	 	<list-options list-name="countryGeoList" key-name="geoId" description="${geoName}"/>
        	 </drop-down>
         </field>
         <field name="partyIdentificationTypeId" title="Identification Type">        	
@@ -881,6 +882,43 @@
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+                              <!-- For employee profile -->
+                              
+    <form name="Listemployeenextkin" type="list"  list-name="fileDocuments" default-entity-name="RegistryDocuments" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  target="" title="File Documents" separate-columns="false">
+        <actions>
+            <entity-condition entity-name="StaffNextOfKin">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="staffnokId"/>
+            </entity-condition>
+        </actions>
+        
+        
+        <field name="staffnokId"><display/></field>
+      <field name="familyRelationsId" title="Family Relation"><display-entity entity-name="FamilyRelations" description="${relationship}"></display-entity></field>
+	  <field name="fullname"><display/></field>
+	  <field name="gender"><display/></field>
+	  <field name="idno"><display/></field>
+	  <field name="phoneNo"><display/></field>
+	  <field name="geoId" title="Country"><display-entity entity-name="Geo" description="${geoName}"></display-entity></field>
+    </form>
+    
+    <form name="ListemployeeDependants" type="list"  list-name="fileDocuments" default-entity-name="RegistryDocuments" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  target="" title="File Documents" separate-columns="false">
+        <actions>
+            <entity-condition entity-name="StaffDependant">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="staffdependantId"/>
+            </entity-condition>
+        </actions>
+        <field name="staffdependantId"><display/></field>
+       <field name="familyRelationsId" title="Family Relation"><display-entity entity-name="FamilyRelations" description="${relationship}"></display-entity></field>
+	  <field name="fullname"><display/></field>
+	  <field name="gender"><display/></field>
+	  <field name="idno"><display/></field>
+	  <field name="isdeceased"><display/></field>
     </form>
     
      <!-- New Dependant Details -->
