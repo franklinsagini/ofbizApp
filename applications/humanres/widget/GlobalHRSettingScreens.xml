@@ -132,7 +132,7 @@
             </widgets>
         </section>
     </screen>
-  <!--   <screen name="EditEmplPositionTypes">
+   <screen name="EditEmplPositionTypes">
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPositionTypes"/>
@@ -166,7 +166,75 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen> -->
+    </screen> 
+    
+
+    
+    <screen name="FindSalaryAdvanceTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="advanceSalary"/>
+                <set field="headerItem" value="advanceSalary"/>
+                <set field="tabButtonItem" value="EmplPositionTypes"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="emplPositionTypeCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditSalaryAdvanceTypes" text="New Salary Advance Type" style="buttontext create"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <screen name="EditSalaryAdvanceTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindPositionTypes"/>
+                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem2" value="EditEmplPositionType"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <entity-one entity-name="EmplPositionType" value-field="emplPositionType"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="emplPositionTypeId"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPositionTypeTabBar"/>
+                            </widgets>
+                        </section>
+                        <screenlet title="${uiLabelMap.HumanResEditEmplPositionType}">
+                            <section>
+                                <widgets>
+                                    <include-form name="EditEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditEmplPositionTypeRates">
         <section>
             <actions>

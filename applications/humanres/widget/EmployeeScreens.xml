@@ -79,6 +79,36 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="EmployeeRelations">
+        <section>
+            <actions>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="RegistryFiles" value-field="FilesContext" />
+            </actions>
+            <widgets>
+                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets> 
+                                <container style="righthalf" >
+	                                <screenlet title="File Documents Details">
+	                                    <include-form name="Listemployeenextkin" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+	                                </screenlet>
+                            	</container> 
+                            	<screenlet title="File Actions Details">
+                                    <include-form name="ListemployeeDependants" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                                <container style="clear"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
     <screen name="EmployeeProfile">
         <section>
             <actions>
@@ -126,6 +156,9 @@ under the License.
                                             <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             <include-screen name="trainingsList"/>
                                             <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            <screenlet title="Staff Next of kin">
+                                            <include-form location="component://humanres/widget/forms/EmployeeForms.xml" name="Listemployeenextkin"/>
+                                            </screenlet>
                                             
                                         </container>
                                         <container style="profile-right">
@@ -134,6 +167,11 @@ under the License.
                                             <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            
+                                             
+                                             <screenlet title="Staff Dependants">
+                                              <include-form location="component://humanres/widget/forms/EmployeeForms.xml" name="ListemployeeDependants"/>
+                                             </screenlet>
                                         </container>
                                     </widgets>
                                 </section>
