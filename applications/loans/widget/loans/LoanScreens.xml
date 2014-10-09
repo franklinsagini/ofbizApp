@@ -1654,4 +1654,114 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- changeLoanDetails -->
+    <screen name="changeLoanDetails">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Change Loan Details"/>
+                <set field="tabButtonItem" value="changeLoanDetails"/>
+                <set field="headerItem" value="changeLoanDetails"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="loanApplication">
+                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                </entity-one>
+                
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" value="${loanApplication.partyId}"/>
+                </entity-one>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       
+                        <section>
+                            <condition>
+                                <not><if-empty field="loanApplication"/></not>
+                            </condition>
+                            <widgets>
+
+                                <!-- LoanStatus -->
+								<screenlet title="Loan Status">
+									<include-form name="LoanStatus"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanStatus"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								
+								<!-- LoanStatusChange -->
+								<screenlet title="Change Loan Status for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanStatusChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanStatusChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<!-- LoanInterestChange -->
+								<screenlet title="Change Interest Rate for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanInterestChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanInterestChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<!-- LoanAmountChange -->
+								<screenlet title="Change Loan Amount for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanAmountChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanAmountChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<!-- LoanRepaymentPeriodChange -->
+								<screenlet title="Change Repayment Period for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanRepaymentPeriodChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanRepaymentPeriodChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								
+								<!--  LoanSalaryAmount -->
+								<screenlet title="Change Salary Amount for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanSalaryAmount"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanSalaryAmount"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+									<!-- LoanGuarantorChange -->
+								<screenlet title="Change Guarantors for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanGuarantorChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanGuarantorChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
