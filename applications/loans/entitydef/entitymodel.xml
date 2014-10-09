@@ -838,5 +838,148 @@ under the License.
         <key-map field-name="loanProductId"/>
       </view-link>
     </view-entity>
+    
+    <!-- Changing Loan Things -->
+    <!-- LoanStatus -->
+    <entity entity-name="LoanStatus" package-name="org.ofbiz.loans"
+		title="LoanStatus Entity">
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="name" type="name"></field>
+		
+		<prim-key field="name"/>
+	</entity>
+	
+	<!-- LoanStatusChange -->
+	<entity entity-name="LoanStatusChange" package-name="org.ofbiz.loans"
+		title="LoanStatusChange Entity">
+		<field name="loanStatusChangeId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="fromStatus" type="name"></field>
+		<field name="toStatus" type="name"></field>
+		<field name="changedBy" type="name"></field>
+		
+		<prim-key field="loanStatusChangeId"/>
+		<relation type="one" fk-name="LoanStatus_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	<!-- LoanInterestChange -->
+	<entity entity-name="LoanInterestChange" package-name="org.ofbiz.loans"
+		title="LoanInterestChange Entity">
+		<field name="loanInterestChangeId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="fromInterestRate" type="fixed-point"></field>
+		<field name="toInterestRate" type="fixed-point"></field>
+		<field name="changedBy" type="name"></field>
+		
+		<prim-key field="loanInterestChangeId"/>
+		<relation type="one" fk-name="LoanInterest_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	<!-- LoanAmountChange -->
+	<entity entity-name="LoanAmountChange" package-name="org.ofbiz.loans"
+		title="LoanAmountChange Entity">
+		<field name="loanAmountChangeId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="fromAmount" type="fixed-point"></field>
+		<field name="toAmount" type="fixed-point"></field>
+		<field name="changedBy" type="name"></field>
+		
+		<prim-key field="loanAmountChangeId"/>
+		<relation type="one" fk-name="LoanAmount_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	<!-- LoanRepaymentPeriodChange -->
+	<entity entity-name="LoanRepaymentPeriodChange" package-name="org.ofbiz.loans"
+		title="LoanRepaymentPeriodChange Entity">
+		<field name="loanRepaymentPeriodChangeId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="fromPeriod" type="numeric"></field>
+		<field name="toPeriod" type="numeric"></field>
+		<field name="changedBy" type="name"></field>
+		
+		<prim-key field="loanRepaymentPeriodChangeId"/>
+		<relation type="one" fk-name="LoanRepaymentChanged_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	<!-- LoanSalaryAmount -->
+	<entity entity-name="LoanSalaryAmount" package-name="org.ofbiz.loans"
+		title="LoanSalaryAmount Entity">
+		<field name="loanSalaryAmountId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="fromSalaryAmount" type="fixed-point"></field>
+		<field name="toSalaryAmount" type="fixed-point"></field>
+		<field name="changedBy" type="name"></field>
+		
+		<prim-key field="loanSalaryAmountId"/>
+		<relation type="one" fk-name="LoanSalaryAmount_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	<!-- LoanGuarantorChange -->
+	<entity entity-name="LoanGuarantorChange" package-name="org.ofbiz.loans"
+		title="LoanGuarantorChange Entity">
+		<field name="loanGuarantorChangeId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="fromGuarantor" type="id"></field>
+		
+		<field name="memberNo" type="name"></field>
+		<field name="payrolNo" type="name"></field>
+		<field name="depositamt" type="fixed-point"></field>
+		<field name="guaranteedPercentage" type="fixed-point"></field>
+		<field name="guaranteedValue" type="fixed-point"></field>
+		<field name="currentStationId" type="id"></field>
+		
+		
+		<field name="toGuarantor" type="id"></field>
+		
+		<field name="toMemberNo" type="name"></field>
+		<field name="toPayrolNo" type="name"></field>
+		<field name="toDepositamt" type="fixed-point"></field>
+		<field name="toGuaranteedPercentage" type="fixed-point"></field>
+		<field name="toGuaranteedValue" type="fixed-point"></field>
+		<field name="toCurrentStationId" type="id"></field>
+		
+		
+		<field name="changedBy" type="name"></field>
+		
+		<prim-key field="loanGuarantorChangeId"/>
+		<relation type="one" fk-name="LoanGuarantor_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
+	
 	
 </entitymodel>

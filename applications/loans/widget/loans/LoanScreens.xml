@@ -163,7 +163,7 @@ under the License.
                 <set field="target" value="createLoanStatus"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!--  property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
-                <set field="loanStatusId" from-field="parameters.loanStatusId"/>
+                <set field="name" from-field="parameters.name"/>
                 
                 <entity-one entity-name="LoanStatus" value-field="loanStatusContext"/>
             </actions>
@@ -321,7 +321,9 @@ under the License.
                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/><!-- is required -->
                 </entity-one>
                 
-                
+                <entity-one value-field="lookupLoanStatus" entity-name="LoanStatus">
+                	<field-map field-name="name" value="${loanApplication.applicationStatus}"/>
+                </entity-one>
                 
                 <!-- entity-one entity-name="SaccoProduct" value-field="lookupLoanType">
                     <field-map field-name="saccoProductId" from-field="lookupLoanApplication.saccoProductId"/>
@@ -336,7 +338,7 @@ under the License.
                 
                 
                  <entity-one entity-name="LoanStatus" value-field="lookupLoanStatus">
-                    <field-map field-name="loanStatusId" from-field="lookupLoanApplication.loanStatusId"/><!-- is required -->
+                    <field-map field-name="name" from-field="lookupLoanApplication.name"/><!-- is required -->
                 </entity-one>
                 
                 <entity-and entity-name="LoanApplicationSecurity" list="loanApplicationSecurityList">
@@ -1647,6 +1649,117 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- changeLoanDetails -->
+    <screen name="changeLoanDetails">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Change Loan Details"/>
+                <set field="tabButtonItem" value="changeLoanDetails"/>
+                <set field="headerItem" value="changeLoanDetails"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="loanApplication">
+                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                </entity-one>
+                
+                <entity-one entity-name="LoanApplication" value-field="lookupLoanApplication">
+                    <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/><!-- is required -->
+                </entity-one>
+                
+                <entity-one value-field="lookupLoanStatus" entity-name="LoanStatus">
+                	<field-map field-name="name" value="${loanApplication.applicationStatus}"/>
+                </entity-one>
+                
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" value="${loanApplication.partyId}"/>
+                </entity-one>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       
+                        <section>
+                            <condition>
+                                <not><if-empty field="loanApplication"/></not>
+                            </condition>
+                            <widgets>
+
+								<screenlet>
+									<include-form name="ViewLoanApplicationDetails" location="component://loans/widget/loans/LoanForms.xml"/>
+								</screenlet>
+								<!-- LoanStatusChange -->
+								<screenlet title="Change Loan Status for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanStatusChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanStatusChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<!-- LoanInterestChange -->
+								<screenlet title="Change Interest Rate for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanInterestChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanInterestChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<!-- LoanAmountChange -->
+								<screenlet title="Change Loan Amount for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanAmountChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanAmountChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<!-- LoanRepaymentPeriodChange -->
+								<screenlet title="Change Repayment Period for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanRepaymentPeriodChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanRepaymentPeriodChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								
+								<!--  LoanSalaryAmount -->
+								<screenlet title="Change Salary Amount for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanSalaryAmount"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanSalaryAmount"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+									<!-- LoanGuarantorChange -->
+								<screenlet title="Change Guarantors for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+									<include-form name="LoanGuarantorChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listLoanGuarantorChange"
+										location="component://loans/widget/loans/LoanForms.xml" />
+								</screenlet>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
                             </fail-widgets>
                         </section>
                     </decorator-section>

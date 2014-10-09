@@ -1,14 +1,13 @@
 package org.ofbiz.humanres;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,14 +17,15 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.common.JsLanguageFilesMapping.datejs;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
-import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -227,7 +227,7 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		deleteExistingLeaveBalance(delegator);
 		try {
 			personsELI = delegator.findAll("LeaveBalancesView", true);
-			//log.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"+personsELI);
+			log.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"+personsELI);
 			
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -273,27 +273,28 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 			
 		}
 		//log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
-	double approvedLeaveSum =0;
+	BigDecimal approvedLeaveSum =BigDecimal.ZERO;
 	//double  usedLeaveDays = 0;
-	double lostLeaveDays = 0;
+	BigDecimal lostLeaveDays = BigDecimal.ZERO;
 		for (GenericValue genericValue : getApprovedLeaveSumELI) {
-			 approvedLeaveSum += genericValue.getLong("leaveDuration");
+			//approvedLeaveSum += genericValue.getLong("leaveDuration");
+			approvedLeaveSum = approvedLeaveSum.add(genericValue.getBigDecimal("leaveDuration"));
 		}
 		//log.info("============================================================" +approvedLeaveSum);
 		
 		// ============ get accrual rate ================ //
-	double accrualRate = 0; 
-	GenericValue accrualRates = null;
+	BigDecimal accrualRate = BigDecimal.ZERO; 
+	GenericValue employeeLeaveType = null;
 		try {
-			 accrualRates = delegator.findOne("EmplLeaveType",
+			employeeLeaveType = delegator.findOne("EmplLeaveType",
 					UtilMisc.toMap("leaveTypeId", "ANNUAL_LEAVE"), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			
 		}
-		if (accrualRates != null) {
+		if (accrualRate != null) {
 
-			accrualRate = accrualRates.getDouble("accrualRate");
+			accrualRate = employeeLeaveType.getBigDecimal("accrualRate");
 			
 		} else {
 			System.out.println("######## Accrual Rate not found #### ");
@@ -322,15 +323,15 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		Period difference = new Period(accrueStart, stCurrentDate, monthDay);
 
 		int months = difference.getMonths();
-		double accruedLeaveDay = months * accrualRate;
-		double leaveBalances =  accruedLeaveDay - approvedLeaveSum; 
+		BigDecimal accruedLeaveDay = accrualRate.multiply(new BigDecimal(months));
+		BigDecimal leaveBalances =  accruedLeaveDay.subtract(approvedLeaveSum); 
 
 
 		GenericValue leavelog = delegator.makeValue("LeaveBalances", "partyId", partyId, 
-	            "accruedDays", accruedLeaveDay , 
-	            "usedLeaveDays", approvedLeaveSum,
-	            "lostLeaveDays", lostLeaveDays, 
-	            "availableLeaveDays", leaveBalances);
+	            "accruedDays", accruedLeaveDay.doubleValue() , 
+	            "usedLeaveDays", approvedLeaveSum.doubleValue(),
+	            "lostLeaveDays", lostLeaveDays.doubleValue(), 
+	            "availableLeaveDays", leaveBalances.doubleValue());
 	try {
 		delegator.create(leavelog);
 	} catch (GenericEntityException e) {
@@ -680,4 +681,5 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		return superVisorLevelValue;
 	}
 
+	
 }

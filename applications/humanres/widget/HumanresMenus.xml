@@ -26,13 +26,15 @@
         <menu-item name="EmplPosition" title="${uiLabelMap.HumanResEmployeePosition}"><link target="FindEmplPositions"/></menu-item>
         <menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>
         <menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><link target="FindPartySkills"/></menu-item>
-        <menu-item name="EmplRelations" title="Employee Relations"><link target="spouse"/></menu-item> 
+        <menu-item name="EmplRelations" title="Employee Relations"><link target="employeeRelations"/></menu-item> 
         <menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item>
         <menu-item name="employeeReports" title="Employee Reports"><link target="staffList"/></menu-item>
+           <menu-item name="salaryAdvance" title="Salary Advance" selected-style="selected"><link target="salaryAdvance"/></menu-item>
         <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="kpidefinition"/></menu-item>       
         <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item>
         <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
         <menu-item name="GlobalHRSettings" title="${uiLabelMap.HumanResGlobalHRSettings}" selected-style="selected"><link target="globalHRSettings"/></menu-item>
+      
         <!-- menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><link target="FindJobRequisitions"/></menu-item --> 
         <!-- menu-item name="EmploymentApp" title="${uiLabelMap.HumanResEmploymentApp}"><link target="FindEmploymentApps"/></menu-item -->        
     </menu>
@@ -248,21 +250,27 @@
         <menu-item name="station" title="Stations">
         	<link target="station"/>
         </menu-item>
-        <!-- <menu-item name="supervisorLevel" title="Supervisor Levels">
-            <link target="editSupervisorLevel"/>
-        </menu-item> -->
+         <menu-item name="advanceSalary" title="Salary Advances">
+        	<link target="FindAdvanceSalary"/>
+        </menu-item>
     </menu>
     
     <menu name="EmplRelationsTabBar" type="simple" default-menu-item-name="spouse"
 		menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
 			<menu-item name="spouse" title="Spouse Details">
-				<link target="spouse"/>
+				<link target="spouse">
+					<parameter param-name="partyId"/>
+				</link>
 			</menu-item>
 			<menu-item name="dependant" title="Dependant Details">
-				<link target="dependant"/>
+				<link target="dependant">
+					<parameter param-name="partyId"/>
+				</link>
 			</menu-item>
 			<menu-item name="nextofkin" title="Next Of Kin Details">
-				<link target="nextofkin"/>
+				<link target="nextofkin">
+					<parameter param-name="partyId"/>
+				</link>
 			</menu-item>
 	</menu>
 

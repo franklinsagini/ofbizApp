@@ -679,4 +679,219 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- LoanStatus -->
+     <simple-method method-name="createLoanStatus" short-description="Create LoanStatus">
+        <make-value entity-name="LoanStatus" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanStatus" field="loanStatusId"/>
+        <set from-field="loanStatusId" field="newEntity.loanStatusId"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanStatus" short-description="Update LoanStatus">
+        <entity-one entity-name="LoanStatus" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanStatus" short-description="Delete LoanStatus">
+        <entity-one entity-name="LoanStatus" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- LoanStatusChange -->
+     <simple-method method-name="createLoanStatusChange" short-description="Create LoanStatusChange">
+			<call-simple-method method-name="saveLoanStatusChange" scope="inline"></call-simple-method>
+			<!-- Get Loan Application and update -->
+			<entity-one entity-name="LoanApplication" value-field="loanApplication">
+				<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"></field-map>
+			</entity-one>
+			<set field="loanApplication.applicationStatus" value="${newEntity.toStatus}"></set>
+			<store-value value-field="loanApplication"></store-value>
+			
+    </simple-method>
+    <simple-method method-name="saveLoanStatusChange" use-transaction="true">
+    	<make-value entity-name="LoanStatusChange" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanStatusChange" field="loanStatusChangeId"/>
+        <set from-field="loanStatusChangeId" field="newEntity.loanStatusChangeId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanStatusChange" short-description="Update LoanStatusChange">
+        <entity-one entity-name="LoanStatusChange" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanStatusChange" short-description="Delete LoanStatusChange">
+        <entity-one entity-name="LoanStatusChange" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- LoanInterestChange -->
+     <simple-method method-name="createLoanInterestChange" short-description="Create LoanInterestChange">
+        
+        
+        <call-simple-method method-name="saveInterestChange" scope="inline"></call-simple-method>
+        <!-- Get Loan Application and update -->
+		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+				<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"></field-map>
+		</entity-one>
+		<set field="loanApplication.interestRatePM" value="${newEntity.toInterestRate}"></set>
+		<store-value value-field="loanApplication"></store-value>
+    </simple-method>
+    <simple-method method-name="saveInterestChange" use-transaction="true">
+    	<make-value entity-name="LoanInterestChange" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanInterestChange" field="loanInterestChangeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanInterestChangeId" field="newEntity.loanInterestChangeId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanInterestChange" short-description="Update LoanInterestChange">
+        <entity-one entity-name="LoanInterestChange" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanInterestChange" short-description="Delete LoanInterestChange">
+        <entity-one entity-name="LoanInterestChange" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- LoanAmountChange -->
+     <simple-method method-name="createLoanAmountChange" short-description="Create LoanAmountChange">
+        <call-simple-method method-name="saveLoanAmountChange" scope="inline"></call-simple-method>
+        <!-- Get Loan Application and update -->
+		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+				<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"></field-map>
+		</entity-one>
+		<set field="loanApplication.loanAmt" value="${newEntity.toAmount}"></set>
+		<store-value value-field="loanApplication"></store-value>
+    </simple-method>
+    <simple-method method-name="saveLoanAmountChange" use-transaction="true">
+    	<make-value entity-name="LoanAmountChange" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanAmountChange" field="loanAmountChangeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanAmountChangeId" field="newEntity.loanAmountChangeId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanAmountChange" short-description="Update LoanAmountChange">
+        <entity-one entity-name="LoanAmountChange" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanAmountChange" short-description="Delete LoanAmountChange">
+        <entity-one entity-name="LoanAmountChange" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- LoanRepaymentPeriodChange -->
+     <simple-method method-name="createLoanRepaymentPeriodChange" short-description="Create LoanRepaymentPeriodChange">
+        <call-simple-method method-name="saveRepaymentPeriodChange" scope="inline"></call-simple-method>
+        <!-- Get Loan Application and update -->
+		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+				<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"></field-map>
+		</entity-one>
+		<set field="loanApplication.repaymentPeriod" value="${newEntity.toPeriod}"></set>
+		<store-value value-field="loanApplication"></store-value>
+    </simple-method>
+    <simple-method method-name="saveRepaymentPeriodChange" use-transaction="true">
+        <make-value entity-name="LoanRepaymentPeriodChange" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="LoanRepaymentPeriodChange" field="loanRepaymentPeriodChangeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanRepaymentPeriodChangeId" field="newEntity.loanRepaymentPeriodChangeId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanRepaymentPeriodChange" short-description="Update LoanRepaymentPeriodChange">
+        <entity-one entity-name="LoanRepaymentPeriodChange" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanRepaymentPeriodChange" short-description="Delete LoanRepaymentPeriodChange">
+        <entity-one entity-name="LoanRepaymentPeriodChange" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    <!-- LoanSalaryAmount -->
+     <simple-method method-name="createLoanSalaryAmount" short-description="Create LoanSalaryAmount">
+        <call-simple-method method-name="saveSalaryAmountChange" scope="inline"></call-simple-method>
+        <!-- Get Loan Application and update -->
+		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+				<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"></field-map>
+		</entity-one>
+		<set field="loanApplication.salaryAmt" value="${newEntity.toSalaryAmount}"></set>
+		<store-value value-field="loanApplication"></store-value>
+    </simple-method>
+    <simple-method method-name="saveSalaryAmountChange" use-transaction="true">
+    	<make-value entity-name="LoanSalaryAmount" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanSalaryAmount" field="loanSalaryAmountId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanSalaryAmountId" field="newEntity.loanSalaryAmountId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanSalaryAmount" short-description="Update LoanSalaryAmount">
+        <entity-one entity-name="LoanSalaryAmount" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanSalaryAmount" short-description="Delete LoanSalaryAmount">
+        <entity-one entity-name="LoanSalaryAmount" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- LoanGuarantorChange -->
+     <simple-method method-name="createLoanGuarantorChange" short-description="Create LoanGuarantorChange">
+        <make-value entity-name="LoanGuarantorChange" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="LoanGuarantorChange" field="loanGuarantorChangeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="loanGuarantorChangeId" field="newEntity.loanGuarantorChangeId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanGuarantorChange" short-description="Update LoanGuarantorChange">
+        <entity-one entity-name="LoanGuarantorChange" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanGuarantorChange" short-description="Delete LoanGuarantorChange">
+        <entity-one entity-name="LoanGuarantorChange" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

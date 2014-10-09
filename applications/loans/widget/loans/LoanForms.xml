@@ -56,7 +56,7 @@ under the License.
     <form name="NewLoanStatus" type="single" target="createLoanStatus"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusContext">
         
-        <field name="loanStatusId"><hidden/></field>
+       
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
@@ -74,7 +74,7 @@ under the License.
         <field name="name"> <text></text> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="loanStatusId"/>
+                <parameter param-name="name"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
@@ -104,7 +104,7 @@ under the License.
         	<display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${lookupPaymentMethodType.description}"/>
         </field>
         <!-- field name="externalId"><display/></field -->
-        <field name="loanStatusId"><display-entity entity-name="LoanStatus" key-field-name="loanStatusId" description="${lookupLoanStatus.name}"/></field>
+        <field name="applicationStatus"><display></display></field>
     </form>
     
     <!--Loan Application Security -->
@@ -1577,9 +1577,333 @@ under the License.
         </field>
         
         <field name="memberStatus"><display also-hidden="false"></display></field>
-        
+        <!-- viewapplicationprofile -->
+        <!-- loanapplication?partyId=${partyId} -->
         <field name="Loan Application">
-        	<hyperlink target="loanapplication?partyId=${partyId}" description="Loan Application for ${firstName} ${lastName}"></hyperlink>
+        	<hyperlink target="viewapplicationprofile?partyId=${partyId}" description="Loan Application for ${firstName} ${lastName}"></hyperlink>
         </field>
-     </form>  
+     </form> 
+     
+     <!-- LoanStatus -->
+      <!--Begin LoanStatus -->
+
+    <!--End LoanStatus -->
+    <!-- 
+    	
+		LoanInterestChange
+		LoanAmountChange
+		LoanRepaymentPeriodChange
+		LoanSalaryAmount
+		LoanGuarantorChange
+    	
+     -->
+     <!-- LoanStatusChange -->
+     <form name="LoanStatusChange" type="single" target="createLoanStatusChange"
+        focus-field-name="toStatus" header-row-style="header-row"  default-table-style="basic-table" default-map-name="loanStatusChangeContext">
+        <actions>
+        	<entity-condition entity-name="LoanStatus" list="loanStatusList">
+        	</entity-condition>
+        	<set field="fromStatus" value="${loanApplication.applicationStatus}"/>
+        </actions>
+        <field name="loanStatusChangeId"><hidden/></field>
+        
+       <field name="loanApplicationId"><hidden value="${loanApplicationId}"/></field>
+        
+      <field name="fromStatus" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+      <field name="toStatus" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="name" entity-name="LoanStatus">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+ 		               
+        <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listLoanStatusChange" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanStatusChange" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="LoanStatusChange">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanStatusChange"/>
+        <field name="loanStatusChangeId"><hidden/></field>
+        
+        <field name="loanApplicationId"><hidden/></field>
+		<field name="fromStatus" title="From"><display></display></field>
+		<field name="toStatus" title="To"><display></display></field>
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+     <!-- LoanInterestChange -->
+           <form name="LoanInterestChange" type="single" target="createLoanInterestChange"
+        focus-field-name="toInterestRate" header-row-style="header-row"  default-table-style="basic-table" default-map-name="loanInterestChangeContext">
+        <actions>
+        	<entity-condition entity-name="LoanStatus" list="loanStatusList">
+        	</entity-condition>
+        	<set field="fromInterestRate" value="${loanApplication.interestRatePM}"/>
+        </actions>
+        <field name="loanInterestChangeId"><hidden/></field>
+        
+       <field name="loanApplicationId"><hidden value="${loanApplicationId}"/></field>
+        
+      <field name="fromInterestRate" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      <field name="toInterestRate" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+   
+        
+ 		               
+        <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listLoanInterestChange" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanInterestChange" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="LoanInterestChange">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanInterestChange"/>
+        <field name="loanInterestChangeId"><hidden/></field>
+        
+        <field name="loanApplicationId"><hidden/></field>
+		<field name="fromInterestRate" title="From"><display></display></field>
+		<field name="toInterestRate" title="To"><display></display></field>
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+     <!-- LoanAmountChange -->
+      <form name="LoanAmountChange" type="single" target="createLoanAmountChange"
+        focus-field-name="toInterestRate" header-row-style="header-row"  default-table-style="basic-table" default-map-name="loanAmountChangeContext">
+        <actions>
+        	<set field="fromAmount" value="${loanApplication.loanAmt}"/>
+        </actions>
+        <field name="loanAmountChangeId"><hidden/></field>
+        
+       <field name="loanApplicationId"><hidden value="${loanApplicationId}"/></field>
+        
+      <field name="fromAmount" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      <field name="toAmount" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+   
+        
+ 		               
+        <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listLoanAmountChange" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanAmountChange" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="LoanAmountChange">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanAmountChange"/>
+        <field name="loanAmountChangeId"><hidden/></field>
+        
+        <field name="loanApplicationId"><hidden/></field>
+		<field name="fromAmount" title="From"><display></display></field>
+		<field name="toAmount" title="To"><display></display></field>
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+     
+     <!-- LoanRepaymentPeriodChange -->
+           <form name="LoanRepaymentPeriodChange" type="single" target="createLoanRepaymentPeriodChange"
+        focus-field-name="toInterestRate" header-row-style="header-row"  default-table-style="basic-table" default-map-name="loanRepaymentPeriodChangeContext">
+        <actions>
+        	<set field="fromPeriod" value="${loanApplication.repaymentPeriod}"/>
+        </actions>
+        <field name="loanRepaymentPeriodChangeId"><hidden/></field>
+        
+       <field name="loanApplicationId"><hidden value="${loanApplicationId}"/></field>
+        
+      <field name="fromPeriod" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      <field name="toPeriod" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+   
+        
+ 		               
+        <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listLoanRepaymentPeriodChange" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanRepaymentPeriodChange" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="LoanRepaymentPeriodChange">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanRepaymentPeriodChange"/>
+        <field name="loanRepaymentPeriodChangeId"><hidden/></field>
+        
+        <field name="loanApplicationId"><hidden/></field>
+		<field name="fromPeriod" title="From"><display></display></field>
+		<field name="toPeriod" title="To"><display></display></field>
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+     <!-- LoanSalaryAmount -->
+     <form name="LoanSalaryAmount" type="single" target="createLoanSalaryAmount"
+        focus-field-name="toInterestRate" header-row-style="header-row"  default-table-style="basic-table" default-map-name="loanSalaryAmountContext">
+        <actions>
+        	<set field="fromSalaryAmount" value="${loanApplication.salaryAmt}"/>
+        </actions>
+        <field name="loanSalaryAmountId"><hidden/></field>
+        
+       <field name="loanApplicationId"><hidden value="${loanApplicationId}"/></field>
+        
+      <field name="fromSalaryAmount" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      <field name="toSalaryAmount" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+   
+        
+ 		               
+        <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listLoanSalaryAmount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanSalaryAmount" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="LoanSalaryAmount">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanSalaryAmount"/>
+        <field name="loanSalaryAmountId"><hidden/></field>
+        
+        <field name="loanApplicationId"><hidden/></field>
+		<field name="fromSalaryAmount" title="From"><display></display></field>
+		<field name="toSalaryAmount" title="To"><display></display></field>
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
+     
+     <!-- LoanGuarantorChange -->
+           <form name="LoanGuarantorChange" type="single" target="createLoanGuarantorChange"
+        focus-field-name="toInterestRate" header-row-style="header-row"  default-table-style="basic-table" default-map-name="loanGuarantorChangeContext">
+        <actions>
+        	<entity-condition entity-name="Member" list="memberList">
+        		<condition-expr field-name="partyId" operator="not-equals" value="${loanApplication.partyId}"/>
+            </entity-condition>
+			
+			<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
+        <field name="loanGuarantorChangeId"><hidden/></field>
+        
+       <field name="loanApplicationId"><hidden value="${loanApplicationId}"/></field>
+        
+      <field name="fromGuarantor" title="Old Guarantor" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="memberList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="memberNo" title="Member No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="payrolNo" title="Payrol No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="depositamt" title="Deposit Amount" widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        
+        <field name="currentStationId" title="Current Station" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="stationList"   key-name="stationId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="guaranteedPercentage" title="Guaranteed %"><text size="20" maxlength="60"/></field>
+		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field>
+		
+		<!-- To -->
+		
+		<field name="toGuarantor" title="New Guarantor" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="memberList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field>
+        
+        <field name="toMemberNo" title="To Member No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="toPayrolNo" title="To Payrol No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="toDepositamt" title="To Deposit Amount" widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        
+        <field name="toCurrentStationId" title="To Current Station" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="stationList"   key-name="stationId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="toGuaranteedPercentage" title="Guaranteed %"><text size="20" maxlength="60"/></field>
+		<field name="toGuaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field>      
+   
+        
+ 		               
+        <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listLoanGuarantorChange" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanGuarantorChange" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="LoanGuarantorChange">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanGuarantorChange"/>
+        <field name="loanGuarantorChangeId"><hidden/></field>
+        
+        <field name="loanApplicationId"><hidden/></field>
+		     <field name="fromGuarantor" title="Old Guarantor" widget-style="required" required-field="true">
+        	<!-- drop-down allow-empty="true">
+                <list-options list-name="memberList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down -->
+            <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
+        </field>
+        
+        <field name="memberNo" title="Member No." widget-style="required" required-field="true"><display/></field>
+        <field name="payrolNo" title="Payrol No." widget-style="required" required-field="true"><display/></field>
+        <field name="depositamt" title="Deposit Amount" widget-style="required" required-field="true"><display/></field>
+        
+        <field name="currentStationId" title="Current Station" widget-style="required" required-field="true">
+        	<!-- drop-down allow-empty="true">
+                <list-options list-name="stationList"   key-name="stationId" description="${name}"/>
+            </drop-down  -->
+            <display-entity entity-name="Station" key-field-name="stationId"  description="${name}" also-hidden="false"/>
+        </field>
+        <field name="guaranteedPercentage" title="Guaranteed %"><display/></field>
+		<field name="guaranteedValue" title="Guaranteed Amount"><display/></field>
+		
+		<!-- To -->
+		
+		<field name="toGuarantor" title="New Guarantor" widget-style="required" required-field="true">
+        	<!-- drop-down allow-empty="true">
+                <list-options list-name="memberList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down -->
+            <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
+        </field>
+        
+        <field name="toMemberNo" title="To Member No." widget-style="required" required-field="true"><display/></field>
+        <field name="toPayrolNo" title="To Payrol No." widget-style="required" required-field="true"><display/></field>
+        <field name="toDepositamt" title="To Deposit Amount" widget-style="required" required-field="true"><display/></field>
+        
+        <field name="toCurrentStationId" title="To Current Station" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="stationList"   key-name="stationId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="toGuaranteedPercentage" title="Guaranteed %"><display/></field>
+		<field name="toGuaranteedValue" title="Guaranteed Amount"><display/></field> 
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
 </forms>

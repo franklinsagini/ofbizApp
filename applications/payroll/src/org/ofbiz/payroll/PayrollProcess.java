@@ -17,7 +17,6 @@ import javolution.util.FastMap;
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -274,20 +273,6 @@ public class PayrollProcess {
 		 * "NETPAY" "NHIF" "NSSF" "NSSFVOL" "PAYE" "PENSION" "TAXABLEINCOME"
 		 * "TOTDEDUCTIONS"
 		 * */
-		/**
-		 * 	public static BigDecimal bdEXCESSPENSIONBENEFIT;
-			public static BigDecimal bdINSURANCERELIEF;
-			public static BigDecimal bdLOWINTERESTBENEFIT;
-			public static BigDecimal bdMPR;
-			public static BigDecimal bdNETPAY;
-			public static BigDecimal bdNHIF;
-			public static BigDecimal bdPAYE;
-			public static BigDecimal bdTAXABLEINCOME;
-			public static BigDecimal bdTOTDEDUCTIONS;
-			public static BigDecimal bdNSSFStatutory = BigDecimal.ZERO;
-			public static BigDecimal bdNSSFVoluntary = BigDecimal.ZERO;
-			public static BigDecimal bdPensionAmt = BigDecimal.ZERO;
-		 **/
 		// EXCESSPENSIONBENEFIT
 		listSystemElements.add(createElementToSave(delegator, "EXCESSPENSIONBENEFIT", bdEXCESSPENSIONBENEFIT, staffPayrollId));
 		listSystemElements.add(createElementToSave(delegator, "INSURANCERELIEF", bdINSURANCERELIEF, staffPayrollId));

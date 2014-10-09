@@ -88,6 +88,44 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- List All Members -->
+		<screen name="listAllSaccomembers">
+		<section>
+			<actions>
+				<set field="titleProperty" value="List Sacco Members" />
+				<set field="headerItem" value="listsaccomembers" />
+				<set field="tabButtonItem" value="findparty" />
+
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters" / -->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW" />
+							</condition>
+							<widgets>
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://party/webapp/partymgr/party/listsaccomembers.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 	<!-- reviewmembers -->
 	<screen name="reviewmembers">
@@ -118,6 +156,18 @@
 							<widgets>
 								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html> 
 									</platform-specific -->
+								<screenlet>
+									<container style="button-bar">
+										<link target="NewMember" text="New Member"
+											style="buttontext">
+											<!-- parameter param-name="loanApplicationId"/ -->
+											<image url-mode="raw"
+												src="${iconsLocation}/add.png" />
+										</link>
+										
+									</container>
+								</screenlet>
+									
 								<screenlet title="Search Members">
 									<include-form name="FindMember"
 										location="component://party/widget/partymgr/PartyForms.xml" />
@@ -2631,6 +2681,120 @@
 			</widgets>
 		</section>
 	</screen>
+	<!-- changeMember -->
+	<screen name="changeMember">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Change Member Details" />
+				<set field="headerItem" value="changeMember" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="changeMember" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<property-to-field field="defaultCountryGeoId"
+					resource="general" property="KEN" default="KEN" />
+				<set field="partyId" from-field="parameters.partyId" />
+				
+				<entity-one entity-name="Member" value-field="memberContext" />
+				
+				<set field="memberHasNominees" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasNominees(memberContext);}" type="String"/>
+				<set field="memberHasReferees" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasReferees(memberContext);}" type="String"/>
+				
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<section>
+									<condition>
+										<if-compare operator="equals" value="N" field="memberHasNominees"/>
+									</condition>
+									<widgets>
+										<container>
+									
+												<label style="h3"> Member must have Nominees - Please Add</label>
+										</container>
+									</widgets>
+								</section>
+								
+								<section>
+									<condition>
+										<if-compare operator="equals" value="N" field="memberHasReferees"/>
+									</condition>
+									<widgets>
+										<container>
+									
+												<label style="h3"> Member must have Referees - Please Add</label>
+										</container>
+									</widgets>
+								</section>
+								
+								
+								
+								<!-- ChangeMemberStation -->
+								<screenlet title="Change Member Station for ${memberContext.firstName} ${memberContext.lastName}">
+									<include-form name="ChangeMemberStation"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listChangeMemberStation"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								
+								<!-- ChangeMemberEmploymentType -->
+								<screenlet title="Change Employment Type for ${memberContext.firstName} ${memberContext.lastName}">
+									<include-form name="ChangeMemberEmploymentType"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listChangeMemberEmploymentType"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								<!-- ChangeMemberEmployeeNumber -->
+								<screenlet title="Change Employee Number for ${memberContext.firstName} ${memberContext.lastName}">
+									<include-form name="ChangeMemberEmployeeNumber"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listChangeMemberEmployeeNumber"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								<!-- ChangeMemberBranch -->
+								<screenlet title="Change Branch for ${memberContext.firstName} ${memberContext.lastName}">
+									<include-form name="ChangeMemberBranch"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listChangeMemberBranch"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								<!-- ChangeMemberShareAmount -->
+								<screenlet title="Change ShareAmount for ${memberContext.firstName} ${memberContext.lastName}">
+									<include-form name="ChangeMemberShareAmount"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+								<screenlet title="List">
+									<include-form name="listChangeMemberShareAmount"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<!-- End changeMember -->
+	
 	<!-- Approve Member End -->
 	<!-- Reject Member -->
 	<screen name="RejectMember">

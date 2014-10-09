@@ -715,11 +715,12 @@ under the License.
         <field name="partyId" type="id-ne"/>
         <field name="leaveTypeId" type="id-ne"/>
         <field name="emplLeaveReasonTypeId" type="id-ne"/>
-        <field name="fromDate" type="date-time"/>
+        <field name="fromDate" type="date"/>
         <field name="leaveDuration" type="floating-point"/>     
         <field name="carryOverUsed" type="floating-point"/>     
 
         <field name="thruDate" type="date"/>
+        <field name="resumptionDate" type="date"/>
         <field name="isActive" type="indicator"></field>
         <field name="leaveBalance" type="numeric"/>
         <field name="createdBy" type="id-ne"/>
@@ -1432,7 +1433,7 @@ under the License.
         <field name="emailAddress" type="name"></field>
         <field name="postalAddress" type="name"></field>
         <field name="homeAddress" type="name"></field>
-        <field name="countryGeoId" type="id"></field>
+        <field name="geoId" type="id"></field>
         
         <!--field name="maritalstatus" type="id"></field-->
         
@@ -1447,7 +1448,7 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
         <relation type="one" fk-name="POST_ADDR_CGEO" title="Country" rel-entity-name="Geo">
-        <key-map field-name="countryGeoId"/>
+        <key-map field-name="geoId"/>
       </relation>
         </entity>
         
@@ -1487,12 +1488,11 @@ under the License.
         <field name="fullname" type="name"></field>
         <field name="gender" type="name"></field>
         <field name="idno" type="name"></field>
-        <field name="employer" type="name"></field>
         <field name="phoneNo" type="name"></field>
         <field name="emailAddress" type="name"></field>
         <field name="postalAddress" type="name"></field>
         <field name="homeAddress" type="name"></field>
-        <field name="countryGeoId" type="id"></field>        
+        <field name="geoId" type="id"></field>        
         <prim-key field="staffnokId"/>
         <relation type="one" fk-name="nok_identification" rel-entity-name="PartyIdentificationType">
             <key-map field-name="partyIdentificationTypeId"/>
@@ -1504,7 +1504,7 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
         <relation type="one" fk-name="POST_ADDR_CGEO" title="Country" rel-entity-name="Geo">
-        <key-map field-name="countryGeoId"/>
+        <key-map field-name="geoId"/>
       </relation>
         </entity>       
         
