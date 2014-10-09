@@ -993,6 +993,30 @@ under the License.
         </field>           	
         
         <field name="memberStatus"><text default-value="NEW" disabled="true"></text></field>
+        
+        
+        <field name="recruitingAgent"  title="Recuiting Agent" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="Member" description="Member"/>
+                <option key="Delegate" description="Delegate"/>
+                <option key="Staff" description="Staff"/>
+                <option key="Business Representative" description="Business Representative"/>
+                <option key="Self" description="Self"/>
+            </drop-down>
+        </field>
+        
+        <field name="introducingMember" title="Introducing Member">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${firstName} ${lastName}"
+					key-field-name="partyId" entity-name="Member">
+					<entity-order-by field-name="firstName" />
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="recuiterNames" title="Recuiter Names"><text></text></field>
+		<field name="recruiterEmail" title="Recruiter Email"><text ></text></field>
+		<field name="recruiterPhone" title="Recruiter Phone"><text></text></field>
        
        <!-- field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onClick" action="javascript: return confirm('Are you Sure do you want to continue ?');"><submit button-type="text-link"/></field -->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return memberRegistrationFormValidation();"><submit button-type="button"/></field>
