@@ -715,6 +715,9 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
+                            	<screenlet name="Employee">
+                            		<label style="h3">${party.firstName} ${party.lastName}</label>
+                            	</screenlet>
                                 <screenlet title="Spouse Details">
                                     <include-form name="NewSpouseDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                                 </screenlet>
@@ -749,7 +752,10 @@ under the License.
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one value-field="party" entity-name="Person">
+                	<field-map field-name="partyId" value="${partyId}"/>
+                </entity-one>
                 <entity-one entity-name="StaffDependant" value-field="staffDependantContext"/>
             </actions>
             <widgets>
@@ -761,6 +767,9 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
+                            	<screenlet name="Employee">
+                            		<label style="h3">${party.firstName} ${party.lastName}</label>
+                            	</screenlet>
                                 <screenlet title="Dependant Details">
                                     <include-form name="NewDependantDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                                 </screenlet>
@@ -795,7 +804,10 @@ under the License.
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one value-field="party" entity-name="Person">
+                	<field-map field-name="partyId" value="${partyId}"/>
+                </entity-one>
                 <entity-one entity-name="StaffNextOfKin" value-field="staffNextOfKinContext"/>
             </actions>
             <widgets>
@@ -807,6 +819,9 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
+                            	<screenlet name="Employee">
+                            		<label style="h3">${party.firstName} ${party.lastName}</label>
+                            	</screenlet>
                                 <screenlet title="Next Of Kin Details">
                                     <include-form name="NewNextOfKinDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                                 </screenlet>
@@ -846,7 +861,7 @@ under the License.
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                    	<!-- include-menu name="EmplRelationsTabBar" location="component://humanres/widget/HumanresMenus.xml"/ -->
+                    	<include-menu name="EmplRelationsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
@@ -867,6 +882,47 @@ under the License.
                         			<include-form name="listemploymentHistory" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         		</screenlet>
                         	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- FindEmployee -->
+        <screen name="employeeRelations">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Employee Relations"/>
+                <set field="headerItem" value="main"/>
+                <set field="tabButtonItem" value="employeeRelations"/>
+                <set field="employeeCtx" from-field="parameters"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <!-- platform-specific>
+                                    <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
+                                </platform-specific -->
+                                <screenlet title="Search Employees">
+                                        <include-form name="FindEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                            	</screenlet>
+                                <screenlet title="Employees List">
+                                		<include-form  name="employeesList" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
