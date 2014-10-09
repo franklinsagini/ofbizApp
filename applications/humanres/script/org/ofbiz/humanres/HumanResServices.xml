@@ -1651,10 +1651,11 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<if-empty field="newEntity.familyRelationsId">
 			<sequenced-id sequence-name="FamilyRelations"
-				field="newEntity.familyRelationsId" />
+				field="familyRelationsId" />
 		</if-empty>
 		<field-to-result field="newEntity.familyRelationsId"
 			result-name="familyRelationsId" />
+			<set field="newEntity.familyRelationsId" from-field="familyRelationsId"/>
 		<create-value value-field="newEntity" />
 	</simple-method>
 
