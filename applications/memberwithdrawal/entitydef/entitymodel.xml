@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of memberwithdrawal Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+    <entity entity-name="MemberWithdrawal" package-name="org.ofbiz.memberwithdrawal"
+		title="MemberWithdrawal Entity">
+		<field name="memberWithdrawalId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="partyId" type="id-ne"></field>
+		<field name="idNumber" type="name"></field>
+		<field name="payrollNumber" type="name"></field>
+		<field name="mobilePhoneNumber" type="name"></field>
+		
+		<field name="firstName" type="name"></field>
+		<field name="middleName" type="name"></field>
+		<field name="lastName" type="name"></field>
+		<field name="withdrawalstatus" type="name"></field> <!-- Applied, Active, Renewing, Deactivated -->
+		
+		<!-- Member / Chai Sacco -->
+		<field name="initiatedBy" type="name"></field>
+		
+		<field name="withdrawalNo" type="id"></field>
+		<field name="dateApplied" type="date-time"></field>
+		<field name="withdrawalreason" type="name"></field>
+		
+		<field name="memberNumber" type="name"></field>
+		
+		
+		<field name="comments" type="name"></field>
+		
+		<!-- for deceased member -->
+		<field name="deathOccurrenceDate" type="date-time"></field>
+		<field name="deathCertificateNumber" type="name"></field>
+		
+		
+		<prim-key field="memberWithdrawalId"/>
+		<relation type="one" fk-name="MemberWithdrawal_Member" rel-entity-name="Member">
+        	<key-map field-name="partyId"/>
+      	</relation>
+      	
+      	<relation type="one" fk-name="MemberWithdrawal_WithdrawalReason" rel-entity-name="WithdrawalReason">
+        	<key-map field-name="withdrawalreason" rel-field-name="name"/>
+      	</relation>
+      	
+	</entity>
+	
+	<entity entity-name="WithdrawalStatus" package-name="org.ofbiz.memberwithdrawal"
+		title="WithdrawalStatus Entity">
+		<field name="withdrawalStatusId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="memberWithdrawalId" type="id"></field>
+		<field name="name" type="name"></field>
+		<field name="comments" type="name"></field>
+		
+		
+		
+		
+		
+		<prim-key field="withdrawalStatusId"/>
+		<relation type="one" fk-name="WithdrawalStatus_MemberWithdrawal" rel-entity-name="MemberWithdrawal">
+        	<key-map field-name="memberWithdrawalId"/>
+      	</relation>
+
+	</entity>
+	
+	<entity entity-name="WithdrawalReason" package-name="org.ofbiz.memberwithdrawal"
+		title="WithdrawalReason Entity">
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="name" type="name"></field>
+		<field name="comments" type="name"></field>
+		
+		<prim-key field="name"/>
+	</entity>
+	
+	<entity entity-name="WithdrawalLog" package-name="org.ofbiz.memberwithdrawal"
+		title="WithdrawalLog Entity">
+		<field name="withdrawalLogId" type="id-ne"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="memberWithdrawalId" type="id"></field>
+		<field name="withdrawalstatus" type="name"></field>
+		<field name="comments" type="name"></field>
+		
+		<prim-key field="withdrawalLogId"/>
+		<relation type="one" fk-name="WithdrawalLog_MemberWithdrawal" rel-entity-name="MemberWithdrawal">
+        	<key-map field-name="memberWithdrawalId"/>
+      	</relation>
+
+	</entity>
+
+</entitymodel>
