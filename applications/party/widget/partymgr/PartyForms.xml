@@ -977,8 +977,13 @@ under the License.
         <!--field name="monthlySalaryAmount" title="Salary Amount"  required-field="true" widget-style="required"  position="1"><text/></field -->
         <field name="shareAmount" title="Share Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
         <field name="memberDepositAmount" title="Member Deposit Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
+<<<<<<< HEAD
 
         <field name="atmApplication" title="ATL Application" required-field="true" widget-style="required">
+=======
+
+        <field name="atmApplication" title="ATM Application" required-field="true" widget-style="required">
+>>>>>>> 68400c94e03df87b87df9a8b7188ccb185ea6773
             <drop-down allow-empty="false">
                 <option key="Yes" description="Yes"/>
                 <option key="No" description="No"/>
@@ -993,7 +998,28 @@ under the License.
         </field>
 
         <field name="memberStatus"><text default-value="NEW" disabled="true"></text></field>
+        <field name="recruitingAgent"  title="Recuiting Agent" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <option key="Member" description="Member"/>
+                <option key="Delegate" description="Delegate"/>
+                <option key="Staff" description="Staff"/>
+                <option key="Business Representative" description="Business Representative"/>
+                <option key="Self" description="Self"/>
+            </drop-down>
+        </field>
 
+        <field name="introducingMember" title="Introducing Member">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${firstName} ${lastName}"
+					key-field-name="partyId" entity-name="Member">
+					<entity-order-by field-name="firstName" />
+				</entity-options>
+			</drop-down>
+		</field>
+
+		<field name="recuiterNames" title="Recruiter Names"><text></text></field>
+		<field name="recruiterEmail" title="Recruiter Email"><text ></text></field>
+		<field name="recruiterPhone" title="Recruiter Phone"><text></text></field>
        <!-- field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onClick" action="javascript: return confirm('Are you Sure do you want to continue ?');"><submit button-type="text-link"/></field -->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return memberRegistrationFormValidation();"><submit button-type="button"/></field>
     </form>
@@ -1001,8 +1027,18 @@ under the License.
     <form name="FindMember" type="single" target="reviewmembers" default-entity-name="Member">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
+
+        <field name="idNumber" title="ID Number" position="2"><text-find/></field>
+
+        <field name="middleName" title="Middle Name"><text-find/></field>
+
+        <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
+
         <field name="lastName" title="Last Name"><text-find/></field>
-        <field name="memberStatus" title="Status"><text-find/></field>
+
+        <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+
+        <field name="memberStatus" title="Status"><hidden value="NEW"/></field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -1023,6 +1059,7 @@ under the License.
 
         <actions>
         	<entity-condition entity-name="Member">
+        		<condition-expr field-name="memberStatus" operator="equals" value="NEW"/>
         		<order-by field-name="-partyId"/>
         	</entity-condition>
 
@@ -1039,10 +1076,19 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
+<<<<<<< HEAD
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
 
 
+=======
+         <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
+         <field name="Member Names">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
+
+>>>>>>> 68400c94e03df87b87df9a8b7188ccb185ea6773
         <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
 
@@ -1063,11 +1109,22 @@ under the License.
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
         </field>
+<<<<<<< HEAD
 
         <field name="memberNumber" title="Member #"><display></display></field>
 
         <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
 
+=======
+
+        <field name="memberNumber" title="Member No."><display></display></field>
+
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+
+         <field name="memberStatus" title="Status"><display also-hidden="false"></display></field>
+
+
+>>>>>>> 68400c94e03df87b87df9a8b7188ccb185ea6773
         <field name="Edit">
         	<hyperlink target="NewMember?partyId=${partyId}" description="Edit"></hyperlink>
         </field>
@@ -1083,10 +1140,15 @@ under the License.
         <field name="Change">
         	<hyperlink target="changeMember?partyId=${partyId}" description="Change"></hyperlink>
         </field>
+<<<<<<< HEAD
 
          <field name="Details">
         	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${lastName} Details"></hyperlink>
         </field>
+=======
+
+
+>>>>>>> 68400c94e03df87b87df9a8b7188ccb185ea6773
      </form>
 
      <!-- Print Members -->
@@ -2004,11 +2066,19 @@ under the License.
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         </actions>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="firstName" title="First Name"><text-find/></field>
+                <field name="firstName" title="First Name"><text-find/></field>
+
+        <field name="idNumber" title="ID Number" position="2"><text-find/></field>
+
+        <field name="middleName" title="Middle Name"><text-find/></field>
+
+        <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
+
         <field name="lastName" title="Last Name"><text-find/></field>
-        <field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field>
-        <field name="memberNumber" title="${uiLabelMap.MemberNumber}"><text-find></text-find></field>
+
+        <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+
+        <field name="memberStatus" title="Status" ><hidden value="ACTIVE"/></field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -2046,10 +2116,21 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
+<<<<<<< HEAD
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
 
 
+=======
+
+        <field name="Member Names">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
+         <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
+
+
+>>>>>>> 68400c94e03df87b87df9a8b7188ccb185ea6773
         <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
 
@@ -2071,7 +2152,119 @@ under the License.
         </field>
 
         <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+<<<<<<< HEAD
         <field name="memberNumber" title="${uiLabelMap.MemberNumber}"><display></display></field>
+
+=======
+        <field name="memberNumber" title="Member No."><display></display></field>
+
+>>>>>>> 68400c94e03df87b87df9a8b7188ccb185ea6773
+        <field name="memberStatus"><display also-hidden="false"></display></field>
+
+        <field name="Edit">
+        	<hyperlink target="NewMember?partyId=${partyId}" description="Edit Member"></hyperlink>
+        </field>
+
+        <field name="Change Member Status">
+        	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
+        </field>
+<<<<<<< HEAD
+
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
+=======
+
+
+     </form>
+
+     <!-- start FindAllMembers -->
+     <form name="FindAllMembers" type="single" target="allmembers" default-entity-name="Member">
+        <actions>
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        </actions>
+                <field name="firstName" title="First Name"><text-find/></field>
+
+        <field name="idNumber" title="ID Number" position="2"><text-find/></field>
+
+        <field name="middleName" title="Middle Name"><text-find/></field>
+
+        <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
+
+        <field name="lastName" title="Last Name"><text-find/></field>
+
+        <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+
+        <field name="memberStatus" title="Status" ><text-find></text-find></field>
+        <field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+
+    <form name="allmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="activemembers"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+        <actions>
+        	<entity-condition entity-name="Member">
+        		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        		<order-by field-name="-partyId"/>
+        	</entity-condition>
+
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+
+        <field name="Member Names">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
+         <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
+
+
+        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+
+       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+
+       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+	     <field name="branchId" title="Branch">
+            <!-- drop-down allow-empty="false">
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down -->
+            <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
+>>>>>>> 68400c94e03df87b87df9a8b7188ccb185ea6773
+        </field>
+
+	   <field name="stationId" title="Station">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+        <field name="memberNumber" title="Member No."><display></display></field>
 
         <field name="memberStatus"><display also-hidden="false"></display></field>
 
@@ -2083,11 +2276,15 @@ under the License.
         	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
         </field>
 
-         <field name="Details">
-        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
-        </field>
-     </form>
 
+     </form>
+<<<<<<< HEAD
+
+=======
+
+     <!-- End Find All Members -->
+
+>>>>>>> 68400c94e03df87b87df9a8b7188ccb185ea6773
      <!-- Branches -->
      <form name="branches" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="branches"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
