@@ -27,6 +27,7 @@
                 <security https="true" auth="true" />
                 <response name="success" type="view" value="memberwithdrawal" />
         </request-map>
+
     <request-map uri="createMemberWithdrawal">
                 <security https="true" auth="true" />
                 <event type="service" invoke="createMemberWithdrawal" />
@@ -68,6 +69,79 @@
                 <response name="success" type="request-redirect-noparam"
                         value="memberwithdrawal"></response>
         </request-map>
+        
+        <request-map uri="withdrawalreason">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="withdrawalreason" />
+        </request-map>
+        
+        
+        
+        <request-map uri="createWithdrawalReason">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createWithdrawalReason" />
+                <response name="success" type="request-redirect-noparam"
+                        value="withdrawalreason"></response>
+        </request-map>
+                <request-map uri="updateWithdrawalReason">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateWithdrawalReason" />
+                <response name="success" type="request-redirect-noparam"
+                        value="withdrawalreason"></response>
+                <response name="error" type="view" value="withdrawalreason" />
+        </request-map>
+
+        <request-map uri="deleteWithdrawalReason">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteWithdrawalReason" />
+                <response name="success" type="request-redirect-noparam"
+                        value="withdrawalreason"></response>
+        </request-map>
+        
+        <!-- withdrawalApprovals -->
+         <request-map uri="withdrawalApprovals">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="withdrawalApprovals" />
+        </request-map>
+        
+         <!-- withdrawalApprovals -->
+         <request-map uri="withdrawalLog">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="withdrawalLog" />
+        </request-map>
+        
+        <request-map uri="createWithdrawalLog">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createWithdrawalLog" />
+                <response name="success" type="request-redirect"
+                        value="withdrawalApprovals"></response>
+        </request-map>
+                <request-map uri="updateWithdrawalLog">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateWithdrawalLog" />
+                <response name="success" type="request-redirect"
+                        value="withdrawalApprovals"></response>
+                <response name="error" type="view" value="withdrawalApprovals" />
+        </request-map>
+
+        <request-map uri="deleteWithdrawalLog">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteWithdrawalLog" />
+                <response name="success" type="request-redirect"
+                        value="withdrawalApprovals"></response>
+        </request-map>
+        
+        <request-map uri="approveWithdrawal">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="approveWithdrawal" />
+        </request-map>
+        
+        <request-map uri="rejectWithdrawal">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="rejectWithdrawal" />
+        </request-map>        
+
+        
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://memberwithdrawal/widget/memberwithdrawalScreens.xml#main"/ -->
     
@@ -75,4 +149,10 @@
 
 <view-map name="memberwithdrawal" type="screen" page="component://memberwithdrawal/widget/memberwithdrawalScreens.xml#NewWithdrawal"/>
 <view-map name="withdrawalstatus" type="screen" page="component://memberwithdrawal/widget/memberwithdrawalScreens.xml#NewWithdrawalLog"/>
+<view-map name="withdrawalreason" type="screen" page="component://memberwithdrawal/widget/memberwithdrawalScreens.xml#withdrawalreason"/>
+<view-map name="withdrawalApprovals" type="screen" page="component://memberwithdrawal/widget/memberwithdrawalScreens.xml#withdrawalApprovals"/>
+
+<view-map name="approveWithdrawal" type="screen" page="component://memberwithdrawal/widget/memberwithdrawalScreens.xml#approveWithdrawal"/>
+<view-map name="rejectWithdrawal" type="screen" page="component://memberwithdrawal/widget/memberwithdrawalScreens.xml#rejectWithdrawal"/>
+
 </site-conf>
