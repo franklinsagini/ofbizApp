@@ -119,13 +119,17 @@ public class LoanServices {
 		// request.getParameter(arg0)
 		String partyId = (String) request.getParameter("memberId");
 		String loanProductId = (String) request.getParameter("loanProductId");
-		
+
 		// Locale locale = (Locale) request.getParameter("locale");
 		GenericValue member = null;
 		// String firstName, middleName, lastName, idNumber, memberType,
 		// memberNumber, mobileNumber;
 		String memberDetails = "";
-		BigDecimal bdDepositamt = totalSavings(partyId, loanProductId, delegator);
+		BigDecimal bdDepositamt = BigDecimal.ZERO;
+
+		if ((loanProductId != null) && (!loanProductId.equals(""))) {
+			bdDepositamt = totalSavings(partyId, loanProductId, delegator);
+		}
 
 		try {
 			member = delegator.findOne("Member",
@@ -147,6 +151,8 @@ public class LoanServices {
 
 			result.put("payrollNo", member.get("payrollNumber"));
 			result.put("memberNo", member.get("memberNumber"));
+			result.put("memberClass", member.get("memberClass"));
+			
 
 			result.put("payrolNo", member.get("payrollNumber"));
 			result.put("currentStationId", member.get("stationId"));
@@ -228,7 +234,8 @@ public class LoanServices {
 		// account)
 		BigDecimal bdMaximumLoanAmt = BigDecimal.ZERO;
 		BigDecimal bdExistingLoans;
-		BigDecimal bdTotalSavings = totalSavings(memberId, loanProductId,  delegator);
+		BigDecimal bdTotalSavings = totalSavings(memberId, loanProductId,
+				delegator);
 		// Get get Loan Product
 		try {
 			loanProduct = delegator.findOne("LoanProduct",
@@ -253,12 +260,13 @@ public class LoanServices {
 			}
 
 			// Get Existing Loans
-			bdExistingLoans = calculateExistingLoansTotal(memberId, loanProductId, delegator);
-			
-			bdMaximumLoanAmt = (bdTotalSavings.multiply(savingsMultiplier)).subtract(bdExistingLoans);
-			
-			//Check if account has retainer
-			
+			bdExistingLoans = calculateExistingLoansTotal(memberId,
+					loanProductId, delegator);
+
+			bdMaximumLoanAmt = (bdTotalSavings.multiply(savingsMultiplier))
+					.subtract(bdExistingLoans);
+
+			// Check if account has retainer
 
 			log.info("############ The total Savings are ####### "
 					+ bdTotalSavings);
@@ -327,10 +335,12 @@ public class LoanServices {
 		return json;
 	}
 
-	private static BigDecimal totalSavings(String memberId, String loanProductId, Delegator delegator) {
-		//Get the multiplier account - the account being used to get the maximum loan as defined in the 
+	private static BigDecimal totalSavings(String memberId,
+			String loanProductId, Delegator delegator) {
+		// Get the multiplier account - the account being used to get the
+		// maximum loan as defined in the
 		// Loan Product Setup
-		
+
 		GenericValue loanProduct = null;
 		try {
 			loanProduct = delegator.findOne("LoanProduct",
@@ -338,14 +348,10 @@ public class LoanServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
-		//The Multiplier account id
+
+		// The Multiplier account id
 		String accountProductId = loanProduct.getString("accountProductId");
-		
-		
-		
-		
-		
+
 		// Get Accounts for this member
 		List<GenericValue> memberAccountELI = null;
 		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
@@ -393,11 +399,11 @@ public class LoanServices {
 		return months;
 
 	}
-	
-	public static int getMemberDuration(String partyId){
+
+	public static int getMemberDuration(String partyId) {
 		int durationInMonths = 0;
-		
-		//Get Member
+
+		// Get Member
 		GenericValue member = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -407,24 +413,24 @@ public class LoanServices {
 			// return ServiceUtil.returnError(UtilProperties.getMessage("",
 			// "Cannot Get Member Details",
 			// UtilMisc.toMap("errMessage", e.getMessage()), locale));
-			//System.out.println(e.printStackTrace());
+			// System.out.println(e.printStackTrace());
 			e.printStackTrace();
 		}
-		
+
 		Date joinDate = member.getDate("joinDate");
-		//Date dateJoinDate = new Date(joinDate.getTime());
+		// Date dateJoinDate = new Date(joinDate.getTime());
 		durationInMonths = getMemberDurations(joinDate);
-		
+
 		return durationInMonths;
 	}
 
 	/**
 	 * Calculate Existing Loans Total
 	 * **/
-	private static BigDecimal calculateExistingLoansTotal(String memberId, String loanProductId,
-			Delegator delegator) {
+	private static BigDecimal calculateExistingLoansTotal(String memberId,
+			String loanProductId, Delegator delegator) {
 		BigDecimal existingLoansTotal = BigDecimal.ZERO;
-		
+
 		GenericValue loanProduct = null;
 		try {
 			loanProduct = delegator.findOne("LoanProduct",
@@ -432,12 +438,12 @@ public class LoanServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
-		//The Multiplier account id
+
+		// The Multiplier account id
 		String accountProductId = loanProduct.getString("accountProductId");
 
 		List<GenericValue> loanApplicationELI = null; // =
-		
+
 		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, memberId),
@@ -447,8 +453,7 @@ public class LoanServices {
 
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
-					loanApplicationsConditions, null,
-					null, null, false);
+					loanApplicationsConditions, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -936,7 +941,7 @@ public class LoanServices {
 		if (noOfGuarantors > 0) {
 			bdAverageLoanAmt = loanAmt.divide(new BigDecimal(noOfGuarantors),
 					6, RoundingMode.HALF_UP);
-		} else{
+		} else {
 			eacherGuarantorGreaterThanAverage = "N";
 		}
 
@@ -994,31 +999,32 @@ public class LoanServices {
 		}
 
 	}
-	
+
 	/***
-	 * @author Japheth Odonya  @when Sep 5, 2014 12:10:03 AM
+	 * @author Japheth Odonya @when Sep 5, 2014 12:10:03 AM
 	 * 
-	 * 	collateralsAvailable
-	 *  guarantorsAvailable
-	 *  guarantorsTotalDepositsEnough
-	 *  eacherGuarantorGreaterThanAverage
+	 *         collateralsAvailable guarantorsAvailable
+	 *         guarantorsTotalDepositsEnough eacherGuarantorGreaterThanAverage
 	 * 
 	 * */
 	public static String validateApplicationForm(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-		String loanApplicationId = (String) request.getParameter("loanApplicationId");
+		String loanApplicationId = (String) request
+				.getParameter("loanApplicationId");
 
 		String collateralsAvailable = loanHasCollateral(loanApplicationId);
 		String guarantorsAvailable = loanHasGuarantors(loanApplicationId);
-		String guarantorsTotalDepositsEnough = 	guarantorTotalsEqualLoanTotal(loanApplicationId);
+		String guarantorsTotalDepositsEnough = guarantorTotalsEqualLoanTotal(loanApplicationId);
 		String eacherGuarantorGreaterThanAverage = checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);
-		
+
 		result.put("collateralsAvailable", collateralsAvailable);
 		result.put("guarantorsAvailable", guarantorsAvailable);
-		result.put("guarantorsTotalDepositsEnough", guarantorsTotalDepositsEnough);
-		result.put("eacherGuarantorGreaterThanAverage", eacherGuarantorGreaterThanAverage);
-		
+		result.put("guarantorsTotalDepositsEnough",
+				guarantorsTotalDepositsEnough);
+		result.put("eacherGuarantorGreaterThanAverage",
+				eacherGuarantorGreaterThanAverage);
+
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
 
@@ -1054,24 +1060,27 @@ public class LoanServices {
 
 		return json;
 	}
-	
+
 	/***
-	 * @author Japheth Odonya  @when Sep 5, 2014 12:57:17 AM
-	 * forwardLoanApplication
+	 * @author Japheth Odonya @when Sep 5, 2014 12:57:17 AM
+	 *         forwardLoanApplication
 	 * 
-	 * Forward Loan Application to Next Stage - to Review
+	 *         Forward Loan Application to Next Stage - to Review
 	 * 
 	 * */
 	public static String forwardLoanApplication(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-		Delegator delegator = (Delegator)request.getAttribute("delegator");
-		String loanApplicationId = (String) request.getParameter("loanApplicationId");
-//		Map<String, String> userLogin = (Map<String, String>)request.getAttribute("userLogin");
-//		request.get
-//		String userLoginId = userLogin.get("userLoginId");
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String loanApplicationId = (String) request
+				.getParameter("loanApplicationId");
+		// Map<String, String> userLogin = (Map<String,
+		// String>)request.getAttribute("userLogin");
+		// request.get
+		// String userLoginId = userLogin.get("userLoginId");
 		HttpSession session = request.getSession();
-		GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+		GenericValue userLogin = (GenericValue) session
+				.getAttribute("userLogin");
 		String userLoginId = userLogin.getString("userLoginId");
 
 		GenericValue loanApplication = null;
@@ -1079,36 +1088,34 @@ public class LoanServices {
 		// SaccoProduct
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
-					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		loanApplication.set("applicationStatus", "FORWARDED");
 		try {
 			delegator.createOrStore(loanApplication);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
-		//Create a Log
+
+		// Create a Log
 		GenericValue loanStatusLog;
 		String loanStatusLogId = delegator.getNextSeqId("LoanStatusLog", 1);
-		
-		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc
-				.toMap("loanStatusLogId", loanStatusLogId,
-						"loanApplicationId", loanApplicationId,
-						"applicationStatus", "FORWARED",
-						"createdBy", userLoginId,
-						"comment", "forwarded for review"
-				));
-		
+
+		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
+				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
+				loanApplicationId, "applicationStatus", "FORWARED",
+				"createdBy", userLoginId, "comment", "forwarded for review"));
+
 		try {
 			delegator.createOrStore(loanStatusLog);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
 
