@@ -67,7 +67,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form -->
     <form name="AddEmployee" type="single" target="createPerson" default-map-name="personInfo"
-        focus-field-name="salutation" header-row-style="header-row" default-table-style="basic-table">
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table">
         <actions>
         
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
@@ -629,7 +629,7 @@
        	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
        	 </drop-down>
         </field>
-        <field name="idno" title="Identification Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="idno" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="phoneNo" title="Phone Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="emailAddress" title="Email Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="postalAddress" title="Postal Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -714,7 +714,7 @@
         	<option key="F" description="Female"/>
         </drop-down>
         </field>
-        <field name="dob" title="Date of Birth" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><date-time type="timestamp"></date-time></field>
+        <field name="dob" title="Date of Birth" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="timestamp"></date-time></field>
          <field name="bloodGroupId" title="Blood Group">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="bloodGroupList" key-name="bloodGroupId" description="${bloodGroup}"/>
@@ -725,7 +725,7 @@
        	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
        	 </drop-down>
         </field>
-        <field name="idno" title="Identification Number"><text size="30" maxlength="60"/></field>
+        <field name="idno" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="isdeceased" title="Deceased">
         <drop-down allow-empty="false"> 
         	<option key="N" description="No"/>
@@ -825,6 +825,7 @@
         	<option key="F" description="Female"/>
         </drop-down>
         </field>
+        <field name="dob" title="Date of Birth" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="timestamp"></date-time></field>
         <field name="geoId" title="Nationality" widget-style="required"	required-field="true">
 			<drop-down>
 				<list-options key-name="geoId" list-name="countryGeoList"
@@ -836,7 +837,7 @@
        	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
        	 </drop-down>
         </field>
-        <field name="idno" title="Identification Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="idno" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="phoneNo" title="Phone Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="emailAddress" title="Email Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="postalAddress" title="Postal Address" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -979,7 +980,7 @@
     </form>
     
     <!-- Find Employee -->
-    <form name="FindEmployee" type="single" target="main" default-entity-name="Person">
+    <form name="FindEmployee" type="single" target="employeeRelations" default-entity-name="Person">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
@@ -1046,6 +1047,174 @@
         	<hyperlink target="dependant?partyId=${partyId}" description="Dependants for ${firstName} ${lastName}"></hyperlink>
         </field>
      </form>
+     
+         <!-- Find Employee -->
+    <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="Person">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="idNumber" title="ID Number"><text-find/></field>
+        <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
+        <field name="memberStatus" title="Status"><text-find/></field>
+        <!-- field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field -->
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+     
+      <form name="employeesListAddBankDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerson" paginate-target="employeeBankDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="Person">
+        		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<!-- entity-condition entity-name="Station" list="stationList"></entity-condition -->
+        	
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="employeeCtx"/>
+                <field-map field-name="entityName" value="Person"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+   
+       <!-- field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+	     <field name="stationId" title="Station">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            
+        </field -->
+        
+        <!-- field name="memberStatus"><display also-hidden="false"></display></field -->
+        
+        <field name="Add Employee Bank Details">
+        	<hyperlink target="bank?partyId=${partyId}" description="Bank Details for ${firstName} ${lastName}"></hyperlink>
+        </field>
+     </form>
+     
+        
+    <!-- New Pay Point-->
+    <form name="NewPayPoint" type="single" target="createPayPoint"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payPointContext">
+        
+        <actions>
+        	<entity-condition entity-name="Party" list="partyList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+
+        	<entity-condition entity-name="BankDetails" list="bankList"></entity-condition>
+        	<set field="bankDetailsId" from-field="bankDetailsId"/>
+        	
+        	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
+        	<set field="bankBranchId" from-field="bankBranchId"/>
+        	
+        	
+        </actions>
+        
+        <field name="payPointId"><hidden/></field>
+        <field name="partyId" parameter-name="partyId"><hidden/></field>
+        <!-- field name="staffNo" title="Staff No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="20"/></field>
+        <field name="staffName" title="Staff Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+         <field name="partyId" title="Employee">
+            <drop-down allow-empty="true" no-current-selected-key="${firstName}  ${lastName}">
+                <entity-options  entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
+                    <entity-constraint name="employeeNumber" operator="not-equals" value=""/>
+                    <entity-order-by field-name="firstName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="bankDetailsId" title="Bank">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="bankList" key-name="bankDetailsId" description="${bankName}"/>
+       	 </drop-down>
+        </field>
+        <field name="bankBranchId" title="Bank Branch">
+       		<drop-down allow-empty="true">
+      	 		<!-- list-options list-name="bankBranchList" key-name="bankBranchId" description="${branchName}"/ -->
+       	 	</drop-down>        	
+        </field>
+        <field name="accountName" title="Account Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="accountNumber" title="Account No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="payMode"  title="Pay Mode" >
+            <drop-down allow-empty="false">
+                <option key="EFT" description="EFT"/>
+                <option key="cheque" description="Cheque"/>                
+                <option key="cash" description="Cash"/>
+            </drop-down>
+        </field>
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPayPoints" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayPoint" paginate-target="paypoint"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <actions>
+        
+        	<entity-condition entity-name="PayPoint">
+        	<condition-expr field-name="partyId" from-field="partyId"/>
+        	<order-by field-name="payPointId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="BankDetails" list="bankList">
+            </entity-condition>
+            <entity-condition entity-name="BankBranch" list="branchList">
+            </entity-condition>
+           
+             
+        </actions>
+		<field name="payPointId"><hidden/></field>
+         <field name="partyId" title="Employee">
+            <drop-down allow-empty="true" no-current-selected-key="${firstName}  ${lastName}">
+                <entity-options  entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
+                    <entity-constraint name="employeeNumber" operator="not-equals" value=""/>
+                    <entity-order-by field-name="firstName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="bankDetailsId" title="Bank">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="bankList" key-name="bankDetailsId" description="${bankName}"/>
+       	 </drop-down>
+        </field>
+        <field name="bankBranchId" title="Bank Branch">
+       		<drop-down allow-empty="true">
+      	 		<list-options list-name="branchList" key-name="bankBranchId" description="${branchName}"/>
+       	 	</drop-down>        	
+        </field>
+        <field name="accountName" title="Account Name"><text size="30" maxlength="60"/></field>
+        <field name="accountNumber" title="Account No."><text size="30" maxlength="60"/></field>
+        <field name="payMode"  title="Pay Mode" >
+            <drop-down allow-empty="false">
+                <option key="EFT" description="EFT"/>
+                <option key="cheque" description="Cheque"/>                
+                <option key="cash" description="Cash"/>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePayPoint" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="payPointId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
     
 </forms>
 

@@ -194,8 +194,8 @@ under the License.
     </form>
     
     <!-- New Person/Employee -->
-    <form name="AddNewPerson" type="single" target="updatePerson" default-map-name="personInfo"
-        focus-field-name="salutation" header-row-style="header-row" default-table-style="basic-table">
+    <form name="AddNewPerson" type="single" target="createPerson" default-map-name="personInfo"
+    header-row-style="header-row" default-table-style="basic-table">
         <actions>
         	<entity-condition entity-name="Religion" list="religionList"></entity-condition>
         	<set field="religionId" from-field="religionId"/>
@@ -224,11 +224,22 @@ under the License.
         <auto-fields-service service-name="updatePerson"/>
         
         <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
+        <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
         <field name="employeeNumber" title="${uiLabelMap.MemberEmployeeNumber}" required-field="true" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="Mr." description="Mr."/>
+                <option key="Miss." description="Miss."/>
+                <option key="Mrs." description="Mrs."/>
+                <option key="Dr." description="Dr."/>
+                <option key="Prof." description="Prof."/>
+                <option key="Hon." description="Hon."/>
+                <option key="Rev." description="Rev."/>
+            </drop-down>
+        </field>
         <field name="gender">
             <drop-down allow-empty="false">
                 <option key="Male" description="${uiLabelMap.CommonMale}"/>
@@ -319,7 +330,27 @@ under the License.
         <field name="placeofbirth" title="Place of Birth"><text size="40" maxlength="60"/></field>
         <field name="nationalIDNumber" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         
-        
+        <field name="emplPositionTypeId" title="Job Title">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="emplPositionTypeId" description="${description}" entity-name="EmplPositionType">
+                    <entity-order-by field-name="emplPositionTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="payGradeId" title="Job Grade">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="payGradeId" description="${payGradeName}" entity-name="PayGrade">
+                    <entity-order-by field-name="payGradeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="mobNo" title="Mobile Phone Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="homeTelNo" title="Home Telephone Number"><text size="40" maxlength="60"/></field>
+        <field name="emailAddress"><text size="40" maxlength="60"/></field>
+        <field name="permanentPostalAddress"><text size="40" maxlength="60"/></field>
+        <field name="postalAddress"><text size="40" maxlength="60"/></field>
+        <field name="town" title="Town/City"><text size="40" maxlength="60"/></field>
+        <field name="currentAddress"><text size="40" maxlength="60"/></field>
         <!--field name="statusId" use-when="person==null"><hidden/></field>
         <field name="statusId" use-when="person!=null &amp;&amp; leadDescription==null">
             <drop-down allow-empty="false">
