@@ -42,6 +42,38 @@
             </widgets>
         </section>
     </screen>
+    
+    
+	<screen name="insertMenuDecorator">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<container style="leftclear">
+											<include-menu name="GlobalHRSettingMenus"
+												location="component://humanres/widget/HumanresMenus.xml" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+    
+    
     <screen name="EditSkillTypes">
         <section>
             <actions>
@@ -386,4 +418,68 @@
             </widgets>
         </section>
     </screen>
+    
+      <screen name="NewBankDetails">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Bank Details"/>
+                <set field="headerItem" value="bankdetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createBankDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="BankDetails" value-field="bankDetailsContext"/>
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="New Bank">
+                                    <include-form name="NewBankDetails" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                                
+                        		<screenlet title="Bank List">
+                        			<include-form name="listBankDetails" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="NewBansdsskDetails">
+        <section>                        
+            <actions>
+               <set field="titleProperty" value="Bank Details"/>
+                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createBankDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="BankDetails" value-field="bankDetailsContext"/>
+            </actions>            
+            <widgets>
+                <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">                                                                                       
+                        <section>
+                            <widgets>
+                                <screenlet title="New Bank">
+                                    <include-form name="NewBankDetails" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                                
+                        		<screenlet title="Bank List">
+                        			<include-form name="listBankDetails" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
 </screens>
