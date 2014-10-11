@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+    
+    <!-- MemberWithdrawal -->
+    <simple-method method-name="createMemberWithdrawal" short-description="Create MemberWithdrawal">
+        <make-value entity-name="MemberWithdrawal" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="MemberWithdrawal" field="memberWithdrawalId"/>
+        <set from-field="memberWithdrawalId" field="newEntity.memberWithdrawalId"/>
+        <set from-field="memberWithdrawalId" field="newEntity.withdrawalNo"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateMemberWithdrawal" short-description="Update MemberWithdrawal">
+        <entity-one entity-name="MemberWithdrawal" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteMemberWithdrawal" short-description="Delete MemberWithdrawal">
+        <entity-one entity-name="MemberWithdrawal" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- WithdrawalStatus -->
+    <simple-method method-name="createWithdrawalStatus" short-description="Create WithdrawalStatus">
+        <make-value entity-name="WithdrawalStatus" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="WithdrawalStatus" field="withdrawalStatusId"/>
+        <set from-field="withdrawalStatusId" field="newEntity.withdrawalStatusId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateWithdrawalStatus" short-description="Update WithdrawalStatus">
+        <entity-one entity-name="WithdrawalStatus" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteWithdrawalStatus" short-description="Delete WithdrawalStatus">
+        <entity-one entity-name="WithdrawalStatus" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- WithdrawalReason -->
+    <simple-method method-name="createWithdrawalReason" short-description="Create WithdrawalReason">
+        <make-value entity-name="WithdrawalReason" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+         <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateWithdrawalReason" short-description="Update WithdrawalReason">
+        <entity-one entity-name="WithdrawalReason" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteWithdrawalReason" short-description="Delete WithdrawalReason">
+        <entity-one entity-name="WithdrawalReason" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- WithdrawalLog -->
+    <simple-method method-name="createWithdrawalLog" short-description="Create WithdrawalLog">
+		<call-simple-method method-name="saveWithdrawalLog" scope="inline"></call-simple-method>
+        
+        <if-compare operator="equals" value="APPROVED" field="newEntity.withdrawalstatus">
+        	<call-simple-method method-name="updateWithdrawalToApproved" scope="inline"></call-simple-method>
+        </if-compare>
+        <if-compare operator="equals" value="REJECTED" field="newEntity.withdrawalstatus">
+        	<call-simple-method method-name="updateWithdrawalToRejected" scope="inline"></call-simple-method>
+        </if-compare>
+        
+    </simple-method>
+    
+    <simple-method method-name="saveWithdrawalLog" use-transaction="true">
+    	<make-value entity-name="WithdrawalLog" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="WithdrawalLog" field="withdrawalLogId"/>
+        <set from-field="withdrawalLogId" field="newEntity.withdrawalLogId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <!-- Updates Withdrawal to Approved and then Member to Withdrawn -->
+    <simple-method method-name="updateWithdrawalToApproved" use-transaction="true">
+    	<set field="memberWithdrawalId" from-field="newEntity.memberWithdrawalId"/>
+    	<entity-one value-field="memberWithdrawal" entity-name="MemberWithdrawal">
+    		<field-map field-name="memberWithdrawalId" from-field="memberWithdrawalId"/>
+    	</entity-one>
+    	<!-- Update Member Withdrawal -->
+    	<set field="memberWithdrawal.withdrawalstatus" value="APPROVED"/>
+    	<store-value value-field="memberWithdrawal"/>
+    	
+    	<entity-one value-field="member" entity-name="Member">
+    		<field-map field-name="partyId" value="${memberWithdrawal.partyId}"/>
+    	</entity-one>
+    	<set field="member.memberStatus" value="WITHDRAWN"/>
+    	<store-value value-field="member"/>
+    </simple-method>
+    <simple-method method-name="updateWithdrawalToRejected" use-transaction="true">
+    	<set field="memberWithdrawalId" from-field="newEntity.memberWithdrawalId"/>
+    	<entity-one value-field="memberWithdrawal" entity-name="MemberWithdrawal">
+    		<field-map field-name="memberWithdrawalId" from-field="memberWithdrawalId"/>
+    	</entity-one>
+    	<!-- Update Member Withdrawal -->
+    	<set field="memberWithdrawal.withdrawalstatus" value="REJECTED"/>
+    	<store-value value-field="memberWithdrawal"/>
+    	
+    	<entity-one value-field="member" entity-name="Member">
+    		<field-map field-name="partyId" value="${memberWithdrawal.partyId}"/>
+    	</entity-one>
+    	<set field="member.memberStatus" value="ACTIVE"/>
+    	<store-value value-field="member"/>
+    </simple-method>
+    
+     <simple-method method-name="updateWithdrawalLog" short-description="Update WithdrawalLog">
+        <entity-one entity-name="WithdrawalLog" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteWithdrawalLog" short-description="Delete WithdrawalLog">
+        <entity-one entity-name="WithdrawalLog" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+</simple-methods>

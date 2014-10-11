@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-	license agreements. See the NOTICE file distributed with this work for additional 
-	information regarding copyright ownership. The ASF licenses this file to 
-	you under the Apache License, Version 2.0 (the "License"); you may not use 
-	this file except in compliance with the License. You may obtain a copy of 
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+	license agreements. See the NOTICE file distributed with this work for additional
+	information regarding copyright ownership. The ASF licenses this file to
+	you under the Apache License, Version 2.0 (the "License"); you may not use
+	this file except in compliance with the License. You may obtain a copy of
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
 	language governing permissions and limitations under the License. -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -26,7 +26,7 @@
 	<!-- Events to run on every request before security (chains exempt) -->
 	<!-- <preprocessor> </preprocessor> -->
 	<!-- Events to run on every request after all other processing (chains exempt) -->
-	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" 
+	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent"
 		invoke="test"/> </postprocessor> -->
 
 	<!-- Request Mappings -->
@@ -455,20 +455,32 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="EditPartyGroup" />
 	</request-map>
-	
+
 	<request-map uri="addBranch">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="addBranch" />
 	</request-map>
-	
+
+	<request-map uri="addChaiBranch">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addBranch" />
+	</request-map>
+
+	<request-map uri="createChaiBranch">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createChaiBranch" />
+       <response name="success" type="view" value="branches" />
+	    <response name="error" type="view" value="branches" />
+    </request-map>
+
 	 <request-map uri="generateAccountNumber">
         <!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
         <event type="java" path="org.ofbiz.party.party.MemberServices" invoke="generateAccountNumber" />
                 <response name="success" type="none">
         </response>
     </request-map>
-	
-	
+
+
 	<request-map uri="createPartyGroup">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createPartyGroup" />
@@ -943,7 +955,7 @@
 		<response name="success" type="view" value="ListPartyCommEvents" />
 	</request-map>
 
-	<!-- TODO <request-map uri="ListCommCustRequests"><security https="true" 
+	<!-- TODO <request-map uri="ListCommCustRequests"><security https="true"
 		auth="true"/><response name="success" type="view" value="ListCommCustRequests"/></request-map> -->
 
 	<request-map uri="showclassgroups">
@@ -1553,32 +1565,35 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="listsaccomembers" />
 	</request-map>
-	
+
 	<request-map uri="reviewmembers">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="reviewmembers" />
 	</request-map>
-	
+
 	<request-map uri="activemembers">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="activemembers" />
 	</request-map>
-	
+		<request-map uri="allmembers">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="allmembers" />
+	</request-map>
 	<request-map uri="ApproveMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="ApproveMember" />
 	</request-map>
-	
+
 	<request-map uri="RejectMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="RejectMember" />
 	</request-map>
-	
+
 	<request-map uri="ChangeMemberStatus">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="ChangeMemberStatus" />
 	</request-map>
-	
+
 	<!-- end of request mappings -->
 
 	<!-- Member Details -->
@@ -1634,19 +1649,19 @@
 		<response name="success" type="view" value="employers"
 			/>
 	</request-map>
-	
+
 	<request-map uri="branches">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="branches"/>
 	</request-map>
-	
+
 	<request-map uri="viewstations">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="viewstations"/>
 	</request-map>
-	
+
 	<!-- viewstations -->
-	
+
 
 	<request-map uri="openingBalance">
 		<security https="true" auth="true" />
@@ -2110,7 +2125,7 @@
 			value="accountStatus"></response>
 		<response name="error" type="view" value="accountStatus" />
 	</request-map>
-	
+
 	<!--  -->
 	<request-map uri="approveMember">
 		<security https="true" auth="true" />
@@ -2120,7 +2135,7 @@
 		</response>
 		<response name="error" type="view" value="ApproveMember" />
 	</request-map>
-	
+
 
 	<!-- ChangeMemberStation  -->
 	<request-map uri="createChangeMemberStation">
@@ -2149,7 +2164,7 @@
 			value="changeMember"></response>
 		<response name="error" type="view" value="changeMember" />
 	</request-map>
-		
+
 	<!-- ChangeMemberEmploymentType  -->
 	<request-map uri="createChangeMemberEmploymentType">
 		<security https="true" auth="true" />
@@ -2258,7 +2273,7 @@
 			value="changeMember"></response>
 		<response name="error" type="view" value="changeMember" />
 	</request-map>
-	
+
 	<!-- Change Member -->
 	<!-- request-map uri="changeMember">
 		<security https="true" auth="true" />
@@ -2268,14 +2283,14 @@
 		</response>
 		<response name="error" type="view" value="changeMember" />
 	</request-map -->
-	
+
 		<request-map uri="changeMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="changeMember"/>
 	</request-map>
-	
-	
-	
+
+
+
 	<!-- Approve Member CRUD -->
 	<request-map uri="createApproveMemberLog">
 		<security https="true" auth="true" />
@@ -2303,7 +2318,7 @@
 			value="ApproveMember"></response>
 		<response name="error" type="view" value="ApproveMember" />
 	</request-map>
-	
+
 	<request-map uri="rejectMember">
 		<security https="true" auth="true" />
 		<event type="service" invoke="rejectMember" />
@@ -2312,9 +2327,9 @@
 		</response>
 		<response name="error" type="view" value="RejectMember" />
 	</request-map>
-	
+
 	<!-- Reject Member CRUD -->
-	
+
 	<request-map uri="createRejectMemberLog">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createRejectMemberLog" />
@@ -2341,7 +2356,7 @@
 			value="RejectMember"></response>
 		<response name="error" type="view" value="RejectMember" />
 	</request-map>
-	
+
 	<!-- CRUD for Change Member Status -->
 	<request-map uri="createChangeMemberStatus">
 		<security https="true" auth="true" />
@@ -2369,9 +2384,9 @@
 			value="ChangeMemberStatus"></response>
 		<response name="error" type="view" value="ChangeMemberStatus" />
 	</request-map>
-	
-	
-	
+
+
+
 	<request-map uri="partyIdentificationType">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="partyIdentificationType"/>
@@ -2392,15 +2407,15 @@
         <event type="service" invoke="deletePartyIdentificationType"/>
         <response name="success" type="view" value="partyIdentificationType"/>
     </request-map>
-    
-    <!-- Staff Status -->    
+
+    <!-- Staff Status -->
     <request-map uri="enumStaffStatus">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="enumStaffStatus"
 			save-home-view="true">
 			</response>
 	</request-map>
-	
+
     <request-map uri="createEnumStaffStatus">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createEnumStaffStatus" />
@@ -2411,7 +2426,7 @@
 			</response>
 		<response name="error" type="view" value="enumStaffStatus" />
 	</request-map>
-	
+
 	<request-map uri="updateEnumStaffStatus">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateEnumStaffStatus" />
@@ -2422,7 +2437,7 @@
 			</response>
 		<response name="error" type="view" value="enumStaffStatus" />
 	</request-map>
-	
+
 	<request-map uri="deleteEnumStaffStatus">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteEnumStaffStatus" />
@@ -2433,17 +2448,17 @@
 			</response>
 		<response name="error" type="view" value="enumStaffStatus" />
 	</request-map>
-	
+
 	<request-map uri="memberslistpdf.pdf">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="memberslistpdf" />
 	</request-map>
-	
+
 	<request-map uri="memberslistcsv.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="memberslistcsv" />
 	</request-map>
-	
+
 	<!-- Create Station -->
 	<request-map uri="createStation">
 		<security https="true" auth="true" />
@@ -2455,7 +2470,7 @@
 			</response>
 		<response name="error" type="view" value="viewstations" />
 	</request-map>
-	
+
 	<request-map uri="updateStation">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateStation" />
@@ -2465,7 +2480,7 @@
 			</response>
 		<response name="error" type="view" value="viewstations" />
 	</request-map>
-	
+
 	<request-map uri="deleteStation">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteStation" />
@@ -2475,15 +2490,15 @@
 			</response>
 		<response name="error" type="view" value="viewstations" />
 	</request-map>
-	
+
 		<request-map uri="memberTypes">
 	<security https="true" auth="true" />
 	<response name="success" type="view" value="memberTypes"
 		save-home-view="true" />
 	</request-map>
-	
+
 	<!-- MemberType CRUD -->
-	
+
 	<request-map uri="createMemberType">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createMemberType" />
@@ -2509,7 +2524,7 @@
 			value="memberTypes"></response>
 		<response name="error" type="view" value="memberTypes" />
 	</request-map>
-	
+
 	  <request-map uri="memberRegistrationFormValidation">
         <event type="java" path="org.ofbiz.party.party.MemberValidation" invoke="uniqueFieldsValidation" />
                 <response name="success" type="none">
@@ -2520,14 +2535,14 @@
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#findparty" />
-		
+
 	<view-map name="branches" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#branches" />
-		
+
 	<view-map name="viewstations" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#viewstations" />
-		
-		
+
+
 
 	<view-map name="findparty" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#findparty" />
@@ -2561,16 +2576,15 @@
 	<view-map name="ProfileCreateNewLogin" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#CreateUserLogin" />
 	<view-map name="ProfileEditUserLoginSecurityGroups" type="screen"
-		page="component://party/widget/partymgr/PartyScreens.xml#EditUserLoginSecurityGroups" />
+		page="component://party/widget/pacreatePartyGrouprtymgr/PartyScreens.xml#EditUserLoginSecurityGroups" />
 
 	<view-map name="EditPerson" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPerson" />
 	<view-map name="EditPartyGroup" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup" />
-	
-	<view-map name="addBranch" type="screen"
-		page="component://party/widget/partymgr/PartyScreens.xml#addBranch" />
-		
+
+	<view-map name="addBranch" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#addBranch" />
+
 	<view-map name="EditPartyAttribute" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPartyAttribute" />
 	<view-map name="AddPartyNote" type="screen"
@@ -2769,27 +2783,30 @@
 		page="component://party/widget/partymgr/PartyScreens.xml#listsaccomembers" /-->
 	<view-map name="listsaccomembers" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />
-		
-	
+
+
 	<view-map name="reviewmembers" type="screen"
-		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />	
-		
+		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />
+
 	<view-map name="activemembers" type="screen"
-		page="component://party/widget/partymgr/PartyScreens.xml#activemembers" />	
-		
+		page="component://party/widget/partymgr/PartyScreens.xml#activemembers" />
+
+		<view-map name="allmembers" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#allmembers" />
+
 	<view-map name="ApproveMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#ApproveMember" />
-		
+
 	<view-map name="changeMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#changeMember" />
-		
+
 	<view-map name="RejectMember" type="screen"
-		page="component://party/widget/partymgr/PartyScreens.xml#RejectMember" />	
-		
+		page="component://party/widget/partymgr/PartyScreens.xml#RejectMember" />
+
 	<view-map name="ChangeMemberStatus" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#ChangeMemberStatus" />
-		
-		
+
+
 	<view-map name="viewmemberprofile" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#viewmemberprofile" />
 
@@ -2829,24 +2846,24 @@
 
 	<view-map name="memberShareBalance" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberShareBalance" />
-		
+
 	<view-map name="accountStatus" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#accountStatus" />
 
 	<view-map name="memberAttachments" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberAttachments" />
-		
+
 	<view-map name="partyIdentificationType" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewPartyIdentificationType"/>
 	<view-map name="enumStaffStatus" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewenumStaffStatus"/>
-		
+
 	<!-- PDF and CSV -->
 	<view-map name="memberslistcsv" type="screencsv" content-type="text/csv"
                 page="component://party/widget/partymgr/PartyScreens.xml#memberslistcsv" />
-                
+
         <view-map name="memberslistpdf" type="screenfop"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberslistpdf"
 		content-type="application/pdf" encoding="none" />
-		
+
 		<view-map name="memberTypes" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#memberTypes" />
 

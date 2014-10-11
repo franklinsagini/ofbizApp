@@ -1597,11 +1597,8 @@
 		<make-value entity-name="BloodGroup" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.bloodGroupId">
-			<sequenced-id sequence-name="BloodGroup" field="newEntity.bloodGroupId" />
-		</if-empty>
-		<field-to-result field="newEntity.bloodGroupId"
-			result-name="bloodGroupId" />
+		<sequenced-id sequence-name="BloodGroup" field="newEntity.bloodGroupId" />
+			<set from-field="bloodGroupId" field="newEntity.bloodGroupId" />
 		<create-value value-field="newEntity" />
 	</simple-method>
 
@@ -1651,10 +1648,11 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<if-empty field="newEntity.familyRelationsId">
 			<sequenced-id sequence-name="FamilyRelations"
-				field="newEntity.familyRelationsId" />
+				field="familyRelationsId" />
 		</if-empty>
 		<field-to-result field="newEntity.familyRelationsId"
 			result-name="familyRelationsId" />
+			<set field="newEntity.familyRelationsId" from-field="familyRelationsId"/>
 		<create-value value-field="newEntity" />
 	</simple-method>
 
@@ -1751,5 +1749,79 @@
 		<entity-one entity-name="StaffNextOfKin" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
+	
+	 <!-- Bank Details Starts Here -->
+	<simple-method method-name="createBankDetails" short-description="Add Bank Details">
+        <make-value entity-name="BankDetails" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="BankDetails" field="bankDetailsId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="bankDetailsId" field="newEntity.bankDetailsId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateBankDetails" short-description="Update Bank Details">
+        <entity-one entity-name="BankDetails" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteBankDetails" short-description="Delete Bank Details">
+        <entity-one entity-name="BankDetails" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Bank Branch Starts Here -->
+	<simple-method method-name="createBankBranch" short-description="Add Bank Branch">
+        <make-value entity-name="BankBranch" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="BankBranch" field="bankBranchId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="bankBranchId" field="newEntity.bankBranchId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateBankBranch" short-description="Update Bank Branch">
+        <entity-one entity-name="BankBranch" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteBankBranch" short-description="Delete Bank Branch">
+    <set field="bankDetailsId" from-field="parameters.bankDetailsId"/>
+        <entity-one entity-name="BankBranch" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Pay Point Starts Here -->
+	<simple-method method-name="createPayPoint" short-description="Add Pay Point">
+        <make-value entity-name="PayPoint" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PayPoint" field="payPointId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="payPointId" field="newEntity.payPointId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePayPoint" short-description="Update Pay Point">
+        <entity-one entity-name="PayPoint" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePayPoint" short-description="Delete Pay Point">
+        <entity-one entity-name="PayPoint" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 
 </simple-methods>

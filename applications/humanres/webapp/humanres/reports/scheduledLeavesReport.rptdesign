@@ -87,6 +87,23 @@
                     <text-property name="heading">last_name</text-property>
                 </structure>
             </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="expr" type="javascript">row["approval_status"]</expression>
+                    <simple-property-list name="value1">
+                        <value>"Approved"</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">gt</property>
+                    <expression name="expr" type="javascript">row["from_date"]</expression>
+                    <simple-property-list name="value1">
+                        <value>new Date()</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -451,6 +468,16 @@
         </style>
         <style name="rownum" id="80">
             <property name="backgroundColor">#808000</property>
+            <structure name="stringFormat">
+                <property name="category">&lt;</property>
+                <property name="pattern">&lt;</property>
+            </structure>
+        </style>
+        <style name="case" id="184">
+            <structure name="stringFormat">
+                <property name="category">&lt;</property>
+                <property name="pattern">&lt;</property>
+            </structure>
         </style>
     </styles>
     <page-setup>
@@ -466,6 +493,7 @@
     </page-setup>
     <body>
         <table id="126">
+            <property name="width">7.947916666666667in</property>
             <property name="dataSet">scheduledleaves</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -523,66 +551,147 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="157"/>
-            <column id="158"/>
-            <column id="159"/>
-            <column id="160"/>
-            <column id="161"/>
-            <column id="162"/>
-            <column id="163"/>
-            <column id="164"/>
-            <column id="165"/>
+            <column id="157">
+                <property name="width">0.8854166666666666in</property>
+            </column>
+            <column id="158">
+                <property name="width">0.8854166666666666in</property>
+            </column>
+            <column id="159">
+                <property name="width">0.8854166666666666in</property>
+            </column>
+            <column id="160">
+                <property name="width">1.0208333333333333in</property>
+            </column>
+            <column id="161">
+                <property name="width">0.8125in</property>
+            </column>
+            <column id="162">
+                <property name="width">0.8229166666666666in</property>
+            </column>
+            <column id="163">
+                <property name="width">0.9895833333333334in</property>
+            </column>
+            <column id="164">
+                <property name="width">0.8333333333333334in</property>
+            </column>
+            <column id="165">
+                <property name="width">0.8125in</property>
+            </column>
             <header>
+                <row id="195">
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="color">black</property>
+                    <property name="textAlign">left</property>
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">1.7291666666666667in</property>
+                    <cell id="196"/>
+                    <cell id="197"/>
+                    <cell id="198"/>
+                    <cell id="199">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <property name="textAlign">center</property>
+                        <image id="206">
+                            <property name="height">1.5625in</property>
+                            <property name="width">1.5208333333333333in</property>
+                            <property name="source">embed</property>
+                            <property name="imageName">ofbiz_logo_2.gif</property>
+                        </image>
+                    </cell>
+                    <cell id="202"/>
+                    <cell id="203"/>
+                    <cell id="204"/>
+                </row>
+                <row id="185">
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="color">black</property>
+                    <property name="textAlign">left</property>
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.4375in</property>
+                    <cell id="186"/>
+                    <cell id="187"/>
+                    <cell id="188">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">1</property>
+                        <label id="205">
+                            <property name="fontSize">14pt</property>
+                            <property name="textUnderline">underline</property>
+                            <text-property name="text">EMPLOYEES' SCHEDULED LEAVES REPORT</text-property>
+                        </label>
+                    </cell>
+                    <cell id="193"/>
+                    <cell id="194"/>
+                </row>
                 <row id="127">
+                    <property name="backgroundColor">green</property>
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="color">yellow</property>
+                    <property name="textAlign">left</property>
+                    <property name="verticalAlign">middle</property>
                     <cell id="128">
                         <label id="166">
-                            <text-property name="text">party_id</text-property>
+                            <text-property name="text">Employee Id</text-property>
                         </label>
                     </cell>
                     <cell id="129">
                         <label id="168">
-                            <text-property name="text">first_name</text-property>
+                            <text-property name="text">First Name</text-property>
                         </label>
                     </cell>
                     <cell id="130">
                         <label id="170">
-                            <text-property name="text">last_name</text-property>
+                            <text-property name="text">Surname</text-property>
                         </label>
                     </cell>
                     <cell id="131">
                         <label id="172">
-                            <text-property name="text">replace</text-property>
+                            <text-property name="text">Leave Type</text-property>
                         </label>
                     </cell>
                     <cell id="132">
                         <label id="174">
-                            <text-property name="text">empl_leave_reason_type_id</text-property>
+                            <text-property name="text">Leave Reason</text-property>
                         </label>
                     </cell>
                     <cell id="133">
                         <label id="176">
-                            <text-property name="text">approval_status</text-property>
+                            <text-property name="text">Approval Status</text-property>
                         </label>
                     </cell>
                     <cell id="134">
                         <label id="178">
-                            <text-property name="text">from_date</text-property>
+                            <text-property name="text">From Date</text-property>
                         </label>
                     </cell>
                     <cell id="135">
                         <label id="180">
-                            <text-property name="text">leave_duration</text-property>
+                            <text-property name="text">Leave Duration</text-property>
                         </label>
                     </cell>
                     <cell id="136">
                         <label id="182">
-                            <text-property name="text">thru_date</text-property>
+                            <text-property name="text">To Date</text-property>
                         </label>
                     </cell>
                 </row>
             </header>
             <detail>
                 <row id="137">
+                    <property name="style">case</property>
+                    <list-property name="highlightRules">
+                        <structure>
+                            <property name="operator">ne</property>
+                            <expression name="testExpr" type="javascript">row.__rownum%2</expression>
+                            <simple-property-list name="value1">
+                                <value type="javascript">0</value>
+                            </simple-property-list>
+                            <property name="style">rownum</property>
+                        </structure>
+                    </list-property>
                     <cell id="138">
                         <data id="167">
                             <property name="resultSetColumn">party_id</property>

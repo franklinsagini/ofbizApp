@@ -2745,6 +2745,15 @@ under the License.
       <field name="weight" type="floating-point"></field>
       <field name="mothersMaidenName" type="long-varchar" encrypt="true"></field>
       <field name="nationalIDNumber" type="name"></field>
+      <field name="emplPositionTypeId" type="name"></field>
+      <field name="payGradeId" type="name"></field>
+      <field name="mobNo" type="name"></field>
+      <field name="homeTelNo" type="name"></field>
+      <field name="emailAddress" type="name"></field>
+      <field name="permanentPostalAddress" type="name"></field>
+      <field name="postalAddress" type="name"></field>
+      <field name="town" type="name"></field>
+      <field name="currentAddress" type="name"></field>
       <field name="socialSecurityNumber" type="long-varchar" encrypt="true"></field>
       <field name="nhifNumber" type="long-varchar" encrypt="true"></field>
       <field name="pinNumber" type="long-varchar" encrypt="true"></field>
@@ -2785,6 +2794,12 @@ under the License.
       
       <relation type="one" fk-name="PERSON_TRIBE" rel-entity-name="Tribe">
         <key-map field-name="tribeId"/>
+      </relation>
+      <relation type="one" fk-name="PERSON_JOBTITLE" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PERSON_JOBGRADE" rel-entity-name="PayGrade">
+        <key-map field-name="payGradeId"/>
       </relation>
       <index name="FIRST_NAME_IDX">
         <index-field name="firstName"/>
@@ -3127,6 +3142,14 @@ under the License.
     	
     	<field name="atmApplication" type="name"></field>
     	<field name="msaccoApplication" type="name"></field>
+    	
+    	<!-- Introducer -->
+    	<field name="recruitingAgent" type="name"></field>
+    	<field name="introducingMember" type="id"></field>
+    	
+    	<field name="recuiterNames" type="name"></field>
+    	<field name="recruiterEmail" type="name"></field>
+    	<field name="recruiterPhone" type="name"></field>
     	
     	<prim-key field="partyId"/>
     	

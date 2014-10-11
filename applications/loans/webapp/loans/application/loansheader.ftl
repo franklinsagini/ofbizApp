@@ -92,6 +92,7 @@
 				 $('input[name="payrolNo"]').val(data.payrolNo);
 				 $('select[name="currentStationId"]').val(data.currentStationId);
 				 $('input[name="depositamt"]').val(data.depositamt);
+				 $('input[name="memberClass"]').val(data.memberClass);
 				 
 				 
               //You handle the response here like displaying in required div etc. 
