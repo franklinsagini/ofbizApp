@@ -584,6 +584,15 @@ under the License.
 		<response name="error" type="view" value="payrollOverview" />
      </request-map>
      
+     <request-map uri="createpayrollperiods">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.payroll.CreatePayrollPeriods" invoke="createPayrollPeriod" ></event>
+        <response name="success" type="view" value="payrollperiod">
+				<redirect-parameter name="payrollYearId"/>
+		</response>
+		<response name="error" type="view" value="payrollyear" />
+     </request-map>
+     
      
     
     	<!-- PDFs -->
