@@ -132,6 +132,7 @@ public class CreatePayrollPeriods {
 			cal.set(Calendar.MONTH, month);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			Timestamp start = new Timestamp(cal.getTimeInMillis());
+			
 			String name = months[month] + "-" + getYY(year);
 			//
 			cal.add(Calendar.MONTH, 1);
@@ -143,18 +144,25 @@ public class CreatePayrollPeriods {
 			
 			listPayrollPeriods.add(createPeriod(month+1, name, payrollYearId, start, end, delegator));
 		}
+		try {
+			delegator.storeAll(listPayrollPeriods);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "";
 	}
 	
 	private static GenericValue createPeriod(int seq, String periodName, String payrollYearId, Timestamp start, Timestamp end, Delegator delegator) {
 		
 		String payrollPeriodSequenceId = delegator.getNextSeqId("PayrollPeriod");
+		Long sequence = new Long(seq);
 
 		GenericValue payrollPeriods = delegator.makeValidValue(
 				"PayrollPeriod", UtilMisc.toMap(
 						"payrollPeriodId", payrollPeriodSequenceId, 
 						"payrollYearId", payrollYearId, 
-						"sequence_no", seq, 
+						"sequence_no", sequence, 
 						"name", periodName, 
 						"currentperiod", "N", 
 						"status", "Inactive",

@@ -58,7 +58,7 @@ public class MigratePayroll {
 		curTimeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		newPeriodEndDate = getPeriodEndDate(newPayrollPeriodId, delegator);
 
-		try {
+		/*try {
 			employeesELI = delegator.findList("StaffPayroll", EntityCondition
 					.makeCondition("payrollPeriodId", oldPayrollPeriodId), null,
 					null, null, false);
@@ -88,7 +88,7 @@ public class MigratePayroll {
 			}
 			
 			
-		}
+		}*/
 
 	
 		Writer out;
@@ -144,14 +144,14 @@ public class MigratePayroll {
 
 			newPPID = getNewPeriod(payrollPeriod, payrollPeriod.getLong("sequence_no"), delegator);
 			
-			payrollPeriod.setString("currentperiod", "N");
+/*			payrollPeriod.setString("currentperiod", "N");
 			payrollPeriod.setString("status", "Closed");
 			try {
 				delegator.createOrStore(payrollPeriod);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 		}
 
 		return newPPID;
@@ -166,15 +166,18 @@ public class MigratePayroll {
 		List<GenericValue> periodELI = new LinkedList<GenericValue>();
 
 		
-		if(seq_No==12)
+		if(isLastSequence(payrollPeriod.getString("payrollYearId"), seq_No, delegator)==true)
 		{
 			yearId = getNewYear(payrollPeriod.getString("payrollYearId"), delegator);
-			newSeq=1l;
+			newSeq= new Long(1);
+			log.info("######### YEAR ID>>>>>>>1>>>>>>"+yearId);
+			
 		}
 		else
 		{
 			yearId = payrollPeriod.getString("payrollYearId");
 			newSeq=seq_No+1;
+			log.info("######### YEAR ID>>>>>>>>2>>>>>"+yearId);
 		}
 		
 		 EntityConditionList<EntityExpr> payrollPeriodConditions = EntityCondition
@@ -197,16 +200,48 @@ public class MigratePayroll {
 			log.info("######### 2>>>>>>>>>>>>>>>>>>"+period.getString("payrollPeriodId"));
 			pId = period.getString("payrollPeriodId");
 			
-			period.setString("currentperiod", "Y");
+/*			period.setString("currentperiod", "Y");
 			period.setString("status", "Open");
 			try {
 				delegator.createOrStore(period);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 		}
 		return pId;
+	}
+
+	private static boolean isLastSequence(String payrollYearId, Long seqNo, Delegator delegator) {
+
+		List<GenericValue> periodELI = new LinkedList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> payrollPeriodConditions = EntityCondition
+		 .makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+		 "payrollYearId", EntityOperator.EQUALS,
+		 payrollYearId), EntityCondition.makeCondition(
+		 "sequence_no", EntityOperator.EQUALS,
+		 seqNo+1)), EntityOperator.AND);		
+
+		try {
+			periodELI = delegator.findList("PayrollPeriod",	
+					payrollPeriodConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue period : periodELI) {
+			
+			if(period.isEmpty())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return false;
 	}
 
 	private static String getNewYear(String oldYearId, Delegator delegator) {
