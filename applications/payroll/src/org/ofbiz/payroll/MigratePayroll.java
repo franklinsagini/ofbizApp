@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.JodaTimePermission;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -159,11 +160,34 @@ public class MigratePayroll {
 	private static String getNewPeriod(GenericValue payrollPeriod,
 			Long seq_No, Delegator delegator) {
 		String pId="";
+		Long newSeq = 0l;
+		String yearId = "";
+		
 		List<GenericValue> periodELI = new LinkedList<GenericValue>();
 
+		
+		if(seq_No==12)
+		{
+			yearId = getNewYear(payrollPeriod.getString("payrollYearId"), delegator);
+			newSeq=1l;
+		}
+		else
+		{
+			yearId = payrollPeriod.getString("payrollYearId");
+			newSeq=seq_No+1;
+		}
+		
+		 EntityConditionList<EntityExpr> payrollPeriodConditions = EntityCondition
+		 .makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+		 "payrollYearId", EntityOperator.EQUALS,
+		 yearId), EntityCondition.makeCondition(
+		 "sequence_no", EntityOperator.EQUALS,
+		 newSeq)), EntityOperator.AND);
+		
+
 		try {
-			periodELI = delegator.findList("PayrollPeriod",	EntityCondition.makeCondition("sequence_no",
-					seq_No+1), null, null, null, false);
+			periodELI = delegator.findList("PayrollPeriod",	
+					payrollPeriodConditions, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -185,12 +209,81 @@ public class MigratePayroll {
 		return pId;
 	}
 
+	private static String getNewYear(String oldYearId, Delegator delegator) {
+		String newYear="";
+		List<GenericValue> PayrollYearELI = null;
+		try {
+			
+			PayrollYearELI = delegator.findList("PayrollYear",
+					EntityCondition.makeCondition("payrollYearId",
+							oldYearId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue payrollYear : PayrollYearELI) {
+			
+			String seq= payrollYear.getString("yearSeq");
+			
+			int setId = Integer.parseInt(seq);
+			newYear=getnewYearId(setId, delegator);
+		}
+		return newYear;
+	}
+
+	private static String getnewYearId(int setId, Delegator delegator) {
+		String newYearId="";
+		List<GenericValue> newYearELI = null;
+		try {
+			
+			newYearELI = delegator.findList("PayrollYear",
+					EntityCondition.makeCondition("yearSeq",
+							setId+1), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue newYear : newYearELI) {
+
+			newYearId=newYear.getString("payrollYearId");
+		}
+		return newYearId;
+	}
+
+/*	private static Long getnewPeriodSeq(GenericValue newYear,
+			Delegator delegator) {
+		Long newSeq=0l;
+		List<GenericValue> newYearPeriodELI = null;
+		
+		EntityConditionList<EntityExpr> payrollPeriodConditions = EntityCondition
+		 .makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+		 "payrollYearId", EntityOperator.EQUALS,
+		 newYear.getString("payrollYearId")), EntityCondition.makeCondition(
+		 "sequence_no", EntityOperator.EQUALS,
+		 1)), EntityOperator.AND);
+		
+		try {
+			
+			newYearPeriodELI = delegator.findList("PayrollPeriod",
+					payrollPeriodConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue newYearPeriod : newYearPeriodELI) {
+
+			
+		}
+		return newSeq;
+	}*/
+
 	private static void rollOverPayroll(GenericValue employee,
 			String staffPayrollId, String newPayrollPeriodId, Delegator delegator) {
 //		log.info("######### Roll over starts here>>>>>>>>>>>>>>>>>>>>>");
 		
 		List<GenericValue> staffPayrollDetailsELI = null;
 		try {
+			
 			staffPayrollDetailsELI = delegator.findList("StaffPayroll",
 					EntityCondition.makeCondition("staffPayrollId",
 							staffPayrollId), null, null, null, false);
@@ -271,8 +364,7 @@ public class MigratePayroll {
 
 	private static GenericValue createStaffToSave(Delegator delegator, String partyId, BigDecimal pensionPercentage, BigDecimal nssfVolAmt,
 			String newPayrollPeriodId ){
-		String staffPayrollSequenceId = delegator
-		.getNextSeqId("StaffPayroll");
+		String staffPayrollSequenceId = delegator.getNextSeqId("StaffPayroll");
 
 		GenericValue staffPayroll = delegator.makeValidValue(
 				"StaffPayroll", UtilMisc.toMap(
