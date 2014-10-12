@@ -550,6 +550,8 @@ public class CommonServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonPingDatasourceInvalidCount", locale));
         }
     }
+    
+
 
     public static Map<String, Object> getAllMetrics(DispatchContext dctx, Map<String, ?> context) {
         List<Map<String, Object>> metricsMapList = FastList.newInstance();
