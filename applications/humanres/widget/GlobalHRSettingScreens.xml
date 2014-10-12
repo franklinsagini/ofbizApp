@@ -452,6 +452,56 @@
         </section>
     </screen>
     
+      <screen name="NewBankBranch">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Bank Branch"/>
+                <set field="headerItem" value="bankbranch"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createBankBranch"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="bankDetailsId" from-field="parameters.bankDetailsId"/>
+                
+                <entity-one entity-name="BankBranch" value-field="bankBranchContext"/>
+                
+                <entity-one value-field="bank" entity-name="BankDetails">
+                	<field-map field-name="bankDetailsId" from-field="bankDetailsId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Bank Branch  for ${bank.bankName}">
+                                    <include-form name="NewBankBranch" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Bank Branch List">
+                        			<include-form name="listBankBranch" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
     <screen name="NewBansdsskDetails">
         <section>                        
             <actions>
