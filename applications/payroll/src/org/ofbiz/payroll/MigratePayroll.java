@@ -58,7 +58,7 @@ public class MigratePayroll {
 		curTimeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		newPeriodEndDate = getPeriodEndDate(newPayrollPeriodId, delegator);
 
-		/*try {
+		try {
 			employeesELI = delegator.findList("StaffPayroll", EntityCondition
 					.makeCondition("payrollPeriodId", oldPayrollPeriodId), null,
 					null, null, false);
@@ -88,7 +88,7 @@ public class MigratePayroll {
 			}
 			
 			
-		}*/
+		}
 
 	
 		Writer out;
@@ -144,14 +144,14 @@ public class MigratePayroll {
 
 			newPPID = getNewPeriod(payrollPeriod, payrollPeriod.getLong("sequence_no"), delegator);
 			
-/*			payrollPeriod.setString("currentperiod", "N");
+			payrollPeriod.setString("currentperiod", "N");
 			payrollPeriod.setString("status", "Closed");
 			try {
 				delegator.createOrStore(payrollPeriod);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 		}
 
 		return newPPID;
@@ -200,14 +200,14 @@ public class MigratePayroll {
 			log.info("######### 2>>>>>>>>>>>>>>>>>>"+period.getString("payrollPeriodId"));
 			pId = period.getString("payrollPeriodId");
 			
-/*			period.setString("currentperiod", "Y");
+			period.setString("currentperiod", "Y");
 			period.setString("status", "Open");
 			try {
 				delegator.createOrStore(period);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 		}
 		return pId;
 	}
@@ -229,19 +229,18 @@ public class MigratePayroll {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+		log.info("######### 3.5>>>>>>>>>>>>>>>>>>");
 
-		for (GenericValue period : periodELI) {
-			
-			if(period.isEmpty())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+		if(periodELI.isEmpty())
+		{
+			log.info("######### 3>>>>>>>>>>>>>>>>>>");
+			return true;
 		}
-		return false;
+		else
+		{
+			log.info("######### 4>>>>>>>>>>>>>>>>>>");
+			return false;
+		}
 	}
 
 	private static String getNewYear(String oldYearId, Delegator delegator) {
@@ -262,6 +261,15 @@ public class MigratePayroll {
 			
 			int setId = Integer.parseInt(seq);
 			newYear=getnewYearId(setId, delegator);
+			
+			payrollYear.setString("currentyear", "N");
+			payrollYear.setString("status", "Closed");
+			try {
+				delegator.createOrStore(payrollYear);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return newYear;
 	}
@@ -273,7 +281,7 @@ public class MigratePayroll {
 			
 			newYearELI = delegator.findList("PayrollYear",
 					EntityCondition.makeCondition("yearSeq",
-							setId+1), null, null, null, false);
+							String.valueOf(setId+1) ), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -281,6 +289,15 @@ public class MigratePayroll {
 		for (GenericValue newYear : newYearELI) {
 
 			newYearId=newYear.getString("payrollYearId");
+			
+			newYear.setString("currentyear", "Y");
+			newYear.setString("status", "Open");
+			try {
+				delegator.createOrStore(newYear);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return newYearId;
 	}

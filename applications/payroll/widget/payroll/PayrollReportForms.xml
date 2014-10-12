@@ -29,7 +29,10 @@ under the License.
         	</entity-condition>
         	<set field="partyId" from-field="partyId"/>
 
-        	<entity-condition entity-name="PayrollPeriod" list="periodList"></entity-condition>
+        	<entity-condition entity-name="PayrollPeriod" list="periodList">
+        		<condition-expr field-name="status" operator="not-equals" value="Inactive"/>
+        		<order-by field-name="payrollPeriodId"/>
+        	</entity-condition>
         	<set field="payrollPeriodId" from-field="payrollPeriodId"/>
         	
         </actions>
