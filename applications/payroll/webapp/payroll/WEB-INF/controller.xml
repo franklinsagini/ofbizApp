@@ -584,6 +584,15 @@ under the License.
 		<response name="error" type="view" value="payrollOverview" />
      </request-map>
      
+     <request-map uri="createpayrollperiods">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.payroll.CreatePayrollPeriods" invoke="createPayrollPeriod" ></event>
+        <response name="success" type="view" value="payrollperiod">
+				<redirect-parameter name="payrollYearId"/>
+		</response>
+		<response name="error" type="view" value="payrollyear" />
+     </request-map>
+     
      
     
     	<!-- PDFs -->
@@ -604,7 +613,8 @@ under the License.
     <request-map uri="payslipView"><security https="true" auth="true"/><response name="success" type="view" value="payslipView"/></request-map>
     <request-map uri="payslipViewpdf"><security https="true" auth="true"/><response name="success" type="view" value="payslipViewpdf"/></request-map>
  	
- 	<request-map uri="payrollElementsView"><security https="true" auth="true"/><response name="success" type="view" value="payrollElementsView"/></request-map>   
+ 	<request-map uri="payrollElementsView"><security https="true" auth="true"/><response name="success" type="view" value="payrollElementsView"/></request-map>
+ 	<request-map uri="payslipReportView"><security https="true" auth="true"/><response name="success" type="view" value="payslipReportView"/></request-map>   
 	
 	
 	
@@ -643,6 +653,8 @@ under the License.
     <view-map name="payslipViewpdf" type="screenfop" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayslipGeneratorpdf" content-type="application/pdf" encoding="none"/>
     
     <view-map name="payrollElementsView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayrollElementReport"/>
+    
+    <view-map name="payslipReportView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayslipReport"/>
 	
 	
 		

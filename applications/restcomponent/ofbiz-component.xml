@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofbiz-component name="restcomponent"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
+
+    <resource-loader name="main" type="component"/>
+
+    <!-- place the config directory on the classpath to access configuration files -->
+    <classpath type="dir" location="config"/>
+    <classpath type="dir" location="dtd"/>
+
+    <!-- load single or multiple external libraries -->
+    <classpath type="jar" location="build/lib/*"/>
+    <classpath type="jar" location="lib/*"/>
+
+    <!-- web applications; will be mounted when using the embedded container -->
+    <webapp name="restcomponent"
+        title="RestComponent"
+        server="default-server"
+        location="webapp/restcomponent"
+        base-permission="OFBTOOLS,RESTCOMPONENT"
+        mount-point="/restcomponent"/>
+</ofbiz-component>

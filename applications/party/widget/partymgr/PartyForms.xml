@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="EditPerson" type="single" target="updatePerson" default-map-name="personInfo"
@@ -29,27 +29,27 @@ under the License.
 
         	<entity-condition entity-name="BloodGroup" list="bloodGroupList"></entity-condition>
         	<set field="bloodGroupId" from-field="bloodGroupId"/>
-        	
+
         	<entity-condition entity-name="Tribe" list="tribeList"></entity-condition>
         	<set field="tribeId" from-field="tribeId"/>
-        	
+
         	<entity-condition entity-name="County" list="countyList"></entity-condition>
         	<set field="countyId" from-field="countyId"/>
-        	
+
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
-        	
+
         	<!-- entity-one entity-name="PartyGroup" value-field="branch">
         		<field-map field-name="partyId" from-field="userLogin.partyId"/>
         	</entity-one -->
-        	
+
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
 
         </actions>
-        <alt-target use-when="personInfo==null" target="createPerson"/>        
+        <alt-target use-when="personInfo==null" target="createPerson"/>
         <auto-fields-service service-name="updatePerson"/>
-        
+
         <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
@@ -71,42 +71,42 @@ under the License.
                 <option key="Widowed" description="${uiLabelMap.PartyMaritalStatusWidowed}"/>
             </drop-down>
         </field>
-        <field name="religionId" title="Religion">        	
+        <field name="religionId" title="Religion">
        	 <drop-down allow-empty="false">
        	 	<list-options list-name="religionList" key-name="religionId" description="${religion}"/>
        	 </drop-down>
         </field>
-        <field name="bloodGroupId" title="Blood Group">        	
+        <field name="bloodGroupId" title="Blood Group">
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="bloodGroupList" key-name="bloodGroupId" description="${bloodGroup}"/>
        	 </drop-down>
         </field>
-        <field name="tribeId" title="Tribe">        	
+        <field name="tribeId" title="Tribe">
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="tribeList" key-name="tribeId" description="${tribe}"/>
        	 </drop-down>
         </field>
-        <field name="countyId" title="County">        	
+        <field name="countyId" title="County">
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
        	 </drop-down>
         </field>
-        
+
         <field name="branchId" title="Branch" required-field="true" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        
+
          <!-- field name="stationId" title="Station" required-field="true" widget-style="required">
             <drop-down allow-empty="false" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field -->
-        <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>  
-        <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>  
-        <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>         
-      
+        <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>
+        <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>
+        <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>
+
         <field name="employmentStatusEnumId" title="Employment Status">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
@@ -140,13 +140,13 @@ under the License.
 			<drop-down allow-empty="false">
 				<option key="N" description="No"/>
 				<option key="Y" description="Yes"/>
-			</drop-down>        
+			</drop-down>
         </field>
         <field name="disabilityDetails"><text size="40" maxlength="60"/></field>
         <field name="placeofbirth" title="Place of Birth"><text size="40" maxlength="60"/></field>
         <field name="nationalIDNumber" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
-        
-        
+
+
         <!--field name="statusId" use-when="person==null"><hidden/></field>
         <field name="statusId" use-when="person!=null &amp;&amp; leadDescription==null">
             <drop-down allow-empty="false">
@@ -164,7 +164,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field-->
-        
+
        <field name="statusId"><hidden/></field>
         <field name="residenceStatusEnumId"><hidden/></field>
         <field name="occupation"><hidden/></field>
@@ -184,7 +184,7 @@ under the License.
         <field name="mothersMaidenName"><hidden/></field>
         <field name="cardId"><hidden/></field>
         <field name="externalId"><hidden/></field>
-        
+
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -192,43 +192,54 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    
+
     <!-- New Person/Employee -->
-    <form name="AddNewPerson" type="single" target="updatePerson" default-map-name="personInfo"
-        focus-field-name="salutation" header-row-style="header-row" default-table-style="basic-table">
+    <form name="AddNewPerson" type="single" target="createPerson" default-map-name="personInfo"
+    header-row-style="header-row" default-table-style="basic-table">
         <actions>
         	<entity-condition entity-name="Religion" list="religionList"></entity-condition>
         	<set field="religionId" from-field="religionId"/>
 
         	<entity-condition entity-name="BloodGroup" list="bloodGroupList"></entity-condition>
         	<set field="bloodGroupId" from-field="bloodGroupId"/>
-        	
+
         	<entity-condition entity-name="Tribe" list="tribeList"></entity-condition>
         	<set field="tribeId" from-field="tribeId"/>
-        	
+
         	<entity-condition entity-name="County" list="countyList"></entity-condition>
         	<set field="countyId" from-field="countyId"/>
-        	
+
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
-        	
+
         	<!-- entity-one entity-name="PartyGroup" value-field="branch">
         		<field-map field-name="partyId" from-field="userLogin.partyId"/>
         	</entity-one -->
-        	
+
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
 
         </actions>
-        <alt-target use-when="personInfo==null" target="createPerson"/>        
+        <alt-target use-when="personInfo==null" target="createPerson"/>
         <auto-fields-service service-name="updatePerson"/>
-        
+
         <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
+        <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
         <field name="employeeNumber" title="${uiLabelMap.MemberEmployeeNumber}" required-field="true" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="Mr." description="Mr."/>
+                <option key="Miss." description="Miss."/>
+                <option key="Mrs." description="Mrs."/>
+                <option key="Dr." description="Dr."/>
+                <option key="Prof." description="Prof."/>
+                <option key="Hon." description="Hon."/>
+                <option key="Rev." description="Rev."/>
+            </drop-down>
+        </field>
         <field name="gender">
             <drop-down allow-empty="false">
                 <option key="Male" description="${uiLabelMap.CommonMale}"/>
@@ -244,42 +255,42 @@ under the License.
                 <option key="Widowed" description="${uiLabelMap.PartyMaritalStatusWidowed}"/>
             </drop-down>
         </field>
-        <field name="religionId" title="Religion">        	
+        <field name="religionId" title="Religion">
        	 <drop-down allow-empty="false">
        	 	<list-options list-name="religionList" key-name="religionId" description="${religion}"/>
        	 </drop-down>
         </field>
-        <field name="bloodGroupId" title="Blood Group">        	
+        <field name="bloodGroupId" title="Blood Group">
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="bloodGroupList" key-name="bloodGroupId" description="${bloodGroup}"/>
        	 </drop-down>
         </field>
-        <field name="tribeId" title="Tribe">        	
+        <field name="tribeId" title="Tribe">
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="tribeList" key-name="tribeId" description="${tribe}"/>
        	 </drop-down>
         </field>
-        <field name="countyId" title="County">        	
+        <field name="countyId" title="County">
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
        	 </drop-down>
         </field>
-        
+
         <field name="branchId" title="Branch" required-field="true" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        
+
          <!-- field name="stationId" title="Station" required-field="true" widget-style="required">
             <drop-down allow-empty="false" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field -->
-        <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>  
-        <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>  
-        <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>         
-      
+        <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>
+        <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>
+        <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>
+
         <field name="employmentStatusEnumId" title="Employment Status">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
@@ -313,13 +324,34 @@ under the License.
 			<drop-down allow-empty="false">
 				<option key="N" description="No"/>
 				<option key="Y" description="Yes"/>
-			</drop-down>        
+			</drop-down>
         </field>
         <field name="disabilityDetails"><text size="40" maxlength="60"/></field>
         <field name="placeofbirth" title="Place of Birth"><text size="40" maxlength="60"/></field>
         <field name="nationalIDNumber" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         
-        
+        <field name="emplPositionTypeId" title="Job Title">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="emplPositionTypeId" description="${description}" entity-name="EmplPositionType">
+                    <entity-order-by field-name="emplPositionTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="payGradeId" title="Job Grade">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="payGradeId" description="${payGradeName}" entity-name="PayGrade">
+                    <entity-order-by field-name="payGradeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="mobNo" title="Mobile Phone Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="homeTelNo" title="Home Telephone Number"><text size="40" maxlength="60"/></field>
+        <field name="emailAddress"><text size="40" maxlength="60"/></field>
+        <field name="permanentPostalAddress"><text size="40" maxlength="60"/></field>
+        <field name="postalAddress"><text size="40" maxlength="60"/></field>
+        <field name="town" title="Town/City"><text size="40" maxlength="60"/></field>
+        <field name="currentAddress"><text size="40" maxlength="60"/></field>
+
         <!--field name="statusId" use-when="person==null"><hidden/></field>
         <field name="statusId" use-when="person!=null &amp;&amp; leadDescription==null">
             <drop-down allow-empty="false">
@@ -337,7 +369,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field-->
-        
+
        <field name="statusId"><hidden/></field>
         <field name="residenceStatusEnumId"><hidden/></field>
         <field name="occupation"><hidden/></field>
@@ -357,7 +389,7 @@ under the License.
         <field name="mothersMaidenName"><hidden/></field>
         <field name="cardId"><hidden/></field>
         <field name="externalId"><hidden/></field>
-        
+
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -441,7 +473,7 @@ under the License.
 
     <form name="ViewPartyPerson" type="single" default-map-name="lookupPerson">
     <actions>
-    	
+
     </actions>
         <field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field>
         <field name="partyId"><hidden/></field>
@@ -450,15 +482,15 @@ under the License.
         <field name="comments" title="${uiLabelMap.PartyComments}"><hidden/></field>
         <field name="externalId"><hidden/></field>
         <field name="statusId"><hidden/></field>
-        <!--field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field-->      
-      
+        <!--field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field-->
+
        <field name="gender" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="Person" key-field-name="partyId" description="${gender}"/>
         </field>
         <field name="maritalStatus" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="Person" key-field-name="partyId" description="${maritalStatus}"/>
         </field>
-        
+
          <field name="employmentStatusEnumId" title="Employment Status">
             <display-entity also-hidden="false" entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]"/>
         </field>
@@ -757,7 +789,7 @@ under the License.
         <field name="USER_ADDRESS1" title="${uiLabelMap.CommonAddress1}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="USER_ADDRESS2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
         <field name="USER_CITY" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="USER_STATE" title="${uiLabelMap.CommonState}" widget-style="required"><drop-down allow-empty="false"/></field>                       
+        <field name="USER_STATE" title="${uiLabelMap.CommonState}" widget-style="required"><drop-down allow-empty="false"/></field>
         <field name="USER_POSTAL_CODE" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
         <field name="USER_COUNTRY" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down no-current-selected-key="${defaultCountryGeoId}">
@@ -813,26 +845,26 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
-    
+
     <form name="NewMember" type="single" target="${target}${previousParams}"
         focus-field-name="firstName" header-row-style="header-row" default-table-style="basic-table" default-map-name="memberContext">
         <actions>
         	<entity-condition entity-name="FinAccount" list="accountList">
         		<order-by field-name="finAccountName"/>
         	</entity-condition>
-        	
+
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
-        	
+
         	<entity-one entity-name="PartyGroup" value-field="branch">
         		<field-map field-name="partyId" from-field="userLogin.partyId"/>
         	</entity-one>
-        	
+
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
-        	
+
         	<entity-condition entity-name="MemberType" list="memberTypeList"></entity-condition>
-        	
+
         	<entity-condition entity-name="IncomeScale" list="incomeScaleList"></entity-condition>
         </actions>
         <field name="partyId"><hidden/></field>
@@ -841,9 +873,9 @@ under the License.
         <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
         <field name="firstName" title="${uiLabelMap.MemberFirstName}" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="middleName" title="${uiLabelMap.MemberMiddleName}"><text size="30" maxlength="60"/></field>
-        
+
         <field name="lastName" title="${uiLabelMap.MemberLastName}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
-        
+
         <!-- field name="salutation" title="${uiLabelMap.MemberSalutation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
         <field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
@@ -872,16 +904,16 @@ under the License.
                 <option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}"/>
             </drop-down>
         </field>
-        
+
         <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="idNumber"  title="${uiLabelMap.MemberIDNumber}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="pinNumber" title="${uiLabelMap.MemberPINNumber}"><text size="30" maxlength="60"/></field>
         <field name="passportNumber" title="${uiLabelMap.MemberPassportNumber}" ><text size="30" maxlength="60"/></field>
-		<field name="MemberAddressDetails" title="${uiLabelMap.MemberAddressDetails}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>       
+		<field name="MemberAddressDetails" title="${uiLabelMap.MemberAddressDetails}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field name="emailAddress" title="${uiLabelMap.MemberEmailAddress}"><text size="30" maxlength="60"/></field>
         <field name="physicalAddress" title="${uiLabelMap.MemberPhysicalAddress}" widget-style="required" required-field="true"><textarea cols="30" /></field>
         <field name="postalAddress" title="${uiLabelMap.MemberPostalAddress}" widget-style="required" required-field="true"><textarea cols="30"/></field>
-       
+
         <!-- field name="memberClass" title="${uiLabelMap.MemberClass}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="memberClass" title="${uiLabelMap.MemberClass}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
@@ -889,18 +921,18 @@ under the License.
                 <option key="Class B" description="Class B"/>
             </drop-down>
         </field>
-        
+
        <field name="memberTypeName" title="${uiLabelMap.MemberType}" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
                 <list-options list-name="memberTypeList" key-name="name"  description="${name}" />
             </drop-down>
         </field>
-        
-        
-        
+
+
+
        <field name="employeeNumber" title="${uiLabelMap.MemberEmployeeNumber}" required-field="true" widget-style="required"><text size="30" maxlength="60"/></field>
        <field name="employeeType" title="${uiLabelMap.MemberEmployeeType}" required-field="true" widget-style="required"><text size="30" maxlength="60"/></field>
-       
+
        <field name="employeeType" title="${uiLabelMap.MemberEmployeeType}" required-field="true" widget-style="required">
             <drop-down allow-empty="true">
                 <option key="Permanent" description="Permanent"/>
@@ -908,14 +940,14 @@ under the License.
                 <option key="Contract" description="Contract"/>
             </drop-down>
         </field>
-       
+
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="memberNumber" title="${uiLabelMap.MemberNumber}"  required-field="true" widget-style="required"><text size="30" maxlength="60" disabled="true" default-value="**GENERATED**"/></field>
        <field name="mobileNumber" title="${uiLabelMap.MemberMobileNumber}" required-field="true" widget-style="required"><text default-value="254" size="30" maxlength="60"/></field>
        <field name="birthDate" title="${uiLabelMap.MemberBirthDate}" required-field="true" widget-style="required"><date-time type="date"/></field>
        <field name="permanentAddress" title="Permanent Address" required-field="true" widget-style="required"><textarea cols="30"/></field>
        <field name="currentAddress" title="${uiLabelMap.MemberCurrentAddress}" required-field="true" widget-style="required"><textarea cols="30"/></field>
-       
+
        <!-- field name="MEMBER_COUNTRY_OF_RESIDENCE" title="${uiLabelMap.MemberCountryOfResidence}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
        <field name="countryOfResidence" title="${uiLabelMap.MemberCountryOfResidence}" required-field="true" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="${defaultCountryGeoId}">
@@ -950,7 +982,7 @@ under the License.
        <field name="joinDate" title="Date Joined"  required-field="true" widget-style="required"><date-time type="date"/></field>
        <!-- field name="registrationFee" title="Registration Fee"  required-field="true"  widget-style="required"><text></text></field>
        <field name="paidAmount" title="Paid Amount"  required-field="true" widget-style="required"  position="2"><text/></field -->
-		
+
 		<!-- field name="finAccountId" title="Bank Account">
             <drop-down allow-empty="true" >
                 <list-options list-name="accountList" key-name="finAccountId"  description="${finAccountName}" />
@@ -961,40 +993,40 @@ under the License.
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        
+
          <field name="stationId" title="Station" required-field="true" widget-style="required">
             <drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field>
-        
+
          <field name="incomeScaleId" title="Income/Salary Scale" >
             <drop-down allow-empty="true" >
                 <list-options list-name="incomeScaleList" key-name="incomeScaleId"  description="${lowerValue} - ${upperValue}" />
             </drop-down>
         </field>
-        
+
         <!--field name="monthlySalaryAmount" title="Salary Amount"  required-field="true" widget-style="required"  position="1"><text/></field -->
         <field name="shareAmount" title="Share Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
         <field name="memberDepositAmount" title="Member Deposit Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
-        
-        <field name="atmApplication" title="ATM Application" required-field="true" widget-style="required">
+
+
+        <field name="atmApplication" title="ATL Application" required-field="true" widget-style="required">
+
             <drop-down allow-empty="false">
                 <option key="Yes" description="Yes"/>
                 <option key="No" description="No"/>
             </drop-down>
         </field>
-        
+
          <field name="msaccoApplication" title="MSACCO Application" required-field="true" widget-style="required">
             <drop-down allow-empty="false">
                 <option key="Yes" description="Yes"/>
                 <option key="No" description="No"/>
             </drop-down>
-        </field>           	
-        
+        </field>
+
         <field name="memberStatus"><text default-value="NEW" disabled="true"></text></field>
-        
-        
         <field name="recruitingAgent"  title="Recuiting Agent" widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <option key="Member" description="Member"/>
@@ -1004,7 +1036,7 @@ under the License.
                 <option key="Self" description="Self"/>
             </drop-down>
         </field>
-        
+
         <field name="introducingMember" title="Introducing Member">
 			<drop-down allow-empty="true" current-description="">
 				<entity-options description="${firstName} ${lastName}"
@@ -1013,29 +1045,28 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field>
-		
+
 		<field name="recuiterNames" title="Recruiter Names"><text></text></field>
 		<field name="recruiterEmail" title="Recruiter Email"><text ></text></field>
 		<field name="recruiterPhone" title="Recruiter Phone"><text></text></field>
-       
        <!-- field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onClick" action="javascript: return confirm('Are you Sure do you want to continue ?');"><submit button-type="text-link"/></field -->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return memberRegistrationFormValidation();"><submit button-type="button"/></field>
     </form>
-    
+
     <form name="FindMember" type="single" target="reviewmembers" default-entity-name="Member">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
-        
+
         <field name="idNumber" title="ID Number" position="2"><text-find/></field>
-        
+
         <field name="middleName" title="Middle Name"><text-find/></field>
-        
+
         <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
-        
+
         <field name="lastName" title="Last Name"><text-find/></field>
-        
+
         <field name="memberNumber" title="Member No." position="2"><text-find/></field>
-        
+
         <field name="memberStatus" title="Status"><hidden value="NEW"/></field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
@@ -1051,95 +1082,21 @@ under the License.
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
-    
+
     <form name="reviewmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="reviewmembers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        
+
         <actions>
         	<entity-condition entity-name="Member">
         		<condition-expr field-name="memberStatus" operator="equals" value="NEW"/>
         		<order-by field-name="-partyId"/>
         	</entity-condition>
-        	
-        	<entity-condition entity-name="PartyGroup" list="partyGroups">
-        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
-        	</entity-condition>
-        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
-        	
-        	<service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="memberCtx"/>
-                <field-map field-name="entityName" value="Member"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-        </actions>
-         <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
-         <field name="Member Names">
-        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${middleName} ${lastName}"></hyperlink>
-        </field>
-        
-        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
-        
-       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-   
-       <field name="payrollNumber" title="Payroll No"><display also-hidden="false"></display></field>
-	   
-	    <field name="branchId" title="Branch">
-            <!-- drop-down allow-empty="false">
-                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
-            </drop-down -->
-            <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
-        </field>
-	   
-	   <field name="stationId" title="Station">
-	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
-            <!-- drop-down allow-empty="true" >
-                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
-            </drop-down -->
-        </field>
-        
-        <field name="memberNumber" title="Member No."><display></display></field>
 
-        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
-        
-         <field name="memberStatus" title="Status"><display also-hidden="false"></display></field>
-        
-        
-        <field name="Edit">
-        	<hyperlink target="NewMember?partyId=${partyId}" description="Edit"></hyperlink>
-        </field>
-        
-        <field name="Approve">
-        	<hyperlink target="ApproveMember?partyId=${partyId}" description="Approve"></hyperlink>
-        </field>
-        
-        <field name="Reject">
-        	<hyperlink target="RejectMember?partyId=${partyId}" description="Reject"></hyperlink>
-        </field>
-        
-        <field name="Change">
-        	<hyperlink target="changeMember?partyId=${partyId}" description="Change"></hyperlink>
-        </field>
-        
-        
-     </form>
-     
-     <!-- Print Members -->
-     <form name="printmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="BankBranch"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        
-        <actions>
-        	<entity-condition entity-name="Member">
-        	</entity-condition>
-        	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
-        	
+
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
@@ -1150,13 +1107,97 @@ under the License.
         </actions>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
-        
-        
+
+
+
+         <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
+         <field name="Member Names">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
+
+        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+
+       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+
+       <field name="payrollNumber" title="Payroll No"><display also-hidden="false"></display></field>
+
+	    <field name="branchId" title="Branch">
+            <!-- drop-down allow-empty="false">
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down -->
+            <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
+        </field>
+
+	   <field name="stationId" title="Station">
+	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
+            <!-- drop-down allow-empty="true" >
+                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+            </drop-down -->
+        </field>
+
+        <field name="memberNumber" title="Member #"><display></display></field>
+
+
+
+        <field name="memberNumber" title="Member No."><display></display></field>
+
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+
+         <field name="memberStatus" title="Status"><display also-hidden="false"></display></field>
+
+
+        <field name="Edit">
+        	<hyperlink target="NewMember?partyId=${partyId}" description="Edit"></hyperlink>
+        </field>
+
+        <field name="Approve">
+        	<hyperlink target="ApproveMember?partyId=${partyId}" description="Approve"></hyperlink>
+        </field>
+
+        <field name="Reject">
+        	<hyperlink target="RejectMember?partyId=${partyId}" description="Reject"></hyperlink>
+        </field>
+
+        <field name="Change">
+        	<hyperlink target="changeMember?partyId=${partyId}" description="Change"></hyperlink>
+        </field>
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${lastName} Details"></hyperlink>
+        </field>
+     </form>
+
+     <!-- Print Members -->
+     <form name="printmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="BankBranch"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+        <actions>
+        	<entity-condition entity-name="Member">
+        	</entity-condition>
+
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+
+
         <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="idNumber" title="ID No."><display also-hidden="false"></display></field>
-        
+
        <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-   
+
        <field name="payrollNumber" title="Payroll No."><display also-hidden="false"></display></field>
 	     <field name="stationId" title="Station">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
@@ -1164,10 +1205,10 @@ under the License.
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
         </field>
-        
+
         <field name="memberStatus"><display also-hidden="false"></display></field>
-        
-        
+
+
      </form>
 
     <form name="ListSegmentRoles" type="list" target="updateSegmentGroupRole"
@@ -1694,7 +1735,7 @@ under the License.
             <entity-condition entity-name="RoleType" list="parentRoleList">
                 <condition-expr field-name="parentTypeId" operator="equals" from-field="nullField"/>
                 <order-by field-name="description"/>
-            </entity-condition>                            
+            </entity-condition>
         </actions>
         <field name="partyId"><hidden value="${parameters.partyId}"/></field>
         <field name="roleTypeId" event="onChange" action="ajaxUpdateArea('addPartySecondaryRole', 'addsecondaryroles', jQuery('#AddPartyMainRole').serialize());" entry-name="dummy">
@@ -1768,19 +1809,19 @@ under the License.
         <field name="estimatedAmount" title="${uiLabelMap.SfaEstimatedAmount}"><display/></field>
         <field name="partyId"><display/></field>
     </form>
-    
-    
+
+
     <form name="NewPartyIdentificationType" type="single" target="createPartyIdentificationType"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="partyIdentificationTypeContext">
         <actions>
         	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
         	<set field="parentTypeId" from-field="partyIdentificationTypeId"/>
-        	
+
         </actions>
-        
+
         <field name="partyIdentificationTypeId"><hidden/></field>
         <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="parentTypeId" title="Parent ID" > 
+        <field name="parentTypeId" title="Parent ID" >
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
        	 </drop-down>
@@ -1791,10 +1832,10 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down-->
         </field>
-                        
+
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
-    
+
     <form name="listPartyIdentificationType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartyIdentificationType" paginate-target="PartyIdentificationType"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -1815,8 +1856,8 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
-    
-    
+
+
 
     <form name="listPartyIdentification" type="list" list-name="listIt"
                  default-table-style="basic-table hover-bar" target="updatePartyIdentification">
@@ -1837,7 +1878,7 @@ under the License.
         </field>
         <field name="submit" title="${uiLabelMap.CommonUpdate}"><submit /></field>
     </form>
-    
+
     <form name="editPartyIdentification" type="single" list-name="partyIdents"
                  default-table-style="basic-table hover-bar" target="createPartyIdentification" focus-field-name="idValue">
         <alt-target use-when="partyIdentification !=null" target="updatePartyIdentification"/>
@@ -1848,7 +1889,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyIdentificationTypeId" use-when="partyIdentification != null"> 
+        <field name="partyIdentificationTypeId" use-when="partyIdentification != null">
             <display-entity entity-name="PartyIdentificationType"/>
         </field>
         <field name="partyId"><hidden /></field>
@@ -1856,7 +1897,7 @@ under the License.
         <field name="submit" title="${uiLabelMap.CommonCreate}" use-when="partyIdentification == null"><submit /></field>
         <field name="submit" title="${uiLabelMap.CommonUpdate}" use-when="partyIdentification != null"><submit /></field>
     </form>
-    
+
     <form name="EditProductStoreRole" type="single" extends="EditProductStoreRole" extends-resource="component://product/widget/catalog/StoreForms.xml">
         <field name="partyId"><hidden/></field>
         <field name="productStoreId" use-when="productStoreRole==null" title="${uiLabelMap.ProductStoreId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -1961,27 +2002,27 @@ under the License.
         <field name="postalCode" title="postalCode"><display/></field>
         <field name="countryGeoId" title="countryGeoId"><display/></field>
     </form>
-    
+
     <form name="ImportParty" type="upload" target="uploadParty" title="" >
         <field name="uploadedFile"><file/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpload}"><submit button-type="button"/></field>
     </form>
-    
+
 <!-- ReviewMember start -->
 	<form name="ApproveMember" type="single" target="createApproveMemberLog"
         focus-field-name="comment" header-row-style="header-row"  default-table-style="basic-table" default-map-name="memberStatusLogContext">
         <field name="memberStatusLogId"><hidden/></field>
-        
+
         <field name="partyId" parameter-name="partyId"><hidden/></field>
         <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
         <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
         <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
         <field name="comment" title="Comments"><textarea/></field>
      	<!--   use-when="parameters.get(&quot;partyId&quot;)!=null&amp;&amp;sprint==null" -->
-       
+
         <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="approve" title="Approve" widget-style="buttontext" > <submit/> </field>
     </form>
-    
+
     <form name="listApproveMember" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateApproveMemberLog" paginate-target="approveMemberLog"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2012,8 +2053,8 @@ under the License.
         <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
         <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
         <field name="comment" title="Comments"><textarea/></field>
-       
-       
+
+
         <field name="reject" title="Reject" widget-style="buttontext"> <submit/></field>
         <!-- field name="reject" title="Reject" widget-style="buttontext"><hyperlink target="rejectMember"></hyperlink></field -->
     </form>
@@ -2034,7 +2075,7 @@ under the License.
         <field name="memberStatus" title="Status"><display also-hidden="false"></display></field>
         <field name="comment" title="Comment"><display></display></field>
     </form>
-    
+
     <!-- Active Members -->
     <form name="FindMemberActive" type="single" target="activemembers" default-entity-name="Member">
         <actions>
@@ -2043,17 +2084,17 @@ under the License.
         	</entity-condition>
         </actions>
                 <field name="firstName" title="First Name"><text-find/></field>
-        
+
         <field name="idNumber" title="ID Number" position="2"><text-find/></field>
-        
+
         <field name="middleName" title="Middle Name"><text-find/></field>
-        
+
         <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
-        
+
         <field name="lastName" title="Last Name"><text-find/></field>
-        
+
         <field name="memberNumber" title="Member No." position="2"><text-find/></field>
-        
+
         <field name="memberStatus" title="Status" ><hidden value="ACTIVE"/></field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
@@ -2069,21 +2110,21 @@ under the License.
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
-    
+
     <form name="activemembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="activemembers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        
+
         <actions>
         	<entity-condition entity-name="Member">
         		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
         		<order-by field-name="-partyId"/>
         	</entity-condition>
-        	
+
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
-        	
+
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
@@ -2092,19 +2133,23 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+
+
+
         <field name="Member Names">
         	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${middleName} ${lastName}"></hyperlink>
         </field>
          <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
-        
-        
+
+
         <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
-        
+
        <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-   
+
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
 	     <field name="branchId" title="Branch">
             <!-- drop-down allow-empty="false">
@@ -2112,30 +2157,36 @@ under the License.
             </drop-down -->
             <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
         </field>
-	   
+
 	   <field name="stationId" title="Station">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
             <!-- drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
         </field>
-        
+
         <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
-        <field name="memberNumber" title="Member No."><display></display></field>
-        
+
+        <field name="memberNumber" title="${uiLabelMap.MemberNumber}"><display></display></field>
+
+
         <field name="memberStatus"><display also-hidden="false"></display></field>
-        
+
         <field name="Edit">
         	<hyperlink target="NewMember?partyId=${partyId}" description="Edit Member"></hyperlink>
         </field>
-        
+
         <field name="Change Member Status">
         	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
         </field>
-        
+
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
+
+</field>
 
      </form>
-     
+
      <!-- start FindAllMembers -->
      <form name="FindAllMembers" type="single" target="allmembers" default-entity-name="Member">
         <actions>
@@ -2144,17 +2195,17 @@ under the License.
         	</entity-condition>
         </actions>
                 <field name="firstName" title="First Name"><text-find/></field>
-        
+
         <field name="idNumber" title="ID Number" position="2"><text-find/></field>
-        
+
         <field name="middleName" title="Middle Name"><text-find/></field>
-        
+
         <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
-        
+
         <field name="lastName" title="Last Name"><text-find/></field>
-        
+
         <field name="memberNumber" title="Member No." position="2"><text-find/></field>
-        
+
         <field name="memberStatus" title="Status" ><text-find></text-find></field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
@@ -2170,21 +2221,21 @@ under the License.
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
-    
+
     <form name="allmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="activemembers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        
+
         <actions>
         	<entity-condition entity-name="Member">
         		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
         		<order-by field-name="-partyId"/>
         	</entity-condition>
-        	
+
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
-        	
+
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
@@ -2193,56 +2244,54 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        
+
         <field name="Member Names">
         	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="${firstName} ${middleName} ${lastName}"></hyperlink>
         </field>
          <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
-        
-        
+
+
         <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
-        
+
        <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-   
+
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
 	     <field name="branchId" title="Branch">
             <!-- drop-down allow-empty="false">
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down -->
             <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
+
         </field>
-	   
+
 	   <field name="stationId" title="Station">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
             <!-- drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
         </field>
-        
+
         <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
         <field name="memberNumber" title="Member No."><display></display></field>
-        
+
         <field name="memberStatus"><display also-hidden="false"></display></field>
-        
+
         <field name="Edit">
         	<hyperlink target="NewMember?partyId=${partyId}" description="Edit Member"></hyperlink>
         </field>
-        
+
         <field name="Change Member Status">
         	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
         </field>
-        
+
 
      </form>
-     
-     <!-- End Find All Members -->
-     
      <!-- Branches -->
      <form name="branches" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="branches"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        
+
         <actions>
         	<entity-condition entity-name="PartyGroup">
         		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
@@ -2253,12 +2302,12 @@ under the License.
         		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
         		<order-by field-name="-partyId"/>
         	</entity-condition>
-        	
+
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         	<entity-condition entity-name="Station" list="stationList"></entity-condition -->
-        	
+
         	<!-- service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
@@ -2271,36 +2320,46 @@ under the License.
         	<field name="code" title="Code"><display also-hidden="false"/></field>
          <field name="groupName" title="Branch"><display also-hidden="false"/></field>
         <field name="createdStamp" title="Created"><display also-hidden="false" type="date-time"/></field>
-        
-        
+
+
         <!-- field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
-        
-   
+
+
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
 	     <field name="stationId" title="Station">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
-          
+
         </field>
-        
+
         <field name="memberStatus"><display also-hidden="false"></display></field>
-        
+
         <field name="Edit">
         	<hyperlink target="NewMember?partyId=${partyId}" description="Edit Member"></hyperlink>
         </field>
-        
+
         <field name="Change Member Status">
         	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
         </field -->
-        
+
          <field name="Branch Details">
         	<hyperlink target="viewprofile?partyId=${partyId}" description="Details"></hyperlink>
         </field>
-        
+
          <field name=" Stations">
         	<hyperlink target="viewstations?partyId=${partyId}" description="Add Stations to ${groupName} "></hyperlink>
         </field>
+         <field name="Accounting">
+            <hyperlink target="/accounting/control/AdminMain" target-type="inter-app" description="Setup GL for ${groupName}">
+                <parameter param-name="organizationPartyId" from-field="partyId"/>
+            </hyperlink>
+        </field>
+<!--         <field name="partyId" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="inter-app" description="${partyId}" target="/ordermgr/control/orderview">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field> -->
      </form>
-     
+
      <!-- Change Member Status -->
      <form name="ChangeMemberStatus" type="single" target="createChangeMemberStatus"
         focus-field-name="comment" header-row-style="header-row"  default-table-style="basic-table" default-map-name="memberStatusLogContext">
@@ -2319,11 +2378,11 @@ under the License.
         	</drop-down>
         </field>
         <field name="comment" title="Comments"><textarea/></field>
-       
-       
+
+
         <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
     </form>
-    
+
     <form name="listChangeMemberStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberStatus" paginate-target="changeMemberStatus"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2343,19 +2402,19 @@ under the License.
         <field name="comment" title="Comment"><display></display></field>
         <field name="createdStamp" title="When"><display also-hidden="false"></display></field>
     </form>
-    
-    
+
+
     <form name="NewenumStaffStatus" type="single" target="createEnumStaffStatus"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="enumStaffStatusContext">
-        
+
         <field name="enum_Id"><hidden/></field>
 	    <field name="enumTypeId"><hidden value="EMPLOY_STTS"/></field>
 	    <field name="enum_code" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-      
+
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
-        
+
         <form name="listenumStaffStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEnumStaffStatus" paginate-target="Enumeration"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2363,13 +2422,13 @@ under the License.
             	<condition-expr field-name="enumTypeId" operator="equals" value="EMPLOY_STTS"/>
             </entity-condition>
          </actions>
-         
+
         <auto-fields-service default-field-type="hidden" service-name="updateEnumStaffStatus"/>
-       
+
         <field name="enum_Id"> <hidden/> </field>
         <field name="enum_code" title="Code"> <text></text> </field>
         <field name="description"> <text></text> </field>
-        
+
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEnumStaffStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="enum_Id"/>
@@ -2377,7 +2436,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
-    
+
     <!-- viewstations View Branch Stations -->
     <form name="NewStation" type="single" target="createStation"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="bankBranchContext">
@@ -2393,10 +2452,10 @@ under the License.
         	<list-options key-name="employerId" list-name="employerList"  description="${name}"/>
         </drop-down>
         </field>
-        
+
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
      </form>
-        
+
      <form name="listStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="viewstations"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2426,15 +2485,15 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
-    
+
     <!-- Member Type -->
     <form name="NewMemberType" type="single" target="createMemberType"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="memberTypeContext">
-        
+
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
+
     <form name="listMemberType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberType" paginate-target="memberTypes"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2453,11 +2512,11 @@ under the License.
         </field>
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
-    
+
     <!-- addBranch -->
-     <form name="addBranch" type="single" target="updatePartyGroup" default-map-name="partyGroup"
-        focus-field-name="groupName" header-row-style="header-row" default-table-style="basic-table">
-        <alt-target use-when="partyGroup==null" target="createPartyGroup"/>
+     <form name="addBranch" type="single" target="updatePartyGroup" default-map-name="partyGroup" focus-field-name="groupName" header-row-style="header-row"
+        default-table-style="basic-table">
+        <alt-target use-when="partyGroup==null" target="createChaiBranch"/>
         <!-- auto-fields-service service-name="updatePartyGroup"/ -->
         <field use-when="partyGroup!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="partyGroup==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
@@ -2465,9 +2524,9 @@ under the License.
         <field name="code" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text></text></field>
         <field name="groupName" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text></text></field>
         <field name="partyTypeId"><ignored/></field>
-        
-        <field name="preferredCurrencyUomId">
-            <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+
+        <field name="lastCurrencyUom">
+            <drop-down allow-empty="false" no-current-selected-key="KES">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                     <entity-order-by field-name="description"/>
@@ -2496,7 +2555,7 @@ under the License.
             </hyperlink>
         </field -->
     </form>
-    
+
     <!--Begin ChangeMemberStation -->
     <form name="ChangeMemberStation" type="single" target="createChangeMemberStation"
         focus-field-name="fromStation" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
@@ -2505,9 +2564,9 @@ under the License.
         	<set field="fromStation" value="${memberContext.stationId}"/>
         </actions>
         <field name="changeMemberStationId"><hidden/></field>
-        
+
         <field name="partyId"><hidden value="${partyId}"/></field>
-        
+
         <field name="fromStation" title="From">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -2515,7 +2574,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        
+
         <field name="toStation" title="To">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -2523,10 +2582,10 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-       
+
         <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
     </form>
-    
+
     <form name="listChangeMemberStation" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberStation" paginate-target="changeMember"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2537,7 +2596,7 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberStation"/>
         <field name="changeMemberStationId"><hidden/></field>
-        
+
         <field name="partyId"><hidden/></field>
        <field name="fromStation" title="From">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
@@ -2550,13 +2609,13 @@ under the License.
             <!-- drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
-        </field>        
+        </field>
 
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
     <!--End ChangeMemberStation -->
-    
+
     <!--Begin ChangeMemberEmploymentType -->
     <form name="ChangeMemberEmploymentType" type="single" target="createChangeMemberEmploymentType"
         focus-field-name="toEmploymentType" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
@@ -2565,11 +2624,11 @@ under the License.
         	<set field="fromEmploymentType" value="${memberContext.employeeType}"/>
         </actions>
         <field name="changeMemberStationId"><hidden/></field>
-        
+
        <field name="partyId"><hidden value="${partyId}"/></field>
-        
+
         <field name="fromEmploymentType" title="Old Employment Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        
+
         <field name="toEmploymentType" title="New Employment Type">
         	<drop-down>
         		<option key="Permanent" description="Permanent"/>
@@ -2577,10 +2636,10 @@ under the License.
         		<option key="Contract" description="Contract"/>
         	</drop-down>
         </field>
-       
+
         <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
     </form>
-    
+
     <form name="listChangeMemberEmploymentType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberEmploymentType" paginate-target="changeMember"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2591,17 +2650,17 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberEmploymentType"/>
         <field name="changeMemberEmploymentTypeId"><hidden/></field>
-        
+
         <field name="partyId"><hidden/></field>
       <field name="fromEmploymentType" title="Old Employment Type"><display></display></field>
-      <field name="toEmploymentType" title="New Employment Type"><display></display></field>  
-        
+      <field name="toEmploymentType" title="New Employment Type"><display></display></field>
+
 
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
     <!--End ChangeMemberEmploymentType -->
-    
+
     <!--Begin ChangeMemberEmployeeNumber -->
     	<form name="ChangeMemberEmployeeNumber" type="single" target="createChangeMemberEmployeeNumber"
         focus-field-name="toEmployeeNumber" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
@@ -2610,17 +2669,17 @@ under the License.
         	<set field="fromEmployeeNumber" value="${memberContext.employeeNumber}"/>
         </actions>
         <field name="changeMemberEmploymentTypeId"><hidden/></field>
-        
+
        <field name="partyId"><hidden value="${partyId}"/></field>
-        
+
         <field name="fromEmployeeNumber" title="Old Employee Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        
+
         <field name="toEmployeeNumber" title="New Employee Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-       
-       
+
+
         <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
     </form>
-    
+
     <form name="listChangeMemberEmployeeNumber" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberEmployeeNumber" paginate-target="changeMember"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2630,17 +2689,17 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberEmployeeNumber"/>
         <field name="changeMemberEmployeeNumberId"><hidden/></field>
-        
+
         <field name="partyId"><hidden/></field>
       <field name="fromEmployeeNumber" title="Old Employee Number"><display></display></field>
-      <field name="toEmployeeNumber" title="New Employee Number"><display></display></field>  
-        
+      <field name="toEmployeeNumber" title="New Employee Number"><display></display></field>
+
 
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
     <!--End ChangeMemberEmployeeNumber -->
-    
+
     <!--Begin ChangeMemberBranch -->
     <form name="ChangeMemberBranch" type="single" target="createChangeMemberBranch"
         focus-field-name="toBranch" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
@@ -2651,31 +2710,31 @@ under the License.
         	<set field="fromBranch" value="${memberContext.branchId}"/>
         </actions>
         <field name="changeMemberBranchId"><hidden/></field>
-        
+
        <field name="partyId"><hidden value="${partyId}"/></field>
-        
+
        <field name="fromBranch" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+                <entity-constraint name="isBranch" operator="equals" value="Y"/>
                     <entity-order-by field-name="groupName"/>
-                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
                 </entity-options>
             </drop-down>
         </field>
-        
+
         <field name="toBranch" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+                <entity-constraint name="isBranch" operator="equals" value="Y"/>
                     <entity-order-by field-name="groupName"/>
-                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
                 </entity-options>
             </drop-down>
         </field>
-        
- 		               
+
+
         <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
     </form>
-    
+
     <form name="listChangeMemberBranch" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberBranch" paginate-target="changeMember"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2685,7 +2744,7 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberBranch"/>
         <field name="changeMemberBranchId"><hidden/></field>
-        
+
         <field name="partyId"><hidden/></field>
       <field name="fromBranch" title="From">
 	     	<display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
@@ -2699,13 +2758,13 @@ under the License.
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
         </field>
-        
+
 
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
     <!--End ChangeMemberBranch -->
-    
+
     <!--Begin ChangeMemberShareAmount -->
     <form name="ChangeMemberShareAmount" type="single" target="createChangeMemberShareAmount"
         focus-field-name="toShareAmount" header-row-style="header-row"  default-table-style="basic-table" default-map-name="changeMemberStationContext">
@@ -2716,17 +2775,17 @@ under the License.
         	<set field="fromShareAmount" value="${memberContext.shareAmount}"/>
         </actions>
         <field name="changeMemberShareAmountId"><hidden/></field>
-        
+
        <field name="partyId"><hidden value="${partyId}"/></field>
-        
+
       <field name="fromShareAmount" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        
+
         <field name="toShareAmount" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        
- 		               
+
+
         <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="change" title="Change" widget-style="buttontext" > <submit/> </field>
     </form>
-    
+
     <form name="listChangeMemberShareAmount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateChangeMemberShareAmount" paginate-target="changeMember"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -2736,11 +2795,11 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateChangeMemberShareAmount"/>
         <field name="changeMemberShareAmountId"><hidden/></field>
-        
+
         <field name="partyId"><hidden/></field>
 		<field name="fromShareAmount" title="From"><display></display></field>
 		<field name="toShareAmount" title="To"><display></display></field>
-        
+
 
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>

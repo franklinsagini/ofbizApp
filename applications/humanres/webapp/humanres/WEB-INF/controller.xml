@@ -40,11 +40,30 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
-    
-     <request-map uri="ViewHandler">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewHandler"/>
+ <request-map uri="brancheslist">
+    	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+    	<event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getBranches" />
+		<response name="success" type="none">
+    </response>
     </request-map>
+    
+    <request-map uri="bank">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="bank"
+			save-home-view="true" />
+	</request-map>
+	
+    <request-map uri="bankdetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="bankdetails"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="employeeBankDetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="emplBankDetails"
+			save-home-view="true" />
+	</request-map>
     
    <request-map uri="createSalaryStep">
         <security https="true" auth="true"/>
@@ -101,6 +120,121 @@ under the License.
 
 
     <!--  Request Mappings for calling leave duration and end date java functions -->
+    
+    <request-map uri="createBankDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createBankDetails" />
+		<response name="success" type="request-redirect"
+			value="bankdetails">
+			<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="bankdetails" />
+	</request-map>
+	
+	<request-map uri="updateBankDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateBankDetails" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="bankdetails">
+			<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="bankdetails" />
+	</request-map>
+	
+	<request-map uri="deleteBankDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteBankDetails" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="bankdetails">
+			<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="bankdetails" />
+	</request-map>
+	
+		<request-map uri="bankbranch">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="bankbranch"
+			save-home-view="true">
+				<redirect-parameter name="bankDetailsId"/>
+			</response>
+	</request-map>
+	
+	<!-- request-map uri="addBranch">
+		<security https="true" auth="true" />
+		<response name="success" type="request-redirect" value="bankbranch"
+			save-home-view="true">
+				<redirect-parameter name="bankDetailsId"/>
+			</response>
+	</request-map -->
+	
+	<!-- Create Bank Branch -->
+	<request-map uri="createBankBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createBankBranch" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="bankbranch">
+				<redirect-parameter name="bankDetailsId"/>
+			</response>
+		<response name="error" type="view" value="bankbranch" />
+	</request-map>
+	
+	<request-map uri="updateBankBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateBankBranch" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="bankbranch">
+			<redirect-parameter name="bankDetailsId"/>
+			</response>
+		<response name="error" type="view" value="bankbranch" />
+	</request-map>
+	
+	<request-map uri="deleteBankBranch">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteBankBranch" />
+		<response name="success" type="request-redirect" 
+		value="bankbranch" save-current-view="true" save-last-view="true">
+			<redirect-parameter name="bankDetailsId"/>
+			</response>
+		<response name="error" type="view" value="bankbranch" />
+	</request-map>
+	
+	
+	<!-- Create Paypoints -->
+	<request-map uri="createPayPoint">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPayPoint" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="bank">
+			<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="bank" />
+	</request-map>
+	
+	<request-map uri="updatePayPoint">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePayPoint" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="bank">
+			</response>
+		<response name="error" type="view" value="bank" />
+	</request-map>
+	
+	<request-map uri="deletePayPoint">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePayPoint" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="bank">
+			</response>
+		<response name="error" type="view" value="bank" />
+	</request-map>
+
+	
+    
     <request-map uri="closeFinacialYear">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="closeFinacialYear" />
@@ -2197,7 +2331,11 @@ under the License.
     <view-map name="employeeDependantDetailscsv" type="screencsv" content-type="text/csv"
                page="component://humanres/widget/ReportScreens.xml#EmployeeDependantDetailscsv" />               
     <view-map name="employeeDependantDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#EmployeeDependantDetailspdf"
-		content-type="application/pdf" encoding="none" />		
+		content-type="application/pdf" encoding="none" />	
+		<view-map name="bankdetails" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewBankDetails"/>
+	<view-map name="bankbranch" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewBankBranch"/>
+	<view-map name="emplBankDetails" type="screen" page="component://humanres/widget/EmployeeScreens.xml#employeeBankDetails"/>
+	<view-map name="bank" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewEmplBankDetails"/>
 		
 	<view-map name="employeeNOKDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetails"/>
     <view-map name="employeeNOKDetailscsv" type="screencsv" content-type="text/csv"
@@ -2217,10 +2355,10 @@ under the License.
     <view-map name="positionDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#PositionDetailspdf"
 		content-type="application/pdf" encoding="none" />		
 		
-		<view-map name="staffOnLedfdfave" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"
+	<view-map name="staffOnLedfdfave" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"
 		content-type="application/pdf" encoding="none" /> 
-		    <view-map name="staffOnLeave" type="screen" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"/>
-		    	<view-map name="advanceSalary" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
-		    	<view-map name="EditSalaryAdvanceTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
+	<view-map name="staffOnLeave" type="screen" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"/>
+	<view-map name="advanceSalary" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
+	<view-map name="EditSalaryAdvanceTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
 						
 </site-conf>

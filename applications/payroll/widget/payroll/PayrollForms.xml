@@ -582,7 +582,17 @@ under the License.
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollYearContext">
         
         <field name="payrollYearId"><hidden/></field>
+        <field name="yearSeq" title="Year Sequence">
+			<text default-value="**GENERATED**" disabled="true"></text>
+		</field>
+        
         <field name="name" title="Year" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="status"  title="Status" >
+            <drop-down allow-empty="false">
+                <option key="Inactive" description="Inactive"/>
+                <option key="Current" description="Current Year"/>
+			</drop-down>
+        </field>
         <field name="currentyear"  title="Current Year" >
             <drop-down allow-empty="false">
                 <option key="N" description="No"/>
@@ -599,6 +609,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollYear">
+            	<order-by field-name="yearSeq"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updatePayrollYear"/>
@@ -606,9 +617,10 @@ under the License.
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
         <field name="name"> <text></text> </field>
-        <field name="currentyear" title="Current Year"> <text></text> </field>
-        <field name="startDate"><date-time /></field>
-        <field name="endDate"><date-time/></field>
+        <field name="status" title="Status"><display also-hidden="false"/></field>
+        <field name="currentyear" title="Current Year"> <hidden/> </field>
+        <field name="startDate"><display type="date"/></field>
+        <field name="endDate"><display type="date"/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePayrollYear" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="payrollYearId"/>
@@ -616,6 +628,11 @@ under the License.
         </field>
         <field name="managePeriods" title="Manage Periods" widget-style="buttontext">
             <hyperlink target="payrollperiod" description="Manage Periods" also-hidden="false">
+                <parameter param-name="payrollYearId"/>
+            </hyperlink>
+        </field>
+        <field name="createpayrollperiods" title="Create Periods" widget-style="buttontext">
+            <hyperlink target="createpayrollperiods" description="Create Periods" also-hidden="false">
                 <parameter param-name="payrollYearId"/>
             </hyperlink>
         </field>
@@ -643,7 +660,7 @@ under the License.
         </field>
         <field name="status"  title="Status" >
             <drop-down allow-empty="false">
-                <option key="Inactve" description="Inactve"/>
+                <option key="Inactive" description="Inactive"/>
                 <option key="Open" description="Open"/>
                 <option key="Closed" description="Closed"/>
 			</drop-down>
@@ -668,7 +685,7 @@ under the License.
         <field name="payrollYearId"> <hidden/> </field>
         <field name="sequence_no" title="Sequence No"> <display also-hidden="false"/> </field>
         <field name="name" title="Period" > <text ></text> </field>
-        <field name="currentperiod" title="Current Period"> <text disabled="false"></text> </field>
+        <field name="currentperiod" title="Current Period"> <display/></field>
         <field name="status" title="Status"> <display also-hidden="false"/> </field>
         <field name="startDate"><date-time type="date"/></field>
         <field name="endDate"><date-time type="date"/></field>
