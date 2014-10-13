@@ -1,23 +1,26 @@
+WithdrawalLog
 
-<service name="createWithdrawalStatus" engine="simple" default-entity-name="WithdrawalStatus"
-             location="component://memberwithdrawal/script/org/ofbiz/memberwithdrawal/MemberWithdrawalServices.xml" invoke="createWithdrawalStatus" auth="true">
-        <description>Create Loan Product</description>
-        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="true"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
+    <simple-method method-name="createWithdrawalLog" short-description="Create WithdrawalLog">
+        <make-value entity-name="WithdrawalLog" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="WithdrawalLog" field="withdrawalLogId"/>
+        <set from-field="withdrawalLogId" field="newEntity.withdrawalLogId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
     
-    <service name="updateWithdrawalStatus" engine="simple" default-entity-name="WithdrawalStatus"
-             location="component://memberwithdrawal/script/org/ofbiz/memberwithdrawal/MemberWithdrawalServices.xml" invoke="updateWithdrawalStatus" auth="true">
-        <description>Update a Loan Product</description>
-        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
-	
-	<service name="deleteWithdrawalStatus" engine="simple" default-entity-name="WithdrawalStatus"
-             location="component://memberwithdrawal/script/org/ofbiz/memberwithdrawal/MemberWithdrawalServices.xml" invoke="deleteWithdrawalStatus" auth="true">
-        <description>Delete WithdrawalStatus</description>
-        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-    </service> 
+     <simple-method method-name="updateWithdrawalLog" short-description="Update WithdrawalLog">
+        <entity-one entity-name="WithdrawalLog" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteWithdrawalLog" short-description="Delete WithdrawalLog">
+        <entity-one entity-name="WithdrawalLog" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+ 
