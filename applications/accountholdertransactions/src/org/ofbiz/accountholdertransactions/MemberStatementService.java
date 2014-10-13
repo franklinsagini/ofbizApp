@@ -1,10 +1,12 @@
 package org.ofbiz.accountholdertransactions;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -68,7 +70,7 @@ public class MemberStatementService {
 
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		List<Transaction> listTransactions = new ArrayList<Transaction>();
-
+		Timestamp dateCreated;
 		Gson gson = new Gson();
 
 		for (GenericValue genericValue : accountTransactionELI) {
@@ -78,8 +80,11 @@ public class MemberStatementService {
 					.getString("transactionType"));
 			transaction.setTransactionAmount(genericValue
 					.getBigDecimal("transactionAmount"));
-			transaction.setCreatedStamp(genericValue
-					.getTimestamp("createdStamp"));
+			
+			//genericValue.getT
+			dateCreated = new Timestamp(genericValue.getTimestamp("createdStamp").getTime());
+			DateTime dateTimeCreated = new DateTime(dateCreated.getTime());
+			transaction.setCreatedStamp(dateTimeCreated.toString("dd/MM/yyyy"));
 			try {
 				memberAccount = delegator.findOne(
 						"MemberAccount",

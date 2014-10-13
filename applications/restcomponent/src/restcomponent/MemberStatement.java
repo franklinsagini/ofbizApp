@@ -25,8 +25,8 @@ import org.ofbiz.service.ServiceUtil;
 @Path("/statement")
 public class MemberStatement {
 	
-	@Context
-	HttpHeaders headers;
+	//@Context
+	//HttpHeaders headers;
 	
 	@GET
 	@Produces("text/plain")
@@ -36,16 +36,16 @@ public class MemberStatement {
 		String username = null;
 		String password = null;
 		
-		try {
-			username = headers.getRequestHeader("login.username").get(0);
-			password = headers.getRequestHeader("login.password").get(0);
-		} catch (NullPointerException e) {
-			return Response.serverError().entity("Problem reading http header(s): login.username or login.password").build();
-		}
-		
-		if (username == null || password == null) {
-			return Response.serverError().entity("Problem reading http header(s): login.username or login.password").build();
-		}
+//		try {
+//			username = headers.getRequestHeader("login.username").get(0);
+//			password = headers.getRequestHeader("login.password").get(0);
+//		} catch (NullPointerException e) {
+//			return Response.serverError().entity("Problem reading http header(s): login.username or login.password").build();
+//		}
+//		
+//		if (username == null || password == null) {
+//			return Response.serverError().entity("Problem reading http header(s): login.username or login.password").build();
+//		}
 		
     	GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator("default");
     	//LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher("default",delegator); 
@@ -71,7 +71,7 @@ public class MemberStatement {
 		if (ServiceUtil.isSuccess(result)) {   
 			//text/json
 			//return Response.ok("RESPONSE: *** " + result.get("transactions") + " ***").type("text/plain").build();
-			return Response.ok(result.get("transactions")).type("text/json").build();
+			return Response.ok(result.get("transactions")).type("application/json").build();
 		}
 		
 		if (ServiceUtil.isError(result) || ServiceUtil.isFailure(result)) {
