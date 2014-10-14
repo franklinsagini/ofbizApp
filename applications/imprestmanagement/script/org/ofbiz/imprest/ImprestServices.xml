@@ -54,4 +54,20 @@
             <store-value value-field="lookedUpValue"/>
     </simple-method>
 
+    <simple-method method-name="createPerDiemSetup" short-description="Create ImprestPerDiemSetup">
+            <make-value entity-name="ImprestPerDiemSetup" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="ImprestPerDiemSetup" field="perDiemSetupId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="perDiemSetupId" field="newEntity.perDiemSetupId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateSupplier" short-description="Update ImprestPerDiemSetup">
+            <entity-one entity-name="ImprestPerDiemSetup" value-field="lookedUpValue"/>
+            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+            <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
 </simple-methods>

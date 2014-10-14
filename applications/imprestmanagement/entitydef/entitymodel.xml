@@ -45,7 +45,24 @@
       <prim-key field="destinationId"/>
     </entity>
 
-
+    <entity entity-name="ImprestPerDiemSetup"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Imprest Account Entity">
+      <field name="perDiemSetupId" type="id-ne"></field>
+      <field name="destinationId" type="id-ne"></field>
+      <field name="payGradeId" type="id-ne"></field>
+      <field name="amount" type="currency-amount"></field>
+      <!-- <field name="numberOfDays" type="numeric"></field> -->
+      <prim-key field="perDiemSetupId"/>
+      <prim-key field="destinationId"/>
+      <prim-key field="payGradeId"/>
+      <relation type="one" fk-name="PAY_HIST_PERDIEM" rel-entity-name="PayGrade">
+        <key-map field-name="payGradeId"/>
+      </relation>
+      <relation type="one" fk-name="PERDIEM_DEST" rel-entity-name="ImprestDestination">
+        <key-map field-name="destinationId"/>
+      </relation>
+    </entity>
 
 
 </entitymodel>
