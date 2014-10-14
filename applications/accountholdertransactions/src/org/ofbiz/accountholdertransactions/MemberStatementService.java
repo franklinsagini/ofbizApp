@@ -48,10 +48,11 @@ public class MemberStatementService {
 						"partyId", EntityOperator.EQUALS, partyId)),
 						EntityOperator.AND);
 		List<GenericValue> accountTransactionELI = null;
-
+		List<String> orderByList = new ArrayList<String>();
+		orderByList.add("createdStamp DESC");
 		try {
 			accountTransactionELI = delegator.findList("AccountTransaction",
-					transactionConditions, null, null, null, false);
+					transactionConditions, null, orderByList, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();

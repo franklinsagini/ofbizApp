@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of ImprestManagement Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+
+    <entity entity-name="ImprestType"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Imprest Type Entity">
+      <field name="imprestTypeId" type="id-ne"></field>
+      <field name="typeCode" type="short-varchar"></field>
+      <field name="typeName" type="id-long-ne"></field>
+      <prim-key field="imprestTypeId"/>
+    </entity>
+
+    <entity entity-name="ImprestAccount"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Imprest Account Entity">
+      <field name="imprestAccountId" type="id-ne"></field>
+      <field name="imprestTypeId" type="id-ne"></field>
+      <field name="glAccountId" type="id"></field>
+      <prim-key field="imprestAccountId"/>
+      <prim-key field="imprestTypeId"/>
+      <prim-key field="glAccountId"/>
+      <relation type="one" fk-name="IMPRESTTYPE_GLACCOUNT" rel-entity-name="ImprestType">
+        <key-map field-name="imprestTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PAYMENT_ORGLA" rel-entity-name="GlAccount">
+        <key-map field-name="imprestTypeId"/>
+        <key-map field-name="glAccountId" rel-field-name="glAccountId"/>
+      </relation>
+    </entity>
+
+
+    <entity entity-name="ImprestDestination"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Imprest Destination Entity">
+      <field name="destinationId" type="id-ne"></field>
+      <field name="destinationName" type="id-long-ne"></field>
+      <prim-key field="destinationId"/>
+    </entity>
+
+
+
+
+</entitymodel>
