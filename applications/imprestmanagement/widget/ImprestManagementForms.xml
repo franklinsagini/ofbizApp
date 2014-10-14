@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+    <!--
+        EditImprestAccount
+     -->
+
+    <form name="EditImprestAccount" type="single" target="createImprestAccount" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="imprestAccountContext">
+        <alt-target use-when="imprestAccountContext!=null" target="UpdateImprestAccount"/>
+        <actions>
+            <entity-condition entity-name="ImprestAccount" list="imprestAccountList">
+                <order-by field-name="imprestAccountId"/>
+            </entity-condition>
+        </actions>
+        <field name="imprestAccountId">
+            <hidden/>
+        </field>
+        <field name="imprestAccountId" use-when="imprestAccountContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+        <field position="1" name="imprestTypeId" title="Imprest Type">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ImprestType"
+                    description="${typeName}"><entity-order-by field-name="typeName" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="glAccountId" position="2">
+            <lookup target-form-name="LookupGlAccount"/>
+        </field>
+                <!-- submitButton -->
+        <field use-when="imprestAccountContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="imprestAccountContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+            <!--
+                ImprestAccountList
+            -->
+    <form name="ImprestAccountList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateImprestAccount"
+        paginate-target="EditImprestAccount" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ImprestAccount"></entity-condition>
+        </actions>
+        <field name="imprestAccountId"><hidden/></field>
+        <field name="imprestTypeId" title="Imprest Type" >
+            <display-entity entity-name="ImprestType" description="${typeName}"/>
+        </field>
+        <field name="glAccountId" title="Account Mapping">
+            <display-entity entity-name="GlAccount" description="${glAccountId} ${accountName}"/>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="imprestAccountId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+    <!--
+        EditImprestDestination
+     -->
+
+    <form name="EditImprestDestination" type="single" target="createImprestDestination" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="imprestDestinationContext">
+        <alt-target use-when="imprestDestinationContext!=null" target="UpdateImprestDestination"/>
+        <actions>
+            <entity-condition entity-name="ImprestDestination" list="imprestDestinationList">
+                <order-by field-name="destinationId"/>
+            </entity-condition>
+        </actions>
+        <field name="destinationId">
+            <hidden/>
+        </field>
+        <field name="destinationId" use-when="imprestDestinationContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+        <field name="destinationName" title="Destination">
+            <text size="45"></text>
+        </field>
+                <!-- submitButton -->
+        <field use-when="imprestDestinationContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="imprestDestinationContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+            <!--
+                ImprestDestinationList
+            -->
+    <form name="ImprestDestinationList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateImprestDestination"
+        paginate-target="EditImprestDestination" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ImprestDestination"></entity-condition>
+        </actions>
+        <field name="destinationName" title="Destination">
+            <display />
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="destinationId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+
+    <!--
+        EditPerDiemSetup
+     -->
+
+    <form name="EditPerDiemSetup" type="single" target="createPerDiemSetup" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="perDiemContext">
+        <alt-target use-when="perDiemContext!=null" target="UpdatePerDiemSetup"/>
+        <actions>
+            <entity-condition entity-name="ImprestPerDiemSetup" list="perDiemSetupList">
+                <order-by field-name="perDiemSetupId"/>
+            </entity-condition>
+        </actions>
+        <field name="perDiemSetupId">
+            <hidden/>
+        </field>
+        <field name="perDiemSetupId" use-when="perDiemContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+        <field position="1" name="destinationId" title="Destination">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ImprestDestination"
+                    description="${destinationName}"><entity-order-by field-name="destinationName" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="payGradeId" position="2">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PayGrade"
+                    description="${payGradeName}"><entity-order-by field-name="payGradeName" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="amount" title="Cost/Day" tooltip="KES"><text size="10"/></field>
+        <!-- <field position="2" name="numberOfDays" title="Number of Days"><text size="10"/></field> -->
+                <!-- submitButton -->
+        <field use-when="perDiemContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="perDiemContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+            <!--
+                PerDiemSetupList
+            -->
+    <form name="PerDiemSetupList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdatePerDiemSetup"
+        paginate-target="EditPerDiemSetup" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ImprestPerDiemSetup"></entity-condition>
+        </actions>
+        <field name="perDiemSetupId"><hidden/></field>
+        <field name="destinationId" title="Destination" >
+            <display-entity entity-name="ImprestDestination" description="${destinationName}"/>
+        </field>
+        <field name="payGradeId" title="Job Group">
+            <display-entity entity-name="PayGrade" description="${payGradeName}"/>
+        </field>
+        <field name="amount" title="Cost/Day" widget-area-style="align-text"><display type="currency" currency="KES"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteSupplier" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="perDiemSetupId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+
+
+</forms>

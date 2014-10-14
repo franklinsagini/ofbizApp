@@ -51,4 +51,47 @@ under the License.
         
         <field name="submitButton" title="Run" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
+        
+         <form name="listPayrollElementsReport" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="payrollElementsView"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PayrollElement">
+            	<order-by field-name="elementCode"/>
+            </entity-condition>
+            <entity-condition entity-name="PayrollElement" list="payrollElementList"></entity-condition>
+        </actions>
+       
+       <field name="payrollElementId" > <hidden/>  </field>        
+        <field name="elementCode" title="Element Code"> 
+	        <display/>
+	    </field>        
+        <field name="name"> <display also-hidden="false"/> </field>
+        <field name="elementType"> <display also-hidden="false"/> </field>
+        <field name="payslipdisplay" title="Payslip Display"> <display also-hidden="false"/> </field>   
+    </form>
+    <form name="listPayPointsReport" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="payPointsReport"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>        
+        	<entity-condition entity-name="PayPoints">
+        		<order-by field-name="partyId"/>
+        	</entity-condition>
+        	<entity-condition entity-name="BankDetails" list="bankList">
+            </entity-condition>
+            <entity-condition entity-name="BankBranch" list="branchList">
+            </entity-condition>
+        </actions>
+		<field name="payPointId"><hidden/></field>
+         <field name="partyId" title="Employee">
+         	<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})"/>
+        </field>
+        <field name="bankDetailsId" title="Bank">  
+        	<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"/> 
+        </field>
+        <field name="bankBranchId" title="Bank Branch">
+        	<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"/> 
+        </field>
+        <field name="accountName" title="Account Name"><display/></field>
+        <field name="accountNumber" title="Account No."><display/></field>
+        <field name="payMode"  title="Pay Mode" > <display/></field>
+    </form>
 </forms>
