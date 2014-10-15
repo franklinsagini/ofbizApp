@@ -108,6 +108,7 @@ public class PayrollProcess {
 					.getString("staffPayrollId"), delegator);
 			log.info("######### Staff ID "
 					+ genericValue.getString("staffPayrollId"));
+			manageBalances(genericValue, genericValue.getString("staffPayrollId"), delegator);
 		}
 
 	
@@ -125,6 +126,94 @@ public class PayrollProcess {
 			}
 		}
 		return "";
+	}
+
+	private static void manageBalances(GenericValue employee,
+			String staffPayrollId, Delegator delegator) {
+		List<GenericValue> staffPayrollElementELI = null;	
+		
+		EntityConditionList<EntityExpr> elementConditions = EntityCondition
+		.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("staffPayrollId", EntityOperator.EQUALS, staffPayrollId),
+				EntityCondition.makeCondition("elementType", EntityOperator.EQUALS, "Deduction"),
+				EntityCondition.makeCondition("hasBalance", EntityOperator.EQUALS, "Y")), EntityOperator.AND);
+		
+		try {
+			staffPayrollElementELI = delegator.findList("PayrollElementAndStaffPayrollElement",
+					elementConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue staffPayrollElement : staffPayrollElementELI) {
+			calcBalances(staffPayrollElement, delegator);
+		}		
+	}
+
+	private static void calcBalances(GenericValue staffPayrollElement,
+			Delegator delegator) {
+		BigDecimal amount=BigDecimal.ZERO;
+		BigDecimal balance=BigDecimal.ZERO;
+		BigDecimal newAmount=BigDecimal.ZERO;
+		BigDecimal newBalance=BigDecimal.ZERO;
+		
+		if(!(staffPayrollElement.getBigDecimal("amount")==null))
+		{
+			amount=staffPayrollElement.getBigDecimal("amount");
+		}
+		if(!(staffPayrollElement.getBigDecimal("balance")==null))
+		{
+			balance=staffPayrollElement.getBigDecimal("balance");
+		}
+		
+		
+		if(!(staffPayrollElement.getString("valueChanged").equals("Y")))
+		{
+			if(staffPayrollElement.getString("cummulative").equals("Y"))
+			{				
+				newBalance=balance.add(amount);
+				setNewBalance(staffPayrollElement, amount, newBalance, delegator);
+				
+			}else
+			{
+				if(amount.compareTo(balance)<=0)
+				{
+					newBalance=balance.subtract(amount);
+					newAmount=amount;					
+				}
+				else
+				{
+					newBalance=BigDecimal.ZERO;
+					newAmount=balance;
+				}
+				setNewBalance(staffPayrollElement, newAmount, newBalance, delegator);
+			}
+		}
+		else
+		{
+			log.info("Balance Already Modified ");
+		}
+	}
+
+	private static void setNewBalance(GenericValue staffPayrolElement,
+			BigDecimal newAmount, BigDecimal newBalance, Delegator delegator) {
+		
+	//	String staffPayrollElementsSequenceId = delegator.getNextSeqId("StaffPayrollElements");
+
+		GenericValue staffPayrollElementNew = delegator.makeValidValue(
+				"StaffPayrollElements", UtilMisc.toMap(
+						"staffPayrollElementsId",staffPayrolElement.getString("staffPayrollElementsId"), 
+						"staffPayrollId", staffPayrolElement.getString("staffPayrollId"),  
+						"payrollElementId",	staffPayrolElement.getString("payrollElementId"), 
+						"amount", newAmount, 
+						"balance", newBalance,
+						"valueChanged", "Y"));
+		try {
+		//	staffPayrollElementNew = delegator.createSetNextSeqId(staffPayrollElementNew);
+			delegator.store(staffPayrollElementNew);
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}	
 	}
 
 	private static void deleteStaffSystemElements(String staffPayrollId,
@@ -1211,22 +1300,31 @@ public class PayrollProcess {
 		 * */
 		// GenericValue interestPayrolElement =
 		// delegator.makeValidValue("PayrollElement", )
-		String staffPayrollElementsId = delegator
-				.getNextSeqId("StaffPayrollElements");
-		BigDecimal bdInterestAmt = payrolElement
-				.getBigDecimal("interestamount");
-		GenericValue interestPayrolElement = delegator.makeValidValue(
-				"StaffPayrollElements", UtilMisc.toMap(
-						"staffPayrollElementsId", staffPayrollElementsId,
-						"payrollElementId", payrolElement.getString("childId"),
-						"staffPayrollId", staffPayrollId, "amount",
-						bdInterestAmt));
-		log.info("Fixed  Interest Amount :: " + bdInterestAmt);
+		
+		GenericValue staffPayrollElement = getStaffPayrolElement(payrolElement
+				.getString("payrollElementId"), staffPayrollId, delegator);
+		
+		if(!(staffPayrollElement==null))
+		{
+			String staffPayrollElementsId = delegator.getNextSeqId("StaffPayrollElements");
+			BigDecimal bdInterestAmt = payrolElement.getBigDecimal("interestamount");
+			GenericValue interestPayrolElement = delegator.makeValidValue(
+			"StaffPayrollElements", UtilMisc.toMap(
+					"staffPayrollElementsId", staffPayrollElementsId,
+					"payrollElementId", payrolElement.getString("childId"),
+					"staffPayrollId", staffPayrollId, "amount",
+					bdInterestAmt, "balance", BigDecimal.ZERO));
+			log.info("Fixed  Interest Amount :: " + bdInterestAmt);
 
-		try {
-			delegator.createOrStore(interestPayrolElement);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
+			try {
+				delegator.createOrStore(interestPayrolElement);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			log.info("################ Interest Payroll Element Does Not Exist");
 		}
 	}
 
@@ -1246,24 +1344,33 @@ public class PayrollProcess {
 		 *
 		 *
 		 * */
-		BigDecimal bdInterestAmt = computeInterestAmount(staffPayrollElement,
-				payrolElement, delegator);
-		log.info("################ Variable Interest Amount :: "
-				+ bdInterestAmt);
+		if(!(staffPayrollElement==null))
+		{
+			BigDecimal bdInterestAmt = computeInterestAmount(staffPayrollElement,
+					payrolElement, delegator);
+			log.info("################ Variable Interest Amount :: "
+					+ bdInterestAmt);
 
-		String staffPayrollElementsId = delegator
-				.getNextSeqId("StaffPayrollElements");
-		GenericValue interestPayrolElement = delegator.makeValidValue(
-				"StaffPayrollElements", UtilMisc.toMap(
-						"staffPayrollElementsId", staffPayrollElementsId,
-						"payrollElementId", payrolElement.getString("childId"),
-						"staffPayrollId", staffPayrollId, "amount",
-						bdInterestAmt));
-		try {
-			delegator.createOrStore(interestPayrolElement);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
+			String staffPayrollElementsId = delegator
+					.getNextSeqId("StaffPayrollElements");
+			GenericValue interestPayrolElement = delegator.makeValidValue(
+					"StaffPayrollElements", UtilMisc.toMap(
+							"staffPayrollElementsId", staffPayrollElementsId,
+							"payrollElementId", payrolElement.getString("childId"),
+							"staffPayrollId", staffPayrollId, "amount",
+							bdInterestAmt, "balance", BigDecimal.ZERO));
+			try {
+				delegator.createOrStore(interestPayrolElement);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
 		}
+		else
+		{
+			log.info("################ Interest Payroll Element Does Not Exist");
+		}
+		
+		
 	}
 
 	private static BigDecimal computeInterestAmount(

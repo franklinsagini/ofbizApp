@@ -61,7 +61,7 @@ under the License.
         <field name="interestamount" type="currency-amount"></field>
         <field name="interestrate" type="floating-point"></field>
         <field name="interestfrequency" type="name"></field>
-        <field name="payslipdisplay" type="indicator"></field>
+        <field name="payslipdisplay" type="name"></field>
         <field name="isbold" type="indicator"></field>
         <field name="parentId" type="id"></field>
         <field name="childId" type="id"></field>
@@ -275,6 +275,27 @@ under the License.
             <key-map field-name="payrollElementId" />
         </view-link>
     
+    </view-entity>
+    
+    <view-entity entity-name="PayPoints" package-name="org.ofbiz.payroll" 
+    	title="Staff Paypoints Report View">
+        <member-entity entity-alias="PPT" entity-name="PayPoint" />   
+        <member-entity entity-alias="PER" entity-name="Person" />     
+    	<member-entity entity-alias="BDE" entity-name="BankDetails" />
+    	<member-entity entity-alias="BBR" entity-name="BankBranch" />
+        <alias-all entity-alias="PPT"/>
+        <alias-all entity-alias="PER"/>
+        <alias-all entity-alias="BDE" />        
+        <alias-all entity-alias="BBR" />        
+        <view-link entity-alias="PPT" rel-entity-alias="PER">
+            <key-map field-name="partyId" />
+        </view-link>
+         <view-link entity-alias="PPT" rel-entity-alias="BDE">
+            <key-map field-name="bankDetailsId" />
+        </view-link>
+         <view-link entity-alias="PPT" rel-entity-alias="BBR">
+            <key-map field-name="bankBranchId" />
+        </view-link>    
     </view-entity>
         
          <!-- entity entity-name="PayrollOverview" package-name="org.ofbiz.payroll" title="Payroll Overview">

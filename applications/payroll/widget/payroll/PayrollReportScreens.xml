@@ -158,28 +158,15 @@ under the License.
                                                     <image url-mode="raw" src="${iconsLocation}/add.png" />
                                                    
                                                 </link>
-                                               
+                                                 <link url-mode="inter-app" target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"  text="Payroll Elements PDF Report" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
+                                                </link>                                               
                                                 </container>
-
-                                			
                                 		</widgets>
                                 	</section>
                                 </screenlet>
-                                
                                 <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"  text="Payroll Elements PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />
-                                                   
-                                                </link>
-                                               
-                                                </container>
-
-                                			
-                                		</widgets>
-                                	</section>
+                                	<include-form name="listPayrollElementsReport" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -216,23 +203,63 @@ under the License.
                                 	<section>
                                 		<widgets>
     										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:62146/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FemployeePayslip.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-706592975"  text="Payslip HTML Report" style="buttontext create">
+                                                <link url-mode="inter-app" target="http://127.0.0.1:58658/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FemployeePayslip.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1520971860"  text="Payslip HTML Report" style="buttontext create">
                                                     <image url-mode="raw" src="${iconsLocation}/add.png" />                                                   
+                                                </link>    
+                                                <link url-mode="inter-app" target="http://127.0.0.1:58658/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FemployeePayslip.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1520971860"  text="Payslip PDF Report" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
+                                                </link>                                               
+                                                </container>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>       
+       </screen>
+       <screen name="PayPointsReport">
+		<section>
+            <actions>
+                <set field="titleProperty" value="Payroll Paypoint Report"/>
+                <set field="headerItem" value="payPointsReport"/>
+                <set field="tabButtonItem" value="payPointsReport"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="payPointsReport"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>                                
+                                <screenlet>
+                                	<section>
+                                		<widgets>
+    										<container style="button-bar">                                                   
+                                                <link url-mode="inter-app" target="http://127.0.0.1:58658/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FpayPoints.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-2128315792"  text="Payroll Paypoints HTML Report" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
+                                                   
+                                                </link>
+                                                 <link url-mode="inter-app" target="http://127.0.0.1:58658/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FpayPoints.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-2128315792"  text="Payroll Paypoints PDF Report" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
                                                 </link>                                               
                                                 </container>
                                 		</widgets>
                                 	</section>
                                 </screenlet>
                                 <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:62146/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FemployeePayslip.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-706592975"  text="Payslip PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
+                                	<include-form name="listPayPointsReport" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
