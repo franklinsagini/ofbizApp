@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="customercareCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="FindMember">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Members"/>
+                <set field="headerItem" value="receiveLoanApplication"/>
+                <set field="tabButtonItem" value="findmember"/>
+                <set field="memberCtx" from-field="parameters"/>
+
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <!-- condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition -->
+                            <widgets>
+                                <!-- platform-specific>
+                                    <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
+                                </platform-specific -->
+                                <screenlet title="Search Members">
+                                        <include-form name="FindMember" location="component://customercare/widget/customercareForms.xml"/>
+                            	</screenlet>
+                                <screenlet title="Members List">
+                                		<include-form  name="members" location="component://customercare/widget/customercareForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <!-- fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets -->
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+        <!-- Loan Application -->
+    <screen name="NewLoanApplication">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create New Loan Application"/>
+                <set field="headerItem" value="loanapplication"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <entity-condition entity-name="Member" list="membersList">
+            </entity-condition>
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CUSTOMERCARE" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Loan Application">
+                                    <include-form name="NewLoanApplication" location="component://customercare/widget/customercareForms.xml"/>
+                                <!-- platform-specific>
+                                    <html><html-template location="component://loans/webapp/loans/application/loanapplication.ftl"/></html>
+                                </platform-specific -->
+                                </screenlet>
+                                
+                                
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">Cant See Customer Care</label>
+                            </fail-widgets>
+                            
+                        </section>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Loan Applications">
+                        			<include-form name="listLoanApplications" location="component://customercare/widget/customercareForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- receivedLoanApplication -->
+        <screen name="receivedLoanApplication">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create New Loan Application"/>
+                <set field="headerItem" value="loanapplication"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <entity-condition entity-name="Member" list="membersList">
+            </entity-condition>
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Loan Applications">
+                        			<include-form name="listLoanApplications" location="component://customercare/widget/customercareForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- forwardedLoanApplications -->
+            <screen name="forwardedLoanApplications">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create New Loan Application"/>
+                <set field="headerItem" value="forwardedLoanApplications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <entity-condition entity-name="Member" list="membersList">
+            </entity-condition>
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Loan Applications">
+                        			<include-form name="listForwardedLoanApplications" location="component://customercare/widget/customercareForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+
+</screens>
