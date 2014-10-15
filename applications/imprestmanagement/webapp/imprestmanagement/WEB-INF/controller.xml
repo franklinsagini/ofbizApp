@@ -25,6 +25,8 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
+
+    <!-- Inprest Setup -->
     <request-map uri="accountsetup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="setup"/>
@@ -36,18 +38,6 @@
     <request-map uri="destinationssetup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="destinationssetup"/>
-    </request-map>
-    <request-map uri="surrenderable">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="surrenderable"/>
-    </request-map>
-    <request-map uri="perdiem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="perdiem"/>
-    </request-map>
-    <request-map uri="pettycash">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="pettycash"/>
     </request-map>
 
     <!-- Inprest Setup CRUD Operations -->
@@ -79,7 +69,6 @@
         <response name="error" type="view" value="destinationssetup" />
     </request-map>
 
-
     <request-map uri="createPerDiemSetup">
         <security https="true" auth="true" />
         <event type="service" invoke="createPerDiemSetup" />
@@ -94,6 +83,43 @@
         <response name="error" type="view" value="perdiemsetup" />
     </request-map>
 
+    <!-- Imprest Surrenderable -->
+    <request-map uri="surrenderable">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="surrenderable"/>
+    </request-map>
+    <request-map uri="findSurrenderable">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findSurrenderable"/>
+    </request-map>
+    <request-map uri="newSurrenderable">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newSurrenderable"/>
+    </request-map>
+    <request-map uri="surrender">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="surrender"/>
+    </request-map>
+    <!-- Surrenderable CRUD Operations -->
+    <request-map uri="createSurrenderable">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSurrenderable"/>
+        <response name="success" type="view" value="editSurrenderable"/>
+        <response name="error" type="view" value="newSurrenderable"/>
+    </request-map>
+
+    <!-- Imprest Per Diem -->
+    <request-map uri="perdiem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="perdiem"/>
+    </request-map>
+
+    <!-- Imprest Petty Cash -->
+    <request-map uri="pettycash">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="pettycash"/>
+    </request-map>
+
 
      <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
 
@@ -103,6 +129,9 @@
     <view-map name="perdiemsetup" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#perdiemsetup"/>
     <view-map name="destinationssetup" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#destinationssetup"/>
     <view-map name="surrenderable" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#surrenderable"/>
+    <view-map name="findSurrenderable" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#findSurrenderable"/>
+    <view-map name="newSurrenderable" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#newSurrenderable"/>
+    <view-map name="surrender" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#surrender"/>
     <view-map name="perdiem" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#perdiem"/>
     <view-map name="pettycash" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#pettycash"/>
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
