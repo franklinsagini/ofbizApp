@@ -981,6 +981,11 @@
     
     <!-- Find Employee -->
     <form name="FindEmployee" type="single" target="employeeRelations" default-entity-name="Person">
+     <actions>
+    <entity-condition entity-name="PartyGroup" list="branches">
+    <condition-expr field-name="isBranch" operator="equals" value="Y"/>
+    </entity-condition>
+    </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
@@ -996,7 +1001,8 @@
         </field -->
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+                 <list-options key-name="partyId" list-name="branches"
+					description="${groupName}" />
             </drop-down>
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
@@ -1012,6 +1018,10 @@
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="RoleTypeAndParty">
+        		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
         	</entity-condition>
         	<!-- entity-condition entity-name="Station" list="stationList"></entity-condition -->
         	
@@ -1050,6 +1060,15 @@
      
          <!-- Find Employee -->
     <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="Person">
+    <actions>
+    <entity-condition entity-name="PartyGroup" list="branches">
+    <condition-expr field-name="isBranch" operator="equals" value="Y"/>
+    </entity-condition>
+    
+    <entity-condition entity-name="RoleTypeAndParty">
+        		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
+        	</entity-condition>
+    </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
@@ -1065,7 +1084,11 @@
         </field -->
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            
+            <list-options key-name="partyId" list-name="branches"
+					description="${groupName}" />
+					
+               <!--  <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/> -->
             </drop-down>
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
@@ -1081,6 +1104,9 @@
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	<entity-condition entity-name="RoleTypeAndParty">
+        		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
         	</entity-condition>
         	<!-- entity-condition entity-name="Station" list="stationList"></entity-condition -->
         	
@@ -1111,7 +1137,7 @@
      
         
     <!-- New Pay Point-->
-    <form name="NewPayPoint" type="single" target="createPayPoint"
+    <form name="NewPayPoint" type="single" target="createEmplPayPoint"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payPointContext">
         
         <actions>
@@ -1213,7 +1239,9 @@
                 <parameter param-name="payPointId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+         <submit button-type="button"/>
+         </field>
     </form>
     
     

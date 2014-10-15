@@ -220,12 +220,18 @@ under the License.
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
 
         </actions>
-        <alt-target use-when="personInfo==null" target="createPerson"/>
-        <auto-fields-service service-name="updatePerson"/>
-
-        <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
-        <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
+        
+        <alt-target use-when="personInfo!=null" target="updatePerson"/>
+        <!-- <alt-target use-when="personInfo==null" target="createPerson"/>
+        <auto-fields-service service-name="updatePerson"/> -->
+        
+        
+        <field name="partyId"><hidden/></field>        
+        <field name="partyId" use-when="personInfo!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        
+  <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
+        <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
+        
         <field name="employeeNumber" title="${uiLabelMap.MemberEmployeeNumber}" required-field="true" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
