@@ -347,9 +347,14 @@
 				description="Edit Application"></hyperlink>
 		</field>
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
-			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
-			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
+		<!-- 
+			event="onclick"
+			action="javascript: return loanApplicationFormComplete(${loanApplicationId});"
+		 -->
+		
+		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" >
+			
+			<hyperlink target="forwardApplicationToLoans?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
 				
 				
@@ -392,7 +397,12 @@
 		<actions>
 			<entity-condition entity-name="LoanApplication">
 				<condition-list combine="and">
-					<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDED"></condition-expr>
+					<condition-list combine="or">
+						<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDEDLOANS"></condition-expr>
+						<condition-expr field-name="applicationStatus" operator="equals" value="FORWAREDAPPROVAL"></condition-expr>
+						<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDED"></condition-expr>
+					</condition-list>
+					
 					<condition-expr field-name="createdBy" operator="equals" from-field="userLogin.userLoginId"></condition-expr>
 				</condition-list>				
 				
@@ -454,18 +464,18 @@
 			<display />
 		</field>
 		
-		<field name="Edit Application">
+		<!-- field name="Edit Application">
 			<hyperlink target="loanapplication?partyId=${partyId}&amp;loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
-		</field>
+		</field -->
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
+		<!-- field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
 			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
 				
 				
-		</field>
+		</field -->
 		<!-- field name="formStatus" title="Form" use-when="loanApplication.collateralsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsTotalDepositsEnough.equals(&quot;N&quot;)&amp;&amp;loanApplication.eacherGuarantorGreaterThanAverage.equals(&quot;N&quot;)"><display default-value="Form Incomplete, Provide Details (Guarantors, Collateral etc)"></display></field -->
 		
 
