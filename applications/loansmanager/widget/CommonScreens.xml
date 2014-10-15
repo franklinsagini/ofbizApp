@@ -18,6 +18,38 @@
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
+            
+            	 <section>
+        			<widgets>
+						<platform-specific>
+							<html><html-template location="component://customercare/webapp/customercare/customercareheader.ftl"/></html>
+						</platform-specific>
+					</widgets>
+        		</section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="loansprocessingCommonDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="LOANSPROCESSING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.loansprocessingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
