@@ -1154,7 +1154,7 @@ public class LoanServices {
 			e.printStackTrace();
 		}
 
-		loanApplication.set("applicationStatus", "FORWARDED");
+		loanApplication.set("applicationStatus", "FORWAREDAPPROVAL");
 		try {
 			delegator.createOrStore(loanApplication);
 		} catch (GenericEntityException e2) {
@@ -1167,8 +1167,8 @@ public class LoanServices {
 
 		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
 				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
-				loanApplicationId, "applicationStatus", "FORWARED",
-				"createdBy", userLoginId, "comment", "forwarded for review"));
+				loanApplicationId, "applicationStatus", "FORWAREDAPPROVAL",
+				"createdBy", userLoginId, "comment", "forwarded for approval"));
 
 		try {
 			delegator.createOrStore(loanStatusLog);
@@ -1197,7 +1197,7 @@ public class LoanServices {
 		Writer out;
 		try {
 			out = response.getWriter();
-			out.write(json);
+			out.write("");
 			out.flush();
 		} catch (IOException e) {
 			try {
@@ -1209,7 +1209,95 @@ public class LoanServices {
 			}
 		}
 
-		return json;
+		return "";
+	}
+	
+	/***
+	 * Sent to Loans
+	 * 
+	 * */
+	public static String forwardLoanApplicationToLoans(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String loanApplicationId = (String) request
+				.getParameter("loanApplicationId");
+		// Map<String, String> userLogin = (Map<String,
+		// String>)request.getAttribute("userLogin");
+		// request.get
+		// String userLoginId = userLogin.get("userLoginId");
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session
+				.getAttribute("userLogin");
+		String userLoginId = userLogin.getString("userLoginId");
+
+		GenericValue loanApplication = null;
+
+		// SaccoProduct
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		loanApplication.set("applicationStatus", "FORWARDEDLOANS");
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Create a Log
+		GenericValue loanStatusLog;
+		String loanStatusLogId = delegator.getNextSeqId("LoanStatusLog", 1);
+
+		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
+				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
+				loanApplicationId, "applicationStatus", "FORWARDEDLOANS",
+				"createdBy", userLoginId, "comment", "forwarded to Loans"));
+
+		try {
+			delegator.createOrStore(loanStatusLog);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return "";
 	}
 
 }

@@ -66,6 +66,16 @@
                         	<redirect-parameter name="partyId"/>
                         </response>
         </request-map>
+        
+            <request-map uri="forwardApplicationToLoans">
+                <security auth="true" https="true"/>
+        <!-- event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" / -->
+        <event type="java" path="org.ofbiz.loans.LoanServices" invoke="forwardLoanApplicationToLoans" />
+                <response name="view" type="request-redirect"
+                        value="receivedLoanApplication"> 
+                        </response>
+                <response name="error" type="view" value="forwardedLoanApplications" />
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://customercare/widget/customercareScreens.xml#main"/>
