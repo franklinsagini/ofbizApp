@@ -168,6 +168,74 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 
+        <!--
+            FindSurrenderable
+         -->
+    <form name="FindSurrenderable" default-map-name="surrenderCtx" target="findSurrenderable" type="single">
+        <auto-fields-entity entity-name="ImprestSurrenderable" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="surrenderableId"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <!--
+           FindSurrenderableList
+     -->
+
+    <form name="FindSurrenderableList" type="list" list-name="listIt" target="" title="ImprestSurrenderable List" paginate-target="findSupplier" default-entity-name="Supplier"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="surrenderCtx" />
+                <field-map field-name="entityName" value="ImprestSurrenderable" />
+                <field-map field-name="orderBy" from-field="parameters.sortField" />
+                <field-map field-name="viewIndex" from-field="viewIndex" />
+                <field-map field-name="viewSize" from-field="viewSize" />
+            </service>
+        </actions>
+        <field name="surrenderableId" title="Supplier Id" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${surrenderableId}" target="supplierOverview">
+                <parameter param-name="surrenderableId" />
+            </hyperlink>
+        </field>
+        <field name="employeeId" sort-field="true">
+            <display-entity entity-name="Person" description="${destinationName}"/>
+        </field>
+        <field name="approverId" sort-field="true">
+             <display-entity entity-name="Person" description="${destinationName}"/>
+        </field>
+        <field name="reqDate" sort-field="true">
+            <display />
+        </field>
+        <field name="appDate" sort-field="true">
+            <display />
+        </field>
+         <field name="amount" title="Amount" widget-area-style="align-text" sort-field="true">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field name="approvalStatus" sort-field="true">
+            <display />
+        </field>
+    </form>
+
+    <form name="newSurrenderable" type="single" target="createSurrenderable" default-map-name="surrenderable" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        </actions>
+
+        <field name="surrenderableId">
+            <hidden/>
+        </field>
+        <field name="employeeId" title="Employee" tooltip="${uiLabelMap.CommonRequired}">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+
+        <field position="1" name="createButton" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 
 
 </forms>
