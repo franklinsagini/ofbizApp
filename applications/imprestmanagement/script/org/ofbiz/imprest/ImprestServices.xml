@@ -70,4 +70,23 @@
             <store-value value-field="lookedUpValue"/>
     </simple-method>
 
+    <simple-method method-name="createSurrenderable" short-description="Create ImprestSurrenderable">
+            <make-value entity-name="ImprestSurrenderable" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <log level="info" message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Parameters [${parameters}]"/>
+            <sequenced-id sequence-name="ImprestSurrenderable" field="surrenderableId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="surrenderableId" field="newEntity.surrenderableId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateSurrenderable" short-description="Update ImprestSurrenderable">
+            <entity-one entity-name="ImprestSurrenderable" value-field="lookedUpValue"/>
+            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+            <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+
+
 </simple-methods>
