@@ -1061,6 +1061,7 @@
          <!-- Find Employee -->
     <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="RoleTypeAndParty">
     <actions>
+    <set field="roleTypeId" value="EMPLOYEE"/>
     <entity-condition entity-name="PartyGroup" list="branches">
     <condition-expr field-name="isBranch" operator="equals" value="Y"/>
     </entity-condition>
@@ -1093,22 +1094,13 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>
-        <entity-condition entity-name="RoleTypeAndParty">
+            <entity-condition entity-name="RoleTypeAndParty" >
         		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
         	</entity-condition>
-        	<!--  <entity-condition entity-name="Person">
-        		condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/
-        	</entity-condition> -->
-        	
-        	
-        	<entity-condition entity-name="PartyGroup" list="partyGroups">
-        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
-        	</entity-condition>
-        	<!-- entity-condition entity-name="Station" list="stationList"></entity-condition -->
-        	
+        	<set field="roleTypeId" value="EMPLOYEE"/>
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="employeeCtx"/>
-                <field-map field-name="entityName" value="Person"/>
+                <field-map field-name="entityName" value="RoleTypeAndParty"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
