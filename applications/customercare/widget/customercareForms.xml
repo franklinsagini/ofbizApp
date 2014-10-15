@@ -278,10 +278,12 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
+			
 			<entity-condition entity-name="LoanApplication">
-				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
-				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
-				<condition-expr field-name="applicationStatus" operator="equals" value="NEW"></condition-expr>
+		    	<condition-list combine="and">
+					<condition-expr field-name="applicationStatus" operator="equals" value="NEW"></condition-expr>
+					<condition-expr field-name="createdBy" operator="equals" from-field="userLogin.userLoginId"></condition-expr>
+				</condition-list>
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
@@ -389,9 +391,11 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
 			<entity-condition entity-name="LoanApplication">
-				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
-				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
-				<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDED"></condition-expr>
+				<condition-list combine="and">
+					<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDED"></condition-expr>
+					<condition-expr field-name="createdBy" operator="equals" from-field="userLogin.userLoginId"></condition-expr>
+				</condition-list>				
+				
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
