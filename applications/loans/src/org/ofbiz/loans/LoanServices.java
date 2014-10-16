@@ -25,6 +25,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -267,7 +268,9 @@ public class LoanServices {
 				bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt")
 						.subtract(bdExistingLoans);
 			}
-
+			
+			BigDecimal dbTotalPrincipalRepaid = LoanRepayments.getTotalPrincipalPaid(memberId);
+			bdMaximumLoanAmt = bdMaximumLoanAmt.add(dbTotalPrincipalRepaid);
 			// else if it is not based on multiples of Account Product the
 
 			// Check if account has retainer
@@ -1226,7 +1229,17 @@ public class LoanServices {
 			e.printStackTrace();
 		}
 
-		loanApplication.set("applicationStatus", "FORWAREDAPPROVAL");
+		String oldStatus = loanApplication.getString("applicationStatus");
+		String newStatus, commentName;
+		if (oldStatus.equals("FORWAREDAPPROVAL")){
+			newStatus = "APPROVED";
+			commentName = "Loan Approved by "+userLoginId;
+		} else{
+			newStatus = "FORWAREDAPPROVAL";
+			commentName = "forwarded by "+userLoginId+" for approval ";
+		}
+		
+		loanApplication.set("applicationStatus", newStatus);
 		try {
 			delegator.createOrStore(loanApplication);
 		} catch (GenericEntityException e2) {
@@ -1239,8 +1252,8 @@ public class LoanServices {
 
 		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
 				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
-				loanApplicationId, "applicationStatus", "FORWAREDAPPROVAL",
-				"createdBy", userLoginId, "comment", "forwarded for approval"));
+				loanApplicationId, "applicationStatus", newStatus,
+				"createdBy", userLoginId, "comment", commentName));
 
 		try {
 			delegator.createOrStore(loanStatusLog);

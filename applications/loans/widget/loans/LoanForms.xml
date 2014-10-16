@@ -187,7 +187,11 @@ under the License.
         		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
         	</entity-one>
         	<entity-condition entity-name="Member" list="memberList">
-        		<condition-expr field-name="partyId" operator="not-equals" value="${loanApplication.partyId}"/>
+        		<condition-list combine="and">
+        			<condition-expr field-name="partyId" operator="not-equals" value="${loanApplication.partyId}"/>
+        			<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        		</condition-list>
+        		
             </entity-condition>
             
             <!-- entity-condition entity-name="MemberStation" list="memberStationsList"></entity-condition -->
