@@ -1059,16 +1059,17 @@
      </form>
      
          <!-- Find Employee -->
-    <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="RoleTypeAndParty">
+    <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="">
     <actions>
-    <set field="roleTypeId" value="EMPLOYEE"/>
     <entity-condition entity-name="PartyGroup" list="branches">
     <condition-expr field-name="isBranch" operator="equals" value="Y"/>
     </entity-condition>
     
     <entity-condition entity-name="RoleTypeAndParty" >
         		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
+        		<order-by field-name="partyId"/>
         	</entity-condition>
+        	
         	
     </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1077,6 +1078,7 @@
         <field name="idNumber" title="ID Number"><text-find/></field>
         <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
         <field name="memberStatus" title="Status"><text-find/></field>
+       <!--  <field name="roleTypeId"><display-entity entity-name="RoleTypeAndParty" key-field-name="roleTypeId"></display-entity><hidden value="EMPLOYEE"/></field> -->
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
             
@@ -1097,7 +1099,7 @@
             <entity-condition entity-name="RoleTypeAndParty" >
         		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
         	</entity-condition>
-        	<set field="roleTypeId" value="EMPLOYEE"/>
+        	
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="employeeCtx"/>
                 <field-map field-name="entityName" value="RoleTypeAndParty"/>
