@@ -30,7 +30,16 @@
         <response name="success" type="view" value="loanapplication" />
     </request-map>
     
-           <request-map uri="createLoanApplication">
+    <request-map uri="loansGuaranteed">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="loansGuaranteed">
+        	<redirect-parameter name="loanApplicationId"/>
+        	<redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
+    
+    
+    <request-map uri="createLoanApplication">
                 <security https="true" auth="true" />
                 <!-- event type="simple"
                         path="component://loans/script/org/ofbiz/loans/LoanEvents.xml" invoke="createLoanApplication" / -->
@@ -430,7 +439,9 @@
         <view-map name="forwardedLoanApplications" type="screen" page="component://loansprocessing/widget/loansprocessingScreens.xml#forwardedLoanApplications"/>
      <view-map name="viewapplicationprofile" type="screen"
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#viewapplicationprofile" />
-                
+         
+           <view-map name="loansGuaranteed" type="screen"
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#loansGuaranteed" />          
      <view-map name="changeLoanDetails" type="screen"
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#changeLoanDetails" />
 </site-conf>
