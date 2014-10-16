@@ -521,6 +521,7 @@ public class LoginServices {
         userLoginToCreate.set("externalAuthId", externalAuthId);
         userLoginToCreate.set("passwordHint", passwordHint);
         userLoginToCreate.set("enabled", enabled);
+        userLoginToCreate.set("lastLocale", "en-GB");
         userLoginToCreate.set("requirePasswordChange", requirePasswordChange);
         userLoginToCreate.set("currentPassword", useEncryption ? HashCrypt.cryptUTF8(getHashType(), null, currentPassword) : currentPassword);
         try {

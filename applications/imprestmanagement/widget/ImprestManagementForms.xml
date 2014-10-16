@@ -223,8 +223,10 @@
     <form name="newSurrenderable" type="single" target="createSurrenderable" default-map-name="surrenderable" header-row-style="header-row"
         default-table-style="basic-table">
         <actions>
+            <entity-condition entity-name="ImprestSurrenderable" list="imprestSurrenderableList">
+                <order-by field-name="surrenderableId"/>
+            </entity-condition>
         </actions>
-
         <field name="surrenderableId">
             <hidden/>
         </field>
@@ -236,6 +238,35 @@
         <field position="1" name="createButton" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+    </form>
+
+    <form name="EditSurrenderable" type="single" target="updateSurrenderable" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="surrenderableContext">
+        <alt-target use-when="surrenderableContext!=null" target="UpdatePerDiemSetup"/>
+        <actions>
+            <entity-condition entity-name="ImprestSurrenderable" list="imprestSurrenderableList">
+                <order-by field-name="surrenderableId"/>
+            </entity-condition>
+        </actions>
+        <field name="surrenderableId">
+            <hidden/>
+        </field>
+        <field name="surrenderableId" use-when="surrenderableContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+        <field position="1" name="employeeId" title="Destination">
+             <text size="10"/>
+        </field>
+        <field name="reqDate" position="2">
+             <text size="10"/>
+        </field>
+        <field position="1" name="amount" title="Cost/Day" tooltip="KES">
+            <text size="10"/>
+        </field>
+        <!-- <field position="2" name="numberOfDays" title="Number of Days"><text size="10"/></field> -->
+                <!-- submitButton -->
+        <field use-when="surrenderableContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="surrenderableContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
 
