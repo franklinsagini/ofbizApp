@@ -81,6 +81,11 @@
                 <response name="success" type="view" value="viewapplicationprofile"
                         save-home-view="true" />
         </request-map>
+        
+        <request-map uri="loanLogs">
+        	<security https="true" auth="true"/>
+        	<response name="success" type="view" value="loanLogs"></response>
+        </request-map>
 
         <!-- Loan Application Security -->
         <!-- Start LoanApplicationSecurity -->
@@ -265,7 +270,29 @@
 		<response name="success" type="view" value="changeLoanDetails"/>
 	</request-map>
 	
-	
+	    <request-map uri="loansGuaranteed">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="loansGuaranteed">
+        	<redirect-parameter name="loanApplicationId"/>
+        	<redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
+    
+        <request-map uri="currentRepayments">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="currentRepayments">
+        	<redirect-parameter name="loanApplicationId"/>
+        	<redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
+    
+     <request-map uri="addGuarantors">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="addGuarantors">
+        	<redirect-parameter name="loanApplicationId"/>
+        	<redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
 	
 	
 	
@@ -431,7 +458,15 @@
         <view-map name="forwardedLoanApplications" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#forwardedLoanApplications"/>
         <view-map name="approvedLoanApplications" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#approvedLoanApplications"/>
     
-    
+         <view-map name="loansGuaranteed" type="screen"
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#loansGuaranteed" />
+     <view-map name="currentRepayments" type="screen"
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#currentRepayments" />
+                
+     <view-map name="addGuarantors" type="screen"
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#addGuarantors" />              
+     <view-map name="loanLogs" type="screen"
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#loanLogs" />  
     
      <view-map name="viewapplicationprofile" type="screen"
                 page="component://loansmanager/widget/loansmanagerScreens.xml#viewapplicationprofile" />
