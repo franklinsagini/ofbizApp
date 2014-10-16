@@ -981,6 +981,11 @@
     
     <!-- Find Employee -->
     <form name="FindEmployee" type="single" target="employeeRelations" default-entity-name="Person">
+     <actions>
+    <entity-condition entity-name="PartyGroup" list="branches">
+    <condition-expr field-name="isBranch" operator="equals" value="Y"/>
+    </entity-condition>
+    </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
@@ -996,7 +1001,8 @@
         </field -->
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+                 <list-options key-name="partyId" list-name="branches"
+					description="${groupName}" />
             </drop-down>
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
@@ -1012,6 +1018,10 @@
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="RoleTypeAndParty">
+        		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
         	</entity-condition>
         	<!-- entity-condition entity-name="Station" list="stationList"></entity-condition -->
         	
@@ -1049,60 +1059,58 @@
      </form>
      
          <!-- Find Employee -->
-    <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="Person">
+    <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="RoleTypeAndParty">
+    <actions>
+    <set field="roleTypeId" value="EMPLOYEE"/>
+    <entity-condition entity-name="PartyGroup" list="branches">
+    <condition-expr field-name="isBranch" operator="equals" value="Y"/>
+    </entity-condition>
+    
+    <entity-condition entity-name="RoleTypeAndParty" >
+        		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
+        	</entity-condition>
+        	
+    </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="idNumber" title="ID Number"><text-find/></field>
         <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
         <field name="memberStatus" title="Status"><text-find/></field>
-        <!-- field name="stationId" title="Station">
-            <drop-down allow-empty="true" current-description="">
-                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
-                    <entity-order-by field-name="name"/>
-                </entity-options>
-            </drop-down>
-        </field -->
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+            
+            <list-options key-name="partyId" list-name="branches"
+					description="${groupName}" />
+					
+               <!--  <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/> -->
             </drop-down>
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
-     
-      <form name="employeesListAddBankDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerson" paginate-target="employeeBankDetails"
+   
+ 
+      <form name="employeesListAddBankDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="" paginate-target="FindEmployeeBank"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>
-        	<entity-condition entity-name="Person">
-        		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+            <entity-condition entity-name="RoleTypeAndParty" >
+        		<condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
         	</entity-condition>
-        	
-        	<entity-condition entity-name="PartyGroup" list="partyGroups">
-        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
-        	</entity-condition>
-        	<!-- entity-condition entity-name="Station" list="stationList"></entity-condition -->
-        	
+        	<set field="roleTypeId" value="EMPLOYEE"/>
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="employeeCtx"/>
-                <field-map field-name="entityName" value="Person"/>
+                <field-map field-name="entityName" value="RoleTypeAndParty"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+         <field name="partyId"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}"></display-entity></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
         <field name="nationalIDNumber" title="Id Number"><display also-hidden="false"></display></field>
-   
-       <!-- field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
-	     <field name="stationId" title="Station">
-	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
-            
-        </field -->
-        
-        <!-- field name="memberStatus"><display also-hidden="false"></display></field -->
         
         <field name="Add Employee Bank Details">
         	<hyperlink target="bank?partyId=${partyId}" description="Bank Details for ${firstName} ${lastName}"></hyperlink>
@@ -1111,7 +1119,7 @@
      
         
     <!-- New Pay Point-->
-    <form name="NewPayPoint" type="single" target="createPayPoint"
+    <form name="NewPayPoint" type="single" target="createEmplPayPoint"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payPointContext">
         
         <actions>
@@ -1213,7 +1221,9 @@
                 <parameter param-name="payPointId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+         <submit button-type="button"/>
+         </field>
     </form>
     
     

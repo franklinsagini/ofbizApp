@@ -61,6 +61,7 @@ under the License.
                 <set field="titleProperty" value="PartyCreateNewEmployee"/>
                 <set field="headerItem" value="Employees"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="KEN"/>
+                <entity-one entity-name="PartyAndPerson" value-field="personalInfo" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -80,7 +81,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="EmployeeRelations">
+    <screen name="EmployeeRelationyts">
         <section>
             <actions>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -934,6 +935,7 @@ under the License.
         <screen name="employeeBankDetails">
         <section>
             <actions>
+            	<set field="roleTypeId" value="EMPLOYEE"/>
                 <set field="titleProperty" value="Employee Bank Details"/>
                 <set field="headerItem" value="EmplBankDetails"/>
                 <set field="tabButtonItem" value="employeeBankDetails"/>
@@ -941,6 +943,8 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
 
                 <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+                <set field="employeeCtx" from-field="parameters"/>
+                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -975,9 +979,9 @@ under the License.
     <section>
             <actions>
                 <set field="titleProperty" value="Employee Bank Details"/>
-                <set field="headerItem" value="paypoint"/>
+                <set field="headerItem" value="bank"/>
                 <set field="displayPassword" value="Y"/>
-                <set field="target" value="createPayPoint"/>
+                <set field="target" value="createEmplPayPoint"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                  <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one value-field="party" entity-name="Person">
