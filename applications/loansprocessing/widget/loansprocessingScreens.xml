@@ -123,6 +123,100 @@
         </section>
     </screen>
     
+    
+         <screen name="loansGuaranteed">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="tabButtonItem" value="loansGuaranteed"/>
+                <set field="headerItem" value="loansGuaranteed"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="loanApplication">
+                                    <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                </entity-one>
+                <set field="partyId" from-field="loanApplication.partyId"/>
+                
+                <set field="memberNumber" from-field="loanApplication.memberNumber"/>
+                
+                 
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       
+                        <section>
+                            <condition>
+                                <not><if-empty field="loanApplication"/></not>
+                            </condition>
+                            <widgets>
+                               <screenlet title="My Guaranteed Loans List">
+                                            	<include-form name="myGuaranteedLoans" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                 </screenlet>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- currentRepayments -->
+             <screen name="currentRepayments">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="tabButtonItem" value="currentRepayments"/>
+                <set field="headerItem" value="currentRepayments"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="loanApplication">
+                                    <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                </entity-one>
+                <set field="partyId" from-field="loanApplication.partyId"/>
+                
+                <set field="memberNumber" from-field="loanApplication.memberNumber"/>
+                
+                 
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       
+                        <section>
+                            <condition>
+                                <not><if-empty field="loanApplication"/></not>
+                            </condition>
+                            <widgets>
+                               <screenlet title="Current Repayments">
+                                            	<include-form name="currentRepayments" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                 </screenlet>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- LoanApplication -->
     <screen name="LoanApplication">
         <section>
@@ -561,6 +655,98 @@
 									<include-form name="listLoanGuarantorChange"
 										location="component://loans/widget/loans/LoanForms.xml" />
 								</screenlet>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Add Guarantors -->
+     <screen name="addGuarantors">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Members"/>
+                <set field="headerItem" value="addGuarantors"/>
+                <set field="tabButtonItem" value="addGuarantors"/>
+                <set field="memberCtx" from-field="parameters"/>
+				<set field="partyId" from-field="parameters.partyId"/>
+				<set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <!-- condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition -->
+                            <widgets>
+                                <!-- platform-specific>
+                                    <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
+                                </platform-specific -->
+                                <screenlet title="Search Members">
+                                        <include-form name="FindMember" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                            	</screenlet>
+                                <screenlet title="Members List">
+                                		<include-form  name="members" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                </screenlet>
+                                
+                                 <screenlet title="Guarantors List">
+                                            	<include-form name="ViewLoanGuarantorsList" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                 </screenlet>
+                            </widgets>
+                            <!-- fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets -->
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- loanLogs -->
+        <screen name="loanLogs">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="tabButtonItem" value="loanLogs"/>
+                <set field="headerItem" value="loanLogs"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="loanApplication">
+                                    <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                </entity-one>
+                <set field="partyId" from-field="loanApplication.partyId"/>
+                
+                <set field="memberNumber" from-field="loanApplication.memberNumber"/>
+                
+                 
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       
+                        <section>
+                            <condition>
+                                <not><if-empty field="loanApplication"/></not>
+                            </condition>
+                            <widgets>
+                               <screenlet title="Logs">
+                                            	<include-form name="loanLogs" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                 </screenlet>
                                
                             </widgets>
                             <fail-widgets>

@@ -1526,6 +1526,32 @@ public class LoanRepayments {
 
 		return totalInsurancePaid;
 	}
+	
+	public static BigDecimal getTotalPrincipalPaid(String partyId){
+		BigDecimal bdTotalPrincipalPaid = BigDecimal.ZERO;
+		
+		//Get all loans by this member
+		List<GenericValue> loanApplicationELI = null; // =
+
+		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId)),
+						EntityOperator.AND);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		// List<GenericValue> loansList = new LinkedList<GenericValue>();
+
+		for (GenericValue genericValue : loanApplicationELI) {
+			bdTotalPrincipalPaid = bdTotalPrincipalPaid.add(getTotalPrincipalPaid(partyId, genericValue.getString("loanApplicationId")));
+		}
+		return bdTotalPrincipalPaid;
+	}
 
 	/***
 	 * @author Japheth Odonya @when Oct 5, 2014 11:39:41 PM Get Total Principal
@@ -1567,6 +1593,8 @@ public class LoanRepayments {
 
 		return totalPrincipalPaid;
 	}
+	
+	//public static BigDecimal getTotalLoanPaid
 
 	/**
 	 * @author Japheth Odonya @when Oct 5, 2014 11:54:49 PM Get total paid
