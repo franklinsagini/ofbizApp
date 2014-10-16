@@ -65,9 +65,9 @@
                 
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
-                <set field="saccoProductId" from-field="loanApplication.saccoProductId"/>
+                <set field="loanProductId" from-field="loanApplication.loanProductId"/>
                 <set field="partyId" from-field="loanApplication.partyId"/>
-                <entity-one entity-name="SaccoProduct" value-field="saccoProduct"/>
+                <entity-one entity-name="LoanProduct" value-field="loanProduct"/>
                 <entity-one entity-name="Member" value-field="member"/>
             </actions>
             <widgets>
@@ -110,7 +110,15 @@
                                                 </condition>
                                                 <widgets>
                                                     <!-- label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/ -->
-                                                    <label text="Loan Application :  ${saccoProduct.name} - ${saccoProduct.code} for ${member.firstName} ${member.lastName}"></label>
+                                                   
+                                                   	<screenlet>
+                                                   		<label text="Loan Application :  ${loanProduct.name} - ${loanProduct.code} for ${member.firstName} ${member.lastName}"></label>
+                                                   	</screenlet>
+                                                    
+                                                   	<screenlet>
+                                                   		<label text="Loan No :  ${loanApplication.loanNo} Loan Amount : KES. ${loanApplication.loanAmt}"></label>
+                                                   	</screenlet>
+                                                    
                                                 </widgets>
                                                 <fail-widgets>
                                                     <label text="Sacco Member"/>
