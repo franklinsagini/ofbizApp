@@ -122,6 +122,9 @@
 					if(excessdays <= 0){
 						
 						$('input[name="leaveDuration"]').val(data.leaveDuration);
+						
+						$('input[name="resumptionDate"]').val(data.resumptionDate);
+					  	$('input[name="resumptionDate_i18n"]').val(data.resumptionDate_i18n);
 					}
 					else if (excessdays > 0){
 					alert("Leave longer than your leave balance");
@@ -147,6 +150,11 @@
 	     success : function(data){
 					 $('input[name="thruDate"]').val(data.thruDate);
 					  $('input[name="thruDate_i18n"]').val(data.thruDate_i18n);
+					  
+					   $('input[name="resumptionDate"]').val(data.resumptionDate);
+					  $('input[name="resumptionDate_i18n"]').val(data.resumptionDate_i18n);
+					  
+					  
 					 
 	               },
 	      error : function(errorData){
