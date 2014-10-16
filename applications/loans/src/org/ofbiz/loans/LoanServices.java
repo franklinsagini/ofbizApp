@@ -127,9 +127,8 @@ public class LoanServices {
 		String memberDetails = "";
 		BigDecimal bdDepositamt = BigDecimal.ZERO;
 
-		if ((loanProductId != null) && (!loanProductId.equals(""))) {
-			bdDepositamt = totalSavings(partyId, loanProductId, delegator);
-		}
+		// bdDepositamt = totalSavings(partyId, loanProductId, delegator);
+		bdDepositamt = totalMemberDepositSavings(partyId, delegator);
 
 		try {
 			member = delegator.findOne("Member",
@@ -152,7 +151,6 @@ public class LoanServices {
 			result.put("payrollNo", member.get("payrollNumber"));
 			result.put("memberNo", member.get("memberNumber"));
 			result.put("memberClass", member.get("memberClass"));
-			
 
 			result.put("payrolNo", member.get("payrollNumber"));
 			result.put("currentStationId", member.get("stationId"));
@@ -253,25 +251,24 @@ public class LoanServices {
 			}
 
 			// Get Existing Loans
-			
-			
-			//if this is a loan based on Multiples of Account Product then
-			if (loanProduct.getString("multipleOfSavings").equals("Yes")){
+
+			// if this is a loan based on Multiples of Account Product then
+			if (loanProduct.getString("multipleOfSavings").equals("Yes")) {
 				bdExistingLoans = calculateExistingLoansTotal(memberId,
 						loanProductId, delegator);
 				bdTotalSavings = totalSavings(memberId, loanProductId,
 						delegator);
 				bdMaximumLoanAmt = (bdTotalSavings.multiply(savingsMultiplier))
-					.subtract(bdExistingLoans);
-			} else{
-				
-				bdExistingLoans = calculateExistingAccountLessLoansTotal(memberId,
-						loanProductId, delegator);
-				bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt").subtract(bdExistingLoans);
+						.subtract(bdExistingLoans);
+			} else {
+
+				bdExistingLoans = calculateExistingAccountLessLoansTotal(
+						memberId, loanProductId, delegator);
+				bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt")
+						.subtract(bdExistingLoans);
 			}
-			
-			//else if it is not based on multiples of Account Product the
-			
+
+			// else if it is not based on multiples of Account Product the
 
 			// Check if account has retainer
 
@@ -391,6 +388,81 @@ public class LoanServices {
 		return bdTotalSavings;
 	}
 
+	/***
+	 * Get total deposit savings
+	 * 
+	 * */
+	private static BigDecimal totalMemberDepositSavings(String memberId,
+			Delegator delegator) {
+		// Get the multiplier account - the account being used to get the
+		// maximum loan as defined in the
+		// Loan Product Setup
+
+		// Get Accounts for this member
+		List<GenericValue> memberAccountELI = null;
+		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId),
+						EntityCondition.makeCondition("withdrawable",
+								EntityOperator.EQUALS, "No")),
+						EntityOperator.AND);
+
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					accountsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (memberAccountELI == null) {
+			return BigDecimal.ZERO;
+		}
+		BigDecimal bdTotalSavings = BigDecimal.ZERO;
+		//BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : memberAccountELI) {
+			// result.put(genericValue.get("bankBranchId").toString(),
+			// genericValue.get("branchName"));
+			// Compute the total Savings for this account
+			bdTotalSavings = bdTotalSavings.add(AccHolderTransactionServices
+					.getTotalSavings(genericValue.get("memberAccountId")
+							.toString(), delegator));
+			
+				//			bdOpeningBalance = bdOpeningBalance.add(getTotalOpeningBalance(memberId, genericValue.get("memberAccountId")
+				//							.toString(), delegator));
+		}
+		// sum up all the savings
+		//bdTotalSavings = bdTotalSavings.add(bdOpeningBalance);
+		return bdTotalSavings;
+	}
+
+	private static BigDecimal getTotalOpeningBalance(String memberId, String memberAccountId,
+			Delegator delegator) {
+		List<GenericValue> memberAccountDetailsELI = null;
+		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId),
+						EntityCondition.makeCondition("memberAccountId",
+								EntityOperator.EQUALS, memberAccountId)),
+						EntityOperator.AND);
+
+		try {
+			memberAccountDetailsELI = delegator.findList("MemberAccountDetails",
+					accountsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (memberAccountDetailsELI == null) {
+			return BigDecimal.ZERO;
+		}
+		BigDecimal bdTotalOpeningBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : memberAccountDetailsELI) {
+			bdTotalOpeningBalance = bdTotalOpeningBalance.add(genericValue.getBigDecimal("savingsOpeningBalance"));
+			
+		}
+		return bdTotalOpeningBalance;
+	}
+
 	public static int getMemberDurations(Date joinDate) {
 
 		LocalDateTime stJoinDate = new LocalDateTime(joinDate.getTime());
@@ -457,8 +529,8 @@ public class LoanServices {
 						EntityCondition.makeCondition("accountProductId",
 								EntityOperator.EQUALS, accountProductId)),
 						EntityOperator.AND);
-		
-		//EntityOperator._emptyMap
+
+		// EntityOperator._emptyMap
 
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
@@ -477,7 +549,7 @@ public class LoanServices {
 
 		return existingLoansTotal;
 	}
-	
+
 	/***
 	 * Total Loans for Loans without product
 	 * 
@@ -485,8 +557,8 @@ public class LoanServices {
 	/**
 	 * Calculate Existing Loans Total
 	 * **/
-	private static BigDecimal calculateExistingAccountLessLoansTotal(String memberId,
-			String loanProductId, Delegator delegator) {
+	private static BigDecimal calculateExistingAccountLessLoansTotal(
+			String memberId, String loanProductId, Delegator delegator) {
 		BigDecimal existingLoansTotal = BigDecimal.ZERO;
 
 		GenericValue loanProduct = null;
@@ -498,7 +570,7 @@ public class LoanServices {
 		}
 
 		// The Multiplier account id
-		//String accountProductId = loanProduct.getString("accountProductId");
+		// String accountProductId = loanProduct.getString("accountProductId");
 
 		List<GenericValue> loanApplicationELI = null; // =
 
@@ -508,8 +580,8 @@ public class LoanServices {
 						EntityCondition.makeCondition("accountProductId",
 								EntityOperator.EQUALS, "NOACCOUNT")),
 						EntityOperator.AND);
-		
-		//EntityOperator._emptyMap
+
+		// EntityOperator._emptyMap
 
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
@@ -1211,13 +1283,13 @@ public class LoanServices {
 
 		return "";
 	}
-	
+
 	/***
 	 * Sent to Loans
 	 * 
 	 * */
-	public static String forwardLoanApplicationToLoans(HttpServletRequest request,
-			HttpServletResponse response) {
+	public static String forwardLoanApplicationToLoans(
+			HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String loanApplicationId = (String) request
