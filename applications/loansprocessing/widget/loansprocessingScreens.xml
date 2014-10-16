@@ -668,5 +668,50 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- Add Guarantors -->
+     <screen name="addGuarantors">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Members"/>
+                <set field="headerItem" value="addGuarantors"/>
+                <set field="tabButtonItem" value="addGuarantors"/>
+                <set field="memberCtx" from-field="parameters"/>
+				<set field="partyId" from-field="parameters.partyId"/>
+				<set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <!-- condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition -->
+                            <widgets>
+                                <!-- platform-specific>
+                                    <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
+                                </platform-specific -->
+                                <screenlet title="Search Members">
+                                        <include-form name="FindMember" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                            	</screenlet>
+                                <screenlet title="Members List">
+                                		<include-form  name="members" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                </screenlet>
+                                
+                                 <screenlet title="Guarantors List">
+                                            	<include-form name="ViewLoanGuarantorsList" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                 </screenlet>
+                            </widgets>
+                            <!-- fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets -->
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>

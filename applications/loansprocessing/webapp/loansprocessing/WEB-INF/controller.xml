@@ -22,7 +22,6 @@
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="forwardedLoanApplications"/></request-map>
-    
        <request-map uri="forwardedLoanApplications"><security https="true" auth="true"/><response name="success" type="view" value="forwardedLoanApplications"/></request-map>
  	
  	<request-map uri="loanapplication">
@@ -45,6 +44,16 @@
         	<redirect-parameter name="partyId"/>
         </response>
     </request-map>
+    
+     <request-map uri="addGuarantors">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="addGuarantors">
+        	<redirect-parameter name="loanApplicationId"/>
+        	<redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
+    
+    
     
     
     
@@ -450,10 +459,13 @@
      <view-map name="viewapplicationprofile" type="screen"
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#viewapplicationprofile" />
          
-           <view-map name="loansGuaranteed" type="screen"
+     <view-map name="loansGuaranteed" type="screen"
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#loansGuaranteed" />
-           <view-map name="currentRepayments" type="screen"
-                page="component://loansprocessing/widget/loansprocessingScreens.xml#currentRepayments" />                
+     <view-map name="currentRepayments" type="screen"
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#currentRepayments" />
+                
+     <view-map name="addGuarantors" type="screen"
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#addGuarantors" />              
                           
      <view-map name="changeLoanDetails" type="screen"
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#changeLoanDetails" />
