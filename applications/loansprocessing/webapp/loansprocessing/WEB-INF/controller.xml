@@ -38,6 +38,16 @@
         </response>
     </request-map>
     
+        <request-map uri="currentRepayments">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="currentRepayments">
+        	<redirect-parameter name="loanApplicationId"/>
+        	<redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
+    
+    
+    
     
     <request-map uri="createLoanApplication">
                 <security https="true" auth="true" />
@@ -441,7 +451,10 @@
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#viewapplicationprofile" />
          
            <view-map name="loansGuaranteed" type="screen"
-                page="component://loansprocessing/widget/loansprocessingScreens.xml#loansGuaranteed" />          
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#loansGuaranteed" />
+           <view-map name="currentRepayments" type="screen"
+                page="component://loansprocessing/widget/loansprocessingScreens.xml#currentRepayments" />                
+                          
      <view-map name="changeLoanDetails" type="screen"
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#changeLoanDetails" />
 </site-conf>

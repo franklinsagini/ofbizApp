@@ -163,5 +163,78 @@
             </hyperlink>
         </field -->
     </form>
+    
+    <!-- currentRepayments -->
+    <form name="currentRepayments" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanRepayment" paginate-target="loanRepayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanRepayment">
+            	<condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+            	</condition-list>
+            </entity-condition>
+            
+        	<entity-condition entity-name="Member" list="membersList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition>
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
+        	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
+        	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanRepayment"/ -->
+        <field name="partyId"><hidden/></field>
+ 		<!-- field name="partyId" title="Member">
+        	<drop-down>
+        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        	</drop-down>
+        </field -->
+        <!-- field name="memberAccountId" title="Member Account">
+        	<drop-down allow-empty="false">
+        		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${AccountNo}"/>
+        	</drop-down>
+        </field>
+        <field name="accountNo" title="Account No"><text></text></field>
+        <field name="accountName" title="Account Name"><text></text></field>
+        <field name="accountBalance" title="Account Balance"><text></text></field -->
+        
+        <!--field name="loanApplicationId" title="Loan">
+        	<drop-down allow-empty="false">
+        		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
+        	</drop-down>
+        </field>
+        
+        <field name="loanNo" title="Loan No"><display></display></field>
+        <field name="loanTypeId" title="Loan Type">
+        	<drop-down allow-empty="false">
+        		<list-options key-name="saccoProductId" list-name="saccoProductList" description="${name} - ${code}"/>
+        	</drop-down>
+        </field -->
+        
+        
+        <!-- field name="repaymentType" title="Repayment Type"><text></text></field -->
+        <field name="loanNo" title="Loan No"  ><display></display></field>
+        
+        <field name="createdStamp" title="Date/Time Paid"  ><display type="date-time"></display></field>
+        <!-- field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field -->
+        <!-- field name="transactionAmount" title="Total Paid"><text></text></field -->
+        
+        <!--field name="interestAmount" title="Interest Amount"><display></display></field>
+        <field name="insuranceAmount" title="Insurance Amount"><display/></field>
+        <field name="principalAmount" title="Principal Amount" ><display/></field -->
+        
+        <field name="insuranceAmount" title="Insurance Amount"><display/></field>
+        <field name="interestAmount" title="Interest Amount"><display></display></field>
+        <field name="principalAmount" title="Principal Amount" ><display/></field>
+        <field name="excessAmount" title="Excess Amount"  ><display type="accounting-number"></display></field>
+        <!-- field name="excessAmount" title="Excess Amount" ><display/></field -->
+        
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanRepayment" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanRepaymentId"/>
+            </hyperlink>
+        </field >
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
 
 </forms>
