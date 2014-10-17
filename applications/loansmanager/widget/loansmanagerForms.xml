@@ -79,10 +79,10 @@
 				description="Edit Application"></hyperlink>
 		</field -->
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;FORWARDEDLOANS&quot;)" event="onclick"
-			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
-			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
-				description="Forward Application"></hyperlink>
+		<field name="Forward" use-when="applicationStatus.equals(&quot;FORWAREDAPPROVAL&quot;)" event="onclick"
+			action="javascript: return loanApplicationFormComplete(${loanApplicationId});" >
+			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}&amp;DONE_PAGE=forwardApplication?loanApplicationId=${loanApplicationId}"
+				description="Approve" target-type="inter-app" ></hyperlink>
 				
 				
 		</field>
@@ -108,6 +108,13 @@
 		<field name="detailsLink" title="Details"
 			widget-style="buttontext">
 			<hyperlink target="viewapplicationprofile" description="Details"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+				<field name="loanLogs" title="Logs" widget-style="buttontext">
+			<hyperlink target="loanLogs" description="Show Logs"
 				also-hidden="false">
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
@@ -213,7 +220,7 @@
 			button-type="button"/></field -->
 		<field name="changeLoanDetails" title="Change Loan Details"
 			widget-style="buttontext">
-			<hyperlink target="changeLoanDetails" description="Change Loan Details"
+			<hyperlink target="changeLoanDetails" description="Change"
 				also-hidden="false">
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
@@ -221,6 +228,13 @@
 		<field name="detailsLink" title="Details"
 			widget-style="buttontext">
 			<hyperlink target="viewapplicationprofile" description="Details"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+				<field name="loanLogs" title="Logs" widget-style="buttontext">
+			<hyperlink target="loanLogs" description="Logs"
 				also-hidden="false">
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>

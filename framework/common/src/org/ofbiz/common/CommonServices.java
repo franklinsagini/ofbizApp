@@ -349,7 +349,7 @@ public class CommonServices {
             v.set("serverIpAddress", "127.0.0.1");
             v.set("serverHostName", "localhost");
             v.set("webappName", "webtools");
-            v.set("initialLocale", "en_US");
+            v.set("initialLocale", "en_GB");
             v.set("initialRequest", "http://localhost:8080/webtools/control/main");
             v.set("initialReferrer", "http://localhost:8080/webtools/control/main");
             v.set("initialUserAgent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-us) AppleWebKit/124 (KHTML, like Gecko) Safari/125.1");
@@ -550,7 +550,7 @@ public class CommonServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonPingDatasourceInvalidCount", locale));
         }
     }
-    
+
 
 
     public static Map<String, Object> getAllMetrics(DispatchContext dctx, Map<String, ?> context) {
