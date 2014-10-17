@@ -272,8 +272,10 @@
     	
     	if (!isValid){
     		alert(message);
+    		window.location.reload();
     	} else{
     		alert(' Loan Application forwarded for review!');
+    		window.location.reload();
     	}
     	
     	

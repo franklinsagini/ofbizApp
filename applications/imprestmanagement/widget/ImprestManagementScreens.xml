@@ -302,6 +302,27 @@
             </widgets>
         </section>
     </screen>
+    <screen name="editSurrenderable">
+        <section>
+            <actions>
+                <set field="surrenderableId" value="parameters.surrenderableId"/>
+                <entity-one entity-name="ImprestSurrenderable" value-field="surrenderableContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSurrenderableDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Imprest Management: Surrenderable Imprest">
+                                    <include-form name="EditSurrenderable" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="perdiem">
         <section>
             <actions>

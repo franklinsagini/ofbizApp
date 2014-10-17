@@ -611,23 +611,48 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 
 		Delegator delegator = person.getDelegator();
 
-		List<GenericValue> getLeaveAppointmentDateELI = null;
+		List<GenericValue> getLeaveappointmentdateELI = null;
 
 		try {
-			getLeaveAppointmentDateELI = delegator.findList("Person",
+			getLeaveappointmentdateELI = delegator.findList("Person",
 					EntityCondition.makeCondition("partyId", partyId), null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 
-		for (GenericValue genericValue : getLeaveAppointmentDateELI) {
+		for (GenericValue genericValue : getLeaveappointmentdateELI) {
 			appointmentdate = genericValue.getString("appointmentdate");
 		}
 
 		return appointmentdate;
 
 	}
+	
+	/*public static String getLeaveappointmentdate(GenericValue person) {
+		String appointmentdate = "";
+
+		String partyId = person.getString("partyId");
+
+		Delegator delegator = person.getDelegator();
+
+		List<GenericValue> getappointmentdateELI = null;
+
+		try {
+			getappointmentdateELI = delegator.findList("Person",
+					EntityCondition.makeCondition("partyId", partyId), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : getappointmentdateELI) {
+			appointmentdate = genericValue.getString("appointmentdate");
+		}
+
+		return appointmentdate;
+
+	}*/
 
 	public static String getpartyIdFrom(GenericValue party) {
 		String partyIdFromV = "";
