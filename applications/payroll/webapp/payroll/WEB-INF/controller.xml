@@ -515,8 +515,7 @@ under the License.
 			<redirect-parameter name="nhifTableId"/>
 			</response>
 		<response name="error" type="view" value="nhiftable" />
-	</request-map>
-	
+	</request-map>	
 
 	
 	<request-map uri="nssftable">
@@ -560,6 +559,36 @@ under the License.
 			<redirect-parameter name="nssfTableId"/>
 			</response>
 		<response name="error" type="view" value="nssftable" />
+	</request-map>
+	
+	<!-- Create Payslip Message -->
+	<request-map uri="payslipMessage">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="payslipMessage"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="createPayslipMessage">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPayslipMessage" />
+		<response name="success" type="request-redirect-noparam"
+			value="payslipMessage"></response>
+		<response name="error" type="view" value="nhiftable" />
+	</request-map>
+	
+	<request-map uri="updatePayslipMessage">
+		<security https="true" auth="true" />
+		<response name="success" type="request-redirect-noparam"
+			value="payslipMessage"></response>
+		<response name="error" type="view" value="payslipMessage" />
+	</request-map>
+	
+	<request-map uri="deletePayslipMessage">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePayslipMessage" />
+		<response name="success" type="request-redirect-noparam"
+			value="payslipMessage"></response>
+		<response name="error" type="view" value="payslipMessage" />
 	</request-map>
 	
 	 <request-map uri="runpayroll">
@@ -647,6 +676,7 @@ under the License.
 	<view-map name="nhiftable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewNHIFTable"/>
 	<view-map name="nssftable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewNSSFTable"/>
 	<view-map name="payrollOverview" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#PayrollOverview"/>
+	<view-map name="payslipMessage" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#PayslipMessage"/>
 	
 	 <!-- PDFs  -->
     <view-map name="ReportTestPDF" type="screenfop" page="component://payroll/widget/payroll/PayrollScreens.xml#ReportTestPDF" content-type="application/pdf" encoding="none"/>
