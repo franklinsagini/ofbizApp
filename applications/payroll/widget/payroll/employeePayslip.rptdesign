@@ -6,6 +6,32 @@
     <property name="cheatSheet">org.eclipse.birt.report.designer.ui.cheatsheet.dualcolumnlisting</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="name" id="667">
+            <text-property name="promptText">Payroll Period</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="employee_number" id="668">
+            <text-property name="promptText">Employee Number</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="HCM_DataSource" id="396">
             <list-property name="privateDriverProperties">
@@ -98,6 +124,28 @@
                 <structure>
                     <property name="columnName">paymenttype</property>
                     <text-property name="displayName">paymenttype</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">name</property>
+                    <property name="paramName">name</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">employee_number</property>
+                    <property name="paramName">employee_number</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -357,11 +405,12 @@ payroll_element_id,
        COALESCE(balance,0) as balance,parametername, isbold,paymenttype,element_code,groupdisplayorder FROM
 
 (SELECT sp.party_id, c.employee_number, c.first_name||' '||c.last_name as name, pp.name as period, '' as branch, 
-c.pin_number as pin
+c.pin_number as pin, sp.payroll_period_id
   FROM staff_payroll sp
   LEFT JOIN person c ON c.party_id=sp.party_id
   LEFT JOIN payroll_period pp ON pp.payroll_period_id=sp.payroll_period_id 
-   WHERE sp.payroll_period_id='10021' --AND sp.party_id IN ('10031', 'Developer2')
+   WHERE sp.payroll_period_id IN (SELECT payroll_period_id FROM payroll_period WHERE status != 'Inactive' AND name=?)
+   AND c.employee_number =?
    )a
 
 LEFT JOIN
@@ -396,41 +445,68 @@ LEFT JOIN
 
 (
 SELECT * FROM (
-SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,
+SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,sp.payroll_period_id,
        cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,  
        pe.isbold,pe.element_code,'PAYMENTS' as paymenttype,1 as groupdisplayorder
   FROM staff_payroll_elements spe
 LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id 
   LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id 
-  WHERE sp.payroll_period_id='10021' AND pe.payslipdisplay ='Y' AND 
-  spe.amount >0 and pe.element_type='Payment' --AND sp.party_id IN ('10031', 'Developer2')
+  WHERE pe.payslipdisplay ='Yes' AND 
+  spe.amount >0 and pe.element_type='Payment' 
+  --AND sp.party_id IN (SELECT party_id FROM person WHERE employee_number='1236')
 
 UNION
 
-SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,
+SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,sp.payroll_period_id,
        cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,  
        pe.isbold,pe.element_code,'' as paymenttype,2 as groupdisplayorder
   FROM staff_payroll_elements spe
 LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id 
   LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id 
-  WHERE sp.payroll_period_id='10021' AND pe.payslipdisplay ='Y' AND 
-  spe.amount >0 and pe.element_type='System Element' --AND sp.party_id IN ('10031', 'Developer2')
+  WHERE pe.payslipdisplay ='Yes' AND 
+  spe.amount >0 and pe.element_type='System Element' 
+  --AND sp.party_id IN (SELECT party_id FROM person WHERE employee_number=)
   UNION
 
-SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,
+SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,sp.payroll_period_id,
        cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,  
        pe.isbold,pe.element_code,'DEDUCTIONS' as paymenttype,3 as groupdisplayorder
   FROM staff_payroll_elements spe
 LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id 
   LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id 
-  WHERE sp.payroll_period_id='10021' AND pe.payslipdisplay ='Y' AND 
-  spe.amount >0 and pe.element_type='Deduction' --AND sp.party_id IN ('10031', 'Developer2')
-	) AS X) as y ON y.party_id=a.party_id
+  WHERE pe.payslipdisplay ='Yes' AND 
+  spe.amount >0 and pe.element_type='Deduction' 
+  --AND sp.party_id IN (SELECT party_id FROM person WHERE employee_number=)
+	) AS X) as y ON y.party_id=a.party_id AND y.payroll_period_id=a.payroll_period_id
 	) as v
 	ORDER BY party_id, groupdisplayorder,element_code]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name></design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>0</design:precision>
+        <design:scale>0</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+    </design:parameterDefinitions>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name></design:name>
+        <design:position>2</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>0</design:precision>
+        <design:scale>0</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
