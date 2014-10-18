@@ -1571,11 +1571,8 @@
 		<make-value entity-name="County" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.countyId">
 			<sequenced-id sequence-name="County" field="newEntity.countyId" />
-		</if-empty>
-		<field-to-result field="newEntity.countyId"
-			result-name="countyId" />
+			<set from-field="countyId" field="newEntity.countyId"/>
 		<create-value value-field="newEntity" />
 	</simple-method>
 
@@ -1800,7 +1797,7 @@
     </simple-method>
     
     <!-- Pay Point Starts Here -->
-	<simple-method method-name="createPayPoint" short-description="Add Pay Point">
+	<simple-method method-name="createEmplPayPoint" short-description="Add Pay Point">
         <make-value entity-name="PayPoint" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>

@@ -197,6 +197,10 @@ under the License.
         	</entity-one>
         	
         	<set field="newEntity.accountProductId" value="${loanProduct.accountProductId}"/>
+        	
+        	<if-empty field="newEntity.accountProductId">
+        		<set field="newEntity.accountProductId" value="NOACCOUNT"/>
+        	</if-empty>
         	<store-value value-field="newEntity"/>
         <else>
         	<call-simple-method method-name="updateLoanApplication"></call-simple-method>
@@ -210,7 +214,7 @@ under the License.
     	        	<sequenced-id sequence-name="LoanApplication" field="loanApplicationId"/>
 	        <now-timestamp field="newEntity.createdDate"/>
 	        <set from-field="loanApplicationId" field="newEntity.loanApplicationId"/>
-	        <set field="entity.loanStatus" value="DRAFT"/>
+	        <set field="newEntity.loanStatus" value="DRAFT"/>
 	        
             <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
             <set field="newEntity.applicationStatus" value="NEW"/>
@@ -221,7 +225,7 @@ under the License.
             <set field="documentName" value="LOAN"/>
             <set field="newEntity.workflowDocumentTypeId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getWorkflowDocumentType(documentName);}" type="String"/>
             <!-- Set OrganizationUnit -->
-            <set field="partyId" from-field="userLogin.partyId"/>
+            <!-- set field="partyId" from-field="userLogin.partyId"/ -->
             <set field="newEntity.organizationUnitId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getUserOrganizationUnit(partyId);}" type="String"/>
             <create-value value-field="newEntity"/>
     </simple-method>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <property-map resource="loansmanagerUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.loansmanagerCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.loansmanagerCompanySubtitle" global="true"/>
+
+                <set field="activeApp" value="loansmanager" global="true"/>
+                <set field="applicationMenuName" value="MainAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://loansmanager/widget/loansmanagerMenus.xml" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.loansmanagerApplication}" global="true"/>
+            </actions>
+            <widgets>
+                <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
+            
+            	 <section>
+        			<widgets>
+						<platform-specific>
+							<html><html-template location="component://customercare/webapp/customercare/customercareheader.ftl"/></html>
+						</platform-specific>
+					</widgets>
+        		</section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonLoanApplicationDecorator">
+        <section>
+            <actions>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="loanApplication"/>
+                <!-- entity-one entity-name="sa" value-field="loanApplication"/ -->
+                
+                <entity-one entity-name="Person" value-field="lookupPerson"/>
+                <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
+                <set field="loanProductId" from-field="loanApplication.loanProductId"/>
+                <set field="partyId" from-field="loanApplication.partyId"/>
+                <entity-one entity-name="LoanProduct" value-field="loanProduct"/>
+                <entity-one entity-name="Member" value-field="member"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                                    <not><if-empty field="loanApplication"/></not>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <!-- include-menu location="component://loans/widget/loans/ExampleMenus.xml" name="LoanDetailsTabBar"/ -->
+                                <include-menu location="component://loansprocessing/widget/loansprocessingMenus.xml" name="LoanProcessingDetailsTabBar"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <!-- do check for PARTYMGR, _VIEW permission -->
+                    <decorator-section name="body">
+                        <section>
+                            
+                            <condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field="loanApplicationId"/></not></condition>
+                                    <widgets>
+                                        <!-- include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/ -->
+                                        <container style="clear"/>
+                                        <container style="page-title">
+                                            <section>
+                                                <condition>
+                                                    <or>
+                                                        <not><if-empty field="lookupPerson"/></not>
+                                                        <not><if-empty field="lookupGroup"/></not>
+                                                        <not><if-empty field="loanApplication"/></not>
+                                                    </or>
+                                                </condition>
+                                                <widgets>
+                                                    <!-- label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/ -->
+                                                   
+                                                   	<screenlet>
+                                                   		<label text="Loan Application :  ${loanProduct.name} - ${loanProduct.code} for ${member.firstName} ${member.lastName}"></label>
+                                                   	</screenlet>
+                                                    
+                                                   	<screenlet>
+                                                   		<label text="Loan No :  ${loanApplication.loanNo} Amount : KES. ${loanApplication.loanAmt}"></label>
+                                                   	</screenlet>
+                                                    
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <label text="Sacco Member"/>
+                                                  <!-- label> ${member.firstName}</label --> 
+                                                </fail-widgets>
+                                            </section>
+                                        </container>
+                                    </widgets>
+                                </section>
+
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="loansprocessingCommonDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="LOANSPROCESSING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.loansprocessingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="loansmanagerCommonDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="LOANSMANAGER" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.loansmanagerViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

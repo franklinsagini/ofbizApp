@@ -202,9 +202,9 @@ under the License.
 	
 	
 	<!-- Create Paypoints -->
-	<request-map uri="createPayPoint">
+	<request-map uri="createEmplPayPoint">
 		<security https="true" auth="true" />
-		<event type="service" invoke="createPayPoint" />
+		<event type="service" invoke="createEmplPayPoint" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
 		<response name="success" type="request-redirect"
 			value="bank">
@@ -217,8 +217,9 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="updatePayPoint" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect" 
 			value="bank">
+			<redirect-parameter name="partyId"/>
 			</response>
 		<response name="error" type="view" value="bank" />
 	</request-map>
@@ -227,8 +228,9 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" invoke="deletePayPoint" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
+		<response name="success" type="request-redirect" 
 			value="bank">
+			<redirect-parameter name="partyId"/>
 			</response>
 		<response name="error" type="view" value="bank" />
 	</request-map>
@@ -335,7 +337,8 @@ under the License.
     <request-map uri="createPartyQual">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyQual"/>
-        <response name="success" type="view" value="NewPartyQual"/>
+        <response name="success" type="request-redirect-noparam" value="NewPartyQual"/>
+        <response name="error" type="view" value="NewPartyQual" />
     </request-map>
     <request-map uri="updatePartyQual">
         <security https="true" auth="true"/>
@@ -1111,7 +1114,7 @@ under the License.
     <request-map uri="createEmployeeQualification">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyQual"/>
-        <response name="success" type="view" value="EditEmployeeQuals"/>
+        <response name="success" type="request-redirect-noparam" value="EditEmployeeQuals"/>
         <response name="error" type="view" value="EditEmployeeQuals"/>
     </request-map>
     <request-map uri="updateEmployeeQualification">
@@ -1325,7 +1328,7 @@ under the License.
     <request-map uri="createPartyQualExt">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyQual"/>
-        <response name="success" type="view" value="EditPartyQuals"/>
+        <response name="success" type="request-redirect-noparam" value="EditPartyQuals"/>
         <response name="error" type="view" value="EditPartyQuals"/>
     </request-map>
     <request-map uri="updatePartyQualExt">

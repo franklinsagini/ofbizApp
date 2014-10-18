@@ -707,6 +707,28 @@ under the License.
       </relation>
     </entity>
     
+    
+    
+    <entity entity-name="EmplLeaveOpeningBalance"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Opening Balance Entity">
+            
+        <field name="partyId" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
+        <field name="openingLeaveBalance" type="floating-point"/>  
+        <field name="isActive" type="indicator"></field>
+         <field name="openingDate" type="date"/>
+     
+        <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_ELETP" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
+        </relation>
+    </entity>  
+    
+    
+    
     <entity entity-name="EmplLeave"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Entity">

@@ -187,7 +187,11 @@ under the License.
         		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
         	</entity-one>
         	<entity-condition entity-name="Member" list="memberList">
-        		<condition-expr field-name="partyId" operator="not-equals" value="${loanApplication.partyId}"/>
+        		<condition-list combine="and">
+        			<condition-expr field-name="partyId" operator="not-equals" value="${loanApplication.partyId}"/>
+        			<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        		</condition-list>
+        		
             </entity-condition>
             
             <!-- entity-condition entity-name="MemberStation" list="memberStationsList"></entity-condition -->
@@ -631,8 +635,8 @@ under the License.
         	MULTIPLE OF SAVINGS AMOUNT
          -->
          
-         <field name="accountProductId" title="Mutliplier Account Product" widget-style="required"
-			required-field="true">
+         <field name="accountProductId" title="Mutliplier Account Product" 
+			required-field="false">
 			<drop-down allow-empty="true">
 				<list-options list-name="accountProductList" key-name="accountProductId"
 					description="${name} - ${code}" />
@@ -724,6 +728,7 @@ under the License.
         <actions>
             <entity-condition entity-name="AccountProduct">
             	<condition-expr field-name="isActive" operator="equals" value="Y"/>
+            	<order-by field-name="-accountProductId"/>
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateAccountProduct"/>
@@ -737,6 +742,8 @@ under the License.
         <field name="minSavingsAmt"><text></text></field>
         <field name="minInterestEarningAmt"><text></text></field>
         <field name="interestPerMonth"><text></text></field>
+        <field name="createdStamp" title="Created"><display type="date-time"></display></field>
+         <field name="createdBy" title="Created By"><display ></display></field>
         
         <field name="Edit Account">
         	<hyperlink target="AccountProduct?accountProductId=${accountProductId}" description="Edit Account"></hyperlink>
@@ -755,6 +762,7 @@ under the License.
         <actions>
             <entity-condition entity-name="LoanProduct">
             	<condition-expr field-name="isActive" operator="equals" value="Y"/>
+            	<order-by field-name="-loanProductId"/>
             </entity-condition>
             
             <entity-condition entity-name="AccountProduct" list="accountProductList"></entity-condition>
@@ -779,14 +787,15 @@ under the License.
             </drop-down>
         </field>
         
-        <field name="accountProductId" title="Mutliplier Account Product" widget-style="required"
-			required-field="true">
+        <field name="accountProductId" title="Mutliplier Account Product"
+			required-field="false">
 			<drop-down allow-empty="true">
 				<list-options list-name="accountProductList" key-name="accountProductId"
 					description="${name} - ${code}" />
 			</drop-down>
 		</field>
-        
+        <field name="createdStamp" title="Created"><display type="date-time"></display></field>
+         <field name="createdBy" title="Created By"><display ></display></field>
         <field name="Edit Loan">
         	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
         </field>
@@ -1521,12 +1530,27 @@ under the License.
     
     <!-- Add Find Member Form -->
     <form name="FindMember" type="single" target="main" default-entity-name="Member">
+        <actions>
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        </actions>
+        
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
         <field name="firstName" title="First Name"><text-find/></field>
+
+        <field name="idNumber" title="ID Number" position="2"><text-find/></field>
+
+        <field name="middleName" title="Middle Name"><text-find/></field>
+
+        <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
+
         <field name="lastName" title="Last Name"><text-find/></field>
-        <field name="idNumber" title="ID Number"><text-find/></field>
-        <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
-        <field name="memberStatus" title="Status"><text-find/></field>
+
+        <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+
+        <field name="memberStatus" title="Status" ><hidden value="ACTIVE"/></field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -1539,6 +1563,7 @@ under the License.
                 <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
             </drop-down>
         </field>
+
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
     
@@ -1577,6 +1602,8 @@ under the License.
         </field>
         
         <field name="memberStatus"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Created"><display  type="date"></display></field>
+        <field name="createdBy" title="Created By"><display ></display></field>
         <!-- viewapplicationprofile -->
         <!-- loanapplication?partyId=${partyId} -->
         <field name="Loan Application">

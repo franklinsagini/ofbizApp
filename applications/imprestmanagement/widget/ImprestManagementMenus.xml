@@ -3,7 +3,7 @@
     <menu name="MainAppBar" title="${uiLabelMap.ImprestManagementApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
         <menu-item name="setup" title="${uiLabelMap.ImprestSetup}"><link target="accountsetup"/></menu-item>
-        <menu-item name="surrenderable" title="${uiLabelMap.ImprestSurrenderable}"><link target="surrenderable"/></menu-item>
+        <menu-item name="surrenderable" title="${uiLabelMap.ImprestSurrenderable}"><link target="findSurrenderable"/></menu-item>
         <menu-item name="perdiem" title="${uiLabelMap.ImprestPerDiem}"><link target="perdiem"/></menu-item>
         <menu-item name="pettycash" title="${uiLabelMap.ImprestPettyCash}"><link target="pettycash"/></menu-item>
     </menu>
@@ -29,5 +29,49 @@
             </link>
         </menu-item>
     </menu>
+
+    <!--
+        Surrenderable Tab bar Menu
+    -->
+    <menu name="SurrenderableTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+
+        <menu-item name="find" title="${uiLabelMap.CommonFind}">
+            <link target="findSurrenderable"/>
+        </menu-item>
+
+        <menu-item name="surrenderoverview" title="${uiLabelMap.ImprestOverview}">
+            <link target="surrenderoverview">
+                <parameter param-name="supplierId" from-field="supplierContext.supplierId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="surrenderheader" title="${uiLabelMap.ImprestHeader}">
+            <link target="surrenderheader">
+                <parameter param-name="supplierId" from-field="supplierContext.supplierId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="surrenderlines" title="${uiLabelMap.ImprestLines}">
+            <link target="surrenderlines">
+                <parameter param-name="supplierId" from-field="supplierContext.supplierId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="surrender" title="${uiLabelMap.ImprestSurrender}">
+            <link target="surrender">
+                <parameter param-name="supplierId" from-field="supplierContext.supplierId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <!--
+        Surrenderable Sub Tab bar Menu
+    -->
+    <menu name="SurrenderableSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="createNew" title="Create New" widget-style="buttontext create">
+            <link target="newSurrenderable"/>
+        </menu-item>
+    </menu>
+
 
 </menus>

@@ -64,5 +64,25 @@
       </relation>
     </entity>
 
+    <entity entity-name="ImprestSurrenderable"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Imprest Account Entity">
+      <field name="surrenderableId" type="id-ne"></field>
+      <field name="employeeId" type="id-ne"></field>
+      <field name="approverId" type="id-ne"></field>
+      <field name="reqDate" type="date-time"></field>
+      <field name="appDate" type="date-time"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="approvalStatus" type="short-varchar"></field>
+      <prim-key field="surrenderableId"/>
+      <prim-key field="employeeId"/>
+      <relation type="one" fk-name="PERS_IMP_EMPL" title="Employee" rel-entity-name="Person">
+          <key-map field-name="employeeId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PERS_IMP_APP" title="Approver" rel-entity-name="Person">
+          <key-map field-name="approverId" rel-field-name="partyId"/>
+      </relation>
+    </entity>
+
 
 </entitymodel>

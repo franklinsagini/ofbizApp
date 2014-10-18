@@ -194,7 +194,7 @@ under the License.
     </form>
 
     <!-- New Person/Employee -->
-    <form name="AddNewPerson" type="single" target="createPerson" default-map-name="personInfo"
+    <form name="AddNewPerson" type="single" target="createPerson" default-map-name="personalInfo"
     header-row-style="header-row" default-table-style="basic-table">
         <actions>
         	<entity-condition entity-name="Religion" list="religionList"></entity-condition>
@@ -220,14 +220,21 @@ under the License.
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
 
         </actions>
-        <alt-target use-when="personInfo==null" target="createPerson"/>
-        <auto-fields-service service-name="updatePerson"/>
-
-        <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
-        <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
+        
+        <alt-target use-when="personalInfo!=null" target="updatePerson"/>
+        <!-- <alt-target use-when="personInfo==null" target="createPerson"/>
+        <auto-fields-service service-name="updatePerson"/> -->
+        
+        
+        <field name="partyId"><hidden/></field>        
+        <field name="partyId" use-when="personalInfo!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        
+  <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
+        <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
+        
         <field name="employeeNumber" title="${uiLabelMap.MemberEmployeeNumber}" required-field="true" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+         <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
@@ -2083,7 +2090,7 @@ under the License.
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         </actions>
-                <field name="firstName" title="First Name"><text-find/></field>
+        <field name="firstName" title="First Name"><text-find/></field>
 
         <field name="idNumber" title="ID Number" position="2"><text-find/></field>
 
