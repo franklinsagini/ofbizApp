@@ -10,11 +10,7 @@
     <form name="EditImprestAccount" type="single" target="createImprestAccount" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="imprestAccountContext">
         <alt-target use-when="imprestAccountContext!=null" target="UpdateImprestAccount"/>
-        <actions>
-            <entity-condition entity-name="ImprestAccount" list="imprestAccountList">
-                <order-by field-name="imprestAccountId"/>
-            </entity-condition>
-        </actions>
+
         <field name="imprestAccountId">
             <hidden/>
         </field>
@@ -66,11 +62,7 @@
     <form name="EditImprestDestination" type="single" target="createImprestDestination" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="imprestDestinationContext">
         <alt-target use-when="imprestDestinationContext!=null" target="UpdateImprestDestination"/>
-        <actions>
-            <entity-condition entity-name="ImprestDestination" list="imprestDestinationList">
-                <order-by field-name="destinationId"/>
-            </entity-condition>
-        </actions>
+
         <field name="destinationId">
             <hidden/>
         </field>
@@ -112,11 +104,7 @@
     <form name="EditPerDiemSetup" type="single" target="createPerDiemSetup" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="perDiemContext">
         <alt-target use-when="perDiemContext!=null" target="UpdatePerDiemSetup"/>
-        <actions>
-            <entity-condition entity-name="ImprestPerDiemSetup" list="perDiemSetupList">
-                <order-by field-name="perDiemSetupId"/>
-            </entity-condition>
-        </actions>
+
         <field name="perDiemSetupId">
             <hidden/>
         </field>
@@ -184,7 +172,7 @@
            FindSurrenderableList
      -->
 
-    <form name="FindSurrenderableList" type="list" list-name="listIt" target="" title="ImprestSurrenderable List" paginate-target="findSupplier" default-entity-name="Supplier"
+    <form name="FindSurrenderableList" type="list" list-name="listIt" target="" title="ImprestSurrenderable List" paginate-target="findSupplier" default-entity-name="ImprestSurrenderable"
         separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -195,28 +183,28 @@
                 <field-map field-name="viewSize" from-field="viewSize" />
             </service>
         </actions>
-        <field name="surrenderableId" title="Supplier Id" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${surrenderableId}" target="supplierOverview">
+        <field name="surrenderableId" title="Imprest Id" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${surrenderableId}" target="editSurrenderable">
                 <parameter param-name="surrenderableId" />
             </hyperlink>
         </field>
-        <field name="employeeId" sort-field="true">
-            <display-entity entity-name="Person" description="${destinationName}"/>
+        <field name="employeeId" title="Prepared By">
+              <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
         </field>
-        <field name="approverId" sort-field="true">
-             <display-entity entity-name="Person" description="${destinationName}"/>
+        <field name="approvalStatus" >
+             <display />
         </field>
-        <field name="reqDate" sort-field="true">
-            <display />
+        <field  name="reqDate" title="Created On">
+            <display also-hidden="false" type="date-time"></display>
         </field>
-        <field name="appDate" sort-field="true">
-            <display />
+        <field  name="approverId" title="Approved By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
         </field>
-         <field name="amount" title="Amount" widget-area-style="align-text" sort-field="true">
+        <field name="appDate" title="Approved On">
+            <display also-hidden="false" type="date-time"></display>
+        </field>
+        <field  name="amount" title="Imprest Total">
             <display type="currency" currency="KES"/>
-        </field>
-        <field name="approvalStatus" sort-field="true">
-            <display />
         </field>
     </form>
 
@@ -241,32 +229,37 @@
     </form>
 
     <form name="EditSurrenderable" type="single" target="updateSurrenderable" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
-        default-map-name="surrenderableContext">
-        <alt-target use-when="surrenderableContext!=null" target="UpdatePerDiemSetup"/>
-        <actions>
-            <entity-condition entity-name="ImprestSurrenderable" list="imprestSurrenderableList">
-                <order-by field-name="surrenderableId"/>
-            </entity-condition>
-        </actions>
+        default-map-name="imprestSurrenderableContext">
+        <alt-target use-when="imprestSurrenderableContext!=null" target="UpdatePerDiemSetup"/>
+
+
         <field name="surrenderableId">
             <hidden/>
         </field>
-        <field name="surrenderableId" use-when="surrenderableContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
-            <display />
+
+        <field position="1" name="employeeId" title="Prepared By">
+              <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
         </field>
-        <field position="1" name="employeeId" title="Destination">
-             <text size="10"/>
+        <field name="approvalStatus" position="2">
+             <display />
         </field>
-        <field name="reqDate" position="2">
-             <text size="10"/>
+        <field position="1" name="amount" title="Imprest Total">
+            <display type="currency" currency="KES"/>
         </field>
-        <field position="1" name="amount" title="Cost/Day" tooltip="KES">
-            <text size="10"/>
+        <field position="2" name="reqDate" title="Created On">
+            <display also-hidden="false" type="date-time"></display>
         </field>
+        <field position="1" name="approverId" title="Approved By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field position="2" name="appDate" title="Approved On">
+            <display also-hidden="false" type="date-time"></display>
+        </field>
+
         <!-- <field position="2" name="numberOfDays" title="Number of Days"><text size="10"/></field> -->
                 <!-- submitButton -->
-        <field use-when="surrenderableContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field use-when="surrenderableContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="imprestSurrenderableContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="imprestSurrenderableContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
 
