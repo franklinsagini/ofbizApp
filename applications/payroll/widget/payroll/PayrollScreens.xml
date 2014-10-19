@@ -795,27 +795,53 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
+                        <!-- section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Payslip Message">zvdnhff
+                                <screenlet title="Payslip Message">
                                     <include-form name="PayslipMsg" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
-                        </section>
+                        </section -->
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="NSSF Table List">
+                        		<screenlet title=" ">
                         			<include-form name="listPayslipMsg" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditPayslipMessage">
+        <section>
+            <actions>
+                <set field="headerItem" value="PayslipMessage"/>
+                <set field="tabButtonItem" value="editPayslipMessage"/>
+                <set field="titleProperty" value="Edit Payslip Message"/>
+                <set field="payslipMessageId" from-field="parameters.payslipMessageId"/>
+                <entity-one entity-name="PayslipMessage" value-field="payslipmessage"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <!--include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/-->
+                        <screenlet title="Edit Payslip Message">
+                            <section>
+                                <widgets>
+                                    <include-form name="EditPayslipMessage" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

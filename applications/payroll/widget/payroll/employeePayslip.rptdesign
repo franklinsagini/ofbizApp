@@ -114,6 +114,10 @@
                     <text-property name="displayName">isbold</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">payslip_message</property>
+                    <text-property name="displayName">payslip_message</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">element_code</property>
                     <text-property name="displayName">element_code</text-property>
                 </structure>
@@ -227,16 +231,21 @@
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">element_code</property>
+                        <property name="name">payslip_message</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
+                        <property name="name">element_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
                         <property name="name">groupdisplayorder</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">19</property>
                         <property name="name">paymenttype</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -351,20 +360,27 @@
                 </structure>
                 <structure>
                     <property name="position">16</property>
+                    <property name="name">payslip_message</property>
+                    <property name="nativeName">payslip_message</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
                     <property name="name">element_code</property>
                     <property name="nativeName">element_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">groupdisplayorder</property>
                     <property name="nativeName">groupdisplayorder</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">paymenttype</property>
                     <property name="nativeName">paymenttype</property>
                     <property name="dataType">string</property>
@@ -373,7 +389,7 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[select party_id,name,period,employee_number,pin, branch, bank_name,''as branch_name,account_number,
 position,amount, payroll_element_id,
-balance,parametername, isbold,
+balance,parametername, isbold,payslip_message,
 case
 when payroll_element_id = 'NETPAY' then '1000'
 when payroll_element_id ilike 'TOTDEDUCTIONS' then '999'
@@ -401,16 +417,18 @@ else paymenttype
 end as paymenttype  from (
 
 SELECT a.party_id,name,period,employee_number,pin, br.branch,bank_name, account_number,position,amount , 
-payroll_element_id, 
+payroll_element_id, a.payslip_message,
        COALESCE(balance,0) as balance,parametername, isbold,paymenttype,element_code,groupdisplayorder FROM
 
 (SELECT sp.party_id, c.employee_number, c.first_name||' '||c.last_name as name, pp.name as period, '' as branch, 
-c.pin_number as pin, sp.payroll_period_id
-  FROM staff_payroll sp
+c.pin_number as pin, sp.payroll_period_id, pm.description as payslip_message
+  FROM payslip_message pm, staff_payroll sp
   LEFT JOIN person c ON c.party_id=sp.party_id
   LEFT JOIN payroll_period pp ON pp.payroll_period_id=sp.payroll_period_id 
-   WHERE sp.payroll_period_id IN (SELECT payroll_period_id FROM payroll_period WHERE status != 'Inactive' AND name=?)
-   AND c.employee_number =?
+  WHERE pm.description IS NOT NULL AND pm.description !='No Message' AND 
+  pm.display='Y' AND  sp.payroll_period_id IN 
+  (SELECT payroll_period_id FROM payroll_period WHERE status != 'Inactive' AND name=?)
+  AND c.employee_number =?
    )a
 
 LEFT JOIN
@@ -972,7 +990,15 @@ LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id
                 <structure>
                     <property name="name">parametername</property>
                     <text-property name="displayName">parametername</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["parametername"]</expression>
+                    <expression name="expression" type="javascript">if(dataSetRow["isbold"]=='Y')
+{
+	bold = true;
+	dataSetRow["parametername"]
+}
+else
+{
+	dataSetRow["parametername"]
+}</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -984,7 +1010,14 @@ LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id
                 <structure>
                     <property name="name">balance</property>
                     <text-property name="displayName">balance</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["balance"]</expression>
+                    <expression name="expression" type="javascript">if(dataSetRow["balance"] ==0.00)
+{
+    null
+}
+else
+{
+    dataSetRow["balance"]
+}</expression>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
@@ -997,6 +1030,12 @@ LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id
                     <property name="name">element_code</property>
                     <text-property name="displayName">element_code</text-property>
                     <expression name="expression" type="javascript">dataSetRow["element_code"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">payslip_message</property>
+                    <text-property name="displayName">payslip_message</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["payslip_message"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
@@ -1311,8 +1350,8 @@ LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id
                     <detail>
                         <row id="452">
                             <cell id="453">
-                                <data id="463">
-                                    <property name="textAlign">left</property>
+                                <data id="683">
+                                    <property name="fontWeight">normal</property>
                                     <property name="resultSetColumn">parametername</property>
                                 </data>
                             </cell>
@@ -1354,20 +1393,16 @@ LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id
                     <column id="486">
                         <property name="width">3.6979166666666665in</property>
                     </column>
-                    <header>
-                        <row id="480">
-                            <cell id="481"/>
-                        </row>
-                    </header>
-                    <detail>
-                        <row id="482">
-                            <cell id="483"/>
-                        </row>
-                    </detail>
                     <footer>
                         <row id="484">
-                            <property name="height">0.6666666666666666in</property>
-                            <cell id="485"/>
+                            <property name="height">0.3229166666666667in</property>
+                            <cell id="485">
+                                <data id="682">
+                                    <property name="fontWeight">bold</property>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">payslip_message</property>
+                                </data>
+                            </cell>
                         </row>
                     </footer>
                 </table>
