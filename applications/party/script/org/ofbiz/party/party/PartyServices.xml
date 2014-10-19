@@ -216,7 +216,7 @@ under the License.
             </if-not-empty>
         </iterate-map>
     </simple-method>
-    
+
         <!-- Party Identification Type Starts Here -->
 	<simple-method method-name="createPartyIdentificationType" short-description="Create Party Identification Type">
         <make-value entity-name="PartyIdentificationType" value-field="newEntity"/>
@@ -235,7 +235,7 @@ under the License.
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deletePartyIdentificationType" short-description="Delete Party Identification Type">
         <entity-one entity-name="PartyIdentificationType" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -1206,8 +1206,8 @@ under the License.
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>
     </simple-method>
-    
-    
+
+
      <!-- Staff Employment Status -->
 	<simple-method method-name="createEnumStaffStatus" short-description="Add Staff Employment Status">
         <make-value entity-name="Enumeration" value-field="newEntity"/>
@@ -1221,32 +1221,34 @@ under the License.
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateEnumStaffStatus" short-description="Update Staff Employment Status">
         <entity-one entity-name="Enumeration" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteEnumStaffStatus" short-description="Delete Staff Employment Status">
         <entity-one entity-name="Enumeration" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- MemberType -->
     <simple-method method-name="createMemberType" short-description="Add MemberType">
         <make-value entity-name="MemberType" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="MemberType" field="memberTypeId"/>
+        <set from-field="memberTypeId" field="newEntity.memberTypeId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateMemberType" short-description="Update MemberType">
         <entity-one entity-name="MemberType" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteMemberType" short-description="Delete MemberType">
         <entity-one entity-name="MemberType" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>

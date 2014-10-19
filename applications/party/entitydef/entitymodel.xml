@@ -2715,7 +2715,7 @@ under the License.
     <entity entity-name="Person"
             package-name="org.ofbiz.party.party"
             title="Person Entity">
-      <field name="partyId" type="id-ne"></field>  
+      <field name="partyId" type="id-ne"></field>
       <field name="employeeNumber" type="name"></field>
       <field name="salutation" type="name"></field>
       <field name="firstName" type="name"></field>
@@ -2738,7 +2738,7 @@ under the License.
       <field name="tribeId" type="id"></field>
       <field name="countyId" type="id"></field>
       <field name="appointmentdate" type="date"></field>
-      <field name="retirementdate" type="date"></field>      
+      <field name="retirementdate" type="date"></field>
       <field name="confirmationdate" type="date"></field>
       <field name="deceasedDate" type="date"></field>
       <field name="height" type="floating-point"></field>
@@ -2769,11 +2769,11 @@ under the License.
       <field name="existingCustomer" type="indicator"></field>
       <field name="cardId" type="id-long" ></field>
       <field name="isDisabled" type="indicator" ></field>
-      <field name="disabilityDetails" type="long-varchar" ></field>  
-      
+      <field name="disabilityDetails" type="long-varchar" ></field>
+
       <field name="branchId" type="name"></field>
- 	  <!-- field name="stationId" type="id"></field -->      
-      
+ 	  <!-- field name="stationId" type="id"></field -->
+
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -2784,14 +2784,14 @@ under the License.
       <relation type="one" fk-name="PERSON_RESS_ENUM" title="ResidenceStatus" rel-entity-name="Enumeration">
         <key-map field-name="residenceStatusEnumId" rel-field-name="enumId"/>
       </relation>
-      
+
       <relation type="one" fk-name="PERSON_PARTYGROUP" rel-entity-name="PartyGroup">
          <key-map field-name="branchId" rel-field-name="partyId"/>
       </relation>
  	  <relation type="one" fk-name="PERSON_STATION" rel-entity-name="Station">
         <key-map field-name="stationId"/>
       </relation>
-      
+
       <relation type="one" fk-name="PERSON_TRIBE" rel-entity-name="Tribe">
         <key-map field-name="tribeId"/>
       </relation>
@@ -3090,12 +3090,12 @@ under the License.
     <!-- Member Entity and Related Entities -->
     <entity entity-name="Member" package-name="org.ofbiz.party.party" title="Member Entity" sequence-bank-size="1">
     	<field name="partyId" type="id-ne"></field>
-    	
+
     	<field name="isActive" type="indicator"></field>
         <field name="createdBy" type="name"></field>
         <field name="updatedBy" type="name"></field>
         <field name="branchId" type="name"></field>
-    	
+
     	<field name="firstName" type="name"></field>
     	<field name="middleName" type="name"></field>
     	<field name="lastName" type="name"></field>
@@ -3110,13 +3110,13 @@ under the License.
     	<field name="physicalAddress" type="name"></field>
     	<field name="postalAddress" type="name"></field>
     	<field name="memberClass" type="very-short"></field>
-    	
-    	<field name="memberType" type="very-short"></field>
-    	
-    	
+
+    	<!-- <field name="memberType" type="very-short"></field> -->
+
+
     	<field name="memberTypeName" type="name"></field>
-    	
-    	
+
+
     	<field name="employeeNumber" type="name"></field>
     	<field name="employeeType" type="name"></field>
     	<field name="payrollNumber" type="name"></field>
@@ -3129,21 +3129,21 @@ under the License.
     	<field name="country" type="very-short"></field>
     	<field name="citizenship" type="very-short"></field>
     	<field name="membershipofOtherSacco" type="indicator"></field>
-		
+
     	<field name="joinDate" type="date"></field>
     	<field name="registrationFee" type="fixed-point"></field>
     	<field name="paidAmount" type="fixed-point"></field>
     	<field name="finAccountId" type="id"></field>
-    	
+
     	<!-- Images -->
     	<field name="photourl" type="name"></field>
     	<field name="idfronturl" type="name"></field>
     	<field name="idbackurl" type="name"></field>
     	<field name="signatureurl" type="name"></field>
-    	
+
     	<field name="stationId" type="id"></field>
-    	
-    	<!-- 
+
+    	<!--
     		NEW
     		ACTIVE
     		INACTIVE
@@ -3151,39 +3151,39 @@ under the License.
     		WITHDRAWN
     		DEAD
     	 -->
-    	<field name="memberStatus" type="name"></field> 
-    	
+    	<field name="memberStatus" type="name"></field>
+
     	<field name="monthlySalaryAmount" type="fixed-point"></field>
     	<field name="shareAmount" type="fixed-point"></field>
     	<field name="memberDepositAmount" type="fixed-point"></field>
-    	
+
     	<field name="incomeScaleId" type="id"></field>
-    	
+
     	<field name="atmApplication" type="name"></field>
     	<field name="msaccoApplication" type="name"></field>
-    	
+
     	<!-- Introducer -->
     	<field name="recruitingAgent" type="name"></field>
     	<field name="introducingMember" type="id"></field>
-    	
+
     	<field name="recuiterNames" type="name"></field>
     	<field name="recruiterEmail" type="name"></field>
     	<field name="recruiterPhone" type="name"></field>
-    	
+
     	<prim-key field="partyId"/>
-    	
+
       	<relation type="one" fk-name="MEMBER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      
+
       <relation type="one" fk-name="MEMBER_INCOMESCALE" rel-entity-name="IncomeScale">
         <key-map field-name="incomeScaleId"/>
       </relation>
-      
+
       <relation type="one" fk-name="MEMBER_PARTYGROUP" rel-entity-name="PartyGroup">
             <key-map field-name="branchId" rel-field-name="partyId"/>
         </relation>
-      
+
       <relation type="one" fk-name="EMPLOYMENTDETAILS_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
@@ -3191,22 +3191,22 @@ under the License.
       <relation type="one" fk-name="MEMBER_FNACT" rel-entity-name="FinAccount">
             <key-map field-name="finAccountId"/>
        </relation>
-       
+
        <relation type="one" fk-name="MEMBER_STATION" rel-entity-name="Station">
             <key-map field-name="stationId"/>
         </relation>
-        
+
         <relation type="one" fk-name="MEMBER_MemberTypeName" rel-entity-name="MemberType">
-            <key-map field-name="memberTypeName" rel-field-name="name"/>
+            <key-map field-name="memberTypeName" rel-field-name="memberTypeId"/>
         </relation>
-        
+
         <index unique="true" name="index_idNumber">
     		<index-field name="idNumber"/>
     	</index>
     	<index unique="true" name="index_payrollNumber">
     		<index-field name="payrollNumber"/>
     	</index>
-        
+
     </entity>
 
     <!-- County -->
@@ -3329,7 +3329,7 @@ under the License.
 			<field name="accountName" type="name"></field>
 			<field name="accountStatusId" type="id"></field>
 			<field name="withdrawable" type="name"></field>
-			
+
 			<field name="contributing" type="name"></field>
 			<field name="contributingAmount" type="fixed-point"></field>
 
@@ -3397,7 +3397,7 @@ under the License.
      		<field name="independentwitnessidno" type="name"></field>
      		<field name="witnessmobileno" type="name"></field>
      		<field name="witnesspostaladdress" type="name"></field>
-     		
+
      		<field name="isUnderAge" type="name"></field>
      		<field name="administratorNames" type="name"></field>
      		<field name="administratorIdNo" type="name"></field>
@@ -3419,39 +3419,40 @@ under the License.
      		<field name="dateAccepted" type="date"></field>
      		<prim-key field="termsAndConditionsId"/>
      </entity>
-     
+
      <entity entity-name="MemberStatusLog"
             package-name="org.ofbiz.party.party"
             title="MemberStatusLog Entity">
-           
+
       <field name="memberStatusLogId" type="id-ne"></field>
-      
+
       <field name="isActive" type="indicator"></field>
       <field name="createdBy" type="id"></field>
       <field name="updatedBy" type="id"></field>
       <field name="branchId" type="name"></field>
-      
+
       <field name="partyId" type="id"></field>
       <field name="memberStatus" type="name"></field>
       <field name="comment" type="name"></field>
-      
-      
+
+
       <prim-key field="memberStatusLogId"/>
       <relation type="one" fk-name="MemberStatusLog_MEMBER" rel-entity-name="Member">
         <key-map field-name="partyId"/>
       </relation>
-      
+
       <relation type="one" fk-name="MemberStatusLog_MEMBER" rel-entity-name="PartyGroup">
         <key-map field-name="branchId" rel-field-name="partyId"/>
       </relation>
     </entity>
-    
+
     <!-- Member Type -->
     <entity entity-name="MemberType" package-name="org.ofbiz.party.party" title="Member Type Entity">
+        <field name="memberTypeId" type="id-ne"></field>
      		<field name="name" type="name"></field>
-			<prim-key field="name"/>
-     </entity>
-     
+		  <prim-key field="memberTypeId"/>
+    </entity>
+
      <!-- ChangeMemberStation -->
      <entity entity-name="ChangeMemberStation" package-name="org.ofbiz.party.party" title="ChangeMemberStation">
     	<field name="changeMemberStationId" type="id-ne"></field>
@@ -3485,7 +3486,7 @@ under the License.
     	<relation type="one" fk-name="CHANGEEMPLOYMENTTYPE_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
-        
+
     </entity>
      <!-- ChangeMemberEmployeeNumber -->
      <entity entity-name="ChangeMemberEmployeeNumber" package-name="org.ofbiz.party.party" title="ChangeMemberEmployeeNumber">
@@ -3500,7 +3501,7 @@ under the License.
     	<relation type="one" fk-name="CHANGEEMPLOYEENUMBER_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
-        
+
     </entity>
      <!-- ChangeMemberBranch -->
      <entity entity-name="ChangeMemberBranch" package-name="org.ofbiz.party.party" title="ChangeMemberBranch">
@@ -3515,14 +3516,14 @@ under the License.
     	<relation type="one" fk-name="CHANGEBRANCH_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
-        
+
          <relation type="one" fk-name="CHANGEBRANCH_FROMBRANCH" rel-entity-name="PartyGroup">
         <key-map  field-name="fromBranch" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="CHANGEBRANCH_TOBRANCH" rel-entity-name="PartyGroup">
         <key-map  field-name="toBranch" rel-field-name="partyId"/>
       </relation>
-        
+
     </entity>
      <!-- ChangeMemberShareAmount -->
      <entity entity-name="ChangeMemberShareAmount" package-name="org.ofbiz.party.party" title="ChangeMemberShareAmount">
@@ -3538,22 +3539,22 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
     </entity>
-    
+
     <entity entity-name="bosamembers" package-name="org.ofbiz.party.party" title="members Entity" sequence-bank-size="1">
     	<field name="id" type="name"></field>
-    	
+
     	<field name="MemberNo" type="name"></field>
         <field name="Surname" type="name"></field>
         <field name="FirstName" type="name"></field>
         <field name="SecondName" type="name"></field>
-    	
+
     	<field name="idno" type="name"></field>
     	<field name="RegDate" type="name"></field>
-		
+
     	<field name="EmpNo" type="name"></field>
     	<field name="PayrollNo" type="name"></field>
     	<field name="Mobile" type="name"></field>
-		
+
     	<field name="birthdate" type="name"></field>
     	<field name="homtel" type="name"></field>
     	<field name="Title" type="name"></field>
@@ -3563,17 +3564,17 @@ under the License.
     	<field name="maritalsts" type="name"></field>
     	<field name="homaddress" type="name"></field>
     	<field name="StationCode" type="name"></field>
-    	
+
     	<field name="status" type="name"></field>
-    	
-    	
+
+
     	<field name="Designation" type="name"></field>
-    	
-    	
+
+
     	<field name="TermsOfService" type="name"></field>
     	<field name="DateOfAppointment" type="name"></field>
     	<field name="ShowinMPAS" type="name"></field>
-		
+
     	<field name="ast" type="name"></field>
     	<field name="Allinactiveposting" type="name"></field>
     	<field name="UserID" type="name"></field>
@@ -3583,15 +3584,15 @@ under the License.
     	<field name="ShareCapitalPaid" type="name"></field>
     	<field name="Capture_Date" type="name"></field>
     	<field name="Old_mobile" type="name"></field>
-		
+
     	<field name="serial_number" type="name"></field>
     	<field name="Category" type="name"></field>
     	<field name="sc" type="name"></field>
 
-    	
-    	<prim-key field="id"/>
-    	
 
-        
+    	<prim-key field="id"/>
+
+
+
     </entity>
 </entitymodel>
