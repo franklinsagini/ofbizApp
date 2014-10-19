@@ -75,9 +75,12 @@
              <set-pk-fields map="parameters" value-field="newEntity"/>
             <set-nonpk-fields map="parameters" value-field="newEntity"/>
             <log level="info" message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Parameters [${parameters}]"/>
+            <set field="approvalStatus" value="CREATED" />
+            <now-timestamp field="reqDate"/>
             <sequenced-id sequence-name="ImprestSurrenderable" field="surrenderableId"/>
-            <now-timestamp field="newEntity.createdDate"/>
             <set from-field="surrenderableId" field="newEntity.surrenderableId"/>
+            <set from-field="approvalStatus" field="newEntity.approvalStatus"/>
+            <set from-field="reqDate" field="newEntity.reqDate"/>
             <create-value value-field="newEntity"/>
     </simple-method>
 

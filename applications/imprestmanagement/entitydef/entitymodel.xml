@@ -84,5 +84,19 @@
       </relation>
     </entity>
 
+    <entity entity-name="ImprestSurrenderableLines"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Imprest Line Entity">
+      <field name="surrenderableId" type="id-ne"></field>
+      <field name="lineId" type="id-ne"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="description" type="id-long-ne"></field>
+      <prim-key field="surrenderableId"/>
+      <prim-key field="lineId"/>
+      <relation type="one" fk-name="IMP_HEADE_LINE" title="Imprest" rel-entity-name="ImprestSurrenderable">
+          <key-map field-name="surrenderableId" />
+      </relation>
+    </entity>
+
 
 </entitymodel>

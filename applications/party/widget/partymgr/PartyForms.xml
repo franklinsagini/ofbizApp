@@ -220,18 +220,18 @@ under the License.
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
 
         </actions>
-        
+
         <alt-target use-when="personalInfo!=null" target="updatePerson"/>
         <!-- <alt-target use-when="personInfo==null" target="createPerson"/>
         <auto-fields-service service-name="updatePerson"/> -->
-        
-        
-        <field name="partyId"><hidden/></field>        
+
+
+        <field name="partyId"><hidden/></field>
         <field name="partyId" use-when="personalInfo!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        
+
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
-        
+
         <field name="employeeNumber" title="${uiLabelMap.MemberEmployeeNumber}" required-field="true" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
          <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text size="40" maxlength="60"/></field>
@@ -336,7 +336,7 @@ under the License.
         <field name="disabilityDetails"><text size="40" maxlength="60"/></field>
         <field name="placeofbirth" title="Place of Birth"><text size="40" maxlength="60"/></field>
         <field name="nationalIDNumber" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
-        
+
         <field name="emplPositionTypeId" title="Job Title">
             <drop-down allow-empty="false">
                 <entity-options key-field-name="emplPositionTypeId" description="${description}" entity-name="EmplPositionType">
@@ -931,7 +931,9 @@ under the License.
 
        <field name="memberTypeName" title="${uiLabelMap.MemberType}" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
-                <list-options list-name="memberTypeList" key-name="name"  description="${name}" />
+                <entity-options entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
+                    <entity-order-by field-name="name" />
+                </entity-options>
             </drop-down>
         </field>
 
@@ -2414,9 +2416,9 @@ under the License.
     <form name="NewenumStaffStatus" type="single" target="createEnumStaffStatus"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="enumStaffStatusContext">
 
-        <field name="enum_Id"><hidden/></field>
+        <field name="enumId"><hidden/></field>
 	    <field name="enumTypeId"><hidden value="EMPLOY_STTS"/></field>
-	    <field name="enum_code" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+	    <field name="enumCode" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
@@ -2432,13 +2434,13 @@ under the License.
 
         <auto-fields-service default-field-type="hidden" service-name="updateEnumStaffStatus"/>
 
-        <field name="enum_Id"> <hidden/> </field>
-        <field name="enum_code" title="Code"> <text></text> </field>
+        <field name="enumId"> <hidden/> </field>
+        <field name="enumCode" title="Code"> <text></text> </field>
         <field name="description"> <text></text> </field>
 
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEnumStaffStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="enum_Id"/>
+                <parameter param-name="enumId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>

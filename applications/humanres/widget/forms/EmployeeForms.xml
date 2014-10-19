@@ -989,8 +989,13 @@
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="nationalIDNumber" title="Id Number"><text-find/></field>
        <field name="roleTypeId"><hidden value="EMPLOYEE"/></field> 
-       <!-- <field name="isBranch"><hidden value="Y"/></field>  -->
-        <field name="groupName" title="Branch"><text-find/></field>
+        <field name="branchId" title="Branch">
+          <drop-down allow-empty="true">
+                <entity-options entity-name="PartyGroup" key-field-name="partyId" description="${groupName}">
+                	<entity-constraint name="isBranch" operator="equals" value="Y"/>
+                </entity-options>
+            </drop-down>
+      </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
     
@@ -1011,7 +1016,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-         <field name="partyId" title="First Name"><display also-hidden="false"/></field>
+         <field name="partyId"><display also-hidden="false"/></field>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
         <field name="nationalIDNumber" title="Id Number"><display also-hidden="false"/></field>
@@ -1031,14 +1036,19 @@
          <!-- Find Employee -->
     <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="RoleTypeAndPersonEmployeeAndBranch">
     
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+           <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="partyId"><text-find/></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="nationalIDNumber" title="Id Number"><text-find/></field>
        <field name="roleTypeId"><hidden value="EMPLOYEE"/></field> 
-       <!-- <field name="isBranch"><hidden value="Y"/></field>  -->
-        <field name="groupName" title="Branch"><text-find/></field>
+        <field name="branchId" title="Branch">
+          <drop-down allow-empty="true">
+                <entity-options entity-name="PartyGroup" key-field-name="partyId" description="${groupName}">
+                	<entity-constraint name="isBranch" operator="equals" value="Y"/>
+                </entity-options>
+            </drop-down>
+      </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
    
@@ -1060,7 +1070,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-         <field name="partyId" title="First Name"><display also-hidden="false"/></field>
+         <field name="partyId"><display also-hidden="false"/></field>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
         <field name="nationalIDNumber" title="Id Number"><display also-hidden="false"/></field>
