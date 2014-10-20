@@ -179,6 +179,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="emplPositionType==null" target="createEmplPositionType"/>
         <auto-fields-service service-name="updateEmplPositionType"/>
+        <field name="parentTypeId"><hidden/></field>
         <field name="emplPositionTypeId" use-when="emplPositionType==null"><text/></field>
         <field name="emplPositionTypeId" use-when="emplPositionType!=null"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
@@ -531,6 +532,38 @@ under the License.
         <field name="addBranch" title="Add Branch" widget-style="buttontext">
             <hyperlink target="bankbranch" description="Add Branch" also-hidden="false">
                 <parameter param-name="bankDetailsId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+     <form name="NewPartyContent" type="single" target="createPartyContentType"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="partycontentTypeContext">
+        
+        <field name="partyContentTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="parentTypeId" title="Parent Content Type" ><text size="30" maxlength="60"/></field>
+         <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPartyContents" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartyContentType" paginate-target="NewPartyContent"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyContentType">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updatePartyContentType"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="partyContentTypeId"> <text></text> </field>
+        <field name="parentTypeId"> <text></text> </field>
+        <field name="description"> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePartyContentType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="partyContentTypeId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>

@@ -1085,6 +1085,43 @@ under the License.
             </hyperlink>
         </field>
     </form>
+        
+     <form name="listPayslipMsg" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayslipMessage" paginate-target="payslipMessage"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PayslipMessage">
+            </entity-condition>
+        </actions>
+         <field name="payslipMessageId" > <hidden/>  </field>        
+        <field name="description" title="Edit Payslip Message"> 
+	        <hyperlink also-hidden="false" description="${description}" target="editPayslipMessage">
+                <parameter param-name="payslipMessageId"/>
+            </hyperlink>
+	    </field>       
+	    <field name="display" title="Display On Payslip"><display/></field>
+    </form>
+     <form name="EditPayslipMessage" type="single" target="updatePayslipMessage" title="" default-map-name="payslipmessage"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <actions>
+        	<entity-condition entity-name="PayslipMessage"></entity-condition>
+        	<set field="payslipMessageId" from-field="parameters.payslipMessageId"/>
+        </actions>
+        <alt-target use-when="payrollelement==null" target="updatePayslipMessage"/>
+        <auto-fields-service service-name="updatePayslipMessage" map-name="payslipmessage"/>
+
+        <field name="payslipMessageId"> <hidden/></field>
+        <field name="description" title="Payslip Message" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="display" title="Display On Payslip">
+        	<drop-down allow-empty="false">
+        		<option key="N" description="No"/>
+        		<option key="Y" description="Yes"/>
+        	</drop-down>
+        </field>
+        
+        <field name="submitButton" use-when="payrollelement!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+  
     
    
 </forms>

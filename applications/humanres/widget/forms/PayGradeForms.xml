@@ -49,14 +49,15 @@
             </hyperlink>
         </field>
     </form>
-    <form name="EditPayGrade" type="single" target="updatePayGrade" title=""
+    <form name="EditPayGrade" type="single" target="createPayGrade" title=""
         header-row-style="header-row" default-table-style="basic-table" default-map-name="payGrade">
         <alt-target use-when="payGradeId==null" target="createPayGrade"/>
+         <alt-target use-when="payGrade!=null" target="updatePayGrade"/>
         <auto-fields-service service-name="updatePayGrade"/>
         <field use-when="payGrade!=null" name="payGradeId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="payGrade==null" name="payGradeId"><text/></field>
         <field name="payGradeName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="payGrade==null" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="payGrade!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListSalarySteps" type="multi" target="updateSalaryStep?salaryStepSeqId=${salaryStepSeqId}&amp;payGradeId=${payGradeId}" paginate-target="findSalarySteps"

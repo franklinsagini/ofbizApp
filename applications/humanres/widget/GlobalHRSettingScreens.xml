@@ -47,6 +47,7 @@
 	<screen name="insertMenuDecorator">
 		<section>
 			<actions>
+				 <set field="headerItem" value="GlobalHRSettings"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -423,7 +424,7 @@
     <section>
             <actions>
                 <set field="titleProperty" value="Bank Details"/>
-                <set field="headerItem" value="bankdetails"/>
+                <set field="tabButtonItem" value="staffbankdetails"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createBankDetails"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -529,6 +530,39 @@
                     </decorator-section>
                 </decorator-screen>
             </widgets>            
+        </section>
+    </screen>
+    
+     <screen name="NewPartyContent">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Bank Details"/>
+                <set field="tabButtonItem" value="partyContents"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPartyContentType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PartyContentType" value-field="partycontentTypeContext"/>
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="New Party Content Type">
+                                    <include-form name="NewPartyContent" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                                
+                        		<screenlet title="Party Content Types List">
+                        			<include-form name="listPartyContents" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
         </section>
     </screen>
     

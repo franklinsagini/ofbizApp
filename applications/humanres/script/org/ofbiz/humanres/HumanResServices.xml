@@ -546,11 +546,21 @@
 		<store-value value-field="lookedUpValue" />
 	</simple-method>
 
-	<simple-method method-name="deletePayGrade"
+<!-- 	<simple-method method-name="deletePayGrade"
 		short-description="Delete Pay Grade">
 		<entity-one entity-name="PayGrade" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
+	 -->
+	
+	<simple-method method-name="deletePayGrade"
+		short-description="Delete Pay Grade">
+		<set field="payGradeId" from-field="parameters.payGradeId" />
+		<entity-one entity-name="PayGrade" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	
 
 	<simple-method method-name="createPayHistory"
 		short-description="Create Pay History">
@@ -1545,11 +1555,18 @@
 		<make-value entity-name="Tribe" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.tribeId">
+		
+		
+		<sequenced-id sequence-name="Tribe" field="tribeId" />
+
+		<set from-field="tribeId" field="newEntity.tribeId" />
+		
+		
+		<!-- <if-empty field="newEntity.tribeId">
 			<sequenced-id sequence-name="Tribe" field="newEntity.tribeId" />
 		</if-empty>
 		<field-to-result field="newEntity.tribeId"
-			result-name="tribeId" />
+			result-name="tribeId" /> -->
 		<create-value value-field="newEntity" />
 	</simple-method>
 
@@ -1617,11 +1634,16 @@
 		<make-value entity-name="Religion" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.religionId">
+		
+		<sequenced-id sequence-name="Religion" field="religionId" />
+
+		<set from-field="religionId" field="newEntity.religionId" />
+		
+		<!-- <if-empty field="newEntity.religionId">
 			<sequenced-id sequence-name="Religion" field="newEntity.religionId" />
 		</if-empty>
 		<field-to-result field="newEntity.religionId"
-			result-name="religionId" />
+			result-name="religionId" /> -->
 		<create-value value-field="newEntity" />
 	</simple-method>
 
@@ -1768,6 +1790,28 @@
     
     <simple-method method-name="deleteBankDetails" short-description="Delete Bank Details">
         <entity-one entity-name="BankDetails" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    
+    <!--======================== party Content Types======================== -->
+    
+    
+    <simple-method method-name="createPartyContentType" short-description="Add Bank Details">
+        <make-value entity-name="PartyContentType" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePartyContentType" short-description="Update Bank Details">
+        <entity-one entity-name="PartyContentType" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePartyContentType" short-description="Delete Bank Details">
+        <entity-one entity-name="PartyContentType" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     

@@ -45,9 +45,9 @@ public static String getLeaveBalance(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		Date confirmationdate = null;
+		Date appointmentdate = null;
 		try {
-			confirmationdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("confirmationdate")));
+			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
 		} catch (ParseException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -111,7 +111,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 		
 		//========= ==============================//
 	
-		LocalDateTime stappointmentdate = new LocalDateTime(confirmationdate);
+		LocalDateTime stappointmentdate = new LocalDateTime(appointmentdate);
 		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
 				.getTimeInMillis());
 		
