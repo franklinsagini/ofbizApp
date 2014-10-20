@@ -59,6 +59,12 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	 <request-map uri="partyContentTypes">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="partyContentTypes"
+			save-home-view="true" />
+	</request-map>
+	
 	<request-map uri="employeeBankDetails">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="emplBankDetails"
@@ -152,6 +158,47 @@ under the License.
 			</response>
 		<response name="error" type="view" value="bankdetails" />
 	</request-map>
+	
+	
+	<!--======================== party Content Types======================== -->
+	
+	
+	 <request-map uri="createPartyContentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPartyContentType" />
+		<response name="success" type="request-redirect"
+			value="partyContentTypes">
+			<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="partyContentTypes" />
+	</request-map>
+	
+	<request-map uri="updatePartyContentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePartyContentType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="partyContentTypes">
+			<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="partyContentTypes" />
+	</request-map>
+	
+	<request-map uri="deletePartyContentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePartyContentType" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="partyContentTypes">
+			<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="partyContentTypes" />
+	</request-map>
+	
+	
+	
+	
+	
 	
 		<request-map uri="bankbranch">
 		<security https="true" auth="true" />
@@ -2339,6 +2386,8 @@ under the License.
 	<view-map name="bankbranch" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewBankBranch"/>
 	<view-map name="emplBankDetails" type="screen" page="component://humanres/widget/EmployeeScreens.xml#employeeBankDetails"/>
 	<view-map name="bank" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewEmplBankDetails"/>
+	
+	<view-map name="partyContentTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewPartyContent"/>
 		
 	<view-map name="employeeNOKDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetails"/>
     <view-map name="employeeNOKDetailscsv" type="screencsv" content-type="text/csv"

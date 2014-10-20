@@ -1793,6 +1793,28 @@
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    
+    <!--======================== party Content Types======================== -->
+    
+    
+    <simple-method method-name="createPartyContentType" short-description="Add Bank Details">
+        <make-value entity-name="PartyContentType" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePartyContentType" short-description="Update Bank Details">
+        <entity-one entity-name="PartyContentType" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePartyContentType" short-description="Delete Bank Details">
+        <entity-one entity-name="PartyContentType" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
     <!-- Bank Branch Starts Here -->
 	<simple-method method-name="createBankBranch" short-description="Add Bank Branch">
         <make-value entity-name="BankBranch" value-field="newEntity"/>
