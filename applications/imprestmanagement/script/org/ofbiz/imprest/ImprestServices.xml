@@ -91,5 +91,64 @@
     </simple-method>
 
 
+        <!-- create a new ImprestSurrenderable header record -->
+    <simple-method method-name="createSurrendable" short-description="Create an Budget">
+          <now-timestamp field="nowDate"/>
+          <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="ImprestSurrenderable"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+
+        <!-- create a non existing ID if not supplied -->
+        <sequenced-id sequence-name="ImprestSurrenderable" field="newEntity.surrenderableId"/>
+
+        <!-- populate EmployeeId -->
+        <set from-field="userLogin.partyId" field="newEntity.employeeId"/>
+
+        <!-- populate reqDate -->
+        <set from-field="nowDate" field="newEntity.reqDate"/>
+
+        <!-- populate reqDate -->
+        <set value="PENDING" field="newEntity.approvalStatus"/>
+
+        <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+
+        <set field="setStatus.surrenderableId" from-field="newEntity.surrenderableId"/>
+        <set field="setStatus.statusId" value="BG_CREATED"/>
+        <call-service service-name="updateSurrendableStatus" in-map-name="setStatus"/>
+        <field-to-result field="newEntity.surrenderableId" result-name="surrenderableId"/>
+    </simple-method>
+
+    <!-- update Surrendable Status -->
+    <simple-method method-name="updateSurrendableStatus" short-description="Update Surrendable Status">
+        <now-timestamp field="nowDate"/>
+        <entity-and list="surrendableStatuses" entity-name="SurrendableStatus">
+            <field-map field-name="surrenderableId" from-field="parameters.surrenderableId"/>
+            <order-by field-name="-statusDate"/>
+        </entity-and>
+        <if-not-empty field="surrendableStatuses">
+            <first-from-list entry="surrenderableStatus" list="surrendableStatuses"/>
+            <entity-one value-field="statusValidChange" entity-name="StatusValidChange">
+                <field-map field-name="statusId" from-field="surrenderableStatus.statusId"/>
+                <field-map field-name="statusIdTo" from-field="parameters.statusId"/>
+            </entity-one>
+            <if-not-empty field="statusValidChange">
+                <make-value value-field="newEntity" entity-name="SurrendableStatus"/>
+                <set-pk-fields value-field="newEntity" map="parameters"/>
+                <set-nonpk-fields map="parameters" value-field="newEntity"/>
+                <set field="newEntity.statusDate" from-field="nowDate"/>
+                <create-value value-field="newEntity"/>
+            </if-not-empty>
+            <else>
+                <make-value value-field="newEntity" entity-name="SurrendableStatus"/>
+                <set-pk-fields value-field="newEntity" map="parameters"/>
+                <set-nonpk-fields map="parameters" value-field="newEntity"/>
+                <set field="newEntity.statusDate" from-field="nowDate"/>
+                <create-value value-field="newEntity"/>
+            </else>
+        </if-not-empty>
+    </simple-method>
+
+
 
 </simple-methods>
