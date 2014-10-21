@@ -449,7 +449,7 @@ public class PayrollProcess {
 		BigDecimal bdInsuranceRelief = BigDecimal.ZERO;
 		BigDecimal bdMPRAmount = BigDecimal.ZERO;
 
-		bdInsuranceRelief = getInsuranceRelief(employee, staffPayrollId, delegator);
+		bdInsuranceRelief = getInsuranceRelief(employee, staffPayrollId, delegator).setScale(6, RoundingMode.HALF_UP);
 		bdINSURANCERELIEF = bdInsuranceRelief;
 		bdMPRAmount = getMPR(employee, delegator);
 		bdMPR = bdMPRAmount;
@@ -1261,7 +1261,7 @@ public class PayrollProcess {
 		return contribution;
 	}
 
-	private static BigDecimal getLoanElementAmount(GenericValue payrollElement, String staffPayrollId,
+/*	private static BigDecimal getLoanElementAmount(GenericValue payrollElement, String staffPayrollId,
 			Delegator delegator) {
 		// Do the real getting
 		BigDecimal bdAmount = BigDecimal.ZERO;
@@ -1285,7 +1285,7 @@ public class PayrollProcess {
 			}
 		}
 		return bdAmount;
-	}
+	}*/
 
 	/***
 	 * @author charles Get the fixed Interest
