@@ -184,7 +184,7 @@
             </service>
         </actions>
         <field name="surrenderableId" title="Imprest Id" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${surrenderableId}" target="editSurrenderable">
+            <hyperlink also-hidden="false" description="Imprest : ${surrenderableId}" target="editSurrenderable">
                 <parameter param-name="surrenderableId" />
             </hyperlink>
         </field>
@@ -230,8 +230,6 @@
 
     <form name="EditSurrenderable" type="single" target="updateSurrenderable" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="imprestSurrenderableContext">
-        <alt-target use-when="imprestSurrenderableContext!=null" target="UpdatePerDiemSetup"/>
-
 
         <field name="surrenderableId">
             <hidden/>
@@ -240,9 +238,11 @@
         <field position="1" name="employeeId" title="Prepared By">
               <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
         </field>
+
         <field name="approvalStatus" position="2">
              <display />
         </field>
+
         <field position="1" name="amount" title="Imprest Total">
             <display type="currency" currency="KES"/>
         </field>
@@ -257,6 +257,42 @@
         </field>
 
         <!-- <field position="2" name="numberOfDays" title="Number of Days"><text size="10"/></field> -->
+                <!-- submitButton -->
+        <field use-when="imprestSurrenderableContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="imprestSurrenderableContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+    <!--
+        EditSupplierForm
+     -->
+
+    <form name="EditSurrendableForm" type="single" target="createSurrenderable" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="imprestSurrenderableContext">
+        <alt-target use-when="imprestSurrenderableContext!=null" target="updateSurrenderable"/>
+        <actions>
+            <entity-condition entity-name="ImprestSurrenderable" list="surrendableList">
+                <order-by field-name="surrenderableId"/>
+            </entity-condition>
+        </actions>
+        <field name="surrenderableId"><hidden/></field>
+        <field name="employeeId" title="Prepared By">
+              <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field name="approvalStatus" >
+             <display />
+        </field>
+        <field  name="reqDate" title="Created On">
+            <display also-hidden="false" type="date-time"></display>
+        </field>
+        <field  name="approverId" title="Approved By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field name="appDate" title="Approved On">
+            <display also-hidden="false" type="date-time"></display>
+        </field>
+        <field  name="amount" title="Imprest Total">
+            <display type="currency" currency="KES"/>
+        </field>
                 <!-- submitButton -->
         <field use-when="imprestSurrenderableContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field use-when="imprestSurrenderableContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
