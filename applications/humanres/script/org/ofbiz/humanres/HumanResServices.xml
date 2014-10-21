@@ -102,6 +102,60 @@
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
 	
+ <!-- ================COURSE SPECIALIZATION========================= -->
+ 
+ <simple-method method-name="createPartyCourseSpecialization"
+		short-description="Create a Party Qualification Type">
+		<make-value entity-name="PartyCourseSpecialization" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="PartyCourseSpecialization" field="specializationId" />
+		<set from-field="specializationId" field="newEntity.specializationId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updatePartyCourseSpecialization"
+		short-description="Update Party Qualification Type">
+		<entity-one entity-name="PartyCourseSpecialization" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deletePartyCourseSpecialization"
+		short-description="Delete Party Qualification Type">
+		<entity-one entity-name="PartyCourseSpecialization" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+ 
+ 
+ <!-- ============================INSTITUTIONS======================================= -->
+ 
+ <simple-method method-name="createPartyQualInstitution"
+		short-description="Create a Party Qualification Type">
+		<make-value entity-name="PartyQualInstitute" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="PartyQualInstitute" field="instituteId" />
+		<set from-field="instituteId" field="newEntity.instituteId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updatePartyQualInstitution"
+		short-description="Update Party Qualification Type">
+		<entity-one entity-name="PartyQualInstitute" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deletePartyQualInstitution"
+		short-description="Delete Party Qualification Type">
+		<entity-one entity-name="PartyQualInstitute" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	
+	
+	
 		<!-- Party Qualification Group -->
 	<simple-method method-name="createPartyQualGroup"
 		short-description="Create a Party Qualification Group">
@@ -961,12 +1015,11 @@
 		short-description="Create a PositionType">
 		<make-value entity-name="EmplPositionType" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.emplPositionTypeId">
-			<sequenced-id sequence-name="EmplPositionType"
-				field="newEntity.emplPositionTypeId" />
-		</if-empty>
-		<field-to-result field="newEntity.emplPositionTypeId"
-			result-name="emplPositionTypeId" />
+		
+		<sequenced-id sequence-name="EmplPositionType" field="emplPositionTypeId" />
+
+		<set from-field="emplPositionTypeId" field="newEntity.emplPositionTypeId" />
+		
 		<create-value value-field="newEntity" />
 	</simple-method>
 

@@ -42,7 +42,9 @@
                                         </container>
                                     </widgets>
                                 </section>
+                                
                             </decorator-section>
+                            
                            <decorator-section name="search-options">
                                <include-form name="FindPartyQuals" location="component://humanres/widget/forms/PartyQualForms.xml"/>
                            </decorator-section>
@@ -122,6 +124,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
+                            <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplQualificationTabBar"/>
                                 <screenlet title="New Qualification Type">
                                     <include-form name="NewPartyQualType" location="component://humanres/widget/forms/PartyQualForms.xml"/>
                                 </screenlet>
@@ -143,6 +146,101 @@
             </widgets>
         </section>
     </screen>
+    
+    
+    <screen name="NewPartyCourseSpecializationType">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Party Qualification Type"/>
+                <set field="headerItem" value="courseSpecialization"/>
+                <set field="tabButtonItem" value="courseSpecialization"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPartyCourseSpecialization"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PartyCourseSpecialization" value-field="PartyCourseSpecializationContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplQualificationTabBar"/>
+                                <screenlet title="New Course Specialization">
+                                    <include-form name="NewPartyCourseSpecialization" location="component://humanres/widget/forms/PartyQualForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Course Specialization List">
+                        			<include-form name="listPartyCourseSpecialization" location="component://humanres/widget/forms/PartyQualForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="NewPartyQualInstitute">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Party Qualification Type"/>
+                <set field="headerItem" value="institute"/>
+                <set field="tabButtonItem" value="institute"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPartyQualType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PartyQualInstitute" value-field="PartyQualInstituteContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplQualificationTabBar"/>
+                                <screenlet title="New Institute">
+                                    <include-form name="NewPartyQualInstitute" location="component://humanres/widget/forms/PartyQualForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Institutes List">
+                        			<include-form name="listPartyQualInstitutes" location="component://humanres/widget/forms/PartyQualForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
     <screen name="NewPartyQualGroup">
     <section>
             <actions>
