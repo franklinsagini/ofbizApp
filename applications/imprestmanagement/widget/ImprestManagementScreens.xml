@@ -46,6 +46,7 @@
             <actions>
                 <property-map resource="ImprestManagementUiLabels" map-name="uiLabelMap" global="true"/>
                  <set field="headerItem" value="surrenderable"/><!-- this highlights the selected menu-item with name "surrenderable" -->
+                  <set field="surrenderableId" value="parameters.surrenderableId"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -265,6 +266,47 @@
                                 </screenlet>
                             </widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditSurrendableScreen">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Document Approval"/>
+                <set field="tabButtonItem" value="editSupplier"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createSupplier"/>
+                <set field="surrenderableId" value="parameters.surrenderableId"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="ImprestSurrenderable" value-field="imprestSurrenderableContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSurrenderableDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Imprest Management: Edit Surrenderable Imprest">
+                                    <include-form name="EditSurrendableForm" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+<!--
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Purchasing Management: Suppliers List">
+                                    <include-form name="SupplierListForm" location="component://purchases/widget/PurchasesForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+-->
                     </decorator-section>
                 </decorator-screen>
             </widgets>
