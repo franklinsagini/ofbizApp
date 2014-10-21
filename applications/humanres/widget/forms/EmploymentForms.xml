@@ -81,7 +81,9 @@
         </field>
         <field name="firstName"><display></display></field>
         <field name="lastName"><display></display></field>
-        <field name="branchId" title="Branch"><display/></field>
+        <field name="branchId" title="Branch">
+        <display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"> </display-entity>
+        </field>
         <!-- field name="stationId" title="Station">
 	       <display-entity entity-name="Station" key-field-name="stationId" description="${name}"></display-entity>
         </field -->
@@ -153,7 +155,9 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="branchId" use-when="employment!=null" title="Branch"><display/></field>
+         <field name="branchId" use-when="employment!=null" title="Branch">
+        	<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"> </display-entity>
+        </field>
         <field name="branchId"  use-when="employment==null" title="Branch" required-field="true" widget-style="required">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
