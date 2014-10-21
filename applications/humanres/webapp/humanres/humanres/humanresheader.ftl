@@ -62,6 +62,30 @@
          }
         });
         
+             
+   jQuery('input[name="appointmentdate"]').change(function(){
+		 
+         var appointmentdate = this.value;
+         var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
+         var reqUrl = '/humanres/control/emplConfirmDate';
+          
+          if (appointmentdate.length > 0){
+         	calculateConfirmDate(reqUrl, appointmentdate);
+         }
+        });
+        
+         jQuery('input[name="birthDate"]').change(function(){
+		 
+         var birthDate = this.value;
+         var birthDate =  jQuery('input[name="birthDate"]').val();
+         var reqUrl = '/humanres/control/emplRetireDate';
+          
+          if (birthDate.length > 0){
+         	calculateRetireDate(reqUrl, birthDate);
+         }
+        });
+        
+        
         
     jQuery('input[name="leaveDuration"]').change(function(){
 		 
@@ -153,6 +177,48 @@
 					  
 					   $('input[name="resumptionDate"]').val(data.resumptionDate);
 					  $('input[name="resumptionDate_i18n"]').val(data.resumptionDate_i18n);
+					  
+					  
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    }
+	    
+	     function calculateConfirmDate(reqUrl, appointmentdate){
+	    	jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'appointmentdate': appointmentdate}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+					 $('input[name="confirmationdate"]').val(data.confirmationdate);
+					  $('input[name="confirmationdate_i18n"]').val(data.confirmationdate_i18n);
+					  
+					  
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    }
+	    
+	    function calculateRetireDate(reqUrl, birthDate){
+	    	jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'birthDate': birthDate}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+					 $('input[name="retirementdate"]').val(data.retirementdate);
+					  $('input[name="retirementdate_i18n"]').val(data.retirementdate_i18n);
 					  
 					  
 					 
