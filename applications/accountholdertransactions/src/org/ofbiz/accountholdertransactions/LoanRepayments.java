@@ -722,12 +722,12 @@ public class LoanRepayments {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-
+		partyId = partyId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
 						.makeCondition("partyId", EntityOperator.EQUALS,
-								partyId)
+								Long.valueOf(partyId))
 
 				), EntityOperator.AND);
 
@@ -757,13 +757,13 @@ public class LoanRepayments {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-
+		partyId = partyId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
 						.makeCondition("repaymentName", EntityOperator.EQUALS,
 								"INTEREST"), EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId)
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId))
 
 				), EntityOperator.AND);
 
@@ -793,13 +793,13 @@ public class LoanRepayments {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-
+		partyId = partyId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
 						.makeCondition("repaymentName", EntityOperator.EQUALS,
 								"INSURANCE"), EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId)
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId))
 
 				), EntityOperator.AND);
 
@@ -829,13 +829,13 @@ public class LoanRepayments {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-
+		partyId = partyId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
 						.makeCondition("repaymentName", EntityOperator.EQUALS,
 								"PRINCIPAL"), EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId)
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId))
 
 				), EntityOperator.AND);
 
@@ -863,13 +863,13 @@ public class LoanRepayments {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isPaid", EntityOperator.EQUALS, "N"),
 
 				EntityCondition.makeCondition("loanApplicationId",
-						EntityOperator.EQUALS, loanApplicationId)
+						EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -899,14 +899,14 @@ public class LoanRepayments {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
 						.makeCondition("repaymentName", EntityOperator.EQUALS,
 								"INTEREST"), EntityCondition.makeCondition(
 						"loanApplicationId", EntityOperator.EQUALS,
-						loanApplicationId)
+						Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -935,14 +935,14 @@ public class LoanRepayments {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
 						.makeCondition("repaymentName", EntityOperator.EQUALS,
 								"INSURANCE"), EntityCondition.makeCondition(
 						"loanApplicationId", EntityOperator.EQUALS,
-						loanApplicationId)
+						Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -971,14 +971,14 @@ public class LoanRepayments {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isPaid", EntityOperator.EQUALS, "N"), EntityCondition
 						.makeCondition("repaymentName", EntityOperator.EQUALS,
 								"PRINCIPAL"), EntityCondition.makeCondition(
 						"loanApplicationId", EntityOperator.EQUALS,
-						loanApplicationId)
+						Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -1204,10 +1204,10 @@ public class LoanRepayments {
 		// isPaid
 		List<GenericValue> loanExpectationELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-
+		partyId = partyId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
 						EntityCondition.makeCondition("isPaid",
 								EntityOperator.EQUALS, "N")
 
@@ -1302,11 +1302,13 @@ public class LoanRepayments {
 
 		// EntityCondition.makeCondition(
 		// "isPaid", EntityOperator.EQUALS, "N"),
+		partyId = partyId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceFirst(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
 						EntityCondition.makeCondition("loanApplicationId",
-								EntityOperator.EQUALS, loanApplicationId)
+								EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -1342,13 +1344,15 @@ public class LoanRepayments {
 
 		// EntityCondition.makeCondition(
 		// "isPaid", EntityOperator.EQUALS, "N"),
+		partyId = partyId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceFirst(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"repaymentName", EntityOperator.EQUALS, "INTEREST"),
 						EntityCondition.makeCondition("partyId",
-								EntityOperator.EQUALS, partyId),
+								EntityOperator.EQUALS, Long.valueOf(partyId)),
 						EntityCondition.makeCondition("loanApplicationId",
-								EntityOperator.EQUALS, loanApplicationId)
+								EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -1383,13 +1387,15 @@ public class LoanRepayments {
 
 		// EntityCondition.makeCondition(
 		// "isPaid", EntityOperator.EQUALS, "N"),
+		partyId = partyId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceFirst(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"repaymentName", EntityOperator.EQUALS, "INSURANCE"),
 						EntityCondition.makeCondition("partyId",
-								EntityOperator.EQUALS, partyId),
+								EntityOperator.EQUALS, Long.valueOf(partyId)),
 						EntityCondition.makeCondition("loanApplicationId",
-								EntityOperator.EQUALS, loanApplicationId)
+								EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -1421,14 +1427,16 @@ public class LoanRepayments {
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
 
 		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		partyId = partyId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceFirst(",", "");
 		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"repaymentName", EntityOperator.EQUALS, "PRINCIPAL"),
 						EntityCondition.makeCondition("partyId",
-								EntityOperator.EQUALS, partyId),
+								EntityOperator.EQUALS, Long.valueOf(partyId)),
 
 						EntityCondition.makeCondition("loanApplicationId",
-								EntityOperator.EQUALS, loanApplicationId)
+								EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -1461,12 +1469,14 @@ public class LoanRepayments {
 		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
 
 		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		partyId = partyId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceFirst(",", "");
 		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
 
 				EntityCondition.makeCondition("loanApplicationId",
-						EntityOperator.EQUALS, loanApplicationId)
+						EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -1500,12 +1510,14 @@ public class LoanRepayments {
 		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
 
 		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		partyId = partyId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceFirst(",", "");
 		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
 
 				EntityCondition.makeCondition("loanApplicationId",
-						EntityOperator.EQUALS, loanApplicationId)
+						EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 
@@ -1532,12 +1544,13 @@ public class LoanRepayments {
 		
 		//Get all loans by this member
 		List<GenericValue> loanApplicationELI = null; // =
-
+		partyId = partyId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId)),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId))),
 						EntityOperator.AND);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
 					loanApplicationsConditions, null, null, null, false);
@@ -1565,9 +1578,10 @@ public class LoanRepayments {
 		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
 
 		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		partyId = partyId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
 
 				EntityCondition.makeCondition("loanApplicationId",
 						EntityOperator.EQUALS, loanApplicationId)
@@ -1607,12 +1621,14 @@ public class LoanRepayments {
 		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
 
 		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		partyId = partyId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
 
 				EntityCondition.makeCondition("loanApplicationId",
-						EntityOperator.EQUALS, loanApplicationId)
+						EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 

@@ -8,10 +8,13 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
+			<set field="statusName" value="FORWAREDAPPROVAL"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+			
 			<entity-condition entity-name="LoanApplication">
 				<condition-list combine="and">
 					<condition-list combine="or">
-						<condition-expr field-name="applicationStatus" operator="equals" value="FORWAREDAPPROVAL"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${statusId}"></condition-expr>
 					</condition-list>
 					
 				</condition-list>				
@@ -62,8 +65,8 @@
 			<entity-options description="${description}" entity-name="PaymentMethodType" -->
 		<!-- entity-order-by field-name="description"/ -->
 		<!-- /entity-options> </drop-down> </field -->
-		<field name="applicationStatus">
-			<display also-hidden="false" />
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
 		</field>
 		
 		<field name="createdStamp" title="Created">
@@ -77,12 +80,16 @@
 		<!-- field name="Edit Application">
 			<hyperlink target="loanapplication?partyId=${partyId}&amp;loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
-		</field -->
+		</field 
+		applicationStatus.equals(&quot;FORWAREDAPPROVAL&quot;)
+		-->
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;FORWAREDAPPROVAL&quot;)" event="onclick"
+		<field name="Forward" use-when="loanStatusId==${statusId}" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});" >
-			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}&amp;DONE_PAGE=forwardApplication?loanApplicationId=${loanApplicationId}"
-				description="Approve" target-type="inter-app" ></hyperlink>
+			<hyperlink target="forwardApplication"
+				description="Approve" target-type="inter-app" >
+					<parameter param-name="loanApplicationId"/>
+				</hyperlink>
 				
 				
 		</field>
@@ -128,13 +135,16 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
+			<set field="statusName" value="APPROVED"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+			
 			<entity-condition entity-name="LoanApplication">
-				<condition-list combine="and">
-					<condition-list combine="or">
-						<condition-expr field-name="applicationStatus" operator="equals" value="APPROVED"></condition-expr>
-					</condition-list>
+				<!-- condition-list combine="and">
+					<condition-list combine="or" -->
+						<condition-expr field-name="loanStatusId" operator="equals" value="${statusId}"></condition-expr>
+					<!-- /condition-list>
 					
-				</condition-list>				
+				</condition-list -->				
 				
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
@@ -182,8 +192,8 @@
 			<entity-options description="${description}" entity-name="PaymentMethodType" -->
 		<!-- entity-order-by field-name="description"/ -->
 		<!-- /entity-options> </drop-down> </field -->
-		<field name="applicationStatus">
-			<display also-hidden="false" />
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
 		</field>
 		
 		<field name="createdStamp" title="Created">
@@ -197,15 +207,17 @@
 		<!-- field name="Edit Application">
 			<hyperlink target="loanapplication?partyId=${partyId}&amp;loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
+				
+				applicationStatus.equals(&quot;FORWARDEDLOANS&quot;)
 		</field -->
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;FORWARDEDLOANS&quot;)" event="onclick"
+		<!-- field name="Forward" use-when="loanStatusId == ${statusId}" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
 			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
 				
 				
-		</field>
+		</field -->
 		<!-- field name="formStatus" title="Form" use-when="loanApplication.collateralsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsTotalDepositsEnough.equals(&quot;N&quot;)&amp;&amp;loanApplication.eacherGuarantorGreaterThanAverage.equals(&quot;N&quot;)"><display default-value="Form Incomplete, Provide Details (Guarantors, Collateral etc)"></display></field -->
 		
 

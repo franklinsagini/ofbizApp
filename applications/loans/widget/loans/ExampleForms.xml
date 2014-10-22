@@ -723,8 +723,12 @@
 		default-table-style="basic-table" default-map-name="applicationContext">
 
 		<actions>
+		
+			<set field="statusName" value="ACTIVE"/>
+			<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+			
 			<entity-condition entity-name="Member" list="membersList">
-				<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+				<condition-expr field-name="memberStatusId" operator="equals" value="${statusId}"/>
 			</entity-condition>
 			<!-- entity-condition entity-name="SaccoProduct" list="productsList"> 
 				<condition-expr field-name="productType" operator="equals" value="Loan"/> 
@@ -743,9 +747,11 @@
 				<condition-expr field-name="loanProductId" operator="in" value="${productClassList}" />
 			</entity-condition -->
 			
-			<entity-condition entity-name="LoanProductClassView" list="productsList">
-				<condition-expr field-name="memberClass" operator="equals" value="${member.memberClass}"/>
-			</entity-condition>
+			<!-- entity-condition entity-name="LoanProductClassView" list="productsList">
+				
+			</entity-condition -->
+			<!-- condition-expr field-name="memberClass" operator="equals" value="${member.memberClass}"/ -->
+			<entity-condition entity-name="LoanProduct" list="productsList"></entity-condition>
 
 			<entity-condition entity-name="PaymentMethodType"
 				list="paymentMethodsList">
@@ -753,8 +759,15 @@
 
 			<entity-condition entity-name="LoanStatus" list="loanStatusList">
 			</entity-condition>
-
-
+			<entity-one entity-name="Member" value-field="member">
+				<field-map field-name="partyId" from-field="parameters.partyId"/>
+			</entity-one>
+			<entity-one entity-name="MemberType" value-field="memberType">
+				<field-map field-name="memberTypeId" value="${member.memberTypeId}"/>
+			</entity-one>
+			<entity-one entity-name="MemberClass" value-field="memberClass">
+				<field-map field-name="memberClassId" value="${member.memberClassId}"/>
+			</entity-one>
 			<!--entity-condition entity-name="LoanSecurity" list="loanSecurityList"> 
 				</entity-condition -->
 				
@@ -796,13 +809,13 @@
 			required-field="true">
 			<text size="30" maxlength="60" default-value="${member.idNumber}"  />
 		</field>
-		<field name="memberType" title="Member Type" widget-style="required"
+		<field name="memberTypeId" title="Member Type" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" default-value="${member.memberType}"  />
+			<display default-value="${memberType.name}"></display>
 		</field>
-		<field name="memberClass" title="Member Class" widget-style="required"
+		<field name="memberClassId" title="Member Class" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" default-value="${member.memberClass}"  />
+			<display default-value="${memberClass.name}"></display>
 		</field>
 		<field name="memberNumber" title="Member Number" widget-style="required"
 			required-field="true">
@@ -949,15 +962,15 @@
 		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table 
 		hover-bar" -->
 	<form name="listLoanApplications" type="list" list-name="listIt"
-		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
+		paginate-target="FindLoanApplication" 
 		separate-columns="true" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-			<entity-condition entity-name="LoanApplication">
-				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
-				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
-				<order-by field-name="-loanApplicationId"/>
-			</entity-condition>
+			<!-- order-by field-name="-loanApplicationId"/ -->
+			<!-- entity-condition entity-name="LoanApplication">
+
+				
+			</entity-condition -->
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
 			    							
 		</actions>
@@ -985,7 +998,7 @@
 			<display also-hidden="false" />
 		</field>
 		
-		<field name="salaryAmt" title="Salary Amount">
+		<!-- field name="salaryAmt" title="Salary Amount">
 			<display also-hidden="false" />
 		</field>
 		<field name="interestRatePM" title="Interest Rate(P.M)">
@@ -999,15 +1012,15 @@
 		<field name="paymentMethodTypeId" title="Payment Method">
 			<display-entity description="${description}"
 				entity-name="PaymentMethodType"></display-entity>
-		</field>
+		</field -->
 
 		<!-- field name="loanSecurityId" title="LoanSecurity"> <drop-down allow-empty="true"> 
 			<entity-options description="${description}" entity-name="PaymentMethodType" -->
 		<!-- entity-order-by field-name="description"/ -->
 		<!-- /entity-options> </drop-down> </field -->
-		<field name="applicationStatus">
+		<!-- field name="applicationStatus">
 			<display also-hidden="false" />
-		</field>
+		</field -->
 		
 		
 		

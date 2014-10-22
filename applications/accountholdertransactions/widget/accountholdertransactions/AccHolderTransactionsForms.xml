@@ -964,12 +964,15 @@ under the License.
         
         <actions>
         	<entity-condition entity-name="Member">
-        		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        		<condition-expr field-name="memberStatusId" operator="equals" value="${statusId}"/>
         		<order-by field-name="-partyId"/>
         	</entity-condition>
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="MemberStatus" list="statusList">
         	</entity-condition>
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
         	
@@ -998,7 +1001,11 @@ under the License.
             </drop-down -->
         </field>
         
-        <field name="memberStatus"><display also-hidden="false"></display></field>
+        <field name="memberStatusId" title="Status">
+        	<drop-down>
+        		<list-options key-name="memberStatusId" list-name="statusList" description="${name}"/>
+        	</drop-down>
+        </field>
         
         <field name="Transactions">
         	<hyperlink target="cashWithdrawal?partyId=${partyId}" description="Transactions for ${firstName} ${lastName}"></hyperlink>

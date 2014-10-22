@@ -675,23 +675,28 @@ under the License.
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
         <field name="memberAccountDetailsId"><hidden/></field>
-        <field name="partyId" title="Member">
+        <!-- field name="partyId" title="Member">
         	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
-            <!--  drop-down allow-empty="true">
+           
+        </field -->
+        
+         <!--  drop-down allow-empty="true">
                 <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
                 </entity-options>
             </drop-down -->
-        </field>
         
-        <field name="openingBalanceDate"><display also-hidden="false"/></field>
+        <field name="openingBalanceDate"><display also-hidden="false" type="date"/></field>
         
         <!-- field name="memberAccountPayableId" title="Account Payable">
         	<display-entity description="${accountName} ${accountCode}" key-field-name="glAccountId" entity-name="GlAccount" also-hidden="false" ></display-entity>
         </field -->
         <field name="memberAccountId" title="Member Account" >
-            <drop-down allow-empty="true">
+            <!-- drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
-            </drop-down>
+            </drop-down -->
+            <display-entity  entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}"> 
+            	
+            </display-entity>
         </field>
         
         <field name="apOpeningBalance"><display also-hidden="false"/></field>

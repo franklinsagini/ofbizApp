@@ -28,8 +28,12 @@ under the License.
         	<make-value entity-name="AccountProduct" value-field="newEntity"/>
 	        <set-pk-fields map="parameters" value-field="newEntity"/>
 	        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-	        <sequenced-id sequence-name="AccountProduct" field="accountProductId"/>
-	        <set from-field="accountProductId" field="newEntity.accountProductId"/>
+	        <!-- sequenced-id sequence-name="AccountProduct" field="accountProductId"/>
+	        <set from-field="accountProductId" field="newEntity.accountProductId"/ -->
+	        <set field="entityName" value="AccountProduct"></set>
+        
+        	<set field="newEntity.accountProductId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+	        
 	        <set field="newEntity.isActive" value="Y"/>
 	        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
 	        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
@@ -70,8 +74,12 @@ under the License.
 	      		<make-value entity-name="LoanProduct" value-field="newEntity"/>
 		        <set-pk-fields map="parameters" value-field="newEntity"/>
 		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-		        <sequenced-id sequence-name="LoanProduct" field="loanProductId"/>
-		        <set from-field="loanProductId" field="newEntity.loanProductId"/>
+		        <!-- sequenced-id sequence-name="LoanProduct" field="loanProductId"/>
+		        <set from-field="loanProductId" field="newEntity.loanProductId"/ -->
+		        <set field="entityName" value="LoanProduct"></set>
+        
+        		<set field="newEntity.loanProductId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        
 		        <set field="newEntity.isActive" value="Y"/>
 		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
 		        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
@@ -198,9 +206,9 @@ under the License.
         	
         	<set field="newEntity.accountProductId" value="${loanProduct.accountProductId}"/>
         	
-        	<if-empty field="newEntity.accountProductId">
+        	<!-- if-empty field="newEntity.accountProductId">
         		<set field="newEntity.accountProductId" value="NOACCOUNT"/>
-        	</if-empty>
+        	</if-empty -->
         	<store-value value-field="newEntity"/>
         <else>
         	<call-simple-method method-name="updateLoanApplication"></call-simple-method>
@@ -211,22 +219,30 @@ under the License.
     </simple-method>
     
     <simple-method method-name="saveLoanApplication" short-description="Save a Loan Application" >
-    	        	<sequenced-id sequence-name="LoanApplication" field="loanApplicationId"/>
+    
+    		<set field="entityName" value="LoanApplication"></set>
+        
+        	<set field="newEntity.loanApplicationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+    		
+    	    <!-- sequenced-id sequence-name="LoanApplication" field="loanApplicationId"/>
 	        <now-timestamp field="newEntity.createdDate"/>
-	        <set from-field="loanApplicationId" field="newEntity.loanApplicationId"/>
-	        <set field="newEntity.loanStatus" value="DRAFT"/>
+	        <set from-field="loanApplicationId" field="newEntity.loanApplicationId"/ -->
 	        
             <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-            <set field="newEntity.applicationStatus" value="NEW"/>
+            
+            <set field="statusName" value="NEW"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"/>
+            <set field="newEntity.loanStatusId" value="${statusId}"/>
             <set field="newEntity.isActive" value="Y"/>
             <sequenced-id field="newEntity.loanNo" sequence-name="LoanNumber" stagger-max="1"  />
             
             <!-- Set WorkflowDocument -->
             <set field="documentName" value="LOAN"/>
-            <set field="newEntity.workflowDocumentTypeId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getWorkflowDocumentType(documentName);}" type="String"/>
+            <!-- set field="newEntity.workflowDocumentTypeId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getWorkflowDocumentType(documentName);}" type="Long"/ -->
+            
             <!-- Set OrganizationUnit -->
-            <!-- set field="partyId" from-field="userLogin.partyId"/ -->
-            <set field="newEntity.organizationUnitId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getUserOrganizationUnit(partyId);}" type="String"/>
+            <set field="partyId" from-field="userLogin.partyId"/>
+            <!-- set field="newEntity.organizationUnitId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getUserOrganizationUnit(partyId);}" type="Long"/ -->
             <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -282,12 +298,11 @@ under the License.
         <make-value entity-name="LoanStatus" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="LoanStatus" field="loanStatusId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanStatusId" field="newEntity.loanStatusId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+        
+        <set field="entityName" value="LoanStatus"></set>
+		<set field="newEntity.loanStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+      
         <create-value value-field="newEntity"/>
     </simple-method>
 	
@@ -680,28 +695,6 @@ under the License.
     
     <simple-method method-name="deleteLoanProductClass" short-description="Delete LoanProductClass">
         <entity-one entity-name="LoanProductClass" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <!-- LoanStatus -->
-     <simple-method method-name="createLoanStatus" short-description="Create LoanStatus">
-        <make-value entity-name="LoanStatus" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="LoanStatus" field="loanStatusId"/>
-        <set from-field="loanStatusId" field="newEntity.loanStatusId"/>
-        <set field="newEntity.isActive" value="Y"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    
-     <simple-method method-name="updateLoanStatus" short-description="Update LoanStatus">
-        <entity-one entity-name="LoanStatus" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteLoanStatus" short-description="Delete LoanStatus">
-        <entity-one entity-name="LoanStatus" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     

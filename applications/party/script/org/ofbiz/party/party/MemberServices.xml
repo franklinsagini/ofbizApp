@@ -19,12 +19,8 @@
 		<make-value entity-name="Relationship" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-		<sequenced-id sequence-name="Relationship" field="relationshipId" />
-		<now-timestamp field="newEntity.createdDate" />
-		<set from-field="relationshipId" field="newEntity.relationshipId" />
-		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
-		<!-- set field="productType" value="Loan"/ -->
+		<set field="entityName" value="Relationship"></set>
+        <set field="newEntity.relationshipId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 		<create-value value-field="newEntity" />
 	</simple-method>
 
@@ -50,10 +46,8 @@
         <make-value entity-name="EmploymentDetails" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="EmploymentDetails" field="employmentDetailsId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="employmentDetailsId" field="newEntity.employmentDetailsId"/>
+		<set field="entityName" value="EmploymentDetails"></set>
+        <set field="newEntity.employmentDetailsId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -74,11 +68,8 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="BusinessDetails" field="businessDetailsId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="businessDetailsId" field="newEntity.businessDetailsId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+		<set field="entityName" value="BusinessDetails"></set>
+		<set field="newEntity.businessDetailsId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -101,10 +92,8 @@
         <make-value entity-name="MemberContribution" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberContribution" field="memberContributionId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="memberContributionId" field="newEntity.memberContributionId"/>
+		<set field="entityName" value="MemberContribution"></set>
+		<set field="newEntity.memberContributionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -128,9 +117,13 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberAccount" field="memberAccountId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="memberAccountId" field="newEntity.memberAccountId"/>
+        <!-- sequenced-id sequence-name="MemberAccount" field="memberAccountId"/>
+        <now-timestamp field="newEntity.createdDate"/ -->
+        <set field="entityName" value="MemberAccount"></set>
+        
+        <set field="newEntity.memberAccountId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <!-- set from-field="memberAccountId" field="newEntity.memberAccountId"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -154,11 +147,8 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberReferee" field="memberRefereeId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="memberRefereeId" field="newEntity.memberRefereeId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+        <set field="entityName" value="MemberReferee"></set>
+        <set field="newEntity.memberRefereeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -182,11 +172,9 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberNominee" field="memberNomineeId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="memberNomineeId" field="newEntity.memberNomineeId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+        <set field="entityName" value="MemberNominee"></set>
+        <set field="newEntity.memberNomineeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -208,11 +196,9 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="TermsAndConditions" field="termsAndConditionsId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="termsAndConditionsId" field="newEntity.termsAndConditionsId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+        <set field="entityName" value="TermsAndConditions"></set>
+        <set field="newEntity.termsAndConditionsId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -234,11 +220,8 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="SourceOfFund" field="sourceOfFundId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="sourceOfFundId" field="newEntity.sourceOfFundId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+        <set field="entityName" value="SourceOfFund"></set>
+        <set field="newEntity.termsAndConditionsId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -260,11 +243,8 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="Employer" field="employerId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="employerId" field="newEntity.employerId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+		<set field="entityName" value="Employer"></set>
+		<set field="newEntity.employerId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -285,9 +265,9 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberAccountDetails" field="memberAccountDetailsId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="memberAccountDetailsId" field="newEntity.memberAccountDetailsId"/>
+        <set field="entityName" value="MemberAccountDetails"></set>
+        <set field="newEntity.memberAccountDetailsId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -308,11 +288,8 @@
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="LoanApplication" field="loanApplicationId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanApplicationId" field="newEntity.loanApplicationId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+		<set field="entityName" value="LoanApplication"></set>
+		<set field="newEntity.loanApplicationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -331,12 +308,8 @@
         <make-value entity-name="MemberShare" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberShare" field="memberShareId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="memberShareId" field="newEntity.memberShareId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+		<set field="entityName" value="MemberShare"></set>
+		<set field="newEntity.memberShareId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -356,12 +329,8 @@
         <make-value entity-name="AccountStatus" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="AccountStatus" field="accountStatusId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="accountStatusId" field="newEntity.accountStatusId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+		<set field="entityName" value="AccountStatus"></set>
+		<set field="newEntity.accountStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -381,10 +350,13 @@
         <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberStatusLog" field="memberStatusLogId"/>
-        <set from-field="memberStatusLogId" field="newEntity.memberStatusLogId"/>
-        <set value="ACTIVE" field="newEntity.memberStatus"/>
+		<set field="entityName" value="MemberStatusLog"></set>
+		<set field="newEntity.memberStatusLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+       <set field="statusName" value="ACTIVE"/>
+	   <set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+        
+        <set field="newEntity.memberStatusId" value="${memberStatusId}"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <set field="newEntity.isActive" value="Y"/>
@@ -396,7 +368,7 @@
         <entity-one entity-name="Member" value-field="member">
         	 <field-map field-name="partyId" from-field="partyId"/>
         </entity-one>
-        <set value="ACTIVE" field="member.memberStatus"/>
+        <set value="${memberStatusId}" field="member.memberStatusId"/>
         <store-value value-field="member"/>
     </simple-method>
     
@@ -416,12 +388,14 @@
         <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberStatusLog" field="memberStatusLogId"/>
-        <set from-field="memberStatusLogId" field="newEntity.memberStatusLogId"/>
-        <set value="REJECTED" field="newEntity.memberStatus"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+		<set field="entityName" value="MemberStatusLog"></set>
+		<set field="newEntity.memberStatusLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+	    <set field="statusName" value="REJECTED"/>
+	  	<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+        
+        <set field="newEntity.memberStatusId" value="${memberStatusId}"/>
+
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
@@ -431,7 +405,7 @@
         <entity-one entity-name="Member" value-field="member">
         	 <field-map field-name="partyId" from-field="partyId"/>
         </entity-one>
-        <set value="REJECTED" field="member.memberStatus"/>
+        <set value="${memberStatusId}" field="member.memberStatusId"/>
         <store-value value-field="member"/>
         
     </simple-method>
@@ -452,11 +426,8 @@
         <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="MemberStatusLog" field="memberStatusLogId"/>
-        <set from-field="memberStatusLogId" field="newEntity.memberStatusLogId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+		<set field="entityName" value="MemberStatusLog"></set>
+		<set field="newEntity.memberStatusLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
@@ -466,7 +437,7 @@
         <entity-one entity-name="Member" value-field="member">
         	 <field-map field-name="partyId" from-field="partyId"/>
         </entity-one>
-        <set from-field="newEntity.memberStatus" field="member.memberStatus"/>
+        <set from-field="newEntity.memberStatusId" field="member.memberStatusId"/>
         <store-value value-field="member"/>
     </simple-method>
     
@@ -495,8 +466,8 @@
     	<make-value entity-name="ChangeMemberStation" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="ChangeMemberStation" field="changeMemberStationId"/>
-        <set from-field="changeMemberStationId" field="newEntity.changeMemberStationId"/>
+		<set field="entityName" value="ChangeMemberStation"></set>
+		<set field="newEntity.changeMemberStationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
@@ -527,8 +498,8 @@
     	<make-value entity-name="ChangeMemberEmploymentType" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="ChangeMemberEmploymentType" field="changeMemberEmploymentTypeId"/>
-        <set from-field="changeMemberEmploymentTypeId" field="newEntity.changeMemberEmploymentTypeId"/>
+		<set field="entityName" value="ChangeMemberEmploymentType"></set>
+		<set field="newEntity.changeMemberEmploymentTypeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
@@ -557,8 +528,8 @@
     	 	<make-value entity-name="ChangeMemberEmployeeNumber" value-field="newEntity"/>
         	<set-pk-fields map="parameters" value-field="newEntity"/>
         	<set-nonpk-fields map="parameters" value-field="newEntity"/>
-        	<sequenced-id sequence-name="ChangeMemberEmployeeNumber" field="changeMemberEmployeeNumberId"/>
-        	<set from-field="changeMemberEmployeeNumberId" field="newEntity.changeMemberEmployeeNumberId"/>
+			<set field="entityName" value="ChangeMemberEmployeeNumber"></set>
+			<set field="newEntity.changeMemberEmployeeNumberId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         	<set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         	<create-value value-field="newEntity"/>
     </simple-method>
@@ -589,8 +560,8 @@
     	<make-value entity-name="ChangeMemberBranch" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="ChangeMemberBranch" field="changeMemberBranchId"/>
-        <set from-field="changeMemberBranchId" field="newEntity.changeMemberBranchId"/>
+		<set field="entityName" value="ChangeMemberBranch"></set>
+		<set field="newEntity.changeMemberBranchId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
@@ -620,8 +591,8 @@
     	<make-value entity-name="ChangeMemberShareAmount" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="ChangeMemberShareAmount" field="changeMemberShareAmountId"/>
-        <set from-field="changeMemberShareAmountId" field="newEntity.changeMemberShareAmountId"/>
+		<set field="entityName" value="ChangeMemberShareAmount"></set>
+		<set field="newEntity.changeMemberShareAmountId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
@@ -635,6 +606,50 @@
     <simple-method method-name="deleteChangeMemberShareAmount" short-description="Delete ChangeMemberShareAmount">
         <entity-one entity-name="ChangeMemberShareAmount" value-field="lookUpValue"/>
         <remove-value value-field="lookUpValue"/>
+    </simple-method>
+    
+    <!-- Member -->
+    <simple-method method-name="createMember" short-description="Add Member">
+    	
+        <make-value entity-name="Member" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        
+        <set field="entityName" value="Member"></set>
+        <set field="newEntity.partyId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+		<set field="memberNo" value="${newEntity.partyId}"/>
+		<to-string field="memberNo"/>
+        <set field="newEntity.memberNumber" value="${memberNo}"></set>
+        <!-- sequenced-id sequence-name="MemberType" field="newEntity.memberTypeId" / -->
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
+        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
+        
+        <call-simple-method method-name="saveParty" scope="inline">
+        </call-simple-method>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="saveParty">
+    	<make-value entity-name="Party" value-field="partyEntity"/>
+        <set-pk-fields map="parameters" value-field="partyEntity"/>
+        <set-nonpk-fields map="parameters" value-field="partyEntity"/>
+        <set field="partyEntity.createdByUserLogin" from-field="userLogin.userLoginId"/>
+        <set field="partyEntity.partyId" from-field="memberNo"/>
+        <set field="partyEntity.statusId" from-field="PARTY_ENABLED"/>
+        <create-value value-field="partyEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateMember" short-description="Update Member">
+        <entity-one entity-name="Member" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteMember" short-description="Delete Member">
+        <entity-one entity-name="Member" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
 </simple-methods>

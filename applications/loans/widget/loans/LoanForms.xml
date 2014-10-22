@@ -189,7 +189,7 @@ under the License.
         	<entity-condition entity-name="Member" list="memberList">
         		<condition-list combine="and">
         			<condition-expr field-name="partyId" operator="not-equals" value="${loanApplication.partyId}"/>
-        			<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        			<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
         		</condition-list>
         		
             </entity-condition>
@@ -1550,7 +1550,8 @@ under the License.
 
         <field name="memberNumber" title="Member No." position="2"><text-find/></field>
 
-        <field name="memberStatus" title="Status" ><hidden value="ACTIVE"/></field>
+		<!-- <hidden value="ACTIVE"/> -->
+        <field name="memberStatus" title="Status" > <text-find></text-find> </field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -1572,7 +1573,6 @@ under the License.
         
         <actions>
         	<entity-condition entity-name="Member">
-        		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
         		<order-by field-name="-partyId"/>
         	</entity-condition>
         	
@@ -1589,6 +1589,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
+         <field name="partyId"><hidden/></field>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
         <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
@@ -1601,13 +1602,17 @@ under the License.
             </drop-down -->
         </field>
         
-        <field name="memberStatus"><display also-hidden="false"></display></field>
+        <field name="memberStatusId" title="Member Status">
+        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity>	
+        </field>
         <field name="createdStamp" title="Created"><display  type="date"></display></field>
         <field name="createdBy" title="Created By"><display ></display></field>
         <!-- viewapplicationprofile -->
         <!-- loanapplication?partyId=${partyId} -->
         <field name="Loan Application">
-        	<hyperlink target="loanapplication?partyId=${partyId}" description="Loan Application for ${firstName} ${lastName}"></hyperlink>
+        	<hyperlink target="loanapplication"  description="Loan Application for ${firstName} ${lastName}">
+        		<parameter param-name="partyId" from-field="partyId"/>
+        	</hyperlink>
         </field>
      </form> 
      

@@ -8,12 +8,24 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
+			<set field="forwardedLoansStatusName" value="FORWARDEDLOANS"/>
+	   		<set field="forwardedLoansStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedLoansStatusName);}"/> 
+			
+			<set field="forwardApprovalStatusName" value="FORWAREDAPPROVAL"/>
+	   		<set field="forwardedApprovalStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardApprovalStatusName);}"/> 
+			
+			<set field="forwardedStatusName" value="FORWARDED"/>
+	   		<set field="forwardedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedStatusName);}"/> 
+		
+					<set field="statusName" value="FORWARDEDLOANS"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+		
 			<entity-condition entity-name="LoanApplication">
 				<condition-list combine="and">
 					<condition-list combine="or">
-						<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDEDLOANS"></condition-expr>
-						<condition-expr field-name="applicationStatus" operator="equals" value="FORWAREDAPPROVAL"></condition-expr>
-						<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDED"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedLoansStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedApprovalStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedStatusId}"></condition-expr>
 					</condition-list>
 					
 				</condition-list>				
@@ -80,12 +92,15 @@
 			<hyperlink target="loanapplication?partyId=${partyId}&amp;loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
 		</field -->
+		<!-- applicationStatus.equals(&quot;FORWARDEDLOANS&quot;) 
+		use-when="loanStatusId==${forwardedLoansStatusId}"
+		-->
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;FORWARDEDLOANS&quot;)" event="onclick"
+		<field name="Forward"  use-when="loanStatusId==${statusId}" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
-			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
+			<hyperlink target="forwardApplication"
 				description="Forward Application To Approver" link-type="anchor">
-					
+					<parameter param-name="loanApplicationId"/>
 				</hyperlink>
 				
 				
@@ -286,10 +301,13 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>
+        	<set field="statusName" value="ACTIVE"/>
+	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+ 
         	<set field="partyId" from-field="parameters.partyId"/>
         	<entity-condition entity-name="Member">
         		<condition-list combine="and">
-        			<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        			<condition-expr field-name="memberStatusId" operator="equals" value="${memberStatusId}"/>
         			<condition-expr field-name="partyId" operator="not-equals" value="${partyId}"/>
         		</condition-list>
         		
@@ -327,7 +345,9 @@
         <!-- viewapplicationprofile -->
         <!-- loanapplication?partyId=${partyId} -->
         <field name="Loan Application">
-        	<hyperlink target="loanapplication?partyId=${partyId}" description="Add ${firstName} ${middleName} ${lastName} to guarantors"></hyperlink>
+        	<hyperlink target="loanapplication" description="Add ${firstName} ${middleName} ${lastName} to guarantors">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
         </field>
      </form>
      
@@ -375,7 +395,9 @@
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
          <field name="createdBy"><display also-hidden="false"></display> </field>
-        <field name="applicationStatus"><display also-hidden="false"></display>  </field>
+        <field name="loanStatusId">
+        	<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+        </field>
         <field name="createdStamp"><display also-hidden="false" type="date-time"></display> </field>
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteReviewLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">

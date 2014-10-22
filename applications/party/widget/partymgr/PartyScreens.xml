@@ -135,12 +135,14 @@
 				<set field="headerItem" value="reviewmembers" />
 				<set field="tabButtonItem" value="findparty" />
 				<set field="memberCtx" from-field="parameters" />
-
+				<set field="statusName" value="NEW"/>
+				<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+				
 				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
 				<entity-condition list="reviewMembersList"
 					entity-name="Member">
-					<condition-expr field-name="memberStatus" operator="equals"
-						value="NEW" />
+					<condition-expr field-name="memberStatusId" operator="equals"
+						value="${memberStatusId}" />
 				</entity-condition>
 			</actions>
 			<widgets>
@@ -1163,6 +1165,10 @@
 									action="_CREATE" />
 							</condition>
 							<widgets>
+								<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
 
 								<screenlet title="${uiLabelMap.PartyCreateNewMember}">
 									<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/partyHeader.ftl"/></html>
@@ -2852,6 +2858,9 @@
 				<set field="memberCtx" from-field="parameters" />
 
 				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+				<set field="statusName" value="ACTIVE" />
+				<set field="memberStatusId"  value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}" global="true" type="Long"/> 
+				
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -3196,6 +3205,10 @@
                         <section>
 
                             <widgets>
+                            	<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
                                 <screenlet title="New Member Type">
                                     <include-form name="NewMemberType" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
@@ -3217,6 +3230,317 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- MemberClass -->
+    <screen name="MemberClass">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create MemberClass"/>
+                <set field="headerItem" value="MemberClass"/>
+                <set field="tabButtonItem" value="MemberClass" />
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createMemberType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
 
+                            <widgets>
+                            	<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
+                                <screenlet title="New MemberClass">
+                                    <include-form name="MemberClass" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="MemberClass">
+                        			<include-form name="listMemberClass" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- MemberStatus -->
+        <screen name="MemberStatus">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create MemberStatus"/>
+                <set field="headerItem" value="MemberStatus"/>
+                <set field="tabButtonItem" value="MemberStatus" />
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createMemberStatus"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+
+                            <widgets>
+                            	<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
+                                <screenlet title="New MemberStatus">
+                                    <include-form name="MemberStatus" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="MemberStatus">
+                        			<include-form name="listMemberStatus" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Salutation -->
+        <screen name="Salutation">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create Salutation"/>
+                <set field="headerItem" value="Salutation"/>
+                <set field="tabButtonItem" value="Salutation" />
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createSalutation"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+
+                            <widgets>
+                            	<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
+                                <screenlet title="New Salutation">
+                                    <include-form name="Salutation" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Salutation">
+                        			<include-form name="listSalutation" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- MaritalStatus -->
+        <screen name="MaritalStatus">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create MaritalStatus"/>
+                <set field="headerItem" value="MaritalStatus"/>
+                <set field="tabButtonItem" value="MaritalStatus" />
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createMaritalStatus"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+
+                            <widgets>
+                            	<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
+                                <screenlet title="New MaritalStatus">
+                                    <include-form name="MaritalStatus" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="MaritalStatus">
+                        			<include-form name="listMaritalStatus" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+	<!-- 
+		RecruitingAgent
+		
+	 -->
+	         <screen name="RecruitingAgent">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create RecruitingAgent"/>
+                <set field="headerItem" value="RecruitingAgent"/>
+                <set field="tabButtonItem" value="RecruitingAgent" />
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createRecruitingAgent"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+
+                            <widgets>
+                            	<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
+                                <screenlet title="New RecruitingAgent">
+                                    <include-form name="RecruitingAgent" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="MaritalStatus">
+                        			<include-form name="listRecruitingAgent" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	 <!-- 
+	 	EmploymentType
+		
+	  -->
+	          <screen name="EmploymentType">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create EmploymentType"/>
+                <set field="headerItem" value="EmploymentType"/>
+                <set field="tabButtonItem" value="EmploymentType" />
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createEmploymentType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+
+                            <widgets>
+                            	<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
+                                <screenlet title="New EmploymentType">
+                                    <include-form name="EmploymentType" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="EmploymentType">
+                        			<include-form name="listEmploymentType" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	  
+	  <!-- 
+	  	Gender
+	   -->
+	           <screen name="Gender">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create Gender"/>
+                <set field="headerItem" value="Gender"/>
+                <set field="tabButtonItem" value="Gender" />
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createGender"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+
+                            <widgets>
+                            	<screenlet>
+									<include-menu location="component://party/widget/partymgr/PartyMenus.xml"
+										name="MemberGlobalTabBar" />
+								</screenlet>
+                                <screenlet title="New Gender">
+                                    <include-form name="Gender" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Gender">
+                        			<include-form name="listGender" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>

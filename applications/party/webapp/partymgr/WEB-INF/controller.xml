@@ -1544,20 +1544,25 @@
 	<!-- Member -->
 	<request-map uri="NewMember">
 		<security https="true" auth="true" />
-		<!-- event type="simple"
-			path="component://party/script/org/ofbiz/party/user/UserEvents.xml"
-			invoke="getSaccoMember" /-->
 		<response name="success" type="view" value="NewMember" />
 	</request-map>
-	<request-map uri="createMember">
+	<!-- request-map uri="createMember">
 		<security https="true" auth="true" />
 		<event type="simple"
 			path="component://party/script/org/ofbiz/party/user/UserEvents.xml"
 			invoke="createSaccoMember"/>
-		<!-- response name="success" type="view" value="listsaccomembers"/ -->
+		
 		<response name="success" type="request-redirect-noparam"
 			value="listsaccomembers"></response>
-		<!-- response name="success" type="view" value="NewMember"/ -->
+		
+		<response name="error" type="view" value="NewMember" />
+	</request-map -->
+		<request-map uri="createMember">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMember" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="NewMember">
+		</response>
 		<response name="error" type="view" value="NewMember" />
 	</request-map>
 
@@ -2530,6 +2535,220 @@
                 <response name="success" type="none">
         </response>
     </request-map>
+    
+    <!-- MemberClass -->
+    <request-map uri="MemberClass">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="MemberClass" />
+	</request-map>
+	
+	<request-map uri="MemberStatus">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="MemberStatus" />
+	</request-map>
+	
+	<request-map uri="Salutation">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="Salutation" />
+	</request-map>
+	
+	<request-map uri="MaritalStatus">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="MaritalStatus" />
+	</request-map>
+	
+	<!--  
+		RecruitingAgent
+		EmploymentType
+		Gender
+	-->
+	<request-map uri="RecruitingAgent">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="RecruitingAgent" />
+	</request-map>
+	
+	<request-map uri="EmploymentType">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EmploymentType" />
+	</request-map>
+	
+	<request-map uri="Gender">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="Gender" />
+	</request-map>
+	
+	<!-- MemberClass -->
+	<request-map uri="createMemberClass">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMemberClass" />
+		<response name="success" type="request-redirect" value="MemberClass">
+		</response>
+		<response name="error" type="view" value="MemberClass" />
+	</request-map>
+
+	<request-map uri="updateMemberClass">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMemberClass" />
+		<response name="success" type="request-redirect-noparam"
+			value="MemberClass"></response>
+		<response name="error" type="view" value="MemberClass" />
+	</request-map>
+
+	<request-map uri="deleteMemberClass">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMemberClass" />
+		<response name="success" type="request-redirect-noparam"
+			value="MemberClass"></response>
+		<response name="error" type="view" value="MemberClass" />
+	</request-map>
+	
+	<!-- MemberStatus -->
+		<request-map uri="createMemberStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMemberStatus" />
+		<response name="success" type="request-redirect" value="MemberStatus">
+		</response>
+		<response name="error" type="view" value="MemberStatus" />
+	</request-map>
+
+	<request-map uri="updateMemberStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMemberStatus" />
+		<response name="success" type="request-redirect-noparam"
+			value="MemberStatus"></response>
+		<response name="error" type="view" value="MemberStatus" />
+	</request-map>
+
+	<request-map uri="deleteMemberStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMemberStatus" />
+		<response name="success" type="request-redirect-noparam"
+			value="MemberStatus"></response>
+		<response name="error" type="view" value="MemberStatus" />
+	</request-map>
+	<!-- Salutation -->
+		<request-map uri="createSalutation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createSalutation" />
+		<response name="success" type="request-redirect" value="Salutation">
+		</response>
+		<response name="error" type="view" value="Salutation" />
+	</request-map>
+
+	<request-map uri="updateSalutation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateSalutation" />
+		<response name="success" type="request-redirect-noparam"
+			value="Salutation"></response>
+		<response name="error" type="view" value="Salutation" />
+	</request-map>
+
+	<request-map uri="deleteSalutation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteSalutation" />
+		<response name="success" type="request-redirect-noparam"
+			value="Salutation"></response>
+		<response name="error" type="view" value="Salutation" />
+	</request-map>
+	<!-- MaritalStatus -->
+		<request-map uri="createMaritalStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMaritalStatus" />
+		<response name="success" type="request-redirect" value="MaritalStatus">
+		</response>
+		<response name="error" type="view" value="MaritalStatus" />
+	</request-map>
+
+	<request-map uri="updateMaritalStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMaritalStatus" />
+		<response name="success" type="request-redirect-noparam"
+			value="MaritalStatus"></response>
+		<response name="error" type="view" value="MaritalStatus" />
+	</request-map>
+
+	<request-map uri="deleteMaritalStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMaritalStatus" />
+		<response name="success" type="request-redirect-noparam"
+			value="MaritalStatus"></response>
+		<response name="error" type="view" value="MaritalStatus" />
+	</request-map>
+	
+	<request-map uri="createRecruitingAgent">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createRecruitingAgent" />
+		<response name="success" type="request-redirect" value="RecruitingAgent">
+		</response>
+		<response name="error" type="view" value="RecruitingAgent" />
+	</request-map>
+
+	<request-map uri="updateRecruitingAgent">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateRecruitingAgent" />
+		<response name="success" type="request-redirect-noparam"
+			value="RecruitingAgent"></response>
+		<response name="error" type="view" value="RecruitingAgent" />
+	</request-map>
+
+	<request-map uri="deleteRecruitingAgent">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteRecruitingAgent" />
+		<response name="success" type="request-redirect-noparam"
+			value="RecruitingAgent"></response>
+		<response name="error" type="view" value="RecruitingAgent" />
+	</request-map>
+	
+	<request-map uri="createEmploymentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createEmploymentType" />
+		<response name="success" type="request-redirect" value="EmploymentType">
+		</response>
+		<response name="error" type="view" value="EmploymentType" />
+	</request-map>
+
+	<request-map uri="updateEmploymentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateEmploymentType" />
+		<response name="success" type="request-redirect-noparam"
+			value="EmploymentType"></response>
+		<response name="error" type="view" value="EmploymentType" />
+	</request-map>
+
+	<request-map uri="deleteEmploymentType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteEmploymentType" />
+		<response name="success" type="request-redirect-noparam"
+			value="EmploymentType"></response>
+		<response name="error" type="view" value="EmploymentType" />
+	</request-map>
+	
+	
+		<request-map uri="createGender">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createGender" />
+		<response name="success" type="request-redirect" value="Gender">
+		</response>
+		<response name="error" type="view" value="Gender" />
+	</request-map>
+
+	<request-map uri="updateGender">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateGender" />
+		<response name="success" type="request-redirect-noparam"
+			value="Gender"></response>
+		<response name="error" type="view" value="Gender" />
+	</request-map>
+
+	<request-map uri="deleteGender">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteGender" />
+		<response name="success" type="request-redirect-noparam"
+			value="Gender"></response>
+		<response name="error" type="view" value="Gender" />
+	</request-map>
+	
+	<!-- MemberType -->
 
 
 	<!-- View Mappings -->
@@ -2840,7 +3059,7 @@
 
 	<view-map name="openingBalance" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#openingBalance" />
-
+	
 	<view-map name="memberLoanBalance" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberLoanBalance" />
 
@@ -2866,6 +3085,34 @@
 
 		<view-map name="memberTypes" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#memberTypes" />
+                
+        <!-- MemberClass -->
+        		<view-map name="MemberClass" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#MemberClass" />
+                
+
+        		<view-map name="MemberStatus" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#MemberStatus" />
+
+        		<view-map name="Salutation" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#Salutation" />
+
+        		<view-map name="MaritalStatus" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#MaritalStatus" />
+                
+                <!--  
+		RecruitingAgent
+		EmploymentType
+		Gender
+	-->
+	        		<view-map name="RecruitingAgent" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#RecruitingAgent" />
+                
+                        		<view-map name="EmploymentType" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#EmploymentType" />
+                
+                        		<view-map name="Gender" type="screen"
+                page="component://party/widget/partymgr/PartyScreens.xml#Gender" />
 
 	<!-- end of view mappings -->
 </site-conf>

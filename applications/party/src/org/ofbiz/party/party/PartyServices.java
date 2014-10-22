@@ -3692,10 +3692,10 @@ public class PartyServices {
 		String memberId = (String) request.getParameter("memberId");
 
 		List<GenericValue> memberNomineeELI = null; // =
-
+		memberId = memberId.replaceAll(",", "");
 		try {
 			memberNomineeELI = delegator.findList("MemberNominee",
-					EntityCondition.makeCondition("partyId", memberId), null,
+					EntityCondition.makeCondition("partyId", Long.valueOf(memberId)), null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -3711,7 +3711,7 @@ public class PartyServices {
 
 		try {
 			memberRefereeELI = delegator.findList("MemberReferee",
-					EntityCondition.makeCondition("partyId", memberId), null,
+					EntityCondition.makeCondition("partyId", Long.valueOf(memberId)), null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -3769,10 +3769,10 @@ public class PartyServices {
 		String memberId = member.getString("partyId");
 
 		List<GenericValue> memberRefereeELI = null; // =
-
+		memberId = memberId.replaceAll(",", "");
 		try {
 			memberRefereeELI = delegator.findList("MemberReferee",
-					EntityCondition.makeCondition("partyId", memberId), null,
+					EntityCondition.makeCondition("partyId", Long.valueOf(memberId)), null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -3795,7 +3795,7 @@ public class PartyServices {
 	public static String memberHasNominees(GenericValue member) {
 		//Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = member.getDelegator();
-		String memberId = member.getString("partyId");
+		Long memberId = member.getLong("partyId");
 
 		List<GenericValue> memberNomineeELI = null; // =
 

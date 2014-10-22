@@ -1235,8 +1235,15 @@ under the License.
         <make-value entity-name="MemberType" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="MemberType" field="memberTypeId"/>
-        <set from-field="memberTypeId" field="newEntity.memberTypeId"/>
+        
+        <set field="entityName" value="MemberType"></set>
+        <set field="newEntity.memberTypeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <!-- sequenced-id sequence-name="MemberType" field="newEntity.memberTypeId" / -->
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
+        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
         <create-value value-field="newEntity"/>
     </simple-method>
 
@@ -1248,6 +1255,185 @@ under the License.
 
     <simple-method method-name="deleteMemberType" short-description="Delete MemberType">
         <entity-one entity-name="MemberType" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    
+    <simple-method method-name="createMemberClass" short-description="Add MemberClass">
+        <make-value entity-name="MemberClass" value-field="newEntity"/>
+        
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- sequenced-id-to-env></sequenced-id-to-env -->
+        <set field="entityName" value="MemberClass"></set>
+        
+        <set field="newEntity.memberClassId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateMemberClass" short-description="Update MemberClass">
+        <entity-one entity-name="MemberClass" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteMemberClass" short-description="Delete MemberClass">
+        <entity-one entity-name="MemberClass" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createMemberStatus" short-description="Add MemberStatus">
+        <make-value entity-name="MemberStatus" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        
+         <set field="entityName" value="MemberStatus"></set>
+        
+        <set field="newEntity.memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
+        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateMemberStatus" short-description="Update MemberStatus">
+        <entity-one entity-name="MemberStatus" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteMemberStatus" short-description="Delete MemberStatus">
+        <entity-one entity-name="MemberStatus" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createSalutation" short-description="Add Salutation">
+        <make-value entity-name="Salutation" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+                <set field="entityName" value="Salutation"></set>
+        
+        <set field="newEntity.salutationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
+        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateSalutation" short-description="Update Salutation">
+        <entity-one entity-name="Salutation" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteSalutation" short-description="Delete Salutation">
+        <entity-one entity-name="Salutation" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="createMaritalStatus" short-description="Add MaritalStatus">
+        <make-value entity-name="MaritalStatus" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+                <set field="entityName" value="MaritalStatus"></set>
+        
+        <set field="newEntity.maritalStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
+        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateMaritalStatus" short-description="Update MaritalStatus">
+        <entity-one entity-name="MaritalStatus" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteMaritalStatus" short-description="Delete MaritalStatus">
+        <entity-one entity-name="MaritalStatus" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+       <simple-method method-name="createRecruitingAgent" short-description="Add RecruitingAgent">
+        <make-value entity-name="RecruitingAgent" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        
+         <set field="entityName" value="RecruitingAgent"></set>
+        
+        <set field="newEntity.recruitingAgentId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
+        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateRecruitingAgent" short-description="Update RecruitingAgent">
+        <entity-one entity-name="RecruitingAgent" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteRecruitingAgent" short-description="Delete RecruitingAgent">
+        <entity-one entity-name="RecruitingAgent" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+       <simple-method method-name="createEmploymentType" short-description="Add EmploymentType">
+        <make-value entity-name="EmploymentType" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        
+         <set field="entityName" value="EmploymentType"></set>
+        
+        <set field="newEntity.employmentTypeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
+        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateEmploymentType" short-description="Update EmploymentType">
+        <entity-one entity-name="EmploymentType" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteEmploymentType" short-description="Delete EmploymentType">
+        <entity-one entity-name="EmploymentType" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+       <simple-method method-name="createGender" short-description="Add Gender">
+        <make-value entity-name="Gender" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        
+         <set field="entityName" value="Gender"></set>
+        
+        <set field="newEntity.genderId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
+        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateGender" short-description="Update Gender">
+        <entity-one entity-name="Gender" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="deleteGender" short-description="Delete Gender">
+        <entity-one entity-name="Gender" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 </simple-methods>
