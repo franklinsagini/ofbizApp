@@ -164,6 +164,32 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+     <!-- ============================GRADES======================================= -->
+     <service name="createPartyCourseGrade" engine="simple" default-entity-name="PartyCourseGrade"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyCourseGrade" auth="true">
+        <description>Create a Party Qualification Type</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <!--override name="description" optional="false"/-->
+    </service>
+
+    <service name="updatePartyCourseGrade" engine="simple" default-entity-name="PartyCourseGrade"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updatePartyCourseGrade" auth="true">
+        <description>Update Party Qualification Type</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <!--override name="description" optional="false"/-->
+    </service>
+
+    <service name="deletePartyCourseGrade" engine="simple" default-entity-name="PartyCourseGrade"
+        location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deletePartyCourseGrade" auth="true">
+        <description>Delete Party Qualification Type</description>
+        <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
     
     
     <service name="createPartyQualGroup" engine="simple" default-entity-name="PartyQualGroup"

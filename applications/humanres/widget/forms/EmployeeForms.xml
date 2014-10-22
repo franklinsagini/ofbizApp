@@ -235,7 +235,15 @@
             </drop-down>
         </field>
         
-         <field name="grade" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="grade" title="Select A grade" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${grade}" key-field-name="grade" entity-name="PartyCourseGrade">
+                    <entity-order-by field-name="gradeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        
         <field name="institutelocation" title="Institute Location" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="fromDate"><date-time type="date"/></field>
         <field name="thruDate"><date-time type="date"/></field>

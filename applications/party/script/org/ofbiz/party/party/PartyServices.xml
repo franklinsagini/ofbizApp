@@ -1086,6 +1086,10 @@ under the License.
         <call-map-processor xml-resource="component://party/script/org/ofbiz/party/party/PartyMapProcs.xml"
                 processor-name="person" in-map-name="parameters" out-map-name="personMap"/>
         <check-errors/>
+        
+        <call-simple-method method-name="savePartyRole" scope="inline"></call-simple-method>
+        
+        
         <set field="partyId" from-field="parameters.partyId"/>
         <entity-one entity-name="Party" value-field="party"/>
         <set field="personContext.partyId" from-field="partyId"/>
@@ -1101,6 +1105,17 @@ under the License.
         </if-empty>
         <field-to-result field="partyId"/>
     </simple-method>
+    
+    <simple-method method-name="savePartyRole">
+		
+		<make-value entity-name="PartyRole" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<set value="EMPLOYEE" field="newEntity.roleTypeId" />
+		<set field="partyId" from-field="parameters.partyId" />
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
 
     <simple-method method-name="quickCreateCustomer" short-description="Create customer profile on basis of First Name ,Last Name and Email Address" login-required="false">
         <call-map-processor xml-resource="component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml"
