@@ -39,29 +39,60 @@
             <link target="findSurrenderable"/>
         </menu-item>
 
-        <menu-item name="surrenderoverview" title="${uiLabelMap.ImprestOverview}">
-            <link target="surrenderoverview">
-                <parameter param-name="supplierId" from-field="supplierContext.supplierId"/>
+        <menu-item name="SurrenderOverview" title="${uiLabelMap.ImprestOverview}">
+            <link target="SurrenderOverview">
+                <parameter param-name="surrenderableId" />
             </link>
         </menu-item>
 
-        <menu-item name="surrenderheader" title="${uiLabelMap.ImprestHeader}">
-            <link target="surrenderheader">
-                <parameter param-name="supplierId" from-field="supplierContext.supplierId"/>
+        <menu-item name="EditSurrenderable" title="${uiLabelMap.ImprestHeader}">
+            <condition>
+                <and>
+                    <not><if-empty field="surrenderableId"/></not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED"/>
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="EditSurrenderable">
+                <parameter param-name="surrenderableId"/>
             </link>
         </menu-item>
 
         <menu-item name="surrenderlines" title="${uiLabelMap.ImprestLines}">
             <link target="surrenderlines">
-                <parameter param-name="supplierId" from-field="supplierContext.supplierId"/>
+                <parameter param-name="surrenderableId" from-field="supplierContext.surrenderableId"/>
             </link>
         </menu-item>
 
-        <menu-item name="surrender" title="${uiLabelMap.ImprestSurrender}">
-            <link target="surrender">
-                <parameter param-name="supplierId" from-field="supplierContext.supplierId"/>
+        <menu-item name="SurrenderItem" title="Surrender Items">
+            <condition>
+                <and>
+                    <not><if-empty field="surrenderableId"/></not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED"/>
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="EditSurrenderItem">
+                <parameter param-name="surrenderableId"/>
             </link>
         </menu-item>
+
+        <menu-item name="SurrenderReviews" title="Reviews">
+            <condition>
+                <and>
+                    <not><if-empty field="surrenderableId"/></not>
+                    <if-compare field="statusId" operator="not-equals" value="BG_REJECTED"/>
+                </and>
+            </condition>
+            <link target="BudgetReviews">
+                <parameter param-name="surrenderableId"/>
+            </link>
+        </menu-item>
+
     </menu>
 
     <!--

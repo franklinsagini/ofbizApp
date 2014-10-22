@@ -44,14 +44,22 @@
     <screen name="CommonSurrenderableDecorator">
         <section>
             <actions>
-                <property-map resource="ImprestManagementUiLabels" map-name="uiLabelMap" global="true"/>
-                 <set field="headerItem" value="surrenderable"/><!-- this highlights the selected menu-item with name "surrenderable" -->
-                  <set field="surrenderableId" value="parameters.surrenderableId"/>
+                <set field="headerItem" value="surrenderable"/><!-- this highlights the selected menu-item with name "surrenderable" -->
+                <set field="surrenderableId" from-field="surrenderableMap.surrenderableId" default-value="${parameters.surrenderableId}"/>
+                <entity-one entity-name="ImprestSurrenderable" value-field="surrenderable"/>
+                <entity-and list="SurrendableStatus" entity-name="SurrendableStatus">
+                    <field-map field-name="surrenderableId" from-field="surrenderableId"/>
+                    <order-by field-name="-statusDate"/>
+                </entity-and>
+                <set field="statusId" from-field="SurrendableStatus[0].statusId"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" >
                     <decorator-section name="pre-body">
                         <section>
+                            <condition>
+                                <not><if-empty field="surrenderableId"/></not>
+                            </condition>
                             <widgets>
                                 <include-menu name="SurrenderableTabBar" location="component://imprestmanagement/widget/ImprestManagementMenus.xml"/>
                             </widgets>
@@ -68,7 +76,8 @@
                                     </condition>
                                     <widgets>
                                         <container style="leftclear">
-                                            <label style="h1" text="Imprest: ${imprestSurrenderableContext.surrenderableId} - ${imprestSurrenderableContext.approvalStatus}" />
+                                            <!-- <include-menu name="BudgetSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                                            <label style="h1" text="Imprest: [${surrenderableId}] - ${surrenderableMap.approvalStatus}" />
                                         </container>
                                     </widgets>
                                 </section>
@@ -197,6 +206,8 @@
             </widgets>
         </section>
     </screen>
+<!-- =======================================================================* SURRENDERABLE SCREENS *=============================================================== -->
+    <!-- Find Surrenderable Screen -->
     <screen name="findSurrenderable">
         <section>
             <actions>
@@ -212,7 +223,7 @@
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newSurrenderable" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                            <link target="EditSurrenderable" text="Create New" style="buttontext create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -229,89 +240,45 @@
             </widgets>
         </section>
     </screen>
-    <screen name="newSurrenderable">
+
+    <!-- Create and/or Edit Surrenderable -->
+    <screen name="EditSurrenderable">
         <section>
             <actions>
-                <set field="titleProperty" value="AccountingNewPaymentOutgoing"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonSurrenderableDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="Imprest Management: Surrenderable Imprest">
-                                    <include-form name="newSurrenderable" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="editSurrenderable">
-        <section>
-            <actions>
-                <set field="surrenderableId" value="parameters.surrenderableId"/>
-                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <entity-one entity-name="ImprestSurrenderable" value-field="imprestSurrenderableContext"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonSurrenderableDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="Imprest Management: Surrenderable Imprest">
-                                    <include-form name="EditSurrenderable" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="EditSurrendableScreen">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Document Approval"/>
-                <set field="tabButtonItem" value="editSupplier"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="createSupplier"/>
-                <set field="surrenderableId" value="parameters.surrenderableId"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <entity-one entity-name="ImprestSurrenderable" value-field="imprestSurrenderableContext"/>
+                <set field="titleProperty" value="Imprest Management System"/>
+                <set field="tabButtonItem" value="EditSurrenderable"/>
+                <set field="surrenderableId" from-field="parameters.surrenderableId"/>
+                <entity-one entity-name="ImprestSurrenderable" value-field="surrenderableMap"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSurrenderableDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                                <not>
+                                    <if-empty field="surrenderableMap"/>
+                                </not>
                             </condition>
                             <widgets>
-                                <screenlet title="Imprest Management: Edit Surrenderable Imprest">
-                                    <include-form name="EditSurrendableForm" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                <screenlet title="Surrenderable Imprest: Edit ${surrenderableId}">
+                                    <include-form name="EditSurrenderable" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                                <screenlet title="Surrenderable Imprest: Create New">
+                                    <include-form name="EditSurrenderable" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
                             </fail-widgets>
                         </section>
-<!--
-                        <section name="search-results">
-                            <widgets>
-                                <screenlet title="Purchasing Management: Suppliers List">
-                                    <include-form name="SupplierListForm" location="component://purchases/widget/PurchasesForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
--->
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+
+
+<!-- =======================================================================* PER DIEM SCREENS *=============================================================== -->
+    <!-- Per Diem Screen -->
     <screen name="perdiem">
         <section>
             <actions>
@@ -325,6 +292,9 @@
             </widgets>
         </section>
     </screen>
+
+<!-- =======================================================================* PETTY CASH SCREENS *=============================================================== -->
+    <!-- Petty Cash Screen -->
     <screen name="pettycash">
         <section>
             <actions>
