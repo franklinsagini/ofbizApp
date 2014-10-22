@@ -165,6 +165,18 @@
         </if-not-empty>
     </simple-method>
 
+    <!-- create a new Petty Cash header record -->
+    <simple-method method-name="createPettyCash" short-description="Create an ImprestPettyCash">
+          <!-- create new entity and create all the fields -->
 
+        <make-value value-field="newEntity" entity-name="ImprestPettyCash"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set from-field="userLogin.partyId" field="newEntity.createdBy"/>
+        <set field="newEntity.initialBalance" value="0.00" type="BigDecimal"/>
+        <set field="newEntity.currentBalance" value="0.00" type="BigDecimal"/>
+        <set field="newEntity.reservedAmount" value="0.00" type="BigDecimal"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
 
 </simple-methods>

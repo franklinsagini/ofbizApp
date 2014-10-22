@@ -62,6 +62,23 @@
       </relation>
     </entity>
 
+    <entity entity-name="ImprestPettyCash"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Petty Cash Entity">
+      <field name="customTimePeriodId" type="id"></field>
+      <field name="createdBy" type="id-ne"></field>
+      <field name="initialBalance" type="currency-amount"></field>
+      <field name="currentBalance" type="currency-amount"></field>
+      <field name="reservedAmount" type="currency-amount"></field>
+      <prim-key field="customTimePeriodId"/>
+      <relation type="one" fk-name="PETTY_CASH_CREATOR" title="Creator" rel-entity-name="Party">
+        <key-map field-name="createdBy" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PTTY_CSH_PRD" rel-entity-name="CustomTimePeriod">
+        <key-map field-name="customTimePeriodId"/>
+      </relation>
+    </entity>
+
     <entity entity-name="ImprestPerDiemSetup"
             package-name="org.ofbiz.imprestmanagement.imprest"
             title="Imprest Account Entity">
