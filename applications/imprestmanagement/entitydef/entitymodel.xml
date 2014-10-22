@@ -68,6 +68,7 @@
             package-name="org.ofbiz.imprestmanagement.imprest"
             title="Imprest Account Entity">
       <field name="surrenderableId" type="id-ne"></field>
+      <field name="surrenderableName" type="id-long-ne"></field>
       <field name="employeeId" type="id-ne"></field>
       <field name="approverId" type="id-ne"></field>
       <field name="reqDate" type="date-time"></field>
@@ -96,6 +97,25 @@
       <relation type="one" fk-name="IMP_HEADE_LINE" title="Imprest" rel-entity-name="ImprestSurrenderable">
           <key-map field-name="surrenderableId" />
       </relation>
+    </entity>
+
+
+    <entity entity-name="SurrendableStatus"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Surrendable Status Entity">
+      <field name="surrenderableId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="statusName" type="short-varchar"></field>
+      <field name="statusDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="surrenderableId"/>
+      <prim-key field="statusId"/>
+      <relation type="one" fk-name="SURREN_STTS_SURENDABLE" rel-entity-name="ImprestSurrenderable">
+        <key-map field-name="surrenderableId"/>
+      </relation>
+<!--       <relation type="one" fk-name="BUDGET_STTS_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation> -->
     </entity>
 
 
