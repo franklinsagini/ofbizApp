@@ -425,6 +425,11 @@ under the License.
         <response name="success" type="view" value="institute"/>
     </request-map>
     
+     <request-map uri="courseGrades">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="courseGrades"/>
+    </request-map>
+    
     <request-map uri="createPartyQualType">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyQualType"/>
@@ -432,7 +437,7 @@ under the License.
     </request-map>
     <request-map uri="updatePartyQualType">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updatePartyQualType"/>
+        <event type="service" invoke="updatePartyQualType"/>
         <response name="success" type="request-redirect" value="partyQualType">
         <redirect-parameter name="partyQualTypeId"/>
         </response>
@@ -453,7 +458,7 @@ under the License.
     </request-map>
     <request-map uri="updatePartyCourseSpecialization">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updatePartyCourseSpecialization"/>
+        <event type="service" invoke="updatePartyCourseSpecialization"/>
         <response name="success" type="request-redirect" value="courseSpecialization">
         <redirect-parameter name="specializationId"/>
         </response>
@@ -475,16 +480,39 @@ under the License.
     </request-map>
     <request-map uri="updatePartyQualInstitution">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updatePartyQualInstitution"/>
+        <event type="service" invoke="updatePartyQualInstitution"/>
         <response name="success" type="request-redirect" value="institute">
         <redirect-parameter name="instituteId"/>
         </response>
         <response name="error" type="view" value="institute" />
     </request-map>
+    
     <request-map uri="deletePartyQualInstitution">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyQualInstitution"/>
         <response name="success" type="request-redirect-noparam" value="institute"/>
+    </request-map>
+    
+    <!-- ============================GRADES======================================= -->
+    
+      <request-map uri="createPartyCourseGrade">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyCourseGrade"/>
+        <response name="success" type="request-redirect-noparam" value="courseGrades"/>
+    </request-map>
+    <request-map uri="updatePartyCourseGrade">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyCourseGrade"/>
+        <response name="success" type="request-redirect" value="courseGrades">
+        <redirect-parameter name="gradeId"/>
+        </response>
+        <response name="error" type="view" value="courseGrades" />
+    </request-map>
+    
+    <request-map uri="deletePartyCourseGrade">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyCourseGrade"/>
+        <response name="success" type="request-redirect-noparam" value="courseGrades"/>
     </request-map>
     
     
@@ -2322,6 +2350,7 @@ under the License.
     <view-map name="EditPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#EditPartyQuals"/>
     <view-map name="partyQualType" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualType"/>
     <view-map name="courseSpecialization" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyCourseSpecializationType"/>
+    <view-map name="courseGrades" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyCourseGrade"/>
     <view-map name="institute" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualInstitute"/>
     <view-map name="partyQualGroup" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualGroup"/>
 

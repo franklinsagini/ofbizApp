@@ -154,6 +154,30 @@
 	</simple-method>
 	
 	
+	<!-- ============================GRADES======================================= -->
+ 
+ <simple-method method-name="createPartyCourseGrade"
+		short-description="Create a Party Qualification Type">
+		<make-value entity-name="PartyCourseGrade" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="PartyCourseGrade" field="gradeId" />
+		<set from-field="gradeId" field="newEntity.gradeId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updatePartyCourseGrade"
+		short-description="Update Party Qualification Type">
+		<entity-one entity-name="PartyCourseGrade" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deletePartyCourseGrade"
+		short-description="Delete Party Qualification Type">
+		<entity-one entity-name="PartyCourseGrade" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
 	
 	
 		<!-- Party Qualification Group -->

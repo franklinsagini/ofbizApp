@@ -256,18 +256,42 @@ under the License.
         </actions>
         
         <auto-fields-service default-field-type="hidden" service-name="updatePartyQualType"/>
-        <!-- field name="skillTypeId">
-            <display-entity entity-name="SkillType" description="${description}"/>
-        </field -->
-        <!-- field name="bankDetailsId" title="Bank">
-        	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
-        </field -->
         <field name="instituteId"> <hidden/> </field>
         <field name="institute"> <text></text> </field>
         
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePartyQualInstitution" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="instituteId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+      <form name="NewPartyCourseGrade" type="single" target="createPartyCourseGrade"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="PartyCourseGradeContext">
+
+
+        <field name="gradeId"><hidden/></field>
+        <field name="grade" title="Grade Name/Symbol" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPartyCourseGrades" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartyCourseGrade" paginate-target="courseGrades"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyCourseGrade">
+            </entity-condition>
+        </actions>
+        
+        <auto-fields-service default-field-type="hidden" service-name="updatePartyCourseGrade"/>
+        <field name="gradeId"> <hidden/> </field>
+        <field name="grade"> <text></text> </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePartyCourseGrade" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="gradeId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
