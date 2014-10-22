@@ -70,6 +70,22 @@
             <store-value value-field="lookedUpValue"/>
     </simple-method>
 
+    <simple-method method-name="createPettySetup" short-description="Create ImprestPettySetup">
+            <make-value entity-name="ImprestPettySetup" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="ImprestPettySetup" field="pettySetupId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="pettySetupId" field="newEntity.pettySetupId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="UpdatePettySetup" short-description="Update ImprestPettySetup">
+            <entity-one entity-name="ImprestPettySetup" value-field="lookedUpValue"/>
+            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+            <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
     <simple-method method-name="createSurrenderable" short-description="Create ImprestSurrenderable">
             <make-value entity-name="ImprestSurrenderable" value-field="newEntity"/>
              <set-pk-fields map="parameters" value-field="newEntity"/>

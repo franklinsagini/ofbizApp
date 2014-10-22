@@ -98,6 +98,78 @@
 
 
     <!--
+        EditPettySetup
+     -->
+
+    <form name="EditPettySetup" type="single" target="createPettySetup" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="pettyContext">
+        <alt-target use-when="pettyContext!=null" target="UpdatePettySetup"/>
+
+        <field name="pettySetupId">
+            <hidden/>
+        </field>
+        <field  name="pettySetupId" use-when="pettyContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+        <field position="1" name="pettySetupName" title="Name/Description">
+            <text size="45"></text>
+        </field>
+        <field position="2" name="cashManager" title="cashManager" required-field="true">
+            <lookup target-form-name="LookupPerson"/>
+        </field>
+        <field position="1" name="cashLimit" title="Cash Limit" tooltip="KES">
+            <text size="10"/>
+        </field>
+        <field position="2" name="replenishLevel" title="Replenish Level" tooltip="KES">
+            <text size="10"/>
+        </field>
+        <field position="1" name="fromDate" title="From Date">
+              <date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+          </field>
+        <field position="2" name="toDate" title="To Date">
+              <date-time />
+        </field>
+        <field position="1" name="isActive" title="Active">
+            <drop-down allow-empty="false">
+                <option key="N" description="NO"/>
+                <option key="Y" description="YES"/>
+            </drop-down>
+        </field>
+                <!-- submitButton -->
+        <field use-when="pettyContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="pettyContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+            <!--
+                PettySetupist
+            -->
+    <form name="PettySetupist" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdatePettySetup"
+        paginate-target="EditPettySetup" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ImprestPettySetup"></entity-condition>
+        </actions>
+        <field name="pettySetupId"><hidden/></field>
+        <field name="cashManager" title="Cash Manager">
+              <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field name="cashLimit" title="Petty Cash Limit" widget-area-style="align-text"><display type="currency" currency="KES"/></field>
+        <field name="replenishLevel" title="Replenish Level" widget-area-style="align-text"><display type="currency" currency="KES"/></field>
+        <field  name="fromDate" title="From Date">
+            <display also-hidden="false" type="date-time"></display>
+        </field>
+        <field  name="isActive" title="Active">
+            <display ></display>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deletePettyCashSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="pettySetupId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+
+    <!--
         EditPerDiemSetup
      -->
 

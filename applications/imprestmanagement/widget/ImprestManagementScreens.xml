@@ -138,6 +138,40 @@
             </widgets>
         </section>
     </screen>
+    <screen name="pettysetup">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="pettysetup"/>
+                <entity-one entity-name="ImprestPettySetup" value-field="pettyContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonImprestSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="IMPRESTMANAGEMENT" action="IMPRESTMANAGEMENT_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Imprest Management: Petty Cash Setup">
+                                    <include-form name="EditPettySetup" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ImprestManagementViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Imprest Management: Petty Cash Setup List">
+                                    <include-form name="PettySetupist" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="perdiemsetup">
         <section>
             <actions>

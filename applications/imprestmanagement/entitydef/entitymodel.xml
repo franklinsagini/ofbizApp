@@ -45,6 +45,23 @@
       <prim-key field="destinationId"/>
     </entity>
 
+    <entity entity-name="ImprestPettySetup"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="Petty Setup Entity">
+      <field name="pettySetupId" type="id-ne"></field>
+      <field name="cashManager" type="id-ne"></field>
+      <field name="cashLimit" type="currency-amount"></field>
+      <field name="replenishLevel" type="currency-amount"></field>
+      <field name="pettySetupName" type="id-long-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="toDate" type="date-time"></field>
+      <field name="isActive" type="indicator"></field>
+      <prim-key field="pettySetupId"/>
+      <relation type="one" fk-name="PETTY_SETUP_MANAGER" title="Manager" rel-entity-name="Party">
+        <key-map field-name="cashManager" rel-field-name="partyId"/>
+      </relation>
+    </entity>
+
     <entity entity-name="ImprestPerDiemSetup"
             package-name="org.ofbiz.imprestmanagement.imprest"
             title="Imprest Account Entity">
