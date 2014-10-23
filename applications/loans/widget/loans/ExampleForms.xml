@@ -937,9 +937,9 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="applicationStatus" title="Status">
+		<!--  field name="applicationStatus" title="Status">
 			<text-find />
-		</field>
+		</field -->
 		<field name="loanAmt" title="Amount">
 			<text-find></text-find>
 		</field>
@@ -966,11 +966,11 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-			<!-- order-by field-name="-loanApplicationId"/ -->
-			<!-- entity-condition entity-name="LoanApplication">
+			
+			<entity-condition entity-name="LoanApplication">
 
-				
-			</entity-condition -->
+				<order-by field-name="-loanApplicationId"/>
+			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
 			    							
 		</actions>
@@ -1022,20 +1022,22 @@
 			<display also-hidden="false" />
 		</field -->
 		
-		
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
 		
 		<field name="Edit Application">
 			<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
 		</field>
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
+		<!-- field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
 			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
 				
 				
-		</field>
+		</field -->
 		<!-- field name="formStatus" title="Form" use-when="loanApplication.collateralsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsTotalDepositsEnough.equals(&quot;N&quot;)&amp;&amp;loanApplication.eacherGuarantorGreaterThanAverage.equals(&quot;N&quot;)"><display default-value="Form Incomplete, Provide Details (Guarantors, Collateral etc)"></display></field -->
 		
 
@@ -1126,18 +1128,18 @@
 			<entity-options description="${description}" entity-name="PaymentMethodType" -->
 		<!-- entity-order-by field-name="description"/ -->
 		<!-- /entity-options> </drop-down> </field -->
-		<field name="applicationStatus">
-			<display also-hidden="false" />
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
 		</field>
 		<field name="Edit Application">
 			<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
 		</field>
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)">
+		<!-- field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)">
 			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
-		</field>
+		</field -->
 		
 		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext">

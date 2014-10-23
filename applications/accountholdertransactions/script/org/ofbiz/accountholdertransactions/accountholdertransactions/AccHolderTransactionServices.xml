@@ -28,9 +28,10 @@ under the License.
         <make-value entity-name="AccountTransaction" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="createdDate"/>
+         <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
+        <!-- set field="entityName" value="AccountTransaction"></set>
+        <set field="newEntity.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
         
         <set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
         <set field="newEntity.isActive" value="Y"/>
@@ -63,9 +64,12 @@ under the License.
         <!-- entity-one entity-name="AcctgTrans" value-field="acctgTrans"/ -->
          <!-- set-pk-fields map="parameters" value-field="acctgTrans"/ -->
         <!-- set-nonpk-fields map="newEntity" value-field="acctgTrans"/ -->
-        <sequenced-id sequence-name="AcctgTrans" field="acctgTransId"/>
+         <sequenced-id sequence-name="AcctgTrans" field="acctgTransId"/>
+        <now-timestamp field="createdDate"/>
         <set from-field="acctgTransId" field="acctgTrans.acctgTransId"/>
         
+		<!-- set field="entityName" value="AcctgTrans"></set>
+		<set field="acctgTrans.acctgTransId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}" type="String"></set -->        
         <!-- Get Accounts from setup -->
         <set field="accountHolderTransactionSetupId" value="MEMBERTRANSACTIONACCOUNT"/>
         <entity-one entity-name="AccountHolderTransactionSetup" value-field="accountHolderTransactionSetup"/>
@@ -86,8 +90,8 @@ under the License.
         
         <!-- Create Account Entries one for Member Deposit and Another for Cash -->
         <!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
-        <call-simple-method method-name="createMemberDepositEntry"></call-simple-method>
-        <call-simple-method method-name="createMemberCashEntry"></call-simple-method>
+        <call-simple-method method-name="createMemberDepositEntry" scope="inline"></call-simple-method>
+        <call-simple-method method-name="createMemberCashEntry" scope="inline"></call-simple-method>
     </simple-method>
     
     <simple-method method-name="createMemberDepositEntry" short-description="Member Deposit Entry">
@@ -162,12 +166,13 @@ under the License.
         <make-value entity-name="AccountTransaction" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="createdDate"/>
+        
         <map-to-map map="parameters" to-map="transactionParameters"/>
        
+        <!-- set field="entityName" value="AccountTransaction"></set>
+        <set field="newEntity.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+        <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
-        
         <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
 		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
         
@@ -185,7 +190,7 @@ under the License.
         <set field="cashPosting" value="D"/>
         
          <!-- Post Cash Deposit -->
-        <call-simple-method method-name="createMemberTransaction"></call-simple-method>
+        <!-- call-simple-method method-name="createMemberTransaction"></call-simple-method -->
         
         
     </simple-method>
@@ -215,9 +220,12 @@ under the License.
     
     
     <simple-method method-name="saveChequeWithdrawal" short-description="Saving Cheque Withdrawal Reccord, call this method in createChequeWithdrawal">
-    	<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="createdDate"/>
+        <!-- set field="entityName" value="AccountTransaction"></set>
+        <set field="newEntity.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		
+		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
+		
         <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
 		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
          <set field="newEntity.isActive" value="Y"/>
@@ -289,9 +297,11 @@ under the License.
     	<make-value entity-name="AccountTransaction" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="createdDate"/>
+        <!-- set field="entityName" value="AccountTransaction"></set>
+        <set field="newEntity.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
+		
         <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
 		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
          <set field="newEntity.isActive" value="Y"/>
@@ -320,8 +330,9 @@ under the License.
     <simple-method method-name="createChequeDepositWithEndDate" use-transaction="true">
          <set-pk-fields map="parameters" value-field="anotherTransaction"/>
         <set-nonpk-fields map="parameters" value-field="anotherTransaction"/>
+        <!-- set field="entityName" value="AccountTransaction"></set>
+        <set field="anotherTransaction.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set-->
         <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <now-timestamp field="createdDate"/>
         <set from-field="accountTransactionId" field="anotherTransaction.accountTransactionId"/>
         
          <set field="anotherTransaction.isActive" value="Y"/>
@@ -364,9 +375,8 @@ under the License.
         <make-value entity-name="LoanRepayment" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="LoanRepayment" field="loanRepaymentId"/>
-        <now-timestamp field="createdDate"/>
-        <set from-field="loanRepaymentId" field="newEntity.loanRepaymentId"/>
+        <set field="entityName" value="LoanRepayment"></set>
+        <set field="newEntity.loanRepaymentId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
 		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
         <set field="newEntity.isActive" value="Y"/>
@@ -412,9 +422,8 @@ under the License.
         <make-value entity-name="ApplyStandingOrder" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="ApplyStandingOrder" field="applyStandingOrderId"/>
-        <now-timestamp field="createdDate"/>
-        <set from-field="applyStandingOrderId" field="newEntity.applyStandingOrderId"/>
+        <set field="entityName" value="ApplyStandingOrder"></set>
+        <set field="newEntity.applyStandingOrderId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -434,11 +443,9 @@ under the License.
         <make-value entity-name="ChequeType" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="ChequeType" field="chequeTypeId"/>
-        <now-timestamp field="createdDate"/>
-        <set from-field="chequeTypeId" field="newEntity.chequeTypeId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+        <set field="entityName" value="ChequeType"></set>
+        <set field="newEntity.chequeTypeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
@@ -461,8 +468,8 @@ under the License.
         <make-value entity-name="ChequeSetup" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- sequenced-id sequence-name="ChequeSetup" field="chequeSetupId"/ -->
-        <now-timestamp field="createdDate"/>
+        <set field="entityName" value="ChequeSetup"></set>
+        <set field="newEntity.chequeSetupId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
@@ -645,13 +652,14 @@ under the License.
     	<make-value entity-name="AccountTransactionParent" value-field="transactionParent"/>
          <set-pk-fields map="parameters" value-field="transactionParent"/>
         <set-nonpk-fields map="parameters" value-field="transactionParent"/>
-        <sequenced-id sequence-name="AccountTransactionParent" field="accountTransactionParentId"/>
-        <set from-field="accountTransactionParentId" field="transactionParent.accountTransactionParentId"/>
-        
+		<!-- set field="entityName" value="AccountTransactionParent"></set>
+		<set field="transactionParent.accountTransactionParentId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		<sequenced-id sequence-name="AccountTransactionParent" field="accountTransactionParentId"/>
+        <set from-field="accountTransactionParentId" field="transactionParent.accountTransactionParentId"/>        
         <set field="transactionParent.isActive" value="Y"/>
         <set field="transactionParent.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}"/>
+        <set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/>
         
         <set field="transactionParent.approved" value="NO"/>
         <set field="transactionParent.rejected" value="NO"/>

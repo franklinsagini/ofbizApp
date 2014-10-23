@@ -41,9 +41,10 @@ public class LoanAccounting {
 		Delegator delegator;
 		delegator = loanApplication.getDelegator();
 		// GenericValue accountTransaction = null;
+		loanApplicationId = loanApplicationId.replaceFirst(",", "");
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
-					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					UtilMisc.toMap("loanApplicationId", Long.valueOf(loanApplicationId)),
 					false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -165,11 +166,11 @@ public class LoanAccounting {
 
 		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
 		Delegator delegator = loanApplication.getDelegator();
-		
+		memberId = memberId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS,
-						memberId), EntityCondition
+						Long.valueOf(memberId)), EntityCondition
 						.makeCondition("withdrawable",
 								EntityOperator.EQUALS, "Yes")),
 						EntityOperator.AND);
@@ -209,10 +210,11 @@ public class LoanAccounting {
 		//Pick only upfront payable charges like negotiation or appraisal fee
 		// TODO - Add filter for upfront
 		//chargedUpfront
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> chargesConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"loanApplicationId", EntityOperator.EQUALS,
-						loanApplicationId), EntityCondition
+						Long.valueOf(loanApplicationId)), EntityCondition
 						.makeCondition("chargedUpfront",
 								EntityOperator.EQUALS, "Y")),
 						EntityOperator.AND);

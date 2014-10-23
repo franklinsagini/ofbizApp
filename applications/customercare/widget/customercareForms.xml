@@ -306,7 +306,7 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
 			<set field="statusName" value="NEW"/>
-	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="Long"/> 
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
 	   		
 			
 			
@@ -389,9 +389,9 @@
 			equals(&quot;NEW&quot;)
 		 -->
 		
-		<field name="Forward" use-when="loanStatusId==${statusId}"  >
+		<field name="Forward" use-when="loanStatusId==${statusId}"   >
 			
-			<hyperlink target="forwardApplicationToLoans"
+			<hyperlink target="forwardApplicationToLoans" 
 				description="Forward Application" link-type="anchor">
 					<parameter param-name="loanApplicationId"/>
 				</hyperlink>

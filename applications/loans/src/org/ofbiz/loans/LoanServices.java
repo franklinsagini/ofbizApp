@@ -406,12 +406,12 @@ public class LoanServices {
 		// Get the multiplier account - the account being used to get the
 		// maximum loan as defined in the
 		// Loan Product Setup
-
+		memberId = memberId.replaceAll(",", "");
 		// Get Accounts for this member
 		List<GenericValue> memberAccountELI = null;
 		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, memberId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(memberId)),
 						EntityCondition.makeCondition("withdrawable",
 								EntityOperator.EQUALS, "No")),
 						EntityOperator.AND);
@@ -617,6 +617,8 @@ public class LoanServices {
 
 		for (GenericValue genericValue : loanApplicationELI) {
 			// toDeleteList.add(genericValue);
+			System.out.println("GGGGGGGGG Got valur GGGGGGGG "
+					+ genericValue.getBigDecimal("loanAmt"));
 			existingLoansTotal = existingLoansTotal.add(genericValue
 					.getBigDecimal("loanAmt"));
 		}
@@ -1298,11 +1300,11 @@ public class LoanServices {
 
 		// Create a Log
 		GenericValue loanStatusLog;
-		String loanStatusLogId = delegator.getNextSeqId("LoanStatusLog", 1);
-
+		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog", 1);
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
 				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
-				loanApplicationId, "loanStatusId", newStatusId, "createdBy",
+				Long.valueOf(loanApplicationId), "loanStatusId", newStatusId, "createdBy",
 				userLoginId, "comment", commentName));
 
 		try {
@@ -1311,40 +1313,39 @@ public class LoanServices {
 			e2.printStackTrace();
 		}
 
-		Gson gson = new Gson();
-		String json = gson.toJson(result);
+		//Gson gson = new Gson();
+		//String json = gson.toJson(result);
 
 		// set the X-JSON content type
-		response.setContentType("application/x-json");
+		// response.setContentType("application/x-json");
 		// jsonStr.length is not reliable for unicode characters
-		try {
-			response.setContentLength(json.getBytes("UTF8").length);
-		} catch (UnsupportedEncodingException e) {
-			try {
-				throw new EventHandlerException("Problems with Json encoding",
-						e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
+		// try {
+		// response.setContentLength(json.getBytes("UTF8").length);
+		// } catch (UnsupportedEncodingException e) {
+		// try {
+		// throw new EventHandlerException("Problems with Json encoding",
+		// e);
+		// } catch (EventHandlerException e1) {
+		// e1.printStackTrace();
+		// }
+		// }
 
 		// return the JSON String
-		Writer out;
-		try {
-			out = response.getWriter();
-			out.write("");
-			out.flush();
-		} catch (IOException e) {
-			try {
-				throw new EventHandlerException(
-						"Unable to get response writer", e);
-			} catch (EventHandlerException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+//		Writer out;
+//		try {
+//			out = response.getWriter();
+//			out.write("");
+//			out.flush();
+//		} catch (IOException e) {
+//			try {
+//				throw new EventHandlerException(
+//						"Unable to get response writer", e);
+//			} catch (EventHandlerException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
 
-		return "";
+		return "success";
 	}
 
 	/***
@@ -1390,11 +1391,11 @@ public class LoanServices {
 
 		// Create a Log
 		GenericValue loanStatusLog;
-		String loanStatusLogId = delegator.getNextSeqId("LoanStatusLog", 1);
-
+		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog", 1);
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
 				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
-				loanApplicationId, "loanStatusId", loanStatusId, "createdBy",
+				Long.valueOf(loanApplicationId), "loanStatusId", loanStatusId, "createdBy",
 				userLoginId, "comment", "forwarded to Loans"));
 
 		try {
@@ -1403,40 +1404,40 @@ public class LoanServices {
 			e2.printStackTrace();
 		}
 
-		Gson gson = new Gson();
-		String json = gson.toJson(result);
-
-		// set the X-JSON content type
-		response.setContentType("application/x-json");
-		// jsonStr.length is not reliable for unicode characters
-		try {
-			response.setContentLength(json.getBytes("UTF8").length);
-		} catch (UnsupportedEncodingException e) {
-			try {
-				throw new EventHandlerException("Problems with Json encoding",
-						e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
+		// Gson gson = new Gson();
+		// String json = gson.toJson(result);
+		//
+		// // set the X-JSON content type
+		// response.setContentType("application/x-json");
+		// // jsonStr.length is not reliable for unicode characters
+		// try {
+		// response.setContentLength(json.getBytes("UTF8").length);
+		// } catch (UnsupportedEncodingException e) {
+		// try {
+		// throw new EventHandlerException("Problems with Json encoding",
+		// e);
+		// } catch (EventHandlerException e1) {
+		// e1.printStackTrace();
+		// }
+		// }
 
 		// return the JSON String
-		Writer out;
-		try {
-			out = response.getWriter();
-			out.write("");
-			out.flush();
-		} catch (IOException e) {
-			try {
-				throw new EventHandlerException(
-						"Unable to get response writer", e);
-			} catch (EventHandlerException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+//		Writer out;
+//		try {
+//			out = response.getWriter();
+//			out.write("");
+//			out.flush();
+//		} catch (IOException e) {
+//			try {
+//				throw new EventHandlerException(
+//						"Unable to get response writer", e);
+//			} catch (EventHandlerException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//		}
 
-		return "";
+		return "success";
 	}
 
 	/***

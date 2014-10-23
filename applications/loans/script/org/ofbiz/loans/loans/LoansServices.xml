@@ -274,9 +274,11 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="LoanSecurity" field="loanSecurityId"/>
+        <!-- sequenced-id sequence-name="LoanSecurity" field="loanSecurityId"/>
         <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanSecurityId" field="newEntity.loanSecurityId"/>
+        <set from-field="loanSecurityId" field="newEntity.loanSecurityId"/ -->
+        <set field="entityName" value="LoanSecurity"></set>
+		<set field="newEntity.loanSecurityId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -332,9 +334,12 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="LoanApplicationSecurity" field="loanApplicationSecurityId"/>
+        <!-- sequenced-id sequence-name="LoanApplicationSecurity" field="loanApplicationSecurityId"/>
         <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanApplicationSecurityId" field="newEntity.loanApplicationSecurityId"/>
+        <set from-field="loanApplicationSecurityId" field="newEntity.loanApplicationSecurityId"/-->
+        <set field="entityName" value="LoanApplicationSecurity"></set>
+		<set field="newEntity.loanApplicationSecurityId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -358,11 +363,11 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="LoanApplicationCallateral" field="loanApplicationCallateralId"/>
+        <!-- sequenced-id sequence-name="LoanApplicationCallateral" field="loanApplicationCallateralId"/>
         <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanApplicationCallateralId" field="newEntity.loanApplicationCallateralId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
+        <set from-field="loanApplicationCallateralId" field="newEntity.loanApplicationCallateralId"/ -->
+		<set field="entityName" value="LoanApplicationCallateral"></set>
+		<set field="newEntity.loanApplicationCallateralId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="updateLoanApplicationCollateral" short-description="Update Loan Application Collateral">
@@ -389,9 +394,11 @@ under the License.
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="LoanGuarantor" field="loanGuarantorId"/>
+        <!-- sequenced-id sequence-name="LoanGuarantor" field="loanGuarantorId"/>
         <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanGuarantorId" field="newEntity.loanGuarantorId"/>
+        <set from-field="loanGuarantorId" field="newEntity.loanGuarantorId"/ -->
+        <set field="entityName" value="LoanGuarantor"></set>
+		<set field="newEntity.loanGuarantorId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -519,11 +526,15 @@ under the License.
     	<make-value entity-name="LoanStatusLog" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="LoanStatusLog" field="loanStatusLogId"/>
-        <set from-field="loanStatusLogId" field="newEntity.loanStatusLogId"/>
+        <!-- sequenced-id sequence-name="LoanStatusLog" field="loanStatusLogId"/>
+        <set from-field="loanStatusLogId" field="newEntity.loanStatusLogId"/-->
+        
+        <set field="entityName" value="LoanStatusLog"></set>
+		<set field="newEntity.loanStatusLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+        <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <now field="currentDate"/>
         <set field="newEntity.disbursementDate" from-field="currentDate"/>
         <create-value value-field="newEntity"/>
@@ -532,7 +543,7 @@ under the License.
         <entity-one entity-name="LoanApplication" value-field="loanApplication">
         	 <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
         </entity-one>
-        <set from-field="newEntity.applicationStatus" field="loanApplication.applicationStatus"/>
+        <set from-field="newEntity.loanStatusId" field="loanApplication.loanStatusId"/>
         <set from-field="newEntity.disbursementDate" field="loanApplication.disbursementDate"/>
         
         <!--  set from-field="newEntity.repaymentStartDate" field="loanApplication.repaymentStartDate"/ -->
@@ -581,10 +592,8 @@ under the License.
         <make-value entity-name="ProductCharge" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="ProductCharge" field="productChargeId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="productChargeId" field="newEntity.productChargeId"/>
+        <set field="entityName" value="ProductCharge"></set>
+		<set field="newEntity.productChargeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -606,10 +615,9 @@ under the License.
         <make-value entity-name="LoanProductCharge" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="LoanProductCharge" field="loanProductChargeId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanProductChargeId" field="newEntity.loanProductChargeId"/>
+        <set field="entityName" value="LoanProductCharge"></set>
+		<set field="newEntity.loanProductChargeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
@@ -633,9 +641,8 @@ under the License.
         <make-value entity-name="LoanApplicationCharge" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="LoanApplicationCharge" field="loanApplicationChargeId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="loanApplicationChargeId" field="newEntity.loanApplicationChargeId"/>
+        <set field="entityName" value="LoanApplicationCharge"></set>
+		<set field="newEntity.loanApplicationChargeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     

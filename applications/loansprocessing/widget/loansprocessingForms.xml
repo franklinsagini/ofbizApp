@@ -11,8 +11,8 @@
 			<set field="forwardedLoansStatusName" value="FORWARDEDLOANS"/>
 	   		<set field="forwardedLoansStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedLoansStatusName);}"/> 
 			
-			<set field="forwardApprovalStatusName" value="FORWAREDAPPROVAL"/>
-	   		<set field="forwardedApprovalStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardApprovalStatusName);}"/> 
+			<!-- set field="forwardApprovalStatusName" value="FORWAREDAPPROVAL"/>
+	   		<set field="forwardedApprovalStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardApprovalStatusName);}"/ --> 
 			
 			<set field="forwardedStatusName" value="FORWARDED"/>
 	   		<set field="forwardedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedStatusName);}"/> 
@@ -100,6 +100,15 @@
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
 			<hyperlink target="forwardApplication"
 				description="Forward Application To Approver" link-type="anchor">
+					<parameter param-name="loanApplicationId"/>
+				</hyperlink>
+				
+				
+		</field>
+		
+		<field name="Reject" >
+			<hyperlink target="returnToCustomerCare"
+				description="Return to CustomerCare" link-type="anchor">
 					<parameter param-name="loanApplicationId"/>
 				</hyperlink>
 				

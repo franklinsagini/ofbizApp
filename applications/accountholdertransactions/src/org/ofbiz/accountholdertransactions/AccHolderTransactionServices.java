@@ -132,10 +132,10 @@ public class AccHolderTransactionServices {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String partyId = (String) request.getParameter("partyId");
 		List<GenericValue> memberAccountELI = null;
-
+		partyId = partyId.replaceAll(",", "");
 		try {
 			memberAccountELI = delegator.findList("MemberAccount",
-					EntityCondition.makeCondition("partyId", partyId), null,
+					EntityCondition.makeCondition("partyId", Long.valueOf(partyId)), null,
 					null, null, false);
 
 		} catch (GenericEntityException e2) {
@@ -243,11 +243,11 @@ public class AccHolderTransactionServices {
 	private static BigDecimal calculateOpeningBalance(String memberAccountId,
 			Delegator delegator) {
 		List<GenericValue> openingBalanceELI = null;
-
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		try {
 			openingBalanceELI = delegator.findList("MemberAccountDetails",
 					EntityCondition.makeCondition("memberAccountId",
-							memberAccountId), null, null, null, false);
+							Long.valueOf(memberAccountId)), null, null, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -275,10 +275,11 @@ public class AccHolderTransactionServices {
 		// Conditions
 		// EntityConditionList<EntityCondition> transactionConditions =
 		// EntityCondition.makeCond
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition
+						Long.valueOf(memberAccountId)), EntityCondition
 						.makeCondition("transactionType",
 								EntityOperator.EQUALS, "CASHDEPOSIT")),
 						EntityOperator.AND);
@@ -317,10 +318,11 @@ public class AccHolderTransactionServices {
 		// Conditions
 		// EntityConditionList<EntityCondition> transactionConditions =
 		// EntityCondition.makeCond
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition.makeCondition(
+						Long.valueOf(memberAccountId)), EntityCondition.makeCondition(
 						"increaseDecrease", EntityOperator.EQUALS,
 						increaseDecrease)), EntityOperator.AND);
 
@@ -352,10 +354,11 @@ public class AccHolderTransactionServices {
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> cashWithdrawalELI = null;
 
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition.makeCondition(
+						Long.valueOf(memberAccountId)), EntityCondition.makeCondition(
 						"transactionType", EntityOperator.EQUALS,
 						"CASHWITHDRAWAL")), EntityOperator.AND);
 
@@ -387,11 +390,11 @@ public class AccHolderTransactionServices {
 	private static BigDecimal calculateTotalChequeDeposits(
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> chequeDepositELI = null;
-
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition.makeCondition(
+						Long.valueOf(memberAccountId)), EntityCondition.makeCondition(
 						"transactionType", EntityOperator.EQUALS,
 						"CHEQUEDEPOSIT")), EntityOperator.AND);
 
@@ -423,11 +426,11 @@ public class AccHolderTransactionServices {
 	private static BigDecimal calculateTotalChequeWithdrawals(
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> chequeWithdrawalELI = null;
-
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition.makeCondition(
+						Long.valueOf(memberAccountId)), EntityCondition.makeCondition(
 						"transactionType", EntityOperator.EQUALS,
 						"CHEQUEWITHDRAWAL")), EntityOperator.AND);
 
@@ -459,11 +462,11 @@ public class AccHolderTransactionServices {
 	private static BigDecimal calculateTotalClearedChequeDeposits(
 			String memberAccountId, Delegator delegator) {
 		List<GenericValue> chequeDepositELI = null;
-
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"memberAccountId", EntityOperator.EQUALS,
-						memberAccountId), EntityCondition.makeCondition(
+						Long.valueOf(memberAccountId)), EntityCondition.makeCondition(
 						"transactionType", EntityOperator.EQUALS,
 						"CHEQUEDEPOSIT"), EntityCondition
 						.makeCondition("clearDate",
@@ -707,10 +710,11 @@ public class AccHolderTransactionServices {
 		// delegator = DelegatorFactoryImpl.getDelegator("delegator");
 		delegator = accountTransaction.getDelegator();
 		// GenericValue accountTransaction = null;
+		accountTransactionId = accountTransactionId.replaceAll(",", "");
 		try {
 			accountTransaction = delegator
 					.findOne("AccountTransaction", UtilMisc.toMap(
-							"accountTransactionId", accountTransactionId),
+							"accountTransactionId", Long.valueOf(accountTransactionId)),
 							false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -1075,7 +1079,7 @@ public class AccHolderTransactionServices {
 		EntityConditionList<EntityExpr> accountChargeConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"accountProductId", EntityOperator.EQUALS,
-						accountProductCharge.getString("accountProductId")), EntityCondition.makeCondition(
+						accountProductCharge.getLong("accountProductId")), EntityCondition.makeCondition(
 						"transactionType", EntityOperator.EQUALS,
 						accountProductCharge.getString("transactionType"))
 						, EntityCondition.makeCondition(
@@ -1110,10 +1114,11 @@ public class AccHolderTransactionServices {
 			String transactionType) {
 
 		Delegator delegator = accountTransaction.getDelegator();
+		accountProductId = accountProductId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> accountChargeConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"accountProductId", EntityOperator.EQUALS,
-						accountProductId), EntityCondition.makeCondition(
+						Long.valueOf(accountProductId)), EntityCondition.makeCondition(
 						"transactionType", EntityOperator.EQUALS,
 						transactionType)), EntityOperator.AND);
 		List<GenericValue> accountProductChargeELI = null;
@@ -1140,11 +1145,11 @@ public class AccHolderTransactionServices {
 		String memberAccountId = accountTransaction
 				.getString("memberAccountId");
 		Delegator delegator = accountTransaction.getDelegator();
-
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		GenericValue memberAccount = null;
 		try {
 			memberAccount = delegator.findOne("MemberAccount",
-					UtilMisc.toMap("memberAccountId", memberAccountId), false);
+					UtilMisc.toMap("memberAccountId", Long.valueOf(memberAccountId)), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -1199,11 +1204,10 @@ public class AccHolderTransactionServices {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String loanApplicationId = (String) request.getParameter("loanApplicationId");
 		GenericValue loanApplication = null;
-
-		// SaccoProduct
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
-					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+					UtilMisc.toMap("loanApplicationId", Long.valueOf(loanApplicationId)), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			return "Cannot Get Loan Application Details";

@@ -42,7 +42,7 @@ under the License.
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
-        <field name="loanSecurityId"> <text></text> </field>
+        <field name="loanSecurityId"> <hidden/> </field>
         <field name="description"> <!-- display also-hidden="false"/ --> <text></text> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanSecurity" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -104,7 +104,9 @@ under the License.
         	<display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${lookupPaymentMethodType.description}"/>
         </field>
         <!-- field name="externalId"><display/></field -->
-        <field name="applicationStatus"><display></display></field>
+        <field name="loanStatusId" title="Status">
+        	<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+        </field>
     </form>
     
     <!--Loan Application Security -->
@@ -478,14 +480,28 @@ under the License.
         		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
         	</entity-one>
         	
-        	<set field="applicationStatusValue" value="${loanApplication.applicationStatus}"/>
+        	<entity-condition entity-name="LoanStatus" list="statusList"></entity-condition>
+        	
+        	<!-- set field="applicationStatusValue" value="${loanApplication.applicationStatus}"/ -->
+        	<set field="statusName" value="DISBURSED"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+        	
         </actions>
         <field name="loanStatusLogId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
-        <field name="applicationStatus" title="Status" required-field="true"><text size="30" maxlength="60" default-value="DISBURSED" /></field>
+        <field name="loanStatusId">
+        	<hidden value="${statusId}"/>
+        </field>
+        <!-- field name="loanStatusId"  >
+        	<drop-down>
+        		<list-options key-name="loanStatusId" list-name="statusList" description="${name}"/>
+        	</drop-down>
+        </field -->
+        <!-- field name="applicationStatus" title="Status" required-field="true"><text size="30" maxlength="60" default-value="DISBURSED" /></field-->
         <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
         <!-- field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field -->
-        <field name="submitButton" use-when="!applicationStatusValue.equals(&quot;DISBURSED&quot;)"  title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
+ 		<!-- use-when="loanStatusId==statusId" -->
+        <field name="submitButton"  title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
     
@@ -502,10 +518,15 @@ under the License.
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
          <field name="createdBy"><display also-hidden="false"></display> </field>
-        <field name="applicationStatus"><display also-hidden="false"></display>  </field>
-        <field name="disbursementDate" title="Date Disbursed"> <display/> </field>
-        <field name="repaymentStartDate" title="Repayment Start Date"> <display /> </field>
-        <field name="createdStamp"><display also-hidden="false" type="date-time"></display> </field>
+        <!-- field name="applicationStatus"><display also-hidden="false"></display>  </field -->
+        <field name="loanStatusId">
+        	<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+        </field>
+        <!-- field name="disbursementDate" title="Date Disbursed"> <display/> </field>
+        
+        <field name="repaymentStartDate" title="Repayment Start Date"> <display /> </field -->
+        <field name="comment" title="Comments"><display></display></field>
+        <field name="createdStamp" title="Date"><display also-hidden="false" type="date-time"></display> </field>
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteDisburseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanStatusLogId"/>
@@ -1221,8 +1242,6 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <!-- form name="listLoanApplicationCharge" type="list" list-name="loanApplicationChargeList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" -->
     <form name="listLoanApplicationCharge" type="list" list-name="loanApplicationChargeList" use-row-submit="true" separate-columns="true" target="updateLoanApplicationCharge" paginate-target="viewaccountproductdetails"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -1234,9 +1253,10 @@ under the License.
         <field name="loanApplicationChargeId"> <hidden/> </field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
         <field name="productChargeId" title="Charge"  widget-style="required" required-field="true">
-        	<drop-down allow-empty="true">
+        	<!-- drop-down allow-empty="true">
                 <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
-            </drop-down>
+            </drop-down -->
+            <display-entity entity-name="ProductCharge" description="${name}" key-field-name="productChargeId"></display-entity>
         </field>
         <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">
         	 <drop-down allow-empty="true">
@@ -1272,14 +1292,15 @@ under the License.
         			<condition-expr field-name="chargedUpfront" operator="equals" value="Y"/>
         		</condition-list>
         	</entity-condition>
-        	<entity-condition entity-name="ProductCharge" list="productChargeList"></entity-condition>
+        	<!-- entity-condition entity-name="ProductCharge" list="productChargeList"></entity-condition -->
         </actions>
         <field name="loanApplicationChargeId"> <hidden/> </field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
-        <field name="productChargeId" title="Charge"  widget-style="required" required-field="true">
-        	<drop-down allow-empty="true">
+        <field name="productChargeId" title="Charge">
+        	<!-- drop-down allow-empty="true">
                 <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
-            </drop-down>
+            </drop-down -->
+            <display-entity entity-name="ProductCharge" key-field-name="productChargeId" description="${name}"></display-entity>
         </field>
         <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">
         	 <drop-down allow-empty="true">
