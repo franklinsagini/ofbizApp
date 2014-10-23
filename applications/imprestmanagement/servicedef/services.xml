@@ -92,4 +92,25 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
+    <service name="updatePettyCash" default-entity-name="ImprestPettyCash" engine="simple"
+                location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="updatePettyCash" auth="true">
+        <description>Update a ImprestPettyCash</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="customTimePeriodId" mode="OUT" type="String" optional="false"></attribute>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="finalizePettyCash" default-entity-name="ImprestPettyCash" engine="simple"
+                location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="finalizePettyCash" auth="true">
+        <description>finalize a ImprestPettyCash</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="customTimePeriodId" mode="OUT" type="String" optional="false"></attribute>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBudgetStatus" default-entity-name="ImprestPettyCash" engine="simple"
+                location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="updateBudgetStatus">
+        <description>Update a Budget</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
 </services>
