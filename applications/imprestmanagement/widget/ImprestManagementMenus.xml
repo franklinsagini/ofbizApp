@@ -112,64 +112,52 @@
 
  <!--
         Petty Cash Tab bar Menu
-    -->
+-->
     <menu name="PettyCashTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
 
-        <menu-item name="find" title="${uiLabelMap.CommonFind}">
-            <link target="findSurrenderable"/>
+        <menu-item name="ListPettyCash" title="Find">
+            <link target="ListPettyCash"/>
         </menu-item>
 
-        <menu-item name="SurrenderOverview" title="${uiLabelMap.ImprestOverview}">
-            <link target="SurrenderOverview">
-                <parameter param-name="surrenderableId" />
+        <menu-item name="PettyCashOverview" title="Petty Cash Overview">
+            <link target="PettyCashOverview">
+                <parameter param-name="pettyCashMap.customTimePeriodId"/>
             </link>
         </menu-item>
 
-        <menu-item name="EditSurrenderable" title="${uiLabelMap.ImprestHeader}">
+        <menu-item name="EditBudget" title="Petty Cash Header">
             <condition>
                 <and>
-                    <not><if-empty field="surrenderableId"/></not>
+                    <not><if-empty field="pettyCashMap.customTimePeriodId"/></not>
+                </and>
+            </condition>
+            <link target="EditBudget">
+                <parameter param-name="pettyCashMap.customTimePeriodId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ReplenishPettyCash" title="Replenish">
+            <condition>
+                <and>
+                    <not><if-empty field="pettyCashMap.customTimePeriodId"/></not>
+                    <if-compare field="pettyCashMap.statusName" operator="equals" value="FINAL"/>
+                </and>
+            </condition>
+            <link target="ReplenishPettyCash">
+                <parameter param-name="pettyCashMap.customTimePeriodId"/>
+            </link>
+        </menu-item>
+        <menu-item name="RequisitionPettyCash" title="Requisition">
+            <condition>
+                <and>
+                    <not><if-empty field="customTimePeriodId"/></not>
                     <or>
                         <if-compare field="statusId" operator="equals" value="BG_CREATED"/>
                         <if-compare field="statusId" operator="equals" value="BG_REVIEWED"/>
                     </or>
                 </and>
             </condition>
-            <link target="EditSurrenderable">
-                <parameter param-name="surrenderableId"/>
-            </link>
-        </menu-item>
-
-        <menu-item name="surrenderlines" title="${uiLabelMap.ImprestLines}">
-            <link target="surrenderlines">
-                <parameter param-name="surrenderableId" from-field="supplierContext.surrenderableId"/>
-            </link>
-        </menu-item>
-
-        <menu-item name="SurrenderItem" title="Surrender Items">
-            <condition>
-                <and>
-                    <not><if-empty field="surrenderableId"/></not>
-                    <or>
-                        <if-compare field="statusId" operator="equals" value="BG_CREATED"/>
-                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED"/>
-                    </or>
-                </and>
-            </condition>
-            <link target="EditSurrenderItem">
-                <parameter param-name="surrenderableId"/>
-            </link>
-        </menu-item>
-
-        <menu-item name="SurrenderReviews" title="Reviews">
-            <condition>
-                <and>
-                    <not><if-empty field="surrenderableId"/></not>
-                    <if-compare field="statusId" operator="not-equals" value="BG_REJECTED"/>
-                </and>
-            </condition>
-            <link target="BudgetReviews">
-                <parameter param-name="surrenderableId"/>
+            <link target="RequisitionPettyCash">
+                <parameter param-name="customTimePeriodId"/>
             </link>
         </menu-item>
 
@@ -179,8 +167,58 @@
         Petty Cash Sub Tab bar Menu
     -->
     <menu name="PettyCashSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
-        <menu-item name="createNew" title="Create New" widget-style="buttontext create">
-            <link target="newSurrenderable"/>
+
+    </menu>
+
+
+    <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditBudget">
+
+    </menu>
+
+    <menu name="BudgetSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="statusToApproved" title="${uiLabelMap.AccountingBudgetStatusToApproved}">
+            <condition>
+                <and>
+                    <not><if-empty field="budgetId"/></not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED"/>
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="updateBudgetStatus">
+                <parameter param-name="budgetId" from-field="budgetId"/>
+                <parameter param-name="statusId" value="BG_APPROVED"/>
+            </link>
+        </menu-item>
+        <menu-item name="statusToReview" title="${uiLabelMap.AccountingBudgetStatusToReviewed}">
+            <condition>
+                <and>
+                    <not><if-empty field="budgetId"/></not>
+                    <if-compare field="statusId" operator="equals" value="BG_CREATED"/>
+                </and>
+            </condition>
+            <link target="updateBudgetStatus">
+                <parameter param-name="budgetId" from-field="budgetId"/>
+                <parameter param-name="statusId" value="BG_REVIEWED"/>
+            </link>
+        </menu-item>
+        <menu-item name="statusToReject" title="${uiLabelMap.AccountingBudgetStatusToRejected}">
+            <condition>
+                <and>
+                    <not><if-empty field="budgetId"/></not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED"/>
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED"/>
+                        <if-compare field="statusId" operator="equals" value="BG_APPROVED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="updateBudgetStatus">
+                <parameter param-name="budgetId" from-field="budgetId"/>
+                <parameter param-name="statusId" value="BG_REJECTED"/>
+            </link>
         </menu-item>
     </menu>
 
