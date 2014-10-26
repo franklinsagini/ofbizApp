@@ -135,15 +135,14 @@
 				<set field="headerItem" value="reviewmembers" />
 				<set field="tabButtonItem" value="findparty" />
 				<set field="memberCtx" from-field="parameters" />
-				<set field="statusName" value="NEW"/>
-				<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+				<!--  set field="statusName" value="NEW"/>
+				< set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
 				
-				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
 				<entity-condition list="reviewMembersList"
 					entity-name="Member">
 					<condition-expr field-name="memberStatusId" operator="equals"
 						value="${memberStatusId}" />
-				</entity-condition>
+				</entity-condition -->
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -175,24 +174,22 @@
 										location="component://party/widget/partymgr/PartyForms.xml" />
 								</screenlet>
 
-								<screenlet name="Print Report">
+								<!-- screenlet name="Print Report">
 									<container style="button-bar">
 
 										<link target="memberslistpdf.pdf" text="Print Members PDF"
 											style="buttontext">
-											<!-- parameter param-name="loanApplicationId"/ -->
 											<image url-mode="raw"
 												src="${iconsLocation}/page_white_acrobat.png" />
 										</link>
 
 										<link target="memberslistcsv.csv" text="Members CSV"
 											style="buttontext">
-											<!-- parameter param-name="loanApplicationId"/ -->
-											<!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+											
 											<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
 										</link>
 									</container>
-								</screenlet>
+								</screenlet -->
 
 								<screenlet title="Members List">
 									<include-form
@@ -2858,8 +2855,8 @@
 				<set field="memberCtx" from-field="parameters" />
 
 				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
-				<set field="statusName" value="ACTIVE" />
-				<set field="memberStatusId"  value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}" global="true" type="Long"/> 
+				<!-- set field="statusName" value="ACTIVE" />
+				<set field="memberStatusId"  value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}" global="true" type="Long"/ --> 
 				
 			</actions>
 			<widgets>

@@ -2579,7 +2579,6 @@ public class ModelFormField {
 
 			Delegator delegator = WidgetWorker.getDelegator(context);
 			String fieldValue = modelFormField.getEntry(context);
-			
 			try {
 				TransactionUtil.begin();
 			} catch (GenericTransactionException e1) {
@@ -2610,6 +2609,7 @@ public class ModelFormField {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+		
 			
 			try {
 				TransactionUtil.begin();
@@ -2617,8 +2617,8 @@ public class ModelFormField {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
-			if (value == null) {
+			String regex = "[0-9]+";
+			if ((value == null) &&  (fieldValue.matches(regex))) {
 				System.out.println("DDDDDDDDDDD Did not get value DDDDDDDDDD ");
 				try {
 					fieldValue = fieldValue.replaceAll(",", "");
@@ -2637,7 +2637,8 @@ public class ModelFormField {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+		
+			
 			// if (value == null) {
 			//
 			// try {

@@ -560,8 +560,12 @@
     	<make-value entity-name="ChangeMemberBranch" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-		<set field="entityName" value="ChangeMemberBranch"></set>
-		<set field="newEntity.changeMemberBranchId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		<!-- set field="entityName" value="ChangeMemberBranch"></set>
+		<set field="newEntity.changeMemberBranchId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		<sequenced-id sequence-name="ChangeMemberBranch" field="newEntity.changeMemberBranchId" />
+        
+        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" /-->
+        <!-- set from-field="memberTypeId" field="newEntity.memberTypeId" / -->
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>

@@ -37,7 +37,10 @@ under the License.
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/>
+        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
+        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
+        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/ -->
+        <set field="newEntity.branchId" value="Company"/>
         <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <set field="newEntity.transactionType" value="CASHWITHDRAWAL"/>
         <set field="transactionType" value="CASHWITHDRAWAL"/>
@@ -179,7 +182,9 @@ under the License.
          <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/>
+        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
+        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
+        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}"/>
         <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <set field="newEntity.transactionType" value="CASHDEPOSIT"/>
          <set field="newEntity.increaseDecrease" value="I"/>
@@ -190,7 +195,7 @@ under the License.
         <set field="cashPosting" value="D"/>
         
          <!-- Post Cash Deposit -->
-        <!-- call-simple-method method-name="createMemberTransaction"></call-simple-method -->
+        <call-simple-method method-name="createMemberTransaction" scope="inline"></call-simple-method>
         
         
     </simple-method>
@@ -231,7 +236,10 @@ under the License.
          <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/>
+        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
+        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
+        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/>
+        
         <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <set field="newEntity.transactionType" value="CHEQUEWITHDRAWAL"/>
         <set field="newEntity.increaseDecrease" value="D"/>
@@ -307,7 +315,10 @@ under the License.
          <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/>
+        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
+        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
+       <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/>
+       
         <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <set field="newEntity.transactionType" value="CHEQUEDEPOSIT"/>
          <set field="newEntity.increaseDecrease" value="I"/>
@@ -382,7 +393,10 @@ under the License.
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/>
+        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
+        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
+        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/>
+        
         <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <set field="newEntity.transactionType" from-field="LOANREPAYMENT"/>
         
@@ -522,7 +536,10 @@ under the License.
          <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/>
+        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
+        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
+        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/>
+        
         <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
@@ -659,7 +676,10 @@ under the License.
         <set field="transactionParent.isActive" value="Y"/>
         <set field="transactionParent.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/>
+        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
+        <!-- set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
+        <set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/>
+        
         
         <set field="transactionParent.approved" value="NO"/>
         <set field="transactionParent.rejected" value="NO"/>
