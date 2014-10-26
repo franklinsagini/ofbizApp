@@ -363,17 +363,30 @@ public class PayrollProcess {
 		 * "TOTDEDUCTIONS"
 		 * */
 		// EXCESSPENSIONBENEFIT
+		
+		bdEXCESSPENSIONBENEFIT = bdEXCESSPENSIONBENEFIT.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "EXCESSPENSIONBENEFIT", bdEXCESSPENSIONBENEFIT, staffPayrollId));
+		bdINSURANCERELIEF = bdINSURANCERELIEF.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "INSURANCERELIEF", bdINSURANCERELIEF, staffPayrollId));
+		bdLOWINTERESTBENEFIT = bdLOWINTERESTBENEFIT.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "LOWINTERESTBENEFIT", bdLOWINTERESTBENEFIT, staffPayrollId));
+		bdMPR = bdMPR.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "MPR", bdMPR, staffPayrollId));
+		bdNETPAY = bdNETPAY.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "NETPAY", bdNETPAY, staffPayrollId));
+		bdNHIF = bdNHIF.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "NHIF", bdNHIF, staffPayrollId));
+		bdPAYE = bdPAYE.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "PAYE", bdPAYE, staffPayrollId));
+		bdTAXABLEINCOME = bdTAXABLEINCOME.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "TAXABLEINCOME", bdTAXABLEINCOME, staffPayrollId));
+		bdTOTDEDUCTIONS = bdTOTDEDUCTIONS.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "TOTDEDUCTIONS", bdTOTDEDUCTIONS, staffPayrollId));
+		bdNSSFStatutory = bdNSSFStatutory.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "NSSF", bdNSSFStatutory, staffPayrollId));
+		bdNSSFVoluntary = bdNSSFVoluntary.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "NSSFVOL", bdNSSFVoluntary, staffPayrollId));
+		bdPensionAmt = bdPensionAmt.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "PENSION", bdPensionAmt, staffPayrollId));
 
 		try {
@@ -404,7 +417,7 @@ public class PayrollProcess {
 		return staffPayrollElement;
 	}
 
-	private static BigDecimal calculateInterestAmounts(GenericValue employee,
+	private static void calculateInterestAmounts(GenericValue employee,
 			String staffPayrollId, Delegator delegator) {
 
 		List<GenericValue> payrollElementsWithInterestELI = null;
@@ -438,8 +451,6 @@ public class PayrollProcess {
 						staffPayrollId);
 			}
 		}
-
-		return null;
 	}
 
 	private static BigDecimal getTotalRelief(GenericValue employee,String staffPayrollId,
@@ -449,7 +460,7 @@ public class PayrollProcess {
 		BigDecimal bdInsuranceRelief = BigDecimal.ZERO;
 		BigDecimal bdMPRAmount = BigDecimal.ZERO;
 
-		bdInsuranceRelief = getInsuranceRelief(employee, staffPayrollId, delegator);
+		bdInsuranceRelief = getInsuranceRelief(employee, staffPayrollId, delegator).setScale(6, RoundingMode.HALF_UP);
 		bdINSURANCERELIEF = bdInsuranceRelief;
 		bdMPRAmount = getMPR(employee, delegator);
 		bdMPR = bdMPRAmount;
@@ -1261,7 +1272,7 @@ public class PayrollProcess {
 		return contribution;
 	}
 
-	private static BigDecimal getLoanElementAmount(GenericValue payrollElement, String staffPayrollId,
+/*	private static BigDecimal getLoanElementAmount(GenericValue payrollElement, String staffPayrollId,
 			Delegator delegator) {
 		// Do the real getting
 		BigDecimal bdAmount = BigDecimal.ZERO;
@@ -1285,7 +1296,7 @@ public class PayrollProcess {
 			}
 		}
 		return bdAmount;
-	}
+	}*/
 
 	/***
 	 * @author charles Get the fixed Interest

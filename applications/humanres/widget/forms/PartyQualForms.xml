@@ -167,7 +167,7 @@ under the License.
 
 
         <field name="partyQualTypeId"><hidden/></field>
-        <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Course Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
                 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
@@ -196,6 +196,127 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     <form name="NewPartyCourseSpecialization" type="single" target="createPartyCourseSpecialization"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="PartyCourseSpecializationContext">
+
+
+        <field name="specializationId"><hidden/></field>
+        <field name="specialization" title="Course Specialization" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPartyCourseSpecialization" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartyCourseSpecialization" paginate-target="courseSpecialization"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyCourseSpecialization">
+            </entity-condition>
+        </actions>
+        
+        <auto-fields-service default-field-type="hidden" service-name="updatePartyQualType"/>
+        <field name="specializationId"> <hidden/> </field>
+        <field name="specialization"> <text></text> </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePartyCourseSpecialization" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="specializationId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+     <form name="NewPartyQualInstitute" type="single" target="createPartyQualInstitution"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="PartyQualInstituteContext">
+
+
+        <field name="instituteId"><hidden/></field>
+        <field name="institute" title="Institution Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPartyQualInstitutes" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartyQualInstitution" paginate-target="institute"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyQualInstitute">
+            </entity-condition>
+        </actions>
+        
+        <auto-fields-service default-field-type="hidden" service-name="updatePartyQualType"/>
+        <field name="instituteId"> <hidden/> </field>
+        <field name="institute"> <text></text> </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePartyQualInstitution" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="instituteId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+      <form name="NewPartyCourseGrade" type="single" target="createPartyCourseGrade"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="PartyCourseGradeContext">
+
+
+        <field name="gradeId"><hidden/></field>
+        <field name="grade" title="Grade Name/Symbol" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+                
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listPartyCourseGrades" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartyCourseGrade" paginate-target="courseGrades"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyCourseGrade">
+            </entity-condition>
+        </actions>
+        
+        <auto-fields-service default-field-type="hidden" service-name="updatePartyCourseGrade"/>
+        <field name="gradeId"> <hidden/> </field>
+        <field name="grade"> <text></text> </field>
+        
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePartyCourseGrade" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="gradeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     <form name="NewPartyQualGroup" type="single" target="createPartyQualGroup"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="partyQualGroupContext">

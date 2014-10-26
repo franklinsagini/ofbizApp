@@ -31,6 +31,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="setup"/>
     </request-map>
+    <request-map uri="pettysetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="pettysetup"/>
+    </request-map>
     <request-map uri="perdiemsetup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="perdiemsetup"/>
@@ -83,6 +87,20 @@
         <response name="error" type="view" value="perdiemsetup" />
     </request-map>
 
+    <request-map uri="createPettySetup">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createPettySetup" />
+        <response name="success" type="request-redirect-noparam" value="pettysetup" />
+        <response name="error" type="view" value="pettysetup" />
+    </request-map>
+
+    <request-map uri="UpdatePettySetup">
+        <security https="true" auth="true" />
+        <event type="service" invoke="UpdatePettySetup" />
+        <response name="success" type="view" value="pettysetup"></response>
+        <response name="error" type="view" value="pettysetup" />
+    </request-map>
+
     <!-- Imprest Surrenderable -->
     <request-map uri="surrenderable">
         <security https="true" auth="true"/>
@@ -92,24 +110,16 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findSurrenderable"/>
     </request-map>
-    <request-map uri="newSurrenderable">
+     <request-map uri="EditSurrenderable">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="newSurrenderable"/>
-    </request-map>
-    <request-map uri="surrender">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="surrender"/>
-    </request-map>
-    <request-map uri="editSurrenderable">
-        <security https="true" auth="true" />
-        <response name="success" type="view" value="editSurrenderable" save-current-view="true" />
+        <response name="success" type="view" value="EditSurrenderable"/>
     </request-map>
     <!-- Surrenderable CRUD Operations -->
-    <request-map uri="createSurrenderable">
+    <request-map uri="createSurrendable">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createSurrenderable"/>
-        <response name="success" type="view" value="editSurrenderable"/>
-        <response name="error" type="view" value="newSurrenderable"/>
+        <event type="service" invoke="createSurrendable"/>
+        <response name="success" type="view" value="EditSurrenderable"/>
+        <response name="error" type="view" value="EditSurrenderable"/>
     </request-map>
 
     <!-- Imprest Per Diem -->
@@ -118,28 +128,69 @@
         <response name="success" type="view" value="perdiem"/>
     </request-map>
 
-    <!-- Imprest Petty Cash -->
+    <!-- PETTY CASH REQUEST-MAPS -->
     <request-map uri="pettycash">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="pettycash"/>
     </request-map>
 
+    <request-map uri="ListPettyCash">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListPettyCash"/>
+    </request-map>
 
-     <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
-     <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="EditPettyCash">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPettyCash"/>
+    </request-map>
+
+    <!-- CRUD PETTY CASH -->
+    <request-map uri="createPettyCash">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPettyCash"/>
+        <response name="success" type="view" value="EditPettyCash"/>
+        <response name="error" type="view" value="EditPettyCash"/>
+    </request-map>
+    <request-map uri="updatePettyCash">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePettyCash"/>
+        <response name="success" type="view" value="EditPettyCash"/>
+        <response name="error" type="view" value="EditPettyCash"/>
+    </request-map>
+    <request-map uri="finalizePettyCash">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="finalizePettyCash"/>
+        <response name="success" type="view" value="EditPettyCash"/>
+        <response name="error" type="view" value="EditPettyCash"/>
+    </request-map>
+
+    <!-- LOOKUP REQUEST-MAPS -->
+    <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
+    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupCustomTimePeriod"><security auth="true" https="true"/><response name="success" type="view" value="LookupCustomTimePeriod"/></request-map>
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#main"/>
     <view-map name="setup" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#setup"/>
+    <view-map name="pettysetup" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#pettysetup"/>
     <view-map name="perdiemsetup" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#perdiemsetup"/>
     <view-map name="destinationssetup" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#destinationssetup"/>
     <view-map name="surrenderable" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#surrenderable"/>
     <view-map name="findSurrenderable" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#findSurrenderable"/>
     <view-map name="newSurrenderable" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#newSurrenderable"/>
-    <view-map name="surrender" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#surrender"/>
-    <view-map name="editSurrenderable" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#editSurrenderable"/>
+    <view-map name="EditSurrenderable" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#EditSurrenderable"/>
+    <view-map name="EditSurrendableScreen" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#EditSurrendableScreen"/>
     <view-map name="perdiem" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#perdiem"/>
+
+    <!-- PETTY CASH VIEW-MAPS -->
     <view-map name="pettycash" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#pettycash"/>
+    <view-map name="ListPettyCash" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#ListPettyCash"/>
+    <view-map name="EditPettyCash" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#EditPettyCash"/>
+
+    <!-- LOOKUP VIEW-MAPS -->
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
+    <view-map name="LookupCustomTimePeriod" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupCustomTimePeriod"/>
 </site-conf>

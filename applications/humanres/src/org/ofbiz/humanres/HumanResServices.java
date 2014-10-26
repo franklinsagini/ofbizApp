@@ -16,10 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
-import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
@@ -381,6 +378,144 @@ public static String getLeaveBalance(HttpServletRequest request,
 
 		return json;
 	}
+	
+	public static LocalDate calculateConfirmationDate(Date appointmentdate) {
+		LocalDate confirmationdate = null;
+		LocalDate localDateStartDate = new LocalDate(appointmentdate);
+		
+
+			localDateStartDate = localDateStartDate.plusMonths(6);
+		
+		return confirmationdate;
+	}
+	
+	public static String  getConfirmationDate(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Date appointmentdate = null;
+		
+		try {
+			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		LocalDate dateAppointmentDate = new LocalDate(appointmentdate);
+
+		LocalDate confirmDate = dateAppointmentDate.plusMonths(6);
+		
+	
+		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String i18confirmationdate = sdfDisplayDate.format(confirmDate.toDate());
+	    String confirmationdate = sdfDate.format(confirmDate.toDate());
+	    
+	    result.put("confirmationdate_i18n", i18confirmationdate);
+	    result.put("confirmationdate", confirmationdate);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
+	
+	
+	public static String  getRetirementDate(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Date birthDate = null;
+		
+		try {
+			birthDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthDate")));
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		LocalDate datebirthDate = new LocalDate(birthDate);
+
+		LocalDate bodDate = datebirthDate.plusYears(55);
+		
+	
+		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String i18retirementdate = sdfDisplayDate.format(bodDate.toDate());
+	    String retirementdate = sdfDate.format(bodDate.toDate());
+	    
+	    result.put("retirementdate_i18n", i18retirementdate);
+	    result.put("retirementdate", retirementdate);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
+	
+	
+
 	
 }
 
