@@ -213,21 +213,21 @@
     <form name="AddEmployeeQualification" type="single" target="createEmployeeQualification">
         <!--auto-fields-service service-name="createPartyQual"/-->
         <field name="partyId"><hidden/></field>
-        <field name="partyQualTypeId" title="Select Course" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+        <field name="partyQualTypeId" title="Select Qualification" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-          <field name="title" title="Select Specialization" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+          <field name="title" title="Select Course Title" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${specialization}" key-field-name="specialization" entity-name="PartyCourseSpecialization">
                     <entity-order-by field-name="specializationId"/>
                 </entity-options>
             </drop-down>
         </field>
-          <field name="institute" title="Select An Institution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+       <!--    <field name="institute" title="Select An Institution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${institute}" key-field-name="institute" entity-name="PartyQualInstitute">
                     <entity-order-by field-name="instituteId"/>
@@ -241,9 +241,10 @@
                     <entity-order-by field-name="gradeId"/>
                 </entity-options>
             </drop-down>
-        </field>
-        
-        
+        </field> -->
+         <field name="specialization" title="Specialization" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+         <field name="institute" title="Institution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+          <field name="grade" title="Grade" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="institutelocation" title="Institute Location" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="fromDate"><date-time type="date"/></field>
         <field name="thruDate"><date-time type="date"/></field>
@@ -277,10 +278,11 @@
         </actions>
         <!--auto-fields-service service-name="updatePartyQual"/-->
         <field name="partyId"><hidden/></field>
-        <field name="partyQualTypeId" title="Course"><display-entity entity-name="PartyQualType" description="${description}"/></field>
+        <field name="partyQualTypeId" title="Qualification"><display-entity entity-name="PartyQualType" description="${description}"/></field>
         
        
-        <field name="title" title="Specialization"><text/></field>
+        <field name="title" title="Course Title"><text/></field>
+         <field name="specialization" title="Specialization"><text/></field>
         <field name="institute" title="Institution"><text/></field>
          <field name="grade"><text/></field>
         <field name="fromDate"><date-time type="date"/></field>
