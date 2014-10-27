@@ -53,9 +53,10 @@
         header-row-style="header-row" default-table-style="basic-table" default-map-name="payGrade">
         <alt-target use-when="payGradeId==null" target="createPayGrade"/>
          <alt-target use-when="payGrade!=null" target="updatePayGrade"/>
-        <auto-fields-service service-name="updatePayGrade"/>
+        <!-- <auto-fields-service service-name="updatePayGrade"/> -->
         <field use-when="payGrade!=null" name="payGradeId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="payGrade==null" name="payGradeId"><text/></field>
+        <!-- <field use-when="payGrade==null" name="payGradeId"><text/></field> -->
+         <field name="payGradeId"><hidden/></field>
         <field name="payGradeName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="payGrade==null" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="payGrade!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -66,9 +67,12 @@
             <entity-one entity-name="SalaryStep" auto-field-map="true"/>
             <entity-condition entity-name="SalaryStep"> <condition-expr field-name="payGradeId" operator="equals" from-field="payGradeId"/><order-by field-name="salaryStepSeqId"/></entity-condition>
         </actions>
-        <auto-fields-service service-name="updateSalaryStep"/>
-        <field name="salaryStepSeqId" title="${uiLabelMap.HumanResSalaryStepSeqId}"><display also-hidden="true"/></field>
+        <!-- <auto-fields-service service-name="updateSalaryStep"/> -->
+        <field name="salaryStepSeqId"><hidden/></field>
         <field name="payGradeId"><hidden/></field>
+        <field name="minAmount"><display/></field>
+        <field name="maxAmount"><display/></field>
+        <field name="dateModified"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
@@ -80,9 +84,11 @@
     </form>
     <form name="AddSalaryStep" type="single" target="createSalaryStep"
         header-row-style="header-row" default-table-style="basic-table">
-        <auto-fields-service service-name="createSalaryStep"/>
         <field name="salaryStepSeqId"><ignored/></field>
-        <field name="payGradeId"><hidden/></field>
+        <field name="minAmount" title="Lower Salary Bracket"><text/></field>
+        <field name="maxAmount" title="Upper Salary Bracket"><text/></field>
+        <field name="dateModified"><date-time type="date"/></field>
+         <field name="payGradeId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
