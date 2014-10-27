@@ -292,6 +292,7 @@
 					from-field="userLogin.partyId" />
 			</entity-condition>
 		</actions>
+		<field name="leaveId"><hidden/></field>
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="PartyNameView"
 				description="${firstName} ${lastName}">
@@ -337,15 +338,7 @@
 				key-field-name="partyId">
 			</display-entity>
 		</field>
-		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
-			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
-				target="EditEmplLeave">
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveTypeId" />
-				<parameter param-name="fromDate" />
-			</hyperlink>
-		</field>
+		
 		<field name="forwardLeave" title="${uiLabelMap.forward}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.forward}"
@@ -356,6 +349,17 @@
 				<parameter param-name="fromDate" />
 			</hyperlink>
 		</field>
+		
+		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
+			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
+				target="updateEmplLeave"><!-- 
+				<parameter param-name="partyId" />
+				<parameter param-name="leaveTypeId" />
+				<parameter param-name="fromDate" /> -->
+				<parameter param-name="leaveId" />
+			</hyperlink>
+		</field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
@@ -363,6 +367,7 @@
 				<parameter param-name="partyId" />
 				<parameter param-name="leaveTypeId" />
 				<parameter param-name="fromDate" />
+				<parameter param-name="leaveId" />
 			</hyperlink>
 		</field>
 		<field name="description">
@@ -373,8 +378,10 @@
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
 		
-		<alt-target use-when="leaveApp==null" target="createEmplLeaveExt" />
+		<alt-target use-when="leaveApp==null" target="createEmplLeaveExt" /> 
+		<!-- <alt-target use-when="leaveApp!=null" target="updateEmplLeave" /> -->
 		<field name="leaveId"><hidden/></field>
+		<field name="leaveId" use-when="leaveApp!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
 		<field name="createdDate"><hidden/></field>
 		<field name="partyId" title="Member">
 			<hidden value="${userLogin.partyId}" />
@@ -424,6 +431,10 @@
 		</field>
 		<field name="leaveBalance" title="Leave Balance">
 			<text default-value="${leaveBalance}" disabled="true"></text>
+		</field>
+		<field name="submitButton" title="${uiLabelMap.CommonCreate}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
 		</field>
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}"
 			widget-style="smallSubmit">

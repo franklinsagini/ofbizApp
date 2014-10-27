@@ -70,6 +70,22 @@
             <store-value value-field="lookedUpValue"/>
     </simple-method>
 
+    <simple-method method-name="createPettySetup" short-description="Create ImprestPettySetup">
+            <make-value entity-name="ImprestPettySetup" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="ImprestPettySetup" field="pettySetupId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="pettySetupId" field="newEntity.pettySetupId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="UpdatePettySetup" short-description="Update ImprestPettySetup">
+            <entity-one entity-name="ImprestPettySetup" value-field="lookedUpValue"/>
+            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+            <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
     <simple-method method-name="createSurrenderable" short-description="Create ImprestSurrenderable">
             <make-value entity-name="ImprestSurrenderable" value-field="newEntity"/>
              <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -149,6 +165,70 @@
         </if-not-empty>
     </simple-method>
 
+    <!-- create a new Petty Cash header record -->
+    <simple-method method-name="createPettyCash" short-description="Create an ImprestPettyCash">
+          <!-- create new entity and create all the fields -->
 
+        <make-value value-field="newEntity" entity-name="ImprestPettyCash"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set from-field="userLogin.partyId" field="newEntity.createdBy"/>
+        <set field="newEntity.initialBalance" value="0.00" type="BigDecimal"/>
+        <set field="newEntity.currentBalance" value="0.00" type="BigDecimal"/>
+        <set field="newEntity.reservedAmount" value="0.00" type="BigDecimal"/>
+        <set field="newEntity.statusName" value="DRAFT"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <!-- update an existing ImprestPettyCash header Record -->
+    <simple-method method-name="updatePettyCash" short-description="Update an existing ImprestPettyCash">
+        <entity-one entity-name="ImprestPettyCash" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+
+        <field-to-result field="parameters.customTimePeriodId" result-name="customTimePeriodId"/>
+    </simple-method>
+
+    <!-- update an existing ImprestPettyCash header Record -->
+    <simple-method method-name="finalizePettyCash" short-description="Update an existing ImprestPettyCash">
+        <entity-one entity-name="ImprestPettyCash" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+         <set field="lookedUpValue.statusName" value="FINAL"/>
+        <store-value value-field="lookedUpValue"/>
+
+        <field-to-result field="parameters.customTimePeriodId" result-name="customTimePeriodId"/>
+    </simple-method>
+
+    <!-- update ImprestPettyCash Status -->
+    <simple-method method-name="updatePettyCashStatus" short-description="Update ImprestPettyCash Status">
+        <now-timestamp field="nowDate"/>
+        <entity-and list="budgetStatuses" entity-name="ImprestPettyCash">
+            <field-map field-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+            <order-by field-name="-statusDate"/>
+        </entity-and>
+        <if-not-empty field="budgetStatuses">
+            <first-from-list entry="budgetStatus" list="budgetStatuses"/>
+            <entity-one value-field="statusValidChange" entity-name="StatusValidChange">
+                <field-map field-name="statusId" from-field="budgetStatus.statusId"/>
+                <field-map field-name="statusIdTo" from-field="parameters.statusId"/>
+            </entity-one>
+            <if-not-empty field="statusValidChange">
+                <make-value value-field="newEntity" entity-name="ImprestPettyCash"/>
+                <set-pk-fields value-field="newEntity" map="parameters"/>
+                <set-nonpk-fields map="parameters" value-field="newEntity"/>
+                <set field="newEntity.statusDate" from-field="nowDate"/>
+                <create-value value-field="newEntity"/>
+            </if-not-empty>
+            <else>
+                <make-value value-field="newEntity" entity-name="BudgetStatus"/>
+                <set-pk-fields value-field="newEntity" map="parameters"/>
+                <set-nonpk-fields map="parameters" value-field="newEntity"/>
+                <set field="newEntity.statusDate" from-field="nowDate"/>
+                <create-value value-field="newEntity"/>
+            </else>
+        </if-not-empty>
+    </simple-method>
 
 </simple-methods>

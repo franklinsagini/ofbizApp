@@ -182,7 +182,7 @@
             </drop-down>
         </field>
         <field name="yearsExperience"><text/></field>
-        <field name="rating"><text/></field>
+        <!-- <field name="rating"><text/></field> -->
         <field name="skillLevel"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -199,7 +199,7 @@
             <display-entity entity-name="SkillType" description="${description}"/>
         </field>
         <field name="yearsExperience"><text/></field>
-        <field name="rating"><text/></field>
+        <!-- <field name="rating"><text/></field> -->
         <field name="skillLevel"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmployeeSkill" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -277,14 +277,14 @@
         </actions>
         <!--auto-fields-service service-name="updatePartyQual"/-->
         <field name="partyId"><hidden/></field>
-        <field name="partyQualTypeId" title="Qualification Type"><display-entity entity-name="PartyQualType" description="${description}"/></field>
+        <field name="partyQualTypeId" title="Course"><display-entity entity-name="PartyQualType" description="${description}"/></field>
         
        
-        <field name="title"><text/></field>
-        <field name="institute"><text/></field>
+        <field name="title" title="Specialization"><text/></field>
+        <field name="institute" title="Institution"><text/></field>
          <field name="grade"><text/></field>
         <field name="fromDate"><date-time type="date"/></field>
-        <field name="thruDate"><date-time type="date"/></field>
+        <field name="thruDate" title="To Date"><date-time type="date"/></field>
        
        
         <!--field name="statusId">
@@ -444,7 +444,7 @@
     </form>
     
     
-    <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">
+   <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">
         <field name="company" entry-name="employment.partyIdFrom">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
                 <sub-hyperlink target="/partymgr/control/viewprofile" description="[${employmentData.employment.partyIdFrom}]" target-type="inter-app">
@@ -460,7 +460,7 @@
         <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
             <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
         </field>
-    </form>
+    </form> 
     <form name="PayrollHistoryList" type="list" list-name="payroll" extends="ListInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml" paginate-target="PayrollHistory">
         <field name="invoiceId" widget-style="buttontext" sort-field="true">
             <hyperlink description="${invoiceId}" target="/accounting/control/invoiceOverview" target-type="inter-app">
@@ -922,7 +922,7 @@
     
                               <!-- For employee profile -->
                               
-    <form name="Listemployeenextkin" type="list"  list-name="fileDocuments" default-entity-name="RegistryDocuments" use-row-submit="true"
+    <form name="Listemployeenextkin" type="list"  list-name="fileDocuments" default-entity-name="StaffNextOfKin" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  target="" title="File Documents" separate-columns="false">
         <actions>
             <entity-condition entity-name="StaffNextOfKin">
@@ -932,16 +932,17 @@
         </actions>
         
         
-        <field name="staffnokId"><display/></field>
-      <field name="familyRelationsId" title="Family Relation"><display-entity entity-name="FamilyRelations" description="${relationship}"></display-entity></field>
+      
+     
 	  <field name="fullname"><display/></field>
+	   <field name="familyRelationsId" title="Family Relation"><display-entity entity-name="FamilyRelations" description="${relationship}"></display-entity></field>
 	  <field name="gender"><display/></field>
 	  <field name="idno"><display/></field>
 	  <field name="phoneNo"><display/></field>
 	  <field name="geoId" title="Country"><display-entity entity-name="Geo" description="${geoName}"></display-entity></field>
     </form>
     
-    <form name="ListemployeeDependants" type="list"  list-name="fileDocuments" default-entity-name="RegistryDocuments" use-row-submit="true"
+    <form name="ListemployeeDependants" type="list"  list-name="fileDocuments" default-entity-name="StaffDependant" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  target="" title="File Documents" separate-columns="false">
         <actions>
             <entity-condition entity-name="StaffDependant">
@@ -949,12 +950,31 @@
                 <order-by field-name="staffdependantId"/>
             </entity-condition>
         </actions>
-        <field name="staffdependantId"><display/></field>
-       <field name="familyRelationsId" title="Family Relation"><display-entity entity-name="FamilyRelations" description="${relationship}"></display-entity></field>
+       
+     
 	  <field name="fullname"><display/></field>
+	    <field name="familyRelationsId" title="Family Relation"><display-entity entity-name="FamilyRelations" description="${relationship}"></display-entity></field>
 	  <field name="gender"><display/></field>
 	  <field name="idno"><display/></field>
 	  <field name="isdeceased"><display/></field>
+    </form>
+    
+     <form name="ListemployeeSpouses" type="list"  list-name="fileDocuments" default-entity-name="StaffSpouse" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  target="" title="File Documents" separate-columns="false">
+        <actions>
+            <entity-condition entity-name="StaffSpouse">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="staffspouseId"/>
+            </entity-condition>
+        </actions>
+      
+     
+	  <field name="fullname"><display/></field>
+	    <field name="familyRelationsId" title="Family Relation"><display-entity entity-name="FamilyRelations" description="${relationship}"></display-entity></field>
+	  <field name="gender"><display/></field>
+	  <field name="idno"><display/></field>
+	  <field name="phoneNo"><display/></field>
+	  <field name="postalAddress"><display/></field>
     </form>
     
      <!-- New Dependant Details -->
@@ -1211,6 +1231,53 @@
          <submit button-type="button"/>
          </field>
     </form>
+    
+    <!-- ========================Employee profile contact information================================ -->
+    
+      <form name="emplContactDetails" type="single" default-map-name="lookupPerson">
+    <actions>
+
+    </actions>
+    
+     <field name="partyId"><hidden/></field>
+		<field position="1" name="mobNo" title="Mobile Phone Number:"><display /></field>
+		<field position="1" name="homeTelNo" title="Home Phone Number:"><display/></field>
+		<field position="1" name="emailAddress" title="Email Address:"><display /></field>
+		<field position="1" name="permanentPostalAddress" title="Physical Address:"><display /></field>
+		<field position="1" name="postalAddress" title="Postal Address:"><display /></field>
+		<field position="1" name="postalCode" title="Postal Code:"><display /></field>
+		<field position="1" name="currentAddress" title="Current Address:"><display /></field>
+		<field position="1" name="town" title="Town/City:" ><display /></field>   
+    </form>
+    
+    
+    <form name="emplIdentificationNumbers" type="single" default-map-name="lookupPerson">
+    <actions>
+
+    </actions>
+    
+     <field name="partyId"><hidden/></field>
+		<field position="1" name="nationalIDNumber" title="National Identity Number:"><display/></field>
+		<field position="1" name="pinNumber" title="Pin Number:"><display /></field>
+		<field position="1" name="socialSecurityNumber" title="N.S.S.F Number:"><display /></field>
+		<field position="1" name="nhifNumber" title="N.H.I.F Number:"><display /></field>
+		<field position="1" name="passportNumber" title="Passport Number:"><display /></field>  
+    </form>
+    
+    
+      <form name="CurrentEmployment" type="single" default-map-name="lookupPerson">
+    <actions>
+
+    </actions>
+    
+     <field name="partyId"><hidden/></field>
+		<field position="1" name="branchId" title="Branch:"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>
+		<field position="1" name="emplPositionTypeId" title="Job Title:"><display-entity entity-name="EmplPositionType" key-field-name="emplPositionTypeId" description="${emplPositionType}"></display-entity></field> 
+    </form>
+    
+    
+    
+    
     
     
     

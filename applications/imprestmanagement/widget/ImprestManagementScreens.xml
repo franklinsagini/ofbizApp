@@ -90,6 +90,48 @@
         </section>
     </screen>
 
+    <screen name="CommonPettyCashDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="ListPettyCash"/>
+                <set field="customTimePeriodId" from-field="pettyCashMap.customTimePeriodId" default-value="${parameters.customTimePeriodId}"/>
+                <entity-one entity-name="ImprestPettyCash" value-field="pettyCashMap"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="customTimePeriodId"/></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="PettyCashTabBar" location="component://imprestmanagement/widget/ImprestManagementMenus.xml"/>
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="pre-body"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="customTimePeriodId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="PettyCashSubTabBar" location="component://imprestmanagement/widget/ImprestManagementMenus.xml"/>
+                                        <label style="h1" text="Imprest Petty Cash : [${customTimePeriodId}]"/>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
 
     <screen name="main">
         <section>
@@ -130,6 +172,40 @@
                             <widgets>
                                 <screenlet title="Imprest Management: Imprests Accounts List">
                                     <include-form name="ImprestAccountList" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="pettysetup">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="pettysetup"/>
+                <entity-one entity-name="ImprestPettySetup" value-field="pettyContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonImprestSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="IMPRESTMANAGEMENT" action="IMPRESTMANAGEMENT_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Imprest Management: Petty Cash Setup">
+                                    <include-form name="EditPettySetup" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ImprestManagementViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Imprest Management: Petty Cash Setup List">
+                                    <include-form name="PettySetupist" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
@@ -298,11 +374,97 @@
     <screen name="pettycash">
         <section>
             <actions>
-                <set field="headerItem" value="pettycash"/><!-- this highlights the selected menu-item with name "pettycash" -->
+                <set field="headerItem" value="ListPettyCash"/><!-- this highlights the selected menu-item with name "ListPettyCash" -->
             </actions>
             <widgets>
                 <decorator-screen name="ImprestManagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ListPettyCash">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Petty Cash"/>
+                <set field="headerItem" value="ListPettyCash"/>
+                <set field="tabButtonItem" value="find"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="EditPettyCash" text="Create New" style="buttontext create"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindPettyCashOptions" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-screen name="PettyCashSearchResults"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+    <screen name="PettyCashSearchResults">
+        <section>
+            <condition>
+                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <include-form name="ListPettyCash" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- create and/or update a petty cash -->
+    <screen name="EditPettyCash">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Petty Cash"/>
+                <set field="tabButtonItem" value="EditPettyCash"/>
+                <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+                <entity-one entity-name="ImprestPettyCash" value-field="pettyCashMap"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPettyCashDecorator" location="component://imprestmanagement/widget/ImprestManagementScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="pettyCashMap"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Imprest Management: Update Petty Cash">
+                                    <include-form name="EditPettyCash" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="Imprest Management: Create New Petty Cash">
+                                    <include-form name="EditPettyCash" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
