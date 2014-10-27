@@ -26,6 +26,9 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +44,7 @@ import javolution.util.FastMap;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVFormat.CSVFormatBuilder;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
@@ -56,6 +60,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -216,6 +221,9 @@ public class PartyServices {
 			return ServiceUtil.returnError(UtilProperties.getMessage(
 					resourceError, "person.create.person_exists", locale));
 		}
+		
+		
+		
 
 		person = delegator.makeValue("Person",
 				UtilMisc.toMap("partyId", partyId));
