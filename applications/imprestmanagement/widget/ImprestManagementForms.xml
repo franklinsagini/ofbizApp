@@ -352,11 +352,42 @@
 
     </form>
 
-    <form name="BudgetHeader" type="single" title="Budget header information" default-map-name="pettyCashMap"
+    <!-- create and update a fixed asset -->
+    <form name="ReplenishPettyCash" type="single" target="replenishPettyCash" title="" default-map-name="replenishMap"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="customTimePeriodId"><display/></field>
-        <field name="customTimePeriodId" position="2"><display/></field>
-        <field position="1" name="comments"><display/></field>
+        <field name="replenishId">
+            <hidden/>
+        </field>
+        <field name="currentBalance">
+            <hidden/>
+        </field>
+        <field use-when="customTimePeriodId != null" name="customTimePeriodId" title="Petty Cash">
+             <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+        </field>
+        <field use-when="customTimePeriodId != null" name="currentBalance" title="Current Balance">
+             <display description="${pettyCash.currentBalance}"/>
+        </field>
+        <field use-when="customTimePeriodId != null" name="reservedAmount" title="Reserved Amount">
+             <display description="${pettyCash.reservedAmount}"/>
+        </field>
+        <field  use-when="replenishMap != null" name="replenishedBy" title="Replenished By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field  use-when="replenishMap == null" name="replenishAmount" title="Replenish Amount">
+            <text size="10"/>
+        </field>
+        <field  use-when="replenishMap != null" name="replenishAmount" title="Replenish Amount">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field name="comments" >
+            <text/>
+        </field>
+        <field name="submitButton" title="Replenish" use-when="replenishMap == null">
+            <submit />
+        </field>
+
+
     </form>
+
 
 </forms>

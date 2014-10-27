@@ -82,6 +82,27 @@
       </relation>
     </entity>
 
+    <entity entity-name="ImprestReplenishPettyCash"
+            package-name="org.ofbiz.imprestmanagement.imprest"
+            title="ReplenishPettyCash Entity">
+      <field name="replenishId" type="id"></field>
+      <field name="customTimePeriodId" type="id"></field>
+      <field name="replenishAmount" type="currency-amount"></field>
+      <field name="comments" type="comment"></field>
+      <field name="replenishDate" type="date-time"></field>
+      <field name="replenishedBy" type="id-ne"></field>
+      <prim-key field="replenishId"/>
+      <prim-key field="customTimePeriodId"/>
+      <relation type="one" fk-name="REPL_PRTY_CASH" title="Replenish" rel-entity-name="Party">
+        <key-map field-name="replenishedBy" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="REPL_PTTY_CASH" title="Petty Cash" rel-entity-name="ImprestPettyCash">
+        <key-map field-name="customTimePeriodId" rel-field-name="customTimePeriodId"/>
+      </relation>
+    </entity>
+
+    <!-- Per Diem Entities -->
+
     <entity entity-name="ImprestPerDiemSetup"
             package-name="org.ofbiz.imprestmanagement.imprest"
             title="Imprest Account Entity">
@@ -150,9 +171,6 @@
       <relation type="one" fk-name="SURREN_STTS_SURENDABLE" rel-entity-name="ImprestSurrenderable">
         <key-map field-name="surrenderableId"/>
       </relation>
-<!--       <relation type="one" fk-name="BUDGET_STTS_STTS" rel-entity-name="StatusItem">
-        <key-map field-name="statusId"/>
-      </relation> -->
     </entity>
 
 

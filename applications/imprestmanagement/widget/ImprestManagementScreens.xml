@@ -470,5 +470,33 @@
             </widgets>
         </section>
     </screen>
+   <!-- create and/or update a petty cash -->
+    <screen name="ReplenishPettyCash">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Petty Cash"/>
+                <set field="tabButtonItem" value="ReplenishPettyCash"/>
+                <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+                <entity-one entity-name="ImprestReplenishPettyCash" value-field="replenishMap"/>
+                <entity-one entity-name="ImprestPettyCash" value-field="pettyCash">
+                    <field-map from-field="parameters.customTimePeriodId" field-name="customTimePeriodId"/>
+                </entity-one>
+                <set field="currentBalance" from-field="pettyCash.currentBalance"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPettyCashDecorator" location="component://imprestmanagement/widget/ImprestManagementScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Imprest Management: Replenish Petty Cash">
+                                    <include-form name="ReplenishPettyCash" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>
