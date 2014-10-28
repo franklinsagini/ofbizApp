@@ -414,11 +414,11 @@ public class LoanRepayments {
 		// loanApplication.getBigDecimal("interestRatePM");
 		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
 				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
-		int repaymentPeriod = loanApplication.getInteger("repaymentPeriod");
+		Long repaymentPeriod = loanApplication.getLong("repaymentPeriod");
 
 		BigDecimal monthlyPayable = AmortizationServices
 				.calculateReducingBalancePaymentAmount(bdLoanAmt,
-						bdInterestRatePM, repaymentPeriod);
+						bdInterestRatePM, repaymentPeriod.intValue());
 
 		BigDecimal bdLoanBalance = calculateLoanBalance(
 				loanApplication.getString("partyId"),
