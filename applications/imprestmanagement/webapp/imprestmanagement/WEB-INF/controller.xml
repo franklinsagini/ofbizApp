@@ -144,6 +144,16 @@
         <response name="success" type="view" value="EditPettyCash"/>
     </request-map>
 
+    <request-map uri="ReplenishPettyCash">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReplenishPettyCash"/>
+    </request-map>
+
+    <request-map uri="PettyCashOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PettyCashOverview"/>
+    </request-map>
+
     <!-- CRUD PETTY CASH -->
     <request-map uri="createPettyCash">
         <security https="true" auth="true"/>
@@ -162,6 +172,12 @@
         <event type="service" invoke="finalizePettyCash"/>
         <response name="success" type="view" value="EditPettyCash"/>
         <response name="error" type="view" value="EditPettyCash"/>
+    </request-map>
+    <request-map uri="replenishPettyCash">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="replenishPettyCash"/>
+        <response name="success" type="view" value="ReplenishPettyCash"/>
+        <response name="error" type="view" value="ReplenishPettyCash"/>
     </request-map>
 
     <!-- LOOKUP REQUEST-MAPS -->
@@ -187,6 +203,8 @@
     <view-map name="pettycash" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#pettycash"/>
     <view-map name="ListPettyCash" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#ListPettyCash"/>
     <view-map name="EditPettyCash" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#EditPettyCash"/>
+    <view-map name="ReplenishPettyCash" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#ReplenishPettyCash"/>
+    <view-map name="PettyCashOverview" type="screen" page="component://imprestmanagement/widget/ImprestManagementScreens.xml#PettyCashOverview"/>
 
     <!-- LOOKUP VIEW-MAPS -->
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
