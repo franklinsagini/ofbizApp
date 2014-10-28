@@ -48,12 +48,6 @@
             <create-value value-field="newEntity"/>
     </simple-method>
 
-    <simple-method method-name="updateSupplier" short-description="Update ImprestDestination">
-            <entity-one entity-name="ImprestDestination" value-field="lookedUpValue"/>
-            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-            <store-value value-field="lookedUpValue"/>
-    </simple-method>
-
     <simple-method method-name="createPerDiemSetup" short-description="Create ImprestPerDiemSetup">
             <make-value entity-name="ImprestPerDiemSetup" value-field="newEntity"/>
              <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -62,12 +56,6 @@
             <now-timestamp field="newEntity.createdDate"/>
             <set from-field="perDiemSetupId" field="newEntity.perDiemSetupId"/>
             <create-value value-field="newEntity"/>
-    </simple-method>
-
-    <simple-method method-name="updateSupplier" short-description="Update ImprestPerDiemSetup">
-            <entity-one entity-name="ImprestPerDiemSetup" value-field="lookedUpValue"/>
-            <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-            <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="createPettySetup" short-description="Create ImprestPettySetup">
@@ -201,34 +189,33 @@
         <field-to-result field="parameters.customTimePeriodId" result-name="customTimePeriodId"/>
     </simple-method>
 
-    <!-- update ImprestPettyCash Status -->
-    <simple-method method-name="updatePettyCashStatus" short-description="Update ImprestPettyCash Status">
-        <now-timestamp field="nowDate"/>
-        <entity-and list="budgetStatuses" entity-name="ImprestPettyCash">
-            <field-map field-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
-            <order-by field-name="-statusDate"/>
-        </entity-and>
-        <if-not-empty field="budgetStatuses">
-            <first-from-list entry="budgetStatus" list="budgetStatuses"/>
-            <entity-one value-field="statusValidChange" entity-name="StatusValidChange">
-                <field-map field-name="statusId" from-field="budgetStatus.statusId"/>
-                <field-map field-name="statusIdTo" from-field="parameters.statusId"/>
-            </entity-one>
-            <if-not-empty field="statusValidChange">
-                <make-value value-field="newEntity" entity-name="ImprestPettyCash"/>
-                <set-pk-fields value-field="newEntity" map="parameters"/>
-                <set-nonpk-fields map="parameters" value-field="newEntity"/>
-                <set field="newEntity.statusDate" from-field="nowDate"/>
-                <create-value value-field="newEntity"/>
-            </if-not-empty>
-            <else>
-                <make-value value-field="newEntity" entity-name="BudgetStatus"/>
-                <set-pk-fields value-field="newEntity" map="parameters"/>
-                <set-nonpk-fields map="parameters" value-field="newEntity"/>
-                <set field="newEntity.statusDate" from-field="nowDate"/>
-                <create-value value-field="newEntity"/>
-            </else>
-        </if-not-empty>
+
+    <!-- create a new Replenish Petty Cash record -->
+    <simple-method method-name="replenishPettyCash" short-description="Create an ImprestReplenishPettyCash">
+          <now-timestamp field="nowDate"/>
+          <!-- create new entity and create all the fields -->
+
+        <make-value value-field="newEntity" entity-name="ImprestReplenishPettyCash"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="ImprestReplenishPettyCash" field="replenishId"/>
+        <set from-field="replenishId" field="newEntity.replenishId"/>
+        <set from-field="userLogin.partyId" field="newEntity.replenishedBy"/>
+        <entity-one entity-name="ImprestPettyCash" value-field="pettyCashMap">
+            <field-map field-name="customTimePeriodId" from-field="newEntity.customTimePeriodId"/>
+        </entity-one>
+        <calculate field="currentBalance">
+            <calcop operator="add">
+               <calcop operator="get" field="pettyCashMap.currentBalance"/>
+               <calcop operator="get" field="newEntity.replenishAmount"/>
+            </calcop>
+        </calculate>
+        <set field="newEntity.replenishDate" from-field="nowDate"/>
+        <create-value value-field="newEntity"/>
+        <!-- Update the petty cash with the new amount -->
+        <set field="pettyCash.customTimePeriodId" from-field="newEntity.customTimePeriodId"/>
+        <set field="pettyCash.currentBalance" from-field="currentBalance"/>
+        <call-service service-name="updatePettyCash" in-map-name="pettyCash"/>
     </simple-method>
 
 </simple-methods>
