@@ -60,7 +60,9 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
+import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -213,6 +215,7 @@ public class PartyServices {
 		try {
 			person = delegator.findOne("Person",
 					UtilMisc.toMap("partyId", partyId), false);
+			
 		} catch (GenericEntityException e) {
 			Debug.logWarning(e.getMessage(), module);
 		}
