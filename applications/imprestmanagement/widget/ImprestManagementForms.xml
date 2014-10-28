@@ -385,9 +385,49 @@
         <field name="submitButton" title="Replenish" use-when="replenishMap == null">
             <submit />
         </field>
-
-
     </form>
 
+    <form name="pettyCashDetails" type="single" default-map-name="pettycash"
+        header-row-style="header-row" default-table-style="basic-table">
+
+        <field name="customTimePeriodId"><hidden/></field>
+        <field use-when="customTimePeriodId != null" name="customTimePeriodId" title="Petty Cash">
+             <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+        </field>
+        <field name="createdBy" title="Created By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field name="initialBalance" title="Initial Balance">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field  name="currentBalance" title="Current Balance">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field name="reservedAmount" title="Reserved Amount">
+            <display type="currency" currency="KES"/>
+        </field>
+    </form>
+
+    <form name="replenishDetails" type="list" list-name="paymentApplications"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ImprestReplenishPettyCash">
+                <condition-expr field-name="customTimePeriodId" from-field="customTimePeriodId"/>
+                <order-by field-name="replenishDate"/>
+            </entity-condition>
+        </actions>
+        <field  name="replenishAmount" title="Replenish Amount">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field name="replenishedBy" title="Replenished By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field name="replenishDate" title="Replenish On">
+            <display also-hidden="false" type="date-time"></display>
+        </field>
+      <field name="comments" type="comment">
+          <display />
+      </field>
+    </form>
 
 </forms>
