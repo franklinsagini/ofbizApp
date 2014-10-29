@@ -305,14 +305,31 @@ public class PayrollProcess {
 				staffPayrollId);
 		log.info("######### Taxable Pay Amount " + bdTaxablePay);
 		bdTAXABLEINCOME = bdTaxablePay;
+		
+		if(bdTaxablePay.compareTo(BigDecimal.ZERO)>0)
+		{
+			bdGrossTax = computeGrossTax(bdTaxablePay, delegator);
+			bdNHIFAmount = computeNHIF(employee, delegator, bdBasicPay);
+			bdNHIF = bdNHIFAmount;
+			bdTotRelief = getTotalRelief(employee, staffPayrollId, delegator);
 
-		bdGrossTax = computeGrossTax(bdTaxablePay, delegator);
-		bdNHIFAmount = computeNHIF(employee, delegator, bdBasicPay);
-		bdNHIF = bdNHIFAmount;
-		bdTotRelief = getTotalRelief(employee, staffPayrollId, delegator);
+			bdPAYEAmount = bdGrossTax.subtract(bdTotRelief);
+			bdPAYE = bdPAYEAmount;			
+			
+		}
+		else
+		{
+			bdGrossTax = BigDecimal.ZERO;
+			bdNHIFAmount = computeNHIF(employee, delegator, bdBasicPay);
+			bdNHIF = bdNHIFAmount;
+			bdTotRelief = getTotalRelief(employee, staffPayrollId, delegator);
 
-		bdPAYEAmount = bdGrossTax.subtract(bdTotRelief);
-		bdPAYE = bdPAYEAmount;
+			bdPAYEAmount = BigDecimal.ZERO;
+			bdPAYE = bdPAYEAmount;
+		}
+
+		
+		
 
 		calculateInterestAmounts(employee, staffPayrollId, delegator);
 
@@ -599,7 +616,7 @@ public class PayrollProcess {
 				bdNSSFVoluntary).subtract(bdPensionAmt).subtract(
 				bdDisabilityAllowance).subtract(bdNonTaxableAmounts);
 
-		if (bdTaxableIncome.intValue() <= 0) {
+		if (bdTaxableIncome.compareTo(BigDecimal.ZERO) <= 0) {
 			bdTaxableIncome = BigDecimal.ZERO;
 		}
 
