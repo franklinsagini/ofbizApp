@@ -922,8 +922,10 @@
 		</field>
 		<field name="partyId" title="Member">
 			<drop-down allow-empty="true" current-description="">
-				<entity-options description="${firstName} ${lastName}"
+				<entity-options description="${firstName} ${middleName} ${lastName} - ${memberNumber}"
 					key-field-name="partyId" entity-name="Member">
+					
+					<entity-constraint name="memberStatusId" operator="equals" value="1"/>
 					<entity-order-by field-name="firstName" />
 				</entity-options>
 			</drop-down>
@@ -1076,10 +1078,10 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-			<entity-condition entity-name="LoanApplication">
+			<!-- entity-condition entity-name="LoanApplication">
 				<limit-range size="20" start="1"/>
 				
-			</entity-condition>
+			</entity-condition -->
 			
 			<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
 				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
@@ -1102,7 +1104,9 @@
 		</field>
 		<field name="partyId" title="Member">
 			<display-entity description="${firstName} ${middleName} ${lastName}"
-				entity-name="Member" also-hidden="false"></display-entity>
+				entity-name="Member" also-hidden="false">
+					
+				</display-entity>
 			<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
 				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
 		</field>
@@ -1139,6 +1143,13 @@
 		<field name="Edit Application">
 			<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
+		</field>
+		
+		<field name="details" title="Details">
+			<hyperlink target="viewapplicationprofile" description="Details"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
 		</field>
 		
 		<!-- field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)">

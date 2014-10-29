@@ -438,15 +438,24 @@ under the License.
     <form name="lookupActiveMember" target="LookupActiveMember" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
-        <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find/></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="middleName"  title="Middle Name">  <text-find></text-find> </field>
         <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find/></field>
+        
         <field name="idNumber" title="ID Number"><text-find/></field>
+         <field name="payrollNumber"  title="Payroll Number"> <text-find></text-find></field>
+        <field name="memberNumber" title="Member Number"> <text-find></text-find></field>
+        
+        <field name="mobileNumber"  title="Mobile Number"> <text-find></text-find></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupActiveMember" type="list" list-name="listIt" paginate-target="LookupActiveMember"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
+
+            <set field="inputFields" from-field="parameters"/>
+
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="Member"/>
@@ -455,11 +464,18 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"  widget-style="smallSubmit">
-            <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
+        <field name="partyId" title="Member"  widget-style="smallSubmit">
+            <hyperlink also-hidden="false" target-type="plain" description="${firstName} ${middleName} ${lastName}" target="javascript:set_values('${partyId}','${firstName} ${middleName} ${lastName} - ${memberNumber}')"/>
         </field>
-        <field name="firstName" title="${uiLabelMap.PartyFirstName}"><display/></field>
-        <field name="lastName"  title="${uiLabelMap.PartyLastName}"><display/></field>
+        <field name="firstName" title="First Name"><display/></field>
+        
+        <field name="lastName"  title="Last Name"><display/></field>
+        
         <field name="idNumber" title="ID Number"><display/></field>
+        
+        <field name="payrollNumber"  title="Payroll Number"><display/></field>
+        <field name="memberNumber" title="Member Number"><display/></field>
+        
+        <field name="mobileNumber"  title="Mobile Number"><display/></field>
     </form>
 </forms>

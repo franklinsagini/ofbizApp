@@ -151,15 +151,17 @@
 	   		<set field="disbursedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(disbursedStatusName);}" type="PlainString"/> 
 			
 			<entity-condition entity-name="LoanApplication">
-				<!-- condition-list combine="and" -->
+				
 					<condition-list combine="or">
 						<condition-expr field-name="loanStatusId" operator="equals" value="${statusId}"></condition-expr>
 						<condition-expr field-name="loanStatusId" operator="equals" value="${disbursedStatusId}"></condition-expr>
-					<!-- /condition-list  -->
 					
-				</condition-list>				
+						
+				</condition-list>		
+				<order-by field-name="-loanApplicationId"/>	
 				
-				<order-by field-name="-loanApplicationId"/>
+				
+				
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
 			    							

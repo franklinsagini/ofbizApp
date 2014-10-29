@@ -202,9 +202,9 @@ under the License.
             </drop-down>
         </field -->
          <field name="refreeId" title="Referee"><lookup target-form-name="LookupActiveMember"/></field>
-       <field name="memberNo" title="Member No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <!-- field name="memberNo" title="Member No" ><text size="30" maxlength="60"/></field>
 
-       <field name="payrollNo" title="Payroll No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="payrollNo" title="Payroll No"><text size="30" maxlength="60"/></field -->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -471,7 +471,7 @@ under the License.
 	
 <!--  memberReferee List-->
 	<form name="listMemberReferee" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberReferee" paginate-target="findMemberReferee"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" >
         <actions>
             <entity-condition entity-name="MemberReferee">
             	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
@@ -481,14 +481,13 @@ under the License.
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
-        <field name="partyId" title="Member">
+        <!-- field name="partyId" title="Member">
         	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
-          </field>
+          </field -->
           <field name="refreeId" title="Referee">
-        	<display-entity key-field-name="partyId" description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+        	<display-entity  key-field-name="partyId" description="${firstName} ${middleName} ${lastName} - Member No. ${memberNumber} - ID NO - ${idNumber} " entity-name="Member" also-hidden="false" ></display-entity>
           </field>
-        <field name="memberNo"><display also-hidden="false"/></field>
-        <field name="payrollNo"><display also-hidden="false"/></field>
+
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteMemberReferee" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="memberRefereeId"/>
