@@ -338,6 +338,18 @@ under the License.
         <response name="success" type="none">
     </response>
     </request-map>
+    
+     <request-map uri="emplConfirmDate">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getConfirmationDate" />
+        <response name="success" type="none">
+    </response>
+    </request-map>
+    
+     <request-map uri="emplRetireDate">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getRetirementDate" />
+        <response name="success" type="none">
+    </response>
+    </request-map>
     <!-- Request Mappings -->
     <request-map uri="view">
         <security https="true" auth="false"/>
@@ -403,6 +415,21 @@ under the License.
         <response name="success" type="view" value="partyQualType"/>
     </request-map>
     
+    <request-map uri="courseSpecialization">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="courseSpecialization"/>
+    </request-map>
+    
+    <request-map uri="institute">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="institute"/>
+    </request-map>
+    
+     <request-map uri="courseGrades">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="courseGrades"/>
+    </request-map>
+    
     <request-map uri="createPartyQualType">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyQualType"/>
@@ -410,14 +437,85 @@ under the License.
     </request-map>
     <request-map uri="updatePartyQualType">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updatePartyQualType"/>
-        <response name="success" type="request-redirect-noparam" value="partyQualType"/>
+        <event type="service" invoke="updatePartyQualType"/>
+        <response name="success" type="request-redirect" value="partyQualType">
+        <redirect-parameter name="partyQualTypeId"/>
+        </response>
+         <response name="error" type="view" value="partyQualType" />
     </request-map>
     <request-map uri="deletePartyQualType">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyQualType"/>
         <response name="success" type="request-redirect-noparam" value="partyQualType"/>
     </request-map>
+    
+    
+    <!-- ================COURSE SPECIALIZATION========================= -->
+     <request-map uri="createPartyCourseSpecialization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyCourseSpecialization"/>
+        <response name="success" type="request-redirect-noparam" value="courseSpecialization"/>
+    </request-map>
+    <request-map uri="updatePartyCourseSpecialization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyCourseSpecialization"/>
+        <response name="success" type="request-redirect" value="courseSpecialization">
+        <redirect-parameter name="specializationId"/>
+        </response>
+        <response name="error" type="view" value="courseSpecialization" />
+    </request-map>
+    <request-map uri="deletePartyCourseSpecialization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyCourseSpecialization"/>
+        <response name="success" type="request-redirect-noparam" value="courseSpecialization"/>
+    </request-map>
+    
+    
+    <!-- ============================INSTITUTIONS======================================= -->
+    
+      <request-map uri="createPartyQualInstitution">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyQualInstitution"/>
+        <response name="success" type="request-redirect-noparam" value="institute"/>
+    </request-map>
+    <request-map uri="updatePartyQualInstitution">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyQualInstitution"/>
+        <response name="success" type="request-redirect" value="institute">
+        <redirect-parameter name="instituteId"/>
+        </response>
+        <response name="error" type="view" value="institute" />
+    </request-map>
+    
+    <request-map uri="deletePartyQualInstitution">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyQualInstitution"/>
+        <response name="success" type="request-redirect-noparam" value="institute"/>
+    </request-map>
+    
+    <!-- ============================GRADES======================================= -->
+    
+      <request-map uri="createPartyCourseGrade">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyCourseGrade"/>
+        <response name="success" type="request-redirect-noparam" value="courseGrades"/>
+    </request-map>
+    <request-map uri="updatePartyCourseGrade">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyCourseGrade"/>
+        <response name="success" type="request-redirect" value="courseGrades">
+        <redirect-parameter name="gradeId"/>
+        </response>
+        <response name="error" type="view" value="courseGrades" />
+    </request-map>
+    
+    <request-map uri="deletePartyCourseGrade">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyCourseGrade"/>
+        <response name="success" type="request-redirect-noparam" value="courseGrades"/>
+    </request-map>
+    
+    
     
      <request-map uri="partyQualGroup">
         <security https="true" auth="true"/>
@@ -927,7 +1025,7 @@ under the License.
     <request-map uri="deleteEmplLeave">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteEmplLeave"/>
-        <response name="success" type="view" value="FindEmplLeaves"/>
+        <response name="success" type="request-redirect-noparam" value="FindEmplLeaves"/>
         <response name="error" type="view" value="FindEmplLeaves"/>
     </request-map>
     <request-map uri="EditEmplLeaveTypes">
@@ -1201,8 +1299,8 @@ under the License.
     <request-map uri="updateEmplLeave">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplLeave"/>
-        <response name="success" type="view" value="EditEmployeeLeaves"/>
-        <response name="error" type="view" value="EditEmployeeLeaves"/>
+        <response name="success" type="view" value="EditEmplLeave"/>
+        <response name="error" type="view" value="EditEmplLeave"/>
     </request-map>
     <request-map uri="forwardEmplLeave">
         <security https="true" auth="true"/>
@@ -1293,17 +1391,17 @@ under the License.
     <request-map uri="createEmplPositionType">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmplPositionType"/>
-        <response name="success" type="view" value="EditEmplPositionTypes"/>
+        <response name="success" type="request-redirect-noparam" value="EditEmplPositionTypes"/>
     </request-map>
     <request-map uri="updateEmplPositionType">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplPositionType"/>
-        <response name="success" type="view" value="EditEmplPositionTypes"/>
+        <response name="success" type="request-redirect-noparam" value="EditEmplPositionTypes"/>
     </request-map>
     <request-map uri="deleteEmplPositionType">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteEmplPositionType"/>
-        <response name="success" type="view" value="FindEmplPositionTypes"/>
+        <response name="success" type="request-redirect-noparam" value="FindEmplPositionTypes"/>
     </request-map>
     <request-map uri="EditEmplPositionTypeRates">
         <security https="true" auth="true"/>
@@ -2251,6 +2349,9 @@ under the License.
     <view-map name="NewPartyQual" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQual"/>
     <view-map name="EditPartyQuals" type="screen" page="component://humanres/widget/PartyQualScreens.xml#EditPartyQuals"/>
     <view-map name="partyQualType" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualType"/>
+    <view-map name="courseSpecialization" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyCourseSpecializationType"/>
+    <view-map name="courseGrades" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyCourseGrade"/>
+    <view-map name="institute" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualInstitute"/>
     <view-map name="partyQualGroup" type="screen" page="component://humanres/widget/PartyQualScreens.xml#NewPartyQualGroup"/>
 
     <view-map name="FindEmploymentApps" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#FindEmploymentApps"/>

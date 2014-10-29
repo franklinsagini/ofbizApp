@@ -228,12 +228,12 @@ under the License.
 
 
         <field name="partyId"><hidden/></field>
-        <field name="partyId" use-when="personalInfo!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <!-- <field name="partyId" use-when="personalInfo!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field> -->
 
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
 
-        <field name="employeeNumber" title="${uiLabelMap.MemberEmployeeNumber}" required-field="true" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
          <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
@@ -249,13 +249,13 @@ under the License.
             </drop-down>
         </field>
         <field name="gender">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <option key="Male" description="${uiLabelMap.CommonMale}"/>
                 <option key="Female" description="${uiLabelMap.CommonFemale}"/>
             </drop-down>
         </field>
         <field name="maritalStatus">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <option key="Single" description="${uiLabelMap.PartyMaritalStatusSingle}"/>
                 <option key="Married" description="${uiLabelMap.PartyMaritalStatusMarried}"/>
                 <option key="Separated" description="${uiLabelMap.PartyMaritalStatusSeparated}"/>
@@ -264,7 +264,7 @@ under the License.
             </drop-down>
         </field>
         <field name="religionId" title="Religion">
-       	 <drop-down allow-empty="false">
+       	 <drop-down allow-empty="true">
        	 	<list-options list-name="religionList" key-name="religionId" description="${religion}"/>
        	 </drop-down>
         </field>
@@ -285,7 +285,7 @@ under the License.
         </field>
 
         <field name="branchId" title="Branch" required-field="true" widget-style="required">
-            <drop-down allow-empty="false" no-current-selected-key="${userLogin.partyId}" >
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
@@ -297,10 +297,11 @@ under the License.
         </field -->
         <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>
         <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>
+         <field name="birthDate" title="Date Of Birth"><date-time type="date"/></field>
         <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>
 
         <field name="employmentStatusEnumId" title="Employment Status">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="EMPLOY_STTS"/>
                     <entity-order-by field-name="sequenceId"/>
@@ -320,7 +321,7 @@ under the License.
             <drop-down allow-empty="false"><option key="N" description="${uiLabelMap.CommonN}"/>
             <option key="Y" description="${uiLabelMap.CommonY}"/></drop-down>
         </field-->
-        <field name="preferredCurrencyUomId">
+        <field name="preferredCurrencyUomId" title="Preferred Currency">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -335,19 +336,22 @@ under the License.
 			</drop-down>
         </field>
         <field name="disabilityDetails"><text size="40" maxlength="60"/></field>
-        <field name="birthDate" title="Date Of Birth"><date-time type="date"/></field>
         <field name="placeofbirth" title="Place of Birth"><text size="40" maxlength="60"/></field>
-        <field name="nationalIDNumber" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="nationalIDNumber"  title="National ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="pinNumber"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="socialSecurityNumber" title="N.S.S.F Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="nhifNumber" title="N.H.I.F Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="passportNumber"><text size="40" maxlength="60"/></field>
 
         <field name="emplPositionTypeId" title="Job Title">
-            <drop-down allow-empty="false">
-                <entity-options key-field-name="emplPositionTypeId" description="${description}" entity-name="EmplPositionType">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="emplPositionTypeId" description="${emplPositionType}" entity-name="EmplPositionType">
                     <entity-order-by field-name="emplPositionTypeId"/>
                 </entity-options>
             </drop-down>
         </field>
         <field name="payGradeId" title="Job Grade">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <entity-options key-field-name="payGradeId" description="${payGradeName}" entity-name="PayGrade">
                     <entity-order-by field-name="payGradeId"/>
                 </entity-options>
@@ -356,10 +360,12 @@ under the License.
         <field name="mobNo" title="Mobile Phone Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="homeTelNo" title="Home Telephone Number"><text size="40" maxlength="60"/></field>
         <field name="emailAddress"><text size="40" maxlength="60"/></field>
-        <field name="permanentPostalAddress"><text size="40" maxlength="60"/></field>
+        <field name="permanentPostalAddress" title="Physical Address"><text size="40" maxlength="60"/></field>
         <field name="postalAddress"><text size="40" maxlength="60"/></field>
-        <field name="town" title="Town/City"><text size="40" maxlength="60"/></field>
+        <field name="postalCode"><text size="40" maxlength="60"/></field>
         <field name="currentAddress"><text size="40" maxlength="60"/></field>
+        <field name="town" title="Town/City"><text size="40" maxlength="60"/></field>
+        
 
         <!--field name="statusId" use-when="person==null"><hidden/></field>
         <field name="statusId" use-when="person!=null &amp;&amp; leadDescription==null">
@@ -486,21 +492,21 @@ under the License.
     </actions>
         <field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field>
         <field name="partyId"><hidden/></field>
-        <field name="employeeNumber" title="Employee Number"><display/></field>
-        <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName}"/></field>
-        <field name="comments" title="${uiLabelMap.PartyComments}"><hidden/></field>
+        <field name="employeeNumber" title="Employee Payroll Number:"><display/></field>
+        <field name="name" title="${uiLabelMap.PartyName}:"><display description="${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName}"/></field>
+        <field name="comments" title="${uiLabelMap.PartyComments}:"><hidden/></field>
         <field name="externalId"><hidden/></field>
         <field name="statusId"><hidden/></field>
         <!--field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field-->
 
-       <field name="gender" entry-name="partyId">
+       <field name="gender" title="Gender:" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="Person" key-field-name="partyId" description="${gender}"/>
         </field>
-        <field name="maritalStatus" entry-name="partyId">
+        <field name="maritalStatus" title="Marital Status:" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="Person" key-field-name="partyId" description="${maritalStatus}"/>
         </field>
 
-         <field name="employmentStatusEnumId" title="Employment Status">
+         <field name="employmentStatusEnumId" title="Employment Status:">
             <display-entity also-hidden="false" entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]"/>
         </field>
 
@@ -514,11 +520,11 @@ under the License.
 			</display-entity>
 		</field-->
 
-        <field name="birthDate" title="${uiLabelMap.MemberBirthDate}" ><display also-hidden="false"/> </field>
-        <field name="appointmentdate" title="Appointment Date" ><display also-hidden="false"/> </field>
-        <field name="appointmentdate" title="Appointment Date" ><display also-hidden="false"/> </field>
-        <field name="confirmationdate" title="Confirmation Date" ><display also-hidden="false"/> </field>
-        <field name="retirementdate" title="Retirement Date" ><display also-hidden="false"/> </field>
+        <field name="birthDate" title="${uiLabelMap.MemberBirthDate}:" ><display also-hidden="false"/> </field>
+        <field name="appointmentdate" title="Appointment Date:" ><display also-hidden="false"/> </field>
+        <field name="appointmentdate" title="Appointment Date:" ><display also-hidden="false"/> </field>
+        <field name="confirmationdate" title="Confirmation Date:" ><display also-hidden="false"/> </field>
+        <field name="retirementdate" title="Retirement Date:" ><display also-hidden="false"/> </field>
 
     </form>
 

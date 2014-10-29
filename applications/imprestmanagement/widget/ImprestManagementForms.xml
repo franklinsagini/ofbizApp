@@ -98,6 +98,78 @@
 
 
     <!--
+        EditPettySetup
+     -->
+
+    <form name="EditPettySetup" type="single" target="createPettySetup" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="pettyContext">
+        <alt-target use-when="pettyContext!=null" target="UpdatePettySetup"/>
+
+        <field name="pettySetupId">
+            <hidden/>
+        </field>
+        <field  name="pettySetupId" use-when="pettyContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+        <field position="1" name="pettySetupName" title="Name/Description">
+            <text size="45"></text>
+        </field>
+        <field position="2" name="cashManager" title="cashManager" required-field="true">
+            <lookup target-form-name="LookupPerson"/>
+        </field>
+        <field position="1" name="cashLimit" title="Cash Limit" tooltip="KES">
+            <text size="10"/>
+        </field>
+        <field position="2" name="replenishLevel" title="Replenish Level" tooltip="KES">
+            <text size="10"/>
+        </field>
+        <field position="1" name="fromDate" title="From Date">
+              <date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+          </field>
+        <field position="2" name="toDate" title="To Date">
+              <date-time />
+        </field>
+        <field position="1" name="isActive" title="Active">
+            <drop-down allow-empty="false">
+                <option key="N" description="NO"/>
+                <option key="Y" description="YES"/>
+            </drop-down>
+        </field>
+                <!-- submitButton -->
+        <field use-when="pettyContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="pettyContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+            <!--
+                PettySetupist
+            -->
+    <form name="PettySetupist" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdatePettySetup"
+        paginate-target="EditPettySetup" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ImprestPettySetup"></entity-condition>
+        </actions>
+        <field name="pettySetupId"><hidden/></field>
+        <field name="cashManager" title="Cash Manager">
+              <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field name="cashLimit" title="Petty Cash Limit" widget-area-style="align-text"><display type="currency" currency="KES"/></field>
+        <field name="replenishLevel" title="Replenish Level" widget-area-style="align-text"><display type="currency" currency="KES"/></field>
+        <field  name="fromDate" title="From Date">
+            <display also-hidden="false" type="date-time"></display>
+        </field>
+        <field  name="isActive" title="Active">
+            <display ></display>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deletePettyCashSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="pettySetupId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+
+    <!--
         EditPerDiemSetup
      -->
 
@@ -208,95 +280,154 @@
         </field>
     </form>
 
-    <form name="newSurrenderable" type="single" target="createSurrenderable" default-map-name="surrenderable" header-row-style="header-row"
-        default-table-style="basic-table">
-        <actions>
-            <entity-condition entity-name="ImprestSurrenderable" list="imprestSurrenderableList">
-                <order-by field-name="surrenderableId"/>
-            </entity-condition>
-        </actions>
-        <field name="surrenderableId">
-            <hidden/>
+<!-- SURRENDABLE FORMS -->
+    <!-- create and update a surrenderable imprest -->
+    <form name="EditSurrenderable" type="single" target="updateSurrendable" title="" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="surrenderableMap">
+        <alt-target use-when="surrenderableMap == null" target="createSurrendable"/>
+        <field use-when="surrenderableMap != null" name="surrenderableId"><display/></field>
+        <field name="surrenderableName" title="Description">
+            <text size="50"></text>
         </field>
-
-        <field name="employeeId" title="Employee" tooltip="${uiLabelMap.CommonRequired}">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-
-        <field position="1" name="createButton" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="surrenderableMap == null"><submit /></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="surrenderableMap != null"><submit /></field>
     </form>
 
-    <form name="EditSurrenderable" type="single" target="updateSurrenderable" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
-        default-map-name="imprestSurrenderableContext">
 
-        <field name="surrenderableId">
-            <hidden/>
-        </field>
+    <!-- %-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-% PETTY CASH FORMS %-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%-%  -->
 
-        <field position="1" name="employeeId" title="Prepared By">
-              <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
-        </field>
+    <!-- list all petty cash in a tabular format -->
+    <form name="ListPettyCash" extends="listlookupPettyCash" extends-resource="component://imprestmanagement/widget/FieldLookupForms.xml">
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="BudgetSearchResults"/>
+    </form>
 
-        <field name="approvalStatus" position="2">
-             <display />
-        </field>
+    <form name="FindPettyCashOptions" extends="lookupPettyCash" extends-resource="component://imprestmanagement/widget/FieldLookupForms.xml"
+        target="ListPettyCash">
+        <field name="searchOptions_collapsed"><hidden value="true"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 
-        <field position="1" name="amount" title="Imprest Total">
-            <display type="currency" currency="KES"/>
+
+    <!-- create and update a fixed asset -->
+    <form name="EditPettyCash" type="single" target="updatePettyCash" title="" default-map-name="pettyCashMap"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="pettyCashMap == null" target="createPettyCash"/>
+        <alt-target use-when="pettyCashMap!=null&amp;&amp;pettyCashMap.getString(&quot;statusName&quot;).equals(&quot;DRAFT&quot;)" target="finalizePettyCash"/>
+        <field use-when="pettyCashMap != null" name="customTimePeriodId" title="Fiscal Period">
+             <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
         </field>
-        <field position="2" name="reqDate" title="Created On">
-            <display also-hidden="false" type="date-time"></display>
+        <field use-when="pettyCashMap == null" name="customTimePeriodId" title="Fiscal Period">
+            <lookup target-form-name="LookupCustomTimePeriod"/>
         </field>
-        <field position="1" name="approverId" title="Approved By">
+        <field  use-when="pettyCashMap != null" name="createdBy" title="Created By">
              <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
         </field>
-        <field position="2" name="appDate" title="Approved On">
-            <display also-hidden="false" type="date-time"></display>
+        <field  use-when="pettyCashMap!=null&amp;&amp;pettyCashMap.getString(&quot;statusName&quot;).equals(&quot;DRAFT&quot;)" name="initialBalance" title="Initial Balance" tooltip="KES">
+            <text size="10"/>
         </field>
-
-        <!-- <field position="2" name="numberOfDays" title="Number of Days"><text size="10"/></field> -->
-                <!-- submitButton -->
-        <field use-when="imprestSurrenderableContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field use-when="imprestSurrenderableContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
-    </form>
-
-    <!--
-        EditSupplierForm
-     -->
-
-    <form name="EditSurrendableForm" type="single" target="createSurrenderable" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
-        default-map-name="imprestSurrenderableContext">
-        <alt-target use-when="imprestSurrenderableContext!=null" target="updateSurrenderable"/>
-        <actions>
-            <entity-condition entity-name="ImprestSurrenderable" list="surrendableList">
-                <order-by field-name="surrenderableId"/>
-            </entity-condition>
-        </actions>
-        <field name="surrenderableId"><hidden/></field>
-        <field name="employeeId" title="Prepared By">
-              <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
-        </field>
-        <field name="approvalStatus" >
-             <display />
-        </field>
-        <field  name="reqDate" title="Created On">
-            <display also-hidden="false" type="date-time"></display>
-        </field>
-        <field  name="approverId" title="Approved By">
-             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
-        </field>
-        <field name="appDate" title="Approved On">
-            <display also-hidden="false" type="date-time"></display>
-        </field>
-        <field  name="amount" title="Imprest Total">
+        <field  use-when="pettyCashMap!=null&amp;&amp;pettyCashMap.getString(&quot;statusName&quot;).equals(&quot;FINAL&quot;)" name="initialBalance" title="Initial Balance" tooltip="KES">
             <display type="currency" currency="KES"/>
         </field>
-                <!-- submitButton -->
-        <field use-when="imprestSurrenderableContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field use-when="imprestSurrenderableContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field  use-when="pettyCashMap != null" name="currentBalance" title="Current Balance">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field  use-when="pettyCashMap != null" name="reservedAmount" title="Reserved Amount">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field name="comments" >
+            <text/>
+        </field>
+        <field use-when="pettyCashMap != null" name="statusName" title="Status">
+            <display/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="pettyCashMap == null">
+            <submit />
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="pettyCashMap!=null">
+            <submit />
+        </field>
+        <field name="finalizeButton" title="Finalize" use-when="pettyCashMap!=null&amp;&amp;pettyCashMap.getString(&quot;statusName&quot;).equals(&quot;DRAFT&quot;)">
+            <submit />
+        </field>
+
     </form>
 
+    <!-- create and update a fixed asset -->
+    <form name="ReplenishPettyCash" type="single" target="replenishPettyCash" title="" default-map-name="replenishMap"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="replenishId">
+            <hidden/>
+        </field>
+        <field name="currentBalance">
+            <hidden/>
+        </field>
+        <field use-when="customTimePeriodId != null" name="customTimePeriodId" title="Petty Cash">
+             <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+        </field>
+        <field use-when="customTimePeriodId != null" name="currentBalance" title="Current Balance">
+             <display description="${pettyCash.currentBalance}"/>
+        </field>
+        <field use-when="customTimePeriodId != null" name="reservedAmount" title="Reserved Amount">
+             <display description="${pettyCash.reservedAmount}"/>
+        </field>
+        <field  use-when="replenishMap != null" name="replenishedBy" title="Replenished By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field  use-when="replenishMap == null" name="replenishAmount" title="Replenish Amount">
+            <text size="10"/>
+        </field>
+        <field  use-when="replenishMap != null" name="replenishAmount" title="Replenish Amount">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field name="comments" >
+            <text/>
+        </field>
+        <field name="submitButton" title="Replenish" use-when="replenishMap == null">
+            <submit />
+        </field>
+    </form>
+
+    <form name="pettyCashDetails" type="single" default-map-name="pettycash"
+        header-row-style="header-row" default-table-style="basic-table">
+
+        <field name="customTimePeriodId"><hidden/></field>
+        <field use-when="customTimePeriodId != null" name="customTimePeriodId" title="Petty Cash">
+             <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+        </field>
+        <field name="createdBy" title="Created By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field name="initialBalance" title="Initial Balance">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field  name="currentBalance" title="Current Balance">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field name="reservedAmount" title="Reserved Amount">
+            <display type="currency" currency="KES"/>
+        </field>
+    </form>
+
+    <form name="replenishDetails" type="list" list-name="paymentApplications"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ImprestReplenishPettyCash">
+                <condition-expr field-name="customTimePeriodId" from-field="customTimePeriodId"/>
+                <order-by field-name="replenishDate"/>
+            </entity-condition>
+        </actions>
+        <field  name="replenishAmount" title="Replenish Amount">
+            <display type="currency" currency="KES"/>
+        </field>
+        <field name="replenishedBy" title="Replenished By">
+             <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+        </field>
+        <field name="replenishDate" title="Replenish On">
+            <display also-hidden="false" type="date-time"></display>
+        </field>
+      <field name="comments" type="comment">
+          <display />
+      </field>
+    </form>
 
 </forms>

@@ -74,6 +74,7 @@ under the License.
         <field name="partyQualTypeId" type="id-ne"></field>
         <field name="qualificationDesc" type="id-long"></field>
         <field name="title" type="id-long"><description>Title of degree or job</description></field>
+         <field name="grade" type="id-long"><description>Title grade</description></field>
         <field name="statusId" type="id"><description>Status e.g. completed, part-time etc.</description></field>
         <field name="verifStatusId" type="id"><description>Verification done for this entry if any</description></field>
         <field name="fromDate" type="date"></field>
@@ -122,6 +123,30 @@ under the License.
       <relation type="one" fk-name="PARTY_QUAL_TPAR" title="Parent" rel-entity-name="PartyQualType">
         <key-map field-name="parentTypeId" rel-field-name="partyQualTypeId"/>
       </relation>
+    </entity>
+    
+     <entity entity-name="PartyCourseSpecialization"
+            package-name="org.ofbiz.humanres.ability"
+            title="Party Qualification Type Entity">
+      <field name="specializationId" type="id-ne"></field>
+      <field name="specialization" type="name"></field>
+      <prim-key field="specializationId"/>
+    </entity>
+    
+     <entity entity-name="PartyQualInstitute"
+            package-name="org.ofbiz.humanres.ability"
+            title="Party Qualification Type Entity">
+       <field name="instituteId" type="id-ne"></field>
+      <field name="institute" type="name"></field>
+      <prim-key field="instituteId"/>
+    </entity>
+    
+     <entity entity-name="PartyCourseGrade"
+            package-name="org.ofbiz.humanres.ability"
+            title="Party Qualification Type Entity">
+       <field name="gradeId" type="id-ne"></field>
+      <field name="grade" type="name"></field>
+      <prim-key field="gradeId"/>
     </entity>
     
     <view-entity entity-name="PersonAndPartyQual" package-name="org.ofbiz.humanres.ability" 
@@ -990,7 +1015,8 @@ under the License.
       <field name="salaryStepSeqId" type="id-ne"></field>
       <field name="payGradeId" type="id-ne"></field>
       <field name="dateModified" type="date-time"></field>
-      <field name="amount" type="currency-amount"></field>
+      <field name="minAmount" type="currency-amount"></field>
+      <field name="maxAmount" type="currency-amount"></field>
       <prim-key field="salaryStepSeqId"/>
       <prim-key field="payGradeId"/>
       <relation type="one" fk-name="SLRY_STP_PGRD" rel-entity-name="PayGrade">
@@ -1198,7 +1224,7 @@ under the License.
       <field name="emplPositionTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="emplPositionType" type="description"></field>
       <prim-key field="emplPositionTypeId"/>
       <relation type="one" fk-name="EMPL_POSI_TYP_PAR" title="Parent" rel-entity-name="EmplPositionType">
         <key-map field-name="parentTypeId" rel-field-name="emplPositionTypeId"/>

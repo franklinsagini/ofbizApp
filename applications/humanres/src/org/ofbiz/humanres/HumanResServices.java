@@ -4,6 +4,9 @@ package org.ofbiz.humanres;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,10 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
-import org.apache.commons.collections.map.StaticBucketMap;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
@@ -33,7 +34,10 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.datasource.GenericHelperInfo;
+import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.webapp.event.EventHandlerException;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
 
 import com.google.gson.Gson;
 
@@ -329,6 +333,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 		try {
 			//branchesELI = delegator.findList("BankBranch", EntityCondition.makeConditionWhere("(bankDetailsId = "+bankDetailsId+")"), null, null, null, false);
 			branchesELI = delegator.findList("BankBranch", EntityCondition.makeCondition("bankDetailsId", bankDetailsId), null, null, null, false);
+		
 		} catch (GenericEntityException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -381,6 +386,171 @@ public static String getLeaveBalance(HttpServletRequest request,
 
 		return json;
 	}
+	
+	public static LocalDate calculateConfirmationDate(Date appointmentdate) {
+		LocalDate confirmationdate = null;
+		LocalDate localDateStartDate = new LocalDate(appointmentdate);
+		
+
+			localDateStartDate = localDateStartDate.plusMonths(6);
+		
+		return confirmationdate;
+	}
+	
+	public static String  getConfirmationDate(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Date appointmentdate = null;
+		
+		try {
+			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		LocalDate dateAppointmentDate = new LocalDate(appointmentdate);
+
+		LocalDate confirmDate = dateAppointmentDate.plusMonths(6);
+		
+	
+		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String i18confirmationdate = sdfDisplayDate.format(confirmDate.toDate());
+	    String confirmationdate = sdfDate.format(confirmDate.toDate());
+	    
+	    result.put("confirmationdate_i18n", i18confirmationdate);
+	    result.put("confirmationdate", confirmationdate);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
+	
+	
+	public static String  getRetirementDate(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Date birthDate = null;
+		
+		try {
+			birthDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthDate")));
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		LocalDate datebirthDate = new LocalDate(birthDate);
+
+		LocalDate bodDate = datebirthDate.plusYears(55);
+		
+	
+		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String i18retirementdate = sdfDisplayDate.format(bodDate.toDate());
+	    String retirementdate = sdfDate.format(bodDate.toDate());
+	    
+	    result.put("retirementdate_i18n", i18retirementdate);
+	    result.put("retirementdate", retirementdate);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
+	
+	
+	
+	
+public static String NextPayrollNumber(Delegator delegator) {
+	String newPayrollNo=null;
+	
+	try {
+
+		String helperNam = delegator.getGroupHelperName("org.ofbiz");    // gets the helper (localderby, localmysql, localpostgres, etc.) for your entity group org.ofbiz
+		Connection conn = ConnectionFactory.getConnection(helperNam); 
+		Statement statement = conn.createStatement();
+		statement.execute("SELECT party_id,employee_number FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
+		ResultSet results = statement.getResultSet();
+			String emplNo=results.getString("employee_number");
+			 String trancatemplNo= StringUtils.substring(emplNo, 3);
+			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+			 String h=String.valueOf(newEmplNo);
+			 newPayrollNo="HCS".concat(h);
+			 
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +newPayrollNo);
+	} catch (Exception e) {
+		// TODO: handle exception
+	}
+	
+	
+	return newPayrollNo;
+
+	
+}
 	
 }
 
