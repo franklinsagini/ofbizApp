@@ -233,7 +233,7 @@ under the License.
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
 
-        <field name="employeeNumber" title="Employee Payroll Number" required-field="true" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
          <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
@@ -337,11 +337,15 @@ under the License.
         </field>
         <field name="disabilityDetails"><text size="40" maxlength="60"/></field>
         <field name="placeofbirth" title="Place of Birth"><text size="40" maxlength="60"/></field>
-        <field name="nationalIDNumber" title="ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field name="nationalIDNumber"  title="National ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="pinNumber"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="socialSecurityNumber" title="N.S.S.F Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="nhifNumber" title="N.H.I.F Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="passportNumber"><text size="40" maxlength="60"/></field>
 
         <field name="emplPositionTypeId" title="Job Title">
             <drop-down allow-empty="true">
-                <entity-options key-field-name="emplPositionTypeId" description="${description}" entity-name="EmplPositionType">
+                <entity-options key-field-name="emplPositionTypeId" description="${emplPositionType}" entity-name="EmplPositionType">
                     <entity-order-by field-name="emplPositionTypeId"/>
                 </entity-options>
             </drop-down>
@@ -488,21 +492,21 @@ under the License.
     </actions>
         <field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field>
         <field name="partyId"><hidden/></field>
-        <field name="employeeNumber" title="Employee Number"><display/></field>
-        <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName}"/></field>
-        <field name="comments" title="${uiLabelMap.PartyComments}"><hidden/></field>
+        <field name="employeeNumber" title="Employee Payroll Number:"><display/></field>
+        <field name="name" title="${uiLabelMap.PartyName}:"><display description="${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName}"/></field>
+        <field name="comments" title="${uiLabelMap.PartyComments}:"><hidden/></field>
         <field name="externalId"><hidden/></field>
         <field name="statusId"><hidden/></field>
         <!--field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field-->
 
-       <field name="gender" entry-name="partyId">
+       <field name="gender" title="Gender:" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="Person" key-field-name="partyId" description="${gender}"/>
         </field>
-        <field name="maritalStatus" entry-name="partyId">
+        <field name="maritalStatus" title="Marital Status:" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="Person" key-field-name="partyId" description="${maritalStatus}"/>
         </field>
 
-         <field name="employmentStatusEnumId" title="Employment Status">
+         <field name="employmentStatusEnumId" title="Employment Status:">
             <display-entity also-hidden="false" entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]"/>
         </field>
 
@@ -516,11 +520,11 @@ under the License.
 			</display-entity>
 		</field-->
 
-        <field name="birthDate" title="${uiLabelMap.MemberBirthDate}" ><display also-hidden="false"/> </field>
-        <field name="appointmentdate" title="Appointment Date" ><display also-hidden="false"/> </field>
-        <field name="appointmentdate" title="Appointment Date" ><display also-hidden="false"/> </field>
-        <field name="confirmationdate" title="Confirmation Date" ><display also-hidden="false"/> </field>
-        <field name="retirementdate" title="Retirement Date" ><display also-hidden="false"/> </field>
+        <field name="birthDate" title="${uiLabelMap.MemberBirthDate}:" ><display also-hidden="false"/> </field>
+        <field name="appointmentdate" title="Appointment Date:" ><display also-hidden="false"/> </field>
+        <field name="appointmentdate" title="Appointment Date:" ><display also-hidden="false"/> </field>
+        <field name="confirmationdate" title="Confirmation Date:" ><display also-hidden="false"/> </field>
+        <field name="retirementdate" title="Retirement Date:" ><display also-hidden="false"/> </field>
 
     </form>
 

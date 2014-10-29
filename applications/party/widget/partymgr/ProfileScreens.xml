@@ -130,6 +130,155 @@
             </widgets>
         </section>
     </screen>
+    
+     <screen name="ConductInformation">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+                <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                    <order-by field-name="-changeDate"/>
+                </entity-and>
+                <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                </entity-one>
+                <set field="partyContentId" from-field="partyContentList[0].contentId"/>
+                <set field="partyContent" value="${groovy: partyContentId!=null?&quot;/content/control/stream?contentId=&quot; + partyContentId : &quot;&quot;}"/>
+                <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
+                <set field="personalImage" from-field="partyContent"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupPerson"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                                    <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Employee Conduct Information" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
+                                           <include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-form name="emplContactDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="Employee Conduct Information" id="PartyPersonalInformationPanel">
+                                    <include-form name="emplContactDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                   
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="EmployeeIdentificationNumbers">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+                <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                    <order-by field-name="-changeDate"/>
+                </entity-and>
+                <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                </entity-one>
+                <set field="partyContentId" from-field="partyContentList[0].contentId"/>
+                <set field="partyContent" value="${groovy: partyContentId!=null?&quot;/content/control/stream?contentId=&quot; + partyContentId : &quot;&quot;}"/>
+                <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
+                <set field="personalImage" from-field="partyContent"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupPerson"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                                    <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Employee Identification Numbers" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
+                                           <include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-form name="emplIdentificationNumbers" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="Employee Identification Numbers" id="PartyPersonalInformationPanel">
+                                    <include-form name="emplIdentificationNumbers" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                   
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- ====================For Profile================================= -->
+     <screen name="EmployementStatus">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+                <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                    <order-by field-name="-changeDate"/>
+                </entity-and>
+                <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                </entity-one>
+                <set field="partyContentId" from-field="partyContentList[0].contentId"/>
+                <set field="partyContent" value="${groovy: partyContentId!=null?&quot;/content/control/stream?contentId=&quot; + partyContentId : &quot;&quot;}"/>
+                <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
+                <set field="personalImage" from-field="partyContent"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupPerson"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                                    <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Current Employement Information" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
+                                           <include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-form name="CurrentEmployment" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="Current Employement Information" id="PartyPersonalInformationPanel">
+                                    <include-form name="CurrentEmployment" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                   
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
 
     <screen name="Contact">
         <section>
@@ -156,7 +305,7 @@
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.PartyPartyIdentifications}" navigation-menu-name="newPartyIdentification" id="PartyIdentificationPanel">
+                <screenlet title="Additional Identification Numbers" navigation-menu-name="newPartyIdentification" id="PartyIdentificationPanel">
                     <include-menu name="newPartyIdentification" location="component://party/widget/partymgr/PartyMenus.xml"/>                
                     <include-form name="listPartyIdentification" location="component://party/widget/partymgr/PartyForms.xml"/>
                 </screenlet>

@@ -1150,13 +1150,22 @@
 		<field-to-result field="responseMessage" result-name="successMessage" />
 	</simple-method> -->
 
-	<simple-method method-name="updateEmplLeave"
+<!-- 	<simple-method method-name="updateEmplLeave"
 		short-description="Update Employee Leave">
 		<entity-one entity-name="EmplLeave"  value-field="lookedUpValue" />
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
 		<property-to-field resource="HumanResUiLabels"
 			property="HumanResLeaveCreationSuccess" field="successMessage" />
+	</simple-method> -->
+	
+	<simple-method method-name="updateEmplLeave"
+		short-description="Update Employee Leave">
+		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+
 	</simple-method>
 
     <simple-method method-name="approveEmplLeaveStatus"
@@ -1261,13 +1270,21 @@
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
-	<simple-method method-name="deleteEmplLeave"
+<!-- 	<simple-method method-name="deleteEmplLeave"
 		short-description="Delete Employee Leave">
 		<entity-one entity-name="EmplLeave" value-field="emplLeave" />
 		<remove-value value-field="emplLeave" />
 		<property-to-field resource="HumanResUiLabels"
 			property="HumanResLeaveCreationSuccess" field="successMessage" />
 	</simple-method>
+	 -->
+	<simple-method method-name="deleteEmplLeave"
+		short-description="Delete Employee Leave">
+		<set field="leaveId" from-field="parameters.leaveId" />
+		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	
 
 	<simple-method method-name="createEmplLeaveType"
 		short-description="Create a LeaveType">
@@ -1878,6 +1895,10 @@
         <make-value entity-name="PartyContentType" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="PartyContentType" field="partyContentTypeId"/>
+        <set field="newEntity.partyContentTypeId" from-field="partyContentTypeId"/>
+        
+        
         <now-timestamp field="newEntity.createdDate"/>
         <create-value value-field="newEntity"/>
     </simple-method>

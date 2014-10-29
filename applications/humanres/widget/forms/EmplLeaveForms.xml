@@ -292,6 +292,7 @@
 					from-field="userLogin.partyId" />
 			</entity-condition>
 		</actions>
+		<field name="leaveId"><hidden/></field>
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="PartyNameView"
 				description="${firstName} ${lastName}">
@@ -337,15 +338,7 @@
 				key-field-name="partyId">
 			</display-entity>
 		</field>
-		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
-			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
-				target="EditEmplLeave">
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveTypeId" />
-				<parameter param-name="fromDate" />
-			</hyperlink>
-		</field>
+		
 		<field name="forwardLeave" title="${uiLabelMap.forward}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.forward}"
@@ -356,6 +349,17 @@
 				<parameter param-name="fromDate" />
 			</hyperlink>
 		</field>
+		
+		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
+			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
+				target="updateEmplLeave">
+				<parameter param-name="partyId" />
+				<parameter param-name="leaveTypeId" />
+				<parameter param-name="fromDate" /> 
+				<parameter param-name="leaveId" />
+			</hyperlink>
+		</field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
@@ -363,6 +367,7 @@
 				<parameter param-name="partyId" />
 				<parameter param-name="leaveTypeId" />
 				<parameter param-name="fromDate" />
+				<parameter param-name="leaveId" />
 			</hyperlink>
 		</field>
 		<field name="description">
@@ -373,8 +378,10 @@
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
 		
-		<alt-target use-when="leaveApp==null" target="createEmplLeaveExt" />
+		<alt-target use-when="leaveApp==null" target="createEmplLeaveExt" /> 
+		<!-- <alt-target use-when="leaveApp!=null" target="updateEmplLeave" /> -->
 		<field name="leaveId"><hidden/></field>
+		<field name="leaveId" use-when="leaveApp!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
 		<field name="createdDate"><hidden/></field>
 		<field name="partyId" title="Member">
 			<hidden value="${userLogin.partyId}" />
@@ -424,6 +431,10 @@
 		</field>
 		<field name="leaveBalance" title="Leave Balance">
 			<text default-value="${leaveBalance}" disabled="true"></text>
+		</field>
+		<field name="submitButton" title="${uiLabelMap.CommonCreate}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
 		</field>
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}"
 			widget-style="smallSubmit">
@@ -691,4 +702,131 @@
 			<display />
 		</field>
 	</form>
+	
+	
+	<!-- =============================================FOR EMPLOYEE PROFILE=========================================== -->
+	
+	<form name="EmplProfileLeaves" list-name="listIt" type="list"
+		odd-row-style="alternate-row" header-row-style="header-row-2"
+		paginate-target="EmplLeave" default-table-style="basic-table hover-bar">
+		<actions>
+<!--			<entity-condition entity-name="EmplLeave">
+				<condition-expr field-name="partyId" operator="equals"
+					from-field="userLogin.partyId" />
+			</entity-condition>
+ 			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="leaveCtx" />
+				<field-map field-name="entityName" value="EmplLeave" />
+				<field-map field-name="orderBy" from-field="parameters.leaveId" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service> -->
+			<entity-condition entity-name="EmplLeave">
+				<condition-expr field-name="partyId" operator="equals"
+					from-field="partyId" />
+			</entity-condition>
+		</actions>
+		<field name="leaveId"><hidden/></field>
+		<!-- <field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="PartyNameView"
+				description="${firstName} ${lastName}">
+				<sub-hyperlink target="/partymgr/control/viewprofile"
+					target-type="inter-app" description="${partyId}" link-style="buttontext">
+					<parameter param-name="partyId" from-field="partyId" />
+				</sub-hyperlink>
+			</display-entity>
+		</field> -->
+		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
+			<display-entity entity-name="EmplLeaveType" />
+		</field>
+		<field name="emplLeaveReasonTypeId">
+			<display-entity entity-name="EmplLeaveReasonType" />
+		</field>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="thruDate">
+			<display />
+		</field>
+		<field name="leaveDuration">
+			<display />
+		</field>		
+		<field name="carryOverUsed">
+			<display />
+		</field>
+		<field name="applicationStatus" title="Application Status">
+			<display />
+		</field>
+	<field name="approvalStatus" title="Approval Status">
+			<display />
+		</field>
+
+		<field name="responsibleEmployee" title="Approver">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+	
+			</display-entity>
+		</field>		
+		<field name="handedOverTo" title="Handed Over To">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+			</display-entity>
+		</field>
+	
+		<field name="description">
+			<hidden />
+		</field>
+	</form>
+	
+	<!-- =============================================FOR EMPLOYEE PROFILE=========================================== -->
+	
+		
+		<form name="ListLeaveLogsForProfile" list-name="leaveLogs" type="list"
+		odd-row-style="alternate-row" header-row-style="header-row-2"
+		paginate-target="" default-table-style="basic-table hover-bar">
+	<actions>
+		<!-- 	<entity-condition entity-name="LeaveStatusLog" >
+				<order-by field-name="lastUpdatedStamp"/>
+			</entity-condition> -->
+			
+			<entity-condition entity-name="LeaveStatusLog" list="leaveLogs">
+			</entity-condition>
+		</actions> 
+	 
+		
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="Person" key-field-name="partyId"
+				description="${partyId} ${firstName} ${lastName}">
+			</display-entity>
+
+		</field>
+		<field name="approvedBy" title="Approved By">
+			<display-entity entity-name="Person" key-field-name="partyId"
+				description="${firstName} ${lastName}">
+			</display-entity>
+			<!-- </display> -->
+		</field>
+		<field name="rejectedBy" title="Rejected By">
+			<display-entity entity-name="Person" key-field-name="partyId"
+				description="${firstName} ${lastName}">
+			</display-entity>
+		</field>
+		<field name="approvalStatus">
+			<display />
+		</field>		
+		<field name="applicationStatus">
+			<display />
+		</field>
+	</form>
+	
+	
+        <form name="emplLeaveBalancesForProfile" type="single"  header-row-style="header-row" default-table-style="basic-table" default-map-name="leavebal">
+        <field name="accruedDays"><display/></field>
+      <field name="usedLeaveDays"><display/></field>
+	  <field name="lostLeaveDays"><display/></field>
+        <field name="availableLeaveDays" ><display/></field>
+    </form>
+
+	
 </forms>

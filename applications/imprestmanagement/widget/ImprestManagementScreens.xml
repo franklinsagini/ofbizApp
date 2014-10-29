@@ -131,22 +131,51 @@
         </section>
     </screen>
 
-
-
-    <screen name="main">
+    <screen name="CommonPettyCashOverviewDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="headerItem" value="ListPettyCash"/>
+                <set field="customTimePeriodId" from-field="pettyCashMap.customTimePeriodId" default-value="${parameters.customTimePeriodId}"/>
+                <entity-one entity-name="ImprestPettyCash" value-field="pettyCashMap"/>
             </actions>
             <widgets>
-                <decorator-screen name="ImprestManagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="customTimePeriodId"/></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="PettyCashTabBar" location="component://imprestmanagement/widget/ImprestManagementMenus.xml"/>
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="pre-body"/>
+                    </decorator-section>
                     <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="customTimePeriodId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="PettyCashSubTabBar" location="component://imprestmanagement/widget/ImprestManagementMenus.xml"/>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <screen name="setup">
+
+
+
+
+
+    <screen name="main">
         <section>
             <actions>
                 <set field="tabButtonItem" value="accountsetup"/>
@@ -464,6 +493,74 @@
                                     <include-form name="EditPettyCash" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
                                 </screenlet>
                             </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <!-- create and/or update a petty cash -->
+    <screen name="ReplenishPettyCash">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Petty Cash"/>
+                <set field="tabButtonItem" value="ReplenishPettyCash"/>
+                <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+                <entity-one entity-name="ImprestReplenishPettyCash" value-field="replenishMap"/>
+                <entity-one entity-name="ImprestPettyCash" value-field="pettyCash">
+                    <field-map from-field="parameters.customTimePeriodId" field-name="customTimePeriodId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPettyCashDecorator" location="component://imprestmanagement/widget/ImprestManagementScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Imprest Management: Replenish Petty Cash">
+                                    <include-form name="ReplenishPettyCash" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Overview Screen -->
+    <screen name="PettyCashOverview">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Petty Cash Overview"/>
+                <set field="tabButtonItem" value="PettyCashOverview"/>
+                <set field="labelTitleProperty" value="Petty Cash Overview"/>
+                <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+                <entity-one entity-name="ImprestPettyCash" value-field="pettycash"/>
+                <entity-one entity-name="ImprestReplenishPettyCash" value-field="replenish"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPettyCashOverviewDecorator" location="component://imprestmanagement/widget/ImprestManagementScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="lefthalf">
+                                    <screenlet title="Petty Cash Details">
+                                        <link target="EditPettyCash" text="${uiLabelMap.CommonUpdate}" style="buttontext">
+                                            <parameter param-name="customTimePeriodId"/>
+                                        </link>
+                                        <include-form name="pettyCashDetails" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                    </screenlet>
+                                </container>
+                                <container style="righthalf">
+                                    <screenlet title="Replenish Details">
+                                        <link target="ReplenishPettyCash" text="${uiLabelMap.CommonUpdate}" style="buttontext">
+                                            <parameter param-name="customTimePeriodId"/>
+                                        </link>
+                                        <include-form name="replenishDetails" location="component://imprestmanagement/widget/ImprestManagementForms.xml"/>
+                                    </screenlet>
+                                </container>
+                                <container style="clear"/>
+                            </widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>

@@ -4,6 +4,9 @@ package org.ofbiz.humanres;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -30,7 +34,10 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.datasource.GenericHelperInfo;
+import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.webapp.event.EventHandlerException;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
 
 import com.google.gson.Gson;
 
@@ -326,6 +333,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 		try {
 			//branchesELI = delegator.findList("BankBranch", EntityCondition.makeConditionWhere("(bankDetailsId = "+bankDetailsId+")"), null, null, null, false);
 			branchesELI = delegator.findList("BankBranch", EntityCondition.makeCondition("bankDetailsId", bankDetailsId), null, null, null, false);
+		
 		} catch (GenericEntityException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -515,7 +523,34 @@ public static String getLeaveBalance(HttpServletRequest request,
 	}
 	
 	
+	
+	
+public static String NextPayrollNumber(Delegator delegator) {
+	String newPayrollNo=null;
+	
+	try {
 
+		String helperNam = delegator.getGroupHelperName("org.ofbiz");    // gets the helper (localderby, localmysql, localpostgres, etc.) for your entity group org.ofbiz
+		Connection conn = ConnectionFactory.getConnection(helperNam); 
+		Statement statement = conn.createStatement();
+		statement.execute("SELECT party_id,employee_number FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
+		ResultSet results = statement.getResultSet();
+			String emplNo=results.getString("employee_number");
+			 String trancatemplNo= StringUtils.substring(emplNo, 3);
+			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+			 String h=String.valueOf(newEmplNo);
+			 newPayrollNo="HCS".concat(h);
+			 
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +newPayrollNo);
+	} catch (Exception e) {
+		// TODO: handle exception
+	}
+	
+	
+	return newPayrollNo;
+
+	
+}
 	
 }
 

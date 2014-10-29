@@ -2,7 +2,7 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="MainAppBar" title="${uiLabelMap.ImprestManagementApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
-        <menu-item name="setup" title="${uiLabelMap.ImprestSetup}"><link target="accountsetup"/></menu-item>
+        <menu-item name="setup" title="${uiLabelMap.ImprestSetup}"><link target="main"/></menu-item>
         <menu-item name="surrenderable" title="${uiLabelMap.ImprestSurrenderable}"><link target="findSurrenderable"/></menu-item>
         <menu-item name="perdiem" title="${uiLabelMap.ImprestPerDiem}"><link target="perdiem"/></menu-item>
         <menu-item name="ListPettyCash" title="${uiLabelMap.ImprestPettyCash}"><link target="ListPettyCash"/></menu-item>
@@ -121,18 +121,18 @@
 
         <menu-item name="PettyCashOverview" title="Petty Cash Overview">
             <link target="PettyCashOverview">
-                <parameter param-name="pettyCashMap.customTimePeriodId"/>
+                <parameter param-name="customTimePeriodId"/>
             </link>
         </menu-item>
 
-        <menu-item name="EditBudget" title="Petty Cash Header">
+        <menu-item name="EditPettyCash" title="Petty Cash Header">
             <condition>
                 <and>
                     <not><if-empty field="pettyCashMap.customTimePeriodId"/></not>
                 </and>
             </condition>
-            <link target="EditBudget">
-                <parameter param-name="pettyCashMap.customTimePeriodId"/>
+            <link target="EditPettyCash">
+                <parameter param-name="customTimePeriodId"/>
             </link>
         </menu-item>
         <menu-item name="ReplenishPettyCash" title="Replenish">
@@ -143,7 +143,7 @@
                 </and>
             </condition>
             <link target="ReplenishPettyCash">
-                <parameter param-name="pettyCashMap.customTimePeriodId"/>
+                <parameter param-name="customTimePeriodId"/>
             </link>
         </menu-item>
         <menu-item name="RequisitionPettyCash" title="Requisition">
