@@ -366,9 +366,11 @@ public class LoanServices {
 		// Get Accounts for this member
 		List<GenericValue> memberAccountELI = null;
 		accountProductId = accountProductId.replaceAll(",", "");
+		
+		memberId =  memberId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, memberId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(memberId)),
 						EntityCondition.makeCondition("accountProductId",
 								EntityOperator.EQUALS,
 								Long.valueOf(accountProductId))),

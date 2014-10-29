@@ -5,8 +5,8 @@
 	 <!-- Add Find Member Form -->
     <form name="FindMember" type="single" target="main" default-entity-name="Member">
         <actions>
-        	<set field="statusName" value="ACTIVE"/>
-	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+        	<!-- set field="statusName" value="ACTIVE"/>
+	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ --> 
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
@@ -44,7 +44,8 @@
         </field>
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+                <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
+                <list-options key-name="partyId" list-name="partyGroups" description="${groupName}" />
             </drop-down>
         </field>
 
@@ -55,13 +56,13 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>
-        	<set field="statusName" value="ACTIVE"/>
+        	<!-- set field="statusName" value="ACTIVE"/>
 	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
         	
         	<entity-condition entity-name="Member">
         		<condition-expr field-name="memberStatusId" operator="equals" value="${statusId}"/>
         		<order-by field-name="-partyId"/>
-        	</entity-condition>
+        	</entity-condition -->
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
@@ -77,20 +78,19 @@
             </service>
         </actions>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+         <field name="middleName" title="Middle Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
-        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+        <field name="idNumber" title="ID Number"><display also-hidden="false"></display></field>
    
-       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+       <!-- field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
 	     <field name="stationId" title="Station">
 	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
-            <!-- drop-down allow-empty="true" >
-                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
-            </drop-down -->
-        </field>
+           
+        </field -->
         
-        <field name="memberStatusId" title="Status">
+        <!-- field name="memberStatusId" title="Status">
         	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity>
-        </field>
+        </field -->
         <field name="createdStamp" title="Created"><display  type="date"></display></field>
         <field name="createdBy" title="Created By"><display ></display></field>
         <!-- viewapplicationprofile -->
@@ -110,12 +110,12 @@
 		default-table-style="basic-table" default-map-name="applicationContext">
 
 		<actions>
-				<set field="statusName" value="ACTIVE"/>
-			<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+				<!-- set field="statusName" value="ACTIVE"/>
+			<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ --> 
 			
-			<entity-condition entity-name="Member" list="membersList">
+			<!-- entity-condition entity-name="Member" list="membersList">
 				<condition-expr field-name="memberStatusId" operator="equals" value="${statusId}"/>
-			</entity-condition>
+			</entity-condition -->
 			<!-- entity-condition entity-name="SaccoProduct" list="productsList"> 
 				<condition-expr field-name="productType" operator="equals" value="Loan"/> 
 				</entity-condition -->

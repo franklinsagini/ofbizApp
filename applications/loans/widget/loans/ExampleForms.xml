@@ -968,8 +968,8 @@
 		<actions>
 			
 			<entity-condition entity-name="LoanApplication">
-
-				<order-by field-name="-loanApplicationId"/>
+				<limit-range size="20" start="1"/>
+				<!-- order-by field-name="-loanApplicationId"/ -->
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
 			    							
@@ -983,9 +983,11 @@
 		<field name="partyId" title="Member">
 			<display-entity description="${firstName} ${middleName} ${lastName}"
 				entity-name="Member" also-hidden="false"></display-entity>
-			<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
-				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
+			
 		</field>
+		
+		<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
+				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
 		<!-- field name="firstName"> <text></text> </field> <field name="middleName"> 
 			<text></text> </field> <field name="lastName"> <text></text> </field -->
 		<field name="loanProductId" title="Product">
@@ -1075,10 +1077,13 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="LoanApplication">
-				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+				<limit-range size="20" start="1"/>
+				
+			</entity-condition>
+			
+			<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
 				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
 				<!-- order-by field-name="saccoProductId"/ -->
-			</entity-condition>
 
 			<service service-name="performFind" result-map="result"
 				result-map-list="listIt">
