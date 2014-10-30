@@ -327,14 +327,31 @@ under the License.
                 <set field="tabButtonItem" value="EditEmployeeLeaves"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
+                <entity-one entity-name="LeaveBalances" value-field="leavebal"/>
+                
+               
+                <entity-condition list="leaveLogs" entity-name="LeaveStatusLog">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="lastUpdatedStamp"/>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-form name="ListEmplLeaves" location="component://humanres/widget/forms/EmployeeForms.xml"/>
-                        <screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}" collapsible="true">
-                            <include-form name="AddEmplLeave" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                     <screenlet id="AddEmplLeavePanel" title="${firstName} Leave Balance" collapsible="true">
+                            <include-form name="emplLeaveBalancesForProfile"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
                         </screenlet>
+                       <!--  <include-form name="ListEmplLeaves" location="component://humanres/widget/forms/EmployeeForms.xml"/> -->
+                        <screenlet id="AddEmplLeavePanel" title="Leaves List" collapsible="true">
+                           <!--  <include-form name="AddEmplLeave" location="component://humanres/widget/forms/EmployeeForms.xml"/> -->
+                            <include-form name="EmplProfileLeaves" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
+                        </screenlet>
+                         <screenlet id="AddEmplLeavePanel" title="Leave Logs" collapsible="true">
+                            <include-form name="ListLeaveLogsForProfile"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                        </screenlet>
+                       
                     </decorator-section>
                 </decorator-screen>
             </widgets>
