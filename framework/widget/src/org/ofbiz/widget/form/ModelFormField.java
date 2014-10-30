@@ -2579,6 +2579,10 @@ public class ModelFormField {
 
 			Delegator delegator = WidgetWorker.getDelegator(context);
 			String fieldValue = modelFormField.getEntry(context);
+			
+			if (!this.entityName.equals("MemberStatus") && !this.entityName.equals("LoanGuarantor")  && !this.entityName.equals("Member") 
+					&& !this.entityName.equals("LoanApplication") && !this.entityName.equals("LoanProduct")  && !this.entityName.equals("AccountProduct")  
+					&& !this.entityName.equals("MaritalStatus")  && !this.entityName.equals("Gender")   && !this.entityName.equals("Salutation")  && !this.entityName.equals("LoanStatus")){
 			try {
 				TransactionUtil.begin();
 			} catch (GenericTransactionException e1) {
@@ -2587,21 +2591,23 @@ public class ModelFormField {
 			}
 			try {
 				System.out.println("TTTTTTTTTT About to try TTTTTTTTT ");
+				
 				value = delegator.findOne(this.entityName, this.cache,
 						fieldKey, fieldValue);
+				
 				//catch (GenericEntityException e)
 			} catch (Exception e) {
 				System.out.println("EEEEEEEEE Threw an exception EEEEEE ");
 				value = null;
-				// String errMsg =
-				// "Error getting value from the database for display of field ["
-				// + this.modelFormField.getName()
-				// + "] on form ["
-				// + this.modelFormField.modelForm.getName()
-				// + "]: "
-				// + e.toString();
-				// Debug.logError(e, errMsg, module);
-				// throw new IllegalArgumentException(errMsg);
+				 String errMsg =
+				 "Error getting value from the database for display of field ["
+				 + this.modelFormField.getName()
+				 + "] on form ["
+				 + this.modelFormField.modelForm.getName()
+				 + "]: "
+				 + e.toString();
+				 Debug.logError(e, errMsg, module);
+				 throw new IllegalArgumentException(errMsg);
 			}
 			try {
 				TransactionUtil.commit();
@@ -2609,7 +2615,7 @@ public class ModelFormField {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		
+			} else{
 			
 			try {
 				TransactionUtil.begin();
@@ -2618,10 +2624,11 @@ public class ModelFormField {
 				e1.printStackTrace();
 			}
 			String regex = "[0-9]+";
+			fieldValue = fieldValue.replaceAll(",", "");
 			if ((value == null) &&  (fieldValue.matches(regex))) {
 				System.out.println("DDDDDDDDDDD Did not get value DDDDDDDDDD ");
 				try {
-					fieldValue = fieldValue.replaceAll(",", "");
+					
 					value = delegator.findOne(this.entityName, this.cache,
 							fieldKey, Long.valueOf(fieldValue));
 				} catch (NumberFormatException e) {
@@ -2637,7 +2644,7 @@ public class ModelFormField {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+			}
 			
 			// if (value == null) {
 			//

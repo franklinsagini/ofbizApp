@@ -874,10 +874,22 @@ public class LoanServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+		
+		BigDecimal bdDepositamt = BigDecimal.ZERO;
+
+		// bdDepositamt = totalSavings(partyId, loanProductId, delegator);
+		
+		
 		List<GenericValue> listToBeUpdatedGuarantors = new LinkedList<GenericValue>();
 		for (GenericValue genericValue : loanGuarantorELI) {
+			bdDepositamt = totalMemberDepositSavings(genericValue.getLong("guarantorId").toString(), delegator);
+			int memberStationId = getMemberStationId(genericValue.getLong("guarantorId").toString());
 			genericValue.set("guaranteedPercentage", bdGuaranteedPercentage);
 			genericValue.set("guaranteedValue", bdGuaranteedValue);
+			genericValue.set("depositamt", bdDepositamt);
+			genericValue.set("currentStationId", memberStationId);
+			
+			
 			listToBeUpdatedGuarantors.add(genericValue);
 		}
 
@@ -888,6 +900,30 @@ public class LoanServices {
 			e.printStackTrace();
 		}
 
+	}
+
+	private static int getMemberStationId(String partyId) {
+		// TODO Auto-generated method stub
+		GenericValue member = null; // =
+		partyId = partyId.replaceAll(",", "");
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne(
+					"Member",
+					UtilMisc.toMap("partyId",
+							Long.valueOf(partyId)), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.info("Cannot Find Member");
+			// return "Cannot Get Product Details";
+		}
+
+		if (member != null) {
+			return member.getLong("stationId").intValue();
+		}
+
+		return 0;
 	}
 
 	/***

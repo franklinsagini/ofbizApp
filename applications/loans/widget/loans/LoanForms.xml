@@ -188,13 +188,14 @@ under the License.
         	<entity-one entity-name="LoanApplication" value-field="loanApplication">
         		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
         	</entity-one>
-        	<entity-condition entity-name="Member" list="memberList">
+        	<!-- entity-condition entity-name="Member" list="memberList">
         		<condition-list combine="and">
         			<condition-expr field-name="partyId" operator="not-equals" value="${loanApplication.partyId}"/>
-        			<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        			
         		</condition-list>
         		
-            </entity-condition>
+            </entity-condition -->
+            <!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
             
             <!-- entity-condition entity-name="MemberStation" list="memberStationsList"></entity-condition -->
             <entity-condition entity-name="Station" list="stationList"></entity-condition>
@@ -202,13 +203,15 @@ under the License.
         
         <field name="loanGuarantorId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
-        <field name="guarantorId" title="Guarantor" widget-style="required" required-field="true">
+        <!-- field name="guarantorId" title="Guarantor" widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
                 <list-options list-name="memberList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
             </drop-down>
-        </field>
+        </field -->
         
-        <field name="memberNo" title="Member No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="guarantorId" title="Guarantor"><lookup target-form-name="LookupActiveMember" show-description="true"/></field>
+        
+        <!-- field name="memberNo" title="Member No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
         <field name="payrolNo" title="Payrol No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
         <field name="depositamt" title="Deposit Amount" widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
         
@@ -218,7 +221,7 @@ under the License.
             </drop-down>
         </field>
         <field name="guaranteedPercentage" title="Guaranteed %"><text size="20" maxlength="60"/></field>
-		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field>        
+		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field -->        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -1571,8 +1574,7 @@ under the License.
 
         <field name="memberNumber" title="Member No." position="2"><text-find/></field>
 
-		<!-- <hidden value="ACTIVE"/> -->
-        <field name="memberStatus" title="Status" > <text-find></text-find> </field>
+		
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
