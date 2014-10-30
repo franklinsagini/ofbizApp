@@ -525,7 +525,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 	
 	
 	
-public static String NextPayrollNumber(Delegator delegator) {
+public String NextPayrollNumber(Delegator delegator) {
 	String newPayrollNo=null;
 	
 	try {

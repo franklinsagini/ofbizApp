@@ -17,7 +17,7 @@
             <actions>
 				<set field="titleProperty" value="HumanResFindEmplLeave" />
 				<set field="headerItem" value="Leave" />
-				<set field="tabButtonItem" value="EmplCarryOverLost" />
+				<set field="tabButtonItem" value="CloseFinacialYear" />
 				<set field="carryoverLostCtx" from-field="parameters"/>
 						<service service-name="humanResManagerPermission"
 					result-map="permResult">
@@ -322,8 +322,11 @@
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
                             	</screenlet>
                                 <screenlet title="My Leaves List">
-                                <include-form name="ListEmplLeaves"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                              <include-form name="ListEmplLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" /> 
+											
+											<!--  <include-form name="ListEmplLeavesForUpdateAndDelete"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" /> -->
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -467,6 +470,14 @@
 							collapsible="true">
 							<include-menu location="component://humanres/widget/HumanresMenus.xml"
 								name="ApproveReject" />
+								
+						<container style="button-bar">
+						<link target="popup" link-type="ajax-window" height="500" width="500" text="Reject Leave with Reason" style="buttontext create">
+						<parameter param-name="partyId"/>
+                        <parameter param-name="fromDate"/>
+                        <parameter param-name="leaveTypeId"/>
+						</link>
+						</container>
 							<include-form name="approveEmplLeaveStatus"
 								location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 						</screenlet>
@@ -544,5 +555,151 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	<!-- 
+	  <screen name="StaffOpeningBalance">
+        <section>
+            <actions>
+				<set field="titleProperty" value="openingLeaveBalance" />
+				<set field="headerItem" value="openingLeaveBalance" />
+				<set field="tabButtonItem" value="openingLeaveBalance" />
+				<set field="leaveCtx" from-field="parameters"/>
+						<service service-name="humanResManagerPermission"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ADMIN" />
+				</service>
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
+					global="true" />
+					
+				<entity-condition entity-name="EmplLeaveOpeningBalance" list="leaveBalList">
+        			<condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>
+        	</entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                						<decorator-section name="pre-body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            do check for PARTYMGR, _VIEW permission
+                            <condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+
+                            <widgets>
+										<section>
+											<widgets>
+												<container style="button-bar">
+													<link target="EditEmplLeave" text="${uiLabelMap.HumanResNewLeave}"
+														style="buttontext create" />
+												</container>
+											</widgets>
+										</section>
+                              <screenlet title="Search My Leaves">
+                                        <include-form name="FindEmplLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                            	</screenlet>
+                                <screenlet title="My Leaves List">
+                                <include-form name="ListEmplLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     -->
+    
+    <screen name="StaffOpeningBalance">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				<set field="headerItem" value="openingLeaveBalance" />
+				<set field="tabButtonItem" value="openingLeaveBalance" />
+				
+				<set field="OpeningLeaveBalanceContext" from-field="parameters"/>
+						<service service-name="humanResManagerPermission"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ADMIN" />
+				</service>
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
+					global="true" />
+
+				
+				
+				
+				<entity-one entity-name="EmplLeaveOpeningBalance" value-field="OpeningLeaveBalanceContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+					<decorator-section name="body">
+					
+					 <section>
+                           <!-- do check for PARTYMGR, _VIEW permission-->
+                            <condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+							<widgets>
+								<screenlet title="Add Staff Balance">
+									<include-form name="EditOpeningLeaveBalanceForm"
+										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Opening Balances">
+									<include-form name="OpeningLeaveBalanceListForm"
+										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+    
+     <screen name="leaveRejectionReason">
+        <section>
+        
+            <actions>
+              <!--   <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/> -->
+                <set field="titleProperty" value="RejectReason"/>
+                <set field="tabButtonItem" value="RejectReason"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="fromDate" from-field="parameters.fromDate"/>
+                <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
+                <entity-one entity-name="LeaveStatusLog" value-field="reason"/>
+            </actions>
+            <widgets>
+            <screenlet title="Add A reason for Rejecting This Leave Application">
+                <include-form name="LeaveRejectionReason" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+	
 
 </screens>

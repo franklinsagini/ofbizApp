@@ -47,6 +47,20 @@ under the License.
     </response>
     </request-map>
     
+    <request-map uri="addStaffOpeningBalance">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="addStaffOpeningBalance" />
+		<response name="success" type="view" value="addOpeningLeaveBalances" />
+		<response name="error" type="view" value="addOpeningLeaveBalances" />
+	</request-map>
+	
+	
+	<request-map uri="popup">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="popup"
+			save-home-view="true" />
+	</request-map>
+    
     <request-map uri="bank">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="bank"
@@ -119,6 +133,11 @@ under the License.
      <request-map uri="EditSalaryAdvanceTypes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditSalaryAdvanceTypes"/>
+    </request-map> 
+         
+         <request-map uri="addOpeningLeaveBalances">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="addOpeningLeaveBalances"/>
     </request-map> 
          
          
@@ -1296,12 +1315,31 @@ under the License.
         <response name="success" type="view" value="EditEmployeeLeaves"/>
         <response name="error" type="view" value="EditEmployeeLeaves"/>
     </request-map>
+    
+    
+    
+    
     <request-map uri="updateEmplLeave">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplLeave"/>
         <response name="success" type="view" value="EditEmplLeave"/>
         <response name="error" type="view" value="EditEmplLeave"/>
     </request-map>
+    
+  
+    
+    
+    
+     <request-map uri="updateEmplLeave2">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmplLeave2"/>
+        <response name="success" type="request-redirect" value="FindEmplLeaves">
+        <redirect-parameter name="partyId"/>
+        </response>
+         <response name="error" type="view" value="FindEmplLeaves" />
+    </request-map>
+    
+    
     <request-map uri="forwardEmplLeave">
         <security https="true" auth="true"/>
         <event type="service" invoke="forwardEmplLeave"/>
@@ -2513,5 +2551,7 @@ under the License.
 	<view-map name="staffOnLeave" type="screen" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"/>
 	<view-map name="advanceSalary" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
 	<view-map name="EditSalaryAdvanceTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
+	<view-map name="addOpeningLeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffOpeningBalance"/> 
+	<view-map name="popup" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveRejectionReason"/> 
 						
 </site-conf>
