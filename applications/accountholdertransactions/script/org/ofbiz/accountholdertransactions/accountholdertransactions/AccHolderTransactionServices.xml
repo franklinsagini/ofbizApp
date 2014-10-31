@@ -60,7 +60,8 @@ under the License.
         <call-simple-method method-name="createMemberTransaction"></call-simple-method>
         <set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
     </simple-method>
-    <simple-method method-name="createMemberTransaction" short-description="Member Transaction Entry">
+   
+    <simple-method method-name="createMemberTransaction" short-description="Member Transaction Entry" use-transaction="true">
         <!-- Create Account Transaction -->
         <!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
         <make-value entity-name="AcctgTrans" value-field="acctgTrans"/>
@@ -84,7 +85,8 @@ under the License.
         <set field="acctgTrans.isPosted" value="Y"/>
         <set field="acctgTrans.postedDate" from-field="createdDate"/>
         <set field="acctgTrans.glFiscalTypeId" value="ACTUAL"/>
-        <set field="acctgTrans.partyId" from-field="newEntity.partyId"/>
+        <!-- set field="acctgTrans.partyId" from-field="newEntity.partyId"/ -->
+        <set field="acctgTrans.partyId" from-field="Company"/>
         <set field="acctgTrans.createdDate" from-field="createdDate"/>
         <set field="acctgTrans.createdByUserLogin" from-field="newEntity.createdBy"/>
         <set field="acctgTrans.lastModifiedDate" from-field="createdDate"/>
@@ -106,7 +108,8 @@ under the License.
         
         <set field="memberDepositEntry.acctgTransId" from-field="acctgTrans.acctgTransId"/>
         <set field="memberDepositEntry.acctgTransEntrySeqId" value="1"/>
-        <set field="memberDepositEntry.partyId" from-field="newEntity.partyId"/>
+        <!-- set field="memberDepositEntry.partyId" from-field="newEntity.partyId"/ -->
+        <set field="memberDepositEntry.partyId" from-field="Company"/>
         <set field="memberDepositEntry.glAccountTypeId" value="MEMBER_DEPOSIT"/>
         <set field="memberDepositEntry.glAccountId" from-field="accountHolderTransactionSetup.memberDepositAccId"/>
         <!-- set field="memberDepositEntry.organizationPartyId" from-field="userLogin.partyId"/ -->
@@ -132,7 +135,8 @@ under the License.
         
         <set field="memberCashEntry.acctgTransId" from-field="acctgTrans.acctgTransId"/>
         <set field="memberCashEntry.acctgTransEntrySeqId" value="2"/>
-        <set field="memberCashEntry.partyId" from-field="newEntity.partyId"/>
+        <!-- set field="memberCashEntry.partyId" from-field="newEntity.partyId"/ -->
+        <set field="memberCashEntry.partyId" from-field="Company"/>
         <set field="memberCashEntry.glAccountTypeId" value="MEMBER_DEPOSIT"/>
         <set field="memberCashEntry.glAccountId" from-field="accountHolderTransactionSetup.cashAccountId"/>
         <!-- set field="memberCashEntry.organizationPartyId" from-field="userLogin.partyId"/ -->
@@ -166,7 +170,16 @@ under the License.
 <!-- CashDeposit -->
 <simple-method method-name="createCashDeposit" short-description="Create CashDeposit">
 		
-        <make-value entity-name="AccountTransaction" value-field="newEntity"/>
+        <call-simple-method method-name="saveCashDeposit" scope="inline"></call-simple-method>
+        
+         <!-- Post Cash Deposit -->
+        <call-simple-method method-name="createMemberTransaction" scope="inline"></call-simple-method>
+        
+        
+    </simple-method>
+    
+    <simple-method method-name="saveCashDeposit" use-transaction="true">
+    	<make-value entity-name="AccountTransaction" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         
@@ -187,17 +200,13 @@ under the License.
         <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}"/>
         <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <set field="newEntity.transactionType" value="CASHDEPOSIT"/>
+        <set field="transactionType" value="CASHDEPOSIT"/>
          <set field="newEntity.increaseDecrease" value="I"/>
         <create-value value-field="newEntity"/>
         
          <!-- Set Posting Type -->
         <set field="memberDepostPosting" value="C"/>
         <set field="cashPosting" value="D"/>
-        
-         <!-- Post Cash Deposit -->
-        <call-simple-method method-name="createMemberTransaction" scope="inline"></call-simple-method>
-        
-        
     </simple-method>
     <simple-method method-name="updateCashDeposit" short-description="Update CashDeposit">
         <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>

@@ -2580,7 +2580,7 @@ public class ModelFormField {
 			Delegator delegator = WidgetWorker.getDelegator(context);
 			String fieldValue = modelFormField.getEntry(context);
 			
-			if (!this.entityName.equals("MemberStatus") && !this.entityName.equals("LoanGuarantor")  && !this.entityName.equals("Member") 
+			if (!this.entityName.equals("MemberStatus")  && !this.entityName.equals("MemberAccount")  && !this.entityName.equals("LoanGuarantor")  && !this.entityName.equals("Member") 
 					&& !this.entityName.equals("LoanApplication") && !this.entityName.equals("LoanProduct")  && !this.entityName.equals("AccountProduct")  
 					&& !this.entityName.equals("MaritalStatus")  && !this.entityName.equals("Gender")   && !this.entityName.equals("Salutation")  && !this.entityName.equals("LoanStatus")){
 			try {
