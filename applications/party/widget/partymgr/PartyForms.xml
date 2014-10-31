@@ -234,12 +234,7 @@ under the License.
 
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
-        <field name="branchId" title=" Select Branch" required-field="true" widget-style="required">
-            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
-                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
-            </drop-down>
-        </field>
-
+       
         <field name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="${employeeNumber}" disabled="true"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
          <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text size="40" maxlength="60"/></field>
@@ -290,6 +285,12 @@ under the License.
        	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
        	 </drop-down>
         </field>
+         <field name="branchId" title=" Select Branch" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
 
        
          <!-- field name="stationId" title="Station" required-field="true" widget-style="required">
