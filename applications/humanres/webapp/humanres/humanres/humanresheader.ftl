@@ -74,6 +74,36 @@
          }
         });
         
+     
+         jQuery('select[name="branchId"]').change(function(){
+		 
+         var appointmentdate = this.value;
+         var branchId =  jQuery('select[name="branchId"]').val();
+         var reqUrl = '/humanres/control/emplrollNumber';
+           if (branchId !=""){  
+         	calculatePayrollNumber(reqUrl);
+         }
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
          jQuery('input[name="birthDate"]').change(function(){
 		 
          var birthDate = this.value;
@@ -110,6 +140,9 @@
         });
 		
 		 });
+		 
+	
+     
      
     function calculateBalance(reqUrl, leaveTypeId, partyId, appointmentdate){
 	    jQuery.ajax({
@@ -164,6 +197,7 @@
 	    });
 	    }
 	    
+	   
 	    function calculateLeaveEndDate(reqUrl, fromDate, leaveDuration){
 	    	jQuery.ajax({
 	
@@ -229,5 +263,146 @@
 	              }
 	    });
 	    }
+	    
+	     function calculatePayrollNumber(reqUrl){
+	    	jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+					 $('input[name="employeeNumber"]').val(data.employeeNumber);
+					  $('input[name="employeeNumber_i18n"]').val(data.employeeNumber_i18n);
+					  
+					  
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    }
+	    
+	   
+	   /** ==================EMPLOYEE VALIDATION ==========================================**/
+	   
+	      function employeeRegistrationFormValidation(reqUrl){
+		/** alert(' Checking for unique fields ... '); **/
+		var nationalIDNumber = jQuery('input[name="nationalIDNumber"]').val();
+    	var pinNumber  = jQuery('input[name="pinNumber"]').val();
+		var mobNo = jQuery('input[name="mobNo"]').val();
+    	var emailAddress  = jQuery('input[name="emailAddress"]').val();
+		var employeeNumber = jQuery('input[name="employeeNumber"]').val();
+		var socialSecurityNumber = jQuery('input[name="socialSecurityNumber"]').val();
+    	var nhifNumber  = jQuery('input[name="nhifNumber"]').val();
+		var passportNumber = jQuery('input[name="passportNumber"]').val();
+
+    	var isValid = true;
+    	var nationalIDNumberState = '';
+    	var pinNumberState = '';
+    	var passportNumberState = '';
+    	var mobileNumberState = '';
+		var employeeNumberState = '';
+		var nhifNumberState = '';
+    	var socialSecurityNumberState = '';
+		var emailAddressState = '';
+		var idNumberSize = '';
+
+    	var reqUrl = '/humanres/control/employeeRegistrationFormValidation';
+
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'nationalIDNumber': nationalIDNumber, 'pinNumber': pinNumber, 'mobNo': mobNo, 'emailAddress': emailAddress, 'employeeNumber': employeeNumber, 'socialSecurityNumber': socialSecurityNumber, 'nhifNumber': nhifNumber, 'passportNumber': passportNumber},
+			     success : function(data){
+
+							nationalIDNumberState = data.nationalIDNumberState;
+							pinNumberState =  data.pinNumberState;
+							passportNumberState =  data.passportNumberState;
+							mobileNumberState =  data.mobileNumberState;
+							employeeNumberState =  data.employeeNumberState;
+							nhifNumberState =  data.nhifNumberState;
+							socialSecurityNumberState =  data.socialSecurityNumberState;
+							emailAddressState =  data.emailAddressState;
+							idNumberSize =  data.idNumberSize;
+
+
+			               },
+			      error : function(errorData){
+
+			              alert("Some error occurred while validating Employee");
+			              }
+
+
+		});
+
+    	var message = '';
+    	if ((nationalIDNumberState == 'USED')){
+    		message = "ID Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+		if ((pinNumberState == 'USED')){
+    		message = message+" PIN Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+		if ((passportNumberState == 'USED')){
+    		message = message+" Payroll Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+		if ((mobileNumberState == 'USED')){
+    		message = message+" Mobile Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+		if ((employeeNumberState == 'USED')){
+    		message = "Employee Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+    	
+		if ((nhifNumberState == 'USED')){
+    		message = "Employee Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+    	
+    	
+		if ((socialSecurityNumberState == 'USED')){
+    		message = "Employee Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+    	
+    	
+		if ((emailAddressState == 'USED')){
+    		message = "Employee Number already used, it must be unique ! ";
+    		isValid = false;
+    	}
+
+    	if ((idNumberSize == 'LESS')){
+    		message = message+"  ID Number must be greater than or equal to 6 characters ! ";
+    		isValid = false;
+    	}
+
+    	if ((idNumberSize == 'MORE')){
+    		message = message+"  ID Number must be less than or equal to 8 characters ! ";
+    		isValid = false;
+    	}
+
+
+    	if (!isValid){
+    		alert(message);
+    	} else{
+    		alert(' Saving Employee!');
+    	}
+
+
+    	return isValid;
+
+    }
    
    </script>

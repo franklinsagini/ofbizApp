@@ -805,6 +805,29 @@ under the License.
             <key-map field-name="leaveStatus" rel-field-name="statusId"/>
         </relation> -->
     </entity>   
+    
+    
+    <entity entity-name="EmplLeaveCalender"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Calender">
+            
+        <field name="leaveCalenderId" type="id-ne"/>
+        <field name="partyId" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
+        <field name="fromDate" type="date"/>
+        <field name="leaveDuration" type="floating-point"/> 
+        <prim-key field="leaveCalenderId"/>
+        <relation type="one" fk-name="EMPL_LEAVECALENDER_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVECALENDER_ELETP" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
+        </relation>
+    </entity>  
+    
+    
+    
+    
     <!-- Leave Balances Entity --> 
     <entity entity-name="LeaveBalances"
             package-name="org.ofbiz.humanres.employment"

@@ -273,7 +273,7 @@
 	</form>
 	<form name="ListEmplLeaves" list-name="listIt" type="list"
 		odd-row-style="alternate-row" header-row-style="header-row-2"
-		paginate-target="EmplLeave" default-table-style="basic-table hover-bar">
+		paginate-target="EditEmplLeave" default-table-style="basic-table hover-bar">
 		<actions>
 <!--			<entity-condition entity-name="EmplLeave">
 				<condition-expr field-name="partyId" operator="equals"
@@ -350,7 +350,7 @@
 			</hyperlink>
 		</field>
 		
-		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
+	<!-- 	<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
 				target="updateEmplLeave">
@@ -359,7 +359,8 @@
 				<parameter param-name="fromDate" /> 
 				<parameter param-name="leaveId" />
 			</hyperlink>
-		</field>
+		</field> -->
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
@@ -374,12 +375,20 @@
 			<hidden />
 		</field>
 	</form>
-	<form name="EditEmplLeave" type="single" target="updateEmplLeave2"
+	<form name="EditEmplLeave" type="single" target="createEmplLeaveExt"
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
 		
-		<alt-target use-when="leaveApp==null" target="createEmplLeaveExt" /> 
-		<!-- <alt-target use-when="leaveApp!=null" target="updateEmplLeave" /> -->
+		<!-- <alt-target use-when="leaveApp==null" target="createEmplLeaveExt" /> 
+		<alt-target use-when="leaveApp!=null" target="updateEmplLeave" /> -->
+		<alt-target use-when="leaveApp!=null" target="updateEmplLeave"/>
+		
+		 <actions>
+            <entity-condition entity-name="EmplLeave" list="emplLeaveList">
+                <order-by field-name="leaveId"/>
+            </entity-condition>
+        </actions>
+		
 		<field name="leaveId"><hidden/></field>
 		<field name="leaveId" use-when="leaveApp!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
 		<field name="createdDate"><hidden/></field>
@@ -432,7 +441,7 @@
 		<field name="leaveBalance" title="Leave Balance">
 			<text default-value="${leaveBalance}" disabled="true"></text>
 		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonCreate}"
+		<!-- <field name="submitButton" title="${uiLabelMap.CommonCreate}"
 			widget-style="smallSubmit">
 			<submit button-type="button" />
 		</field>
@@ -443,7 +452,12 @@
 		<field name="submitButton" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}"
 			widget-style="smallSubmit">
 			<submit button-type="button" />
-		</field>
+		</field> -->
+		
+		 <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <!-- submitButton -->
+        <field use-when="leaveApp==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="leaveApp!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
 	</form>
 	<form name="FindLeaveApprovals" type="single" target="FindLeaveApprovals"
 		odd-row-style="header-row" default-table-style="basic-table"
@@ -501,6 +515,7 @@
 				<field-map field-name="viewSize" from-field="viewSize" />
 			</service>
 		</actions>
+		
 		<field name="partyId" field-name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="PartyNameView"
 				description="${firstName} ${lastName}">
@@ -632,6 +647,7 @@
 	<form name="ListMyLeaves" list-name="emplLeaves" target="" title=""
 		type="list" paginate-target="ListMyLeaves" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
+		<field name="leaveId"><hidden/></field>
 		<field name="partyId" position="1" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="Person" key-field-name="partyId"
 				description="${partyId} ${firstName} ${lastName}">
@@ -851,7 +867,7 @@
 			</drop-down>
 
 	     </field>
-		<field name="openingDate" title="Date"><date-time /></field>
+		<field name="openingDate" title="Date"><date-time type="date" /></field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button" /></field>
 		<!-- submitButton -->
 		<field use-when="OpeningLeaveBalanceContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
@@ -874,6 +890,8 @@
 		<hyperlink target="deletefileType" description="${uiLabelMap.CommonDelete}"	also-hidden="false"><parameter param-name="leaveBalanceId" /></hyperlink></field>
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
+	
+	
 	
 	<!-- =============================FOR LEAVE UPDATE============================================ -->
 	
@@ -976,14 +994,99 @@
 	</form>
 	
 	
+	<!-- ====================================THIS IS FOR LEAVE REJECTION REASON POPUP====================================================== -->
+	
     <form name="LeaveRejectionReason" type="single" target="rejectEmplLeaveStatus" title="" default-map-name="reason" default-entity-name="LeaveStatusLog">
     <actions>
     
     </actions>
-    
     <field name="rejectReason" title="Leave Rejection Reason" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
     <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
     </form>
+    
+    
+    <!-- ==================================FOR LEAVE CALENDER============================================== -->
+  
+    
+    
+    <form name="EditEmplLeaveCalender" type="single" target="createLeaveCalender"
+		default-map-name="EmplLeaveCalenderContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		
+		
+		<alt-target use-when="EmplLeaveCalenderContext!=null" target="updateLeaveCalender"/>
+		
+		 <actions>
+            <entity-condition entity-name="EmplLeaveCalender" list="emplLeaveCalenderList">
+                <order-by field-name="leaveCalenderId"/>
+            </entity-condition>
+        </actions>
+		
+		<field name="leaveCalenderId"><hidden/></field>
+		<field name="leaveCalenderId" use-when="EmplLeaveCalenderContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+		<field name="partyId" title="Member">
+			<hidden value="${userLogin.partyId}" />
+		</field>
+		
+		<field name="appointmentdate" title="Appointment Date">
+			<hidden value="${appointmentdate}" />
+		</field>
+		<field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}"
+			title="${uiLabelMap.HumanResLeaveType}">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}" 
+					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
+			</drop-down>
+		</field>
+		<field name="fromDate" tooltip="${uiLabelMap.CommonRequired}">
+			<date-time type="date" />
+		</field>
+		<field name="leaveDuration" tooltip="${uiLabelMap.CommonRequired}">
+			<text />
+		</field>
+		
+		 <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <!-- submitButton -->
+        <field use-when="EmplLeaveCalenderContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="EmplLeaveCalenderContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+	</form>
+	
+	<form name="EditEmplLeaveCalenderListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLeaveCalender"
+		paginate-target="EditOpeningLeaveBalanceForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="EmplLeaveCalender">
+			<condition-expr field-name="partyId" from-field="${userLogin.partyId}"/>
+			</entity-condition>
+		</actions>
+		
+		<field name="leaveCalenderId"><hidden /></field>
+		<field name="partyId" title="Staff"><hidden/></field>
+		<field name="leaveTypeId" title="Leave Type"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
+		<field name="fromDate"><display/></field>
+		<field name="leaveDuration"><display /></field>
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
+		<hyperlink target="deleteLeaveCalender" description="${uiLabelMap.CommonDelete}"	also-hidden="false"><parameter param-name="leaveCalenderId" /></hyperlink></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
+	</form>
+	
+	<!-- ======================================FOR HR ADMIN=========================================== -->
+	
+	<form name="EditEmplLeaveCalenderListForHRForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLeaveCalender"
+		paginate-target="EditOpeningLeaveBalanceForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="EmplLeaveCalender"></entity-condition>
+		</actions>
+		
+		<field name="leaveCalenderId"><hidden /></field>
+		<field name="partyId" title="Staff"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="leaveTypeId" title="Leave Type"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
+		<field name="fromDate"><display/></field>
+		<field name="leaveDuration"><display /></field>
+		<field name="thruDate" title=" To Date"><display/></field>
+		<!-- <field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
+		<hyperlink target="deleteLeaveCalender" description="${uiLabelMap.CommonDelete}"	also-hidden="false"><parameter param-name="leaveCalenderId" /></hyperlink></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field> -->
+	</form>
 
 	
 </forms>

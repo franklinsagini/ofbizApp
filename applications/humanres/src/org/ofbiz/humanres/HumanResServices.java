@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -524,33 +525,86 @@ public static String getLeaveBalance(HttpServletRequest request,
 	
 	
 	
-	
-public String NextPayrollNumber(Delegator delegator) {
-	String newPayrollNo=null;
-	
+	public static String  NextPayrollNumber(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String nextEmployeeNumber = null;
+		
+		
+		List<GenericValue> employeeELI = null;
+		GenericValue lastEmployee = null;
+		
+		
 	try {
+		List<String> orderByList = new ArrayList<String>();
+		orderByList.add("-createdStamp");
+		employeeELI = delegator.findList("Person",
+				null, null, orderByList, null, false);
+		
+		if (employeeELI.size() > 0){
+			lastEmployee = employeeELI.get(0); 
+		String emplNo=lastEmployee.getString("employeeNumber");
+				
+			
+				 String trancatemplNo= StringUtils.substring(emplNo, 3);
+				 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber="HCS".concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+		}
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+	
+		
+		String i18employeeNumber = (nextEmployeeNumber);
+	    
+	    result.put("employeeNumber_i18n", i18employeeNumber);
+	    result.put("employeeNumber", nextEmployeeNumber);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
 
-		String helperNam = delegator.getGroupHelperName("org.ofbiz");    // gets the helper (localderby, localmysql, localpostgres, etc.) for your entity group org.ofbiz
-		Connection conn = ConnectionFactory.getConnection(helperNam); 
-		Statement statement = conn.createStatement();
-		statement.execute("SELECT party_id,employee_number FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
-		ResultSet results = statement.getResultSet();
-			String emplNo=results.getString("employee_number");
-			 String trancatemplNo= StringUtils.substring(emplNo, 3);
-			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
-			 String h=String.valueOf(newEmplNo);
-			 newPayrollNo="HCS".concat(h);
-			 
-			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +newPayrollNo);
-	} catch (Exception e) {
-		// TODO: handle exception
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
 	}
 	
 	
-	return newPayrollNo;
-
 	
-}
+
 	
 }
 
