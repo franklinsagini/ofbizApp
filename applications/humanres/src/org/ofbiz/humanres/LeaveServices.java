@@ -9,11 +9,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
@@ -22,7 +24,11 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.JsLanguageFilesMapping.datejs;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -32,6 +38,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.workflow.WorkflowServices;
 
@@ -706,5 +715,65 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		return superVisorLevelValue;
 	}
 
+	public static Map<String, Object> addStaffOpeningBalance(DispatchContext ctx,
+			Map<String, ? extends Object> context) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Timestamp now = UtilDateTime.nowTimestamp();
+		List<GenericValue> toBeStored = FastList.newInstance();
+		Locale locale = (Locale) context.get("locale");
+		// in most cases userLogin will be null, but get anyway so we can keep
+		// track of that info if it is available
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+		String leaveBalanceId = (String) context.get("leaveBalanceId");
+
+		// if specified partyId starts with a number, return an error
+		if (UtilValidate.isNotEmpty(leaveBalanceId) && leaveBalanceId.matches("\\d+")) {
+			return ServiceUtil.returnError(UtilProperties.getMessage(
+					null, "party.id_is_digit", locale));
+		}
+
+		// partyId might be empty, so check it and get next seq party id if
+		// empty
+		if (UtilValidate.isEmpty(leaveBalanceId)) {
+			try {
+				leaveBalanceId = delegator.getNextSeqId("EmplLeaveOpeningBalance");
+			} catch (IllegalArgumentException e) {
+				return ServiceUtil.returnError(UtilProperties.getMessage(
+						null, "party.id_generation_failure", locale));
+			}
+		}
+
+		// check to see if party object exists, if so make sure it is PERSON
+		// type party
+		GenericValue EmplLeaveOpeningBalance = null;
+
+		try {
+			EmplLeaveOpeningBalance = delegator.findOne("EmplLeaveOpeningBalance",
+					UtilMisc.toMap("leaveBalanceId", leaveBalanceId), false);
+		} catch (GenericEntityException e) {
+			Debug.logWarning(e.getMessage(), null);
+		}
+
+	
+		EmplLeaveOpeningBalance = delegator.makeValue("EmplLeaveOpeningBalance",
+				UtilMisc.toMap("leaveBalanceId", leaveBalanceId));
+		EmplLeaveOpeningBalance.setNonPKFields(context);
+		toBeStored.add(EmplLeaveOpeningBalance);
+
+		try {
+			delegator.storeAll(toBeStored);
+		} catch (GenericEntityException e) {
+			Debug.logWarning(e.getMessage(), null);
+			return ServiceUtil.returnError(UtilProperties.getMessage(
+					null, "person.create.db_error",
+					new Object[] { e.getMessage() }, locale));
+		}
+
+		result.put("leaveBalanceId", leaveBalanceId);
+		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+		return result;
+	}
 	
 }

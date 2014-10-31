@@ -716,6 +716,7 @@ under the License.
       <field name="approvedBy" type="id-ne"></field>
       <field name="nextApprover" type="id"></field>
       <field name="rejectedBy" type="id-ne"></field>
+       <field name="rejectReason" type="description"></field>
       <!-- <field name="leaveLogStatus" type="description"></field> -->
       <field name="approvalStatus" type="description"></field>
       <prim-key field="leaveStsLogId"/>
@@ -736,12 +737,13 @@ under the License.
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Opening Balance Entity">
             
+        <field name="leaveBalanceId" type="id-ne"/>
         <field name="partyId" type="id-ne"/>
         <field name="leaveTypeId" type="id-ne"/>
         <field name="openingLeaveBalance" type="floating-point"/>  
         <field name="isActive" type="indicator"></field>
          <field name="openingDate" type="date"/>
-     
+         <prim-key field="leaveBalanceId"/>
         <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
@@ -803,6 +805,29 @@ under the License.
             <key-map field-name="leaveStatus" rel-field-name="statusId"/>
         </relation> -->
     </entity>   
+    
+    
+    <entity entity-name="EmplLeaveCalender"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Calender">
+            
+        <field name="leaveCalenderId" type="id-ne"/>
+        <field name="partyId" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
+        <field name="fromDate" type="date"/>
+        <field name="leaveDuration" type="floating-point"/> 
+        <prim-key field="leaveCalenderId"/>
+        <relation type="one" fk-name="EMPL_LEAVECALENDER_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVECALENDER_ELETP" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
+        </relation>
+    </entity>  
+    
+    
+    
+    
     <!-- Leave Balances Entity --> 
     <entity entity-name="LeaveBalances"
             package-name="org.ofbiz.humanres.employment"
@@ -849,6 +874,7 @@ under the License.
         <field name="daytype" type="description"></field>
         <field name="gender" type="name"></field>
         <field name="isforwarded" type="name"></field>
+        <field name="isDeductedFromAnnual" type="name"></field>
         <field name="forwardmax" type="numeric"></field>
         <field name="noticeperiod" type="numeric"></field>
         <field name="validity" type="numeric"></field>
