@@ -29,6 +29,7 @@ import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -598,6 +599,54 @@ public static String getLeaveBalance(HttpServletRequest request,
 		}
 
 		return json;
+
+
+	}
+	
+	/*
+	 * Calculate Next Payroll Number
+	 * 
+	 * **/
+	public static String  NextPayrollNumber() {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String nextEmployeeNumber = null;
+		
+		
+		List<GenericValue> employeeELI = null;
+		GenericValue lastEmployee = null;
+		
+		
+	try {
+		List<String> orderByList = new ArrayList<String>();
+		orderByList.add("-createdStamp");
+		employeeELI = delegator.findList("Person",
+				null, null, orderByList, null, false);
+		
+		if (employeeELI.size() > 0){
+			lastEmployee = employeeELI.get(0); 
+		String emplNo=lastEmployee.getString("employeeNumber");
+				
+			
+				 String trancatemplNo= StringUtils.substring(emplNo, 3);
+				 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber="HCS".concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+		}
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+	
+		
+		//String i18employeeNumber = nextEmployeeNumber;
+	    
+	    result.put("employeeNumber_i18n", nextEmployeeNumber);
+	    result.put("employeeNumber", nextEmployeeNumber);
+	   
+	    return nextEmployeeNumber;
 
 
 	}

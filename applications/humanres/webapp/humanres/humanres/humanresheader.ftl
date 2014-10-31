@@ -85,26 +85,7 @@
          }
         });
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-         jQuery('input[name="birthDate"]').change(function(){
+               jQuery('input[name="birthDate"]').change(function(){
 		 
          var birthDate = this.value;
          var birthDate =  jQuery('input[name="birthDate"]').val();
@@ -288,7 +269,7 @@
 	   
 	   /** ==================EMPLOYEE VALIDATION ==========================================**/
 	   
-	      function employeeRegistrationFormValidation(reqUrl){
+	      function employeeRegistrationFormValidation(){
 		/** alert(' Checking for unique fields ... '); **/
 		var nationalIDNumber = jQuery('input[name="nationalIDNumber"]').val();
     	var pinNumber  = jQuery('input[name="pinNumber"]').val();
@@ -342,54 +323,54 @@
 
     	var message = '';
     	if ((nationalIDNumberState == 'USED')){
-    		message = "ID Number already used, it must be unique ! ";
+    		message = "ID Number already used, Try another one ! ";
     		isValid = false;
     	}
 
 		if ((pinNumberState == 'USED')){
-    		message = message+" PIN Number already used, it must be unique ! ";
+    		message = message+" PIN Number already used,Try another one  ! ";
     		isValid = false;
     	}
 
 		if ((passportNumberState == 'USED')){
-    		message = message+" Payroll Number already used, it must be unique ! ";
+    		message = message+" Passport Number already used, Try another one  ! ";
     		isValid = false;
     	}
 
 		if ((mobileNumberState == 'USED')){
-    		message = message+" Mobile Number already used, it must be unique ! ";
+    		message = message+" Mobile Number already used, Try another one  ! ";
     		isValid = false;
     	}
 
 		if ((employeeNumberState == 'USED')){
-    		message = "Employee Number already used, it must be unique ! ";
+    		message = "Employee Payroll Number already used, Try another one  ! ";
     		isValid = false;
     	}
     	
 		if ((nhifNumberState == 'USED')){
-    		message = "Employee Number already used, it must be unique ! ";
+    		message = "NHIF Number already used, Try another one  ! ";
     		isValid = false;
     	}
     	
     	
 		if ((socialSecurityNumberState == 'USED')){
-    		message = "Employee Number already used, it must be unique ! ";
+    		message = "NSSF Number already used, Try another one  ! ";
     		isValid = false;
     	}
     	
     	
 		if ((emailAddressState == 'USED')){
-    		message = "Employee Number already used, it must be unique ! ";
+    		message = "Email address already used, Try another one  ! ";
     		isValid = false;
     	}
 
     	if ((idNumberSize == 'LESS')){
-    		message = message+"  ID Number must be greater than or equal to 6 characters ! ";
+    		message = message+"  ID Number must be greater or equal to 6 characters ! ";
     		isValid = false;
     	}
 
     	if ((idNumberSize == 'MORE')){
-    		message = message+"  ID Number must be less than or equal to 8 characters ! ";
+    		message = message+"  ID Number must be less or equal to 8 characters ! ";
     		isValid = false;
     	}
 
@@ -397,12 +378,12 @@
     	if (!isValid){
     		alert(message);
     	} else{
-    		alert(' Saving Employee!');
+    		
     	}
 
 
     	return isValid;
 
     }
-   
+    
    </script>
