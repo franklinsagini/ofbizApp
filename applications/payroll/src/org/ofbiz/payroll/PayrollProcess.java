@@ -900,12 +900,16 @@ public class PayrollProcess {
 				delegator);
 		log.info("######### Max Pension " + bdMAX_PENSION_CONTRIBUTION);
 
-		bdEPB = (bdNSSFStatutory.multiply(new BigDecimal(2))).add(
+/*		bdEPB = (bdNSSFStatutory.multiply(new BigDecimal(2))).add(
 				bdNSSFVoluntary).add(bdPensionAmt.multiply(new BigDecimal(3)))
 				.subtract(bdMAX_PENSION_CONTRIBUTION);
-
 		if (bdEPB.intValue() <= 0) {
 			bdEPB = BigDecimal.ZERO;
+		}*/
+		
+		if(bdPensionAmt.compareTo(bdMAX_PENSION_CONTRIBUTION)>0)
+		{
+			bdEPB=bdPensionAmt.subtract(bdMAX_PENSION_CONTRIBUTION);
 		}
 
 		log.info("######### EPB " + bdEPB);
