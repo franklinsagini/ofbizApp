@@ -219,7 +219,9 @@ under the License.
         	</entity-one -->
 
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
-
+        	
+        	
+			<set field="employeeNumber" value="${bsh:org.ofbiz.humanres.HumanResServices.NextPayrollNumber();}" type="String"/>
         </actions>
 
         <alt-target use-when="personalInfo!=null" target="updatePerson"/>
@@ -232,8 +234,8 @@ under the License.
 
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
-
-        <field name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60"/></field>
+       
+        <field name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="${employeeNumber}" disabled="true"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
          <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
@@ -283,13 +285,14 @@ under the License.
        	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
        	 </drop-down>
         </field>
-
-        <field name="branchId" title="Branch" required-field="true" widget-style="required">
+         <field name="branchId" title=" Select Branch" required-field="true" widget-style="required">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
+        
 
+       
          <!-- field name="stationId" title="Station" required-field="true" widget-style="required">
             <drop-down allow-empty="false" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
@@ -405,7 +408,7 @@ under the License.
         <field name="cardId"><hidden/></field>
         <field name="externalId"><hidden/></field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" action="javascript: return employeeRegistrationFormValidation();" event="onclick"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>

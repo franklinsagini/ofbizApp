@@ -45,7 +45,7 @@
       <prim-key field="destinationId"/>
     </entity>
 
-    <!-- Petty Cash Entities -->
+    <!-- Petty Cash Entities
     <entity entity-name="ImprestPettySetup"
             package-name="org.ofbiz.imprestmanagement.imprest"
             title="Petty Setup Entity">
@@ -62,20 +62,30 @@
         <key-map field-name="cashManager" rel-field-name="partyId"/>
       </relation>
     </entity>
-
+-->
     <entity entity-name="ImprestPettyCash"
             package-name="org.ofbiz.imprestmanagement.imprest"
             title="Petty Cash Entity">
+      <field name="pettyCashId" type="id"></field>
+      <field name="pettyCashName" type="id-long-ne"></field>
       <field name="customTimePeriodId" type="id"></field>
       <field name="createdBy" type="id-ne"></field>
       <field name="initialBalance" type="currency-amount"></field>
       <field name="currentBalance" type="currency-amount"></field>
       <field name="reservedAmount" type="currency-amount"></field>
-      <field name="statusName" type="short-varchar"></field>
+      <field name="cashLimit" type="currency-amount"></field>
+      <field name="replenishLevel" type="currency-amount"></field>
       <field name="comments" type="comment"></field>
+      <field name="cashManager" type="id-ne"></field>
+      <field name="isActive" type="indicator"></field>
+      <field name="statusName" type="short-varchar"></field>
+      <prim-key field="pettyCashId"/>
       <prim-key field="customTimePeriodId"/>
       <relation type="one" fk-name="PETTY_CASH_CREATOR" title="Creator" rel-entity-name="Party">
         <key-map field-name="createdBy" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PETTY_CASH_MANAGER" title="Manager" rel-entity-name="Party">
+        <key-map field-name="cashManager" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="PTTY_CSH_PRD" rel-entity-name="CustomTimePeriod">
         <key-map field-name="customTimePeriodId"/>
