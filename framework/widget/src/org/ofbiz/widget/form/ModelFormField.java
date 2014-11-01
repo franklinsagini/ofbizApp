@@ -2583,12 +2583,12 @@ public class ModelFormField {
 			if (!this.entityName.equals("MemberStatus")  && !this.entityName.equals("MemberAccount")  && !this.entityName.equals("LoanGuarantor")  && !this.entityName.equals("Member") 
 					&& !this.entityName.equals("LoanApplication") && !this.entityName.equals("LoanProduct")  && !this.entityName.equals("AccountProduct")  
 					&& !this.entityName.equals("MaritalStatus")  && !this.entityName.equals("Gender")   && !this.entityName.equals("Salutation")  && !this.entityName.equals("LoanStatus")){
-			try {
-				TransactionUtil.begin();
-			} catch (GenericTransactionException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//			try {
+//				TransactionUtil.begin();
+//			} catch (GenericTransactionException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
 			try {
 				System.out.println("TTTTTTTTTT About to try TTTTTTTTT ");
 				
@@ -2609,20 +2609,20 @@ public class ModelFormField {
 				 Debug.logError(e, errMsg, module);
 				 throw new IllegalArgumentException(errMsg);
 			}
-			try {
-				TransactionUtil.commit();
-			} catch (GenericTransactionException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//			try {
+//				TransactionUtil.commit();
+//			} catch (GenericTransactionException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
 			} else{
 			
-			try {
-				TransactionUtil.begin();
-			} catch (GenericTransactionException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//			try {
+//				TransactionUtil.begin();
+//			} catch (GenericTransactionException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
 			String regex = "[0-9]+";
 			fieldValue = fieldValue.replaceAll(",", "");
 			if ((value == null) &&  (fieldValue.matches(regex))) {
@@ -2638,12 +2638,12 @@ public class ModelFormField {
 				}
 
 			}
-			try {
-				TransactionUtil.commit();
-			} catch (GenericTransactionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				TransactionUtil.commit();
+//			} catch (GenericTransactionException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			}
 			
 			// if (value == null) {

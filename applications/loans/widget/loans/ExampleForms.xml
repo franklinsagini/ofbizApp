@@ -727,9 +727,9 @@
 			<set field="statusName" value="ACTIVE"/>
 			<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
 			
-			<entity-condition entity-name="Member" list="membersList">
+			<!-- entity-condition entity-name="Member" list="membersList">
 				<condition-expr field-name="memberStatusId" operator="equals" value="${statusId}"/>
-			</entity-condition>
+			</entity-condition -->
 			<!-- entity-condition entity-name="SaccoProduct" list="productsList"> 
 				<condition-expr field-name="productType" operator="equals" value="Loan"/> 
 				</entity-condition -->
@@ -920,7 +920,7 @@
 		<field name="loanNo" title="Loan No.">
 			<text-find />
 		</field>
-		<field name="partyId" title="Member">
+		<!-- field name="partyId" title="Member">
 			<drop-down allow-empty="true" current-description="">
 				<entity-options description="${firstName} ${middleName} ${lastName} - ${memberNumber}"
 					key-field-name="partyId" entity-name="Member">
@@ -929,7 +929,8 @@
 					<entity-order-by field-name="firstName" />
 				</entity-options>
 			</drop-down>
-		</field>
+		</field -->
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
 
 		<field name="loanProductId" title="Loan Type">
 			<drop-down allow-empty="true" current-description="">
@@ -970,8 +971,8 @@
 		<actions>
 			
 			<entity-condition entity-name="LoanApplication">
-				<limit-range size="20" start="1"/>
-				<!-- order-by field-name="-loanApplicationId"/ -->
+				
+				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
 			    							
