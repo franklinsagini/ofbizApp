@@ -34,11 +34,11 @@ under the License.
         <field name="payrollElementId"><hidden/></field>
         <field name="elementCode" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="elementType"  title="Element Type" >
+        <field name="elementType"  title="Code Type" >
             <drop-down allow-empty="true">
-                <option key="Payment" description="Payment"/>
+                <option key="Payment" description="Earning"/>
                 <option key="Deduction" description="Deduction"/>
-                <option key="System Element" description="System Element"/>
+                <!-- option key="System Element" description="System Element"/ -->
             </drop-down>
         </field>
         <field name="iscalulated" title="Calculated" >
@@ -47,56 +47,32 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
+        
+         <field name="benefit"  title="Benefit Type" >
+            <drop-down allow-empty="true">
+                <option key="Cash" description="Cash Benefit"/>
+                <option key="Non-cash" description="Non-cash Benefit"/>
+            </drop-down>
+        </field>
+        
+        <field name="taxable"  title="Is Taxable" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        
         <field name="hasBalance" title="Has Balance" >
             <drop-down allow-empty="false">
                 <option key="N" description="No"/>                
                 <option key="Y" description="Yes"/>
             </drop-down>
-        </field>
-        <field name="relief"  title="Is Relief" >
-            <drop-down allow-empty="false">                
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        
+        </field>              
         <field name="cummulative"  title="Is Cummulative" >
             <drop-down allow-empty="false">
             	<option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        <field name="employercontribution"  title="Employer Contribution" >
-            <drop-down allow-empty="false">
-            	<option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        
-        <!--field name="systemcontrolled"  title="Control Type" >
-            <drop-down allow-empty="false">
-            	<option key="User" description="User Controlled "/>
-                <option key="System" description="System Controlled"/>
-            </drop-down>
-        </field-->
-        
-         <field name="taxable"  title="Is Taxable" >
-            <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        
-        <field name="employertax"  title="Employer Tax" >
-            <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        <field name="benefit"  title="Benefit Type" >
-            <drop-down allow-empty="true">
-                <option key="Cash" description="Cash Benefit"/>
-                <option key="Non-cash" description="Non-cash Benefit"/>
             </drop-down>
         </field>
         <field name="insurancecontribution"  title="Insurance Contribution" >
@@ -112,14 +88,7 @@ under the License.
             </drop-down>
         </field>
         
-		<field name="recurrent"  title="Is Recurrent" >
-            <drop-down allow-empty="false">
-                <option key="N" description="No"/>
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        
-         <field name="isInterest"  title="Is Interest" >
+        <field name="isInterest"  title="Is Interest" >
             <drop-down allow-empty="false">
                 <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
@@ -147,6 +116,40 @@ under the License.
                 <option key="PerMonth" description="Per Month"/>
             </drop-down>
         </field>
+        <field name="childId" title="Child Code">
+        	<drop-down allow-empty="true">
+        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
+        	</drop-down>
+        </field>        
+        
+        
+        <field name="relief"  title="Is Relief" >
+            <drop-down allow-empty="false">                
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+         <field name="employercontribution"  title="Employer Contribution" >
+            <drop-down allow-empty="false">
+            	<option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+         <field name="employertax"  title="Employer Tax" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="recurrent"  title="Is Recurrent" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
         <field name="payslipdisplay"  title="Payslip Display" >
             <drop-down allow-empty="false">
                 <option key="No" description="No"/>
@@ -161,17 +164,6 @@ under the License.
         </field>
         
         
-        <!-- field name="parentId" title="Parent Element">
-        	<drop-down allow-empty="true">
-        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
-        	</drop-down>
-        </field-->
-        
-        <field name="childId" title="Child Element">
-        	<drop-down allow-empty="true">
-        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
-        	</drop-down>
-        </field>
         
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
@@ -181,23 +173,21 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollElement">
+            	<condition-expr field-name="elementType" operator="not-equals" value="System Element"/>
             	<order-by field-name="elementCode"/>
             </entity-condition>
             <entity-condition entity-name="PayrollElement" list="payrollElementList"></entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updatePayrollElement"/ -->
-        <!-- field name="skillTypeId">
-            <display-entity entity-name="SkillType" description="${description}"/>
-        </field -->
-       
+              
        <field name="payrollElementId" > <hidden/>  </field>        
-        <field name="elementCode" title="Element Code"> 
-	        <hyperlink also-hidden="false" description="${elementCode}" target="EditPayrollElement">
+        <field name="elementCode" title="Code"> 
+	        <hyperlink also-hidden="false" description="${elementCode}" target="EditPayrollElement">	        
                 <parameter param-name="payrollElementId"/>
             </hyperlink>
 	    </field>        
         <field name="name"> <display also-hidden="false"/> </field>
-        <field name="elementType"> <display also-hidden="false"/> </field>
+        <field name="elementType" title="Code Type"> <display also-hidden="false"/> </field>
         <field name="payslipdisplay" title="Payslip Display"> <display also-hidden="false"/> </field>
         
         
@@ -225,20 +215,19 @@ under the License.
         	<set field="payrollElementId" from-field="parameters.payrollElementId"/>
         </actions>
         <alt-target use-when="payrollelement==null" target="createPayrollElements"/>
-        <auto-fields-service service-name="updatePayrollElement" map-name="payrollelement"/>
-        
+        <!-- auto-fields-service service-name="updatePayrollElement" map-name="payrollelement"/ -->        
         
         <!-- field name="payrollElementId" use-when="payrollelement==null"><text/></field>
         <field name="payrollElementId" use-when="payrollelement!=null"><ignored/></field -->
         
-        <field name="payrollElementId"> <hidden/></field>
+       <field name="payrollElementId"><hidden/></field>
         <field name="elementCode" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="elementType"  title="Element Type" >
+        <field name="elementType"  title="Code Type" >
             <drop-down allow-empty="true">
-                <option key="Payment" description="Payment"/>
+                <option key="Payment" description="Earning"/>
                 <option key="Deduction" description="Deduction"/>
-                <option key="System Element" description="System Element"/>
+                <!-- option key="System Element" description="System Element"/ -->
             </drop-down>
         </field>
         <field name="iscalulated" title="Calculated" >
@@ -247,95 +236,64 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
-        <field name="hasBalance" title="Has Balance" >
-            <drop-down allow-empty="false">
-                 <option key="N" description="No"/>                
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        <field name="relief"  title="Is Relief" >
-            <drop-down allow-empty="false">                
-                 <option key="N" description="No"/>                
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
         
-        <field name="cummulative"  title="Is Cummulative" >
-            <drop-down allow-empty="false">
-            	 <option key="N" description="No"/>                
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        <field name="employercontribution"  title="Employer Contribution" >
-            <drop-down allow-empty="false">
-            	 <option key="N" description="No"/>                
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        
-        <!--field name="systemcontrolled"  title="Control Type" >
-            <drop-down allow-empty="false">
-            	<option key="User" description="User Controlled "/>
-                <option key="System" description="System Controlled"/>
-            </drop-down>
-        </field-->
-        
-         <field name="taxable"  title="Is Taxable" >
-            <drop-down allow-empty="false">
-                <option key="N" description="No"/>                
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        
-        <field name="employertax"  title="Employer Tax" >
-            <drop-down allow-empty="false">
-                 <option key="N" description="No"/>                
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        <field name="benefit"  title="Benefit Type" >
+         <field name="benefit"  title="Benefit Type" >
             <drop-down allow-empty="true">
                 <option key="Cash" description="Cash Benefit"/>
                 <option key="Non-cash" description="Non-cash Benefit"/>
             </drop-down>
         </field>
+        
+        <field name="taxable"  title="Is Taxable" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        
+        <field name="hasBalance" title="Has Balance" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>                
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>              
+        <field name="cummulative"  title="Is Cummulative" >
+            <drop-down allow-empty="false">
+            	<option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
         <field name="insurancecontribution"  title="Insurance Contribution" >
             <drop-down allow-empty="false">
-                 <option key="N" description="No"/>                
+                <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
         <field name="hasRelief"  title="Has Relief" >
             <drop-down allow-empty="false">
-                 <option key="N" description="No"/>                
+                <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
         
-		<field name="recurrent"  title="Is Recurrent" >
+        <field name="isInterest"  title="Is Interest" >
             <drop-down allow-empty="false">
-                 <option key="N" description="No"/>                
-                <option key="Y" description="Yes"/>
-            </drop-down>
-        </field>
-        
-         <field name="isInterest"  title="Is Interest" >
-            <drop-down allow-empty="false">
-                 <option key="N" description="No"/>                
+                <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
         
         <field name="hasInterest"  title="Has Interest" >
             <drop-down allow-empty="false">
-                 <option key="N" description="No"/>                
+                <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
         
         <field name="isfixed"  title="Fixed" >
             <drop-down allow-empty="false">
-                 <option key="N" description="No"/>                
+                <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
@@ -347,30 +305,51 @@ under the License.
                 <option key="PerMonth" description="Per Month"/>
             </drop-down>
         </field>
+        <field name="childId" title="Child Code">
+        	<drop-down allow-empty="true">
+        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
+        	</drop-down>
+        </field>        
+        
+        
+        <field name="relief"  title="Is Relief" >
+            <drop-down allow-empty="false">                
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+         <field name="employercontribution"  title="Employer Contribution" >
+            <drop-down allow-empty="false">
+            	<option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+         <field name="employertax"  title="Employer Tax" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="recurrent"  title="Is Recurrent" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
         <field name="payslipdisplay"  title="Payslip Display" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>                
-                <option key="Y" description="Yes"/>
+                <option key="No" description="No"/>
+                <option key="Yes" description="Yes"/>
             </drop-down>
         </field>
         <field name="isbold"  title="Bolded" >
             <drop-down allow-empty="false">
-                <option key="N" description="No"/>                
+                <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
             </drop-down>
-        </field>
-        
-        
-        <!-- field name="parentId" title="Parent Element">
-        	<drop-down allow-empty="true">
-        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
-        	</drop-down>
-        </field-->
-        
-        <field name="childId" title="Child Element">
-        	<drop-down allow-empty="true">
-        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
-        	</drop-down>
         </field>
         
   
