@@ -81,7 +81,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
-					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "LEAVE_APPROVED")),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
 
 		try {

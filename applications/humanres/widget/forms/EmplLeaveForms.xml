@@ -978,7 +978,7 @@
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
 				target="deleteEmplLeave">
 				<parameter param-name="partyId" />
-				<parameter param-name="leaveTypeId" />
+				<parameter param-name="leaveTypeId"/>
 				<parameter param-name="fromDate" />
 				<parameter param-name="leaveId" />
 			</hyperlink>
@@ -991,19 +991,29 @@
 	
 	<!-- ====================================THIS IS FOR LEAVE REJECTION REASON POPUP====================================================== -->
 	
-    <form name="LeaveRejectionReason" type="single" target="rejectEmplLeaveStatus" title="" default-map-name="reason" default-entity-name="LeaveStatusLog">
-    <actions>
+	
+    <form name="LeaveRejectionReason" type="single" target="rejectEmplLeaveStatus" title="" default-map-name="reason" 
+     header-row-style="header-row" default-table-style="basic-table">
     
+    <actions>
+    <entity-condition entity-name="LeaveStatusLog"></entity-condition>
+            <set field="partyId" value="${parameters.partyId}"/>
+            <set field="fromDate" value="${parameters.fromDate}"/>
+            <set field="leaveTypeId" value="${parameters.leaveTypeId}"/>
+            <set field="leaveId" value="${parameters.leaveId}"/>
     </actions>
-    <field name="rejectReason" title="Leave Rejection Reason" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
-    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
+    
+    <field name="partyId"><hidden/></field>
+    <field name="fromDate"><hidden/></field>
+    <field name="leaveTypeId"><hidden/></field>
+    <field name="leaveId"><hidden/></field>
+    <field name="rejectReason" title="Leave Rejection Reason" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea cols="20" rows="3"/></field>
+    <field name="submitButton" title="Reject Leave" widget-style="buttontext"><submit button-type="button" /></field>
     </form>
     
     
     <!-- ==================================FOR LEAVE CALENDER============================================== -->
   
-    
-    
     <form name="EditEmplLeaveCalender" type="single" target="createLeaveCalender"
 		default-map-name="EmplLeaveCalenderContext" header-row-style="header-row"
 		default-table-style="basic-table">
