@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -389,15 +391,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 		return json;
 	}
 	
-	public static LocalDate calculateConfirmationDate(Date appointmentdate) {
-		LocalDate confirmationdate = null;
-		LocalDate localDateStartDate = new LocalDate(appointmentdate);
-		
-
-			localDateStartDate = localDateStartDate.plusMonths(6);
-		
-		return confirmationdate;
-	}
+	
 	
 	public static String  getConfirmationDate(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -526,7 +520,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 	
 	
 	
-	public static String  NextPayrollNumber(HttpServletRequest request,
+	/*public static String  NextPayrollNumber(HttpServletRequest request,
 			HttpServletResponse response) {
 		
 		Map<String, Object> result = FastMap.newInstance();
@@ -602,7 +596,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 
 
 	}
-	
+	*/
 	/*
 	 * Calculate Next Payroll Number
 	 * 
@@ -615,14 +609,18 @@ public static String getLeaveBalance(HttpServletRequest request,
 		
 		
 		List<GenericValue> employeeELI = null;
+		
+		
 		GenericValue lastEmployee = null;
 		
 		
 	try {
 		List<String> orderByList = new ArrayList<String>();
 		orderByList.add("-createdStamp");
-		employeeELI = delegator.findList("Person",
-				null, null, orderByList, null, false);
+
+		employeeELI = delegator.findList("RoleTypeAndPersonEmployeeAndBranch",
+				EntityCondition.makeCondition("roleTypeId",
+						"EMPLOYEE"), null, orderByList, null, false);
 		
 		if (employeeELI.size() > 0){
 			lastEmployee = employeeELI.get(0); 
@@ -641,7 +639,6 @@ public static String getLeaveBalance(HttpServletRequest request,
 		}
 	
 		
-		//String i18employeeNumber = nextEmployeeNumber;
 	    
 	    result.put("employeeNumber_i18n", nextEmployeeNumber);
 	    result.put("employeeNumber", nextEmployeeNumber);
@@ -653,7 +650,88 @@ public static String getLeaveBalance(HttpServletRequest request,
 	
 	
 	
+	
+	
+	
+	
 
+	
+	
+	
+	
+	public static String  showHideFields(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
+		String deductedFromAnnual=null;
+		String show="";
+		
+		
+		List<GenericValue> leaveELI = null;
+		GenericValue leaveType = null;
+		try {
+			leaveELI = delegator.findList("EmplLeaveType",
+					EntityCondition.makeCondition("leaveTypeId", leaveTypeId),
+					null, null, null, false);
+
+			if (leaveELI.size() > 0) {
+				leaveType = leaveELI.get(0);
+				deductedFromAnnual = leaveType.getString("isDeductedFromAnnual");
+
+			}
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (deductedFromAnnual.equalsIgnoreCase("y")) {
+			show=("SHOW");
+		} else {
+			show="HIDE";
+
+		}
+		
+		
+	    result.put("show", show);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
+	
 	
 }
 
