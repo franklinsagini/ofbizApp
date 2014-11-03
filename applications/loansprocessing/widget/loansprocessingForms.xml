@@ -209,9 +209,9 @@
             	</condition-list>
             </entity-condition>
             
-        	<entity-condition entity-name="Member" list="membersList">
+        	<!-- entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
-        	</entity-condition>
+        	</entity-condition -->
         	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
         	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
@@ -319,19 +319,19 @@
 	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
  
         	<set field="partyId" from-field="parameters.partyId"/>
-        	<entity-condition entity-name="Member">
+        	<!-- entity-condition entity-name="Member">
         		<condition-list combine="and">
         			<condition-expr field-name="memberStatusId" operator="equals" value="${memberStatusId}"/>
         			<condition-expr field-name="partyId" operator="not-equals" value="${partyId}"/>
         		</condition-list>
         		
         		<order-by field-name="-partyId"/>
-        	</entity-condition>
+        	</entity-condition -->
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
-        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	<!-- entity-condition entity-name="Station" list="stationList"></entity-condition -->
         	
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>

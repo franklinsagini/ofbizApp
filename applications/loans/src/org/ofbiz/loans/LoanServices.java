@@ -398,6 +398,18 @@ public class LoanServices {
 		// sum up all the savings
 		return bdTotalSavings;
 	}
+	
+	public static BigDecimal getTotalMemberDeposits(Long partyId){
+		BigDecimal bdTotalDeposit = BigDecimal.ZERO;
+		//Delegator delegator = 
+		//bdTotalDeposit = 
+		//memberId = memberId.replaceAll(",", "");
+		String memberId = String.valueOf(partyId);
+		memberId = memberId.replaceAll(",", "");
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		bdTotalDeposit = totalMemberDepositSavings(memberId, delegator);
+		return bdTotalDeposit;
+	}
 
 	/***
 	 * Get total deposit savings
@@ -883,7 +895,7 @@ public class LoanServices {
 		List<GenericValue> listToBeUpdatedGuarantors = new LinkedList<GenericValue>();
 		for (GenericValue genericValue : loanGuarantorELI) {
 			bdDepositamt = totalMemberDepositSavings(genericValue.getLong("guarantorId").toString(), delegator);
-			int memberStationId = getMemberStationId(genericValue.getLong("guarantorId").toString());
+			Long memberStationId = getMemberStationId(genericValue.getLong("guarantorId").toString());
 			genericValue.set("guaranteedPercentage", bdGuaranteedPercentage);
 			genericValue.set("guaranteedValue", bdGuaranteedValue);
 			genericValue.set("depositamt", bdDepositamt);
@@ -902,7 +914,7 @@ public class LoanServices {
 
 	}
 
-	private static int getMemberStationId(String partyId) {
+	private static Long getMemberStationId(String partyId) {
 		// TODO Auto-generated method stub
 		GenericValue member = null; // =
 		partyId = partyId.replaceAll(",", "");
@@ -920,10 +932,10 @@ public class LoanServices {
 		}
 
 		if (member != null) {
-			return member.getLong("stationId").intValue();
+			return member.getLong("stationId");
 		}
 
-		return 0;
+		return 0L;
 	}
 
 	/***

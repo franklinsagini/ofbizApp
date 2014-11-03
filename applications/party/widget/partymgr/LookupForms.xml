@@ -465,20 +465,24 @@ under the License.
             </service>
         </actions>
         <field name="partyId" title="Member"  widget-style="smallSubmit">
-            <hyperlink  also-hidden="false" target-type="content"  description="${firstName} ${middleName} ${lastName}"  target="javascript:set_values('${partyId}' ,'${firstName} ${middleName} ${lastName} - ${memberNumber}')">
+            <hyperlink  also-hidden="false" target-type="content"  description="${firstName} ${middleName} ${lastName}"  target="javascript:set_values('${partyId}'.replace(/,/g, '') ,'${firstName} ${middleName} ${lastName} - ${memberNumber}')">
             	<!-- parameter param-name="partyId" from-field="partyId"/ -->
             	
             </hyperlink>
         </field>
-        <field name="firstName" title="First Name"><display/></field>
+        <field name="totalDeposits" title="Deposits" >
+        	<display default-value="${bsh:org.ofbiz.loans.LoanServices.getTotalMemberDeposits(partyId);}"></display>
+        </field>
         
-        <field name="lastName"  title="Last Name"><display/></field>
         
         <field name="idNumber" title="ID Number"><display/></field>
         
-        <field name="payrollNumber"  title="Payroll Number"><display/></field>
+        <field name="payrollNumber"  title="Payroll Number">
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${payrollNumber}"></display-entity>
+        </field>
         <field name="memberNumber" title="Member Number"><display/></field>
         
         <field name="mobileNumber"  title="Mobile Number"><display/></field>
+        
     </form>
 </forms>

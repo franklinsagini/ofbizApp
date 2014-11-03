@@ -1147,7 +1147,11 @@ Gender
     </form>
 
     <form name="FindMember" type="single" target="reviewmembers" default-entity-name="Member">
-         
+         <actions>
+         	<entity-condition entity-name="PartyGroup" list="banchesList">
+         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+         	</entity-condition>
+         </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="firstName" title="First Name"><text-find/></field>
 
@@ -1175,11 +1179,12 @@ Gender
                 </entity-options>
             </drop-down>
         </field>
-        <!-- field name="branchId" title="Branch">
+        <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+                <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
+                <list-options key-name="partyId" list-name="banchesList" description="${groupName}"/>
             </drop-down>
-        </field -->
+        </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
 
@@ -1189,25 +1194,7 @@ Gender
 				<set field="memberStatusId"value="${bsh:org.ofbiz.party.party.getMemberStatusID.SaccoUtility.getMemberStatusID(statusName);}" type="Long"/ -->
  		<!-- condition-expr field-name="memberStatusId" operator="equals" value="${memberStatusId}"/ -->
         <actions>
-        	<!-- entity-condition entity-name="Member">
-        		
-        		<select-field field-name="firstName"/>
-        		<select-field field-name="lastName"/>
-        		<select-field field-name="middleName"/>
-        		<select-field field-name="idNumber"/>
-        		<select-field field-name="payrollNumber"/>
-        		<select-field field-name="memberNumber"/>
-        		<select-field field-name="mobileNumber"/>
-        		<order-by field-name="-partyId"/>
-        	</entity-condition -->
-        	<!-- entity-condition entity-name="MemberStatus" list="listStatus"></entity-condition>
-
-        	<entity-condition entity-name="PartyGroup" list="partyGroups">
-        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
-        	</entity-condition>
-        	<entity-condition entity-name="Station" list="stationList"></entity-condition -->
-
-        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+           	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
@@ -1215,13 +1202,6 @@ Gender
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
-
-
-
-         <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
          <field name="Member Names">
         	<hyperlink target="viewmemberprofile" description="${firstName} ${middleName} ${lastName}">
         		<parameter param-name="partyId"/>
@@ -1235,24 +1215,7 @@ Gender
 
        <field name="payrollNumber" title="Payroll No"><display also-hidden="false"></display></field>
 
-            <!-- drop-down allow-empty="false">
-                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
-            </drop-down -->
-	    <!-- field name="branchId" title="Branch">
-
-            <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
-        </field -->
-
-	   <!-- field name="stationId" title="Station">
-	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
-
-        </field -->
-        
-                    <!-- drop-down allow-empty="true" >
-                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
-            </drop-down -->
-
-        <field name="memberNumber" title="Member #"><display></display></field>
+         <field name="memberNumber" title="Member #"><display></display></field>
 
 
 
@@ -2282,11 +2245,6 @@ Gender
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
-
-
-
         <field name="Member Names">
         	<hyperlink target="viewmemberprofile" description="${firstName} ${middleName} ${lastName}">
         		<parameter param-name="partyId"/>
@@ -2343,6 +2301,12 @@ Gender
 
      <!-- start FindAllMembers -->
      <form name="FindAllMembers" type="single" target="allmembers" default-entity-name="Member">
+     	<actions>
+     		<entity-condition entity-name="PartyGroup" list="branchesList">
+     			<condition-expr field-name="isBranch" operator="equals" value="Y" />
+     		</entity-condition>
+     	</actions>
+     	<field name="noConditionFind"><hidden value="Y"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
 
         <field name="idNumber" title="ID Number" position="2"><text-find/></field>
@@ -2371,29 +2335,17 @@ Gender
         </field>
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+                <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
+                <list-options key-name="partyId" list-name="branchesList" description="${groupName}"/>
             </drop-down>
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
 
-    <form name="allmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="activemembers"
+    <form name="allmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="allmembers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 
         <actions>
-        	<!-- entity-condition entity-name="Member">
-        		
-        		<order-by field-name="-partyId"/>
-        	</entity-condition -->
-        	
-        	<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
-        	
-        	<!-- entity-condition entity-name="MemberStatus" list="listStatus"></entity-condition>
-
-        	<entity-condition entity-name="PartyGroup" list="partyGroups">
-        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
-        	</entity-condition>
-        	<entity-condition entity-name="Station" list="stationList"></entity-condition -->
 
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
@@ -2409,11 +2361,6 @@ Gender
         		<parameter param-name="partyId"/>
         	</hyperlink>
         </field>
-         <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
-
-
-        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
         <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
 
        <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
@@ -2437,7 +2384,7 @@ Gender
         <!-- drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down -->
-
+		
         <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
         <field name="memberNumber" title="Member No."><display></display></field>
 
@@ -2456,6 +2403,20 @@ Gender
         <!-- field name="memberStatusId">
         	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity>
         </field -->
+        		<field name="memberStatusId" title="Status">
+        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
+        		
+        	</display-entity>
+        </field>
+        
+        <field name="stationId" title="Station">
+        	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
+        		
+        	</display-entity>
+        </field>
+		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
+			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
+		</field>
 
         <field name="Edit">
         	<hyperlink target="NewMember" description="Edit Member">

@@ -20,20 +20,12 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-	
-		<!-- NewCashWithdrawal -->
-	<form name="NewCashWithdrawal" type="single" target="createCashWithdrawal"
-	focus-field-name="transactionAmount" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="cashWithdrawalContext">
         
-        <actions>
-        	<!-- entity-condition entity-name="FinAccount" list="accountList">
-        		<order-by field-name="finAccountName"/>
-        	</entity-condition -->
-
-        	
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
-            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+    <form name="TransactionForm">
+    	       <actions>
+    	       	 <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
+    	       	
+         		<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<condition-list combine="and">
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
@@ -54,9 +46,17 @@ under the License.
             
             
         </field>
-        <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text></text></field>
-        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+           	<field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text default-value="${slipNumber}"></text></field>
+    	
+     </form>
+	
+		<!-- NewCashWithdrawal -->
+	<form name="NewCashWithdrawal" type="single" target="createCashWithdrawal"
+	focus-field-name="transactionAmount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cashWithdrawalContext" extends="TransactionForm">
         
+        
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
         <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
 		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
         
@@ -129,53 +129,20 @@ under the License.
         
     </form>
     
-    <!-- CashDeposit -->
-    <!-- form name="NewCashDeposit" type="single" target="createCashDeposit"
-	focus-field-name="transactionAmount" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="accountTransactionContext" default-entity-name="AccountTransaction" -->
     <form name="NewCashDeposit" type="single" target="createCashDeposit"
 	focus-field-name="transactionAmount" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="cashDepositContext">    
-        <actions>
-
-        	<entity-condition entity-name="PaymentMethodType" list="modeOfPaymentList"></entity-condition>
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
-            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
-            	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+	default-table-style="basic-table" default-map-name="cashDepositContext" extends="TransactionForm">    
+       
+       	<actions>
+       		<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	</condition-list>
             </entity-condition>
+            <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
             
-        </actions>
-        <field name="accountTransactionId"><hidden/></field>
-        <!-- field name="partyId" parameter-name="parameters.partyId"><hidden/></field -->
-		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down>
-        </field -->
-        <field name="partyId"><hidden/></field>
-        <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true" >
-            <drop-down allow-empty="true">
-                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
-           		<!-- on-event-update-area area-target="cashDeposit" event-type="change" area-id="listCashWithdrawal"></on-event-update-area -->
-            
-            	<!-- sub-hyperlink target="cashDeposit" >
-            		<parameter param-name="partyId"/>
-            		<parameter param-name="memberAccountId"/>
-            	</sub-hyperlink -->
-            	
-            </drop-down>
-            <on-field-event-update-area area-target="listCashDeposit" event-type="change" area-id="listCashDeposit"/>
-            <!-- on-field-event-update-area area-target="cashDeposit" event-type="change" area-id="listCashDeposit" / -->
-            
-        </field>
-        <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text></text>
-        </field>
+       	</actions>
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
-        <!-- field name="modeOfPaymentsId" title="Model Of Payment"  widget-style="required" required-field="true">
-        	<drop-down>
-        		<list-options key-name="paymentMethodTypeId" list-name="modeOfPaymentList" description="${description}"/>
-        	</drop-down>
-        </field -->
         <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
 		<field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
        
@@ -304,19 +271,20 @@ under the License.
             		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
             	</condition-list>
             </entity-condition>
+            
+            <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
+            
         </actions>
         <field name="chequeWithdrawalId"><hidden/></field>
         <field name="partyId"><hidden/></field>
-        <field name="accountTransactionParentId" title="Transaction ID"><display also-hidden="false"></display></field>
-		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down>
-        </field -->
+       
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down>
+        </field>
+        <field name="slipNumber" title="Slip Number">
+        	<text default-value="${slipNumber}"></text>
         </field>
         <field name="chequeNo" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
         <field name="payee" title="Payee"  widget-style="required" required-field="true"><text></text></field>
@@ -422,6 +390,8 @@ under the License.
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
             	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             </entity-condition>
+            <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
+            
         </actions>
         <field name="chequeDepositId"><hidden/></field>
         <field name="partyId"><hidden/></field>
@@ -434,6 +404,9 @@ under the License.
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down>
+        </field>
+        <field name="slipNumber" title="Slip Number">
+        	<text default-value="${slipNumber}"></text>
         </field>
         <field name="internalexternal" title="Internal / External">
         	<drop-down allow-empty="false">
@@ -466,7 +439,7 @@ under the License.
         <field name="chequeNo" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
         <field name="receiptNo" title="Receipt No"  widget-style="required" required-field="true"><text></text></field>
         
-        <field name="saccoAccountId" title="Sacco Account"  widget-style="required" required-field="true">
+        <field name="saccoAccountId" title="Bank Account"  widget-style="required" required-field="true">
       		<drop-down allow-empty="false">
       			<list-options key-name="finAccountId" list-name="accountList"  description="${finAccountName} - ${finAccountCode}"/>
       		</drop-down>
@@ -575,25 +548,16 @@ under the License.
         	<set field="totalInterestDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInterestDue(partyId);}" type="BigDecimal"/>
         	<set field="totalInsuranceDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInsuranceDue(partyId);}" type="BigDecimal"/>
         	<set field="totalPrincipalDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalPrincipalDue(partyId);}" type="BigDecimal"/>
+        	
+        	 <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
+        	
         </actions>
         <field name="loanRepaymentId"><hidden/></field>
         <field name="partyId"><hidden/></field>
-		<!-- field name="partyId" title="Member"  widget-style="required" required-field="true">
-        	<drop-down>
-        		<list-options key-name="partyId" list-name="membersList" description="${firstName} ${middleName} ${lastName}"/>
-        	</drop-down>
-        </field -->
-        <!-- field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
-        	<drop-down allow-empty="true">
-        		<list-options key-name="memberAccountId" list-name="memberAccountList" description="${accountName} - ${accountNo}"/>
-        	</drop-down>
-        </field -->
-        <!-- field name="accountNo" title="Account No"  widget-style="required" required-field="true"><text></text></field>
-        <field name="accountName" title="Account Name"  widget-style="required" required-field="true"><text></text></field>
-        <field name="accountBalance" title="Account Balance"  widget-style="required" required-field="true"><text></text></field -->
-         <!-- field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
-		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field -->
-        
+
+		<field name="slipNumber" title="Slip Number">
+			<text default-value="${slipNumber}"></text>
+		</field>        
         <field name="loanApplicationId" title="Loan"  >
         	<drop-down allow-empty="true">
         		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
@@ -981,38 +945,34 @@ under the License.
         	
         	
         </actions>
-          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
-         <field name="middleName" title="Middle Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+          <field name="Member">
+        	<hyperlink target="cashWithdrawal?partyId=${partyId}" description="Transactions for ${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
         <field name="idNumber" title="ID Number"><display also-hidden="false"></display></field>
    
-       <!-- field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
-	     <field name="stationId" title="Station">
-	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
-           
-        </field -->
-        
-        <!-- field name="memberStatusId" title="Status">
-        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity>
-        </field -->
-        <field name="createdStamp" title="Created"><display  type="date"></display></field>
+         <field name="createdStamp" title="Created"><display  type="date"></display></field>
         <field name="createdBy" title="Created By"><display ></display></field>
+ <field name="payrollNumber" title="Payroll Number"><display/></field>
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+        <field name="memberNumber" title="Member Number"><display ></display></field>
         <!-- viewapplicationprofile -->
         <!-- loanapplication?partyId=${partyId} -->
-        <!-- field name="memberStatusId" title="Status">
-        	<display-entity entity-name="MemberStatus" key-field-name="memberStatusId" description="${name}"></display-entity>
-        </field -->
-        <field name="Transactions">
-        	<hyperlink target="cashWithdrawal?partyId=${partyId}" description="Transactions for ${firstName} ${lastName}"></hyperlink>
+
+        
+        <field name="memberStatusId" title="Status">
+        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
+        		
+        	</display-entity>
         </field>
         
-        <!--  field name="Change Member Status">
-        	<hyperlink target="ChangeMemberStatus?partyId=${partyId}" description="Change Member Status"></hyperlink>
+        <field name="stationId" title="Station">
+        	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
+        		
+        	</display-entity>
         </field>
-        
-         <field name="Details">
-        	<hyperlink target="viewmemberprofile?partyId=${partyId}" description="Details"></hyperlink>
-        </field -->
+		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
+			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
+		</field>
      </form>
      
      <!-- Cheque Setup -->

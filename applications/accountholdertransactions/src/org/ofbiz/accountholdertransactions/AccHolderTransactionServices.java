@@ -5,6 +5,10 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +33,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -1405,5 +1410,66 @@ public class AccHolderTransactionServices {
 		branchId = member.getString("branchId");
 		return branchId;
 	}
-
+	
+	/***
+	 * Gets the next slip number
+	 * */
+	public static String getNextSlipNumber(){
+		String slipNumber = "";
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String helperName = delegator.getGroupHelperName("org.ofbiz");    // gets the helper (localderby, localmysql, localpostgres, etc.) for your entity group org.ofbiz
+		Connection conn = null;
+		try {
+			conn = ConnectionFactory.getConnection(helperName);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		Statement statement = null;
+		try {
+			statement = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			statement.execute("SELECT count(SLIP_NUMBER) as slipnumbercount FROM ACCOUNT_TRANSACTION");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ResultSet results = null;
+		try {
+			results = statement.getResultSet();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Long count = 0L;
+		
+		try {
+			while (results.next()){
+				count = results.getLong("slipnumbercount");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int padDigits = 10;
+		count = count + 1;
+		
+		slipNumber =	paddString(padDigits, count.toString());
+		
+		return slipNumber;
+	}
+	
+	public static String paddString(int padDigits, String count) {
+		String padded = String.format("%"+padDigits+"s", count).replace(' ', '0');
+		return padded;
+	}
 }

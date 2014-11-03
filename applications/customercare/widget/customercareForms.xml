@@ -77,9 +77,14 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+         <!-- field name="firstName" title="First Name"><display also-hidden="false"/></field>
          <field name="middleName" title="Middle Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
+                <field name="Loan Application">
+        	<hyperlink target="loanapplication" description="Apply for ${firstName} ${middleName} ${lastName}">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
         <field name="idNumber" title="ID Number"><display also-hidden="false"></display></field>
    
        <!-- field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
@@ -93,13 +98,28 @@
         </field -->
         <field name="createdStamp" title="Created"><display  type="date"></display></field>
         <field name="createdBy" title="Created By"><display ></display></field>
+        <field name="payrollNumber" title="Payroll Number"><display/></field>
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+        <field name="memberNumber" title="Member Number"><display ></display></field>
         <!-- viewapplicationprofile -->
         <!-- loanapplication?partyId=${partyId} -->
-        <field name="Loan Application">
-        	<hyperlink target="loanapplication" description="Apply for ${firstName} ${lastName}">
-        		<parameter param-name="partyId"/>
-        	</hyperlink>
+
+        
+        <field name="memberStatusId" title="Status">
+        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
+        		
+        	</display-entity>
         </field>
+        
+        <field name="stationId" title="Station">
+        	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
+        		
+        	</display-entity>
+        </field>
+		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
+			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
+		</field>
+        
         
       
      </form>
