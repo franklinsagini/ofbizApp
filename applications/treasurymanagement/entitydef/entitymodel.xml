@@ -81,6 +81,10 @@
         <field name="branchId" type="id"></field>
         <field name="sourceTreasury" type="id-ne"></field>
         <field name="destinationTreasury" type="id-ne"></field>
+        
+        <field name="employeeResponsible" type="id"/>
+        <field name="transactionNumber" type="name"/>
+        
         <field name="transactionAmount" type="fixed-point"></field>
         <field name="comments" type="description"></field>
         
@@ -95,7 +99,11 @@
         
         <relation type="one" fk-name="TreasuryTransactionDest_Treasury" rel-entity-name="Treasury">
             <key-map  field-name="destinationTreasury" rel-field-name="treasuryId"/>
-        </relation>   
+        </relation>
+        
+         <relation type="one" fk-name="TreasuryTransfer_Employee" rel-entity-name="Person">
+            <key-map field-name="employeeResponsible" rel-field-name="partyId"/>
+        </relation>
     </entity>
     
     <!-- Transfer Rules -->
