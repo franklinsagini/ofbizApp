@@ -22,11 +22,7 @@
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
-    <request-map uri="cardApplication">
-		<security https="true" auth="true" />
-		<response name="success" type="view" value="cardApplication"
-			save-current-view="true" />
-	</request-map>
+    
 	
 	<request-map uri="createCardApplication">
 		<security https="true" auth="true" />
@@ -52,6 +48,41 @@
 		<response name="success" type="request-redirect-noparam"
 			value="cardApplication"></response>
 		<response name="error" type="view" value="cardApplication" />
+	</request-map>
+	
+	<!-- Card Status -->
+	
+	<request-map uri="cardStatus">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="cardStatus"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="createCardStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createCardStatus" />
+		<response name="success" type="request-redirect"
+			value="cardStatus">
+			</response>
+		<response name="error" type="view" value="cardStatus" />
+	</request-map>
+	
+	<request-map uri="updateCardStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateCardStatus" />
+		<response name="success" type="request-redirect"
+			value="cardStatus">
+			</response>
+		<response name="error" type="view" value="cardStatus" />
+	</request-map>
+	
+	<request-map uri="deleteCardStatus">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteCardStatus" />
+		<response name="success" type="request-redirect"
+			value="cardStatus">
+			</response>
+		<response name="error" type="view" value="cardStatus" />
 	</request-map>
 	
 	<!-- Card Log -->
@@ -90,11 +121,61 @@
 			</response>
 		<response name="error" type="view" value="cardLog" />
 	</request-map>
+	<!-- cardApplicationReceived -->
+	<request-map uri="cardApplicationReceived">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="cardApplicationReceived"
+			save-current-view="true" />
+	</request-map>
+	
+	<!-- Card Application -->
+	<request-map uri="cardApplication">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="cardApplication"
+			save-current-view="true" />
+	</request-map>
 	
 	<!-- Card Receipt -->
 	<request-map uri="cardReceipt">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="cardReceipt"
+			save-current-view="true" />
+	</request-map>
+	
+	<!-- receiveCardPin -->
+	<request-map uri="receiveCardPin">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="receiveCardPin"
+			save-current-view="true" />
+	</request-map>
+	<!-- issueCardPin -->
+	<request-map uri="issueCardPin">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="issueCardPin"
+			save-current-view="true" />
+	</request-map>
+	<!-- activateCard -->
+	<request-map uri="activateCard">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="activateCard"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="cardRenewal">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="CardRenewal"
+			save-current-view="true" />
+	</request-map>
+	
+		<request-map uri="cardDeactivation">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="CardDeactivation"
+			save-current-view="true" />
+	</request-map>
+	
+		<request-map uri="cardReplacementRequest">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="CardReplacementRequest"
 			save-current-view="true" />
 	</request-map>
 	
@@ -127,11 +208,33 @@
 			</response>
 		<response name="error" type="view" value="cardReceipt" />
 	</request-map>
+	
+	
+	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
+   
+   		<!-- Get Member Accounts List -->
+	<request-map uri="memberaccountlist">
+    	
+    	<event type="java" path="org.ofbiz.atmmanagement.ATMManagementServices" invoke="getMemberAccounts" />
+		<response name="success" type="none">
+    </response>
+    </request-map>
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#main"/ -->
     <view-map name="main" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#FindMember"/>
   
     <view-map name="cardApplication" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#NewCardApplication"/>
+    
+    
     <view-map name="cardLog" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#NewCardLog"/>
     <view-map name="cardReceipt" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#NewCardReceipt"/>
+    
+    <view-map name="CardRenewal" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#CardRenewal"/>
+    <view-map name="CardDeactivation" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#CardDeactivation"/>
+    <view-map name="CardReplacementRequest" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#CardReplacementRequest"/>
+    
+    <view-map name="cardStatus" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#cardStatus"/>
+    
+    
+    <view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
 </site-conf>

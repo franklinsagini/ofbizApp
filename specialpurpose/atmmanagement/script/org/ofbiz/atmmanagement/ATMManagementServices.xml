@@ -22,17 +22,21 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 <!-- CardApplication -->
 	<simple-method method-name="createCardApplication" short-description="Create CardApplication">
-        <make-value entity-name="CardApplication" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
+		<call-simple-method method-name="saveCardApplication" scope="inline"></call-simple-method>
+		
+		<!-- Add to logs -->
+		<call-simple-method method-name="createCardLog"></call-simple-method>
+    </simple-method>
+    
+    <simple-method method-name="saveCardApplication" use-transaction="true">
+    	<make-value entity-name="CardApplication" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
         <sequenced-id sequence-name="CardApplication" field="cardApplicationId"/>
         <now-timestamp field="newEntity.createdDate"/>
         <set from-field="cardApplicationId" field="newEntity.cardApplicationId"/>
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -49,18 +53,19 @@ under the License.
     
     <!-- CardLog -->
      <simple-method method-name="createCardLog" short-description="Create CardLog">
-        <make-value entity-name="CardLog" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <make-value entity-name="CardLog" value-field="logEntity"/>
+         <set-pk-fields map="parameters" value-field="logEntity"/>
+        <set-nonpk-fields map="parameters" value-field="logEntity"/>
+        <!-- set field="saccoProductId" value="logEntity.saccoProductId"/ -->
         <sequenced-id sequence-name="CardLog" field="cardLogId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="cardLogId" field="newEntity.cardLogId"/>
-        <set field="newEntity.isActive" value="Y"/>
-	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <now-timestamp field="logEntity.createdDate"/>
+        <set from-field="cardLogId" field="logEntity.cardLogId"/>
+        <set field="logEntity.cardApplicationId"  from-field="newEntity.cardApplicationId" />
+        <set field="logEntity.isActive" value="Y"/>
+	    <set field="logEntity.createdBy" from-field="userLogin.userLoginId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
+        <create-value value-field="logEntity"/>
     </simple-method>
     
      <simple-method method-name="updateCardLog" short-description="Update CardLog">
@@ -99,5 +104,27 @@ under the License.
     <simple-method method-name="deleteCardReceipt" short-description="Delete CardReceipt">
         <entity-one entity-name="CardReceipt" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
-    </simple-method>    
+    </simple-method> 
+    
+         <simple-method method-name="createCardStatus" short-description="Create CardStatus">
+        <make-value entity-name="CardStatus" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+       	<set field="entityName" value="CardStatus"></set>
+        <set field="newEntity.cardStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateCardStatus" short-description="Update CardStatus">
+        <entity-one entity-name="CardStatus" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteCardStatus" short-description="Delete CardStatus">
+        <entity-one entity-name="CardStatus" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>   
 </simple-methods>

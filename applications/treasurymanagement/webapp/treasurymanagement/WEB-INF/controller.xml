@@ -148,7 +148,7 @@
 		<event type="service" invoke="createTreasuryTransfer" />
 		<response name="success" type="request-redirect"
 			value="treasuryTransfer">
-				<redirect-parameter name="partyId"/>
+				<redirect-parameter name="treasuryId"/>
 			</response>
 		<response name="error" type="view" value="treasuryTransfer" />
 	</request-map>
@@ -156,16 +156,20 @@
 	<request-map uri="updateTreasuryTransfer">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateTreasuryTransfer" />
-		<response name="success" type="request-redirect-noparam"
-			value="treasuryTransfer"></response>
+		<response name="success" type="request-redirect"
+			value="treasuryTransfer">
+				<redirect-parameter name="treasuryId"/>
+			</response>
 		<response name="error" type="view" value="treasuryTransfer" />
 	</request-map>
 	
 	<request-map uri="deleteTreasuryTransfer">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteTreasuryTransfer" />
-		<response name="success" type="request-redirect-noparam"
-			value="treasuryTransfer"></response>
+		<response name="success" type="request-redirect"
+			value="treasuryTransfer">
+				<redirect-parameter name="treasuryId"/>
+			</response>
 		<response name="error" type="view" value="treasuryTransfer" />
 	</request-map>
 	
@@ -221,6 +225,40 @@
 			</response>
 	</request-map>
 	
+	<!-- Denomination -->
+	<request-map uri="currencyDenominations">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="currencyDenominations"
+			save-current-view="true">
+			</response>
+	</request-map>
+	
+	<request-map uri="createDenomination">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createDenomination" />
+		<response name="success" type="request-redirect"
+			value="currencyDenominations">
+				<redirect-parameter name="partyId"/>
+			</response>
+		<response name="error" type="view" value="currencyDenominations" />
+	</request-map>
+	
+	<request-map uri="updateDenomination">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateDenomination" />
+		<response name="success" type="request-redirect"
+			value="currencyDenominations"></response>
+		<response name="error" type="view" value="currencyDenominations" />
+	</request-map>
+	
+	<request-map uri="deleteDenomination">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteDenomination" />
+		<response name="success" type="request-redirect"
+			value="currencyDenominations"></response>
+		<response name="error" type="view" value="currencyDenominations" />
+	</request-map>
+	
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#main"/>
@@ -235,5 +273,6 @@
 	
 	<view-map name="transferdestinations" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#transferdestinations"/>
 	<view-map name="transfersources" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#transfersources"/>
+	<view-map name="currencyDenominations" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#currencyDenominations"/>
 	
 </site-conf>

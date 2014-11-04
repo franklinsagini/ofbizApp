@@ -235,19 +235,28 @@
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="TreasuryTransferContext">
         <actions>
+        	<entity-one entity-name="Treasury" value-field="treasury">
+				<field-map field-name="treasuryId" from-field="parameters.treasuryId"/>
+			</entity-one>
+			<set field="treasuryId" from-field="parameters.treasuryId"/>
         	<entity-condition entity-name="Treasury" list="treasuryFromList">
 			</entity-condition>
 			
-			<entity-condition entity-name="Treasury" list="treasuryToList">
+			<!-- entity-condition entity-name="Treasury" list="treasuryToList">
+			</entity-condition -->
+			<entity-condition entity-name="TreasuryDestinations" list="treasuryToList">
+				<!-- select-field field-name=""/ -->
+				<condition-list combine="and">
+					<condition-expr field-name="destinationTreasuryType" operator="equals" value="${treasury.treasuryTypeId}"/>
+					<condition-expr field-name="treasuryId" operator="not-equals" value="${treasuryId}"/>
+				</condition-list>
+				
 			</entity-condition>
 			
 			<entity-condition entity-name="Person" list="employeesList">
 			</entity-condition>
 			
-			<entity-one entity-name="Treasury" value-field="treasury">
-				<field-map field-name="treasuryId" from-field="parameters.treasuryId"/>
-			</entity-one>
-			<set field="treasuryId" from-field="parameters.treasuryId"/>
+			
         </actions>
        
         <field name="treasuryTransferId"><hidden/></field>
@@ -266,7 +275,7 @@
         
         <field name="destinationTreasury" title="To"   widget-style="required" required-field="true">
        		<drop-down allow-empty="true">
-       			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
+       			<list-options key-name="treasuryId" list-name="treasuryToList"  description="${name}"/>
        		</drop-down>
         </field>
         
@@ -555,5 +564,24 @@
             </hyperlink>
         </field>
     </form>
+    
+    <!-- NewDenomination -->
+    <form name="NewDenomination" type="single" target="createDenomination"
+	focus-field-name="denominationId" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="denominationContext">
+        
+       
+        <field name="denominationId" widget-style="required" required-field="true"><text></text></field>
+		
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+    <!-- listDenomination -->
+    <form name="listDenomination" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDenomination" paginate-target="currencyDenominations"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="Denomination"></entity-condition>
+        </actions>
+        <field name="denominationId"><display></display></field>
+	 </form>
     
 </forms>

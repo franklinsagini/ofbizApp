@@ -720,7 +720,7 @@ public class AccHolderTransactionServices {
 		try {
 			accountTransaction = delegator
 					.findOne("AccountTransaction", UtilMisc.toMap(
-							"accountTransactionId", Long.valueOf(accountTransactionId)),
+							"accountTransactionId", accountTransactionId),
 							false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();

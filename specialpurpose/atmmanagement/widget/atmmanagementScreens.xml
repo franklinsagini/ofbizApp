@@ -35,6 +35,7 @@
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
+                            	<include-menu location="component://atmmanagement/widget/atmmanagementMenus.xml" name="CardTabBar"/>
                                 <!-- platform-specific>
                                     <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
                                 </platform-specific -->
@@ -67,7 +68,8 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="cardApplicationCtx" from-field="parameters"/>
                 <entity-one entity-name="CardApplication" value-field="cardApplicationContext"/>
             </actions>
             <widgets>
@@ -87,6 +89,10 @@
                                 <label style="h3">Card Management Permission</label>
                             </fail-widgets>
                         </section>
+                        
+                         <screenlet title="Search Card Application">
+                                        <include-form name="FindCardApplication" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                         </screenlet>
                         
                         <section name="search-results">
                         	<widgets>
@@ -115,6 +121,13 @@
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
                 <entity-one entity-name="CardLog" value-field="cardLogContext"/>
+                <entity-one entity-name="CardApplication" value-field="cardApplication">
+                	<field-map field-name="cardApplicationId" from-field="parameters.cardApplicationId"/>
+                </entity-one>
+                <set field="partyId" value="${cardApplication.partyId}"/>
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -125,9 +138,21 @@
                                 <if-has-permission permission="ATMMANAGEMENT" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Card Application">
+                                <!-- screenlet title="Card Application">
                                     <include-form name="NewCardLog" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
-                                </screenlet>
+                                </screenlet -->
+                               <container>
+                               	<container>
+                               			
+                               			
+										<label style="h3">${member.firstName} ${member.middleName} ${member.lastName} Card Application Logs
+										</label>
+									</container>
+									<container>
+										<label style="h3">Form No : ${cardApplication.formNo}
+										</label>
+									</container>
+                               </container>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3">Card Management Permission</label>
@@ -159,8 +184,143 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+                <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="CardReceipt" value-field="cardReceiptContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Card Receipt">
+                        			<include-form name="listCardReceipt" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- 
+    	CardRenewal
+    	 
+     -->
+     <screen name="CardRenewal">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Card Renewal"/>
+                <set field="headerItem" value="cardRenewal"/>
+                <set field="tabButtonItem" value="CardRenewal"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createCardReceipt"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="CardReceipt" value-field="cardReceiptContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Card Renewal">
+                        			<include-form name="listCardRenewal" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <!-- 
+     	CardDeactivation
+    	 
+      -->
+      <screen name="CardDeactivation">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Card Deactivation"/>
+                <set field="headerItem" value="cardDeactivation"/>
+                <set field="tabButtonItem" value="cardDeactivation"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createCardDeactivation"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="CardApplication" value-field="cardReceiptContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Card Deactivation">
+                        			<include-form name="listCardDeactivation" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      <!-- 
+      	CardReplacementRequest
+       -->
+       <screen name="CardReplacementRequest">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Card Replacement"/>
+                <set field="headerItem" value="CardReplacementRequest"/>
+                <set field="tabButtonItem" value="CardReplacementRequest"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createCardReceipt"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="CardReceipt" value-field="cardReceiptContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Card Replacement Request">
+                        			<include-form name="listCardReplacementRequest" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Card Status -->
+    <screen name="cardStatus">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Card Status"/>
+                <set field="headerItem" value="cardStatus"/>
+                <set field="tabButtonItem" value="cardStatus"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createCardStatus"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="CardStatus" value-field="cardStatusContext"/>
+                
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -171,9 +331,10 @@
                                 <if-has-permission permission="ATMMANAGEMENT" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="Card Receipt">
-                                    <include-form name="NewCardReceipt" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                                <screenlet title="Card Status">
+                                    <include-form name="NewCardStatus" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
                                 </screenlet>
+                               
                             </widgets>
                             <fail-widgets>
                                 <label style="h3">Card Management Permission</label>
@@ -182,8 +343,8 @@
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Card Receipt">
-                        			<include-form name="listCardReceipt" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                        		<screenlet title="Card Status">
+                        			<include-form name="listCardStatus" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

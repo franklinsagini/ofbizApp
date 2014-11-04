@@ -18,7 +18,7 @@
 		<field name="updatedBy" type="name"></field>
 		
 		
-		<field name="partyId" type="id-ne"></field>
+		<field name="partyId" type="id-vlong-int"></field>
 		<field name="idNumber" type="name"></field>
 		<field name="payrollNumber" type="name"></field>
 		<field name="memberAccountId" type="id-ne"></field>
@@ -30,6 +30,7 @@
 		<field name="cardStatus" type="name"></field> <!-- Applied, Active, Renewing, Deactivated -->
 		
 		<field name="formNo" type="name"></field>
+		<field name="cardNumber" type="name"></field>
 		
 		
 		<prim-key field="cardApplicationId"/>
@@ -52,17 +53,28 @@
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
-		
+		<field name="collectedBy" type="name"></field>
+		<field name="dateCollected" type="date-time"></field>
 		<field name="cardStatus" type="name"></field>
 		<field name="comment" type="description"></field>
-		
-		
-		
 		<prim-key field="cardLogId"/>
 		<relation type="one" fk-name="CardLog_CardApplication" rel-entity-name="CardApplication">
         	<key-map field-name="cardApplicationId"/>
       	</relation>
-      	
+	</entity>
+	
+	<entity entity-name="CardStatus" package-name="org.ofbiz.atmmanagement"
+		title="CardStatus Entity">
+		
+		<field name="cardStatusId" type="id-int"></field>
+		<field name="name" type="name"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<prim-key field="cardStatusId"/>
 	</entity>
 	
 	<entity entity-name="CardReceipt" package-name="org.ofbiz.atmmanagement"

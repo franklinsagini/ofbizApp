@@ -83,4 +83,27 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+     <service name="createCardStatus" engine="simple" default-entity-name="CardStatus"
+             location="component://atmmanagement/script/org/ofbiz/atmmanagement/ATMManagementServices.xml" invoke="createCardStatus" auth="true">
+        <description>Create CardStatus</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateCardStatus" engine="simple" default-entity-name="CardStatus"
+             location="component://atmmanagement/script/org/ofbiz/atmmanagement/ATMManagementServices.xml" invoke="updateCardStatus" auth="true">
+        <description>Update CardStatus</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteCardStatus" engine="simple" default-entity-name="CardStatus"
+             location="component://atmmanagement/script/org/ofbiz/atmmanagement/ATMManagementServices.xml" invoke="deleteCardStatus" auth="true">
+        <description>Delete CardStatus</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
 </services>
