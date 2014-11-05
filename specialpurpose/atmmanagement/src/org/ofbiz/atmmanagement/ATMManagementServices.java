@@ -128,7 +128,7 @@ public class ATMManagementServices {
 		Long cardLogId = delegator.getNextSeqIdLong("CardLog", 1);
 		//loanApplicationId = loanApplicationId.replaceAll(",", "");
 		cardLog = delegator.makeValue("CardLog", UtilMisc.toMap(
-				"cardLogId", cardLogId, "cardApplicationId",
+				"cardLogId", cardLogId, "cardApplicationId", "isActive", "Y",
 				Long.valueOf(cardApplicationId), "cardStatusId", cardStatusId, "createdBy",
 				userLoginId, "comment", "Applied for ATM Card"));
 
@@ -154,7 +154,7 @@ public class ATMManagementServices {
 
 		Long cardStatusId = 0L;
 		for (GenericValue genericValue : cardStatusELI) {
-			cardStatusId = genericValue.getLong("loanStatusId");
+			cardStatusId = genericValue.getLong("cardStatusId");
 		}
 		return cardStatusId;
 	}
