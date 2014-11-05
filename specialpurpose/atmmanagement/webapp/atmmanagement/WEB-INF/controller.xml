@@ -28,26 +28,25 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createCardApplication" />
 		<response name="success" type="request-redirect"
-			value="cardApplication">
-				<redirect-parameter name="partyId"/>
+			value="cardApplicationReceived">
 			</response>
-		<response name="error" type="view" value="cardApplication" />
+		<response name="error" type="view" value="cardApplicationReceived" />
 	</request-map>
 	
 	<request-map uri="updateCardApplication">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateCardApplication" />
-		<response name="success" type="request-redirect-noparam"
-			value="cardApplication"></response>
-		<response name="error" type="view" value="cardApplication" />
+		<response name="success" type="request-redirect"
+			value="cardApplicationReceived"></response>
+		<response name="error" type="view" value="cardApplicationReceived" />
 	</request-map>
 	
 	<request-map uri="deleteCardApplication">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteCardApplication" />
-		<response name="success" type="request-redirect-noparam"
-			value="cardApplication"></response>
-		<response name="error" type="view" value="cardApplication" />
+		<response name="success" type="request-redirect"
+			value="cardApplicationReceived"></response>
+		<response name="error" type="view" value="cardApplicationReceived" />
 	</request-map>
 	
 	<!-- Card Status -->
@@ -209,6 +208,25 @@
 		<response name="error" type="view" value="cardReceipt" />
 	</request-map>
 	
+	 <request-map uri="applyforATMCard">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.atmmanagement.ATMManagementServices" invoke="memberHasEnoughBalance" />
+                <response name="success" type="request-redirect"
+                        value="cardApplicationReceived"> 
+                        </response>
+                <response name="error" type="view" value="cardApplicationReceived" />
+    </request-map>
+    
+     <request-map uri="applyforATM">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.atmmanagement.ATMManagementServices" invoke="applyforATM" />
+                <response name="success" type="request-redirect"
+                        value="cardApplicationReceived"> 
+                        </response>
+                <response name="error" type="view" value="cardApplicationReceived" />
+    </request-map>
+    
+	
 	
 	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
    
@@ -223,7 +241,8 @@
     <!-- view-map name="main" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#main"/ -->
     <view-map name="main" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#FindMember"/>
   
-    <view-map name="cardApplication" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#NewCardApplication"/>
+    <view-map name="cardApplication" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#cardApplication"/>
+    <view-map name="cardApplicationReceived" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#cardApplicationReceived"/>
     
     
     <view-map name="cardLog" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#NewCardLog"/>

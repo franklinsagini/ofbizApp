@@ -11,7 +11,7 @@
     
     <entity entity-name="CardApplication" package-name="org.ofbiz.atmmanagement"
 		title="CardApplication Entity">
-		<field name="cardApplicationId" type="id-ne"></field>
+		<field name="cardApplicationId" type="id-vlong-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
@@ -27,7 +27,7 @@
 		<field name="firstName" type="name"></field>
 		<field name="middleName" type="name"></field>
 		<field name="lastName" type="name"></field>
-		<field name="cardStatus" type="name"></field> <!-- Applied, Active, Renewing, Deactivated -->
+		<field name="cardStatusId" type="id-int"></field> <!-- Applied, Active, Renewing, Deactivated -->
 		
 		<field name="formNo" type="name"></field>
 		<field name="cardNumber" type="name"></field>
@@ -40,14 +40,17 @@
       	<relation type="one" fk-name="CardApplication_MemberAccount" rel-entity-name="MemberAccount">
         	<key-map field-name="memberAccountId"/>
       	</relation>
+      	<relation type="one" fk-name="CardApplication_CardStatus" rel-entity-name="CardStatus">
+        	<key-map field-name="cardStatusId"/>
+      	</relation>
 	</entity>
 	
 	<!-- Card Logs -->
 	<entity entity-name="CardLog" package-name="org.ofbiz.atmmanagement"
 		title="CardLog Entity">
 		
-		<field name="cardLogId" type="id-ne"></field>
-		<field name="cardApplicationId" type="id-ne"></field>
+		<field name="cardLogId" type="id-vlong-int"></field>
+		<field name="cardApplicationId" type="id-vlong-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
@@ -55,11 +58,14 @@
 		
 		<field name="collectedBy" type="name"></field>
 		<field name="dateCollected" type="date-time"></field>
-		<field name="cardStatus" type="name"></field>
+		<field name="cardStatusId" type="id-int"></field>
 		<field name="comment" type="description"></field>
 		<prim-key field="cardLogId"/>
 		<relation type="one" fk-name="CardLog_CardApplication" rel-entity-name="CardApplication">
         	<key-map field-name="cardApplicationId"/>
+      	</relation>
+      	<relation type="one" fk-name="CardLog_CardStatus" rel-entity-name="CardStatus">
+        	<key-map field-name="cardStatusId"/>
       	</relation>
 	</entity>
 	
@@ -108,5 +114,49 @@
 			ReceiveCard
 			Deactivate
 	 -->
+	 
+	 <entity entity-name="ATMPINApplication" package-name="org.ofbiz.atmmanagement"
+		title="ATMPINApplication Entity">
+		
+		<field name="atmPINApplicationId" type="id-vlong-int"></field>
+		<field name="cardApplicationId" type="id-vlong-int"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="cardStatusId" type="id-int"></field>
+		<field name="comment" type="description"></field>
+		<prim-key field="atmPINApplicationId"/>
+		<relation type="one" fk-name="ATMPINApplication_CardApplication" rel-entity-name="CardApplication">
+        	<key-map field-name="cardApplicationId"/>
+      	</relation>
+      	<relation type="one" fk-name="ATMPINApplication_CardStatus" rel-entity-name="CardStatus">
+        	<key-map field-name="cardStatusId"/>
+      	</relation>
+	</entity>
+	
+	<entity entity-name="ATMPINLog" package-name="org.ofbiz.atmmanagement"
+		title="CardLog Entity">
+		
+		<field name="atmPINLogId" type="id-vlong-int"></field>
+		<field name="atmPINApplicationId" type="id-vlong-int"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="collectedBy" type="name"></field>
+		<field name="dateCollected" type="date-time"></field>
+		<field name="cardStatusId" type="id-int"></field>
+		<field name="comment" type="description"></field>
+		<prim-key field="atmPINLogId"/>
+		<relation type="one" fk-name="ATMPINLog_ATMPINApplication" rel-entity-name="ATMPINApplication">
+        	<key-map field-name="atmPINApplicationId"/>
+      	</relation>
+      	<relation type="one" fk-name="ATMPINLog_CardStatus" rel-entity-name="CardStatus">
+        	<key-map field-name="cardStatusId"/>
+      	</relation>
+	</entity>
 
 </entitymodel>

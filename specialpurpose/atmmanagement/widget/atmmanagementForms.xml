@@ -133,15 +133,13 @@
 		<field name="payrollNumber" title="Payroll Number"  widget-style="required" required-field="true"><text default-value="${member.payrollNumber}"></text></field -->
 		
 		
-		<field name="cardStatus" title="Card Status">
-        	<drop-down allow-empty="false">
-                <option key="Applied" description="Applied"/>
-                <option key="Active" description="Active"/>
-                <option key="Renewing" description="Renewing"/>
-                <option key="Deactivated" description="Deactivated"/>
-            </drop-down>
+		<field name="cardStatusId" title="Card Status">
+      		<drop-down>
+      			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
+      		</drop-down>
       	</field>
-		<field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field>
+      	
+		<!-- field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field -->
 		
 		              
          <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
@@ -155,7 +153,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
-      <form name="listCardApplication" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplication"
+      <form name="listCardApplication" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplicationReceived"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <!-- entity-condition entity-name="CardApplication" >
@@ -184,10 +182,10 @@
         	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field>
 		
-		<field name="cardStatus" title="Card Status">
-        	<display></display>
+		<field name="cardStatusId" title="Card Status">
+        	<display-entity entity-name="CardStatus" description="${name}" key-field-name="cardStatusId"></display-entity>
       	</field>
-		<field name="formNo" title="Form Number"  ><display></display></field>
+		<field name="cardApplicationId" title="Form Number"  ><display></display></field>
 		
 		              
          <field name="memberAccountId" title="Member Account">
@@ -199,6 +197,73 @@
         
         <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
         <field name="createdBy" title="Created By"  ><display></display></field>
+        <field name="logs">
+        	<hyperlink target="cardLog" description="Logs">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field>
+    </form>
+    
+    <!-- Card Applications -->
+     <form name="listCardApplicationReceived" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplicationReceived"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <!-- entity-condition entity-name="CardApplication" >
+            	
+            	
+            	<order-by field-name="-cardApplicationId"></order-by>
+            </entity-condition -->
+            
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="cardApplicationCtx"/>
+                <field-map field-name="entityName" value="CardApplication"/>
+                <field-map field-name="orderBy" value="-cardApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
+            
+            <!-- entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition -->
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateCardApplication"/ -->
+		
+		<field name="cardApplicationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+		
+		<field name="cardStatusId" title="Card Status">
+        	<display-entity entity-name="CardStatus" description="${name}" key-field-name="cardStatusId"></display-entity>
+      	</field>
+		<field name="cardApplicationId" title="Form Number"  ><display></display></field>
+		
+		              
+         <field name="memberAccountId" title="Member Account">
+         	<display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}" key-field-name="memberAccountId"></display-entity>
+            <!-- drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down -->
+        </field>
+        
+        <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
+        <field name="createdBy" title="Created By"  ><display></display></field>
+        
+        <!-- field name="applyforATMCard">
+        	<hyperlink target="applyforATMCard" description="Apply for ATM Card">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field -->
+        <!-- use-when="applicationStatus.equals(&quot;NEW&quot;)" -->
+        <field name="applyforATM"  event="onclick"
+			action="javascript: return validateCardApplication(${cardApplicationId});">
+			<hyperlink target="applyforATM?cardApplicationId=${cardApplicationId}"
+				description="Apply for ATM Card"></hyperlink>
+				
+				
+		</field>
+        
         <field name="logs">
         	<hyperlink target="cardLog" description="Logs">
         		<parameter param-name="cardApplicationId"/>
@@ -238,7 +303,9 @@
 		<field name="cardLogId"><hidden/></field>
         <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
 
-		<field name="cardStatus" title="Card Status"><display></display></field>
+		<field name="cardStatusId" title="Card Status">
+			<display-entity entity-name="CardStatus" description="${name}" key-field-name="cardStatusId"></display-entity>
+		</field>
 		<field name="createdStamp" title="Date"><display type="date-time"></display></field>
 		<field name="createdBy" title="Created By"><display></display></field>
     </form>
@@ -423,8 +490,8 @@
         	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
         </field>
 		
-		<field name="cardStatus" title="Card Status">
-        	<display></display>
+		<field name="cardStatusId" title="Card Status">
+        	<display-entity entity-name="CardStatus" description="${name}" key-field-name="cardStatusId"></display-entity>
       	</field>
 		<field name="formNo" title="Form Number"  ><display></display></field>
 		
@@ -446,7 +513,7 @@
     </form>
     
     <!-- Find Application -->
-    <form name="FindCardApplication" type="single" target="cardApplication" default-entity-name="CardApplication">
+    <form name="FindCardApplication" type="single" target="cardApplicationReceived" default-entity-name="CardApplication">
         <actions>
         	<!-- set field="statusName" value="ACTIVE"/>
 	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ --> 
@@ -461,16 +528,21 @@
 
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
 
-        <field name="cardStatus" title="Card Status">
+        <!-- field name="cardStatus" title="Card Status">
         	<drop-down allow-empty="false">
                 <option key="Applied" description="Applied"/>
                 <option key="Active" description="Active"/>
                 <option key="Renewing" description="Renewing"/>
                 <option key="Deactivated" description="Deactivated"/>
             </drop-down>
+      	</field -->
+      	<field name="cardStatusId" title="Card Status">
+      		<drop-down>
+      			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
+      		</drop-down>
       	</field>
       	
-      	<field name="formNo" title="Form Number"><text-find></text-find></field>
+      	<field name="cardApplicationId" title="Form Number"><text-find></text-find></field>
 
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>

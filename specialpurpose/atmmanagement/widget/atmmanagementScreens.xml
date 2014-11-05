@@ -57,12 +57,50 @@
     </screen>
     
     <!-- Card Application -->
-    <screen name="NewCardApplication">
+    <screen name="cardApplication">
         <section>
             <actions>
                 <set field="titleProperty" value="Card Application"/>
                 <set field="headerItem" value="cardApplication"/>
                 <set field="tabButtonItem" value="cardApplication"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createCardApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="cardApplicationCtx" from-field="parameters"/>
+                <entity-one entity-name="CardApplication" value-field="cardApplicationContext"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        
+                         <screenlet title="Search Card Application">
+                                        <include-form name="FindCardApplication" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                         </screenlet>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Card Applications">
+                        			<include-form name="listCardApplication" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- cardApplicationReceived -->
+       <screen name="cardApplicationReceived">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Receive Card Application"/>
+                <set field="headerItem" value="cardApplicationReceived"/>
+                <set field="tabButtonItem" value="cardApplicationReceived"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createCardApplication"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
@@ -97,7 +135,7 @@
                         <section name="search-results">
                         	<widgets>
                         		<screenlet title="Card Applications">
-                        			<include-form name="listCardApplication" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                        			<include-form name="listCardApplicationReceived" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>
@@ -149,7 +187,7 @@
 										</label>
 									</container>
 									<container>
-										<label style="h3">Form No : ${cardApplication.formNo}
+										<label style="h3">Form No : ${cardApplication.cardApplicationId}
 										</label>
 									</container>
                                </container>

@@ -1001,6 +1001,17 @@ under the License.
         
         </field>
         
+        <field name="isRate" title="Rate">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+                
+        <field name="rateAmount" title="Rate (%)"><text /></field>
+        <field name="fixedAmount" title="Amount (Total Charge)" ><text /></field>
+        
+        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -1009,6 +1020,7 @@ under the License.
    
         <actions>
             <entity-condition entity-name="ProductCharge">
+            	<order-by field-name="-productChargeId"/>
             </entity-condition>
             
             <entity-condition entity-name="GlAccount" list="glAccountsList">
@@ -1027,6 +1039,17 @@ under the License.
        		</drop-down>
         
         </field>
+        
+       <field name="isRate" title="Is Rate">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+
+        <field name="rateAmount" title="Rate (%)"><text /></field>
+        <field name="fixedAmount" title="Amount (Total Charge)"><text /></field>
+        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteProductCharge" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productChargeId"/>

@@ -32,9 +32,11 @@ under the License.
     	<make-value entity-name="CardApplication" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="CardApplication" field="cardApplicationId"/>
         <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="cardApplicationId" field="newEntity.cardApplicationId"/>
+        
+        <set field="entityName" value="CardApplication"></set>
+        <set field="newEntity.cardApplicationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
@@ -56,10 +58,12 @@ under the License.
         <make-value entity-name="CardLog" value-field="logEntity"/>
          <set-pk-fields map="parameters" value-field="logEntity"/>
         <set-nonpk-fields map="parameters" value-field="logEntity"/>
-        <!-- set field="saccoProductId" value="logEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="CardLog" field="cardLogId"/>
+        
+        <set field="entityName" value="CardLog"></set>
+        <set field="logEntity.cardLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        
         <now-timestamp field="logEntity.createdDate"/>
-        <set from-field="cardLogId" field="logEntity.cardLogId"/>
         <set field="logEntity.cardApplicationId"  from-field="newEntity.cardApplicationId" />
         <set field="logEntity.isActive" value="Y"/>
 	    <set field="logEntity.createdBy" from-field="userLogin.userLoginId"/>
