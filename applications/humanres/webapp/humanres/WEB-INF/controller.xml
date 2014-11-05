@@ -47,9 +47,9 @@ under the License.
     </response>
     </request-map>
     
-    <request-map uri="addStaffOpeningBalance">
+    <request-map uri="addOpeningLeaveBalances">
 		<security https="true" auth="true" />
-		<event type="service" path="" invoke="addStaffOpeningBalance" />
+		<event type="service" path="" invoke="addOpeningLeaveBalances" />
 		<response name="success" type="view" value="addOpeningLeaveBalances" />
 		<response name="error" type="view" value="addOpeningLeaveBalances" />
 	</request-map>
@@ -351,6 +351,13 @@ under the License.
         <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveBalance" />
         <response name="success" type="none"></response>
     </request-map>
+    
+    <request-map uri="emplCompassionateleavebalance">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getCompassionateLeaveBalance" />
+        <response name="success" type="none"></response>
+    </request-map>
+    
+    
    <request-map uri="emplleaveduration">
         <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveDuration" />
         <response name="success" type="none">
@@ -464,6 +471,8 @@ under the License.
         <event type="service" invoke="deletePartyQual"/>
         <response name="success" type="view" value="FindPartyQuals"/>
     </request-map>
+    
+      
 
      <request-map uri="partyQualType">
         <security https="true" auth="true"/>
@@ -503,6 +512,14 @@ under the License.
         <event type="service" invoke="deletePartyQualType"/>
         <response name="success" type="request-redirect-noparam" value="partyQualType"/>
     </request-map>
+    
+     <!-- ================REJECT LEAVE WITH REASON========================= -->
+     <request-map uri="rejectLeaveWithReason">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="rejectLeaveWithReason"/>
+        <response name="success" type="view" value="viewEmplLeaveDetails"/>
+    </request-map>
+    
     
     
     <!-- ================COURSE SPECIALIZATION========================= -->

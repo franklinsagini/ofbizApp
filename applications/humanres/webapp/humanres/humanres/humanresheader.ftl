@@ -441,11 +441,6 @@
     		message = message+" Given Duration not allowed for this type of leave!!";
     		isValid = false;
     	}
-    	if ((leaveDuration.lenght<1)){
-    		message = message+" Leave duration not provided!!";
-    		isValid = false;
-    	}
-    	
 
 		
     	if (!isValid){

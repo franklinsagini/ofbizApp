@@ -1100,6 +1100,18 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    
+    <!-- ============================REJECT LEAVE WITH REASON======================================== -->
+    
+    <service name="rejectLeaveWithReason" engine="simple" default-entity-name="LeaveStatusLog"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="rejectLeaveWithReason" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
     <service name="rejectEmplLeaveStatus" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="rejectEmplLeaveStatus" auth="true">
         <description>Forward Valid Employee Leave</description>
@@ -1107,6 +1119,16 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    
+    <service name="addOpeningLeaveBalances" engine="simple" default-entity-name="EmplLeaveOpeningBalance"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
+	invoke="addOpeningLeaveBalances" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes entity-name="RegistryFileType" include="pk" mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryFileType" include="nonpk" mode="IN" optional="true" />
+	</service>
+    
+    
 
     <service name="deleteEmplLeave" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteEmplLeave" auth="true">

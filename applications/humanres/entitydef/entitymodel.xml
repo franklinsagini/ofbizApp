@@ -740,8 +740,8 @@ under the License.
         <field name="leaveBalanceId" type="id-ne"/>
         <field name="partyId" type="id-ne"/>
         <field name="leaveTypeId" type="id-ne"/>
-        <field name="openingLeaveBalance" type="floating-point"/>  
-        <field name="isActive" type="indicator"></field>
+        <field name="LeaveBalanceCarriedForward" type="floating-point"/>  
+        <field name="LeaveDaysUsed" type="floating-point"/>  
          <field name="openingDate" type="date"/>
          <prim-key field="leaveBalanceId"/>
         <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_PRTY" rel-entity-name="Party">
@@ -767,6 +767,9 @@ under the License.
         <field name="carryOverUsed" type="floating-point"/>     
 
         <field name="thruDate" type="date"/>
+        <field name="isDeductedFromAnnual" type="name"></field>
+        <field name="financialYear" type="id-ne"></field>
+         <field name="hasbalance" type="name"></field>
         <field name="resumptionDate" type="date"/>
         <field name="isActive" type="indicator"></field>
         <field name="leaveBalance" type="numeric"/>
@@ -804,7 +807,31 @@ under the License.
         <!-- <relation type="one" fk-name="EMPL_LEAVE_STS" rel-entity-name="StatusItem">
             <key-map field-name="leaveStatus" rel-field-name="statusId"/>
         </relation> -->
-    </entity>   
+    </entity>  
+    
+    
+    <entity entity-name="EmplCompassionateLost"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Entity">
+            
+        <field name="partyId" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
+         <field name="financialYear" type="id-ne"/>
+       <field name="allocatedLeaveDays" type="fixed-point"></field>
+        <field name="usedLeaveDays" type="fixed-point"></field>
+        <field name="lostLeaveDays" type="id"></field>
+        <field name="carriedOverDays" type="id"></field>
+        <prim-key field="partyId"/>
+        <relation type="one" fk-name="EMPL_LEAVEBAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVEBAL_ELETP" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
+        </relation>
+    </entity>  
+    
+    
+    
     
     
     <entity entity-name="EmplLeaveCalender"
@@ -836,17 +863,35 @@ under the License.
         <field name="accruedDays" type="floating-point"/>
         <field name="usedLeaveDays" type="floating-point"/>
         <field name="lostLeaveDays" type="floating-point"/>
+        <field name="LeaveDaysCarriedOver" type="floating-point"/>
         <field name="availableLeaveDays" type="floating-point"/>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
-    </entity>    
+    </entity> 
+    
+    <entity entity-name="CompassionateLeaveBalances"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Balances Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="days" type="floating-point"/>
+        <field name="usedLeaveDays" type="floating-point"/>
+        <field name="lostLeaveDays" type="floating-point"/>
+        <field name="availableLeaveDays" type="floating-point"/>
+        <prim-key field="partyId"/>
+        <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity> 
+       
     <entity entity-name="EmplCarryOverLost"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Carry Over  And Lost Leave Entity">
+            
         <field name="partyId" type="id-ne"/>
         <field name="financialYear" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
         <field name="accruedDays" type="floating-point"/>
         <field name="usedLeaveDays" type="floating-point"/>
         <field name="lostLeaveDays" type="floating-point"/>
@@ -854,9 +899,11 @@ under the License.
         <field name="resetLeaveDays" type="floating-point"/>
 
         <prim-key field="partyId"/>
-        <!-- <prim-key field="financialYear"/> -->
         <relation type="one" fk-name="CRRYOVER_LOST_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="LEAVE_CARRYOVER_TYPE" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
         </relation>
     </entity>
 
@@ -894,11 +941,8 @@ under the License.
     
     <entity entity-name="StaffLeaveBalances" package-name="org.ofbiz.humanres.employment" title="Staff Leave Balances">
         <field name="staffLeaveBalancesId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="partyId" type="id"></field>
-        <!-- field name="staffNo" type="name"></field-->
-        <!--field name="staffName" type="name"></field-->        
+        <field name="partyId" type="id"></field>       
         <field name="leaveTypeId" type="id"></field>
-        <!--field name="hrYearId" type="id"></field-->
         <field name="allocated" type="fixed-point"></field>
         <field name="bbf" type="fixed-point"></field>
         <field name="taken" type="fixed-point"></field>
@@ -1747,7 +1791,8 @@ under the License.
       <member-entity entity-alias="PartyRoleView" entity-name="PartyRole"></member-entity>
 
       <alias entity-alias="PersonView" name="partyId" field="partyId"/>
-      <alias entity-alias="PersonView" name="appointmentdate" field="appointmentdate"/>      <alias entity-alias="PersonView" name="firstName" field="firstName"/>
+      <alias entity-alias="PersonView" name="appointmentdate" field="appointmentdate"/>   
+      <alias entity-alias="PersonView" name="firstName" field="firstName"/>
       <alias entity-alias="PersonView" name="lastName" field="lastName"/>
       <alias entity-alias="PartyRoleView" name="roleTypeId" field="roleTypeId"/>
         

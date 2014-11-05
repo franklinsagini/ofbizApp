@@ -131,7 +131,10 @@
 		</field>
 		<field name="usedLeaveDays" title="Used Leave Days">
 			<display />
-		</field>		
+		</field>
+		<field name="LeaveDaysCarriedOver" title="Leave Days Brought Forward">
+			<display />
+		</field>			
 		<field name="lostLeaveDays" title="Lost Leave Days">
 			<display />
 		</field>		
@@ -381,13 +384,15 @@
 		
 		<!-- <alt-target use-when="leaveApp==null" target="createEmplLeaveExt" /> 
 		<alt-target use-when="leaveApp!=null" target="updateEmplLeave" /> -->
-		<alt-target use-when="leaveApp!=null" target="updateEmplLeave"/>
+		
 		
 		 <actions>
             <entity-condition entity-name="EmplLeave" list="emplLeaveList">
                 <order-by field-name="leaveId"/>
             </entity-condition>
         </actions>
+        
+        <alt-target use-when="leaveApp!=null" target="updateEmplLeave"/>
 		
 		<field name="leaveId"><hidden/></field>
 		<field name="leaveId" use-when="leaveApp!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -840,28 +845,23 @@
     </form>
 
 
-    <form name="EditOpeningLeaveBalanceForm" type="single" target="addStaffOpeningBalance" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="OpeningLeaveBalanceContext">
-		<alt-target use-when="OpeningLeaveBalanceContext!=null" target="updatefileType" />
+    <form name="EditOpeningLeaveBalanceForm" type="single" target="addOpeningLeaveBalances" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="OpeningLeaveBalanceContext">
+		
 		<actions>
 			<entity-condition entity-name="EmplLeaveOpeningBalance" list="leaveBalList">
 				<order-by field-name="partyId" />
 			</entity-condition>
 		</actions>
+		<alt-target use-when="OpeningLeaveBalanceContext!=null" target="updatefileType" />
 		<field name="leaveBalanceId"><hidden /></field>
 		 <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
-		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
+		<field name="leaveeTypeId" title="${uiLabelMap.HumanResLeaveType}">
 			<drop-down allow-empty="true">
 				<entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
 			</drop-down>
 		</field>
-		<field name="openingLeaveBalance"><text size="45"></text></field>
-		<field name="isActive">
-			<drop-down allow-empty="false">
-				<option key="Y" description="Yes"/>
-                <option key="N" description="No"/>
-			</drop-down>
-
-	     </field>
+		<field name="LeaveBalanceCarriedForward"><text size="45"></text></field>
+		<field name="LeaveDaysUsed"><text size="45"></text></field>
 		<field name="openingDate" title="Date"><date-time type="date" /></field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button" /></field>
 		<!-- submitButton -->
@@ -992,8 +992,10 @@
 	<!-- ====================================THIS IS FOR LEAVE REJECTION REASON POPUP====================================================== -->
 	
 	
-    <form name="LeaveRejectionReason" type="single" target="rejectEmplLeaveStatus" title="" default-map-name="reason" 
-     header-row-style="header-row" default-table-style="basic-table">
+    <form name="LeaveRejectionReason" type="single" target="rejectLeaveWithReason" title=""  
+     header-row-style="header-row" default-table-style="basic-table" default-entity-name="LeaveStatusLog">
+     
+     <!-- target="rejectEmplLeaveStatus" -->
     
     <actions>
     <entity-condition entity-name="LeaveStatusLog"></entity-condition>
@@ -1004,6 +1006,7 @@
     </actions>
     
     <field name="partyId"><hidden/></field>
+    <field name="leaveStsLogId"><hidden/></field>
     <field name="fromDate"><hidden/></field>
     <field name="leaveTypeId"><hidden/></field>
     <field name="leaveId"><hidden/></field>
@@ -1019,13 +1022,15 @@
 		default-table-style="basic-table">
 		
 		
-		<alt-target use-when="EmplLeaveCalenderContext!=null" target="updateLeaveCalender"/>
+		
 		
 		 <actions>
             <entity-condition entity-name="EmplLeaveCalender" list="emplLeaveCalenderList">
                 <order-by field-name="leaveCalenderId"/>
             </entity-condition>
         </actions>
+        
+        <alt-target use-when="EmplLeaveCalenderContext!=null" target="updateLeaveCalender"/>
 		
 		<field name="leaveCalenderId"><hidden/></field>
 		<field name="leaveCalenderId" use-when="EmplLeaveCalenderContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
