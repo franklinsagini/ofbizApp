@@ -1,0 +1,1036 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+    <property name="units">in</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">397</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">397</property>
+        </structure>
+    </list-property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="HCM_DataSource" id="396">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://127.0.0.1/ofbiz</property>
+            <property name="odaUser">ofbiz</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b2ZiaXo=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="P10A_DataSet" id="397">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">empname</property>
+                    <text-property name="displayName">empname</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">emppin</property>
+                    <text-property name="displayName">emppin</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">pin_number</property>
+                    <text-property name="displayName">pin_number</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">names</property>
+                    <text-property name="displayName">names</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">grosspay</property>
+                    <text-property name="displayName">grosspay</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">paye</property>
+                    <text-property name="displayName">paye</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">empname</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">emppin</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">pin_number</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">names</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">grosspay</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">paye</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">HCM_DataSource</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">empname</property>
+                    <property name="nativeName">empname</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">emppin</property>
+                    <property name="nativeName">emppin</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">pin_number</property>
+                    <property name="nativeName">pin_number</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">names</property>
+                    <property name="nativeName">names</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">grosspay</property>
+                    <property name="nativeName">grosspay</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">paye</property>
+                    <property name="nativeName">paye</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[SELECT empname, emppin, pin_number, names, sum(grosspay) as grosspay, sum(paye) as paye from (
+select *
+FROM(
+
+(SELECT 'empname'::text as empname, 'emppin'::text as emppin,  p.first_name||' '||p.last_name as names, 
+p.pin_number,
+CASE
+WHEN spe.payroll_element_id='GROSSPAY' then spe.amount
+END AS grosspay,
+CASE
+WHEN spe.payroll_element_id='PAYE' then spe.amount
+END AS paye
+
+FROM staff_payroll_elements spe 
+JOIN staff_payroll sp ON spe.staff_payroll_id=sp.staff_payroll_id 
+JOIN person p ON p.party_id=sp.party_id 
+JOIN payroll_period pp ON pp.payroll_period_id=sp.payroll_period_id
+WHERE sp.closed='Y' and spe.amount>0
+and to_char(pp.start_date, 'YYYY') = '2014' and
+(spe.payroll_element_id='GROSSPAY' or spe.payroll_element_id='PAYE')
+)
+
+) as alldet
+
+) as v
+group by empname, emppin, pin_number, names
+order by pin_number]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="7">
+            <property name="width">7.770833333333333in</property>
+            <property name="dataSet">P10A_DataSet</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">emppin</property>
+                    <text-property name="displayName">emppin</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["emppin"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">paye</property>
+                    <text-property name="displayName">paye</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["paye"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <text-property name="displayName">TotPAYE</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["paye"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">empname</property>
+                    <text-property name="displayName">empname</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["empname"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">pin_number</property>
+                    <text-property name="displayName">pin_number</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["pin_number"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">names</property>
+                    <text-property name="displayName">names</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["names"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">grosspay</property>
+                    <text-property name="displayName">grosspay</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["grosspay"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_1</property>
+                    <text-property name="displayName">TotGrossPay</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["grosspay"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_2</property>
+                    <text-property name="displayName">TotPAYE</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["paye"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+            </list-property>
+            <column id="20">
+                <property name="width">1.3854166666666667in</property>
+            </column>
+            <column id="21">
+                <property name="width">2.5208333333333335in</property>
+            </column>
+            <column id="22">
+                <property name="width">2.40625in</property>
+            </column>
+            <column id="444">
+                <property name="width">1.4583333333333333in</property>
+            </column>
+            <header>
+                <row id="525">
+                    <property name="height">1.6875in</property>
+                    <cell id="526">
+                        <label id="477">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingTop">20pt</property>
+                            <text-property name="text">P.10A</text-property>
+                        </label>
+                    </cell>
+                    <cell id="527">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <image id="458">
+                            <property name="height">1.0625in</property>
+                            <property name="width">4.59375in</property>
+                            <property name="source">embed</property>
+                            <property name="imageName">logo2OLD.gif</property>
+                        </image>
+                        <label id="459">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">ISO 9001:2008 CERTIFIED</text-property>
+                        </label>
+                        <label id="460">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">DOMESTIC TAXES DEPARTMENT</text-property>
+                        </label>
+                    </cell>
+                    <cell id="529"/>
+                </row>
+                <row id="531">
+                    <property name="height">0.2708333333333333in</property>
+                    <cell id="532">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <label id="476">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">P.A.Y.E. SUPPORTING LIST FOR END OF YEAR CERTIFICATE</text-property>
+                        </label>
+                    </cell>
+                </row>
+                <row id="561">
+                    <property name="height">0.5520833333333334in</property>
+                    <cell id="562"/>
+                    <cell id="563">
+                        <grid id="566">
+                            <property name="width">2.6666666666666665in</property>
+                            <column id="567">
+                                <property name="width">1.3958333333333333in</property>
+                            </column>
+                            <column id="568">
+                                <property name="width">1.2708333333333333in</property>
+                            </column>
+                            <row id="569">
+                                <cell id="570">
+                                    <label id="559">
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">EMPLOYER NAME</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="571">
+                                    <data id="598">
+                                        <property name="resultSetColumn">empname</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="564">
+                        <grid id="572">
+                            <property name="width">2.4895833333333335in</property>
+                            <column id="573">
+                                <property name="width">1.1041666666666667in</property>
+                            </column>
+                            <column id="574">
+                                <property name="width">1.3854166666666667in</property>
+                            </column>
+                            <row id="575">
+                                <cell id="576">
+                                    <label id="560">
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">EMPLOYER PIN</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="577">
+                                    <data id="599">
+                                        <property name="resultSetColumn">emppin</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="565"/>
+                </row>
+                <row id="420">
+                    <property name="height">0.5416666666666666in</property>
+                    <cell id="421">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="478">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">EMPLOYEE'S PIN</text-property>
+                        </label>
+                    </cell>
+                    <cell id="422">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="479">
+                            <property name="fontWeight">bold</property>
+                            <property name="marginTop">0pt</property>
+                            <property name="marginBottom">24pt</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">EMPLOYEE'S NAME</text-property>
+                        </label>
+                    </cell>
+                    <cell id="423">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="480">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">TOTAL EMOLUMENTS</text-property>
+                        </label>
+                        <label id="484">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">(KSH.)</text-property>
+                        </label>
+                    </cell>
+                    <cell id="441">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="481">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">PAYE DEDUCTED</text-property>
+                        </label>
+                        <label id="485">
+                            <property name="fontWeight">bold</property>
+                            <property name="marginTop">0pt</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">(KSH.)</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="12">
+                    <property name="height">0.28125in</property>
+                    <cell id="13">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <data id="600">
+                            <property name="paddingLeft">2pt</property>
+                            <property name="resultSetColumn">pin_number</property>
+                        </data>
+                    </cell>
+                    <cell id="14">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <data id="601">
+                            <property name="paddingLeft">2pt</property>
+                            <property name="paddingBottom">1pt</property>
+                            <property name="resultSetColumn">names</property>
+                        </data>
+                    </cell>
+                    <cell id="15">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <data id="602">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">grosspay</property>
+                        </data>
+                    </cell>
+                    <cell id="442">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <property name="textAlign">right</property>
+                        <data id="604">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00</property>
+                            </structure>
+                            <property name="resultSetColumn">paye</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="16">
+                    <property name="height">0.3125in</property>
+                    <cell id="17">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                    <cell id="18">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="605">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">TOTAL EMOLUMENTS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="19">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <data id="611">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_1</property>
+                        </data>
+                    </cell>
+                    <cell id="443">
+                        <property name="fontWeight">bold</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <property name="textAlign">right</property>
+                        <data id="612">
+                            <property name="paddingRight">5pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00</property>
+                            </structure>
+                            <property name="resultSetColumn">Aggregation_2</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="578">
+                    <property name="height">0.5in</property>
+                    <cell id="579">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                    <cell id="580">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="606">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">TOTAL PAYE TAX</text-property>
+                        </label>
+                    </cell>
+                    <cell id="581">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                    <cell id="582">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                </row>
+                <row id="583">
+                    <property name="height">0.5in</property>
+                    <cell id="584">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                    <cell id="585">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="608">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">TOTAL WCPS</text-property>
+                        </label>
+                    </cell>
+                    <cell id="586">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                    <cell id="587">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                </row>
+                <row id="593">
+                    <property name="height">0.5in</property>
+                    <cell id="594">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                    <cell id="595">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="609">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">* TAX ON LUMPSUM/AUDIT/INTEREST/PENALTY</text-property>
+                        </label>
+                    </cell>
+                    <cell id="597">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                </row>
+                <row id="588">
+                    <property name="height">0.5in</property>
+                    <cell id="589">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                    <cell id="590">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <label id="610">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">* TOTAL TAX DEDUCTED/ TOTAL C/F TO NEXT LIST </text-property>
+                        </label>
+                    </cell>
+                    <cell id="592">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">medium</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">medium</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                    </cell>
+                </row>
+                <row id="626">
+                    <property name="height">0.6145833333333334in</property>
+                    <cell id="627">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <label id="516">
+                            <property name="fontWeight">normal</property>
+                            <text-property name="text">* DELETE AS APPROPRIATE</text-property>
+                        </label>
+                        <grid id="631">
+                            <property name="width">7.697916666666667in</property>
+                            <column id="632">
+                                <property name="width">1.6666666666666667in</property>
+                            </column>
+                            <column id="633">
+                                <property name="width">6.03125in</property>
+                            </column>
+                            <row id="634">
+                                <cell id="635">
+                                    <label id="624">
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">NOTE TO EMPLOYER:-</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="636">
+                                    <label id="625">
+                                        <text-property name="text">ATTACH TWO COPIES OF THIS LIST TO END YEAR CERTIFICATE</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+    <list-property name="images">
+        <structure>
+            <property name="name">logo2OLD.gif</property>
+            <property name="type">image/gif</property>
+            <property name="data">
+                R0lGODlhUAFmAPcAAAAAAPn/+qWlpd4AAFpaWtbW1jMzM+I5QYSEhL29vRkZGe/v7+YUFszMzNaDg3Nz
+                c0pKShAQEO+mnebm5pSUlCEhIbW1tf8AANpeYEJCQmpnZf3u5/cAAOS9vwgICPjP0+IpLq2trd7e3ueN
+                icXFxeADBnt7eykpKVJSUjo6OmZmZpmZmf//+Pf39+FMUIyMjN9oZt8pKvfKwOva2+kOCvgFAP/w9+6p
+                pO55c+FMRuMgH+6TiO8AAOUwL/DCweUBCO5aW/Wss9hycPvf2vfd1OdCP/CDgutLUOg7POSZlunLzOYQ
+                Iff//+cJCuYnJOd+fv/28PkBCf/5/e91dd1kYve0vP8ACOESEPzIyOq4ufCmqe8VGv////nPz+NtcOVN
+                VPzX1+xPTea1re+UlulFR/3n5ewKCukyOt84MewiH+6LjPLm3t8YG/rt7PRhYuYAAPJ8fOkXFO46NeUr
+                Ju0zQOmFhedJQ+NRUulpafa9ufa7vu+trN8GBud0ePGfn/Soo+dlafjXz+xUWvIGA/zh2O+8vuUiJ/LC
+                xu+GjOsCB/3k3OVdW/fV0+wxNuUPEeUYGdwvMe8KEfrn6eZJS+ZSWmtra/73+P3w8OAuLOtEQ/ng3/bL
+                xOcbIOgGD9sLD+uVn/WrreM9P/Clo+qLke4xM+pDPfCdl/SoruhxdfBFTeyBfPSRjO0pJ+xdZN9UUuiE
+                f/O/xu7AwtyChu4PCvd7c/WDgvjDw+tTUOdjX/G3su+1rfA8Oe1rZwAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                ACH5BAAHAP8ALAAAAABQAWYAAAj/ALkIHEiwoMGDCBMqXMiwocOHECNKnEixosWLGDNq3Mixo8ePIEOK
+                HEmypMmTKFOqXMmypcuXMGPKnEmzps2bOHPq3Mmzp8+fQIMKHUq0qNGjSJMqXcq0qdOnUKNKnUq1qtWr
+                WLNq3cq1q9evYMOKHUu2rNmzaNOqXcu27VpLHRzAwMULR51RWrCUkeK279k1YoTEGDCAh+FZcXb1OUXI
+                r+OxUPSgSsODg2UOb95sEbTn0uPPUBeIaJCggYgWCMuMavTmgutBlnk4eaVoIBMmfEHrBtrgBQoDCoIH
+                T6GhAEIoY1i9uczBNQ9OOGrvnt5zAYUMCjx4iCA8uwcCxhO2/zHCoLlr15YNmWJBvb3NBS8MbO8ePEIE
+                Ag0cfvjS+vx5Hl+A4d6AMJEgH3f0ZZeCBRLV0QRzzHFyCoEUqrSCfQkqYJ8JC1BUhQ4QnveGKhWWSBIC
+                8yXowQkMWvRBDzz4JyIgUJhoY0cmeJBhdiiIkJEmaJhXw5A1XPDGHTXeqKRFOe7oQSWoaQRGDObJyMMi
+                lggUAEMthCCABQkkEMIKPnLR5ZckWCBACFEuZcEKFpCQgJoCfFnmkhm9oGOGHiDg0SFsVHnBkBfwgAp7
+                DbWQAAUVROABBAJMMJAFJlQAQAUmJJDbUiSskMJ2GSBgAgT2oZAfnhZZgKCKfn4ESiKCiv+oRkQPABAB
+                CQdlcEJ4UIXgqAADNZDCpaeiKpEIjfJpQkULFCAnnbgS1Ed/5xFKQx4QvXAprwMlsOtBDYSQAAlpWmDu
+                uaiRIG4Ckh6kbpzmFhBCCOSCuaVA4YYZggVtctFAsRAlYB+wAyELAAT3CjTBvvWee64IC8eZZggdEqSu
+                vgksMOe4czpsQX4LmEtuvwOFLK66JEwgcrkkX5xmAyFL7HG8M0GwJ33fVeRtdgD0rN0DBF0SSqznYVLG
+                QxRsW9ACKSSAUAEUnOBBBSo88EAlBERQQYcNIGApwuCukMHBFogQAgHaZUBCwlBLXQm/JZ9wQsUBD1xQ
+                k9wuEAIK26H/YHUlKhgAAMV7py0A3QK1/SQJLZDwgH0p/F0JBACoYKYFlUQAQKsFtWCB10/CHILNHqAA
+                N0ENMOrBAzBboMJ2EFRytQrDviATBTd3F0EKiEe0gLormECAAfZFADAWkVwQRRSuEcqDF0grTRABKyxU
+                KwEFUQABQb72mRAJxhOEAgAoHBS7QSRsF23dEYRQkKoRtIg6d3dyMcEJpy5wAgBAI6RC+QQRHMEGAgHO
+                caEStlqfQUxwAovZB2B3a2DBNKTABRhAfi5B1qroA8GLLEAA+xugQIzwhhosb1BFukAn9OCQFUhPIAgw
+                IEIQULmCkKASBLnfdjBIEBF8ayAF0BAP/4XVOy6AblkRAV/7bGgfHnIhiAqoHxfAMxBtGaCIZmpaQcYm
+                Qi68gAIEsYB2DNAug4gNdcHhVkHOOJD73aoglVBgS17HJ9t5BFlgJAgU7MAc/3AgFDW6jUJcWIE7rQCH
+                DKGh5XLovoIRgACXkqJAfCjFWgFwICrII0EWoIIVeCAFJGOIEhs5ECWq8YnBkWIIyhhED5AyjNvbIgC6
+                SC6CCIAAY8PeQVYQS3xx55QD4WUOT/DGMEpSJQ3YoHAikIFQamQFXeQCGJxAtEKJQiCCRAghw3M2ZxpE
+                kQspgAomMCwIhFIEBpCiCDTktMSZ0yAh4FCjOrgQJfLQhShIGBBTuf+Q8S2yICqwI0EoF801IiCZm9tl
+                L/2lNWAKRACXtB8x6QkTtGUofiERAbcCsKUPhGI5MuIAErK0EEL6KAEoKONCtPXPp2GvAQrgn0FEkAJJ
+                WnIgDyjo27gwPhmKUogFSYEC6AnFY9pyaiq1X00NQtCFUGBZ2sJoQQSw0GRWwKFcgGgOiUdRl0BRRRH1
+                CEePcwMgUMY/b9gDQ0xqAQU4MSHaQuSkANYAAmzJkx7oIjklqUFcFYAAoVwACjqUtIU2hATZaaeZHoC/
+                p1VAASoVgV4r4IHqEWQFuixIU22JuKcKBJInkKJWgag1o2Y1s1ywYPhKZlmXNClBUm1JGdQQh///hGGt
+                ADDACxyF2pUCQK6fpeslVfBC+2XgmAjEXk4PIgBEwlQBWAWXhiDwABM8wAAo8CYXkAXZyyKRIMQNKwpe
+                ScDBEeSv/fKs/QQHtoGMNnEKKGRCbrlJ4nELcy9RLWwhsCmD/MskO2jNkBggoEECYFev84BAneoBA6jg
+                wQRIQQVU2oBLMg0AvGtjBpLqSwW8wK4HUYFiKafJw9onkwiIaTMTwl0UPPh/EWjtQEKgI14VYMVM9UAG
+                AKcCAiigty/4LvgA8F0unO28aUwIZusbgdhBOAJFXomq+CTjgiDgAdrtyCYe1BwezMrAE7bgDhuiLQjM
+                a14vSIFKSVDVmMp1/wIQ4PBntfPW+z3gBXj+VFjr6ahoCUA7Ue7hYylggXkJIAMlFogFASBQUSGEcg8o
+                9Lx6bOUi68mVM0btOqGbEAq0VLUIkDRVA52SB+ROOPI1SAtwiUU5Y+QQTfBPJhClTaUhdmrRFUhc78Yt
+                NvcXr5aFs6tDcGAsCsAAlUh2JVBAv4fYcyB8W61BCvBYxCVgwTgFQAb40gIIUJRyGFzAA/Tp6OlJLwQt
+                nUCSEUIB4KqWWwUg9UlakAJlamjPSp2wQSaggrdiZA/UusAjhgDm8OA1wwphaUEKgDhfAxQAQ7VfnBGS
+                PlAeZLyb3F+VFfJs+D5Kn/vsbsmAKbA3ojQhm/8Nlj5NEOX7aRs16M7hY7v6AgNOgKubzPVIvoqzRG8X
+                5ws/gWEFYgmSVmQMAU+rQpJ21YFUQjsE6O83a6iQBGy7IDfP7QIWAAEsciF9V5w2wjEJgN5W3T6vzJEH
+                fI7KKCZqWMt6wMbLW1CCsNwgqvqtkYGrQ8V+s8Ru7OpKaLwjORZgf+T1F2XpqYQZXAQOMfoPHJb+wm7/
+                TCHgNEgAomR1kHNBYJUTrNcT0OAiIqClD0WqQ0r+SjFHfOH8VPXU1ZzShHDxIC2IktUOQkNXJsDdAkzI
+                TttITDkKJMsiQVGGThBZwfkUnVQ3iAOScBE3xEoQlG96G+Wj4IRkviD0Eoj/BVLgeSNu5wEEGL3WDZKB
+                xE+AsolHCOvfZ58M9K6oM934cwkgb4Hc3iAvUDG7p2qUcwIDCG16h3sTR3zFtEkUIHUmYVH0wUwJMwFj
+                k09MBXEOhQGQkCQUkQoycgEjBVcQB0HUZh9sZ0TRNxCr1i7j50wtwDef5E0JUGw2xHwHAUmolxAlF01P
+                5wGoh39WxnYZ4Ch+x36zZBC/53T9M22UtTpTBXHGxwWHhHXFZ0Y+ZRKkoiKoNT44uEbasYMDcQcD4AcW
+                QQeuwTyu4QSaIHzacYSf5x1sVysZYBAPcEkroABehywN5k0CAHFJhQJ1yFwa2BB45XMLMDa/1SZKJEck
+                /xBaB2EC65cQzrc0BtBaEIBvqQeFBNFtl8JDIXBcBbFOmHZeJzCFJME09uYB3yWJEQCHbiRtBpEDPHAG
+                nsEQgSALn9AFl8ACLBAIIGIZ5/EIjGAQepNijpICKyBHFiAfB0NoLRAyjFIqVsNylOM+BbAC8kEAAnBM
+                xDY30xaKJ5YAuec6U/MCAOM5WfNJkfI9L0BMEXACocZRYzUBPqZtK5AAVLUdyFZdJqACEaCJJJCA4Zg5
+                WlM1LMdYevh1KaYAoYZFCLSD9ugBGHZno5IB3NIAt7QdJ4CQJlAJCpACLHFzq9gqf+Y93wR1CpEDHPAD
+                VcAQigAJhWEGrHALgNAIkf/nH46wCftWJ2AiJvlojGqCZwLQAhPgk/pSJ0ppAVuikWDiJQ5VaCQTACTw
+                JfqySh8kAHMiABU0L0mJVW+yLmF5TvoITWsSJoWmlNBkVC2wAg6lkVqZlEopAPnhOXG5Jli0AMsofyYg
+                iBmgAkVZEPoolnMJTToHEm4EW2AURAfjear1igrhChzAA1PAEKuQk4VSGSF4AXwQC8ZiIz5kbzHGBZTD
+                aXhXf+U3EFRQGaUgBUygEHUQeZfRPCYUBSlUAoXwmSaSmD0HbAhhaiiZELF5AY7wAQtBBCCwHIJCJP7B
+                B7mpmxWiXwkCAVIzdFpCKrGFEFUQIzwweQuhCYggCJn/IAeGoJyxwgc+AJ3RWW8XxR0UlZimJRBDEAeW
+                wQaBcBAcJXU2IAkSsAUQYhlX0AXqWSFbyCdNiD72EXbvo1KSaQUckAm3+BDWZwUykgaN0RANAJgDyhYA
+                eVFfyFyQQzIh4HYDEQT9wQOUYHQG8ZoFAQREQwoeuBCSmAIQuKFkoXysohA5wkz90gIGsDUEYQlkwANF
+                wgOTUGAM0QZzsJlH8BAZUGMZgXydqBETUAAM5xEtUKO4ZyKElyD6lhBoszv9QmMfKhBYcAX/8Qi0wJPY
+                xKIF8QclRCRFWpkYegKUlWgT8ALV+AAIkFSUUl1yxwUW8JdWU43WVajJRgAT0DX+//gAFIA4DWBdCfmo
+                LHhIPZYBBgABKxAlbWmo1qUCCGB8f3qo7kMChFqoCSk5WCMCJPCRCYlBAlCoOaWlZnGCOHOgqkY8EaCg
+                AkFHkmQK/TEkPNAEmeAHKloQZNBHrvEGN+AQJuAb5FMQAZCnPaMCIgByzUJiHeJJJrAmY6I5JmBoK2Cn
+                uScCtcJoSdUCIgBJlVVGpmoCBcAXVDk+KRAtIRNTKkAaoAMlnVgAlBM/MMc/ZyYAMfUAXiIA2hgBE9AC
+                BXCuJtAvGrOrJOB1ZxEA7Kk7cIhGGvKh+gVMo/ADIfUGZEAEB/EHIBuCDHCfXAIBIqAtqSZzHuBvgloB
+                UWJdBf8xUdzTS8kkcgbxZwbQJqoydzSkAOtDOa0FfT6VNIPoRagnOH5HAhYnEP60bz/kF69VH1GrTXvy
+                pV9XPBSlBgLGnBwQAyRLEJpAJbN5HrPWEAmwPeBTWfvWKBkrEAkQtZUAMAvQKAokAv9kVUb1ZwjXAEAo
+                fAfWLiR2WSvSOy7USw/gdz4aszkEYr7UgAJhs48hMN3xJAtBR7GXVdyRnQUxBiVAmzXgoGggHVxQBkVw
+                GYOQQoVSBw7Bp6klOGb3fpApfysWAGyySXq7SaRkVa4GuFFiM13lckg0PjIGRWq0uDOGOD4KAOEWAvpE
+                XKhlga62Fj66KhFQdwpDTMLBK6b/piFzNxCi4Aj/KVKb0AZBcAaY6R80IKBckgGngkBlaj+9i7velLe3
+                Cy5aE7wz+Hm5lWWSCI7Im0PrFkwHkxDPG3/n9UADEUO6gaMUpBB/1h28wmzZ0X8CkQvlwRwOagacACvC
+                GFJ2QKsEYXUzph3kZbuo+HXtZYxymxAwxbXgp2OoUSvAdRAlxyAFXDC7SjJ/aJ3HJzgMDF5lpzCDpRs8
+                97I5mDtlol+DuxC2YAghspky8gbX1BCVwDn6s4L2S7mCKcSpRVlz6y/x5XVidHVjk4XDxGg8lYTuBQA+
+                94eaaCaIxxDJFD4IkIJ9QUfxeL3PJRxfuGnTZcICwQgg8J9W/2AFzEm6PRChCmFB6PgvwlJ6vAvGJyzG
+                7+cBZfxcJGClBSACoizKuFOHXczHAzE2QDM+pGRnhFjHLXDHDAFJlTABSbwbULSrFPt0y4RjU7axFEsQ
+                RNADELLIRXJCIjIGDqEqctPMj5Wd+rO/eKfJZCzDwWEAKZACGbDN3ExMdehy2HZxMoU21CMAL9B+CEHH
+                CizLfFYBmtoeT7c7XhfIwaG5AoE7FuwQREAlm0ko6GGLDkEAtTwBBK0y2XGgsczJCWEBdbzJnZxGBL11
+                Ev1BOmbHRDbLF03O7WYrFKXOCBHLcMwQ48Oru8GHOGYQfKM7pMTL9SGzBiEDS6CsIfgDQf/gEPfTQU/K
+                q49bxkeGEJssszOMxhXNBRfIEIc7PgRDXCd9WdGKEF3MvQWhLWanGy601MGUO2KayquydgxxG695Cifb
+                yMpzARywCA/hKby3HYpFb9A7XzkMs0AdHMOmY1tCv8HMBZ/iNEg9SZbCdviUEE/tEEkz1bpBnaGEWBuU
+                VyEnHKwYEXgQeWLNATrQhg5RQO7iKEU2NuNLhf3309ZMw9zzvzQGuSymACeAGj3MBUwnSczr1CHkEFJN
+                ICKwgAXjvYyNgamXuYikUQ1BCJwg05ypCw+xTvT0uCc9PrhKEAbLYpYC1KWFEDRmcYtG2AJBbK2S2i1Q
+                1GuUwK4d0r7/Vceg0QAqVQDEozuQCG25Y88FwMYG8QTtaySvkC0nkJqmJm00RNIsyLIJ8X5tjRDPZVTR
+                HSUnKbO6UjGp3bXdRxCFBdivTWZNbSINIB+6I82EzNhIRN7XSxBdkDz+wQOtYMidaIAL7ShNuE4y9U3J
+                LWjmRXHNdhDRTTcIpH3Z04BGeze2gkEL3t2bbWUPTiFtqSET3kVXW892VABy3BCWcABVYqSQvBALEJHe
+                VACOsr9/VnYwM0l9Gcw0duIHkTSkDYCFeHy1ogACkDAtQAEGoFguh6sxaCsrfSmuBnpimIOTSCHEtkF2
+                I2jKdLtgd9cCAQjCyAMusAEOsQAI8BvZ/0wAibYAo5LN2RxH4vekDbbNkUOxIYAAEODomVIQkZoB2VxA
+                9ROpmZ4CBPACZWQBpJICW4x+D9AubRk42ty4m4QAmJpTJuDppE6pk3Lo2Bw5MtsCAmACjl4JgUkgLbBb
+                CJLn4HVq/Uu3mN0QtdBllNAGD6GuEyDRotw5ojzRIgCpAkABFBAC8bldEIPtSSUa174AE3Aam9Ttubfu
+                JFMA5kxo9WPtCxCNEHMQ677tWwfvPQQxuYfuCszv6s7uFUKwGJJ4v5y5/+Qr9tHCA3GZhnKsNlrxwlIB
+                xheasCU/AvC5Y4cQI+AJplDxJL9vksQ0p6YhGZAwF1LP1C0QWQALA4ZBjyVf85tkMxeFQbvF2OFs8z4f
+                Tp/CJ6g35Nv780bPEM045bpDRgURvsu0REcf9fiZANflKNpRAR3E0hoyRuMu9T+vMbyesePDHSeAAiZg
+                AQvr9Wr/0dBNaFe69nAf93I/93Rf93Z/93if93q/93zf937/94Af+II/+IRf+IZ/+Iif+EoREAA7
+            </property>
+        </structure>
+    </list-property>
+</report>

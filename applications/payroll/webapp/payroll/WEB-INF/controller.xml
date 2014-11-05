@@ -309,6 +309,12 @@ under the License.
 		save-home-view="true" />
 	</request-map>
 	
+		<request-map uri="closedstaffpayroll">
+	<security https="true" auth="true" />
+	<response name="success" type="view" value="closedstaffpayroll"
+		save-home-view="true" />
+	</request-map>
+	
 	<!-- Create Staff Payroll -->
 	<request-map uri="createStaffPayroll">
 		<security https="true" auth="true" />
@@ -346,6 +352,14 @@ under the License.
 	<request-map uri="staffpayrollelements">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="staffpayrollelements"
+			save-home-view="true">
+				<redirect-parameter name="staffPayrollId"/>
+			</response>
+	</request-map>
+	
+	<request-map uri="closedstaffpayrollelements">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="closedstaffpayrollelements"
 			save-home-view="true">
 				<redirect-parameter name="staffPayrollId"/>
 			</response>
@@ -419,16 +433,22 @@ under the License.
 		<response name="error" type="view" value="payrollconstants" />
 	</request-map>
 	
-	<request-map uri="deletePayrollConstants">
+	<request-map uri="editPayrollConstants">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="editPayrollConstants"
+			save-home-view="true" />
+	</request-map>
+	
+	<!--<request-map uri="deletePayrollConstants">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deletePayrollConstants" />
-		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		 response name="success" type="view" value="savingsproductsetup" / 
 		<response name="success" type="request-redirect-noparam"
 			value="payrollconstants">
 			<redirect-parameter name="payrollConstantsId"/>
 			</response>
 		<response name="error" type="view" value="payrollconstants" />
-	</request-map>
+	</request-map>	-->
 	
 	<request-map uri="payetable">
 		<security https="true" auth="true" />
@@ -660,7 +680,11 @@ under the License.
  	
  	<request-map uri="payPointsReport"><security https="true" auth="true"/><response name="success" type="view" value="payPointsReport"/></request-map>
  	   
-	
+	 <request-map uri="payelementsValidation">
+        <event type="java" path="org.ofbiz.payroll.PayrollElementValidator" invoke="uniqueFieldsValidation" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
 	
 	
     <!-- end of request mappings -->
@@ -679,8 +703,11 @@ under the License.
 	<view-map name="payrollyear" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollYear"/>
 	<view-map name="payrollperiod" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollPeriod"/>
 	<view-map name="staffpayroll" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStaffPayroll"/>
+	<view-map name="closedstaffpayroll" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#ClosedStaffPayroll"/>
 	<view-map name="staffpayrollelements" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStaffPayrollElements"/>
+	<view-map name="closedstaffpayrollelements" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#ClosedStaffPayrollElements"/>
 	<view-map name="payrollconstants" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPayrollConstants"/>
+	<view-map name="editPayrollConstants" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#EditPayrollConstants"/>
 	<view-map name="payetable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewPAYETable"/>
 	<view-map name="nhiftable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewNHIFTable"/>
 	<view-map name="nssftable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewNSSFTable"/>

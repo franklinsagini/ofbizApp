@@ -359,8 +359,7 @@ under the License.
                                 		<widgets>
     										<container style="button-bar">                                                   
                                                 <link target="runpayroll?payrollPeriodId=${parameters.payrollPeriodId}"  text="Run Payroll" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png"/>
-                                                   
+                                                    <image url-mode="raw" src="${iconsLocation}/add.png"/>                                                                                                       
                                                 </link>
                                                 </container>
 
@@ -386,6 +385,42 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    <screen name="ClosedStaffPayroll">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Closed Staff Payroll"/>
+                <set field="headerItem" value="closedstaffpayroll"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="closedstaffpayroll"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="payrollPeriodId" from-field="parameters.payrollPeriodId"/>
+                
+            
+                <entity-one entity-name="StaffPayroll" value-field="staffPayrollContext"/>
+                <entity-one value-field="payrollperiod" entity-name="PayrollPeriod">
+                	<field-map field-name="payrollPeriodId" from-field="payrollPeriodId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="search-results">
+                        	<widgets>
+
+                        		<screenlet title="Closed Staff Payroll For ${payrollperiod.name}">
+                        			<include-form name="listClosedStaffPayroll" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    
     </screen>
     
         <!-- Staff Payroll Elements -->    
@@ -433,6 +468,38 @@ under the License.
                         	<widgets>
                         		<screenlet title="Staff Payroll Element List">
                         			<include-form name="listStaffPayrollElements" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ClosedStaffPayrollElements">
+    	<section>
+            <actions>
+                <set field="titleProperty" value="Closed Payroll Elements"/>
+                <set field="headerItem" value="closedstaffpayrollelements"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="closedstaffpayrollelements"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="staffPayrollId" from-field="parameters.staffPayrollId"/>
+                
+                <entity-one entity-name="StaffPayrollElements" value-field="staffPayrollElementsContext"/>
+
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff Payroll Codes List">
+                        			<include-form name="listClosedStaffPayrollElements" location="component://payroll/widget/payroll/PayrollForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>
@@ -512,6 +579,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    <!--
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
@@ -525,7 +593,7 @@ under the License.
                                 <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
-                        
+                        -->
                         <section name="search-results">
                         	<widgets>
                         		<screenlet title="Payroll Constants List">
@@ -533,6 +601,31 @@ under the License.
                         		</screenlet>
                         	</widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPayrollConstants">
+        <section>
+            <actions>
+                <set field="headerItem" value="PayrollConstants"/>
+                <set field="tabButtonItem" value="editPayrollConstants"/>
+                <set field="titleProperty" value="Edit Payroll Constants"/>
+                <set field="payrollConstantsId" from-field="parameters.payrollConstantsId"/>
+                <entity-one entity-name="PayrollConstants" value-field="payrollconstants"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <!--include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/-->
+                        <screenlet title="Edit Payroll Constants">
+                            <section>
+                                <widgets>
+                                    <include-form name="EditPayrollConstants" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
