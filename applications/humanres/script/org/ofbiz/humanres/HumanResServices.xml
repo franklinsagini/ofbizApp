@@ -1244,15 +1244,16 @@
         <set field="lookedUpValue.approvalStatus" value="Rejected" />
         <store-value value-field="lookedUpValue" />
 			
+        
         <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
         <set-pk-fields map="parameters" value-field="newEntity" />
         <set-nonpk-fields map="parameters" value-field="newEntity" />
-        <sequenced-id sequence-name="leavestatuslogSequence" stagger-max="1" field="leaveStsLogId" />
+        <sequenced-id sequence-name="LeaveStatusLog" stagger-max="1" field="leaveStsLogId" />
         <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
-        <set field="newEntity.rejectedBy" from="userLogin.userLoginId" />
+        <set field="newEntity.partyId" from="lookedUpValue.partyId" />
+        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
         <set field="newEntity.approvalStatus" value="Rejected" />
-        <!-- <set field="newEntity.leaveLogStatus" value="Rejected" /> -->
         <create-value value-field="newEntity" />
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
     </simple-method>

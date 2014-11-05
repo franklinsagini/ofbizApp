@@ -158,6 +158,9 @@ public class PartyServices {
 		// check to see if party object exists, if so make sure it is PERSON
 		// type party
 		GenericValue party = null;
+		
+		//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
+		GenericValue partyRoleEmployee = null;
 
 		try {
 			party = delegator.findOne("Party",
@@ -183,6 +186,11 @@ public class PartyServices {
 					partyId, "partyTypeId", "PERSON", "description",
 					description, "createdDate", now, "lastModifiedDate", now,
 					"statusId", statusId);
+			
+			/*//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
+			Map<String, Object> newPartyRoleMap = UtilMisc.toMap("partyId",
+					partyId, "roleTypeId", "EMPLOYEE");*/
+			
 			String preferredCurrencyUomId = (String) context
 					.get("preferredCurrencyUomId");
 			if (!UtilValidate.isEmpty(preferredCurrencyUomId)) {
@@ -199,8 +207,15 @@ public class PartyServices {
 				newPartyMap.put("lastModifiedByUserLogin",
 						userLogin.get("userLoginId"));
 			}
+			
+			//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
+			partyRoleEmployee = delegator.makeValue("PartyRole",
+					UtilMisc.toMap("partyId", partyId, "roleTypeId", "EMPLOYEE"));
+			
+			
 			party = delegator.makeValue("Party", newPartyMap);
 			toBeStored.add(party);
+			toBeStored.add(partyRoleEmployee);
 
 			// create the status history
 			GenericValue statusRec = delegator.makeValue("PartyStatus",
@@ -225,10 +240,10 @@ public class PartyServices {
 		}
 		
 		
-		String employeeNumber=NextPayrollNumber(delegator); 
+		
 
 		person = delegator.makeValue("Person",
-				UtilMisc.toMap("partyId", partyId, "employeeNumber", employeeNumber));
+				UtilMisc.toMap("partyId", partyId));
 		person.setNonPKFields(context);
 		toBeStored.add(person);
 

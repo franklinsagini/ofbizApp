@@ -75,15 +75,7 @@
         });
         
      
-         jQuery('select[name="branchId"]').change(function(){
-		 
-         var appointmentdate = this.value;
-         var branchId =  jQuery('select[name="branchId"]').val();
-         var reqUrl = '/humanres/control/emplrollNumber';
-           if (branchId !=""){  
-         	calculatePayrollNumber(reqUrl);
-         }
-        });
+       
         
                jQuery('input[name="birthDate"]').change(function(){
 		 
@@ -121,6 +113,8 @@
         });
 		
 		 });
+		 
+		 
 		 
 	
      
@@ -385,5 +379,89 @@
     	return isValid;
 
     }
+    
+    
+   
+   
+   
+   
+   
+   
+    /** ==================LEAVE APPLICATION VALIDATION ==========================================**/
+	   
+	      function staffLeaveFormValidation(){
+		/** alert(' Checking for unique fields ... '); **/
+		
+		
+		var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
+    	var fromDate  = jQuery('input[name="fromDate"]').val();
+    	var partyId  = jQuery('input[name="partyId"]').val();
+    	var leaveDuration  = jQuery('input[name="leaveDuration"]').val();
+    	
+    	var isValid = true;
+    	var GenderState = '';
+    	var NoticePeriodState = '';
+    	var durationState = '';
+
+    	 var reqUrl = '/humanres/control/leaveFormValidation';
+
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'leaveTypeId': leaveTypeId, 'fromDate': fromDate, 'partyId': partyId, 'leaveDuration': leaveDuration},
+			     success : function(data){
+
+							GenderState = data.GenderState;
+							NoticePeriodState =  data.NoticePeriodState;
+							durationState = data.durationState;
+
+			               },
+			      error : function(errorData){
+
+			              alert("Some error occurred while validating Leave");
+			              }
+
+
+		});
+
+    	var message = '';
+    	if ((GenderState == 'INVALID')){
+    		message = "Leave Not allowed for your Gender !!";
+    		isValid = false;
+    	}
+
+		if ((NoticePeriodState == 'INVALID')){
+    		message = message+" Leave notice too short !!";
+    		isValid = false;
+    	}
+    	
+    	if ((durationState == 'INVALID')){
+    		message = message+" Given Duration not allowed for this type of leave!!";
+    		isValid = false;
+    	}
+    	if ((leaveDuration.lenght<1)){
+    		message = message+" Leave duration not provided!!";
+    		isValid = false;
+    	}
+    	
+
+		
+    	if (!isValid){
+    		alert(message);
+    	} else{
+    		
+    	}
+
+
+    	return isValid;
+    	
+    }
+    
+    
+    
+    
+    
     
    </script>
