@@ -905,4 +905,26 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- returnToCustomerCareProcess -->
+    <simple-method method-name="returnToCustomerCareProcess" short-description="Return to CustomerCare">
+		<call-simple-method method-name="saveReturnToCustomerCare" scope="inline"></call-simple-method>
+		
+		<!-- Update Application Status -->
+		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+			<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"/>
+		</entity-one>
+		<set field="loanApplication.loanStatusId" value="${newEntity.loanStatusId}"/>
+        <store-value value-field="loanApplication"/>
+    </simple-method>
+    
+    <simple-method method-name="saveReturnToCustomerCare">
+    	<make-value entity-name="LoanStatusLog" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="LoanStatusLog"></set>
+        <set field="newEntity.loanStatusLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
 </simple-methods>

@@ -346,6 +346,63 @@
 			<submit button-type="button" />
 		</field>
 	</form>
+	
+	<form name="FindNewLoans" type="single" target="receivedLoanApplication"
+		default-entity-name="LoanApplication" default-map-name="loanApplicationCtx">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="loanNo" title="Loan No.">
+			<text-find />
+		</field>
+		<!-- field name="partyId" title="Member">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${firstName} ${middleName} ${lastName} - ${memberNumber}"
+					key-field-name="partyId" entity-name="Member">
+					
+					<entity-constraint name="memberStatusId" operator="equals" value="1"/>
+					<entity-order-by field-name="firstName" />
+				</entity-options>
+			</drop-down>
+		</field -->
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+
+		<field name="loanProductId" title="Loan Type">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${name} ${code}"
+					key-field-name="loanProductId" entity-name="LoanProduct">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+			</drop-down>
+		</field>
+		<!--  field name="applicationStatus" title="Status">
+			<text-find />
+		</field -->
+		<field name="loanAmt" title="Amount">
+			<text-find></text-find>
+		</field>
+		<field name="percentInterestPerMonthAmt" title="Interest Per Month">
+			<text-find />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
 
 	<form name="listLoanApplications" type="list" list-name="listIt"
 		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
@@ -357,20 +414,35 @@
 			<set field="statusId"
 				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"
 				type="PlainString" />
+				
+				<set field="returnStatusName" value="RETURNEDTOCUSTOMERCARE" />
+			<set field="returnStatusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(returnStatusName);}"
+				type="PlainString" />
 
 
 
 			<entity-condition entity-name="LoanApplication">
 				<condition-list combine="and">
-					<condition-expr field-name="loanStatusId" operator="equals"
+					<condition-list combine="or">
+						<condition-expr field-name="loanStatusId" operator="equals"
 						value="${statusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals"
+						value="${returnStatusId}"></condition-expr>
+					</condition-list>
 					<condition-expr field-name="createdBy" operator="equals"
 						from-field="userLogin.userLoginId"></condition-expr>
 				</condition-list>
 				<order-by field-name="-loanApplicationId" />
 			</entity-condition>
 			<!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
-
+			<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanApplicationCtx"/>
+                <field-map field-name="entityName" value="LoanApplication"/>
+                <field-map field-name="orderBy" value="-loanApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
 		</actions>
 		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
 		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
@@ -436,7 +508,7 @@
 		<!-- event="onclick" action="javascript: return loanApplicationFormComplete(${loanApplicationId});" 
 			equals(&quot;NEW&quot;) -->
 
-		<field name="Forward" use-when="loanStatusId==${statusId}">
+		<field name="Forward" use-when="(loanStatusId==${statusId}) || (loanStatusId==${returnStatusId})">
 
 			<hyperlink target="forwardApplicationToLoans" description="Forward Application"
 				link-type="anchor">

@@ -2,6 +2,62 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+			<form name="FindLoansForwarded" type="single" target="forwardedLoanApplications"
+		default-entity-name="LoanApplication" default-map-name="loanApplicationCtx">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="loanNo" title="Loan No.">
+			<text-find />
+		</field>
+		<!-- field name="partyId" title="Member">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${firstName} ${middleName} ${lastName} - ${memberNumber}"
+					key-field-name="partyId" entity-name="Member">
+					
+					<entity-constraint name="memberStatusId" operator="equals" value="1"/>
+					<entity-order-by field-name="firstName" />
+				</entity-options>
+			</drop-down>
+		</field -->
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+
+		<field name="loanProductId" title="Loan Type">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${name} ${code}"
+					key-field-name="loanProductId" entity-name="LoanProduct">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+			</drop-down>
+		</field>
+		<!--  field name="applicationStatus" title="Status">
+			<text-find />
+		</field -->
+		<field name="loanAmt" title="Amount">
+			<text-find></text-find>
+		</field>
+		<field name="percentInterestPerMonthAmt" title="Interest Per Month">
+			<text-find />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
 	<!-- listForwardedLoanApplications -->
 		<form name="listForwardedLoanApplications" type="list" list-name="listIt"
 		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
@@ -33,7 +89,13 @@
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
-			    							
+			 <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanApplicationCtx"/>
+                <field-map field-name="entityName" value="LoanApplication"/>
+                <field-map field-name="orderBy" value="-loanApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>						
 		</actions>
 		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
 		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
@@ -395,6 +457,23 @@
         </field>
     </form>
     
+    <!-- New LoanStatusLog -->
+    <form name="NewLoanStatusLog" type="single" target="returnToCustomerCareProcess"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        <actions>
+        	<set field="statusName" value="RETURNEDTOCUSTOMERCARE" />
+			<set field="statusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"
+				type="Integer" />
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanStatusLogId"><hidden/></field>
+       	<field name="loanStatusId"><hidden value="${statusId}"/></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="submitButton" title="Return" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
     <!-- Logs -->
     <form name="loanLogs" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateReviewLoan" paginate-target="loanStatusLog"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -409,7 +488,7 @@
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
          <field name="createdBy"><display also-hidden="false"></display> </field>
-        <field name="loanStatusId">
+        <field name="loanStatusId" title="Status">
         	<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
         </field>
         <field name="createdStamp"><display also-hidden="false" type="date-time"></display> </field>

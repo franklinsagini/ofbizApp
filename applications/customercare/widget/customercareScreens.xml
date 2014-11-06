@@ -106,6 +106,7 @@
                         </section>
                         <section name="search-results">
                         	<widgets>
+                        		
                         		<screenlet title="Loan Applications">
                         			<include-form name="listLoanApplications" location="component://customercare/widget/customercareForms.xml"/>
                         		</screenlet>
@@ -127,6 +128,7 @@
                 <set field="target" value="createLoanApplication"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 
                 <entity-one entity-name="LoanApplication" value-field="applicationContext">
@@ -149,6 +151,9 @@
 
                         <section name="search-results">
                         	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindNewLoans" location="component://customercare/widget/customercareForms.xml"/>
+                        		</screenlet>
                         		<screenlet title="Loan Applications">
                         			<include-form name="listLoanApplications" location="component://customercare/widget/customercareForms.xml"/>
                         		</screenlet>
