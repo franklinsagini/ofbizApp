@@ -66,11 +66,13 @@ under the License.
       <form name="listCashWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashWithdrawal" paginate-target="cashWithdrawal"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+        	<set field="partyId" from-field="parameters.partyId" type="Long"/>
             <entity-condition entity-name="AccountTransaction" >
             	
             	<condition-list combine="and">
             		<condition-expr field-name="isActive" value="Y"/>
-            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<condition-expr field-name="partyId"  value="${partyId}"/>
+            		
             		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>

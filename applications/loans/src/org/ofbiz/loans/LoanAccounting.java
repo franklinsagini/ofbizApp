@@ -10,8 +10,10 @@ import java.util.Map;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -67,6 +69,7 @@ public class LoanAccounting {
 		createLoanReceivableEntry(loanApplication, acctgTransId, userLogin,
 				glAcctTypeIdLoans);
 
+		String accountTransactionParentId = getAccountTransactionParentId(loanApplication, userLogin);
 		// Creates Charge entry for each charge on loan application
 		// Also creates a
 
@@ -77,7 +80,7 @@ public class LoanAccounting {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		createChargesEntries(loanApplication, userLogin, glAcctTypeIdcharges);
+		createChargesEntries(loanApplication, userLogin, glAcctTypeIdcharges, accountTransactionParentId);
 		try {
 			TransactionUtil.commit();
 		} catch (GenericTransactionException e) {
@@ -91,7 +94,7 @@ public class LoanAccounting {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		createLoanDisbursementAccountingTransaction(loanApplication, userLogin);
+		createLoanDisbursementAccountingTransaction(loanApplication, userLogin, accountTransactionParentId);
 		try {
 			
 			TransactionUtil.commit();
@@ -104,23 +107,54 @@ public class LoanAccounting {
 	}
 
 
+	private static String getAccountTransactionParentId(GenericValue loanApplication, Map<String, String> userLogin) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue accountTransactionParent;
+		String accountTransactionParentId = delegator
+				.getNextSeqId("AccountTransactionParent");
+		String createdBy = (String) userLogin.get("userLoginId");
+		String updatedBy = (String) userLogin.get("userLoginId");
+		String branchId = (String) userLogin.get("partyId");
+		
+		Long partyId =  loanApplication.getLong("partyId");
+		
+		String memberAccountId = getMemberAccountId(loanApplication);
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		accountTransactionParent = delegator.makeValidValue("AccountTransactionParent",
+				UtilMisc.toMap("accountTransactionParentId", accountTransactionParentId,
+						"isActive", "Y", "createdBy", createdBy, "updatedBy",
+						updatedBy, "branchId", branchId,
+						"partyId", partyId,
+						"memberAccountId", Long.valueOf(memberAccountId)));
+		try {
+			delegator.createOrStore(accountTransactionParent);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create Transaction");
+		}
+		
+		return accountTransactionParentId;
+	}
+
+
 	/****
 	 * @author Japheth Odonya @when Aug 22, 2014 2:59:33 PM Create Disbursement
 	 *         Transactions in the source document
 	 * */
 	private static void createLoanDisbursementAccountingTransaction(
-			GenericValue loanApplication, Map<String, String> userLogin) {
+			GenericValue loanApplication, Map<String, String> userLogin, String accountTransactionParentId) {
 		// Create an Account Holder Transaction for this disbursement
 		
 		BigDecimal transactionAmount = loanApplication.getBigDecimal("loanAmt");
 		String memberAccountId = getMemberAccountId(loanApplication);
 		String transactionType = "LOANDISBURSEMENT";
 
-		createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, null);
+
+		createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, null, accountTransactionParentId);
 	}
 
 	private static void createTransaction(GenericValue loanApplication, String transactionType, Map<String, String> userLogin, String memberAccountId,
-			BigDecimal transactionAmount, String productChargeId) {
+			BigDecimal transactionAmount, String productChargeId, String accountTransactionParentId) {
 		Delegator delegator = loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -128,21 +162,23 @@ public class LoanAccounting {
 		String createdBy = (String) userLogin.get("userLoginId");
 		String updatedBy = (String) userLogin.get("userLoginId");
 		String branchId = (String) userLogin.get("partyId");
-		String partyId =  loanApplication.getString("partyId");
+		Long partyId =  loanApplication.getLong("partyId");
 		String increaseDecrease;
 		if (productChargeId == null){
 			increaseDecrease = "I";
 		} else{
 			increaseDecrease = "D";
 		}
-		
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
-				UtilMisc.toMap("accountTransactionId", accountTransactionId,
+				UtilMisc.toMap("accountTransactionId", accountTransactionId, 
+						"accountTransactionParentId", accountTransactionParentId,
 						"isActive", "Y", "createdBy", createdBy, "updatedBy",
 						updatedBy, "branchId", branchId,
 						"partyId", partyId,
 						"increaseDecrease", increaseDecrease,
-						"memberAccountId", memberAccountId,
+						"slipNumber", AccHolderTransactionServices.getNextSlipNumber(),
+						"memberAccountId", Long.valueOf(memberAccountId),
 						"productChargeId", productChargeId,
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType));
@@ -200,7 +236,7 @@ public class LoanAccounting {
 	 *         for each charge on loan application
 	 * **/
 	private static void createChargesEntries(GenericValue loanApplication,
-			Map<String, String> userLogin, String acctgTransType) {
+			Map<String, String> userLogin, String acctgTransType, String accountTransactionParentId) {
 		// Give Loan Application get the charges and post to each
 		Delegator delegator = loanApplication.getDelegator();
 		List<GenericValue> loanApplicationChargeELI = null;
@@ -237,7 +273,7 @@ public class LoanAccounting {
 			transactionAmount = loanApplicationCharge.getBigDecimal("fixedAmount");
 			String transactionType = getChargeName(loanApplicationCharge);
 			String productChargeId = loanApplicationCharge.getString("productChargeId");
-			createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, productChargeId);
+			createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, productChargeId, accountTransactionParentId);
 		}
 
 	}

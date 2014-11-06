@@ -661,8 +661,9 @@ under the License.
          <field name="accountProductId" title="Mutliplier Account Product" 
 			required-field="false">
 			<drop-down allow-empty="true">
-				<list-options list-name="accountProductList" key-name="accountProductId"
-					description="${name} - ${code}" />
+				<!-- list-options list-name="accountProductList" key-name="accountProductId"
+					description="${name} - ${code}" / -->
+					<entity-options description="${name} - ${code}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
 			</drop-down>
 		</field>
         
@@ -813,8 +814,9 @@ under the License.
         <field name="accountProductId" title="Mutliplier Account Product"
 			required-field="false">
 			<drop-down allow-empty="true">
-				<list-options list-name="accountProductList" key-name="accountProductId"
-					description="${name} - ${code}" />
+				<!-- list-options list-name="accountProductList" key-name="accountProductId"
+					description="${name} - ${code}" / -->
+					<entity-options description="${name} - ${code}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
 			</drop-down>
 		</field>
         <field name="createdStamp" title="Created"><display type="date-time"></display></field>
@@ -1965,4 +1967,180 @@ under the License.
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
+    
+    <form name="FindLoan" type="single" target="loanapplicationslist"
+		default-entity-name="LoanApplication" default-map-name="loanApplicationCtx">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="loanNo" title="Loan No.">
+			<text-find />
+		</field>
+		<!-- field name="partyId" title="Member">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${firstName} ${middleName} ${lastName} - ${memberNumber}"
+					key-field-name="partyId" entity-name="Member">
+					
+					<entity-constraint name="memberStatusId" operator="equals" value="1"/>
+					<entity-order-by field-name="firstName" />
+				</entity-options>
+			</drop-down>
+		</field -->
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+
+		<field name="loanProductId" title="Loan Type">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${name} ${code}"
+					key-field-name="loanProductId" entity-name="LoanProduct">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+			</drop-down>
+		</field>
+		<!--  field name="applicationStatus" title="Status">
+			<text-find />
+		</field -->
+		<field name="loanAmt" title="Amount">
+			<text-find></text-find>
+		</field>
+		<field name="percentInterestPerMonthAmt" title="Interest Per Month">
+			<text-find />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+    
+    <form name="listLoanApplications" type="list" list-name="listIt"
+		paginate-target="FindLoanApplication" 
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			
+			<!-- entity-condition entity-name="LoanApplication">
+				
+				<order-by field-name="-loanApplicationId"/>
+			</entity-condition -->
+				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
+			  <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanApplicationCtx"/>
+                <field-map field-name="entityName" value="LoanApplication"/>
+                <field-map field-name="orderBy" value="-loanApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+                
+                
+            </service>   							
+		</actions>
+		
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+		<field name="loanNo">
+			<display also-hidden="false" />
+		</field>
+		<field name="partyId" title="Member">
+			<display-entity description="${firstName} ${middleName} ${lastName}"
+				entity-name="Member" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
+				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
+		<!-- field name="firstName"> <text></text> </field> <field name="middleName"> 
+			<text></text> </field> <field name="lastName"> <text></text> </field -->
+		<field name="loanProductId" title="Product">
+			<display-entity description="${name} ${code}"
+				entity-name="LoanProduct" also-hidden="false"></display-entity>
+			<!-- drop-down allow-empty="true"> <entity-options description="${name} 
+				${code}" entity-name="SaccoProduct"> </entity-options> </drop-down -->
+		</field>
+		<field name="loanAmt" title="Amount">
+			<display also-hidden="false" />
+		</field>
+		
+		<!-- field name="salaryAmt" title="Salary Amount">
+			<display also-hidden="false" />
+		</field>
+		<field name="interestRatePM" title="Interest Rate(P.M)">
+			<display also-hidden="false" />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<display also-hidden="false" />
+		</field>
+
+
+		<field name="paymentMethodTypeId" title="Payment Method">
+			<display-entity description="${description}"
+				entity-name="PaymentMethodType"></display-entity>
+		</field -->
+
+		<!-- field name="loanSecurityId" title="LoanSecurity"> <drop-down allow-empty="true"> 
+			<entity-options description="${description}" entity-name="PaymentMethodType" -->
+		<!-- entity-order-by field-name="description"/ -->
+		<!-- /entity-options> </drop-down> </field -->
+		<!-- field name="applicationStatus">
+			<display also-hidden="false" />
+		</field -->
+		
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
+		
+		<field name="Edit Application">
+			<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}"
+				description="Edit Application"></hyperlink>
+		</field>
+		
+		<!-- field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
+			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
+			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
+				description="Forward Application"></hyperlink>
+				
+				
+		</field -->
+		<!-- field name="formStatus" title="Form" use-when="loanApplication.collateralsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsTotalDepositsEnough.equals(&quot;N&quot;)&amp;&amp;loanApplication.eacherGuarantorGreaterThanAverage.equals(&quot;N&quot;)"><display default-value="Form Incomplete, Provide Details (Guarantors, Collateral etc)"></display></field -->
+		
+
+		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteLoanProduct" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false">
+				<parameter param-name="loanProductId" />
+			</hyperlink>
+		</field -->
+		<!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
+			button-type="button"/></field -->
+		<field name="changeLoanDetails" title="Change Loan Details"
+			widget-style="buttontext">
+			<hyperlink target="changeLoanDetails" description="Change Loan Details"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		<field name="detailsLink" title="Details"
+			widget-style="buttontext">
+			<hyperlink target="viewapplicationprofile" description="Details"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+		
+	</form>
 </forms>

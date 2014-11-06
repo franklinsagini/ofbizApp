@@ -205,9 +205,9 @@ under the License.
                 <set field="headerItem" value="loanapplicationslist"/>
                 <set field="tabButtonItem" value="findparty"/>
                 <set field="partyListSize" value="20"/>
-                
+                <set field="loanApplicationCtx" from-field="parameters"/>
 
-                <service service-name="listLoanApplications" auto-field-map="parameters"/>
+                <!-- service service-name="listLoanApplications" auto-field-map="parameters"/ -->
                 
                 <!-- entity-condition entity-name="LoanApplication" list="applicationsList">
                 	<limit-range size="20" start="1"/>
@@ -228,9 +228,12 @@ under the License.
                                 <!-- platform-specific>
                                     <html><html-template location="component://loans/webapp/loans/application/listloanapplications.ftl"/></html>
                                 </platform-specific -->
+                                <screenlet>
+                                	<include-form name="FindLoan" location="component://loans/widget/loans/LoanForms.xml"/>
+                                </screenlet>
                                 
                                 <screenlet>
-                                	<include-form name="listLoanApplications" location="component://loans/widget/loans/ExampleForms.xml"/>
+                                	<include-form name="listLoanApplications" location="component://loans/widget/loans/LoanForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
