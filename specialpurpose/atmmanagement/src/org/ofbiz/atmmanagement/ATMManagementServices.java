@@ -141,7 +141,7 @@ public class ATMManagementServices {
 		return "success";
 	}
 
-	private static Long getCardStatus(String name) {
+	public static Long getCardStatus(String name) {
 		List<GenericValue> cardStatusELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {

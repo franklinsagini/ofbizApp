@@ -194,7 +194,7 @@
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down -->
         </field>
-        
+        <field name="cardNumber" title="Card Number"><display></display></field>
         <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
         <field name="createdBy" title="Created By"  ><display></display></field>
         <field name="logs">
@@ -246,7 +246,7 @@
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down -->
         </field>
-        
+        <field name="cardNumber" title="Card Number"><display></display></field>
         <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
         <field name="createdBy" title="Created By"  ><display></display></field>
         
@@ -260,9 +260,13 @@
 			action="javascript: return validateCardApplication(${cardApplicationId});">
 			<hyperlink target="applyforATM?cardApplicationId=${cardApplicationId}"
 				description="Apply for ATM Card"></hyperlink>
-				
-				
 		</field>
+		
+		  <field name="atmCardActions">
+        	<hyperlink target="atmCardActions" description="ATM Card Actions">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field>
         
         <field name="logs">
         	<hyperlink target="cardLog" description="Logs">
@@ -270,6 +274,99 @@
         	</hyperlink>
         </field>
     </form>
+    
+    <!-- ReceiveCardLog -->
+    <form name="ReceiveCardLog" type="single" target="receiveCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="cardNumber" title="Card Number"  widget-style="required" required-field="true"><text></text></field>
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Receive" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+	<!-- Issue Card -->
+	<form name="IssueCardLog" type="single" target="issueCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Issue" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      
+      <!-- ActivateCardLog -->
+	<form name="ActivateCardLog" type="single" target="activateCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Activate" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      <!-- RenewCardLog -->
+	<form name="RenewCardLog" type="single" target="renewCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Renewal Request" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      <!-- DeactivateCardLog -->
+	<form name="DeactivateCardLog" type="single" target="deactivateCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Deactivate" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      <!-- ReplaceCardLog -->
+	<form name="ReplaceCardLog" type="single" target="replaceCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Replacement Request" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      
+      <!-- ReceivePIN -->
+      	<form name="ReceivePIN" type="single" target="receivePINProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="atmPINApplication">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Receive PIN" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      <!-- IssuePIN -->
+      	<form name="IssuePIN" type="single" target="issuePINProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Issue PIN" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+	
     
     <!-- CardLog -->
     <form name="NewCardLog" type="single" target="createCardLog"
@@ -281,6 +378,8 @@
 
 		<field name="cardStatus" title="Card Status"  widget-style="required" required-field="true"><text></text></field>
 		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+       
+        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
       </form>
         
@@ -542,7 +641,7 @@
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
       		</drop-down>
       	</field>
-      	
+      	<field name="cardNumber" title="Card Number"><text-find></text-find></field>
       	<field name="cardApplicationId" title="Form Number"><text-find></text-find></field>
 
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
@@ -553,7 +652,19 @@
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="cardStatusContext">
         
        
-        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        <field name="isCharged" title="Is Charged">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+       	<field name="productChargeId" title="Charge" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<entity-options description="${name}" entity-name="ProductCharge" ></entity-options>
+       		</drop-down>
+       	</field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -569,6 +680,17 @@
         </field -->
         <field name="cardStatusId"><hidden/></field>
         <field name="name"> <text></text> </field>
+        <field name="isCharged" title="Is Charged">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+       	<field name="productChargeId" title="Charge">
+       		<drop-down allow-empty="true">
+       			<entity-options description="${name}" entity-name="ProductCharge" ></entity-options>
+       		</drop-down>
+       	</field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteCardStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="cardStatusId"/>

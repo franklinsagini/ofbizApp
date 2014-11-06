@@ -49,6 +49,32 @@
 		<response name="error" type="view" value="cardApplicationReceived" />
 	</request-map>
 	
+	<!-- ATMPINApplication -->
+	<request-map uri="createATMPINApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createATMPINApplication" />
+		<response name="success" type="request-redirect"
+			value="receivePINAction">
+			</response>
+		<response name="error" type="view" value="receivePINAction" />
+	</request-map>
+	
+	<request-map uri="updateATMPINApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateATMPINApplication" />
+		<response name="success" type="request-redirect"
+			value="receivePINAction"></response>
+		<response name="error" type="view" value="receivePINAction" />
+	</request-map>
+	
+	<request-map uri="deleteATMPINApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteATMPINApplication" />
+		<response name="success" type="request-redirect"
+			value="receivePINAction"></response>
+		<response name="error" type="view" value="receivePINAction" />
+	</request-map>
+	
 	<!-- Card Status -->
 	
 	<request-map uri="cardStatus">
@@ -88,6 +114,20 @@
 	<request-map uri="cardLog">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="cardLog"
+			save-current-view="true" />
+	</request-map>
+	
+	<!-- Card Actions atmCardActions -->
+	<request-map uri="atmCardActions">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="atmCardActions"
+			save-current-view="true" />
+	</request-map>
+	
+	
+	<request-map uri="receiveCardAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="receiveCardAction"
 			save-current-view="true" />
 	</request-map>
 	
@@ -187,6 +227,146 @@
 			</response>
 		<response name="error" type="view" value="cardReceipt" />
 	</request-map>
+	<!-- receiveCardAction -->
+	<request-map uri="receiveCardAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="receiveCardAction"
+			save-current-view="true" />
+	</request-map>
+
+	<request-map uri="receiveCardProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="receiveCardProcess" />
+		<response name="success" type="request-redirect"
+			value="receiveCardAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="receiveCardAction" />
+	</request-map>
+	<!-- issueCardAction -->
+	<request-map uri="issueCardAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="issueCardAction"
+			save-current-view="true" />
+	</request-map>
+	
+	
+	<request-map uri="issueCardProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="issueCardProcess" />
+		<response name="success" type="request-redirect"
+			value="issueCardAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="issueCardAction" />
+	</request-map>
+	
+	<!-- receivePINAction -->
+	<request-map uri="receivePINProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="receivePINProcess" />
+		<response name="success" type="request-redirect"
+			value="receivePINAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="receivePINAction" />
+	</request-map>
+	
+	<!-- issuePINAction -->
+	<request-map uri="issuePINProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="issuePINProcess" />
+		<response name="success" type="request-redirect"
+			value="issuePINAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="issuePINAction" />
+	</request-map>
+	
+	
+	<!-- receivePINAction -->
+	<request-map uri="receivePINAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="receivePINAction"
+			save-current-view="true" />
+	</request-map>	
+	<!-- issuePINAction -->
+	<request-map uri="issuePINAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="issuePINAction"
+			save-current-view="true" />
+	</request-map>
+	<!-- activateCardAction -->
+	<request-map uri="activateCardAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="activateCardAction"
+			save-current-view="true" />
+	</request-map>
+	
+	
+	<request-map uri="activateCardProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="activateCardProcess" />
+		<response name="success" type="request-redirect"
+			value="activateCardAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="activateCardAction" />
+	</request-map>
+	<!-- renewCardAction -->
+		<request-map uri="renewCardAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="renewCardAction"
+			save-current-view="true" />
+	</request-map>
+	
+	
+	<request-map uri="renewCardProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="renewCardProcess" />
+		<response name="success" type="request-redirect"
+			value="renewCardAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="renewCardAction" />
+	</request-map>
+	<!-- deactivateCardAction -->
+		<request-map uri="deactivateCardAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deactivateCardAction"
+			save-current-view="true" />
+	</request-map>
+	
+	
+	<request-map uri="deactivateCardProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deactivateCardProcess" />
+		<response name="success" type="request-redirect"
+			value="deactivateCardAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="deactivateCardAction" />
+	</request-map>
+	<!-- replaceCardAction -->
+		<request-map uri="replaceCardAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="replaceCardAction"
+			save-current-view="true" />
+	</request-map>
+	
+	
+	<request-map uri="replaceCardProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="replaceCardProcess" />
+		<response name="success" type="request-redirect"
+			value="replaceCardAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="replaceCardAction" />
+	</request-map>
+	
+	
+	
 	
 	<request-map uri="updateCardReceipt">
 		<security https="true" auth="true" />
@@ -254,6 +434,20 @@
     
     <view-map name="cardStatus" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#cardStatus"/>
     
+    <view-map name="atmCardActions" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#atmCardActions"/>
+    <view-map name="receiveCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#receiveCardAction"/>
+    <view-map name="issueCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#issueCardAction"/>
     
+    <!-- activateCardAction -->
+     <!-- renewCardAction -->
+      <!-- deactivateCardAction -->
+       <!-- replaceCardAction -->
+      <view-map name="activateCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#activateCardAction"/>
+      <view-map name="renewCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#renewCardAction"/>
+      <view-map name="deactivateCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#deactivateCardAction"/>
+      <view-map name="replaceCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#replaceCardAction"/>
+      <view-map name="receivePINAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#receivePINAction"/>
+      <view-map name="issuePINAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#issuePINAction"/>
+
     <view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
 </site-conf>
