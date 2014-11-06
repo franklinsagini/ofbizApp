@@ -42,9 +42,6 @@ under the License.
         <auto-attributes mode="OUT" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="openingLeaveBalance" type="String" mode="IN" optional="false"/>
-        <attribute name="openingDate" type="String" mode="IN" optional="false"/>
  </service>
     
     
@@ -1120,16 +1117,15 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
-    <service name="addOpeningLeaveBalances" engine="simple" default-entity-name="EmplLeaveOpeningBalance"
+    <service name="createOpeningLeaveBalances" engine="simple" default-entity-name="EmplLeaveOpeningBalance"
 	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
-	invoke="addOpeningLeaveBalances" auth="true">
+	invoke="createOpeningLeaveBalances" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes entity-name="RegistryFileType" include="pk" mode="IN" optional="true" />
-		<auto-attributes entity-name="RegistryFileType" include="nonpk" mode="IN" optional="true" />
+		<auto-attributes entity-name="EmplLeaveOpeningBalance" include="pk" mode="IN" optional="true" />
+		<auto-attributes entity-name="EmplLeaveOpeningBalance" include="nonpk" mode="IN" optional="true" />
 	</service>
+	
     
-    
-
     <service name="deleteEmplLeave" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteEmplLeave" auth="true">
         <description>Delete AgreementEmploymentAppl</description>

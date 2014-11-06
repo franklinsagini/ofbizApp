@@ -110,6 +110,14 @@
 										<link target="generateLeaveBalances" text="${uiLabelMap.HumanResGenerate}"
 											style="buttontext create" />
 									</container>
+									<container style="button-bar">
+										<link target="generateCompassionateLeaveBalances" text="Generate Compassionate"
+											style="buttontext create" />
+									</container>
+									<container style="button-bar">
+										<link target="closeFinacialYearCompassionate" text="Close Compassionate"
+											style="buttontext create" />
+									</container>
 								</widgets>
 							</section>
                               <screenlet title="Search Leave Balances">
@@ -565,14 +573,14 @@
 	
 	
 	
-    <screen name="StaffOpeningBalance">
+    <screen name="StaffOpeningBalancezzzzzzsd">
 		<section>
 			<actions>
 				<set field="titleProperty" value="leave" />
 				<set field="headerItem" value="openingLeaveBalance" />
 				<set field="tabButtonItem" value="openingLeaveBalance" />
 				
-				<set field="OpeningLeaveBalanceContext" from-field="parameters"/>
+				
 						<service service-name="humanResManagerPermission"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="ADMIN" />
@@ -620,6 +628,51 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="StaffOpeningBalance">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				<set field="headerItem" value="openingLeaveBalance" />
+				<set field="tabButtonItem" value="openingLeaveBalance" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<entity-one entity-name="EmplLeaveOpeningBalance" value-field="OpeningLeaveBalanceContext" /> 
+				<set field="partyId" from-field="OpeningLeaveBalanceContext.partyId"
+					default-value="${OpeningLeaveBalanceContext.partyId}" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+					<decorator-section name="body">
+						<section>
+						<condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+							<widgets>
+								<screenlet title="Add Staff Balance">
+									<include-form name="EditOpeningLeaveBalanceForm"
+										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Opening Balances">
+									<include-form name="OpeningLeaveBalanceListForm"
+										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	
 	
     

@@ -353,17 +353,17 @@
 			</hyperlink>
 		</field>
 		
-	<!-- 	<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
+	<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
-				target="updateEmplLeave">
+				target="updateEmplLeaveExt">
 				<parameter param-name="partyId" />
 				<parameter param-name="leaveTypeId" />
 				<parameter param-name="fromDate" /> 
-				<parameter param-name="leaveId" />
+				<parameter param-name="leaveId" /> 
 			</hyperlink>
-		</field> -->
-		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+		</field> 
+		<!-- <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field> -->
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
@@ -382,17 +382,22 @@
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
 		
-		<!-- <alt-target use-when="leaveApp==null" target="createEmplLeaveExt" /> 
-		<alt-target use-when="leaveApp!=null" target="updateEmplLeave" /> -->
+		<!-- <alt-target use-when="leaveApp==null" target="createEmplLeaveExt" />  -->
+		
 		
 		
 		 <actions>
+		 	
             <entity-condition entity-name="EmplLeave" list="emplLeaveList">
                 <order-by field-name="leaveId"/>
             </entity-condition>
+            
+            <entity-one entity-name="EmplLeave" value-field="leaveApp">
+            	<field-map field-name="leaveId" from-field="parameters.leaveId"/>
+            </entity-one>
         </actions>
         
-        <alt-target use-when="leaveApp!=null" target="updateEmplLeave"/>
+       <alt-target use-when="leaveApp!=null" target="updateEmplLeaveExt" />
 		
 		<field name="leaveId"><hidden/></field>
 		<field name="leaveId" use-when="leaveApp!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -453,7 +458,7 @@
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" action="javascript: return staffLeaveFormValidation();" event="onclick"
 			widget-style="smallSubmit">
 			<submit button-type="button" />
-		</field>
+		</field> 
 		<field name="submitButton" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" action="javascript: return staffLeaveFormValidation();" event="onclick"
 			widget-style="smallSubmit">
 			<submit button-type="button" />
@@ -845,41 +850,39 @@
     </form>
 
 
-    <form name="EditOpeningLeaveBalanceForm" type="single" target="addOpeningLeaveBalances" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="OpeningLeaveBalanceContext">
+    <form name="EditOpeningLeaveBalanceForm" type="single" target="addStaffOpeningBalance" 
+    focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" 
+    default-map-name="OpeningLeaveBalanceContext">
 		
 		<actions>
 			<entity-condition entity-name="EmplLeaveOpeningBalance" list="leaveBalList">
 				<order-by field-name="partyId" />
 			</entity-condition>
 		</actions>
-		<alt-target use-when="OpeningLeaveBalanceContext!=null" target="updatefileType" />
-		<field name="leaveBalanceId"><hidden /></field>
+		<!-- <field name="leaveBalanceId"><hidden /></field> -->
 		 <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
-		<field name="leaveeTypeId" title="${uiLabelMap.HumanResLeaveType}">
-			<drop-down allow-empty="true">
-				<entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
-			</drop-down>
-		</field>
-		<field name="LeaveBalanceCarriedForward"><text size="45"></text></field>
-		<field name="LeaveDaysUsed"><text size="45"></text></field>
+		
+		<!-- <field name="LeaveBalanceCarriedForward"><text size="45"></text></field>
+		<field name="LeaveDaysUsed"><text size="45"></text></field> -->
+		<field name="annualLeaveBalanceCarriedForward"><text size="45"></text></field> 
+        <field name="annualLeaveDaysUsed" ><text size="45"></text></field>
+        <field name="compassionateLeaveDaysUsed" ><text size="45"></text></field> 
 		<field name="openingDate" title="Date"><date-time type="date" /></field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button" /></field>
-		<!-- submitButton -->
-		<field use-when="OpeningLeaveBalanceContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
-		<field use-when="OpeningLeaveBalanceContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link" /></field>
+		
 	</form>
 
 
 	<form name="OpeningLeaveBalanceListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatefileType"
 		paginate-target="EditOpeningLeaveBalanceForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-			<entity-condition entity-name="EmplLeaveOpeningBalance"></entity-condition>
+			<entity-condition entity-name="EmplLeaveOpeningBalance"></entity-condition> 
 		</actions>
-		<field name="leaveBalanceId"><hidden /></field>
+		<!-- <field name="leaveBalanceId"><hidden /></field> -->
 		<field name="partyId" title="Staff"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="leaveTypeId" title="Leave Type"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
-		<field name="openingLeaveBalance"><display/></field>
-		<field name="isActive"><display /></field>
+		<field name="annualLeaveBalanceCarriedForward"><display/></field>
+		<field name="annualLeaveDaysUsed"><display/></field>
+		<field name="compassionateLeaveDaysUsed"><display/></field>
 		<field name="openingDate" title="Date"><display/></field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
 		<hyperlink target="deletefileType" description="${uiLabelMap.CommonDelete}"	also-hidden="false"><parameter param-name="leaveBalanceId" /></hyperlink></field>

@@ -233,8 +233,6 @@ public static String getCompassionateLeaveBalance(HttpServletRequest request,Htt
 	}
 	//log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
 double approvedLeaveSum=0;
-//double  usedLeaveDays = 0;
-double lostLeaveDays=0;
 	for (GenericValue genericValue : getApprovedLeaveSumELI) {
 		//approvedLeaveSum += genericValue.getLong("leaveDuration");
 		approvedLeaveSum += genericValue.getDouble("leaveDuration");
@@ -242,7 +240,7 @@ double lostLeaveDays=0;
 	//log.info("============================================================" +approvedLeaveSum);
 	
 	// ============ get accrual rate ================ //
-double days=0; 
+Long days=null; 
 GenericValue employeeLeaveType = null;
 	try {
 		employeeLeaveType = delegator.findOne("EmplLeaveType",
@@ -253,7 +251,7 @@ GenericValue employeeLeaveType = null;
 	}
 	if (employeeLeaveType != null) {
 
-		days = employeeLeaveType.getDouble("days");
+		days = employeeLeaveType.getLong("days");
 		
 	} else {
 		System.out.println("######## Days not found #### ");

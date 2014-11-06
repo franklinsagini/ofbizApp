@@ -1184,14 +1184,21 @@
 			property="HumanResLeaveCreationSuccess" field="successMessage" />
 	</simple-method> -->
 	
-	<simple-method method-name="updateEmplLeave"
+	<!-- <simple-method method-name="updateEmplLeave"
 		short-description="Update Employee Leave">
 		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
 
-	</simple-method> 
+	</simple-method>  -->
+	
+	<simple-method method-name="updateEmplLeave" short-description="Update an existing user estate">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+       
+    </simple-method>
 	
 	<simple-method method-name="updateEmplLeave2"
 		short-description="Update Employee Leave">
@@ -1358,7 +1365,7 @@
 	</simple-method>
 	
 	
-	<simple-method method-name="addOpeningLeaveBalances"
+	<simple-method method-name="createOpeningLeaveBalances"
 		short-description="Create File Type">
 		<make-value entity-name="EmplLeaveOpeningBalance" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
@@ -1393,6 +1400,8 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
 	</simple-method>
+	
+    
 	
 	
 

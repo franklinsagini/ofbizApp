@@ -771,7 +771,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		return superVisorLevelValue;
 	}
 
-	public static Map<String, Object> adddfddddStaffOpeningBalance(DispatchContext ctx,
+	public static Map<String, Object> addStaffOpeningBalance(DispatchContext ctx,
 			Map<String, ? extends Object> context) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = ctx.getDelegator();
@@ -781,11 +781,10 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		// in most cases userLogin will be null, but get anyway so we can keep
 		// track of that info if it is available
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
-
-		String leaveBalanceId = (String) context.get("leaveBalanceId");
+		String partyId = (String) context.get("partyId");
 
 		// if specified partyId starts with a number, return an error
-		if (UtilValidate.isNotEmpty(leaveBalanceId) && leaveBalanceId.matches("\\d+")) {
+		/*if (UtilValidate.isNotEmpty(leaveBalanceId) && leaveBalanceId.matches("\\d+")) {
 			return ServiceUtil.returnError(UtilProperties.getMessage(
 					null, "party.id_is_digit", locale));
 		}
@@ -799,7 +798,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 				return ServiceUtil.returnError(UtilProperties.getMessage(
 						null, "party.id_generation_failure", locale));
 			}
-		}
+		}*/
 
 		// check to see if party object exists, if so make sure it is PERSON
 		// type party
@@ -807,14 +806,14 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 
 		try {
 			EmplLeaveOpeningBalance = delegator.findOne("EmplLeaveOpeningBalance",
-					UtilMisc.toMap("leaveBalanceId", leaveBalanceId), false);
+					UtilMisc.toMap("partyId", partyId), false);
 		} catch (GenericEntityException e) {
 			Debug.logWarning(e.getMessage(), null);
 		}
 
 	
 		EmplLeaveOpeningBalance = delegator.makeValue("EmplLeaveOpeningBalance",
-				UtilMisc.toMap("leaveBalanceId", leaveBalanceId));
+				UtilMisc.toMap("partyId", partyId));
 		EmplLeaveOpeningBalance.setNonPKFields(context);
 		toBeStored.add(EmplLeaveOpeningBalance);
 
@@ -827,7 +826,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 					new Object[] { e.getMessage() }, locale));
 		}
 
-		result.put("leaveBalanceId", leaveBalanceId);
+		result.put("partyId", partyId);
 		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
 		return result;
 	}

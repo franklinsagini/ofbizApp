@@ -14,12 +14,15 @@
          	calculateBalance(reqUrl, leaveTypeId, partyId,appointmentdate);
                   }
              }
-         if(leaveTypeId !="ANNUAL_LEAVE"){
-         	jQuery('input[name="approvedLeaveSumed"]').val("");
-         	jQuery('input[name="accruedLeaveDays"]').val("");
-         	jQuery('input[name="leaveBalance"]').val("");
-         	jQuery('input[name="leaveDuration"]').val("");
-         }
+             else if (leaveTypeId =="COMPASSIONATE_LEAVE"){
+         var partyId =  jQuery('input[name="partyId"]').val();
+         
+         var reqUrl = '/humanres/control/emplCompassionateleavebalance';
+          if ((partyId.length > 0) && (leaveTypeId.length > 0)){
+         	calculateCompassionateLeaveBalance(reqUrl, leaveTypeId, partyId)
+                  }
+             }
+         
          
         });
 
@@ -125,6 +128,26 @@
 	     url    : reqUrl,
 	     type   : 'GET',
 	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId ,"appointmentdate" :appointmentdate}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
+					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
+					 $('input[name="leaveBalance"]').val(data.leaveBalance);
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    } 
+	    
+	     function calculateCompassionateLeaveBalance(reqUrl, leaveTypeId, partyId){
+	    jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
 	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
@@ -402,6 +425,7 @@
     	var GenderState = '';
     	var NoticePeriodState = '';
     	var durationState = '';
+    	var onceAyearState = '';
 
     	 var reqUrl = '/humanres/control/leaveFormValidation';
 
@@ -416,6 +440,7 @@
 							GenderState = data.GenderState;
 							NoticePeriodState =  data.NoticePeriodState;
 							durationState = data.durationState;
+							onceAyearState=data.onceAyearState;
 
 			               },
 			      error : function(errorData){
@@ -441,8 +466,16 @@
     		message = message+" Given Duration not allowed for this type of leave!!";
     		isValid = false;
     	}
-
-		
+    	
+    	if ((onceAyearState == 'INVALID')){
+    		message = message+" Given Duration not allowed for this type of leave!!";
+    		isValid = false;
+    	}
+    	if ((onceAyearState == 'PAST')){
+    		message = message+" Given Duration not allowed for this type of leave!!";
+    		isValid = false;
+    	}
+    	
     	if (!isValid){
     		alert(message);
     	} else{
@@ -457,6 +490,9 @@
     
     
     
+    
+    
+  
     
     
    </script>
