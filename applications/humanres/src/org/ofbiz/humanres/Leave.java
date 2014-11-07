@@ -219,6 +219,28 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 			e2.printStackTrace();
 			
 		}
+		
+		GenericValue getAnualOpeningSumELI=null;
+		BigDecimal LeaveDaysUsed=BigDecimal.ZERO;
+		try {
+			 
+			 getAnualOpeningSumELI = delegator.findOne("EmplLeaveOpeningBalance", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getAnualOpeningSumELI==null) {
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+			
+			
+		} else {
+			LeaveDaysUsed = getAnualOpeningSumELI.getBigDecimal("compassionateLeaveDaysUsed");
+			
+		}
+		
 		//log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
 	double approvedLeaveSum =0;
 	//double  usedLeaveDays = 0;
@@ -232,6 +254,7 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 		// ============ get accrual rate ================ //
 	Long days =null; 
 	GenericValue employeeLeaveType = null;
+	double totalUsed=approvedLeaveSum+LeaveDaysUsed.doubleValue();
 		try {
 			employeeLeaveType = delegator.findOne("EmplLeaveType",
 					UtilMisc.toMap("leaveTypeId", "COMPASSIONATE_LEAVE"), false);
@@ -247,13 +270,13 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 			System.out.println("######## Days not found #### ");
 		}
 		
-		double leaveBalances =  days-approvedLeaveSum; 
+		double leaveBalances =  days-totalUsed; 
 
 
 		GenericValue leavelog = delegator.makeValue("CompassionateLeaveBalances", 
 				"partyId", partyId, 
-	            "days", days.doubleValue() , 
-	            "usedLeaveDays", approvedLeaveSum,
+	            "days", days, 
+	            "usedLeaveDays", totalUsed,
 	            "lostLeaveDays", lostLeaveDays.doubleValue(), 
 	            "availableLeaveDays", leaveBalances);
 	try {
@@ -307,6 +330,7 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 			//log.info("===================="+partyId);
 			//log.info("++++++++++++++++++++"+appointmentdate);
 			calculateAnnualLeaveBalanceWithOpeningBalancesSave(partyId, appointmentdate, thisYear);
+			generateCompassionateLeaveBalances(request, response);
 		}
 		//log.info("------------------------------------------------" +partyId);
 		return partyId;
@@ -346,11 +370,6 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 		}
 		
 		try {
-			 /*getAnualOpeningSumELI = delegator.findList("EmplLeaveOpeningBalance",
-					AnnualBalanceConditions, null, null, null, false);*/
-			 
-			/* getAnualOpeningSumELI = delegator.findOne("EmplLeaveOpeningBalance",
-						UtilMisc.toMap("leaveTypeId", "ANNUAL_LEAVE"), false);*/
 			 
 			 getAnualOpeningSumELI = delegator.findOne("EmplLeaveOpeningBalance", 
 					            UtilMisc.toMap("partyId",partyId), false);

@@ -425,7 +425,6 @@
     	var GenderState = '';
     	var NoticePeriodState = '';
     	var durationState = '';
-    	var onceAyearState = '';
 
     	 var reqUrl = '/humanres/control/leaveFormValidation';
 
@@ -440,8 +439,6 @@
 							GenderState = data.GenderState;
 							NoticePeriodState =  data.NoticePeriodState;
 							durationState = data.durationState;
-							onceAyearState=data.onceAyearState;
-
 			               },
 			      error : function(errorData){
 
@@ -467,14 +464,8 @@
     		isValid = false;
     	}
     	
-    	if ((onceAyearState == 'INVALID')){
-    		message = message+" Given Duration not allowed for this type of leave!!";
-    		isValid = false;
-    	}
-    	if ((onceAyearState == 'PAST')){
-    		message = message+" Given Duration not allowed for this type of leave!!";
-    		isValid = false;
-    	}
+    	
+
     	
     	if (!isValid){
     		alert(message);

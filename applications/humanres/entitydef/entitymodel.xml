@@ -750,45 +750,6 @@ under the License.
     </entity>  
     
     
-    
-    <entity entity-name="EmplAnnualLeaveOpeningBalance"
-            package-name="org.ofbiz.humanres.employment"
-            title="Employee Leave Opening Balance Entity">
-            
-        <field name="partyId" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="LeaveBalanceCarriedForward" type="floating-point"/>  
-        <field name="LeaveDaysUsed" type="floating-point"/>  
-         <field name="openingDate" type="date"/>
-         <prim-key field="partyId"/>
-        <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_PRTY" rel-entity-name="Party">
-            <key-map field-name="partyId"/>
-        </relation>
-        <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_ELETP" rel-entity-name="EmplLeaveType">
-            <key-map field-name="leaveTypeId"/>
-        </relation>
-    </entity>  
-    
-     <entity entity-name="EmplCompassionateLeaveOpeningBalance"
-            package-name="org.ofbiz.humanres.employment"
-            title="Employee Leave Opening Balance Entity">
-            
-        <field name="partyId" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="LeaveBalanceCarriedForward" type="floating-point"/>  
-        <field name="LeaveDaysUsed" type="floating-point"/>  
-         <field name="openingDate" type="date"/>
-         <prim-key field="partyId"/>
-        <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_PRTY" rel-entity-name="Party">
-            <key-map field-name="partyId"/>
-        </relation>
-        <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_ELETP" rel-entity-name="EmplLeaveType">
-            <key-map field-name="leaveTypeId"/>
-        </relation>
-    </entity>  
-    
-    
-    
     <entity entity-name="EmplLeave"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Entity">
@@ -919,6 +880,31 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
     </entity> 
+    
+     <view-entity entity-name="LeavesBalanceView"
+            package-name="org.ofbiz.humanres.position"
+            title="EmplLeavesBalances Entity">
+      <member-entity entity-alias="ANNUAL" entity-name="LeaveBalances"></member-entity>
+      <member-entity entity-alias="COMPASSIONATE" entity-name="CompassionateLeaveBalances"></member-entity>
+      <alias-all entity-alias="ANNUAL"/>
+      <alias name="partyId" entity-alias="ANNUAL"/>
+       <alias name="annualaccruedDays" entity-alias="ANNUAL" field="accruedDays"/>
+       <alias name="annualCarriedOverDays" entity-alias="ANNUAL" field="LeaveDaysCarriedOver"/>
+      <alias name="annualUsedLeaveDays" entity-alias="ANNUAL" field="usedLeaveDays"/>
+      <alias name="annualLostLeaveDays" entity-alias="ANNUAL" field="lostLeaveDays"/>
+      <alias name="annualAvailableLeaveDays" entity-alias="ANNUAL" field="availableLeaveDays"/>
+       <alias name="compassionateAllocatedLeaveDays" entity-alias="COMPASSIONATE" field="days"/>
+       <alias name="compassionateUsedLeaveDays" entity-alias="COMPASSIONATE" field="usedLeaveDays"/>
+       <alias name="compassionateAvailableLeaveDays" entity-alias="COMPASSIONATE" field="availableLeaveDays"/>
+      <view-link entity-alias="ANNUAL" rel-entity-alias="COMPASSIONATE">
+        <key-map field-name="partyId"/>
+      </view-link>
+    </view-entity>
+    
+    
+    
+    
+    
        
     <entity entity-name="EmplCarryOverLost"
             package-name="org.ofbiz.humanres.employment"

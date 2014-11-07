@@ -69,7 +69,7 @@ public class LeaveApplicationValidation {
 			result.put("GenderState", getGenderState(leaveTypeId, partyId));
 			result.put("NoticePeriodState",	getNoticePeriodState(leaveTypeId, fromDate));
 			result.put("durationState", getLeaveDurationState(leaveTypeId, leaveDuration));
-			result.put("onceAyearState", getLeaveOnceAyearState(partyId, fromDate));
+			/*result.put("onceAyearState", getLeaveOnceAyearState(partyId, fromDate));*/
 	  /*   } 
 		
 		else if(leaveTypeId!="ANNUAL_LEAVE") {
