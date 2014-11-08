@@ -61,6 +61,17 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="popupSentBack">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="popupSentBack"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="callBackEmployee">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="callBackEmployee"
+			save-home-view="true" />
+	</request-map>
 	
 	   
     <request-map uri="leaveCalender">
@@ -383,6 +394,11 @@ under the License.
         <response name="success" type="none"></response>
     </request-map>
     
+     <request-map uri="getNewLeaveDuration">
+        <event type="java" path="org.ofbiz.humanres.Leave" invoke="getNewLeaveDuration" />
+        <response name="success" type="none"></response>
+    </request-map>
+    
     <request-map uri="emplCompassionateleavebalance">
         <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getCompassionateLeaveBalance" />
         <response name="success" type="none"></response>
@@ -551,6 +567,12 @@ under the License.
         <response name="success" type="view" value="viewEmplLeaveDetails"/>
     </request-map>
     
+     <!-- ================SEND BACK LEAVE WITH REASON========================= -->
+     <request-map uri="sentLeaveBackWithReason">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sentLeaveBackWithReason"/>
+        <response name="success" type="view" value="viewEmplLeaveDetails"/>
+    </request-map>
     
     
     <!-- ================COURSE SPECIALIZATION========================= -->
@@ -1452,6 +1474,15 @@ under the License.
         <response name="success" type="view" value="EditEmplLeave"></response>
         <response name="error" type="view" value="EditEmplLeave" />
     </request-map>
+    
+    
+     <!-- ================CALL BACK EMPLOYEE FROM LEAVE========================= -->
+     <request-map uri="updateLeaveDuration">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLeaveDuration"/>
+        <response name="success" type="view" value="callBackEmployee"/>
+    </request-map>
+    
     
     
     
@@ -2554,6 +2585,7 @@ under the License.
     <view-map name="FindActiveLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>    
     <view-map name="FindCarryOverLost" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
     <view-map name="ActiveEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>
+     <view-map name="callBackEmployee" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#callBackEmployee"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
     <view-map name="LeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>    
     <view-map name="CloseFinacialYear" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
@@ -2670,6 +2702,7 @@ under the License.
 	<view-map name="EditSalaryAdvanceTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
 	<view-map name="addOpeningLeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffOpeningBalance"/> 
 	<view-map name="popup" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveRejectionReason"/> 
+	<view-map name="popupSentBack" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveSentBackReason"/> 
 	<view-map name="leaveCalender" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffLeaveCalender"/> 
 						
 </site-conf>

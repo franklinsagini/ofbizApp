@@ -1073,7 +1073,9 @@ under the License.
     </service> -->
     
     
-     <service name="updateEmplLeave" engine="simple" default-entity-name="EmplLeave"
+    
+    
+      <service name="updateEmplLeave" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmplLeave" auth="true">
         <description>Update estate</description>
          <auto-attributes mode="IN" include="pk" optional="false"/>
@@ -1102,6 +1104,25 @@ under the License.
     
     <service name="rejectLeaveWithReason" engine="simple" default-entity-name="LeaveStatusLog"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="rejectLeaveWithReason" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <!-- ============================SEND BACK LEAVE WITH REASON======================================== -->
+     <service name="sentLeaveBackWithReason" engine="simple" default-entity-name="LeaveStatusLog"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="sentLeaveBackWithReason" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <!-- ============================EMPLOYEE CALL BACK======================================== -->
+    
+    <service name="updateLeaveDuration" engine="simple" default-entity-name="EmplLeave"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateLeaveDuration" auth="true">
         <description>Forward Valid Employee Leave</description>
         <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
         <auto-attributes mode="IN" include="pk" optional="true"/>

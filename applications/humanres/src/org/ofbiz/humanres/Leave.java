@@ -1,8 +1,14 @@
 package org.ofbiz.humanres;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -26,9 +33,15 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.webapp.event.EventHandlerException;
+import org.ofbiz.workflow.WorkflowServices;
+
+import com.google.gson.Gson;
 
 
 public class Leave {
+	private static final HttpServletRequest HttpServletRequest = null;
+	private static final HttpServletResponse HttpServletResponse = null;
 	public static Logger log = Logger.getLogger(Leave.class);
 
 /*  =============    close financial year leaves ==============   */
@@ -521,6 +534,119 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 		log.info("DELETED  ALL RECORDS!" );
 		
 	}
+	
+	/*===========================================EMPLOYEE CALL BACK=====================================================*/
+	
+	public static String getNewLeaveDuration(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		/*Delegator delegator = DelegatorFactoryImpl.getDelegator(null);*/
+		Date thruDate = null;
+		double originalDuration=0;
+		double newDuration=0;
+		int differenceBtnCallNThru=0;
+		Date callBackDate=null;
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String leaveId = (String) request.getParameter("leaveId");
+		
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>leaveId : " + leaveId);
+		try {
+			callBackDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("callBackDate")));
+			
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>leaveId : " + callBackDate);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		
+		GenericValue leave = null;
+		
 
+		try {
+			leave = delegator.findOne("EmplLeave",
+					UtilMisc.toMap("leaveId", leaveId), false);
+		} catch (GenericEntityException e) {
+			return null;
+		}
+		
+		if(leave!=null){
+			thruDate= leave.getDate("thruDate");
+			originalDuration = leave.getDouble("leaveDuration");
+		}
+		else{
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> COULD NOT GET LEAVE===============================" );
+		}
+			
+
+
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Thru Date : " + thruDate);
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> originalDuration: " + originalDuration);
+
+			differenceBtnCallNThru=AccHolderTransactionServices.calculateWorkingDaysBetweenDates(callBackDate, thruDate);
+			newDuration=originalDuration-differenceBtnCallNThru;
+
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Difference: " + differenceBtnCallNThru);
+			
+			result.put("newDuration", String.valueOf(newDuration));
+			
+			Gson gson = new Gson();
+			String json = gson.toJson(result);
+
+			// set the X-JSON content type
+			response.setContentType("application/x-json");
+			// jsonStr.length is not reliable for unicode characters
+			try {
+				response.setContentLength(json.getBytes("UTF8").length);
+			} catch (UnsupportedEncodingException e) {
+				try {
+					throw new EventHandlerException("Problems with Json encoding",
+							e);
+				} catch (EventHandlerException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+			// return the JSON String
+			Writer out;
+			try {
+				out = response.getWriter();
+				out.write(json);
+				out.flush();
+			} catch (IOException e) {
+				try {
+					throw new EventHandlerException(
+							"Unable to get response writer", e);
+				} catch (EventHandlerException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+			return json;
+// result.get("fowardMessage").toString();
+
+	}
+
+
+	private static void deleteExistingLeaveBalanceForThisLeave(Delegator delegator,String leaveId) {
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+		
+		EntityConditionList<EntityExpr> removeCondition = EntityCondition.makeCondition(UtilMisc.toList(
+			    EntityCondition.makeCondition("leaveId", EntityOperator.EQUALS, leaveId),null,
+				null,null),EntityOperator.AND);
+
+		try {
+			delegator.removeByCondition("EmplLeave", removeCondition);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED  ALL RECORDS ABOUT THIS LEAVE!" );
+		
+	}
+	
+	
 
 }

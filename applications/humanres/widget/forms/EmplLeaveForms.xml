@@ -289,25 +289,54 @@
 				key-field-name="partyId">
 			</display-entity>
 		</field>
-		<field name="updateLeave" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
+		<field name="updateLeaved" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
 			<hyperlink also-hidden="false" description="Employee Callback"
-				target="updateEmplLeaveExt">
+				target="callBackEmployee">
 				<parameter param-name="thruDate" /> 
 				<parameter param-name="leaveId" /> 
+				<parameter param-name="partyId" />
+				<parameter param-name="leaveDuration" />  
+				<parameter param-name="leaveTypeId" /> 
 			</hyperlink>
 		</field> 
 		<field name="updateLeave" title="" widget-style="buttontext" use-when="${leaveTypeId=='COMPASSIONATE_LEAVE'}">
 			<hyperlink also-hidden="false" description="Employee Callback"
-				target="updateEmplLeaveExt">
+				target="callBackEmployee">
 				<parameter param-name="thruDate" /> 
 				<parameter param-name="leaveId" /> 
+				<parameter param-name="partyId" />
+				<parameter param-name="leaveDuration" /> 
+				<parameter param-name="leaveTypeId" /> 
 			</hyperlink>
 		</field> 
 				<field name="description">
 			<hidden />
 		</field>
 	</form>
+	
+	
 
+
+  <form name="EmployeeCallBack" type="single" target="updateLeaveDuration"
+		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration();}" type="String"/> -->
+		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration2();}" type="String"/> -->
+		
+        </actions>
+		
+		<field name="leaveId"><hidden/></field>
+		<field name="partyId" title="Staff:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="leaveTypeId" title="Leave Type:"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
+		<field name="leaveDuration"  title="Original Leave Duration (Days):"><display /></field>
+		<field name="thruDate" title="Original Leave End Date:"><display/></field>
+		<field name="callBackDate" required-field="true"><date-time type="date"/></field>
+		<field name="newDuration" required-field="true"><text/></field>
+		
+		 <field name="submitButton" title="Call Back Employee" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
 
 	<form name="FindEmplLeaves" type="single" target="FindEmplLeaves"
 		odd-row-style="header-row" default-table-style="basic-table"
@@ -1090,6 +1119,32 @@
     <field name="leaveId"><hidden/></field>
     <field name="rejectReason" title="Leave Rejection Reason" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea cols="20" rows="3"/></field>
     <field name="submitButton" title="Reject Leave" widget-style="buttontext"><submit button-type="button" /></field>
+    </form>
+    
+    
+	<!-- ====================================THIS IS FOR LEAVE REJECTION REASON POPUP====================================================== -->
+	
+	
+    <form name="LeaveSentBackReason" type="single" target="sentLeaveBackWithReason" title=""  
+     header-row-style="header-row" default-table-style="basic-table" default-entity-name="LeaveStatusLog">
+     
+     <!-- target="rejectEmplLeaveStatus" -->
+    
+    <actions>
+    <entity-condition entity-name="LeaveStatusLog"></entity-condition>
+            <set field="partyId" value="${parameters.partyId}"/>
+            <set field="fromDate" value="${parameters.fromDate}"/>
+            <set field="leaveTypeId" value="${parameters.leaveTypeId}"/>
+            <set field="leaveId" value="${parameters.leaveId}"/>
+    </actions>
+    
+    <field name="partyId"><hidden/></field>
+    <field name="leaveStsLogId"><hidden/></field>
+    <field name="fromDate"><hidden/></field>
+    <field name="leaveTypeId"><hidden/></field>
+    <field name="leaveId"><hidden/></field>
+    <field name="rejectReason" title="Comment/Reason" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea cols="20" rows="3"/></field>
+    <field name="submitButton" title="Send Leave Back" widget-style="buttontext"><submit button-type="button" /></field>
     </form>
     
     

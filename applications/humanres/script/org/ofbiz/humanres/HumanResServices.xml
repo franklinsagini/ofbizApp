@@ -1199,6 +1199,7 @@
         <store-value value-field="lookedUpValue"/>
        
     </simple-method>
+    
 	
 	<simple-method method-name="updateEmplLeave2"
 		short-description="Update Employee Leave">
@@ -1243,6 +1244,31 @@
 
     </simple-method>
     
+     <!-- ==============================EMPLOYEE CALL BACK FROM LEAVE================================== -->
+     <simple-method method-name="updateLeaveDuration"
+        short-description="Reject Employee Leave">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.leaveDuration" from-field="lookedUpValue.newDuration" />
+        
+        <set field="lookedUpValue.thruDate" from-field="lookedUpValue.callBackDate" />
+        <store-value value-field="lookedUpValue" />
+			
+        
+        <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
+        <set-pk-fields map="parameters" value-field="newEntity" />
+        <set-nonpk-fields map="parameters" value-field="newEntity" />
+        <sequenced-id sequence-name="LeaveStatusLog" field="leaveStsLogId" />
+        <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
+        <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
+        <set field="newEntity.approvalStatus" value="Called Back" />
+        <create-value value-field="newEntity" />
+			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+    </simple-method>
+    
+    
     
     <!-- ==============================REJECT LEAVE WITH REASON================================== -->
      <simple-method method-name="rejectLeaveWithReason"
@@ -1264,6 +1290,30 @@
         <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
         <set field="newEntity.approvalStatus" value="Rejected" />
+        <create-value value-field="newEntity" />
+			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+    </simple-method>
+    
+     <!-- ==============================SEND BACK LEAVE WITH REASON================================== -->
+     <simple-method method-name="sentLeaveBackWithReason"
+        short-description="Reject Employee Leave">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.responsibleEmployee" value="NEW" />
+        <set field="lookedUpValue.applicationStatus" value="Send Back" />
+        <set field="lookedUpValue.approvalStatus" value="Send Back" />
+        <store-value value-field="lookedUpValue" />
+			
+        
+        <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
+        <set-pk-fields map="parameters" value-field="newEntity" />
+        <set-nonpk-fields map="parameters" value-field="newEntity" />
+        <sequenced-id sequence-name="LeaveStatusLog" field="leaveStsLogId" />
+        <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
+        <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
+        <set field="newEntity.approvalStatus" value="Send Back" />
         <create-value value-field="newEntity" />
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
     </simple-method>

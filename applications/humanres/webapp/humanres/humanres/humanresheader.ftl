@@ -65,6 +65,19 @@
          }
         });
         
+        
+        jQuery('input[name="callBackDate"]').change(function(){
+		 
+         var callBackDate = this.value;
+         var callBackDate =  jQuery('input[name="callBackDate"]').val();
+         var leaveId =  jQuery('input[name="leaveId"]').val();
+         var reqUrl = '/humanres/control/getNewLeaveDuration';
+          
+          if (callBackDate.length > 0){
+         	calculateNewLeaveDuration(reqUrl, callBackDate, leaveId);
+         }
+        });
+        
              
    jQuery('input[name="appointmentdate"]').change(function(){
 		 
@@ -187,6 +200,26 @@
 					 $('input[name="thruDate_i18n"]').val("");
 
 					 }
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    }
+	    
+	    
+	    function calculateNewLeaveDuration(reqUrl, callBackDate, leaveId){
+	    	jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'callBackDate': callBackDate, 'leaveId': leaveId}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+					  
+					   $('input[name="newDuration"]').val(data.newDuration);
+					  
 	               },
 	      error : function(errorData){
 	
