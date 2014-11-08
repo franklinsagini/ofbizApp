@@ -98,6 +98,31 @@
                 <response name="success" type="request-redirect-noparam"
                         value="shareMinimum"></response>
         </request-map>
+        
+        <request-map uri="depositpolicyamount">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="depositpolicyamount" />
+        </request-map>
+    <request-map uri="createDepositPolicyAmount">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createDepositPolicyAmount" />
+                <response name="success" type="request-redirect"
+                        value="depositpolicyamount"></response>
+        </request-map>
+                <request-map uri="updateDepositPolicyAmount">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateDepositPolicyAmount" />
+                <response name="success" type="request-redirect"
+                        value="depositpolicyamount"></response>
+                <response name="error" type="view" value="depositpolicyamount" />
+        </request-map>
+
+        <request-map uri="deleteDepositPolicyAmount">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteDepositPolicyAmount" />
+                <response name="success" type="request-redirect"
+                        value="depositpolicyamount"></response>
+        </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://managedeposits/widget/ManageDepositsScreens.xml#main"/>
     		<view-map name="graduatedScale" type="screen"
@@ -108,6 +133,10 @@
                 
                 <view-map name="shareMinimum" type="screen"
                 page="component://managedeposits/widget/ManageDepositsScreens.xml#shareMinimum" />
+                
+                <view-map name="depositpolicyamount" type="screen"
+                page="component://managedeposits/widget/ManageDepositsScreens.xml#depositpolicyamount" />
+                
                 
                 
 </site-conf>

@@ -1095,7 +1095,7 @@ under the License.
 		</field>
 	</form>
 	
-	<form name="findListLoanProduct" type="list" list-name="listIt"
+	<form name="findListLoanProduct" type="list" list-name="listIt" target="updateLoanProduct" 
 		paginate-target="FindLoanProduct" default-entity-name="LoanProduct"
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -1134,6 +1134,15 @@ under the License.
             </drop-down>
         </field>
         
+         <field name="accountProductId" title="Mutliplier Account Product"
+			required-field="false">
+			<drop-down allow-empty="true">
+				<!-- list-options list-name="accountProductList" key-name="accountProductId"
+					description="${name} - ${code}" / -->
+					<entity-options description="${name} - ${code}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
+			</drop-down>
+		</field>
+        
         <field name="Edit Loan">
         	<hyperlink target="LoanProduct?loanProductId=${loanProductId}" description="Edit Loan"></hyperlink>
         </field>
@@ -1150,8 +1159,8 @@ under the License.
 				<parameter param-name="loanProductId" />
 			</hyperlink>
 		</field>
-		<!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
-			button-type="button"/></field -->
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
+			button-type="button"/></field>
 	</form>
 	
 	<!-- Loan Product Charge -->
@@ -1206,7 +1215,8 @@ under the License.
         
         <field name="productChargeId" title="Charge"  widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
-                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+                <!-- list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/ -->
+                <entity-options description="${name}" entity-name="ProductCharge" key-field-name="productChargeId"></entity-options>
             </drop-down>
         </field>
         <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">

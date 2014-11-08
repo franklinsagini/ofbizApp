@@ -8,5 +8,35 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+    <entity entity-name="LoanDeductionEvaluation" package-name="org.ofbiz.loansprocessing"
+		title="Loan Deductions Evaluation">
+		<field name="loanDeductionEvaluationId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		
+		<field name="grossSalaryAmt" type="fixed-point"></field>
+		<field name="payslipDeductionAmt" type="fixed-point"></field>
+		
+		<field name="currentContributionAmt" type="fixed-point"></field>
+		
+		<field name="monthlyRepaymentAmt" type="fixed-point"></field>
+		<field name="firstMonthInsuranceAmt" type="fixed-point"></field>
+		
+		<field name="loanDeductionAmt" type="fixed-point"></field>
+		<field name="totalDeductionAmt" type="fixed-point"></field>
+		<field name="newMemberDepostContributionAmt" type="fixed-point"></field>
+		<field name="totalDeductionAfterLoanAddedAmt" type="fixed-point"></field>
+		<field name="twothirdAmt" type="fixed-point"></field>
+		<field name="violationDecision" type="name"></field>
+		
+		<prim-key field="loanDeductionEvaluationId"/>
+		
+		<relation type="one" fk-name="LoanDeductionEvaluation_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
 
 </entitymodel>

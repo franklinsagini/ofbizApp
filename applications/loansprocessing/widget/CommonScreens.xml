@@ -69,6 +69,15 @@
                 <set field="partyId" from-field="loanApplication.partyId"/>
                 <entity-one entity-name="LoanProduct" value-field="loanProduct"/>
                 <entity-one entity-name="Member" value-field="member"/>
+                <set field="memberId" from-field="partyId"/>
+                <set field="loanAmt" value="${loanApplication.loanAmt}" type="BigDecimal"/>
+                
+                <set field="totalLoansRunning" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoansRunning(memberId,loanProductId);}"/>
+                <set field="totalRepaymentsOnRunningLoans" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoansRepaid(memberId);}"/>
+                <set field="loanBalanceAmount" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalances(memberId,loanProductId);}"/>
+                <set field="currentContributionAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanCurrentContributionAmount(memberId, loanProductId);}" type="BigDecimal" global="true"/>
+                <set field="newMemberDepostContributionAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanNewContributionAmount(memberId, loanProductId, loanAmt);}" type="BigDecimal" global="true"/>
+                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -83,7 +92,17 @@
                             <widgets>
                                 <!-- include-menu location="component://loans/widget/loans/ExampleMenus.xml" name="LoanDetailsTabBar"/ -->
                                 <include-menu location="component://loansprocessing/widget/loansprocessingMenus.xml" name="LoanProcessingDetailsTabBar"/>
+                                
+                                <section>
+				        			<widgets>
+										<platform-specific>
+											<html><html-template location="component://loansprocessing/webapp/loansprocessing/loansprocessingheader.ftl"/></html>
+										</platform-specific>
+									</widgets>
+				        		</section>
                             </widgets>
+                            
+                           
                         </section>
                     </decorator-section>
                     <!-- do check for PARTYMGR, _VIEW permission -->
@@ -117,6 +136,22 @@
                                                     
                                                    	<screenlet>
                                                    		<label text="Loan No :  ${loanApplication.loanNo} Loan Amount : KES. ${loanApplication.loanAmt}"></label>
+                                                   	</screenlet>
+
+                                                   		<screenlet>
+                                                   		<label text="Total Loans Running : KES. ${totalLoansRunning}"></label>
+                                                   	</screenlet>
+                                                   	
+                                                   	<screenlet>
+                                                   		<label text="Total Repayments on Running Loans : KES. ${totalRepaymentsOnRunningLoans}"></label>
+                                                   	</screenlet>
+                                                   	
+                                                   		<screenlet>
+                                                   		<label text="Previous Loan Balances : KES. ${loanBalanceAmount}"></label>
+                                                   	</screenlet>
+                                                   	
+                                                   		<screenlet>
+                                                   		<label text="Current Contribution Amount : KES. ${currentContributionAmt}"></label>
                                                    	</screenlet>
                                                     
                                                 </widgets>

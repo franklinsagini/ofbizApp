@@ -2585,6 +2585,12 @@ public class ModelFormField {
 					&& !this.entityName.equals("LoanGuarantor")
 					&& !this.entityName.equals("Member")
 					&& !this.entityName.equals("LoanApplication")
+					
+					&& !this.entityName.equals("LoanApplicationCharge")
+					&& !this.entityName.equals("LoanProductCharge")
+					&& !this.entityName.equals("ProductCharge")
+					
+					
 					&& !this.entityName.equals("LoanProduct")
 					&& !this.entityName.equals("AccountProduct")
 					&& !this.entityName.equals("MaritalStatus")

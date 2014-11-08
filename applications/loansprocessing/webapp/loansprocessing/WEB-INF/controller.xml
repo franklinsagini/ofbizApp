@@ -80,8 +80,49 @@
 		</response>
 	</request-map>
 
+	<request-map uri="returnToCustomerCareProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="returnToCustomerCareProcess" />
+		<response name="success" type="request-redirect" value="returnToCustomerCare">
+			<redirect-parameter name="loanApplicationId" />
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
 
 
+	
+	
+	<request-map uri="addDeductions">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addDeductions">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+	</request-map>
+	
+		<request-map uri="createLoanDeductionEvaluation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanDeductionEvaluation" />
+		<response name="success" type="request-redirect" value="addDeductions">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="addDeductions" />
+	</request-map>
+
+	<request-map uri="updateLoanDeductionEvaluation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanDeductionEvaluation" />
+		<response name="success" type="request-redirect" value="loanApplicationId"></response>
+		<response name="error" type="view" value="addDeductions" />
+	</request-map>
+
+	<request-map uri="deleteLoanDeductionEvaluation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLoanDeductionEvaluation" />
+		<response name="success" type="request-redirect-noparam"
+			value="addDeductions"></response>
+		<response name="error" type="view" value="addDeductions" />
+	</request-map>
+	
 
 	<request-map uri="createLoanApplication">
 		<security https="true" auth="true" />
@@ -486,6 +527,10 @@
 
 	<view-map name="changeLoanDetails" type="screen"
 		page="component://loansprocessing/widget/loansprocessingScreens.xml#changeLoanDetails" />
+		
+	<view-map name="addDeductions" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#addDeductions" />
+		
 
 	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />

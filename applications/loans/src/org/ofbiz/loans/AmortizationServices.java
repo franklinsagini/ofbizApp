@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
-import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -31,10 +30,10 @@ import org.ofbiz.webapp.event.EventHandlerException;
  * 
  **/
 public class AmortizationServices {
-	private static int ONEHUNDRED = 100;
+	public static int ONEHUNDRED = 100;
 	private static int ONE = 1;
 	private static String LINEAR = "LINEAR";
-	private static String REDUCING_BALANCE = "REDUCING_BALANCE";
+	public static String REDUCING_BALANCE = "REDUCING_BALANCE";
 	
 	public static Logger log = Logger.getLogger(AmortizationServices.class);
 	
@@ -282,7 +281,7 @@ public class AmortizationServices {
 	 * @author Japheth Odonya @when Aug 10, 2014 1:04:44 PM Calculcate Repayment
 	 *         Amount for Flat Rate Loan Repayment Method
 	 * */
-	private static BigDecimal calculateFlatRatePaymentAmount(
+	public static BigDecimal calculateFlatRatePaymentAmount(
 			BigDecimal loanAmt, BigDecimal interestRatePM, int repaymentPeriod) {
 		BigDecimal bdPaymentAmount;
 

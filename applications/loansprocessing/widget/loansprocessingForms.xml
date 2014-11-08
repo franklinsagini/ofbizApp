@@ -163,7 +163,7 @@
 		use-when="loanStatusId==${forwardedLoansStatusId}"
 		-->
 		
-		<field name="Forward"  use-when="loanStatusId==${statusId}" event="onclick"
+		<field name="Forward"  use-when="(loanStatusId==${statusId}) &amp;&amp; (guarantorsAdded=='Y')" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
 			<hyperlink target="forwardApplication"
 				description="Forward Application To Approver" link-type="anchor">
@@ -200,9 +200,9 @@
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
 		</field>
-		<field name="detailsLink" title="Details"
+		<field name="detailsLink" title="Add Guarantors"
 			widget-style="buttontext">
-			<hyperlink target="viewapplicationprofile" description="Details"
+			<hyperlink target="viewapplicationprofile" description="Add Guarantors"
 				also-hidden="false">
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
@@ -498,6 +498,71 @@
             </hyperlink>
         </field -->
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+    
+    <!-- addDeductions -->
+     <form name="NewLoanDeductionEvaluation" type="single" target="createNewLoanDeductionEvaluation"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanDeductionEvaluationContext">
+        <!-- actions>
+        	<set field="statusName" value="RETURNEDTOCUSTOMERCARE" />
+			<set field="statusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"
+				type="Integer" />
+        </actions -->
+        <actions>
+        	<set field="monthlyRepaymentAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getMonthlyLoanRepayment(loanApplicationId);}" type="BigDecimal"/>
+        	<set field="firstMonthInsuranceAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getInsuranceAmount(loanApplicationId);}" type="BigDecimal"/>
+        	<set field="loanDeductionAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanRepayment(monthlyRepaymentAmt, firstMonthInsuranceAmt);}" type="BigDecimal"/>
+        	
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanDeductionEvaluationId"><hidden/></field>
+        <field name="grossSalaryAmt" title="Gross Salary Amount (G)"  widget-style="required" required-field="true"><text/></field>
+        
+        <field name="payslipDeductionAmt" title="Payslip Deduction Amount (P)"  widget-style="required" required-field="true"><text/></field>
+        <field name="currentContributionAmt" title="Current Contribution Amount (C)"  widget-style="required" required-field="true"><text/></field>
+        
+        <field name="monthlyRepaymentAmt" title="Monthly Repayment (M)"  widget-style="required" required-field="true"><text/></field>
+        <field name="firstMonthInsuranceAmt" title="First Month Insurance (F)"  widget-style="required" required-field="true"><text/></field>
+        
+        
+        <field name="loanDeductionAmt" title="Loan Deduction Amount (M+F))"  widget-style="required" required-field="true"><text/></field>
+        <field name="totalDeductionAmt" title="Total Deduction Amount (P-C+M+F)"  widget-style="required" required-field="true"><text/></field>
+        <field name="newMemberDepostContributionAmt" title="New Member Contribution Amount (N)"  widget-style="required" required-field="true"><text/></field>
+        <field name="totalDeductionAfterLoanAddedAmt" title="Total Deduction When Loan Added (P-C+M+F+N)"  widget-style="required" required-field="true"><text/></field>
+        <field name="twothirdAmt" title="Two Third Amount (2/3 of G)"  widget-style="required" required-field="true"><text/></field>
+        <field name="violationDecision" title="Violation Verdict"  widget-style="required" required-field="true"><text/></field>
+        
+        <field name="submitButton" title="Save" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Logs -->
+    <form name="LoanDeductionEvaluationList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanDeductionEvaluation" paginate-target="addDeductions"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <!-- actions>
+            <entity-condition entity-name="LoanDeductionEvaluation">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            	<order-by field-name="-loanStatusLogId"/>
+            </entity-condition>
+        </actions -->
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanDeductionEvaluation"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanDeductionEvaluationId"><hidden/></field>
+        <field name="grossSalaryAmt" title="Gross Salary Amount"  widget-style="required" required-field="true"><text/></field>
+        
+        <field name="payslipDeductionAmt" title="Payslip Deduction Amount"  widget-style="required" required-field="true"><text/></field>
+        <field name="currentContributionAmt" title="Current Contribution Amount"  widget-style="required" required-field="true"><text/></field>
+        <field name="loanDeductionAmt" title="Loan Deduction Amount"  widget-style="required" required-field="true"><text/></field>
+        <field name="totalDeductionAmt" title="Total Deduction Amount"  widget-style="required" required-field="true"><text/></field>
+        <field name="newMemberDepostContributionAmt" title="New Member Contribution Amount"  widget-style="required" required-field="true"><text/></field>
+        <field name="totalDeductionAfterLoanAddedAmt" title="Total Deduction When Loan Added"  widget-style="required" required-field="true"><text/></field>
+        <field name="twothirdAmt" title="Two Third Amount"  widget-style="required" required-field="true"><text/></field>
+        <field name="violationDecision" title="Violation Verdict"  widget-style="required" required-field="true"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
 
