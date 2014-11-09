@@ -19,7 +19,14 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
-        <service name="createLoanDeductionEvaluation" engine="simple" default-entity-name="LoanDeductionEvaluation"
+       <service name="createLoanAppraisal" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createLoanAppraisal" auth="true">
+        <description>Loan Appraisal</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>   
+    
+    <service name="createLoanDeductionEvaluation" engine="simple" default-entity-name="LoanDeductionEvaluation"
              location="component://loansprocessing/script/org/ofbiz/loansprocessing/LoansProcessingServices.xml" invoke="createLoanDeductionEvaluation" auth="true">
         <description>Create LoanDeductionEvaluation</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->

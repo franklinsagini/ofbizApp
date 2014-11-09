@@ -52,6 +52,16 @@
 			<redirect-parameter name="partyId" />
 		</response>
 	</request-map>
+	
+	<request-map uri="appraisal">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="appraisal">
+			<redirect-parameter name="loanApplicationId" />
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
+	
+	
 
 	<request-map uri="loanLogs">
 		<security https="true" auth="true" />
@@ -477,6 +487,17 @@
 		</response>
 		<response name="error" type="view" value="changeLoanDetails" />
 	</request-map>
+	
+	<request-map uri="createLoanAppraisal">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanAppraisal" />
+		<response name="success" type="request-redirect" value="appraisal">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="appraisal" />
+	</request-map>
+	
+	
 
 	<request-map uri="updateLoanGuarantorChange">
 		<security https="true" auth="true" />
@@ -517,6 +538,10 @@
 
 	<view-map name="addGuarantors" type="screen"
 		page="component://loansprocessing/widget/loansprocessingScreens.xml#addGuarantors" />
+		
+		
+	<view-map name="appraisal" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#appraisal" />
 
 	<view-map name="loanLogs" type="screen"
 		page="component://loansprocessing/widget/loansprocessingScreens.xml#loanLogs" />

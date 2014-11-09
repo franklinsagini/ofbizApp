@@ -10,11 +10,16 @@
 		<actions>
 			<set field="statusName" value="FORWAREDAPPROVAL"/>
 	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+
+			<set field="statusNameApp" value="APPRAISED"/>
+	   		<set field="statusAppId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusNameApp);}" type="PlainString"/> 
 			
 			<entity-condition entity-name="LoanApplication">
 				<condition-list combine="and">
 					<condition-list combine="or">
 						<condition-expr field-name="loanStatusId" operator="equals" value="${statusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${statusAppId}"></condition-expr>
+						
 					</condition-list>
 					
 				</condition-list>				
@@ -84,10 +89,19 @@
 		applicationStatus.equals(&quot;FORWAREDAPPROVAL&quot;)
 		-->
 		
-		<field name="Forward" use-when="loanStatusId==${statusId}" event="onclick"
+		<!-- field name="Forward" use-when="loanStatusId==${statusId}" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});" >
 			<hyperlink target="forwardApplication"
 				description="Approve" target-type="inter-app" >
+					<parameter param-name="loanApplicationId"/>
+				</hyperlink>
+				
+				
+		</field -->
+		
+		<field name="Approved" >
+			<hyperlink target="approveLoan"
+				description="Approve Loan" link-type="anchor">
 					<parameter param-name="loanApplicationId"/>
 				</hyperlink>
 				
@@ -208,11 +222,11 @@
 			<set field="disbursedStatusName" value="DISBURSED"/>
 	   		<set field="disbursedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(disbursedStatusName);}" type="PlainString"/> 
 			
-			<!-- entity-condition entity-name="LoanApplication">
+			<entity-condition entity-name="LoanApplication">
 				
 					<condition-list combine="or">
 						<condition-expr field-name="loanStatusId" operator="equals" value="${statusId}"></condition-expr>
-						<condition-expr field-name="loanStatusId" operator="equals" value="${disbursedStatusId}"></condition-expr>
+						<!-- condition-expr field-name="loanStatusId" operator="equals" value="${disbursedStatusId}"></condition-expr -->
 					
 						
 				</condition-list>		
@@ -220,7 +234,7 @@
 				
 				
 				
-			</entity-condition -->
+			</entity-condition>
 			
 			
 			 <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -336,4 +350,28 @@
 		
 		
 	</form>
+	
+	<form name="NewApproval" type="single" target="createLoanApproval"
+        focus-field-name="approvedAmt" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        <!-- actions>
+        	<set field="statusName" value="RETURNEDTOCUSTOMERCARE" />
+			<set field="statusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"
+				type="Integer" />
+        </actions -->
+        <actions>
+        	<set field="status" value="APPROVED"  type="String"/>
+        	<set field="statusId" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanStatus(status);}"/>
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanStatusLogId"><hidden/></field>
+       	<field name="loanStatusId"><hidden value="${statusId}"/></field>
+        <field name="approvedAmt" title="Approved Amount"  widget-style="required" required-field="true"><text default-value="${approvedAmt}"/></field>
+        
+        <field name="comment" title="Comment "  widget-style="required" required-field="true"><textarea/></field>
+                
+        <field name="submitButton" title="Save" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+	
 </forms>

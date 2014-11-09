@@ -11,6 +11,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.loans.AmortizationServices;
 import org.ofbiz.loans.LoanServices;
 
@@ -184,6 +185,23 @@ public class LoansProcessingServices {
 		return bdContributionAmount;
 	}
 
+	public static Long getLoanStatus(String name) {
+		List<GenericValue> loanStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanStatusELI = delegator.findList("LoanStatus",
+					EntityCondition.makeCondition("name", name), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long loanStatusId = 0L;
+		for (GenericValue genericValue : loanStatusELI) {
+			loanStatusId = genericValue.getLong("loanStatusId");
+		}
+		return loanStatusId;
+	}
 
 
 }
