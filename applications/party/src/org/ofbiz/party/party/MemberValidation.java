@@ -127,8 +127,7 @@ public class MemberValidation {
 		List<GenericValue> memberELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			memberELI = delegator
-					.findList("Member", EntityCondition.makeCondition(
+			memberELI = delegator.findList("Member", EntityCondition.makeCondition(
 							"mobileNumber", mobileNumber), null, null, null,
 							false);
 		} catch (GenericEntityException e) {

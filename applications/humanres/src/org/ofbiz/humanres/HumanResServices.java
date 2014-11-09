@@ -4,6 +4,7 @@ package org.ofbiz.humanres;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -49,10 +50,11 @@ public class HumanResServices {
 	public static Logger log = Logger.getLogger(LeaveServices.class);
 	
 	// ============================================================== 
-public static String getLeaveBalance(HttpServletRequest request,
-			HttpServletResponse response) {
+public static String getLeaveBalance(HttpServletRequest request,HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		Timestamp now = UtilDateTime.nowTimestamp();
+		String financialYear=LeaveServices.getCurrentYear(now);
 		Date appointmentdate = null;
 		try {
 			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
@@ -61,8 +63,7 @@ public static String getLeaveBalance(HttpServletRequest request,
 			e2.printStackTrace();
 		}
 		String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
-		String partyId = new String(request.getParameter("partyId")).toString();
-		
+		String partyId = new String(request.getParameter("partyId")).toString();		
 		//   get current leave balance  //
 		
 		List<GenericValue> getApprovedLeaveSumELI = null;
@@ -80,7 +81,8 @@ public static String getLeaveBalance(HttpServletRequest request,
 				.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
-					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),
+						EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, financialYear),
+					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
 
@@ -120,12 +122,36 @@ public static String getLeaveBalance(HttpServletRequest request,
 		//========= ==============================//
 	
 		LocalDateTime stappointmentdate = new LocalDateTime(appointmentdate);
-		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
-				.getTimeInMillis());
+		/*LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());*/
+             
+		LocalDateTime today = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
+		LocalDateTime firstDayOfYear = today.dayOfYear().withMinimumValue();
+		
+		log.info(" FFFFFFFFFFF First Day "+firstDayOfYear.toDate());
+		LocalDateTime accrueStart;
+		if(stappointmentdate.isBefore(firstDayOfYear)){
+			
+			accrueStart = firstDayOfYear;
+		}
+		else
+		{
+			accrueStart = stappointmentdate;
+		}
+		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		PeriodType monthDay = PeriodType.months();
 
-		Period difference = new Period(stappointmentdate, stCurrentDate, monthDay);
+		Period difference = new Period(accrueStart, stCurrentDate, monthDay);
 
 		int months = difference.getMonths();
 		String approvedLeaveSumed = Double.toString(approvedLeaveSum);
@@ -176,6 +202,133 @@ public static String getLeaveBalance(HttpServletRequest request,
 		return json;
 
 	}
+ /*============================COMPASSIONATE LEAVE BALANCES========================================*/
+public static String getCompassionateLeaveBalance(HttpServletRequest request,HttpServletResponse response) {
+	Map<String, Object> result = FastMap.newInstance();
+	Delegator delegator = (Delegator) request.getAttribute("delegator");
+	Timestamp now = UtilDateTime.nowTimestamp();
+	String financialYear=LeaveServices.getCurrentYear(now);
+	
+
+	String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
+	String partyId = new String(request.getParameter("partyId")).toString();		
+	//   get current leave balance  //
+	
+	List<GenericValue> getApprovedLeaveSumELI = null;		
+	EntityConditionList<EntityExpr> leaveConditions = EntityCondition
+			.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition(
+					"partyId", EntityOperator.EQUALS, partyId),
+					EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, financialYear),
+				EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "COMPASSIONATE_LEAVE"),
+				EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
+					EntityOperator.AND);
+
+	try {
+		getApprovedLeaveSumELI = delegator.findList("EmplLeave",
+				leaveConditions, null, null, null, false);
+	} catch (GenericEntityException e2) {
+		e2.printStackTrace();
+		
+	}
+	//log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
+double approvedLeaveSum=0;
+	for (GenericValue genericValue : getApprovedLeaveSumELI) {
+		//approvedLeaveSum += genericValue.getLong("leaveDuration");
+		approvedLeaveSum += genericValue.getDouble("leaveDuration");
+	}
+	//log.info("============================================================" +approvedLeaveSum);
+	
+	// ============ get accrual rate ================ //
+Long days=null; 
+GenericValue employeeLeaveType = null;
+	try {
+		employeeLeaveType = delegator.findOne("EmplLeaveType",
+				UtilMisc.toMap("leaveTypeId", "COMPASSIONATE_LEAVE"), false);
+	} catch (GenericEntityException e) {
+		e.printStackTrace();
+		
+	}
+	if (employeeLeaveType != null) {
+
+		days = employeeLeaveType.getLong("days");
+		
+	} else {
+		System.out.println("######## Days not found #### ");
+	}
+	
+	
+	double leaveBalances =  days-approvedLeaveSum; 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	String leaveBalance = Double.toString(leaveBalances);
+
+	//return leaveBalance;
+	result.put("approvedLeaveSumed",approvedLeaveSum );
+	result.put("accruedLeaveDays", days);
+	result.put("leaveBalance" , leaveBalance);
+
+	Gson gson = new Gson();
+	String json = gson.toJson(result);
+
+	// set the X-JSON content type
+	response.setContentType("application/x-json");
+	// jsonStr.length is not reliable for unicode characters
+	try {
+		response.setContentLength(json.getBytes("UTF8").length);
+	} catch (UnsupportedEncodingException e) {
+		try {
+			throw new EventHandlerException("Problems with Json encoding",
+					e);
+		} catch (EventHandlerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	// return the JSON String
+	Writer out;
+	try {
+		out = response.getWriter();
+		out.write(json);
+		out.flush();
+	} catch (IOException e) {
+		try {
+			throw new EventHandlerException(
+					"Unable to get response writer", e);
+		} catch (EventHandlerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	return json;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ==============================================================
 
 
