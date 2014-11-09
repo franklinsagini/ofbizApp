@@ -27,6 +27,9 @@ under the License.
     <form name="NewPayrollElement" type="single" target="createPayrollElement"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollElementContext" paginate-target="elementsDefinition">
          <actions>
+        	<entity-condition entity-name="PayrollElement" list="interestList">
+        		<condition-expr field-name="isInterest" operator="equals" value="Y"/>
+        	</entity-condition>
         	<entity-condition entity-name="PayrollElement" list="elementList">
         		<condition-expr field-name="elementType" operator="not-equals" value="System Element"/>
         	</entity-condition>
@@ -152,9 +155,9 @@ under the License.
                 <option key="PerMonth" description="Per Month"/>
             </drop-down>
         </field>
-        <field name="childId" title="Child Code">
+        <field name="childId" title="Interest Code">
         	<drop-down allow-empty="true">
-        		<list-options list-name="elementList" key-name="payrollElementId" description="${name}"/>
+        		<list-options list-name="interestList" key-name="payrollElementId" description="${name}"/>
         	</drop-down>
         </field>        
         
@@ -338,10 +341,11 @@ under the License.
                 <option key="PerMonth" description="Per Month"/>
             </drop-down>
         </field>
-        <field name="childId" title="Child Code">
+        <field name="childId" title="Interest Code">
         	<drop-down allow-empty="true">
         		<entity-options entity-name="PayrollElement" key-field-name="payrollElementId" description="${name}">
         			<entity-constraint name="elementType" operator="not-equals" value="System Element"/>
+        			<entity-constraint name="isInterest" operator="equals" value="Y"/>
         		</entity-options>
         	</drop-down>
         </field>        
@@ -661,13 +665,14 @@ under the License.
         </form>
         
         <form name="listPayrollPeriod" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollPeriod" paginate-target="payrollperiod"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="pp">
         <actions>
             <entity-condition entity-name="PayrollPeriod">
             	<condition-expr field-name="payrollYearId" from-field="payrollYearId"/>
             	<order-by field-name="sequence_no"/>
             </entity-condition>
         </actions>
+        <alt-target use-when="pp!=null" target="staffpayroll" target-type=""/>
         <auto-fields-service default-field-type="hidden" service-name="updatePayrollPeriod"/>
         <field name="payrollPeriodId"><hidden/></field>       
         <field name="payrollYearId"> <hidden/> </field>
@@ -682,7 +687,14 @@ under the License.
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
-        <field name="addPeriodStaff" title="Add Staff" widget-style="buttontext">
+        <!--        
+        <field name="addPeriodStaff" use-when="pp==null"  title="View Staff" widget-style="buttontext">
+            <hyperlink target="closedstaffpayroll" description="View Staff Payroll" also-hidden="false">
+                <parameter param-name="payrollPeriodId"/>
+            </hyperlink>
+        </field>
+        -->
+        <field name="addPeriodStaff" use-when="pp==null"  title="Add Staff" widget-style="buttontext">
             <hyperlink target="staffpayroll" description="Manage Staff Payroll" also-hidden="false">
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
@@ -941,7 +953,7 @@ under the License.
         </field -->
         <field name="disability_relief" title="Diability Relief"> <display also-hidden="false"/> </field>
         <field name="lowInterstRate" title="Low Interest Benefit Rate (%)"> <display also-hidden="false"/> </field>
-        <field name="pension_maxContibution" title="Maximum Pension Contribution"> <display also-hidden="false"/> </field>
+        <field name="pension_maxContibution" title="Max Non-taxable Pension Contribution"> <display also-hidden="false"/> </field>
         <field name="monthlyPersonalRelief" title="Monthly Personal Relief"> <display also-hidden="false"/> </field>
         <field name="insuranceReliefmax" title="Maximum Insurance Relief"> <display also-hidden="false"/> </field>
         <field name="insuranceReliefRate" title="Insurance Relief Rate (%)"> <display also-hidden="false"/> </field>
@@ -972,7 +984,7 @@ under the License.
         <field name="payrollConstantsId"> <hidden/></field>
         <field name="disability_relief" title="Disability Relief" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="lowInterstRate" title="Low Interest Benefit Rate (%)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="pension_maxContibution" title="Maximum Pension Contribution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="pension_maxContibution" title="Max Non-taxable Pension Contribution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="monthlyPersonalRelief" title="Monthly Personal Relief" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="insuranceReliefmax" title="Maximum Insurance Relief" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="insuranceReliefRate" title="Insurance Relief Rate (%)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -1178,9 +1190,41 @@ under the License.
         	</drop-down>
         </field>
         
-        <field name="submitButton" use-when="payrollelement!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="payslipmessage!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-  
     
+    <form name="listEmployerDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployerDetails" paginate-target="employerDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="EmployerDetails">
+            </entity-condition>
+        </actions>        
+        <field name="employerDetailsId" > <hidden/>  </field>        
+		<field name="employer" title="Employer Name"> 
+			<hyperlink also-hidden="false" description="${employer}" target="editEmployerDetails">
+                <parameter param-name="employerDetailsId"/>
+            </hyperlink>
+		</field>
+		<field name="pinNumber" title="PIN Number"> <display/></field>
+		<field name="nssfNumber" title="NSSF Number"><display/></field>
+		<field name="nhifNumber" title="NHIF Number"><display/></field>
+    </form>
+    <form name="EditEmployerDetails" type="single" target="updateEmployerDetails" title="" default-map-name="employerdetails"
+        header-row-style="header-row" default-table-style="basic-table">        
+        <actions>
+        	<entity-condition entity-name="EmployerDetails"></entity-condition>
+        	<set field="employerDetailsId" from-field="parameters.employerDetailsId"/>
+        </actions>
+        <alt-target use-when="employerdetails==null" target="updateEmployerDetails"/>
+        <auto-fields-service service-name="updateEmployerDetails" map-name="employerdetails"/>
+
+       <field name="employerDetailsId" > <hidden/></field>        
+		<field name="employer" title="Employer Name"><text/></field>
+		<field name="pinNumber" title="PIN Number"><text/></field>
+		<field name="nssfNumber" title="NSSF Number"><text/></field>
+		<field name="nhifNumber" title="NHIF Number"><text/></field>
+        
+        <field name="submitButton" use-when="employerdetails!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
    
 </forms>

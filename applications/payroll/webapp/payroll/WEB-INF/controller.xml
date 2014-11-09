@@ -620,6 +620,29 @@ under the License.
 		<response name="error" type="view" value="payslipMessage" />
 	</request-map -->
 	
+	<!-- Employer Details -->
+	<request-map uri="employerDetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="employerDetails"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="updateEmployerDetails">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateEmployerDetails" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="employerDetails">
+			</response>
+		<response name="error" type="view" value="employerDetails" />
+	</request-map>
+	
+	<request-map uri="editEmployerDetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="editEmployerDetails"
+			save-home-view="true" />
+	</request-map>
+	
 	 <request-map uri="runpayroll">
 	 	<security https="true" auth="true" />
         <event type="java" path="org.ofbiz.payroll.PayrollProcess" invoke="runPayroll" ></event>
@@ -713,7 +736,9 @@ under the License.
 	<view-map name="nssftable" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewNSSFTable"/>
 	<view-map name="payrollOverview" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#PayrollOverview"/>
 	<view-map name="payslipMessage" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#PayslipMessage"/>
-	<view-map name="editPayslipMessage" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#EditPayslipMessage"/>
+	<view-map name="editPayslipMessage" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#EditPayslipMessage"/>	
+	<view-map name="employerDetails" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#EmployerDetails"/>
+	<view-map name="editEmployerDetails" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#EditEmployerDetails"/>
 	
 	 <!-- PDFs  -->
     <view-map name="ReportTestPDF" type="screenfop" page="component://payroll/widget/payroll/PayrollScreens.xml#ReportTestPDF" content-type="application/pdf" encoding="none"/>

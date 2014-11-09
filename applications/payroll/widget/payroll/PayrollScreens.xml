@@ -289,6 +289,10 @@ under the License.
                 
                 <set field="payrollYearId" from-field="parameters.payrollYearId"/>
                 
+                <entity-one entity-name="PayrollPeriod" value-field="pp">
+                	<field-map field-name="payrollYearId" from-field="payrollYearId"/>
+                	<field-map field-name="status" from-field="status" value="Open"/>
+                </entity-one>
                 <entity-one entity-name="PayrollPeriod" value-field="payrollPeriodContext"/>
                 <entity-one value-field="year" entity-name="PayrollYear">
                 	<field-map field-name="payrollYearId" from-field="payrollYearId"/>
@@ -941,5 +945,58 @@ under the License.
         </section>
     </screen>
     
+    <screen name="EmployerDetails">
+    	<section>
+            <actions>
+                <set field="titleProperty" value="Employer Details"/>
+                <set field="headerItem" value="employerDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employerDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-one entity-name="EmployerDetails" value-field="employerDetailsContext"/>
+               
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title=" ">
+                        			<include-form name="listEmployerDetails" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditEmployerDetails">
+        <section>
+            <actions>
+                <set field="headerItem" value="Employer Details"/>
+                <set field="tabButtonItem" value="editEmployerDetails"/>
+                <set field="titleProperty" value="Edit Employer Details"/>
+                <set field="employerDetailsId" from-field="parameters.employerDetailsId"/>
+                <entity-one entity-name="EmployerDetails" value-field="employerdetails"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <!--include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/-->
+                        <screenlet title="Edit Employer Details">
+                            <section>
+                                <widgets>
+                                    <include-form name="EditEmployerDetails" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
 </screens>
