@@ -47,12 +47,24 @@ public class PayrollProcess {
 	public static BigDecimal bdMPR;
 	public static BigDecimal bdNETPAY;
 	public static BigDecimal bdNHIF;
+	public static BigDecimal bdNHIFEmployer = BigDecimal.ZERO;
 	public static BigDecimal bdPAYE;
 	public static BigDecimal bdTAXABLEINCOME;
 	public static BigDecimal bdTOTDEDUCTIONS;
 	public static BigDecimal bdNSSFStatutory = BigDecimal.ZERO;
+	public static BigDecimal bdNSSFEmployer = BigDecimal.ZERO;
 	public static BigDecimal bdNSSFVoluntary = BigDecimal.ZERO;
 	public static BigDecimal bdPensionAmt = BigDecimal.ZERO;
+	public static BigDecimal bdPensionEmployer = BigDecimal.ZERO;
+	
+	
+	public static BigDecimal bdNSSFSUMMARY = BigDecimal.ZERO;
+	public static BigDecimal bdNHIFSUMMARY = BigDecimal.ZERO;
+	public static BigDecimal bdPAYESUMMARY = BigDecimal.ZERO;
+	public static BigDecimal bdNETPAYSUMMARY = BigDecimal.ZERO;
+	public static BigDecimal bdPENSIONSUMMARY = BigDecimal.ZERO;
+	
+	
 
 	private static Logger log = Logger.getLogger(PayrollProcess.class);
 
@@ -102,7 +114,7 @@ public class PayrollProcess {
 
 	for (GenericValue genericValue : employeesELI) {
 			deleteStaffSystemElements(genericValue
-					.getString("staffPayrollId"), delegator);
+					.getString("staffPayrollId"), delegator); 
 			
 			processPayroll(genericValue, genericValue
 					.getString("staffPayrollId"), delegator);
@@ -110,6 +122,34 @@ public class PayrollProcess {
 					+ genericValue.getString("staffPayrollId"));
 			manageBalances(genericValue, genericValue.getString("staffPayrollId"), delegator);
 		}
+
+	List<GenericValue> listPayrollPeriodSummary = new ArrayList<GenericValue>();
+	
+	log.info("######### bdNSSFSUMMARY ######### " + bdNSSFSUMMARY);
+	log.info("######### bdNHIFSUMMARY ######### " + bdNHIFSUMMARY);
+	log.info("######### bdPENSIONSUMMARY ######### " + bdPENSIONSUMMARY);
+	log.info("######### bdPAYESUMMARY ######### " + bdPAYESUMMARY);
+	log.info("######### bdNETPAYSUMMARY ######### " + bdNETPAYSUMMARY);
+	
+	deletePayrollPeriodSummary(delegator, payrollPeriodId);
+	
+	bdNSSFSUMMARY = bdNSSFSUMMARY.setScale(4, RoundingMode.HALF_UP);
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "NSSF", bdNSSFSUMMARY));	
+	bdNHIFSUMMARY = bdNHIFSUMMARY.setScale(4, RoundingMode.HALF_UP);	
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "NHIF", bdNHIFSUMMARY));	
+	bdPENSIONSUMMARY = bdPENSIONSUMMARY.setScale(4, RoundingMode.HALF_UP);	
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "PENSION", bdPENSIONSUMMARY));	
+	bdPAYESUMMARY = bdPAYESUMMARY.setScale(4, RoundingMode.HALF_UP);
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "PAYE", bdPAYESUMMARY));	
+	bdNETPAYSUMMARY = bdNETPAYSUMMARY.setScale(4, RoundingMode.HALF_UP);
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "NETPAY", bdNETPAYSUMMARY));
+	
+	try {
+		delegator.storeAll(listPayrollPeriodSummary);
+	} catch (GenericEntityException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
 	
 		Writer out;
@@ -127,6 +167,45 @@ public class PayrollProcess {
 		}
 		return "";
 	}
+	private static GenericValue createSummaryToSave(Delegator delegator, String payrollPeriodId, String Name, BigDecimal Amount ){
+		String payrollPeriodSummarySequenceId = delegator
+		.getNextSeqId("PayrollPeriodSummary");
+
+		GenericValue payrollPeriodSummary = delegator.makeValidValue(
+				"PayrollPeriodSummary", UtilMisc.toMap(
+						"payrollPeriodSummaryId",
+						payrollPeriodSummarySequenceId, "payrollPeriodId",
+						payrollPeriodId, "elementName", Name, "TotalAmount",
+						Amount));
+		try {
+			payrollPeriodSummary = delegator
+					.createSetNextSeqId(payrollPeriodSummary);
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}
+		return payrollPeriodSummary;
+	}
+	
+	private static void deletePayrollPeriodSummary(Delegator delegator, String payrollPeriodId) {
+		// TODO Auto-generated method stub
+		List<GenericValue> PayrollPeriodSummaryELI = null;
+		
+		try {
+			PayrollPeriodSummaryELI = delegator.findList("PayrollPeriodSummary",
+					EntityCondition.makeCondition("payrollPeriodId", payrollPeriodId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			delegator.removeAll(PayrollPeriodSummaryELI);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 
 	private static void manageBalances(GenericValue employee,
 			String staffPayrollId, Delegator delegator) {
@@ -295,6 +374,11 @@ public class PayrollProcess {
 		BigDecimal bdTotRelief = BigDecimal.ZERO;
 		BigDecimal bdTotDeductions = BigDecimal.ZERO;
 		BigDecimal bdNetPay = BigDecimal.ZERO;
+		bdNSSFSUMMARY = BigDecimal.ZERO;
+		bdNHIFSUMMARY = BigDecimal.ZERO;
+		bdPAYESUMMARY = BigDecimal.ZERO;
+		bdNETPAYSUMMARY = BigDecimal.ZERO;
+		bdPENSIONSUMMARY = BigDecimal.ZERO;
 
 		bdBasicPay = getBasicPay(employee, staffPayrollId, delegator);
 		log.info("######### Basic Pay Amount " + bdBasicPay);
@@ -328,8 +412,7 @@ public class PayrollProcess {
 			bdPAYE = bdPAYEAmount;
 		}
 
-		
-		
+		bdNHIFEmployer=bdNHIF;		
 
 		calculateInterestAmounts(employee, staffPayrollId, delegator);
 
@@ -393,6 +476,8 @@ public class PayrollProcess {
 		listSystemElements.add(createElementToSave(delegator, "NETPAY", bdNETPAY, staffPayrollId));
 		bdNHIF = bdNHIF.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "NHIF", bdNHIF, staffPayrollId));
+		bdNHIFEmployer = bdNHIFEmployer.setScale(4, RoundingMode.HALF_UP);
+		listSystemElements.add(createElementToSave(delegator, "NHIFEMPLOYER", bdNHIFEmployer, staffPayrollId));
 		bdPAYE = bdPAYE.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "PAYE", bdPAYE, staffPayrollId));
 		bdTAXABLEINCOME = bdTAXABLEINCOME.setScale(4, RoundingMode.HALF_UP);
@@ -401,10 +486,20 @@ public class PayrollProcess {
 		listSystemElements.add(createElementToSave(delegator, "TOTDEDUCTIONS", bdTOTDEDUCTIONS, staffPayrollId));
 		bdNSSFStatutory = bdNSSFStatutory.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "NSSF", bdNSSFStatutory, staffPayrollId));
+		bdNSSFEmployer = bdNSSFEmployer.setScale(4, RoundingMode.HALF_UP);
+		listSystemElements.add(createElementToSave(delegator, "NSSFEMPLOYER", bdNSSFEmployer, staffPayrollId));
 		bdNSSFVoluntary = bdNSSFVoluntary.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "NSSFVOL", bdNSSFVoluntary, staffPayrollId));
 		bdPensionAmt = bdPensionAmt.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "PENSION", bdPensionAmt, staffPayrollId));
+		bdPensionEmployer = bdPensionEmployer.setScale(4, RoundingMode.HALF_UP);
+		listSystemElements.add(createElementToSave(delegator, "PENSIONEMPLOYER", bdPensionEmployer, staffPayrollId));
+		
+		bdNSSFSUMMARY = bdNSSFSUMMARY.add(bdNSSFStatutory).add(bdNSSFVoluntary).add(bdNSSFEmployer);
+		bdNHIFSUMMARY = bdNHIFSUMMARY.add(bdNHIF).add(bdNHIFEmployer);
+		bdPENSIONSUMMARY = bdPENSIONSUMMARY.add(bdPensionAmt).add(bdPensionEmployer);
+		bdPAYESUMMARY = bdPAYESUMMARY.add(bdPAYE);
+		bdNETPAYSUMMARY = bdNETPAYSUMMARY.add(bdNETPAY);
 
 		try {
 			delegator.storeAll(listSystemElements);
@@ -892,10 +987,12 @@ public class PayrollProcess {
 
 		bdNSSFStatutory = getNSSFStatutory(employee, delegator);
 		log.info("######### NSSF Statutory " + bdNSSFStatutory);
+		bdNSSFEmployer=bdNSSFStatutory;
 		bdNSSFVoluntary = getNSSFVolAmount(employee, delegator, staffPayrollId);
 		log.info("######### NSSF Voluntary " + bdNSSFVoluntary);
 		bdPensionAmt = getPensionAmount(employee, delegator, staffPayrollId);
 		log.info("######### Pension " + bdPensionAmt);
+		log.info("######### Pension " + bdPensionEmployer);
 		bdMAX_PENSION_CONTRIBUTION = getMaxPensionContribution(employee,
 				delegator);
 		log.info("######### Max Pension " + bdMAX_PENSION_CONTRIBUTION);
@@ -960,24 +1057,49 @@ public class PayrollProcess {
 
 	private static BigDecimal getPensionAmount(GenericValue employee,
 			Delegator delegator, String staffPayrollId) {
-		List<GenericValue> nssfVolELI = null;
+		List<GenericValue> pensionELI = null;
 		BigDecimal bdPensionAmount = BigDecimal.ZERO;
 		try {
-			nssfVolELI = delegator.findList("StaffPayroll", EntityCondition
+			pensionELI = delegator.findList("StaffPayroll", EntityCondition
 					.makeCondition("staffPayrollId", staffPayrollId), null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 
-		for (GenericValue payrollConstant : nssfVolELI) {
+		for (GenericValue payrollConstant : pensionELI) {
 			// Get the amount
 
 			bdPensionAmount = getPensionPercentage(employee, delegator)
 					.multiply(bdBasicPay);
+			
+			 bdPensionEmployer=getPensionEmployerRate(delegator)
+				.multiply(bdBasicPay);
 		}
 
 		return bdPensionAmount;
+	}
+	
+	private static BigDecimal getPensionEmployerRate(Delegator delegator) {
+		BigDecimal bdPensionEmployerRate = BigDecimal.ZERO;
+		List<GenericValue> payrollElementELI = null;
+		try {
+			payrollElementELI = delegator.findList("PayrollElement",
+					EntityCondition.makeCondition("payrollElementId",
+							"PENSIONEMPLOYER"), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue payrollElem : payrollElementELI) {
+			// Get the amount
+			double x = payrollElem.getDouble(("calcRate"));
+			
+			bdPensionEmployerRate = new BigDecimal(payrollElem.getDouble("calcRate")).divide(new BigDecimal(100));
+			log.info("######### Pension Employer % " + bdPensionEmployerRate);
+		}
+
+		return bdPensionEmployerRate;
 	}
 
 	private static BigDecimal getBasicPay(GenericValue employee, String staffPayrollId,
