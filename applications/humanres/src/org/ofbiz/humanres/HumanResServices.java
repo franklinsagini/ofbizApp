@@ -548,18 +548,39 @@ GenericValue employeeLeaveType = null;
 	
 	public static String  getConfirmationDate(HttpServletRequest request,
 			HttpServletResponse response) {
-		
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String employmentStatusEnumId = (String) request.getParameter("employmentStatusEnumId");
 		Map<String, Object> result = FastMap.newInstance();
 		Date appointmentdate = null;
+		int periodBeforeConfirn=0;
 		
 		try {
 			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
+		
+		GenericValue period = null;
+	      try {
+	    	  period = delegator.findOne("Enumeration", 
+	             	UtilMisc.toMap("enumId", employmentStatusEnumId), false);
+	           	log.info("++++++++++++++period++++++++++++++++" +period);
+	             }
+	       catch (GenericEntityException e) {
+	            e.printStackTrace();;
+	       } 
+	      if (period!=null) {
+			periodBeforeConfirn=(period.getLong("periodBeforeConfirmation")).intValue();
+		} else {
+
+		}
+		
+		
+		
+		
 		LocalDate dateAppointmentDate = new LocalDate(appointmentdate);
 
-		LocalDate confirmDate = dateAppointmentDate.plusMonths(6);
+		LocalDate confirmDate = dateAppointmentDate.plusMonths(periodBeforeConfirn);
 		
 	
 		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");

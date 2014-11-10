@@ -67,7 +67,7 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 
 			if (partyId !=null && partyId !="") {
 						log.info("-----++++++-----partyId-----------------" +partyId);
-			calculateLostNonForwarded(partyId, financialYear);// call method to calculate	
+			calculateLostNonForwarded(partyId);// call method to calculate	
 			}
 			
 			
@@ -77,16 +77,14 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 	}
 
 
-	public static void calculateLostNonForwarded(String partyId, String year) {
+	public static void calculateLostNonForwarded(String partyId) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		String partyIds = partyId;
 		//   get current leave balance  //
 		
 		List<GenericValue> getApprovedLeaveSumELI = null;		
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
-					EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, year),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "COMPASSIONATE_LEAVE"),
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),EntityOperator.AND);
 
@@ -130,14 +128,14 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 		String lost=String.valueOf(lostLeaveDays);
 		
 		// Delete record if it was created before end of this year
-		deleteExistingCompassionateLost(delegator, partyId, currentYear, "COMPASSIONATE_LEAVE");
+		deleteExistingCompassionateLost(delegator, partyId, currentYear);
 		
 		GenericValue leavelog = delegator.makeValue("EmplCompassionateLost",
 				"partyId", partyId,
 				"financialYear", currentYear,
 	            "leaveTypeId", "COMPASSIONATE_LEAVE" , 
 	            "usedLeaveDays", usedLeaveDays,
-	            "allocatedLeaveDays", days,
+	            "allocatedLeaveDays", new BigDecimal(days),
 	            "lostLeaveDays", lost);
 		
 		
@@ -156,23 +154,55 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 	}
 			
 	
-	public static void deleteExistingCompassionateLost(Delegator delegator, String partyId, String currentYear, String leaveTypeId) {
+/*	public static void deleteExistingCompassionateLost(Delegator delegator, String partyId) {
 		
-		EntityConditionList<EntityExpr> leavetype = EntityCondition
-				.makeCondition(UtilMisc.toList(	EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
-					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, leaveTypeId),null),EntityOperator.AND);
+		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
+					null,null),EntityOperator.AND);
+		 List<GenericValue> ExistingCompassionateLost=null;
        try {
             
-              List<GenericValue> ExistingCarryOverLost =delegator.findList("EmplCompassionateLost", leavetype, null, null, null, false);
-              
-              for (GenericValue genericValue : ExistingCarryOverLost) {
-            	  
-            	  ExistingCarryOverLost.remove(genericValue);
-              }
+              ExistingCompassionateLost =delegator.findList("EmplCompassionateLost", leaveConditions, null, null, null, false);
+              delegator.removeAll("EmplCompassionateLost");
+             
        } catch (GenericEntityException e) {
             //return ServiceUtil.returnError("Failed. " +e.getMessage());
     	   e.printStackTrace();
-       }  
+       } 
+       
+       if(ExistingCompassionateLost!=null)
+       for (GenericValue genericValue : ExistingCompassionateLost) {
+     	  
+     	  ExistingCompassionateLost.remove(genericValue);
+       }
+       else{
+    	   
+       }
+       
+      
+}*/
+	
+public static void deleteExistingCompassionateLost(Delegator delegator, String partyId, String currentYear) {
+		
+		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),null,null),EntityOperator.AND);
+
+		try {
+			List<GenericValue> ExistingCarryOverLost  = delegator.findList("EmplCompassionateLost",
+					leaveConditions, null, null, null, false);
+			
+			for (GenericValue genericValue : ExistingCarryOverLost) {
+				ExistingCarryOverLost.remove(genericValue);
+			}
+			
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
 }
 	
 /* =========================  Generate leave balances ========================== */

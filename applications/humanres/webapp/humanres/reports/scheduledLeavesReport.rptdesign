@@ -86,6 +86,12 @@
                     <text-property name="displayName">last_name</text-property>
                     <text-property name="heading">last_name</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">employee_number</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">employee_number</text-property>
+                    <text-property name="heading">employee_number</text-property>
+                </structure>
             </list-property>
             <list-property name="filter">
                 <structure>
@@ -149,6 +155,11 @@
                     <structure>
                         <property name="position">9</property>
                         <property name="name">last_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">employee_number</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -218,6 +229,13 @@
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">employee_number</property>
+                    <property name="nativeName">employee_number</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT  REPLACE(empl_leave.leave_type_id, '_', ' '),
     empl_leave.empl_leave_reason_type_id, 
@@ -227,7 +245,8 @@
     empl_leave.thru_date,
     empl_leave.approval_status,
     Person.first_name,
-    Person.last_name 
+    Person.last_name,
+    Person.employee_number
 
   FROM empl_leave 
   INNER JOIN Person ON empl_leave.party_id = Person.party_id]]></xml-property>
@@ -479,6 +498,12 @@
                 <property name="pattern">&lt;</property>
             </structure>
         </style>
+        <style name="Uppercase" id="209">
+            <structure name="stringFormat">
+                <property name="category">></property>
+                <property name="pattern">></property>
+            </structure>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -548,6 +573,12 @@
                     <property name="name">last_name</property>
                     <text-property name="displayName">last_name</text-property>
                     <expression name="expression" type="javascript">dataSetRow["last_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">employee_number</property>
+                    <text-property name="displayName">employee_number</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["employee_number"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
@@ -634,7 +665,7 @@
                     <property name="verticalAlign">middle</property>
                     <cell id="128">
                         <label id="166">
-                            <text-property name="text">Employee Id</text-property>
+                            <text-property name="text">Payroll Number</text-property>
                         </label>
                     </cell>
                     <cell id="129">
@@ -693,8 +724,9 @@
                         </structure>
                     </list-property>
                     <cell id="138">
-                        <data id="167">
-                            <property name="resultSetColumn">party_id</property>
+                        <data id="208">
+                            <property name="style">Uppercase</property>
+                            <property name="resultSetColumn">employee_number</property>
                         </data>
                     </cell>
                     <cell id="139">

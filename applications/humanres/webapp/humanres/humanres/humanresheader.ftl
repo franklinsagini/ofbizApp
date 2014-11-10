@@ -79,14 +79,15 @@
         });
         
              
-   jQuery('input[name="appointmentdate"]').change(function(){
+   jQuery('select[name="employmentStatusEnumId"]').change(function(){
 		 
-         var appointmentdate = this.value;
+         var employmentStatusEnumId = this.value;
          var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
+         var employmentStatusEnumId= jQuery('select[name="employmentStatusEnumId"]').val();
          var reqUrl = '/humanres/control/emplConfirmDate';
           
-          if (appointmentdate.length > 0){
-         	calculateConfirmDate(reqUrl, appointmentdate);
+          if ((appointmentdate.length > 0) && (employmentStatusEnumId.length > 0)){
+         	calculateConfirmDate(reqUrl, appointmentdate, employmentStatusEnumId);
          }
         });
         
@@ -253,12 +254,12 @@
 	    });
 	    }
 	    
-	     function calculateConfirmDate(reqUrl, appointmentdate){
+	     function calculateConfirmDate(reqUrl, appointmentdate, employmentStatusEnumId){
 	    	jQuery.ajax({
 	
 	     url    : reqUrl,
 	     type   : 'GET',
-	     data   : {'appointmentdate': appointmentdate}, //here you can pass the parameters to  
+	     data   : {'appointmentdate': appointmentdate, 'employmentStatusEnumId': employmentStatusEnumId}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
 					 $('input[name="confirmationdate"]').val(data.confirmationdate);
