@@ -374,4 +374,26 @@
         <field name="submitButton" title="Save" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 	
+	<!-- NewReturnToLoans -->
+		<form name="NewReturnToLoans" type="single" target="createReturnToLoans"
+        focus-field-name="comment" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        <!-- actions>
+        	<set field="statusName" value="RETURNEDTOCUSTOMERCARE" />
+			<set field="statusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"
+				type="Integer" />
+        </actions -->
+        <actions>
+        	<set field="status" value="RETURNEDTOAPPRAISAL"  type="String"/>
+        	<set field="statusId" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanStatus(status);}"/>
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanStatusLogId"><hidden/></field>
+       	<field name="loanStatusId"><hidden value="${statusId}"/></field>
+        
+        <field name="comment" title="Comment "  widget-style="required" required-field="true"><textarea/></field>
+                
+        <field name="submitButton" title="Return" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>

@@ -58,6 +58,7 @@ under the License.
         
        
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Description"><textarea/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
     </form>
     
@@ -72,6 +73,7 @@ under the License.
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
         <field name="name"> <text></text> </field>
+        <field name="description" title="Description"><textarea/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="name"/>
@@ -578,8 +580,46 @@ under the License.
         
         <field name="minSavingsAmt" title="Minimum Savings Amount"><text size="30" maxlength="60"/></field>
         
+        
+        <field name="earnsInterest"  title="Earns Interest ?" >
+            <drop-down allow-empty="false">
+            	 <option key="NO" description="NO"/>
+                <option key="YES" description="YES"/>
+            </drop-down>
+        </field>
+        
+        <field name="interestCalculatedPeriod"  title="Interest Calculation Period" >
+            <drop-down allow-empty="true">
+            	 <option key="DAILY" description="DAILY"/>
+                <option key="MONTHLY" description="MONTHLY"/>
+                 <option key="ANNUALLY" description="ANNUALLY"/>
+            </drop-down>
+        </field>
+        
+        <field name="hasMinimumInterestEarningAmount"  title="Has Minimum Interest Earning Amount ?" >
+            <drop-down allow-empty="true">
+            	 <option key="NO" description="NO"/>
+                <option key="YES" description="YES"/>
+            </drop-down>
+        </field>
+        
         <field name="minInterestEarningAmt" title="Minimum Interest Earning Amount"><text size="30" maxlength="60"/></field>
         
+         <field name="whenToAddInterestToAccount"  title="When to Add Interest To Account" >
+            <drop-down allow-empty="true">
+            	<option key="MATURITY" description="MATURITY"/>
+                <option key="ONREQUEST" description="ONREQUEST"/>
+                <option key="MONTHLY" description="MONTHLY"/>
+                <option key="ANNUALLY" description="ANNUALLY"/>
+            </drop-down>
+        </field>   
+        
+        <field name="accountToAddInterestTo" title="Account To Add/Post Interest" 
+			required-field="false">
+			<drop-down allow-empty="true">
+					<entity-options description="${name} - ${code}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
+			</drop-down>
+		</field>    
         <field name="minInterestPercentageAboveSavingsAcct" title="Minimum % Above Savings Amount"><text size="30" maxlength="60"/></field>
      
      	<field name="discountOnBankersCheque"  title="Discount on Bankers Cheque ?" >

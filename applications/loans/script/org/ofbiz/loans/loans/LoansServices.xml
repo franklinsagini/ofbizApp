@@ -957,7 +957,20 @@ under the License.
 		<log level="info" message="AAAAAAAAAA Approved Amount in Log ${newEntity.approvedAmt}"/>
 		<log level="info" message="AAAAAAAAAA Approved Amount in Application ${loanApplication.approvedAmt}"/>
         <store-value value-field="loanApplication"/>
-    </simple-method>    
+    </simple-method>   
+    
+    
+       <simple-method method-name="createReturnToLoans" short-description="Return to Loans">
+		<call-simple-method method-name="saveReturnToCustomerCare" scope="inline"></call-simple-method>
+		
+		<!-- Update Application Status -->
+		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+			<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"/>
+		</entity-one>
+		<set field="loanApplication.loanStatusId" value="${newEntity.loanStatusId}"/>
+		<set field="loanApplication.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="loanApplication"/>
+    </simple-method> 
     <simple-method method-name="saveReturnToCustomerCare" use-transaction="true">
     	<make-value entity-name="LoanStatusLog" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>

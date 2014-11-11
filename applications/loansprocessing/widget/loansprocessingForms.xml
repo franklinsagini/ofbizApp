@@ -73,8 +73,12 @@
 			<set field="forwardedStatusName" value="FORWARDED"/>
 	   		<set field="forwardedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedStatusName);}"/> 
 		
-					<set field="statusName" value="FORWARDEDLOANS"/>
+			<set field="statusName" value="FORWARDEDLOANS"/>
 	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+		
+			<set field="returnedStatusName" value="RETURNEDTOAPPRAISAL"/>
+	   		<set field="returnedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(returnedStatusName);}"/> 
+			
 		
 			<entity-condition entity-name="LoanApplication">
 				<condition-list combine="and">
@@ -82,6 +86,8 @@
 						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedLoansStatusId}"></condition-expr>
 						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedApprovalStatusId}"></condition-expr>
 						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${returnedStatusId}"></condition-expr>
+						
 					</condition-list>
 					
 				</condition-list>				
@@ -137,6 +143,10 @@
 		<field name="paymentMethodTypeId" title="Payment Method">
 			<display-entity description="${description}"
 				entity-name="PaymentMethodType"></display-entity>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
 		</field>
 
 		<!-- field name="loanSecurityId" title="LoanSecurity"> <drop-down allow-empty="true"> 

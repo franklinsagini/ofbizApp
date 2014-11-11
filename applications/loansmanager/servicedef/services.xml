@@ -11,11 +11,20 @@
         </description>
     </service> 
     
-        <service name="createLoanApproval" engine="simple" default-entity-name="LoanStatusLog"
+    <service name="createLoanApproval" engine="simple" default-entity-name="LoanStatusLog"
              location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createLoanApproval" auth="true">
         <description>Loan Approval</description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>   
+    
+    <service name="createReturnToLoans" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createReturnToLoans" auth="true">
+        <description>Loan To Loans Processing</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service> 
+    
+    
     
 </services>
