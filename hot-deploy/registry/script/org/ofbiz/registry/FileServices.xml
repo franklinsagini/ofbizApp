@@ -103,23 +103,21 @@
 
 	</simple-method>
 
+	<!-- ==========================FILE REQUEST================================== -->
 	
 	<simple-method method-name="requestfiles" short-description="request File ">
 		 <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
-		 <set field="fileActionTypeId" value="${newEntity.fileActionTypeId}"/>
+		 
 		 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
-		 
-		 <entity-one entity-name="RegistryFileActionTypes" value-field="fileActionType">
-		 	<field-map field-name="fileActionTypeId" from-field="fileActionTypeId"/>
-		 </entity-one>
 
 		 <!-- Get status -->
-		 <set field="registryFile.status" value="${fileActionType.status}"/>
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		 <set field="registryFile.status" value="REQUESTED"/>
 		<store-value value-field="registryFile" />
 	</simple-method>
 	
@@ -133,9 +131,81 @@
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Request"/>
 		
 		<create-value value-field="newEntity" />
 	</simple-method>
+	
+	<!-- ==========================FILE ISSUE================================== -->
+	
+	<simple-method method-name="issuefiles" short-description="request File ">
+		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
+		 
+		 <set field="partyId" value="${newEntity.partyId}"/>
+		 
+		 
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+
+		 <!-- Get status -->
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		 <set field="registryFile.status" value="ISSUED"/>
+		<store-value value-field="registryFile" />
+	</simple-method>
+	
+	<simple-method method-name="saveIssueAction">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActions" field="actionId" />
+		<set from-field="actionId" field="newEntity.actionId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Issue"/>
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+
+	
+	<!-- ==========================FILE RELEASE================================== -->
+	
+	<simple-method method-name="releasefiles" short-description="request File ">
+		 <call-simple-method method-name="saveReleaseAction" scope="inline"></call-simple-method>
+		 
+		 <set field="partyId" value="${newEntity.partyId}"/>
+		 
+		 
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+
+		 <!-- Get status -->
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		 <set field="registryFile.status" value="AVAILABLE"/>
+		<store-value value-field="registryFile"/>
+	</simple-method>
+	
+	<simple-method method-name="saveReleaseAction">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActions" field="actionId" />
+		<set from-field="actionId" field="newEntity.actionId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Release"/>
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	
+	 
 	
 	
   	<!-- update Budget Status -->

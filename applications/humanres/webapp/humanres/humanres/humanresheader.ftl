@@ -14,12 +14,15 @@
          	calculateBalance(reqUrl, leaveTypeId, partyId,appointmentdate);
                   }
              }
-         if(leaveTypeId !="ANNUAL_LEAVE"){
-         	jQuery('input[name="approvedLeaveSumed"]').val("");
-         	jQuery('input[name="accruedLeaveDays"]').val("");
-         	jQuery('input[name="leaveBalance"]').val("");
-         	jQuery('input[name="leaveDuration"]').val("");
-         }
+             else if (leaveTypeId =="COMPASSIONATE_LEAVE"){
+         var partyId =  jQuery('input[name="partyId"]').val();
+         
+         var reqUrl = '/humanres/control/emplCompassionateleavebalance';
+          if ((partyId.length > 0) && (leaveTypeId.length > 0)){
+         	calculateCompassionateLeaveBalance(reqUrl, leaveTypeId, partyId)
+                  }
+             }
+         
          
         });
 
@@ -62,15 +65,29 @@
          }
         });
         
-             
-   jQuery('input[name="appointmentdate"]').change(function(){
+        
+        jQuery('input[name="callBackDate"]').change(function(){
 		 
-         var appointmentdate = this.value;
+         var callBackDate = this.value;
+         var callBackDate =  jQuery('input[name="callBackDate"]').val();
+         var leaveId =  jQuery('input[name="leaveId"]').val();
+         var reqUrl = '/humanres/control/getNewLeaveDuration';
+          
+          if (callBackDate.length > 0){
+         	calculateNewLeaveDuration(reqUrl, callBackDate, leaveId);
+         }
+        });
+        
+             
+   jQuery('select[name="employmentStatusEnumId"]').change(function(){
+		 
+         var employmentStatusEnumId = this.value;
          var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
+         var employmentStatusEnumId= jQuery('select[name="employmentStatusEnumId"]').val();
          var reqUrl = '/humanres/control/emplConfirmDate';
           
-          if (appointmentdate.length > 0){
-         	calculateConfirmDate(reqUrl, appointmentdate);
+          if ((appointmentdate.length > 0) && (employmentStatusEnumId.length > 0)){
+         	calculateConfirmDate(reqUrl, appointmentdate, employmentStatusEnumId);
          }
         });
         
@@ -138,6 +155,26 @@
 	              }
 	    });
 	    } 
+	    
+	     function calculateCompassionateLeaveBalance(reqUrl, leaveTypeId, partyId){
+	    jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
+					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
+					 $('input[name="leaveBalance"]').val(data.leaveBalance);
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    } 
 
 	  function calculateDuration(reqUrl, fromDate, thruDate){
 	    jQuery.ajax({
@@ -172,6 +209,26 @@
 	    });
 	    }
 	    
+	    
+	    function calculateNewLeaveDuration(reqUrl, callBackDate, leaveId){
+	    	jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'callBackDate': callBackDate, 'leaveId': leaveId}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+					  
+					   $('input[name="newDuration"]').val(data.newDuration);
+					  
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    }
+	    
 	   
 	    function calculateLeaveEndDate(reqUrl, fromDate, leaveDuration){
 	    	jQuery.ajax({
@@ -197,12 +254,12 @@
 	    });
 	    }
 	    
-	     function calculateConfirmDate(reqUrl, appointmentdate){
+	     function calculateConfirmDate(reqUrl, appointmentdate, employmentStatusEnumId){
 	    	jQuery.ajax({
 	
 	     url    : reqUrl,
 	     type   : 'GET',
-	     data   : {'appointmentdate': appointmentdate}, //here you can pass the parameters to  
+	     data   : {'appointmentdate': appointmentdate, 'employmentStatusEnumId': employmentStatusEnumId}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
 					 $('input[name="confirmationdate"]').val(data.confirmationdate);
@@ -416,7 +473,6 @@
 							GenderState = data.GenderState;
 							NoticePeriodState =  data.NoticePeriodState;
 							durationState = data.durationState;
-
 			               },
 			      error : function(errorData){
 
@@ -441,13 +497,10 @@
     		message = message+" Given Duration not allowed for this type of leave!!";
     		isValid = false;
     	}
-    	if ((leaveDuration.lenght<1)){
-    		message = message+" Leave duration not provided!!";
-    		isValid = false;
-    	}
+    	
     	
 
-		
+    	
     	if (!isValid){
     		alert(message);
     	} else{
@@ -462,6 +515,9 @@
     
     
     
+    
+    
+  
     
     
    </script>

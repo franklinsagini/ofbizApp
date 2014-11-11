@@ -7,12 +7,13 @@
 
 	<form name="EditFileTypeForm" type="single" target="createfiletype"	focus-field-name="name" header-row-style="header-row"
 		default-table-style="basic-table" default-map-name="filetypeContext">
-		<alt-target use-when="filetypeContext!=null" target="updatefileType" />
+		
 		<actions>
 			<entity-condition entity-name="RegistryFileType" list="filetypeList">
 				<order-by field-name="fileTypeId" />
 			</entity-condition>
 		</actions>
+		<alt-target use-when="filetypeContext!=null" target="updatefileType" />
 		<field name="fileTypeId" title="Document Type Id"><hidden /></field>
 		<field name="fileTypeId" title="Document Type Id" use-when="filetypeContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
 		<field name="fileType" title="Document Type"><text size="45"></text></field>
@@ -37,12 +38,13 @@
 	
 	<form name="EditFileActionTypesForm" type="single" target="createfileActionTypes"	focus-field-name="name" header-row-style="header-row"
 		default-table-style="basic-table" default-map-name="fileActionTypesContext">
-		<alt-target use-when="fileActionTypesContext!=null" target="updatefileActionTypes" />
+		
 		<actions>
 			<entity-condition entity-name="RegistryFileActionTypes" list="fileactionList">
 				<order-by field-name="fileActionTypeId" />
 			</entity-condition>
-		</actions>		
+		</actions>	
+		<alt-target use-when="fileActionTypesContext!=null" target="updatefileActionTypes" />	
 		<field name="fileActionTypeId"><hidden /></field>
 		<field name="fileActionTypeId" use-when="fileActionTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
 		<field name="fileActionType" title="File Action Type"><text size="45"></text></field>
@@ -73,6 +75,7 @@
 	
    
 	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
+		 <!-- <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field> -->
 		 <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field>
 		  <field name="memberOrEmployee" title="Select File Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
@@ -204,9 +207,9 @@
             </entity-condition>
 		</actions>
 		<field name="actionId"><display /></field>
-    	<field name="fileActionTypeId" title="Action Type"><display-entity entity-name="RegistryFileActionTypes" description="${fileActionType}"></display-entity></field>
+    	<field name="fileActionTypeId" title="Action Type"><display/></field>
 		<field name="partyId" title="File Folio Number"><display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity></field>
-		<field name="actionBy"><display /></field>
+		<field name="actionBy"><display-entity entity-name="Person" key-field-name="partyId" description="${first_name} ${last_name}"></display-entity></field>
 		<field name="actionDate"><display /></field>
 	</form>
 
@@ -272,6 +275,9 @@
             
         </actions>
         <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
+        <field name="creationDate"><hidden/></field>
+         <field name="actionBy"><hidden/></field>
+        <field name="creator"><hidden/></field>
         <field name="addDocument" title="Add Document" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Add Document" target="editfileURL">
 				<parameter param-name="partyId" />
@@ -284,8 +290,22 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-        <field name="reqfile" title="File Actions" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Other File Actions" target="reqfileURL">
+        <field name="requstFile" title="-" widget-style="buttontext" use-when="${status=='AVAILABLE'}">
+			<hyperlink also-hidden="false" description="Request File" target="requestfiles">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+			</hyperlink>
+		</field>
+		 <field name="issueFile" title="-" widget-style="buttontext" use-when="${status=='REQUESTED'}">
+			<hyperlink also-hidden="false" description="Issue File" target="issuefiles">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+			</hyperlink>
+		</field>
+		 <field name="releaseFile" title="-" widget-style="buttontext" use-when="${status=='ISSUED'}">
+			<hyperlink also-hidden="false" description="Return To Registry" target="releasefiles">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 

@@ -6,6 +6,8 @@ import java.io.Writer;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +18,22 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDateTime;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
+
+
+
 
 
 
@@ -38,9 +48,9 @@ import com.google.gson.Gson;
  *         employeeNumber
  * */
 public class LeaveApplicationValidation {
+	
 
-	public static String leaveValidation(HttpServletRequest request,
-			HttpServletResponse response) {
+	public static String leaveValidation(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
 
 		String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
@@ -54,11 +64,23 @@ public class LeaveApplicationValidation {
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
+		
+		/*if (leaveTypeId=="ANNUAL_LEAVE") {*/
+			result.put("GenderState", getGenderState(leaveTypeId, partyId));
+			result.put("NoticePeriodState",	getNoticePeriodState(leaveTypeId, fromDate));
+			result.put("durationState", getLeaveDurationState(leaveTypeId, leaveDuration));
+			/*result.put("onceAyearState", getLeaveOnceAyearState(partyId, fromDate));*/
+	  /*   } 
+		
+		else if(leaveTypeId!="ANNUAL_LEAVE") {
+			result.put("GenderState", getGenderState(leaveTypeId, partyId));
+			result.put("NoticePeriodState",	getNoticePeriodState(leaveTypeId, fromDate));
+			result.put("durationState", getLeaveDurationState(leaveTypeId, leaveDuration));
+			result.put("onceAyearState", "VALID");
+		}
+		*/
 
-		result.put("GenderState", getGenderState(leaveTypeId, partyId));
-		result.put("NoticePeriodState",
-				getNoticePeriodState(leaveTypeId, fromDate));
-		result.put("durationState", getLeaveDurationState(leaveTypeId, leaveDuration));
+		
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -140,33 +162,6 @@ public class LeaveApplicationValidation {
 
 	}
 
-	/*
-	 * public static String getIsDeductableState(String leaveTypeId) { String
-	 * isDeductedFromAnnual=null; Delegator delegator =
-	 * DelegatorFactoryImpl.getDelegator(null);
-	 * 
-	 * List<GenericValue> leaveELI = null; GenericValue leaveType = null; try {
-	 * leaveELI = delegator.findList("EmplLeaveType ",
-	 * EntityCondition.makeCondition("leaveTypeId", leaveTypeId), null, null,
-	 * null, false);
-	 * 
-	 * 
-	 * if ((leaveELI.size() > 0)){ leaveType = leaveELI.get(0);
-	 * isDeductedFromAnnual=leaveType.getString("isDeductedFromAnnual");
-	 * 
-	 * 
-	 * } } catch (GenericEntityException e2) { e2.printStackTrace(); }
-	 * 
-	 * 
-	 * 
-	 * String state=""; if (isDeductedFromAnnual.equalsIgnoreCase("Y")) {
-	 * 
-	 * state="OK";
-	 * 
-	 * } else { state="NOTOK"; } return state;
-	 * 
-	 * }
-	 */
 	public static String getNoticePeriodState(String leaveTypeId,
 			Date fromDatefd) {
 
@@ -244,4 +239,62 @@ public class LeaveApplicationValidation {
 		return state;
 
 	}
+	
+	
+		public static String getLeaveOnceAyearState(String partyId, Date from) {
+
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			LocalDateTime today = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
+			int thisYear = today.getYear();
+			String currentYear = Integer.toString(thisYear);
+			String userYear=null;
+			Date fromDate=null;
+			int approvedLeaveYear=0;
+			
+			 List<GenericValue> getLeaveELI=null;
+			 GenericValue leave = null;
+			
+			EntityConditionList<EntityExpr> getLeave = EntityCondition
+					.makeCondition(UtilMisc.toList(
+//					    EntityCondition.makeCondition("approvalStatus", EntityOperator.EQUALS, "Approved"),
+						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
+						EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),null),EntityOperator.AND);
+
+			try {
+				List<String> orderByList = new ArrayList<String>();
+				orderByList.add("-leaveId");
+				
+				
+				 getLeaveELI = delegator.findList("EmplLeave",
+						getLeave, null, null, null, false);
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+				
+			}
+			
+				if ((getLeaveELI.size() > 0)) {
+					leave = getLeaveELI.get(0);
+					fromDate = leave.getDate("fromDate");
+					String LeaveYear=leave.getString("financialYear");
+					approvedLeaveYear=Integer.valueOf(LeaveYear);
+
+				}
+     
+			LocalDateTime fromb = new LocalDateTime(from);
+			int userfrom = fromb.getYear();
+			userYear = Integer.toString(userfrom);
+			String state = "";
+			if (userfrom==approvedLeaveYear) {
+
+				state = "INVALID";
+
+			} else if(fromb.isBefore(today)) {
+				state = "PAST";
+			
+		  } else {
+			state = "VALID";
+		  }
+			return state;
+
+		}
 }

@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.0.v201405191524 Build &lt;4.4.0.v20140606-1451></property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="Payroll_No" id="9">
+            <text-property name="promptText">Enter Payroll Number</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataSetName">staffSkill</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["payroll_no"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["payroll_no"]</expression>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <property name="mustMatch">false</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="staffSkills" id="7">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://127.0.0.1/ofbiz</property>
+            <property name="odaUser">ofbiz</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b2ZiaXo=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="staffSkill" id="8">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">party_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">party_id</text-property>
+                    <text-property name="heading">party_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">skill_type_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">skill_type_id</text-property>
+                    <text-property name="heading">skill_type_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">skill</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">skill</text-property>
+                    <text-property name="heading">skill</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">first_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">first_name</text-property>
+                    <text-property name="heading">first_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">last_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">last_name</text-property>
+                    <text-property name="heading">last_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">payroll_no</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">payroll_no</text-property>
+                    <text-property name="heading">payroll_no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">staff_party_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">staff_party_id</text-property>
+                    <text-property name="heading">staff_party_id</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">payroll</property>
+                    <property name="paramName">Payroll_No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">party_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">skill_type_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">skill</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">first_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">last_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">payroll_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">staff_party_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">staffSkills</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">party_id</property>
+                    <property name="nativeName">party_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">skill_type_id</property>
+                    <property name="nativeName">skill_type_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">skill</property>
+                    <property name="nativeName">skill</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">first_name</property>
+                    <property name="nativeName">first_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">last_name</property>
+                    <property name="nativeName">last_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">payroll_no</property>
+                    <property name="nativeName">payroll_no</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">staff_party_id</property>
+                    <property name="nativeName">staff_party_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select 
+party_skill.party_id,
+party_skill.skill_type_id,
+skill_type.description as skill,
+Person.first_name,
+Person.last_name,
+Person.employee_number as payroll_No,
+Person.party_id as staff_party_id
+from 
+party_skill
+INNER JOIN skill_type ON skill_type.skill_type_id 
+    = party_skill.skill_type_id
+INNER JOIN Person ON Person.party_id 
+    = party_skill.party_id
+
+WHERE
+Person.employee_number = ?
+    ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="10">
+            <property name="dataSet">staffSkill</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">party_id</property>
+                    <text-property name="displayName">party_id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["party_id"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">skill_type_id</property>
+                    <text-property name="displayName">skill_type_id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["skill_type_id"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">skill</property>
+                    <text-property name="displayName">skill</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["skill"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">first_name</property>
+                    <text-property name="displayName">first_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["first_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">last_name</property>
+                    <text-property name="displayName">last_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["last_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">payroll_no</property>
+                    <text-property name="displayName">payroll_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["payroll_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">staff_party_id</property>
+                    <text-property name="displayName">staff_party_id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["staff_party_id"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="20"/>
+            <column id="21"/>
+            <header>
+                <row id="24">
+                    <cell id="25">
+                        <label id="36">
+                            <text-property name="text">Staff Payroll Number</text-property>
+                        </label>
+                    </cell>
+                    <cell id="26">
+                        <data id="33">
+                            <property name="resultSetColumn">payroll_no</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="27">
+                    <property name="height">0.53125in</property>
+                    <cell id="28">
+                        <label id="37">
+                            <text-property name="text">Staff Names</text-property>
+                        </label>
+                    </cell>
+                    <cell id="29">
+                        <data id="34">
+                            <property name="resultSetColumn">first_name</property>
+                        </data>
+                        <data id="35">
+                            <property name="resultSetColumn">last_name</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="30">
+                    <cell id="31"/>
+                    <cell id="32"/>
+                </row>
+                <row id="11">
+                    <property name="textAlign">left</property>
+                    <cell id="12">
+                        <label id="22">
+                            <text-property name="text">Staff Skills </text-property>
+                        </label>
+                    </cell>
+                    <cell id="13"/>
+                </row>
+            </header>
+            <detail>
+                <row id="14">
+                    <cell id="15">
+                        <data id="23">
+                            <property name="resultSetColumn">skill</property>
+                        </data>
+                    </cell>
+                    <cell id="16"/>
+                </row>
+            </detail>
+            <footer>
+                <row id="17">
+                    <cell id="18"/>
+                    <cell id="19"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

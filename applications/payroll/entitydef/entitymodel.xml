@@ -44,7 +44,9 @@ under the License.
         <field name="name" type="name"></field>
         <field name="elementType" type="name"></field>
         <field name="hasBalance" type="indicator"></field>
-        <field name="iscalulated" type="indicator"></field>        
+        <field name="iscalulated" type="indicator"></field>
+        <field name="calcRate" type="floating-point"></field>
+        <field name="calcField" type="id"></field>      
         <field name="relief" type="indicator"></field>
         <field name="cummulative" type="indicator"></field>
         <field name="employercontribution" type="indicator"></field>
@@ -63,13 +65,14 @@ under the License.
         <field name="interestfrequency" type="name"></field>
         <field name="payslipdisplay" type="name"></field>
         <field name="isbold" type="indicator"></field>
-        <field name="parentId" type="id"></field>
         <field name="childId" type="id"></field>
-        <field name="elementCode" type="name"></field>
+        <field name="elementCode" type="name"></field>        
+        <field name="lowInterestBenefitRate" type="floating-point"></field>
+        
         
         <prim-key field="payrollElementId"/>
         <relation type="one" fk-name="parent_Element" rel-entity-name="PayrollElement">
-            <key-map field-name="parentId"/>
+            <key-map field-name="calcField"/>
         </relation>
         <relation type="one" fk-name="child_Element" rel-entity-name="PayrollElement">
             <key-map field-name="childId"/>
@@ -326,6 +329,32 @@ under the License.
 		<field name="display" type="indicator"></field>
 		<prim-key field="payslipMessageId"/>
 	</entity>
+	
+	<entity entity-name="EmployerDetails" package-name="org.ofbiz.payroll"
+		title="Employer Details">
+		<field name="employerDetailsId" type="id-ne"></field>
+		<field name="employer" type="name"></field>
+		<field name="pinNumber" type="long-varchar"></field>
+		<field name="nssfNumber" type="long-varchar"></field>		
+		<field name="nhifNumber" type="long-varchar"></field>
+		<prim-key field="employerDetailsId"/>
+	</entity>
+	
+	<entity entity-name="PayrollPeriodSummary" package-name="org.ofbiz.payroll"
+		title="Payroll Period Summary">
+		<field name="payrollPeriodSummaryId" type="id-ne"></field>
+		<field name="payrollPeriodId" type="id"></field>
+		<field name="elementName" type="name"></field>
+        <field name="TotalAmount" type="currency-amount"></field> 
+		<prim-key field="payrollPeriodSummaryId"/>
+		 <relation type="one" fk-name="management_period" rel-entity-name="PayrollPeriod">
+            <key-map field-name="payrollPeriodId"/>
+        </relation>
+         <relation type="one" fk-name="management_element" rel-entity-name="PayrollElement">
+            <key-map field-name="payrollElementId"/>
+        </relation>
+	</entity>
+	
         
             
 	
