@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of InterestManagement Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+    <entity entity-name="FixedDepositContract" package-name="org.ofbiz.interestmanagement" title="FixedDepositContract Entity">
+     		<field name="fixedDepositContractId" type="id-vlong-int"></field>
+     		
+     		<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		
+     		
+     		<field name="partyId" type="id-vlong-int"></field>
+     		<field name="memberAccountId" type="id-vlong-int"></field>
+     		
+     		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+     		<field name="interestRatePA" type="fixed-point" enable-audit-log="true"></field>
+     		<field name="periodInMonths" type="numeric" enable-audit-log="true"></field>
+     		
+     		<field name="startDate" type="date-time"></field>
+     		<field name="endDate" type="date-time"></field>
+     		
+     		<field name="closed" type="name"></field>
+     		<field name="closingType" type="name"></field> <!-- MATURITY, REQUEST -->
+     		<field name="closedDate" type="date-time"></field>
+     		<field name="amountEarned" type="fixed-point"></field>
+     		
+			
+
+			<prim-key field="fixedDepositContractId"/>
+
+    	<relation type="one" fk-name="FixedDepositContract_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+
+        <relation type="one" fk-name="FixedDepositContract_MEMBERACCOUNT" rel-entity-name="MemberAccount">
+        <key-map field-name="memberAccountId"/>
+      </relation>
+
+     </entity>
+
+	    <entity entity-name="FixedDepositContractEarning" package-name="org.ofbiz.interestmanagement" title="FixedDepositContractEarning Entity">
+     		<field name="fixedDepositContractEarningId" type="id-vlong-int"></field>
+     		<field name="fixedDepositContractId" type="id-vlong-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		
+     		<field name="amount" type="fixed-point"></field>
+      		<field name="dateEarned" type="date-time"></field>
+     		
+ 
+			<prim-key field="fixedDepositContractEarningId"/>
+
+    	<relation type="one" fk-name="FixedDepositContractEarning_MEMBER" rel-entity-name="FixedDepositContract">
+            <key-map field-name="fixedDepositContractId"/>
+        </relation>
+     </entity>
+     
+     <!-- Savings Type Contract -->
+     
+       <entity entity-name="SavingsTypeContract" package-name="org.ofbiz.interestmanagement" title="SavingsTypeContract Entity">
+     		<field name="savingsTypeContractId" type="id-vlong-int"></field>
+     		<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		
+     		
+     		<field name="partyId" type="id-vlong-int"></field>
+     		<field name="memberAccountId" type="id-vlong-int"></field>
+     		
+     		<field name="interestRatePA" type="fixed-point" enable-audit-log="true"></field>
+     		
+     		<field name="startDate" type="date-time"></field>
+     		<field name="endDate" type="date-time"></field>
+     		
+     		<field name="closed" type="name"></field>
+     		<field name="closingType" type="name"></field> <!-- MATURITY, REQUEST -->
+     		<field name="closedDate" type="date-time"></field>
+     		<field name="amountEarned" type="fixed-point"></field>
+     		
+			
+
+			<prim-key field="savingsTypeContractId"/>
+
+    	<relation type="one" fk-name="SavingsTypeContract_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+
+        <relation type="one" fk-name="SavingsTypeContract_MEMBERACCOUNT" rel-entity-name="MemberAccount">
+        <key-map field-name="memberAccountId"/>
+      </relation>
+
+     </entity>
+
+	    <entity entity-name="SavingsTypeContractEarning" package-name="org.ofbiz.interestmanagement" title="SavingsTypeContractEarning Entity">
+     		<field name="savingsTypeContractEarningId" type="id-vlong-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		<field name="savingsTypeContractId" type="id-vlong-int"></field>
+     		
+     		
+     		
+      		<field name="dateEarned" type="date-time"></field>
+      		<field name="baseAmount" type="fixed-point"></field>
+      		<field name="earnedAmount" type="fixed-point"></field>
+     		
+ 
+ 			<field name="isPosted" type="name"></field>
+ 			<field name="postedDate" type="date-time"></field>
+			<prim-key field="savingsTypeContractEarningId"/>
+
+    	<relation type="one" fk-name="SavingsTypeContractEarning_MEMBER" rel-entity-name="FixedDepositContract">
+            <key-map field-name="savingsTypeContractId"/>
+        </relation>
+     </entity>
+     
+</entitymodel>
