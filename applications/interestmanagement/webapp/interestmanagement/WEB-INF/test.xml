@@ -1,22 +1,23 @@
-        <service name="createSavingsTypeContract" engine="simple" default-entity-name="SavingsTypeContract"
-             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="createSavingsTypeContract" auth="true">
-        <description>Create SavingsTypeContract</description>
-        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="true"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
+    <simple-method method-name="createSavingsTypeContract" short-description="Create SavingsTypeContract">
+        <make-value entity-name="SavingsTypeContract" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="SavingsTypeContract"></set>
+        <set field="newEntity.savingsTypeContractId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
     
-   
+     <simple-method method-name="updateSavingsTypeContract" short-description="Update SavingsTypeContract">
+        <entity-one entity-name="SavingsTypeContract" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
     
-    <service name="updateSavingsTypeContract" engine="simple" default-entity-name="SavingsTypeContract"
-             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="updateSavingsTypeContract" auth="true">
-        <description>Update SavingsTypeContract</description>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
-	
-	<service name="deleteSavingsTypeContract" engine="simple" default-entity-name="SavingsTypeContract"
-             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="deleteSavingsTypeContract" auth="true">
-        <description>Delete SavingsTypeContract</description>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-    </service>
+    <simple-method method-name="deleteSavingsTypeContract" short-description="Delete SavingsTypeContract">
+        <entity-one entity-name="SavingsTypeContract" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
