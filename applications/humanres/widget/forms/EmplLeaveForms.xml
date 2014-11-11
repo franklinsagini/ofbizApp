@@ -94,10 +94,10 @@
 		<field name="carryOverLeaveDays" title="Carry Over Leave Days">
 			<display />
 		</field>		
-		<field name="resetLeaveDays" title="Reset Leave Days">
+		<!-- <field name="resetLeaveDays" title="Reset Leave Days">
 			<display />
 		</field>
-		
+		 -->
 	</form>	
 	<!-- <form name="ListLeaveBalances" list-name="listIt" type="list"
 		odd-row-style="alternate-row" header-row-style="header-row-2"
@@ -197,7 +197,37 @@
 			<display />
 		</field>
 		
+		<field name="resetAnnualLost" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
+			<hyperlink also-hidden="false" description="Reset Annual Leave Days Lost"
+				target="resetStaffAnnualLostLeaveDays">
+				<parameter param-name="annualLostLeaveDays" /> 
+				<parameter param-name="annualAvailableLeaveDays" /> 
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field> 
+
 	</form>
+	
+	
+	
+	
+  <form name="ResetStaffLeaveDaysLost" type="single" target="updateAnnualLeaveBalance"
+		default-map-name="updateAnnualLeaveBalanceContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+		 <set field="availableLeaveDays" from-field="parameters.annualAvailableLeaveDays"/>
+		 <set field="lostLeaveDays" from-field="parameters.annualLostLeaveDays"/>
+        </actions>
+
+		
+		<field name="partyId" title="Staff:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="availableLeaveDays"  title="Current Leave Balance (Days):"><display /></field>
+		<field name="lostLeaveDays" title="Leave Days Lost:"><display/></field>
+		<field name="annualLeaveDaysLost" title="Number Of Leave Days To Reset:"><text/></field>
+		
+		 <field name="submitButton" title="Reset Leave Days" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
 	
 	
 	

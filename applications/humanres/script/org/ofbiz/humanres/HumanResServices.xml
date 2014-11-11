@@ -1268,6 +1268,26 @@
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
     </simple-method>
     
+     <!-- ==============================RESET STAFF LOST LEAVE DAYS================================== -->
+     <simple-method method-name="updateAnnualLeaveBalanceNOT"
+        short-description="Reject Employee Leave">
+        <entity-one entity-name="LeaveBalances" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lost" from-field="lookedUpValue.lostLeaveDays" type="String"/>
+        <set field="bal" from-field="lookedUpValue.availableLeaveDays" type="String"/>
+        <set field="lookedUpValue.availableLeaveDays" value="${bsh:org.ofbiz.humanres.Leave.getValuesForAnnualLeaveReset(bal,lost);}" />
+        <set field="lookedUpValue.lostLeaveDays" value="0" type="Double"/>
+        <store-value value-field="lookedUpValue" />
+    </simple-method>
+    
+    <simple-method method-name="updateAnnualLeaveBalance"
+        short-description="Reject Employee Leave">
+         <make-value value-field="newEntity" entity-name="AnnualLeaveBalancesReset" />
+        <set-pk-fields map="parameters" value-field="newEntity" />
+        <set-nonpk-fields map="parameters" value-field="newEntity" />
+        <create-value value-field="newEntity" />
+    </simple-method>
+    
     
     
     <!-- ==============================REJECT LEAVE WITH REASON================================== -->

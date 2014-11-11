@@ -30,7 +30,7 @@
 		 
          var fromDate = this.value;
           var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
-        if(leaveTypeId == "ANNUAL_LEAVE"){        
+        if((leaveTypeId == "ANNUAL_LEAVE")||(leaveTypeId == "COMPASSIONATE_LEAVE")){        
          var thruDate =  jQuery('input[name="thruDate"]').val();
          var reqUrl = '/humanres/control/emplleaveduration';
           if ((fromDate.length > 0) && (thruDate.length > 0)){
@@ -111,7 +111,7 @@
 		 
          var leaveDuration = this.value;
          var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
-         if (leaveTypeId =="ANNUAL_LEAVE"){        
+         if ((leaveTypeId == "ANNUAL_LEAVE")||(leaveTypeId == "COMPASSIONATE_LEAVE")){        
         var fromDate =  jQuery('input[name="fromDate"]').val();
         var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
         var diff = leaveDuration - leaveBalance;
@@ -318,7 +318,7 @@
 	    }
 	    
 	   
-	   /** ==================EMPLOYEE VALIDATION ==========================================**/
+	   /** ==================EMPLOYEE REGISTRATION VALIDATION ==========================================**/
 	   
 	      function employeeRegistrationFormValidation(){
 		/** alert(' Checking for unique fields ... '); **/
@@ -438,6 +438,120 @@
     }
     
     
+    
+     /** ==================EMPLOYEE UPDATE VALIDATION ==========================================**/
+	   
+	      function employeeUpdateFormValidation(){
+		/** alert(' Checking for unique fields ... '); **/
+		var nationalIDNumber = jQuery('input[name="nationalIDNumber"]').val();
+    	var pinNumber  = jQuery('input[name="pinNumber"]').val();
+		var mobNo = jQuery('input[name="mobNo"]').val();
+    	var emailAddress  = jQuery('input[name="emailAddress"]').val();
+		var socialSecurityNumber = jQuery('input[name="socialSecurityNumber"]').val();
+    	var nhifNumber  = jQuery('input[name="nhifNumber"]').val();
+		var passportNumber = jQuery('input[name="passportNumber"]').val();
+
+    	var isValid = true;
+    	var nationalIDNumberState = '';
+    	var pinNumberState = '';
+    	var passportNumberState = '';
+    	var mobileNumberState = '';
+		var nhifNumberState = '';
+    	var socialSecurityNumberState = '';
+		var emailAddressState = '';
+		var idNumberSize = '';
+
+    	var reqUrl = '/humanres/control/employeeUpdateFormValidation';
+
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'nationalIDNumber': nationalIDNumber, 'pinNumber': pinNumber, 'mobNo': mobNo, 'emailAddress': emailAddress, 'socialSecurityNumber': socialSecurityNumber, 'nhifNumber': nhifNumber, 'passportNumber': passportNumber},
+			     success : function(data){
+
+							nationalIDNumberState = data.nationalIDNumberState;
+							pinNumberState =  data.pinNumberState;
+							passportNumberState =  data.passportNumberState;
+							mobileNumberState =  data.mobileNumberState;
+							nhifNumberState =  data.nhifNumberState;
+							socialSecurityNumberState =  data.socialSecurityNumberState;
+							emailAddressState =  data.emailAddressState;
+							idNumberSize =  data.idNumberSize;
+
+
+			               },
+			      error : function(errorData){
+
+			              alert("Some error occurred while validating Employee");
+			              }
+
+
+		});
+
+    	var message = '';
+    	if ((nationalIDNumberState == 'USED')){
+    		message = "ID Number already used, Try another one ! ";
+    		isValid = false;
+    	}
+
+		if ((pinNumberState == 'USED')){
+    		message = message+" PIN Number already used,Try another one  ! ";
+    		isValid = false;
+    	}
+
+		if ((passportNumberState == 'USED')){
+    		message = message+" Passport Number already used, Try another one  ! ";
+    		isValid = false;
+    	}
+
+		if ((mobileNumberState == 'USED')){
+    		message = message+" Mobile Number already used, Try another one  ! ";
+    		isValid = false;
+    	}
+    	
+		if ((nhifNumberState == 'USED')){
+    		message = "NHIF Number already used, Try another one  ! ";
+    		isValid = false;
+    	}
+    	
+    	
+		if ((socialSecurityNumberState == 'USED')){
+    		message = "NSSF Number already used, Try another one  ! ";
+    		isValid = false;
+    	}
+    	
+    	
+		if ((emailAddressState == 'USED')){
+    		message = "Email address already used, Try another one  ! ";
+    		isValid = false;
+    	}
+
+    	if ((idNumberSize == 'LESS')){
+    		message = message+"  ID Number must be greater or equal to 6 characters ! ";
+    		isValid = false;
+    	}
+
+    	if ((idNumberSize == 'MORE')){
+    		message = message+"  ID Number must be less or equal to 8 characters ! ";
+    		isValid = false;
+    	}
+
+
+    	if (!isValid){
+    		alert(message);
+    	} else{
+    		
+    	}
+
+
+    	return isValid;
+
+    }
+    
+    
+   
    
    
    

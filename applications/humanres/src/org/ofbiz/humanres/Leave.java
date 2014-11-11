@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
@@ -189,7 +191,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 				.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),null,null),EntityOperator.AND);
-
+/*
 		try {
 			List<GenericValue> ExistingCarryOverLost  = delegator.findList("EmplCompassionateLost",
 					leaveConditions, null, null, null, false);
@@ -201,7 +203,17 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 			
-		}
+		}*/
+		 try {
+             GenericValue ExistingCarryOverLost = delegator.findOne("EmplCompassionateLost", 
+             	UtilMisc.toMap( "partyId", partyId), false);
+             if (ExistingCarryOverLost != null && !ExistingCarryOverLost.isEmpty()) {
+            	 ExistingCarryOverLost.remove();
+             }
+       } catch (GenericEntityException e) {
+            //return ServiceUtil.returnError("Failed. " +e.getMessage());
+    	   e.printStackTrace();
+       }  
 		
 }
 	
@@ -390,6 +402,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		
 		List<GenericValue> getApprovedLeaveSumELI = null;	
 		GenericValue getAnualOpeningSumELI=null;
+		GenericValue getAnualResetDaysELI=null;
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition(
@@ -399,10 +412,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
 		
-		EntityConditionList<EntityExpr> AnnualBalanceConditions = EntityCondition.makeCondition(UtilMisc.toList(
-				    EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, 10075),
-				    EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
-					null,null),EntityOperator.AND);
+		
 
 		try {
 			getApprovedLeaveSumELI = delegator.findList("EmplLeave",
@@ -421,10 +431,21 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 			e2.printStackTrace();
 			
 		}
+		
+		try {
+			 
+			 getAnualResetDaysELI = delegator.findOne("AnnualLeaveBalancesReset", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
 		//log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
 	BigDecimal approvedLeaveSum =BigDecimal.ZERO;
 	//double  usedLeaveDays = 0;
 	BigDecimal lostLeaveDays = BigDecimal.ZERO;
+	BigDecimal annualResetLeaveDays = BigDecimal.ZERO;
 	
 	BigDecimal LeaveBalanceCarriedForward = BigDecimal.ZERO; 
 	BigDecimal LeaveDaysUsed= BigDecimal.ZERO; 
@@ -444,14 +465,23 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		//log.info("============================================================" +approvedLeaveSum);
 		
 		// ============ get accrual rate ================ //
-		if (getAnualOpeningSumELI==null) {
-			String errorMsg = "================================NOTHING FOUND HERE===============";
+		if (getAnualResetDaysELI!=null) {
+			annualResetLeaveDays=getAnualResetDaysELI.getBigDecimal("annualLeaveDaysLost");
 			
 			
 		} else {
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
+		
+		if (getAnualOpeningSumELI!=null) {
 			LeaveBalanceCarriedForward = getAnualOpeningSumELI.getBigDecimal("annualLeaveBalanceCarriedForward");
 			LeaveDaysUsed = getAnualOpeningSumELI.getBigDecimal("annualLeaveDaysUsed");
 			
+			
+		} else {
+			
+			String errorMsg = "================================NOTHING FOUND HERE===============";
 		}
 		
 		
@@ -476,12 +506,18 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
  
 	       
 		
-		if (accrualRate != null) {
+		if (accrualRate != null && carryGV != null) {
 
 			accrualRate = employeeLeaveType.getBigDecimal("accrualRate");
 			carryOverLeaveDays = carryGV.getBigDecimal("carryOverLeaveDays");
+			lostLeaveDays = carryGV.getBigDecimal("lostLeaveDays");
 			
-		} else {
+		} else if(accrualRate != null && carryGV == null){
+			accrualRate = employeeLeaveType.getBigDecimal("accrualRate");
+			carryOverLeaveDays = BigDecimal.ZERO;
+			lostLeaveDays = BigDecimal.ZERO;
+			
+		}else {
 			System.out.println("######## Accrual Rate not found #### ");
 		}
 		
@@ -507,8 +543,6 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		
 		
 		
-		
-		
 		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
 		
 
@@ -527,7 +561,12 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		BigDecimal leaveBalances =  (accruedLeaveDay.subtract(totalUsedDays)).add(totalCarriedOver); 
 		
 		 
+
 		
+		// PUT INTO ACCOUNT THE RESET LEAVE DAYS
+		BigDecimal totalLost=lostLeaveDays.subtract(annualResetLeaveDays);
+		BigDecimal totalLeaveBalance=leaveBalances.add(annualResetLeaveDays);
+		BigDecimal totalCarriedForward=totalCarriedOver.add(annualResetLeaveDays);
 		
 		
 		
@@ -539,9 +578,9 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 				"partyId", partyId, 
 	            "accruedDays", accruedLeaveDay.doubleValue() , 
 	            "usedLeaveDays", totalUsedDays.doubleValue(),
-	            "lostLeaveDays", lostLeaveDays.doubleValue(), 
-	            "LeaveDaysCarriedOver", totalCarriedOver.doubleValue(), 
-	            "availableLeaveDays", leaveBalances.doubleValue());
+	            "lostLeaveDays", totalLost.doubleValue(), 
+	            "LeaveDaysCarriedOver", totalCarriedForward.doubleValue(), 
+	            "availableLeaveDays", totalLeaveBalance.doubleValue());
 	try {
 		delegator.create(leavelog);
 	} catch (GenericEntityException e) {
@@ -660,21 +699,21 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 	}
 
 
-	private static void deleteExistingLeaveBalanceForThisLeave(Delegator delegator,String leaveId) {
-		// TODO Auto-generated method stub
-		log.info("######## Tyring to Delete ######## !!!");
+	public static Double  getValuesForAnnualLeaveReset(String currentBal, String lostDays) {
+		double newBal = 0;
 		
-		EntityConditionList<EntityExpr> removeCondition = EntityCondition.makeCondition(UtilMisc.toList(
-			    EntityCondition.makeCondition("leaveId", EntityOperator.EQUALS, leaveId),null,
-				null,null),EntityOperator.AND);
-
+		double currentBalance= Double.parseDouble(currentBal);
+		double lostLeaveDays=Double.parseDouble(lostDays);
 		try {
-			delegator.removeByCondition("EmplLeave", removeCondition);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
+			newBal=currentBalance+lostLeaveDays;
+			log.info("++++++++++++++newBal++++++++++++++++" +newBal);
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		log.info("DELETED  ALL RECORDS ABOUT THIS LEAVE!" );
-		
+			   
+	    return newBal;
+
+
 	}
 	
 	

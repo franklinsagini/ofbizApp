@@ -235,10 +235,11 @@ under the License.
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
        
-        <field name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
-        <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
-         <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text size="40" maxlength="60"/></field>
-        <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
+        <field use-when="personalInfo!=null" name="employeeNumber" title="Employee Payroll Number"><display></display></field>
+        <field name="firstName" title="First Names" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+         <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><hidden/></field>
+        <field name="lastName" title="Last Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <option key="Mr." description="Mr."/>
@@ -407,8 +408,11 @@ under the License.
         <field name="mothersMaidenName"><hidden/></field>
         <field name="cardId"><hidden/></field>
         <field name="externalId"><hidden/></field>
+        
+        
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" action="javascript: return employeeRegistrationFormValidation();" event="onclick"><submit button-type="button"/></field>
+         <field use-when="personalInfo!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" action="javascript: return employeeUpdateFormValidation();" event="onclick"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>

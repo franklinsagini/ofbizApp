@@ -73,6 +73,12 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="resetStaffAnnualLostLeaveDays">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="resetStaffAnnualLostLeaveDays"
+			save-home-view="true" />
+	</request-map>
+	
 	   
     <request-map uri="leaveCalender">
 		<security https="true" auth="true" />
@@ -448,6 +454,12 @@ under the License.
     
      <request-map uri="employeeRegistrationFormValidation">
         <event type="java" path="org.ofbiz.humanres.EmployeeValidation" invoke="uniqueFieldsValidation" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
+    
+     <request-map uri="employeeUpdateFormValidation">
+        <event type="java" path="org.ofbiz.humanres.EmployeeUpdateValidation" invoke="uniqueFieldsValidation" />
                 <response name="success" type="none">
         </response>
     </request-map>
@@ -1481,6 +1493,14 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="updateLeaveDuration"/>
         <response name="success" type="view" value="callBackEmployee"/>
+    </request-map>
+    
+    
+     <!-- ================RESET STAFF LOST LEAVE DAYS========================= -->
+     <request-map uri="updateAnnualLeaveBalance">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAnnualLeaveBalance"/>
+        <response name="success" type="view" value="resetStaffAnnualLostLeaveDays"/>
     </request-map>
     
     
@@ -2586,6 +2606,7 @@ under the License.
     <view-map name="FindCarryOverLost" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
     <view-map name="ActiveEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>
      <view-map name="callBackEmployee" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#callBackEmployee"/>
+     <view-map name="resetStaffAnnualLostLeaveDays" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#resetEmployeeLeaveDaysLost"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
     <view-map name="LeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>    
     <view-map name="CloseFinacialYear" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
