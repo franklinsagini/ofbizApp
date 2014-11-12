@@ -176,7 +176,7 @@ public class PayrollProcess {
 						"payrollPeriodSummaryId",
 						payrollPeriodSummarySequenceId, "payrollPeriodId",
 						payrollPeriodId, "elementName", Name, "TotalAmount",
-						Amount));
+						Amount, "closed", "N"));
 		try {
 			payrollPeriodSummary = delegator
 					.createSetNextSeqId(payrollPeriodSummary);
@@ -374,11 +374,6 @@ public class PayrollProcess {
 		BigDecimal bdTotRelief = BigDecimal.ZERO;
 		BigDecimal bdTotDeductions = BigDecimal.ZERO;
 		BigDecimal bdNetPay = BigDecimal.ZERO;
-		bdNSSFSUMMARY = BigDecimal.ZERO;
-		bdNHIFSUMMARY = BigDecimal.ZERO;
-		bdPAYESUMMARY = BigDecimal.ZERO;
-		bdNETPAYSUMMARY = BigDecimal.ZERO;
-		bdPENSIONSUMMARY = BigDecimal.ZERO;
 
 		bdBasicPay = getBasicPay(employee, staffPayrollId, delegator);
 		log.info("######### Basic Pay Amount " + bdBasicPay);
@@ -406,7 +401,10 @@ public class PayrollProcess {
 			bdGrossTax = BigDecimal.ZERO;
 			bdNHIFAmount = computeNHIF(employee, delegator, bdBasicPay);
 			bdNHIF = bdNHIFAmount;
-			bdTotRelief = getTotalRelief(employee, staffPayrollId, delegator);
+			//bdTotRelief = getTotalRelief(employee, staffPayrollId, delegator);
+			bdINSURANCERELIEF=BigDecimal.ZERO;
+			bdMPR=BigDecimal.ZERO;
+//			bdTotRelief=BigDecimal.ZERO;
 
 			bdPAYEAmount = BigDecimal.ZERO;
 			bdPAYE = bdPAYEAmount;
@@ -415,6 +413,13 @@ public class PayrollProcess {
 		bdNHIFEmployer=bdNHIF;		
 
 		calculateInterestAmounts(employee, staffPayrollId, delegator);
+		
+		if(bdGrossPay.equals(BigDecimal.ZERO))
+		{
+			bdNSSFStatutory=BigDecimal.ZERO;
+			bdNSSFVoluntary=BigDecimal.ZERO;
+			bdNSSFEmployer=BigDecimal.ZERO;			
+		}
 
 		bdTotDeductions = sumDeductions(employee, staffPayrollId, delegator).add(bdPensionAmt)
 				.add(bdPAYEAmount).add(bdNSSFStatutory).add(bdNSSFVoluntary)
@@ -457,6 +462,9 @@ public class PayrollProcess {
 
 		List<GenericValue> listSystemElements = new ArrayList<GenericValue>();
 		GenericValue systemElement;
+		
+		
+		
 		/***
 		 * "EXCESSPENSIONBENEFIT" "INSURANCERELIEF" "LOWINTERESTBENEFIT" "MPR"
 		 * "NETPAY" "NHIF" "NSSF" "NSSFVOL" "PAYE" "PENSION" "TAXABLEINCOME"
@@ -1258,10 +1266,17 @@ public class PayrollProcess {
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;
 		BigDecimal bdOtherDeduction = BigDecimal.ZERO;
+		
+		EntityConditionList<EntityExpr> PayrollElementConditions = EntityCondition
+		.makeCondition(UtilMisc.toList(EntityCondition
+				.makeCondition("elementType", EntityOperator.EQUALS,
+						"Deduction"), EntityCondition.makeCondition(
+				"employercontribution", EntityOperator.NOT_EQUAL,
+				"Y")), EntityOperator.AND);
+		
 		try {
 			payrollElementELI = delegator.findList("PayrollElement",
-					EntityCondition.makeCondition("elementType", "Deduction"),
-					null, null, null, false);
+					PayrollElementConditions,null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -1388,29 +1403,39 @@ public class PayrollProcess {
 	private static BigDecimal computeNHIF(GenericValue employee,
 			Delegator delegator, BigDecimal bdBasicPay) {
 		BigDecimal bdLowerBracket, bdUpperBracket = BigDecimal.ZERO;
-
-		// Get the TaxTable
-		List<GenericValue> nhifTableELI = new LinkedList<GenericValue>();
-		try {
-			nhifTableELI = delegator.findList("NHIFTable", null, null, UtilMisc
-					.toList("lowerbracket"), null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-
 		BigDecimal contribution = BigDecimal.ZERO;
+		
+		if(bdBasicPay.equals(BigDecimal.ZERO))
+		{
+			contribution=BigDecimal.ZERO;
+		}
+		else
+		{
+			// Get the TaxTable
+			List<GenericValue> nhifTableELI = new LinkedList<GenericValue>();
+			try {
+				nhifTableELI = delegator.findList("NHIFTable", null, null, UtilMisc
+						.toList("lowerbracket"), null, false);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
 
-		for (GenericValue genericValue : nhifTableELI) {
-			bdLowerBracket = genericValue.getBigDecimal("lowerbracket");
-			bdUpperBracket = genericValue.getBigDecimal("upperbracket");
+			
+
+			for (GenericValue genericValue : nhifTableELI) {
+				bdLowerBracket = genericValue.getBigDecimal("lowerbracket");
+				bdUpperBracket = genericValue.getBigDecimal("upperbracket");
 
 
-			if ((!(bdBasicPay.compareTo(bdLowerBracket) == -1))
-					&& (!(bdBasicPay.compareTo(bdUpperBracket) == 1))) {
+				if ((!(bdBasicPay.compareTo(bdLowerBracket) == -1))
+						&& (!(bdBasicPay.compareTo(bdUpperBracket) == 1))) {
 
-				contribution = genericValue.getBigDecimal("contribution");
+					contribution = genericValue.getBigDecimal("contribution");
+				}
 			}
 		}
+		
+		
 		log.info("######### NHIF " + contribution);
 		return contribution;
 	}
