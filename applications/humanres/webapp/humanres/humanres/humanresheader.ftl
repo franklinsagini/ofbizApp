@@ -626,12 +626,119 @@
     	
     }
     
+     /** ==================PAYROLL PREFIX VALIDATION ==========================================**/
+	   
+	      function staffPayrollPrefixValidation(){
+		/** alert(' Checking for unique fields ... '); **/
+		
+		
+		var lowerCase =  jQuery('input[name="lowerCase"]').val();
+    	
+    	var isValid = true;
+    	var howLong = '';
+
+    	 var reqUrl = '/humanres/control/validatePayrollPrefix';
+
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'lowerCase': lowerCase},
+			     success : function(data){
+
+							howLong = data.howLong;
+
+			               },
+			      error : function(errorData){
+
+			              alert("Some error occurred while validating Leave");
+			              }
+
+
+		});
+
+    	var message = '';
+    	if ((howLong == 'NOTOK')){
+    		message = "Payroll Prefix Length Can only be Three (3) Characters!!";
+    		isValid = false;
+    	}
+
+    	
+    	if (!isValid){
+    		alert(message);
+    	} else{
+    		
+    	}
+
+
+    	return isValid;
+    	
+    }
+    
+    
+    /** ==================ANNUAL LOST RESET VALIDATION ==========================================**/
+	   
+	      function annualLeaveDaysResetValidation(){
+		/** alert(' Checking for unique fields ... '); **/
+		
+		
+		var lowerCase =  jQuery('input[name="annualLeaveDaysLost"]').val();
+		var lostLeaveDays =  jQuery('input[name="lostLeaveDays"]').val();
+
+    	
+    	var isValid = true;
+    	var state = '';
+
+    	 var reqUrl = '/humanres/control/validateAnnualResetDays';
+
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'annualLeaveDaysLost': annualLeaveDaysLost, 'lostLeaveDays':lostLeaveDays},
+			     success : function(data){
+
+							state = data.state;
+
+			               },
+			      error : function(errorData){
+
+			              alert("Some error occurred while validating Leave");
+			              }
+
+
+		});
+
+    	var message = '';
+    	if ((state == 'MORE')){
+    		message = "Can not reset more than actual lost days!!";
+    		isValid = false;
+    	}
+    	if ((state == 'LITTLE')){
+    		message = "Entered value too little!!";
+    		isValid = false;
+    	}
+    	if ((state == 'INVALID')){
+    		message = "Invalid value (Only Numerics are accepted)!!";
+    		isValid = false;
+    	}
+
+    	
+    	if (!isValid){
+    		alert(message);
+    	} else{
+    		
+    	}
+
+
+    	return isValid;
+    	
+    }
     
     
     
-    
-    
-  
     
     
    </script>

@@ -61,6 +61,12 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="payrollPrefix">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="payrollPrefix"
+			save-home-view="true" />
+	</request-map>
+	
 	<request-map uri="popupSentBack">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="popupSentBack"
@@ -205,6 +211,14 @@ under the License.
 		<response name="error" type="view" value="bankdetails" />
 	</request-map>
 	
+	<!-- ============================Payroll Prefix =====================================-->
+	 <request-map uri="createPayrollPrefix">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPayrollPrefix" />
+		<response name="success" type="view" value="payrollPrefix"/>
+		<response name="error" type="view" value="payrollPrefix" />
+	</request-map>
+	
 	
 	<!--======================== party Content Types======================== -->
 	
@@ -335,6 +349,13 @@ under the License.
 		<response name="success" type="view" value="FindEmplLeaves" />
 		<response name="error" type="view" value="addOpeningLeaveBalances" />
 	</request-map>
+	
+	 <request-map uri="changePayrollPrefix">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="changePayrollPrefix" />
+		<response name="success" type="view" value="payrollPrefix" />
+		<response name="error" type="view" value="payrollPrefix" />
+	</request-map>
 
 	
     
@@ -397,6 +418,16 @@ under the License.
 
    <request-map uri="emplleavebalance">
         <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getLeaveBalance" />
+        <response name="success" type="none"></response>
+    </request-map>
+    
+    <request-map uri="validatePayrollPrefix">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="validatePayrollPrefix" />
+        <response name="success" type="none"></response>
+    </request-map>
+    
+      <request-map uri="validateAnnualResetDays">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="validateAnnualResetDays" />
         <response name="success" type="none"></response>
     </request-map>
     
@@ -2725,5 +2756,6 @@ under the License.
 	<view-map name="popup" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveRejectionReason"/> 
 	<view-map name="popupSentBack" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveSentBackReason"/> 
 	<view-map name="leaveCalender" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffLeaveCalender"/> 
+	<view-map name="payrollPrefix" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewPayrollPrefix"/>
 						
 </site-conf>

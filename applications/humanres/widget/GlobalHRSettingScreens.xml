@@ -574,4 +574,42 @@
         </section>
     </screen>
     
+     <screen name="NewPayrollPrefix">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Payroll Prefix"/>
+                <set field="tabButtonItem" value="payrollPrefix"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPayrollPrefix"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="lowerCase" from-field="parameters.lowerCase" />
+                <entity-one entity-name="payRollPrefix" value-field="PayrollPrefixContext"/>
+                <set field="payRollPrefix" from-field="PayrollPrefixContext.payRollPrefix"
+					default-value="${PayrollPrefixContext.payRollPrefix}" />
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                               <screenlet>
+                               </screenlet>
+                        		<screenlet title="Payroll Prefix Currently In Use">
+                        			<include-form name="listPayrollPrefix" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet>
+                        		</screenlet>
+                        		 <screenlet title="Change Payroll Prefix">
+                                    <include-form name="addPayrollPrefix" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

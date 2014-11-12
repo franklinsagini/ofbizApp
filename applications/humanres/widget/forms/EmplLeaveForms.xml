@@ -215,8 +215,10 @@
 		default-map-name="updateAnnualLeaveBalanceContext" header-row-style="header-row"
 		default-table-style="basic-table">
 		 <actions>
-		 <set field="availableLeaveDays" from-field="parameters.annualAvailableLeaveDays"/>
-		 <set field="lostLeaveDays" from-field="parameters.annualLostLeaveDays"/>
+		<set field="availableLeaveDays" from-field="parameters.annualAvailableLeaveDays"/>
+		 <set field="lostLeaveDays" from-field="parameters.annualLostLeaveDays"/> 
+		 <set field="annualLeaveDaysLost" from-field="parameters.annualLeaveDaysLost"/> 
+		  <set field="partyId" from-field="parameters.partyId"/> 
         </actions>
 
 		
@@ -225,7 +227,8 @@
 		<field name="lostLeaveDays" title="Leave Days Lost:"><display/></field>
 		<field name="annualLeaveDaysLost" title="Number Of Leave Days To Reset:"><text/></field>
 		
-		 <field name="submitButton" title="Reset Leave Days" widget-style="smallSubmit"><submit button-type="button"/></field>
+		 <!-- <field name="submitButton" title="Reset Leave Days" widget-style="smallSubmit"><submit button-type="button"/></field> -->
+		 <field name="submitButton" title="Reset" action="javascript: return annualLeaveDaysResetValidation();" event="onclick"><submit button-type="button"/></field>
 	</form>
 	
 	
@@ -367,11 +370,14 @@
 		 <field name="submitButton" title="Call Back Employee" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	
-
-	<form name="FindEmplLeaves" type="single" target="FindEmplLeaves"
-		odd-row-style="header-row" default-table-style="basic-table"
-		default-entity-name="EmplLeave">
-		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+	
+	 <form name="FindEmplLeaves" default-map-name="LeaveApp" target="FindEmplLeaves" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<!-- <set field="status" value="AVAILABLE"/> -->
+        	
+        </actions>
+        <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/> -->
+       <field name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<hidden value="${userLogin.partyId}" />
 		</field>
 		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
@@ -386,16 +392,7 @@
 					key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType" />
 			</drop-down>
 		</field>
-		<field name="leaveStatus">
-			<drop-down allow-empty="true">
-				<entity-options description="${description}"
-					key-field-name="statusId" entity-name="StatusItem">
-					<entity-constraint name="statusTypeId" operator="equals"
-						value="LEAVE_STATUS" />
-					<entity-order-by field-name="description" />
-				</entity-options>
-			</drop-down>
-		</field>
+		<field name="applicationStatus"><text-find/></field>
 		<field name="description">
 			<hidden />
 		</field>
@@ -403,40 +400,35 @@
 			<hidden value="Y" /><!-- if this isn't there then with all fields 
 				empty no query will be done -->
 		</field>
-		<field name="searchButton" title="${uiLabelMap.CommonFind}"
-			widget-style="smallSubmit">
-			<submit button-type="button" image-location="/images/icons/magnifier.png" />
-		</field>
-	</form>
-	<form name="ListEmplLeaves" list-name="listIt" type="list"
-		odd-row-style="alternate-row" header-row-style="header-row-2"
-		paginate-target="EditEmplLeave" default-table-style="basic-table hover-bar">
-		<actions>
-<!--			<entity-condition entity-name="EmplLeave">
-				<condition-expr field-name="partyId" operator="equals"
-					from-field="userLogin.partyId" />
-			</entity-condition>
- 			<service service-name="performFind" result-map="result"
-				result-map-list="listIt">
-				<field-map field-name="inputFields" from-field="leaveCtx" />
-				<field-map field-name="entityName" value="EmplLeave" />
-				<field-map field-name="orderBy" from-field="parameters.leaveId" />
-				<field-map field-name="viewIndex" from-field="viewIndex" />
-				<field-map field-name="viewSize" from-field="viewSize" />
-			</service> -->
-			<entity-condition entity-name="EmplLeave">
-				<condition-expr field-name="partyId" operator="equals"
-					from-field="userLogin.partyId" />
-			</entity-condition>
-		</actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+     <form name="ListEmplLeaves" target="" title="" list-name="listIt" type="list" paginate-target="FindEmplLeaves"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="leaveCtx"/>
+                <field-map field-name="entityName" value="EmplLeave"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+          <entity-condition entity-name="EmplLeave" list="EmplLeave">
+        			<condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>
+        	</entity-condition>
+			
+            
+        </actions>
+        <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
+          
+      
+		
 		<field name="leaveId"><hidden/></field>
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="PartyNameView"
 				description="${firstName} ${lastName}">
-				<sub-hyperlink target="/partymgr/control/viewprofile"
-					target-type="inter-app" description="${partyId}" link-style="buttontext">
-					<parameter param-name="partyId" from-field="partyId" />
-				</sub-hyperlink>
 			</display-entity>
 		</field>
 		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
@@ -511,7 +503,17 @@
 		<field name="description">
 			<hidden />
 		</field>
-	</form>
+    </form>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	<form name="EditEmplLeave" type="single" target="createEmplLeaveExt"
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
@@ -977,10 +979,14 @@
 	
 	
         <form name="emplLeaveBalancesForProfile" type="single"  header-row-style="header-row" default-table-style="basic-table" default-map-name="leavebal">
-        <field name="accruedDays"><display/></field>
-      <field name="usedLeaveDays"><display/></field>
-	  <field name="lostLeaveDays"><display/></field>
-        <field name="availableLeaveDays" ><display/></field>
+        <field position="1" name="annualaccruedDays" title="Annual Accrued Leave Days"><display/></field>
+      <field position="2" name="compassionateAllocatedLeaveDays"><display/></field>
+	  <field  position="1" name="annualCarriedOverDays" title="Annual Leave Days Brought Forward"><display/></field>
+        <field position="2" name="compassionateUsedLeaveDays" ><display/></field>
+         <field  position="1" name="annualUsedLeaveDays" ><display/></field>
+          <field position="2" name="compassionateAvailableLeaveDays" ><display/></field>
+           <field  position="1" name="annualLostLeaveDays" ><display/></field>
+            <field  position="1" name="annualAvailableLeaveDays" ><display/></field>
     </form>
 
 
