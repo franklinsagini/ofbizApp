@@ -597,4 +597,28 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+    
+  <!--   ===========================================PAYROLL PREFIX======================================================= -->
+  
+    <form name="addPayrollPrefix" type="single" target="createPayrollPrefix"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="PayrollPrefixContext">
+        
+        <actions>
+        </actions>
+        
+        <field name="prefixId"><hidden/></field>
+        <field name="lowerCase" title="Payroll Prefix" tooltip="(Allows 3 characters only)" ><text/></field>
+      <!--   <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return staffPayrollPrefixValidation();"><submit button-type="text-link"/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" action="javascript: return staffPayrollPrefixValidation();" event="onclick"><submit button-type="button"/></field>
+        </form>
+        
+        <form name="listPayrollPrefix" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="payRollPrefix"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="payRollPrefix">
+            </entity-condition>
+        </actions>
+        <field name="prefixId"> <hidden/> </field>
+        <field name="payRollPrefix"><display/> </field>
+    </form>
 </forms>

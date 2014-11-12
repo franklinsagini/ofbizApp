@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.0.v201405191524 Build &lt;4.4.0.v20140606-1451></property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="payroll_No" id="9">
+            <text-property name="promptText">Enter Payroll Number</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataSetName">employmentHistory</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["payroll_no"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["payroll_no"]</expression>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <property name="mustMatch">false</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="employmentHistory" id="7">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://127.0.0.1/ofbiz</property>
+            <property name="odaUser">ofbiz</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b2ZiaXo=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="employmentHistory" id="8">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">party_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">party_id</text-property>
+                    <text-property name="heading">party_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">employer</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">employer</text-property>
+                    <text-property name="heading">employer</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">position</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">position</text-property>
+                    <text-property name="heading">position</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">start_date</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">start_date</text-property>
+                    <text-property name="heading">start_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">end_date</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">end_date</text-property>
+                    <text-property name="heading">end_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">reason</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">reason</text-property>
+                    <text-property name="heading">reason</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">last_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">last_name</text-property>
+                    <text-property name="heading">last_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">first_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">first_name</text-property>
+                    <text-property name="heading">first_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">payroll_no</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">payroll_no</text-property>
+                    <text-property name="heading">payroll_no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">staff_party_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">staff_party_id</text-property>
+                    <text-property name="heading">staff_party_id</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">payroll_no</property>
+                    <property name="paramName">payroll_No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">party_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">employer</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">position</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">start_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">end_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">reason</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">last_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">first_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">payroll_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">staff_party_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">employmentHistory</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">party_id</property>
+                    <property name="nativeName">party_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">employer</property>
+                    <property name="nativeName">employer</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">position</property>
+                    <property name="nativeName">position</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">start_date</property>
+                    <property name="nativeName">start_date</property>
+                    <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">end_date</property>
+                    <property name="nativeName">end_date</property>
+                    <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">reason</property>
+                    <property name="nativeName">reason</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">last_name</property>
+                    <property name="nativeName">last_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">first_name</property>
+                    <property name="nativeName">first_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">payroll_no</property>
+                    <property name="nativeName">payroll_no</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">staff_party_id</property>
+                    <property name="nativeName">staff_party_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select 
+employment_history.party_id,
+employment_history.employer,
+employment_history.position,
+employment_history.start_date,
+employment_history.end_date,
+employment_history.reason,
+Person.last_name,
+Person.first_name,
+Person.employee_number as payroll_No,
+Person.party_id as staff_party_id
+from 
+employment_history
+INNER JOIN Person ON Person.party_id 
+    = employment_history.party_id
+
+WHERE
+Person.employee_number = ?
+    ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>party_id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>20</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>party_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>party_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>20</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>employer</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>100</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>employer</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>employer</design:label>
+            <design:formattingHints>
+              <design:displaySize>100</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>position</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>100</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>position</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>position</design:label>
+            <design:formattingHints>
+              <design:displaySize>100</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>start_date</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+            <design:precision>35</design:precision>
+            <design:scale>6</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>start_date</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>start_date</design:label>
+            <design:formattingHints>
+              <design:displaySize>35</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>end_date</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+            <design:precision>35</design:precision>
+            <design:scale>6</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>end_date</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>end_date</design:label>
+            <design:formattingHints>
+              <design:displaySize>35</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>reason</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>reason</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>reason</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>last_name</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>100</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>last_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>last_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>100</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>payroll_no</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>20</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>payroll_no</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>payroll_no</design:label>
+            <design:formattingHints>
+              <design:displaySize>20</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>staff_party_id</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>20</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>staff_party_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>staff_party_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>20</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="10">
+            <property name="dataSet">employmentHistory</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">party_id</property>
+                    <text-property name="displayName">party_id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["party_id"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">employer</property>
+                    <text-property name="displayName">employer</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["employer"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">position</property>
+                    <text-property name="displayName">position</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["position"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">start_date</property>
+                    <text-property name="displayName">start_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["start_date"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">end_date</property>
+                    <text-property name="displayName">end_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["end_date"]</expression>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="name">reason</property>
+                    <text-property name="displayName">reason</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["reason"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">last_name</property>
+                    <text-property name="displayName">last_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["last_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">payroll_no</property>
+                    <text-property name="displayName">payroll_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["payroll_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">staff_party_id</property>
+                    <text-property name="displayName">staff_party_id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["staff_party_id"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">first_name</property>
+                    <text-property name="displayName">first_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["first_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="29"/>
+            <column id="30"/>
+            <column id="31"/>
+            <column id="32"/>
+            <column id="33"/>
+            <header>
+                <row id="44">
+                    <cell id="45">
+                        <label id="65">
+                            <text-property name="text">Payroll Number</text-property>
+                        </label>
+                    </cell>
+                    <cell id="46">
+                        <data id="62">
+                            <property name="resultSetColumn">payroll_no</property>
+                        </data>
+                    </cell>
+                    <cell id="47"/>
+                    <cell id="48"/>
+                    <cell id="49"/>
+                </row>
+                <row id="50">
+                    <property name="height">0.5833333333333334in</property>
+                    <cell id="51">
+                        <label id="66">
+                            <text-property name="text">Staff Names</text-property>
+                        </label>
+                    </cell>
+                    <cell id="52">
+                        <data id="63">
+                            <property name="resultSetColumn">first_name</property>
+                        </data>
+                        <data id="64">
+                            <property name="resultSetColumn">last_name</property>
+                        </data>
+                    </cell>
+                    <cell id="53"/>
+                    <cell id="54"/>
+                    <cell id="55"/>
+                </row>
+                <row id="56">
+                    <cell id="57"/>
+                    <cell id="58"/>
+                    <cell id="59"/>
+                    <cell id="60"/>
+                    <cell id="61"/>
+                </row>
+                <row id="11">
+                    <cell id="12">
+                        <label id="34">
+                            <text-property name="text">start_date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="13">
+                        <label id="36">
+                            <text-property name="text">end_date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="14">
+                        <label id="38">
+                            <text-property name="text">employer</text-property>
+                        </label>
+                    </cell>
+                    <cell id="15">
+                        <label id="40">
+                            <text-property name="text">position</text-property>
+                        </label>
+                    </cell>
+                    <cell id="16">
+                        <label id="42">
+                            <text-property name="text">reason</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="17">
+                    <cell id="18">
+                        <data id="35">
+                            <property name="resultSetColumn">start_date</property>
+                        </data>
+                    </cell>
+                    <cell id="19">
+                        <data id="37">
+                            <property name="resultSetColumn">end_date</property>
+                        </data>
+                    </cell>
+                    <cell id="20">
+                        <data id="39">
+                            <property name="resultSetColumn">employer</property>
+                        </data>
+                    </cell>
+                    <cell id="21">
+                        <data id="41">
+                            <property name="resultSetColumn">position</property>
+                        </data>
+                    </cell>
+                    <cell id="22">
+                        <data id="43">
+                            <property name="resultSetColumn">reason</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="23">
+                    <cell id="24"/>
+                    <cell id="25"/>
+                    <cell id="26"/>
+                    <cell id="27"/>
+                    <cell id="28"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

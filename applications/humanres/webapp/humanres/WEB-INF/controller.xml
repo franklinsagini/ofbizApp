@@ -61,6 +61,12 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="payrollPrefix">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="payrollPrefix"
+			save-home-view="true" />
+	</request-map>
+	
 	<request-map uri="popupSentBack">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="popupSentBack"
@@ -70,6 +76,12 @@ under the License.
 	<request-map uri="callBackEmployee">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="callBackEmployee"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="resetStaffAnnualLostLeaveDays">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="resetStaffAnnualLostLeaveDays"
 			save-home-view="true" />
 	</request-map>
 	
@@ -197,6 +209,14 @@ under the License.
 			<redirect-parameter name="partyId"/>
 			</response>
 		<response name="error" type="view" value="bankdetails" />
+	</request-map>
+	
+	<!-- ============================Payroll Prefix =====================================-->
+	 <request-map uri="createPayrollPrefix">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPayrollPrefix" />
+		<response name="success" type="view" value="payrollPrefix"/>
+		<response name="error" type="view" value="payrollPrefix" />
 	</request-map>
 	
 	
@@ -329,6 +349,13 @@ under the License.
 		<response name="success" type="view" value="FindEmplLeaves" />
 		<response name="error" type="view" value="addOpeningLeaveBalances" />
 	</request-map>
+	
+	 <request-map uri="changePayrollPrefix">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="changePayrollPrefix" />
+		<response name="success" type="view" value="payrollPrefix" />
+		<response name="error" type="view" value="payrollPrefix" />
+	</request-map>
 
 	
     
@@ -394,6 +421,16 @@ under the License.
         <response name="success" type="none"></response>
     </request-map>
     
+    <request-map uri="validatePayrollPrefix">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="validatePayrollPrefix" />
+        <response name="success" type="none"></response>
+    </request-map>
+    
+      <request-map uri="validateAnnualResetDays">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="validateAnnualResetDays" />
+        <response name="success" type="none"></response>
+    </request-map>
+    
      <request-map uri="getNewLeaveDuration">
         <event type="java" path="org.ofbiz.humanres.Leave" invoke="getNewLeaveDuration" />
         <response name="success" type="none"></response>
@@ -448,6 +485,12 @@ under the License.
     
      <request-map uri="employeeRegistrationFormValidation">
         <event type="java" path="org.ofbiz.humanres.EmployeeValidation" invoke="uniqueFieldsValidation" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
+    
+     <request-map uri="employeeUpdateFormValidation">
+        <event type="java" path="org.ofbiz.humanres.EmployeeUpdateValidation" invoke="uniqueFieldsValidation" />
                 <response name="success" type="none">
         </response>
     </request-map>
@@ -1481,6 +1524,14 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="updateLeaveDuration"/>
         <response name="success" type="view" value="callBackEmployee"/>
+    </request-map>
+    
+    
+     <!-- ================RESET STAFF LOST LEAVE DAYS========================= -->
+     <request-map uri="updateAnnualLeaveBalance">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAnnualLeaveBalance"/>
+        <response name="success" type="view" value="resetStaffAnnualLostLeaveDays"/>
     </request-map>
     
     
@@ -2590,6 +2641,7 @@ under the License.
     <view-map name="FindCarryOverLost" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
     <view-map name="ActiveEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#ActiveEmplLeaves"/>
      <view-map name="callBackEmployee" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#callBackEmployee"/>
+     <view-map name="resetStaffAnnualLostLeaveDays" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#resetEmployeeLeaveDaysLost"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
     <view-map name="LeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#LeaveBalances"/>    
     <view-map name="CloseFinacialYear" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EmplCarryOverLost"/>
@@ -2708,5 +2760,6 @@ under the License.
 	<view-map name="popup" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveRejectionReason"/> 
 	<view-map name="popupSentBack" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveSentBackReason"/> 
 	<view-map name="leaveCalender" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffLeaveCalender"/> 
+	<view-map name="payrollPrefix" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewPayrollPrefix"/>
 						
 </site-conf>

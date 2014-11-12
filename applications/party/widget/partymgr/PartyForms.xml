@@ -235,10 +235,11 @@ under the License.
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
        
-        <field name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
-        <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
-         <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text size="40" maxlength="60"/></field>
-        <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+        <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
+        <field use-when="personalInfo!=null" name="employeeNumber" title="Employee Payroll Number"><display></display></field>
+        <field name="firstName" title="First Names" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
+         <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><hidden/></field>
+        <field name="lastName" title="Last Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <option key="Mr." description="Mr."/>
@@ -299,7 +300,6 @@ under the License.
             </drop-down>
         </field -->
         <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>
-        <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>
          <field name="birthDate" title="Date Of Birth"><date-time type="date"/></field>
         <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>
 
@@ -311,6 +311,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+           <field name="confirmationdate" title="Confirmation Date"><date-time type="date"/></field>
         <!--field name="residenceStatusEnumId" title="Residence Status">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
@@ -407,8 +408,11 @@ under the License.
         <field name="mothersMaidenName"><hidden/></field>
         <field name="cardId"><hidden/></field>
         <field name="externalId"><hidden/></field>
+        
+        
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" action="javascript: return employeeRegistrationFormValidation();" event="onclick"><submit button-type="button"/></field>
+         <field use-when="personalInfo!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" action="javascript: return employeeUpdateFormValidation();" event="onclick"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
@@ -2431,6 +2435,7 @@ under the License.
 	    <field name="enumTypeId"><hidden value="EMPLOY_STTS"/></field>
 	    <field name="enumCode" title="Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="description" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="periodBeforeConfirmation" tooltip="(In months)" widget-style="required"><text size="30" maxlength="60"/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
@@ -2448,6 +2453,7 @@ under the License.
         <field name="enumId"> <hidden/> </field>
         <field name="enumCode" title="Code"> <text></text> </field>
         <field name="description"> <text></text> </field>
+         <field name="periodBeforeConfirmation"> <text></text> </field>
 
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEnumStaffStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">

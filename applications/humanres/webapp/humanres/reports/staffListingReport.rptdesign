@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.0.v201405191524 Build &lt;4.4.0.v20140606-1451></property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/first_report.gif</property>
+    <property name="cheatSheet">org.eclipse.birt.report.designer.ui.cheatsheet.firstreport</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="staffListing" id="248">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://127.0.0.1/ofbiz</property>
+            <property name="odaUser">ofbiz</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b2ZiaXo=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="staffList" id="249">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">first_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">first_name</text-property>
+                    <text-property name="heading">first_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">last_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">last_name</text-property>
+                    <text-property name="heading">last_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">payroll_no</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">payroll_no</text-property>
+                    <text-property name="heading">payroll_no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gender</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">gender</text-property>
+                    <text-property name="heading">gender</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">role_type_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">role_type_id</text-property>
+                    <text-property name="heading">role_type_id</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">first_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">last_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">payroll_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">gender</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">role_type_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">staffListing</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">first_name</property>
+                    <property name="nativeName">first_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">last_name</property>
+                    <property name="nativeName">last_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">payroll_no</property>
+                    <property name="nativeName">payroll_no</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">gender</property>
+                    <property name="nativeName">gender</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">role_type_id</property>
+                    <property name="nativeName">role_type_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select Person.first_name,
+Person.last_name,
+Person.employee_number as payroll_No,
+Person.gender,
+party_role.role_type_id
+from 
+Person
+INNER JOIN party_role ON party_role.party_id 
+    = Person.party_id
+    
+WHERE
+party_role.role_type_id='EMPLOYEE'
+
+
+]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="110">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="246">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="247">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="topMargin">0.07291666666666667in</property>
+            <property name="leftMargin">0.07291666666666667in</property>
+            <property name="rightMargin">0.11458333333333333in</property>
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="250">
+            <property name="dataSet">staffList</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">first_name</property>
+                    <text-property name="displayName">first_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["first_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">last_name</property>
+                    <text-property name="displayName">last_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["last_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">payroll_no</property>
+                    <text-property name="displayName">payroll_no</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["payroll_no"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">gender</property>
+                    <text-property name="displayName">gender</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gender"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">role_type_id</property>
+                    <text-property name="displayName">role_type_id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["role_type_id"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="266"/>
+            <column id="267"/>
+            <column id="268"/>
+            <column id="269"/>
+            <header>
+                <row id="251">
+                    <cell id="252">
+                        <label id="270">
+                            <text-property name="text">payroll_no</text-property>
+                        </label>
+                    </cell>
+                    <cell id="253">
+                        <label id="272">
+                            <text-property name="text">first_name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="254">
+                        <label id="274">
+                            <text-property name="text">last_name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="255">
+                        <label id="276">
+                            <text-property name="text">gender</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="256">
+                    <cell id="257">
+                        <data id="271">
+                            <property name="resultSetColumn">payroll_no</property>
+                        </data>
+                    </cell>
+                    <cell id="258">
+                        <data id="273">
+                            <property name="resultSetColumn">first_name</property>
+                        </data>
+                    </cell>
+                    <cell id="259">
+                        <data id="275">
+                            <property name="resultSetColumn">last_name</property>
+                        </data>
+                    </cell>
+                    <cell id="260">
+                        <data id="277">
+                            <property name="resultSetColumn">gender</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="261">
+                    <cell id="262"/>
+                    <cell id="263"/>
+                    <cell id="264"/>
+                    <cell id="265"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

@@ -19,8 +19,6 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -29,7 +27,6 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.common.JsLanguageFilesMapping.datejs;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -70,12 +67,16 @@ public static String closeFinacialYear(HttpServletRequest request,
 			if (appointmentdate !=null && appointmentdate !="") {
 						log.info("-----++++++-----partyId-----------------" +appointmentdate);
 			log.info("---------------------			appointmentdate--------------------------" +partyId);
-			calculateCarryOverLost(partyId, appointmentdate);// call method to calculate	
+			deleteExistingResetAnnualLost(delegator);
+			deleteExistingLeaveOpeningBalances(delegator);
+			calculateCarryOverLost(partyId, appointmentdate);// call method to calculate
+			Leave.closeFinacialYearForCompassionate(request, response);
 			}
 			
 			
 		}
 		//log.info("------------------------------------------------" +partyId);
+		
 		return partyId;
 	}
 
@@ -89,8 +90,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 		List<GenericValue> getApprovedLeaveSumELI = null;		
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
@@ -185,7 +185,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),null,null),EntityOperator.AND);
 
-		try {
+		/*try {
 			List<GenericValue> ExistingCarryOverLost  = delegator.findList("EmplCarryOverLost",
 					leaveConditions, null, null, null, false);
 			
@@ -196,18 +196,18 @@ public static String closeFinacialYear(HttpServletRequest request,
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 			
-		}
+		}*/
 		
-    /*   try {
+    try {
              GenericValue ExistingCarryOverLost = delegator.findOne("EmplCarryOverLost", 
              	UtilMisc.toMap( "partyId", partyId), false);
-             if (ExistingCarryOverLost != null && !ExistingCarryOverLost.isEmpty()) {t
+             if (ExistingCarryOverLost != null && !ExistingCarryOverLost.isEmpty()) {
             	 ExistingCarryOverLost.remove();
              }
        } catch (GenericEntityException e) {
             //return ServiceUtil.returnError("Failed. " +e.getMessage());
     	   e.printStackTrace();
-       }  */
+       }  
 }
 	
 	public static String resetUnusedCarryOver(HttpServletRequest request,
@@ -408,6 +408,35 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 			e.printStackTrace();
 		}
 		log.info("DELETED  ALL RECORDS!" );
+		
+	}
+	
+	// DELETE ALL RESET ANNUAL LEAVE DAYS
+	
+	private static void deleteExistingResetAnnualLost(Delegator delegator){
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+
+		try {
+			delegator.removeAll("AnnualLeaveBalancesReset");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED  ALL RECORDS IN RESET LEAVE DAYS!");
+		
+	}
+	
+	// DELETE ALL LEAVE OPENING BALANCES
+	private static void deleteExistingLeaveOpeningBalances(Delegator delegator){
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+
+		try {
+			delegator.removeAll("EmplLeaveOpeningBalance");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED ALL LEAVE OPENING BALANCES!");
 		
 	}
 
