@@ -272,7 +272,8 @@ public class CreatePayrollPeriods {
 						"currentperiod", "N", 
 						"status", "Inactive",
 						"startDate", start,
-						"endDate", end));
+						"endDate", end,
+						"payrollcheck", null));
 		try {
 			payrollPeriods = delegator.createSetNextSeqId(payrollPeriods);
 		} catch (GenericEntityException e1) {

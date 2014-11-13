@@ -590,8 +590,8 @@ under the License.
                 <option key="Y" description="Yes"/>
             </drop-down>
         </field>
-        <field name="startDate"><date-time/></field> 
-        <field name="endDate"><date-time/></field>         
+        <field name="startDate"><date-time type="date"/></field> 
+        <field name="endDate"><date-time type="date"/></field>         
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
@@ -632,7 +632,7 @@ under the License.
     </form>
     
     <!-- New Payroll Period-->
-    <form name="NewPayrollPeriod" type="single" target="createPayrollPeriod"
+  <!-- <form name="NewPayrollPeriod" type="single" target="createPayrollPeriod"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollPeriodContext">
         
         <actions>
@@ -662,7 +662,7 @@ under the License.
         
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
-        </form>
+        </form> -->
         
         <form name="listPayrollPeriod" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollPeriod" paginate-target="payrollperiod"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="pp">
@@ -677,16 +677,16 @@ under the License.
         <field name="payrollPeriodId"><hidden/></field>       
         <field name="payrollYearId"> <hidden/> </field>
         <field name="sequence_no" title="Sequence No"> <display also-hidden="false"/> </field>
-        <field name="name" title="Period" > <text ></text> </field>
-        <field name="currentperiod" title="Current Period"> <display/></field>
+        <field name="name" title="Period" > <display also-hidden="false"/> </field>
+        <field name="currentperiod" title="Current Period"> <hidden/></field>
         <field name="status" title="Status"> <display also-hidden="false"/> </field>
-        <field name="startDate"><date-time type="date"/></field>
-        <field name="endDate"><date-time type="date"/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="startDate"><display type="date"/></field>
+        <field name="endDate"><display type="date"/></field>
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePayrollPeriod" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
-        </field>
+        </field -->
         <!--        
         <field name="addPeriodStaff" use-when="pp==null"  title="View Staff" widget-style="buttontext">
             <hyperlink target="closedstaffpayroll" description="View Staff Payroll" also-hidden="false">
@@ -699,7 +699,7 @@ under the License.
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
     
        <!-- New Staff Payroll -->
@@ -729,7 +729,7 @@ under the License.
             </drop-down>
         </field>
         <field name="payrollPeriodId" parameter-name="payrollPeriodId"><hidden/></field>
-        <field name="closed"  title="Closed" > <hidden/></field>        
+        <field name="closed"  title="Closed" > <hidden value="N"/></field>        
         <field name="pensionpercentage" title="Pension Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="nssfVolAmount" title="NSSF Vol Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         
@@ -824,7 +824,7 @@ under the License.
                 <option key="Y" description="Yes"/>     
         	</drop-down>
         </field>
-        <field name="recurrencyExpiry"><date-time/></field> 
+        <field name="recurrencyExpiry"><date-time type="date"/></field> 
         
                 
         <field name="submitButton" title="Save" widget-style="smallSubmit" event="onclick" action="javascript: return paymentCodesFormValidation();"><submit button-type="button"/></field>
@@ -847,7 +847,7 @@ under the License.
         </field>
         <field name="amount"> <text></text> </field>
         <field name="balance"> <text></text> </field>
-        <field name="recurrencyExpiry"><date-time/></field>
+        <field name="recurrencyExpiry"><date-time type="date"/></field>
         
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
                 <hyperlink target="deleteStaffPayrollElements" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -1121,30 +1121,32 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollPeriod">
-            	<condition-expr field-name="status" operator="equals" value="Open"/>
+            	<condition-expr field-name="payrollcheck" operator="equals" value="O"/>            	
             </entity-condition>
         </actions>
         <field name="payrollPeriodId"><hidden/></field>       
         <field name="payrollYearId"> <hidden/> </field>
-        <field name="name" title="Current Period"> <display/> </field>
+        <field name="payrollPeriodId" title="Current Period">
+        	<display-entity entity-name="PayrollPeriod" key-field-name="payrollPeriodId" description="${name}"></display-entity>
+        </field>
         <field name="addPeriodStaff" title="Manage Payroll" widget-style="buttontext">
             <hyperlink target="staffpayroll" description="Manage Staff Payroll" also-hidden="false" image-location="${iconsLocation}/bullet_wrench.png"> 
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
-        <field name="migratepayroll" title="Migrate Payroll" widget-style="buttontext">        
-            <hyperlink target="migratepayroll" description="Migrate Staff Payroll" also-hidden="false" image-location="${iconsLocation}/arrow_right.png">
+       <field name="closepayroll" title="Close Payroll" widget-style="buttontext">        
+            <hyperlink target="closepayroll" description="Close Staff Payroll" also-hidden="false" image-location="${iconsLocation}/stop.png">
                 <parameter param-name="payrollPeriodId"/>
             </hyperlink>
         </field>
-    </form>
+	</form>
     
     <form name="listClosedPayrollOverview" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="payrollOverview" paginate-target="payrollOverview"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PayrollPeriod">
-            	<condition-expr field-name="status" operator="equals" value="Closed"/>
-            	<order-by field-name="sequence_no"/>
+            	<condition-expr field-name="payrollcheck" operator="equals" value="C"/>     
+            	<order-by field-name="-payrollPeriodId"/>
             </entity-condition>
         </actions>
         <field name="payrollPeriodId"><hidden/></field>       
