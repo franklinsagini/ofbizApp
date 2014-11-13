@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+      <simple-method method-name="createMSaccoApplication" short-description="Create MSaccoApplication">
+			<call-simple-method method-name="saveMSaccoApplication" scope="inline"></call-simple-method>
+			<call-simple-method method-name="addMSaccoLog"></call-simple-method>
+    </simple-method>
+    <simple-method method-name="saveMSaccoApplication" use-transaction="true">
+    	<make-value entity-name="MSaccoApplication" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="MSaccoApplication"></set>
+        <set field="newEntity.msaccoApplicationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.closed" value="NO"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="addMSaccoLog">
+    	<make-value entity-name="MSaccoLog" value-field="msaccoLogEntity"/>
+        <set-pk-fields map="parameters" value-field="msaccoLogEntity"/>
+        <set-nonpk-fields map="parameters" value-field="msaccoLogEntity"/>
+        <set field="logEntityName" value="MSaccoLog"></set>
+        <set field="msaccoLogEntity.msaccoLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(logEntityName);}"></set>
+        <set field="msaccoLogEntity.isActive" value="Y"/>
+        <set field="msaccoLogEntity.msaccoApplicationId" value="${newEntity.msaccoApplicationId}"/>
+        <set field="statusName" value="NEW"/>
+        <set field="msaccoLogEntity.cardStatusId" value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.getCardStatus(statusName);}"/>
+        <set field="msaccoLogEntity.comment" value="New Application Created"/>
+	    <set field="msaccoLogEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="msaccoLogEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateMSaccoApplication" short-description="Update MSaccoApplication">
+        <entity-one entity-name="MSaccoApplication" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteMSaccoApplication" short-description="Delete MSaccoApplication">
+        <entity-one entity-name="MSaccoApplication" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- approveMSaccoProcess -->
+     <simple-method method-name="approveMSaccoProcess" short-description="Approve MSacco Process">
+    		 <set field="statusName" value="APPROVED"></set>
+			<call-simple-method method-name="saveMSaccoLog" scope="inline"></call-simple-method>
+			<set field="msaccoApplicationId" value="${logEntity.msaccoApplicationId}"/>
+			<entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+				<field-map field-name="msaccoApplicationId" value="${logEntity.msaccoApplicationId}"/>
+			</entity-one>
+			<set field="msaccoApplication.cardStatusId" value="${logEntity.cardStatusId}"/>
+        	<store-value value-field="msaccoApplication"/>
+    </simple-method>
+    
+    <simple-method method-name="activateMSaccoProcess" short-description="Activate MSacco Process">
+    		 <set field="statusName" value="ACTIVE"></set>
+			<call-simple-method method-name="saveMSaccoLog" scope="inline"></call-simple-method>
+			<set field="msaccoApplicationId" value="${logEntity.msaccoApplicationId}"/>
+			<entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+				<field-map field-name="msaccoApplicationId" value="${logEntity.msaccoApplicationId}"/>
+			</entity-one>
+			<set field="msaccoApplication.cardStatusId" value="${logEntity.cardStatusId}"/>
+        	<store-value value-field="msaccoApplication"/>
+    </simple-method>
+    
+        <simple-method method-name="cancelMSaccoProcess" short-description="Cancel MSacco Process">
+    		 <set field="statusName" value="DEACTIVATED"></set>
+			<call-simple-method method-name="saveMSaccoLog" scope="inline"></call-simple-method>
+			<set field="msaccoApplicationId" value="${logEntity.msaccoApplicationId}"/>
+			<entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+				<field-map field-name="msaccoApplicationId" value="${logEntity.msaccoApplicationId}"/>
+			</entity-one>
+			<set field="msaccoApplication.cardStatusId" value="${logEntity.cardStatusId}"/>
+        	<store-value value-field="msaccoApplication"/>
+    </simple-method>
+    
+    <simple-method method-name="saveMSaccoLog">
+    	<make-value entity-name="MSaccoLog" value-field="logEntity"/>
+        <set-pk-fields map="parameters" value-field="logEntity"/>
+        <set-nonpk-fields map="parameters" value-field="logEntity"/>
+        <set field="entityName" value="MSaccoLog"></set>
+        <set field="logEntity.msaccoLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <now-timestamp field="logEntity.createdDate"/>
+        <set field="logEntity.isActive" value="Y"/>
+	    <set field="logEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <set field="logEntity.cardStatusId" value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.getCardStatus(statusName);}"/>
+        <create-value value-field="logEntity"/>
+    </simple-method>
+    
+</simple-methods>
