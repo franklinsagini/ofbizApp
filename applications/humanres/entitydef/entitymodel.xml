@@ -705,6 +705,17 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
     </entity>
+    
+   <!--  ====================PAYROLL PREFIX====================================== -->
+   
+    <entity entity-name="payRollPrefix"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee payRoll Prefix">
+        <field name="prefixId" type="id-ne"/>
+        <field name="payRollPrefix" type="name"/>
+        <field name="lowerCase" type="name"/>
+        <prim-key field="prefixId"/>
+    </entity> 
 
         <!-- ===========  Leave Status Logs  =========== -->
     <entity entity-name="LeaveStatusLog"
@@ -865,6 +876,17 @@ under the License.
         <field name="availableLeaveDays" type="floating-point"/>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity> 
+    
+     <entity entity-name="AnnualLeaveBalancesReset"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Balances Reset Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="annualLeaveDaysLost" type="floating-point"/>
+        <prim-key field="partyId"/>
+        <relation type="one" fk-name="LEAVE_BALRESET_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
     </entity> 

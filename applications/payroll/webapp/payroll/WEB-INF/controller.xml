@@ -659,6 +659,14 @@ under the License.
 		</response>
 	</request-map>
 	
+	 <request-map uri="closepayroll">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.payroll.ClosePayroll" invoke="closePayroll" ></event>
+        <response name="success" type="request-redirect-noparam" value="payrollOverview"/> 
+		<response name="error" type="view" value="payrollOverview" />
+		
+     </request-map>
+	
      <request-map uri="migratepayroll">
 	 	<security https="true" auth="true" />
         <event type="java" path="org.ofbiz.payroll.MigratePayroll" invoke="migratePayroll" ></event>
@@ -700,6 +708,12 @@ under the License.
  	<request-map uri="payrollElementsView"><security https="true" auth="true"/><response name="success" type="view" value="payrollElementsView"/></request-map>
  	<request-map uri="payslipReportView"><security https="true" auth="true"/><response name="success" type="view" value="payslipReportView"/></request-map>
  	<request-map uri="individualPayslip"><security https="true" auth="true"/><response name="success" type="view" value="individualPayslip"/></request-map>
+ 	
+ 	<request-map uri="P9ReportView"><security https="true" auth="true"/><response name="success" type="view" value="P9ReportView"/></request-map>
+ 	<request-map uri="P10ReportView"><security https="true" auth="true"/><response name="success" type="view" value="P10ReportView"/></request-map>
+ 	<request-map uri="P10AReportView"><security https="true" auth="true"/><response name="success" type="view" value="P10AReportView"/></request-map>
+ 	<request-map uri="NSSFReportView"><security https="true" auth="true"/><response name="success" type="view" value="NSSFReportView"/></request-map>
+ 	<request-map uri="NHIFReportView"><security https="true" auth="true"/><response name="success" type="view" value="NHIFReportView"/></request-map>
  	
  	<request-map uri="payPointsReport"><security https="true" auth="true"/><response name="success" type="view" value="payPointsReport"/></request-map>
  	   
@@ -754,6 +768,12 @@ under the License.
     <view-map name="payrollElementsView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayrollElementReport"/>
     
     <view-map name="payslipReportView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayslipReport"/>
+    <view-map name="P9ReportView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#P9Report"/>
+    <view-map name="P10ReportView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#P10Report"/>
+    <view-map name="P10AReportView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#P10AReport"/>
+    <view-map name="NSSFReportView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#NSSFReport"/>
+    <view-map name="NHIFReportView" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#NHIFReport"/>
+    
     <view-map name="individualPayslip" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#individualPayslipReport"/>
     
     <view-map name="payPointsReport" type="screen" page="component://payroll/widget/payroll/PayrollReportScreens.xml#PayPointsReport"/>

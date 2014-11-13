@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -29,8 +31,10 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -41,6 +45,9 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.jdbc.SQLProcessor;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
 
@@ -694,99 +701,34 @@ GenericValue employeeLeaveType = null;
 	
 	
 	
-	/*public static String  NextPayrollNumber(HttpServletRequest request,
-			HttpServletResponse response) {
-		
-		Map<String, Object> result = FastMap.newInstance();
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		String nextEmployeeNumber = null;
-		
-		
-		List<GenericValue> employeeELI = null;
-		GenericValue lastEmployee = null;
-		
-		
-	try {
-		List<String> orderByList = new ArrayList<String>();
-		orderByList.add("-createdStamp");
-		employeeELI = delegator.findList("Person",
-				null, null, orderByList, null, false);
-		
-		if (employeeELI.size() > 0){
-			lastEmployee = employeeELI.get(0); 
-		String emplNo=lastEmployee.getString("employeeNumber");
-				
-			
-				 String trancatemplNo= StringUtils.substring(emplNo, 3);
-				 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
-				 String h=String.valueOf(newEmplNo);
-				 nextEmployeeNumber="HCS".concat(h);
-				 
-				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
-		}
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
 	
-		
-		String i18employeeNumber = (nextEmployeeNumber);
-	    
-	    result.put("employeeNumber_i18n", i18employeeNumber);
-	    result.put("employeeNumber", nextEmployeeNumber);
-	   
-	    Gson gson = new Gson();
-		String json = gson.toJson(result);
-
-		// set the X-JSON content type
-		response.setContentType("application/x-json");
-		// jsonStr.length is not reliable for unicode characters
-		try {
-			response.setContentLength(json.getBytes("UTF8").length);
-		} catch (UnsupportedEncodingException e) {
-			try {
-				throw new EventHandlerException("Problems with Json encoding",
-						e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
-
-		// return the JSON String
-		Writer out;
-		try {
-			out = response.getWriter();
-			out.write(json);
-			out.flush();
-		} catch (IOException e) {
-			try {
-				throw new EventHandlerException(
-						"Unable to get response writer", e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
-
-		return json;
-
-
-	}
-	*/
-	/*
-	 * Calculate Next Payroll Number
-	 * 
-	 * **/
 	public static String  NextPayrollNumber() {
 		
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String nextEmployeeNumber = null;
+		String PayrollPrefix="HCS";
 		
 		
 		List<GenericValue> employeeELI = null;
 		
 		
 		GenericValue lastEmployee = null;
+		List<GenericValue> prefix = null;
+		GenericValue pre = null;
 		
+		try {
+			
+			prefix = delegator.findList("payRollPrefix",null, null, null, null, false);
+			
+		} catch (GenericEntityException e) {
+			return null;
+		}
+		
+		if (prefix.size() > 0){
+			pre = prefix.get(0); 
+			PayrollPrefix = pre.getString("payRollPrefix");
+		}
 		
 	try {
 		List<String> orderByList = new ArrayList<String>();
@@ -804,7 +746,7 @@ GenericValue employeeLeaveType = null;
 				 String trancatemplNo= StringUtils.substring(emplNo, 3);
 				 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
 				 String h=String.valueOf(newEmplNo);
-				 nextEmployeeNumber="HCS".concat(h);
+				 nextEmployeeNumber=PayrollPrefix.concat(h);
 				 
 				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
 		}
@@ -905,6 +847,151 @@ GenericValue employeeLeaveType = null;
 
 
 	}
+	
+	public static String  payrollUpperCase(String payRoll) {
+		/*Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		deleteExistingPayrollPrefix(delegator); */
+		String upperCasePayroll=payRoll.toUpperCase();
+		
+		 log.info("++++++++++++++upperCasePayroll++++++++++++++++" +upperCasePayroll);
+		return upperCasePayroll;
+	}
+	
+
+	
+	private static void deleteExistingPayrollPrefix(Delegator delegator) {
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+
+		try {
+			delegator.removeAll("payRollPrefix");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED  ALL RECORDS!" );
+		
+	}
+	
+	
+	public static String  validatePayrollPrefix(HttpServletRequest request,	HttpServletResponse response) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Map<String, Object> result = FastMap.newInstance();
+		String payrollPrefix= (String)request.getParameter("lowerCase");
+		String howLong="OK";
+		
+		 log.info("++++++++++++++payrollPrefix++++++++++++++++" +payrollPrefix);
+		 
+	int strLength=payrollPrefix.length();
+	
+	if (strLength!=3) {
+		howLong="NOTOK";
+	} else {
+		howLong="OK";
+		deleteExistingPayrollPrefix(delegator);
+	}
+	    
+	    result.put("howLong", howLong);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
+	
+	
+	public static String  validateAnnualResetDays(HttpServletRequest request,HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		/*String lostDays= (String)request.getParameter("annualLostLeaveDays");
+		String daysToReset= (String)request.getParameter("annualLeaveDaysLost");*/
+		int lostDays = new Integer(request.getParameter("lostLeaveDays")).intValue();
+		int daysToReset = new Integer(request.getParameter("annualLeaveDaysLost")).intValue();
+		
+		
+		String state="GGGGGG";
+		
+		 log.info("++++++++++++++lostDays++++++++++++++++" +lostDays);
+		 log.info("++++++++++++++daysToReset++++++++++++++++" +daysToReset);
+		 
+
+	
+	if (daysToReset > lostDays) {
+		state="MORE";
+	} else if(daysToReset < 0){
+		state="LITTLE";
+	}else{
+		state="INVALID";
+	}
+	    
+	    result.put("state", state);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
+	
 	
 	
 }

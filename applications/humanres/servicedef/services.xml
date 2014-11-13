@@ -43,6 +43,15 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         
  </service>
+ 
+  <service name="changePayrollPrefix" engine="java" default-entity-name="EmplLeaveOpeningBalance"
+            location="org.ofbiz.humanres.HumanResServices" invoke="changePayrollPrefix" auth="false">
+        <description>Create a Person</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        
+ </service>
     
     
     <service name="createPartyRole" engine="simple"
@@ -1129,6 +1138,24 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
+     <!-- ============================RESET STAFF LOST LEAVE DAYS ======================================== -->
+    
+    <service name="updateAnnualLeaveBalanceNOT" engine="simple" default-entity-name="LeaveBalances"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateAnnualLeaveBalance" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <service name="updateAnnualLeaveBalance" engine="simple" default-entity-name="AnnualLeaveBalancesReset"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateAnnualLeaveBalance" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
     
     <service name="rejectEmplLeaveStatus" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="rejectEmplLeaveStatus" auth="true">
@@ -1729,6 +1756,15 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <!-- =============================Payroll Prefix========================== -->
+    
+    <service name="createPayrollPrefix" engine="simple" 
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 	invoke="createPayrollPrefix" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes entity-name="payRollPrefix" include="pk" mode="IN" optional="true" />
+		<auto-attributes entity-name="payRollPrefix" include="nonpk" mode="IN" optional="true" />
+	</service>
     
     <!-- Bank Branch -->
     <service name="createBankBranch" engine="simple" default-entity-name="BankBranch"
