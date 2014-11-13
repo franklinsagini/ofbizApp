@@ -122,7 +122,7 @@ public class LoanServices {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		// request.getParameter(arg0)
 		String partyId = (String) request.getParameter("memberId");
-		String loanProductId = (String) request.getParameter("loanProductId");
+		//String loanProductId = (String) request.getParameter("loanProductId");
 
 		// Locale locale = (Locale) request.getParameter("locale");
 		GenericValue member = null;

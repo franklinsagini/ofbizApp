@@ -11,22 +11,23 @@
     
      <entity entity-name="MSaccoApplication" package-name="org.ofbiz.msaccomanagement"
 		title="MSaccoApplication Entity">
-		<field name="msaccoApplicationId" type="id-ne"></field>
+		<field name="msaccoApplicationId" type="id-vlong-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
 		
-		<field name="partyId" type="id-ne"></field>
+		<field name="partyId" type="id-vlong-int"></field>
 		
-		<field name="mobilePhoneNumber" type="name"></field>
-		
-		
-		<field name="cardStatus" type="name"></field> <!-- Applied, Active, Renewing, Deactivated -->
+		<field name="mobilePhoneNumber" type="name" not-null="true"></field>
 		
 		
-		<field name="memberAccountId" type="id-ne"></field>
+		<field name="cardStatusId" type="id-int"></field>
+		 <!-- Applied, Active, Renewing, Deactivated -->
+		
+		
+		<field name="memberAccountId" type="id-vlong-int"></field>
 		
 		<prim-key field="msaccoApplicationId"/>
 		<relation type="one" fk-name="MSaccoApplication_Member" rel-entity-name="Member">
@@ -35,21 +36,25 @@
       	<relation type="one" fk-name="MSaccoApplication_MemberAccount" rel-entity-name="MemberAccount">
         	<key-map field-name="memberAccountId"/>
       	</relation>
+      	
+      	<relation type="one" fk-name="MSaccoApplication_CardStatus" rel-entity-name="CardStatus">
+        	<key-map field-name="cardStatusId"/>
+      	</relation>
 	</entity>
 	
 	<!-- Card Logs -->
 	<entity entity-name="MSaccoLog" package-name="org.ofbiz.msaccomanagement"
 		title="CardLog Entity">
 		
-		<field name="msaccoLogId" type="id-ne"></field>
-		<field name="msaccoApplicationId" type="id-ne"></field>
+		<field name="msaccoLogId" type="id-vlong-int"></field>
+		<field name="msaccoApplicationId" type="id-vlong-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
 		
-		<field name="cardStatus" type="name"></field>
+		<field name="cardStatusId" type="id-int"></field>
 		<field name="comment" type="description"></field>
 		
 		
@@ -59,6 +64,9 @@
         	<key-map field-name="msaccoApplicationId"/>
       	</relation>
       	
+      	<relation type="one" fk-name="MSaccoLog_CardStatus" rel-entity-name="CardStatus">
+        	<key-map field-name="cardStatusId"/>
+      	</relation>
 	</entity>
 
 </entitymodel>

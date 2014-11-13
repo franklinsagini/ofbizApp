@@ -21,6 +21,9 @@ import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -39,8 +42,15 @@ public class ATMManagementServices {
 		String partyId = (String) request.getParameter("partyId");
 		partyId = partyId.replaceAll(",", "");
 		List<GenericValue> memberAccountELI = null;
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
+						EntityCondition.makeCondition("withdrawable",
+								EntityOperator.EQUALS,
+								"Yes")),
+						EntityOperator.AND);
 		try {
-			memberAccountELI = delegator.findList("MemberAccount", EntityCondition.makeCondition("partyId", Long.valueOf(partyId)), null, null, null, false);
+			memberAccountELI = delegator.findList("MemberAccount", memberAccountConditions, null, null, null, false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}

@@ -57,5 +57,435 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="msaccoApplication">
+		<section>
+			<actions>
+				<set field="titleProperty" value="MSacco Application" />
+				<set field="tabButtonItem" value="msaccoApplication" />
+				<set field="headerItem" value="msaccoApplication"/>
+				<set field="labelTitleProperty" value="MSacco Application" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="MSaccoApplication" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
 
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<!-- screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet -->
+								<screenlet title="MSacco Application">
+									<include-form name="NewMSaccoApplication"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="MSacco Application List">
+									<include-form name="listMSaccoApplication"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- msaccoLogs -->
+	    <screen name="msaccoLogs">
+		<section>
+			<actions>
+				<set field="titleProperty" value="MSacco Application" />
+				<set field="tabButtonItem" value="msaccoApplication" />
+				<set field="headerItem" value="msaccoApplication"/>
+				<set field="labelTitleProperty" value="MSacco Application" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="MSaccoLog" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
+				<entity-one value-field="msaccoApplication" entity-name="MSaccoApplication"></entity-one>
+				
+				<set field="partyId" value="${msaccoApplication.partyId}"/>
+				<entity-one value-field="member" entity-name="Member"></entity-one>
+				
+				<set field="memberAccountId" value="${msaccoApplication.memberAccountId}"/>
+				<entity-one value-field="memberAccount" entity-name="MemberAccount"></entity-one>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+						<section name="search-results">
+							<widgets>
+								<screenlet>
+									<label style="h3">Member Names : ${member.firstName} ${member.middleName} ${member.lastName}</label>
+								</screenlet>
+								<screenlet>
+									<label style="h3">Phone No: ${msaccoApplication.mobilePhoneNumber}</label>
+								</screenlet>
+								<screenlet>
+									<label style="h3">Account No. : ${memberAccount.accountNo} - ${memberAccount.accountName}</label>
+								</screenlet>
+								
+								<screenlet title="MSacco Application Logs">
+									<include-form name="listMSaccoLog"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- msaccoApproval -->
+	    <screen name="msaccoApproval">
+		<section>
+			<actions>
+				<set field="titleProperty" value="MSacco Approval" />
+				<set field="tabButtonItem" value="msaccoApproval" />
+				<set field="headerItem" value="msaccoApproval"/>
+				<set field="labelTitleProperty" value="MSacco Approval" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="MSaccoApplication" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="msaccoApplicationCtx" from-field="parameters"/>
+				
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<!-- screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet -->
+								<!-- screenlet title="MSacco Application">
+									<include-form name="NewMSaccoApplication"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet -->
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Find MSacco">
+									<include-form name="FindMSacco"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+								
+								<screenlet title="MSacco List">
+									<include-form name="listMSaccoApplicationForActioning"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- msaccoActivate -->
+		    <screen name="msaccoActivate">
+		<section>
+			<actions>
+				<set field="titleProperty" value="MSacco Activation" />
+				<set field="tabButtonItem" value="msaccoActivate" />
+				<set field="headerItem" value="msaccoActivate"/>
+				<set field="labelTitleProperty" value="MSacco Activation" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="MSaccoApplication" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="msaccoApplicationCtx" from-field="parameters"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<!-- screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet -->
+								<!-- screenlet title="MSacco Application">
+									<include-form name="NewMSaccoApplication"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet -->
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+							
+								<screenlet title="Find MSacco">
+									<include-form name="FindMSaccoActivate"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+								
+								<screenlet title="MSacco List">
+									<include-form name="listMSaccoApplicationActivation"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<!-- msaccoCancel -->
+	<screen name="msaccoCancel">
+		<section>
+			<actions>
+				<set field="titleProperty" value="MSacco Cancel/Deactivate" />
+				<set field="tabButtonItem" value="msaccoCancel" />
+				<set field="headerItem" value="msaccoCancel"/>
+				<set field="labelTitleProperty" value="MSacco Cancel/Deactivate" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="MSaccoApplication" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="msaccoApplicationCtx" from-field="parameters"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<!-- screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet -->
+								<!-- screenlet title="MSacco Application">
+									<include-form name="NewMSaccoApplication"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet -->
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Find MSacco">
+									<include-form name="FindMSaccoCancel"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+								<screenlet title="MSacco List">
+									<include-form name="listMSaccoApplicationCancel"
+										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- msaccoApproveAction  -->
+	    <screen name="msaccoApproveAction">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Approve M-Sacco"/>
+                <set field="headerItem" value="msaccoApproveAction"/>
+                <set field="tabButtonItem" value="msaccoApproveAction"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="activateCard"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="MSaccoLog" value-field="msaccoLogContext"/>
+                <entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+                	<field-map field-name="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
+                </entity-one>
+                <set field="partyId" value="${msaccoApplication.partyId}"/>
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="msaccomanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="MSACCOMANAGEMENT" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            	<container>
+                               	<container>
+                               			
+                               			
+										<label style="h3">${member.firstName} ${member.middleName} ${member.lastName} M-Sacco Logs
+										</label>
+									</container>
+									<container>
+										<label style="h3">Mobile Number : ${msaccoApplication.mobilePhoneNumber}
+										</label>
+									</container>
+                               </container>
+                                <screenlet title="Approve MSacco">
+                                    <include-form name="ApproveMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
+                                </screenlet>
+                               
+                            </widgets>
+                            
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="MSacco Logs">
+                        			<include-form name="listApproveMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	<!-- msaccoActivateAction  -->
+	    <screen name="msaccoActivateAction">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Activate M-Sacco"/>
+                <set field="headerItem" value="msaccoActivateAction"/>
+                <set field="tabButtonItem" value="msaccoActivateAction"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="activateCard"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="MSaccoLog" value-field="msaccoLogContext"/>
+                <entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+                	<field-map field-name="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
+                </entity-one>
+                <set field="partyId" value="${msaccoApplication.partyId}"/>
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="msaccomanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="MSACCOMANAGEMENT" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            	<container>
+                               	<container>
+                               			
+                               			
+										<label style="h3">${member.firstName} ${member.middleName} ${member.lastName} M-Sacco Logs
+										</label>
+									</container>
+									<container>
+										<label style="h3">Mobile Number : ${msaccoApplication.mobilePhoneNumber}
+										</label>
+									</container>
+                               </container>
+                                <screenlet title="Activate MSacco">
+                                    <include-form name="ActivateMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
+                                </screenlet>
+                               
+                            </widgets>
+                            
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="MSacco Logs">
+                        			<include-form name="listActivateMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	<!-- msaccoCancelAction  -->
+	    <screen name="msaccoCancelAction">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Cancel M-Sacco"/>
+                <set field="headerItem" value="msaccoCancelAction"/>
+                <set field="tabButtonItem" value="msaccoCancelAction"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="cancelMSaccoProcess"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="MSaccoLog" value-field="msaccoLogContext"/>
+                <entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+                	<field-map field-name="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
+                </entity-one>
+                <set field="partyId" value="${msaccoApplication.partyId}"/>
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="msaccomanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="MSACCOMANAGEMENT" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            	<container>
+                               	<container>
+                               			
+                               			
+										<label style="h3">${member.firstName} ${member.middleName} ${member.lastName} M-Sacco Logs
+										</label>
+									</container>
+									<container>
+										<label style="h3">Mobile Number : ${msaccoApplication.mobilePhoneNumber}
+										</label>
+									</container>
+                               </container>
+                                <screenlet title="Activate MSacco">
+                                    <include-form name="CancelMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
+                                </screenlet>
+                               
+                            </widgets>
+                            
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="MSacco Logs">
+                        			<include-form name="listCancelMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
