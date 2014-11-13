@@ -62,15 +62,16 @@ public static String closeFinacialYear(HttpServletRequest request,
 		String partyId ="", appointmentdate = ""; 
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
-			appointmentdate = genericValue.getString("appointmentdate");
+			appointmentdate = genericValue.getString("confirmationdate");
 
 			if (appointmentdate !=null && appointmentdate !="") {
 						log.info("-----++++++-----partyId-----------------" +appointmentdate);
 			log.info("---------------------			appointmentdate--------------------------" +partyId);
-			deleteExistingResetAnnualLost(delegator);
-			deleteExistingLeaveOpeningBalances(delegator);
+			
 			calculateCarryOverLost(partyId, appointmentdate);// call method to calculate
 			Leave.closeFinacialYearForCompassionate(request, response);
+			deleteExistingResetAnnualLost(delegator);
+			deleteExistingLeaveOpeningBalances(delegator);
 			}
 			
 			
@@ -124,6 +125,73 @@ public static String closeFinacialYear(HttpServletRequest request,
 		} else {
 			System.out.println("######## Accrual Rate not found #### ");
 		}
+		
+		//===============================Consider Opening Balances and Reset lost days=====================================
+		GenericValue getAnualOpeningSumELI=null;
+		GenericValue getAnualResetDaysELI=null;
+		BigDecimal annualResetLeaveDays = BigDecimal.ZERO;
+		
+		BigDecimal LeaveBalanceCarriedForward = BigDecimal.ZERO; 
+		BigDecimal LeaveDaysUsed= BigDecimal.ZERO; 
+		try {
+			 
+			 getAnualOpeningSumELI = delegator.findOne("EmplLeaveOpeningBalance", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		try {
+			 
+			 getAnualResetDaysELI = delegator.findOne("AnnualLeaveBalancesReset", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		//===================Consider Annual Leave Balances====================================
+		GenericValue getAnualLeaveBalanceELI=null;
+		BigDecimal annualBal=BigDecimal.ZERO;
+		try {
+			 
+			 getAnualLeaveBalanceELI = delegator.findOne("LeaveBalances", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		if (getAnualLeaveBalanceELI!=null) {
+			annualBal=getAnualLeaveBalanceELI.getBigDecimal("availableLeaveDays");
+			
+			
+		} else {
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
+		if (getAnualResetDaysELI!=null) {
+			annualResetLeaveDays=getAnualResetDaysELI.getBigDecimal("annualLeaveDaysLost");
+			
+			
+		} else {
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
+		
+		if (getAnualOpeningSumELI!=null) {
+			LeaveBalanceCarriedForward = getAnualOpeningSumELI.getBigDecimal("annualLeaveBalanceCarriedForward");
+			LeaveDaysUsed = getAnualOpeningSumELI.getBigDecimal("annualLeaveDaysUsed");
+			
+			
+		} else {
+			
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
 		//========= ==============================//
 		LocalDateTime today = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
 		LocalDateTime firstDayOfYear = today.dayOfYear().withMinimumValue();
@@ -143,9 +211,11 @@ public static String closeFinacialYear(HttpServletRequest request,
 		PeriodType monthDay = PeriodType.months();
 		Period difference = new Period(accrueStart, stCurrentDate, monthDay);
 		int months = difference.getMonths();
-		double accruedLeaveDay = months * accrualRate;
-		double leaveBalances =  accruedLeaveDay - usedLeaveDays;
-		if (leaveBalances > MAXCARRYOVER) {
+		double accruedLeaveDay = (months * accrualRate)+LeaveBalanceCarriedForward.doubleValue()+annualResetLeaveDays.doubleValue();
+		log.info("++++accruedLeaveDay===="+accruedLeaveDay+"====LeaveBalanceCarriedForward:"+LeaveBalanceCarriedForward+"annualResetLeaveDays:"+annualResetLeaveDays);
+		double totalUsed=usedLeaveDays+LeaveDaysUsed.doubleValue();
+		double leaveBalances =  accruedLeaveDay - totalUsed;
+		/*if (leaveBalances > MAXCARRYOVER) {
 			lostLeaveDays = leaveBalances - MAXCARRYOVER;
 			carryOverLeaveDays = MAXCARRYOVER;		 	
 		 } 
@@ -153,6 +223,15 @@ public static String closeFinacialYear(HttpServletRequest request,
 		 	lostLeaveDays = 0;
 			carryOverLeaveDays = leaveBalances;
 		 }
+		 */
+		 if (annualBal.doubleValue() > MAXCARRYOVER) {
+				lostLeaveDays = annualBal.doubleValue() - MAXCARRYOVER;
+				carryOverLeaveDays = MAXCARRYOVER;		 	
+			 } 
+			 if (annualBal.doubleValue() <= MAXCARRYOVER) {
+			 	lostLeaveDays = 0;
+				carryOverLeaveDays = annualBal.doubleValue();
+			 }
 		// Delete record if it was created before end of this year
 		deleteExistingCarryOverLost(delegator, partyId, currentYear);
 		//Create record afresh
@@ -168,7 +247,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 				"partyId", partyId,
 				"financialYear", currentYear,
 	            "accruedDays", accruedLeaveDay , 
-	            "usedLeaveDays", usedLeaveDays,
+	            "usedLeaveDays", totalUsed,
 	            "lostLeaveDays", lostLeaveDays, 
 	            "carryOverLeaveDays", carryOverLeaveDays);
 	try {
@@ -277,7 +356,7 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		String partyId ="", appointmentdate = ""; 
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
-			appointmentdate = genericValue.getString("appointmentdate");
+			appointmentdate = genericValue.getString("confirmationdate");
 			//log.info("===================="+partyId);
 			//log.info("++++++++++++++++++++"+appointmentdate);
 			calculateLeaveBalanceSave(partyId, appointmentdate, thisYear);
@@ -707,7 +786,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		}
 
 		for (GenericValue genericValue : getLeaveappointmentdateELI) {
-			appointmentdate = genericValue.getString("appointmentdate");
+			appointmentdate = genericValue.getString("confirmationdate");
 		}
 
 		return appointmentdate;

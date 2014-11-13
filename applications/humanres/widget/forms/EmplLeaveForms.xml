@@ -164,10 +164,10 @@
 
 		</actions>
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}">
+			<display-entity entity-name="Person" description="${lastName}, ${firstName}">
 				<!-- <sub-hyperlink target="/partymgr/control/viewprofile" -->
 				<sub-hyperlink target="/humanres/control/EmployeeProfile"
-					target-type="inter-app" description="${partyId}" link-style="buttontext">
+					target-type="inter-app" description="Go to Profile" link-style="buttontext">
 					<parameter param-name="partyId" from-field="partyId" />
 				</sub-hyperlink>
 			</display-entity>
@@ -197,7 +197,7 @@
 			<display />
 		</field>
 		
-		<field name="resetAnnualLost" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
+		<field name="resetAnnualLost" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}${annualLostLeaveDays > 0}">
 			<hyperlink also-hidden="false" description="Reset Annual Leave Days Lost"
 				target="resetStaffAnnualLostLeaveDays">
 				<parameter param-name="annualLostLeaveDays" /> 
@@ -455,7 +455,7 @@
 	<field name="approvalStatus" title="Approval Status">
 			<display />
 		</field>
-
+		
 		<field name="responsibleEmployee" title="Approver">
 			<display-entity entity-name="Person" description="${firstName} ${lastName}"
 				key-field-name="partyId">
@@ -541,8 +541,8 @@
 		<field name="partyId" title="Member">
 			<hidden value="${userLogin.partyId}" />
 		</field>
-		<field name="appointmentdate" title="Appointment Date">
-			<hidden value="${appointmentdate}" />
+		<field name="confirmationdate" title="Confirmation Date">
+			<hidden value="${confirmationdate}" />
 		</field>
 		<field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}" required-field="true"
 			title="${uiLabelMap.HumanResLeaveType}">
@@ -578,10 +578,13 @@
 		<field name="organizationUnitId" tooltip="${uiLabelMap.CommonRequired}">
 			<hidden value="${organizationUnitId}" />
 		</field>
-		<field name="accruedLeaveDays" title="Accrued Leave Days">
+		<field name="accruedLeaveDays" title="Accrued/Allocated Leave Days">
 			<text default-value="${accruedLeaveDays}" disabled="true"></text>
 		</field>
-		<field name="approvedLeaveSumed" title="Approved Leave Sum Days">
+		<field name="carryOverLeaveDays" title="Leave Days Brought Forward">
+			<text default-value="${carryOverLeaveDays}" disabled="true"></text>
+		</field>
+		<field name="approvedLeaveSumed" title="Used Leave Days">
 			<text default-value="${ApprovedLeaveSumed}" disabled="true"></text>
 		</field>
 		<field name="leaveBalance" title="Leave Balance">
@@ -1004,9 +1007,9 @@
 		
 		<!-- <field name="LeaveBalanceCarriedForward"><text size="45"></text></field>
 		<field name="LeaveDaysUsed"><text size="45"></text></field> -->
-		<field name="annualLeaveBalanceCarriedForward"><text size="45"></text></field> 
-        <field name="annualLeaveDaysUsed" ><text size="45"></text></field>
-        <field name="compassionateLeaveDaysUsed" ><text size="45"></text></field> 
+		<field name="annualLeaveBalanceCarriedForward" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="45"></text></field> 
+        <field name="annualLeaveDaysUsed" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="45"></text></field>
+        <field name="compassionateLeaveDaysUsed" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="45"></text></field> 
 		<field name="openingDate" title="Date"><date-time type="date" /></field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button" /></field>
 		

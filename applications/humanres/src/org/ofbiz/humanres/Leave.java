@@ -381,7 +381,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		String partyId ="", appointmentdate = ""; 
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
-			appointmentdate = genericValue.getString("appointmentdate");
+			appointmentdate = genericValue.getString("confirmationdate");
 			//log.info("===================="+partyId);
 			//log.info("++++++++++++++++++++"+appointmentdate);
 			calculateAnnualLeaveBalanceWithOpeningBalancesSave(partyId, appointmentdate, thisYear);
@@ -515,7 +515,6 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		} else if(accrualRate != null && carryGV == null){
 			accrualRate = employeeLeaveType.getBigDecimal("accrualRate");
 			carryOverLeaveDays = BigDecimal.ZERO;
-			lostLeaveDays = BigDecimal.ZERO;
 			
 		}else {
 			System.out.println("######## Accrual Rate not found #### ");
