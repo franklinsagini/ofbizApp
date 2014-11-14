@@ -45,6 +45,7 @@ public class MemberStatement {
 				"login.username", username, "login.password", password);
 
 		Map<String, Object> result = FastMap.newInstance();
+	
 		try {
 			result = dispatcher.runSync("statement", paramMap);
 		} catch (GenericServiceException e1) {

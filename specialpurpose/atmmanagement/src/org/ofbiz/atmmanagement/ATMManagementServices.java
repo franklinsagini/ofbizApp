@@ -162,7 +162,7 @@ public class ATMManagementServices {
 			e.printStackTrace();
 		}
 
-		Long cardStatusId = 0L;
+		Long cardStatusId = null;
 		for (GenericValue genericValue : cardStatusELI) {
 			cardStatusId = genericValue.getLong("cardStatusId");
 		}

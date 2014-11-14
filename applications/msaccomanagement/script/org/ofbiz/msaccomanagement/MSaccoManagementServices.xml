@@ -21,7 +21,7 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-      <simple-method method-name="createMSaccoApplication" short-description="Create MSaccoApplication">
+     <simple-method method-name="createMSaccoApplication" short-description="Create MSaccoApplication">
 			<call-simple-method method-name="saveMSaccoApplication" scope="inline"></call-simple-method>
 			<call-simple-method method-name="addMSaccoLog"></call-simple-method>
     </simple-method>
@@ -108,5 +108,27 @@ under the License.
         <set field="logEntity.cardStatusId" value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.getCardStatus(statusName);}"/>
         <create-value value-field="logEntity"/>
     </simple-method>
+    
+             <simple-method method-name="createMSaccoLimit" short-description="Create MSaccoLimit">
+        <make-value entity-name="MSaccoLimit" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+       	<set field="entityName" value="MSaccoLimit"></set>
+        <set field="newEntity.msaccoLimitId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateMSaccoLimit" short-description="Update MSaccoLimit">
+        <entity-one entity-name="MSaccoLimit" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteMSaccoLimit" short-description="Delete MSaccoLimit">
+        <entity-one entity-name="MSaccoLimit" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method> 
     
 </simple-methods>

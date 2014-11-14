@@ -930,8 +930,8 @@ public class AccHolderTransactionServices {
 				accountTransaction);
 		String chargeName = getChargeName(accountProductCharge);
 		// = accountProductCharge.getBigDecimal("");
-		String memberAccountId = accountTransaction.getString("memberAccountId");
-		String productChargeId = accountProductCharge.getString("productChargeId");
+		String memberAccountId = String.valueOf(accountTransaction.getLong("memberAccountId"));
+		String productChargeId = String.valueOf(accountProductCharge.getLong("productChargeId"));
 		
 		String accountTransactionParentId = accountTransaction.getString("accountTransactionParentId");
 		createTransaction(accountTransaction, chargeName, userLogin, memberAccountId, bdChargeAmount, productChargeId, accountTransactionParentId);
@@ -967,10 +967,10 @@ public class AccHolderTransactionServices {
 
 		Delegator delegator = accountProductCharge.getDelegator();
 		GenericValue productCharge = null;
-
+		productChargeId = productChargeId.replaceAll(",", "");
 		try {
 			productCharge = delegator.findOne("ProductCharge",
-					UtilMisc.toMap("productChargeId", productChargeId), false);
+					UtilMisc.toMap("productChargeId", Long.valueOf(productChargeId)), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			log.error("######## Cannot get product charge ");
@@ -1047,7 +1047,7 @@ public class AccHolderTransactionServices {
 			GenericValue accountProductCharge) {
 		Delegator delegator = accountProductCharge.getDelegator();
 		List<GenericValue> accountProductChargeELI = null;
-		
+		parentChargeId = parentChargeId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> accountChargeConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"accountProductId", EntityOperator.EQUALS,
@@ -1056,7 +1056,7 @@ public class AccHolderTransactionServices {
 						accountProductCharge.getString("transactionType"))
 						, EntityCondition.makeCondition(
 						"productChargeId", EntityOperator.EQUALS,
-						parentChargeId)
+						Long.valueOf(parentChargeId))
 						), EntityOperator.AND);
 		try {
 			accountProductChargeELI = delegator.findList(
@@ -1153,13 +1153,16 @@ public class AccHolderTransactionServices {
 			increaseDecrease = "D";
 		}
 
+		productChargeId = productChargeId.replaceAll(",", "");
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId,
 						"isActive", "Y", "createdBy", createdBy, "updatedBy",
-						updatedBy, "branchId", branchId, "partyId", partyId,
+						updatedBy, "branchId", branchId, "partyId", Long.valueOf(partyId),
 						"increaseDecrease", increaseDecrease,
-						"memberAccountId", memberAccountId, "productChargeId",
-						productChargeId, "transactionAmount",
+						"memberAccountId", Long.valueOf(memberAccountId), "productChargeId",
+						Long.valueOf(productChargeId), "transactionAmount",
 						transactionAmount, "transactionType", transactionType, "accountTransactionParentId", accountTransactionParentId));
 		try {
 			delegator.createOrStore(accountTransaction);

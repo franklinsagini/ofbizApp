@@ -264,6 +264,7 @@
             <display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}"  key-field-name="memberAccountId"></display-entity>
         </field>
         
+        <field name="maximumTransactionAmount" title="Maximum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
         <field name="msaccoApproveAction" title="Action" widget-style="buttontext">
 			<hyperlink target="msaccoApproveAction" description="Approve"
@@ -278,6 +279,8 @@
 				<parameter param-name="msaccoApplicationId" />
 			</hyperlink>
 		</field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <!-- FindMSaccoActivate -->
     <form name="FindMSaccoActivate" type="single" target="msaccoActivate" default-entity-name="MSaccoApplication">
@@ -335,7 +338,7 @@
             <display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}"  key-field-name="memberAccountId"></display-entity>
         </field>
         
-        
+        <field name="maximumTransactionAmount" title="Maximum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="msaccoActivateAction" title="Action" widget-style="buttontext">
 			<hyperlink target="msaccoActivateAction" description="Activate"
 				also-hidden="false">
@@ -349,6 +352,8 @@
 				<parameter param-name="msaccoApplicationId" />
 			</hyperlink>
 		</field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
     <!-- FindMSaccoCancel -->
@@ -527,6 +532,35 @@
 		<field name="comment" title="Comment"><display></display></field>
 		<field name="createdStamp" title="Date"><display type="date-time"></display></field>
 		<field name="createdBy" title="Created By"><display></display></field>
+    </form>
+    
+    <!-- MSaccoLimit -->
+     <form name="NewMSaccoLimit" type="single" target="createMSaccoLimit"
+        focus-field-name="minimumTransactionAmount" header-row-style="header-row" default-table-style="basic-table" default-map-name="msaccoLimitContext">
+        
+        <field name="msaccoLimitId"><hidden/></field>
+        <field name="minimumTransactionAmount" title="Minimum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="maximumTransactionAmount" title="Maximum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listMSaccoLimit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMSaccoLimit" paginate-target="msaccoLimit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MSaccoLimit">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateMSaccoLimit"/>
+        <field name="msaccoLimitId"><hidden/></field>
+        <field name="minimumTransactionAmount" title="Minimum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="maximumTransactionAmount" title="Maximum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteCardStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="cardStatusId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
       
 </forms>

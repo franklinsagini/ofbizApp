@@ -23,8 +23,12 @@ under the License.
 
 <!-- CashWithdrawal -->
 	<simple-method method-name="createCashWithdrawal" short-description="Create CashWithdrawal">
-		<call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
-	
+		<call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method>
+        <set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
+    </simple-method>
+    
+    <simple-method method-name="cashWithdrawalSave" use-transaction="true">
+    		<call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
         <make-value entity-name="AccountTransaction" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -39,8 +43,8 @@ under the License.
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
         <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
         <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/ -->
-        <set field="newEntity.branchId" value="Company"/>
+        <set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/>
+        <!-- set field="newEntity.branchId" value="Company"/ -->
         <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
         <set field="newEntity.transactionType" value="CASHWITHDRAWAL"/>
         <set field="transactionType" value="CASHWITHDRAWAL"/>
@@ -58,7 +62,7 @@ under the License.
         
         <!-- Post Cash Withdrawal -->
         <call-simple-method method-name="createMemberTransaction"></call-simple-method>
-        <set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
+    
     </simple-method>
    
     <simple-method method-name="createMemberTransaction" short-description="Member Transaction Entry" use-transaction="true">
