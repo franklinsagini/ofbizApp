@@ -318,6 +318,31 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+	
+	<simple-method method-name="createPerfManager" short-description="Create Perf Manager">
+        <make-value entity-name="PerfManager" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PerfManager" field="perfManagerId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="perfManagerId" field="newEntity.perfManagerId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePerfManager" short-description="Update Perf Manager">
+        <entity-one entity-name="PerfManager" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePerfManager" short-description="Delete Perf Manager">
+        <entity-one entity-name="PerfManager" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
 
 	<simple-method method-name="createPerfReview"
 		short-description="Create a Performance Review">
