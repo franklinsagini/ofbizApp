@@ -79,6 +79,13 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="editStaffConfirmation">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="editStaffConfirmation"
+			save-home-view="true" />
+	</request-map>
+	
+	
 	<request-map uri="resetStaffAnnualLostLeaveDays">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="resetStaffAnnualLostLeaveDays"
@@ -105,6 +112,14 @@ under the License.
 		<response name="success" type="view" value="bankdetails"
 			save-home-view="true" />
 	</request-map>
+	
+	 <request-map uri="findProbationEmployees">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="findProbationEmployees"
+			save-home-view="true" />
+	</request-map>
+	
+	
 	
 	 <request-map uri="partyContentTypes">
 		<security https="true" auth="true" />
@@ -617,6 +632,38 @@ under the License.
         <response name="success" type="view" value="viewEmplLeaveDetails"/>
     </request-map>
     
+    <!-- ================EDIT STAFF CONFIRMATION DATE========================= -->
+     <request-map uri="updateStaffConfirmation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateStaffConfirmation"/>
+        <response name="success" type="view" value="findProbationEmployees"/>
+    </request-map>
+    
+     <!-- ================STAFF CONFIRMATION========================= -->
+     <request-map uri="ConfirmStaff">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ConfirmStaff"/>
+        <response name="success" type="view" value="findProbationEmployees"/>
+    </request-map>
+    
+    <!-- ================STAFF DISMISSAL========================= -->
+     <request-map uri="dismissStaff">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="dismissStaff"/>
+        <response name="success" type="request-redirect" value="findProbationEmployees">
+        <redirect-parameter name="partyId"/>
+        </response>
+        
+        
+    </request-map>
+    
+     <request-map uri="dismissStaffOnProbation">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="dismissStaffOnProbation" />
+		<response name="success" type="view" value="FindEmplLeaves" />
+		<response name="error" type="view" value="addOpeningLeaveBalances" />
+	</request-map>
+    
     
     <!-- ================COURSE SPECIALIZATION========================= -->
      <request-map uri="createPartyCourseSpecialization">
@@ -775,13 +822,17 @@ under the License.
         <event type="service" invoke="deletePartySkill"/>
         <response name="success" type="view" value="FindPartySkills"/>
     </request-map>
+    
+    
     <request-map uri="FindPerfReviews">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPerfReviews"/>
     </request-map>
     <request-map uri="EditPerfReview">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPerfReviews"/>
+        <response name="success" type="view" value="EditPerfReviews">
+        	<redirect-parameter name="perfManagerId"/>
+        </response>
     </request-map>
     <request-map uri="createPerfReview">
         <security https="true" auth="true"/>
@@ -829,6 +880,30 @@ under the License.
         <response name="success" type="view" value="EditPerformanceNotes"/>
         <response name="error" type="view" value="EditPerformanceNotes"/>
     </request-map>
+    
+      <request-map uri="PerfManagement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PerfManagement"/>
+    </request-map>
+    <request-map uri="createPerfManager">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPerfManager"/>
+        <response name="success" type="request-redirect-noparam" value="PerfManagement"/>
+        <response name="error" type="view" value="PerfManagement"/>
+    </request-map>
+    <request-map uri="updatePerfManager">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePerfManager"/>
+        <response name="success" type="request-redirect-noparam" value="PerfManagement"/>
+        <response name="error" type="view" value="PerfManagement"/>
+    </request-map>
+    <request-map uri="deletePerfManager">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePerfManager"/>
+        <response name="success" type="request-redirect-noparam" value="PerfManagement"/>
+        <response name="error" type="view" value="PerfManagement"/>
+    </request-map>
+    
     
     <!--Additional Performance Management Views -->
     
@@ -976,6 +1051,15 @@ under the License.
         <response name="success" type="request-redirect-noparam" value="perfRatingType"/>   
         <response name="error" type="view" value="perfRatingType" />
     </request-map>
+    
+     <request-map uri="generateTargets">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.humanres.GeneratePerformanceTargets" invoke="generatePerfTargets" ></event>
+        <response name="success" type="view" value="FindPerfReviews">
+				<redirect-parameter name="perfManagerId"/>
+		</response>
+		<response name="error" type="view" value="FindPerfReviews" />
+     </request-map>
     
     
     
@@ -2607,7 +2691,7 @@ under the License.
     <view-map name="FindPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#FindPerfReviews"/>
     <view-map name="EditPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviews"/>
     <view-map name="EditPerfReviewItems" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviewItems"/>
-    
+    <view-map name="PerfManagement" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfManagement"/>
     <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
     <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>
     <view-map name="kpiglobaltargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIGlobalTargets"/>
@@ -2680,6 +2764,8 @@ under the License.
     <!-- ==================HR Definitions View Map===================== -->
     
     <view-map name="tribe" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewTribe"/>
+    <view-map name="editStaffConfirmation" type="screen" page="component://humanres/widget/EmployeeScreens.xml#editStaffConfirmationDate"/>
+    
     <view-map name="county" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewCounty"/>
     <view-map name="bloodgroup" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewBloodGroup"/>
     <view-map name="religion" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewReligion"/>
@@ -2691,6 +2777,8 @@ under the License.
     <view-map name="spouse" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewSpouseDetails"/>
     <view-map name="dependant" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewDependantDetails"/>
     <view-map name="nextofkin" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewNextOfKinDetails"/>
+     <view-map name="findProbationEmployees" type="screen" page="component://humanres/widget/EmployeeScreens.xml#employeesOnProbation"/>
+
     
 	<view-map name="station" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStation"/>
     

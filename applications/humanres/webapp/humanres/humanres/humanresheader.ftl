@@ -1,12 +1,15 @@
 <script type="text/javascript">
    jQuery(document).ready(function(){
+   
+   
+	              
     
      jQuery('select[name="leaveTypeId"]').change(function(){
 	
          var leaveTypeId = this.value;
          //console.log(leaveTypeId);
          if (leaveTypeId =="ANNUAL_LEAVE"){
-          var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
+          var appointmentdate =  jQuery('input[name="confirmationdate"]').val();
          var partyId =  jQuery('input[name="partyId"]').val();
          
          var reqUrl = '/humanres/control/emplleavebalance';
@@ -25,16 +28,19 @@
          
          
         });
+        
+        
 
    jQuery('input[name="fromDate"]').change(function(){
 		 
          var fromDate = this.value;
-          var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
-        if((leaveTypeId == "ANNUAL_LEAVE")||(leaveTypeId == "COMPASSIONATE_LEAVE")){        
+         var hasBalance = data.hasBalance;
+         var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
+        if(leaveTypeId != null){        
          var thruDate =  jQuery('input[name="thruDate"]').val();
          var reqUrl = '/humanres/control/emplleaveduration';
           if ((fromDate.length > 0) && (thruDate.length > 0)){
-         	calculateDuration(reqUrl, fromDate, thruDate);
+         	calculateDuration(reqUrl, fromDate, thruDate, leaveTypeId);
          }
          
          var leaveDuration = jQuery('input[name="leaveDuration"]').val();
@@ -43,9 +49,9 @@
          var excessdays =	leaveDuration - leaveBalance;
          var reqUrlLeaveEnd = '/humanres/control/emplleaveend';
          if ((fromDate.length > 0) && (leaveDuration.length > 0) && (excessdays <= 0) ){
-         	calculateLeaveEndDate(reqUrlLeaveEnd, fromDate, leaveDuration);
+         	calculateLeaveEndDate(reqUrlLeaveEnd, fromDate, leaveDuration, leaveTypeId);
          }
-         else if((excessdays > 0)){
+         else if(((leaveTypeId == 'COMPASSIONATE_LEAVE') || (leaveTypeId=='ANNUAL_LEAVE')) && (excessdays > 0)){
          	alert("Leave taken must be less than your leave balance of " +leaveBalance+ "days.");
          	$('input[name="leaveDuration"]').val("");
             $('input[name="thruDate_i18n"]').val("");
@@ -57,11 +63,12 @@
    jQuery('input[name="thruDate"]').change(function(){
 		 
          var thruDate = this.value;
+          var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
          var fromDate =  jQuery('input[name="fromDate"]').val();
          var reqUrl = '/humanres/control/emplleaveduration';
           
           if ((fromDate.length > 0) && (thruDate.length > 0)){
-         	calculateDuration(reqUrl, fromDate, thruDate);
+         	calculateDuration(reqUrl, fromDate, thruDate, leaveTypeId);
          }
         });
         
@@ -111,15 +118,15 @@
 		 
          var leaveDuration = this.value;
          var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
-         if ((leaveTypeId == "ANNUAL_LEAVE")||(leaveTypeId == "COMPASSIONATE_LEAVE")){        
+         if (leaveTypeId != null){        
         var fromDate =  jQuery('input[name="fromDate"]').val();
         var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
         var diff = leaveDuration - leaveBalance;
         var reqUrl = '/humanres/control/emplleaveend';
           if ((fromDate.length > 0) && (leaveDuration.length > 0) && (diff <= 0)){
-         	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration);
+         	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId);
          }
-         else if((diff > 0)){
+         else if(((leaveTypeId == 'COMPASSIONATE_LEAVE') || (leaveTypeId=='ANNUAL_LEAVE')) && (diff > 0)){
          	alert("Leave taken must be less than your leave balance of " +leaveBalance+ "days.");
          	$('input[name="leaveDuration"]').val("");
          $('input[name="thruDate_i18n"]').val("");
@@ -141,18 +148,21 @@
 	
 	     url    : reqUrl,
 	     type   : 'GET',
-	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId ,"appointmentdate" :appointmentdate}, //here you can pass the parameters to  
+	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId ,"confirmationdate" :appointmentdate}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
 	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
 					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
 					 $('input[name="leaveBalance"]').val(data.leaveBalance);
+					 $('input[name="carryOverLeaveDays"]').val(data.carryOverLeaveDays);
 					 
 	               },
 	      error : function(errorData){
 	
 	              alert("Some error occurred while processing the request");
 	              }
+	              
+	             
 	    });
 	    } 
 	    
@@ -176,18 +186,24 @@
 	    });
 	    } 
 
-	  function calculateDuration(reqUrl, fromDate, thruDate){
+	  function calculateDuration(reqUrl, fromDate, thruDate, leaveTypeId){
+	  
+	  
 	    jQuery.ajax({
 	
 	     url    : reqUrl,
 	     type   : 'GET',
-	     data   : {'fromDate': fromDate, 'thruDate':thruDate}, //here you can pass the parameters to  
+	     data   : {'fromDate': fromDate, 'thruDate':thruDate, 'leaveTypeId':leaveTypeId}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
 	     			$('input[name="leaveDuration"]').val("");
+	     			var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
 					var leaveBalance =  $('input[name="leaveBalance"]').val();
 					var leave =  data.leaveDuration;
+					var hasBalance = data.hasBalance;
 					var excessdays =leave -leaveBalance;
+					
+					
 					if(excessdays <= 0){
 						
 						$('input[name="leaveDuration"]').val(data.leaveDuration);
@@ -195,11 +211,26 @@
 						$('input[name="resumptionDate"]').val(data.resumptionDate);
 					  	$('input[name="resumptionDate_i18n"]').val(data.resumptionDate_i18n);
 					}
-					else if (excessdays > 0){
+					else if ((excessdays > 0) && (hasBalance == 'Y')){
 					alert("Leave longer than your leave balance");
 					 $('input[name="leaveDuration"]').val("");
 					 $('input[name="thruDate_i18n"]').val("");
 
+					 }
+					 else if(hasBalance == 'N'){
+					 $('input[name="leaveDuration"]').val(data.leaveDuration);
+						
+						$('input[name="resumptionDate"]').val(data.resumptionDate);
+					  	$('input[name="resumptionDate_i18n"]').val(data.resumptionDate_i18n);
+					  	
+					  	$('input[name="accruedLeaveDays"]').val("");
+					  	$('input[name="approvedLeaveSumed"]').val("");
+					  	$('input[name="leaveBalance"]').val("");
+					  	
+					  	
+			
+			
+					 
 					 }
 	               },
 	      error : function(errorData){
@@ -230,12 +261,13 @@
 	    }
 	    
 	   
-	    function calculateLeaveEndDate(reqUrl, fromDate, leaveDuration){
+	    function calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId){
+	    var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
 	    	jQuery.ajax({
 	
 	     url    : reqUrl,
 	     type   : 'GET',
-	     data   : {'fromDate': fromDate, 'leaveDuration':leaveDuration}, //here you can pass the parameters to  
+	     data   : {'fromDate': fromDate, 'leaveDuration':leaveDuration, 'leaveTypeId':leaveTypeId}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
 					 $('input[name="thruDate"]').val(data.thruDate);
@@ -492,7 +524,7 @@
 
     	var message = '';
     	if ((nationalIDNumberState == 'USED')){
-    		message = "ID Number already used, Try another one ! ";
+    		message = "ID Number already used, Try another one aaa! ";
     		isValid = false;
     	}
 
@@ -573,6 +605,7 @@
     	var GenderState = '';
     	var NoticePeriodState = '';
     	var durationState = '';
+    	var onceAyearState = '';
 
     	 var reqUrl = '/humanres/control/leaveFormValidation';
 
@@ -587,6 +620,7 @@
 							GenderState = data.GenderState;
 							NoticePeriodState =  data.NoticePeriodState;
 							durationState = data.durationState;
+							onceAyearState = data.onceAyearState;
 			               },
 			      error : function(errorData){
 
@@ -610,6 +644,17 @@
     	if ((durationState == 'INVALID')){
     		message = message+" Given Duration not allowed for this type of leave!!";
     		isValid = false;
+    	}
+    	if ((onceAyearState == 'INVALID')){
+    		message = message+" Annual leave can be applied ONLY ONCE per year!!";
+    		isValid = false;
+    	}
+    	if ((onceAyearState == 'PAST')){
+    		message = message+" You can not start leave in the past!!";
+    		isValid = false;
+    	}
+    	if ((onceAyearState == 'VALID')){
+    		isValid = true;
     	}
     	
     	
@@ -736,6 +781,9 @@
     	return isValid;
     	
     }
+    
+    
+   
     
     
     

@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,17 +12,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
@@ -34,7 +30,6 @@ import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -43,13 +38,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.datasource.GenericHelperInfo;
-import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.event.EventHandlerException;
-import org.ofbiz.entity.jdbc.ConnectionFactory;
 
 import com.google.gson.Gson;
 
@@ -64,7 +55,7 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 		String financialYear=LeaveServices.getCurrentYear(now);
 		Date appointmentdate = null;
 		try {
-			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
+			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("confirmationdate")));
 		} catch (ParseException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -83,7 +74,7 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 	       catch (GenericEntityException e) {
 	            e.printStackTrace();;
 	       }  
-	       double carryOverLeaveDays = carryOverLeaveGV.getDouble("carryOverLeaveDays");
+	      /* double carryOverLeaveDays = carryOverLeaveGV.getDouble("carryOverLeaveDays");*/
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition(
@@ -146,31 +137,58 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 		}
 		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
 		
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		PeriodType monthDay = PeriodType.months();
 
 		Period difference = new Period(accrueStart, stCurrentDate, monthDay);
 
 		int months = difference.getMonths();
-		String approvedLeaveSumed = Double.toString(approvedLeaveSum);
+		/*String approvedLeaveSumed = Double.toString(approvedLeaveSum);*/
 		double accruedLeaveDay = months * accrualRate;
-		double leaveBalances =  accruedLeaveDay + carryOverLeaveDays - approvedLeaveSum; 
+		/*double leaveBalances =  accruedLeaveDay + carryOverLeaveDays - approvedLeaveSum; */
 		String accruedLeaveDays = Double.toString(accruedLeaveDay);
-		String leaveBalance = Double.toString(leaveBalances);
+		/*String leaveBalance = Double.toString(leaveBalances);*/
 
+		
+      //==============CONSIDER LEAVE BALANCES=========================
+		GenericValue getAnualLeaveBalanceELI=null;
+		BigDecimal annualBal=BigDecimal.ZERO;
+		BigDecimal annualUsed=BigDecimal.ZERO;
+		BigDecimal annualCarryOver=BigDecimal.ZERO;
+		BigDecimal annualAccrued=BigDecimal.ZERO;
+		try {
+			 
+			 getAnualLeaveBalanceELI = delegator.findOne("LeaveBalances", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		if (getAnualLeaveBalanceELI!=null) {
+			annualBal=getAnualLeaveBalanceELI.getBigDecimal("availableLeaveDays");
+			annualUsed=getAnualLeaveBalanceELI.getBigDecimal("usedLeaveDays");
+			annualCarryOver=getAnualLeaveBalanceELI.getBigDecimal("LeaveDaysCarriedOver");
+			annualAccrued=getAnualLeaveBalanceELI.getBigDecimal("accruedDays");
+			
+			
+		} else {
+			annualBal=new BigDecimal(accruedLeaveDay);
+			annualAccrued=new BigDecimal(accruedLeaveDay);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+	
 		//return leaveBalance;
-		result.put("approvedLeaveSumed",approvedLeaveSumed );
-		result.put("accruedLeaveDays", accruedLeaveDays);
-		result.put("leaveBalance" , leaveBalance);
+		result.put("approvedLeaveSumed",annualUsed );
+		result.put("accruedLeaveDays", annualAccrued);
+		result.put("leaveBalance" , annualBal);
+		result.put("carryOverLeaveDays" , annualCarryOver);
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -217,7 +235,6 @@ public static String getCompassionateLeaveBalance(HttpServletRequest request,Htt
 	String financialYear=LeaveServices.getCurrentYear(now);
 	
 
-	String leaveTypeId = new String((request.getParameter("leaveTypeId")).toString());
 	String partyId = new String(request.getParameter("partyId")).toString();		
 	//   get current leave balance  //
 	
@@ -268,19 +285,13 @@ GenericValue employeeLeaveType = null;
 	double leaveBalances =  days-approvedLeaveSum; 
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	String leaveBalance = Double.toString(leaveBalances);
 
 	//return leaveBalance;
 	result.put("approvedLeaveSumed",approvedLeaveSum );
 	result.put("accruedLeaveDays", days);
 	result.put("leaveBalance" , leaveBalance);
+	result.put("carryOverLeaveDays" , 0.000);
 
 	Gson gson = new Gson();
 	String json = gson.toJson(result);
@@ -321,29 +332,18 @@ GenericValue employeeLeaveType = null;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ==============================================================
 
 
-	public static String getLeaveDuration(HttpServletRequest request,
-			HttpServletResponse response) {
+	public static String getLeaveDuration(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-
+		 Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+        String leaveTypeId = (String)request.getParameter("leaveTypeId").toString();
+        int leaveDuration=0;
 		Date fromDate = null;
+		GenericValue getLeaveDayTypeELI=null;
+		String daytype="";
+		String hasbalance="";
 		try {
 			fromDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fromDate")));
 		} catch (ParseException e2) {
@@ -359,12 +359,55 @@ GenericValue employeeLeaveType = null;
 		}
 		
 		Logger log = Logger.getLogger(HumanResServices.class);
-		log.info("LLLLLLLLL FROM : "+fromDate);
-		log.info("LLLLLLLLL TO : "+thruDate);
+		log.info("=================================LLLLLLLLL leaveTypeId : "+leaveTypeId);
+		log.info("======================================LLLLLLLLL FROM : "+fromDate);
+		log.info("======================================LLLLLLLLL TO : "+thruDate);
+		
+		try {
+			 
+			 getLeaveDayTypeELI = delegator.findOne("EmplLeaveType", 
+					            UtilMisc.toMap("leaveTypeId",leaveTypeId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		if (getLeaveDayTypeELI!=null) {
+			daytype=getLeaveDayTypeELI.getString("daytype");
+			hasbalance=getLeaveDayTypeELI.getString("hasbalance");
+			
+			
+		} else {
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
+		if (daytype.equalsIgnoreCase("Work Days")) {
+			leaveDuration = AccHolderTransactionServices.calculateWorkingDaysBetweenDates(fromDate, thruDate);
+			
+		} else if(daytype.equalsIgnoreCase("Calendar Days")){
+			leaveDuration = calculateCalenderDaysBetweenDates(fromDate, thruDate);
 
-		int leaveDuration = AccHolderTransactionServices.calculateWorkingDaysBetweenDates(fromDate, thruDate);
+		}
+		
+		String indicator=null;
+		
+		if (hasbalance.equalsIgnoreCase("Yes")) {
+			
+			indicator="Y";
+		} else if(hasbalance.equalsIgnoreCase("No")) {
+			indicator="N";
+
+		}
+		
+		
+
+		
 		
 		result.put("leaveDuration", leaveDuration);
+		result.put("hasBalance", indicator);
+		
+		log.info("======================================leaveDuration :=== "+leaveDuration);
+		log.info("======================================hasBalance :==== "+indicator);
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -404,26 +447,75 @@ GenericValue employeeLeaveType = null;
 
 	}
 	
-	public static String  getLeaveEnd(HttpServletRequest request,
-			HttpServletResponse response) {
+	public static String  getLeaveEnd(HttpServletRequest request, HttpServletResponse response) {
 		
 		Map<String, Object> result = FastMap.newInstance();
+		 Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	     String leaveTypeId = (String)request.getParameter("leaveTypeId").toString();
 		Date fromDate = null;
+		String daytype="";
+		GenericValue getLeaveDayTypeELI=null;
+		Date endDate=null;
+		Date resumeDate = null;
 		
 		try {
 			fromDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fromDate")));
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
-		
 		int leaveDuration = new Integer(request.getParameter("leaveDuration")).intValue();
+		
+		Logger log = Logger.getLogger(HumanResServices.class);
+		log.info("=================================LLLLLLLLL leaveTypeId : "+leaveTypeId);
+		log.info("======================================LLLLLLLLL FROM : "+fromDate);
+		log.info("======================================LLLLLLLLL TO : "+leaveDuration);
+		
+		
+		
+		try {
+			 
+			 getLeaveDayTypeELI = delegator.findOne("EmplLeaveType", 
+					            UtilMisc.toMap("leaveTypeId",leaveTypeId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		if (getLeaveDayTypeELI!=null) {
+			daytype=getLeaveDayTypeELI.getString("daytype");
+			
+			log.info("======================================DAYTYPE : "+daytype);
+			
+		} else {
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
+		if (daytype.equalsIgnoreCase("Work_days")) {
+			endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
+			int leaveTillResumption = leaveDuration+1;
+			resumeDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveTillResumption);
+			
+		} else /*if(daytype.equalsIgnoreCase("Calendar_days"))*/{
+			 endDate = calculateEndCalenderDay(fromDate, leaveDuration);
+			int leaveTillResumption = leaveDuration+1;
+			resumeDate = calculateEndCalenderDay(fromDate, leaveTillResumption);
+			
+
+		}
+		
+		
+	
+		
+		
+		
+		
 
 		LocalDateTime dateFromDate = new LocalDateTime(fromDate.getTime());
 
-		Date endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
+		/*Date endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
 		
 		int leaveTillResumption = leaveDuration+1;
-		Date resumeDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveTillResumption);
+		Date resumeDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveTillResumption);*/
 		
 		
 		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
@@ -991,6 +1083,87 @@ GenericValue employeeLeaveType = null;
 
 
 	}
+	
+	public static int calculateCalenderDaysBetweenDates(Date startDate,
+			Date endDate) {
+		int daysCount = 1;
+		LocalDate localDateStartDate = new LocalDate(startDate);
+		LocalDate localDateEndDate = new LocalDate(endDate);
+
+		while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
+				daysCount++;
+			
+
+			localDateStartDate = localDateStartDate.plusDays(1);
+		}
+
+		return daysCount;
+	}
+	
+	public static Date calculateEndCalenderDay(Date startDate, int noOfDays) {
+
+		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
+
+		
+		// Calculate End Date
+		int count = 1;
+		while (count < noOfDays) {
+				localDateEndDate = localDateEndDate.plusDays(1);
+			
+			count++;
+		}
+
+		return localDateEndDate.toDate();
+	}
+	
+	
+	public static String getDateToday(Date confirmDate) {
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		LocalDateTime today = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
+		LocalDateTime confirm = new LocalDateTime(confirmDate);
+		String state="";
+		
+		if (today.isAfter(confirm)) {
+			state="CONFIRM";
+		} else if(today.isBefore(confirm)){
+			state="NOCONFIRM";
+
+		}
+
+		log.info("+++++++++++++++++++++++Today: "+today);
+		log.info("+++++++++++++++++++++++confirm: "+confirm);
+		log.info("+++++++++++++++++++++++state: "+state);
+		return state;
+	}
+	
+	public static Map<String, Object>  dismissStaffOnProbation(DispatchContext ctx,	Map<String, ? extends Object> context) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String partyId = (String) context.get("partyId");
+		
+		log.info("+++++++++++++++++++++++PARTYID: "+partyId);
+		
+		try {
+			delegator.removeByAnd("Person",
+					UtilMisc.toMap("partyId", partyId));
+			delegator.removeByAnd("PartyRole",
+					UtilMisc.toMap("partyId", partyId));
+			delegator.removeByAnd("userLogin",
+					UtilMisc.toMap("partyId", partyId));
+			delegator.removeByAnd("Party",
+					UtilMisc.toMap("partyId", partyId));
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			// if this fails no problem
+		}
+
+		result.put("partyId", partyId);
+		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+		return result;
+		
+	
+	}
+	
 	
 	
 	

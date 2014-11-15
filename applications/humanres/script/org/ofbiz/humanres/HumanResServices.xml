@@ -318,6 +318,31 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+	
+	<simple-method method-name="createPerfManager" short-description="Create Perf Manager">
+        <make-value entity-name="PerfManager" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PerfManager" field="perfManagerId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="perfManagerId" field="newEntity.perfManagerId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePerfManager" short-description="Update Perf Manager">
+        <entity-one entity-name="PerfManager" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePerfManager" short-description="Delete Perf Manager">
+        <entity-one entity-name="PerfManager" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
 
 	<simple-method method-name="createPerfReview"
 		short-description="Create a Performance Review">
@@ -1380,6 +1405,7 @@
         <set field="lookedUpValue.responsibleEmployee" value="" />
         <set field="lookedUpValue.applicationStatus" value="Rejected" />
         <set field="lookedUpValue.approvalStatus" value="Rejected" />
+        <set field="lookedUpValue.rejectReason" from-field="lookedUpValue.rejectReason" />
         <store-value value-field="lookedUpValue" />
 			
         
@@ -1404,6 +1430,7 @@
         <set field="lookedUpValue.responsibleEmployee" value="NEW" />
         <set field="lookedUpValue.applicationStatus" value="Send Back" />
         <set field="lookedUpValue.approvalStatus" value="Send Back" />
+        <set field="lookedUpValue.rejectReason" from-field="lookedUpValue.rejectReason" />
         <store-value value-field="lookedUpValue" />
 			
         
@@ -1444,6 +1471,57 @@
         <create-value value-field="newEntity" />
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
     </simple-method>
+    
+    <!-- ==============================EDIT STAFF CONFIRMATION DATE================================== -->
+     <simple-method method-name="updateStaffConfirmation"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="Person" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.confirmationdate" from-field="lookedUpValue.confirmationdate"/>
+        <store-value value-field="lookedUpValue" />
+        </simple-method>
+        
+        <!-- ==============================STAFF CONFIRMATION================================== -->
+     <simple-method method-name="ConfirmStaff"
+        short-description="Change staff confirmation status">
+        <entity-one entity-name="Person" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.employmentStatusEnumId" value="16"/>
+        <store-value value-field="lookedUpValue" />
+        </simple-method>
+        
+         <!-- ==============================STAFF DISMISSAL================================== -->
+         
+        <simple-method method-name="dismissStaff"
+		short-description="Delete Employee">
+		<set field="partyId" from-field="lookedUpValue.partyId" />
+		<entity-one entity-name="Person" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		
+		<call-simple-method method-name="dismissStaffFromPartyRole" scope="inline"></call-simple-method>
+		<call-simple-method method-name="dismissStaffFromParty" scope="inline"></call-simple-method>
+		
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	 <simple-method method-name="dismissStaffFromPartyRole"
+		short-description="Delete Employee">
+		<set field="partyId" from-field="lookedUpValue.partyId" />
+		<entity-one entity-name="PartyRole" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	 <simple-method method-name="dismissStaffFromParty"
+		short-description="Delete Employee">
+		<set field="partyId" from-field="lookedUpValue.partyId" />
+		<entity-one entity-name="Party" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	
+    
+    
 	<simple-method method-name="createEmplLeave"
 		short-description="Create Employee Leave">
 		<make-value entity-name="EmplLeave" value-field="newEntity"/>
