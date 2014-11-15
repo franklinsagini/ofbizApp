@@ -2,6 +2,7 @@ package org.ofbiz.humanres;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,14 +16,16 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.payroll.ClosePayroll;
 
 public class GeneratePerformanceTargets {
-private static Logger log = Logger.getLogger(ClosePayroll.class);
+	
+	static ArrayList<String> perfTargets = new ArrayList<String>();
+private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 	
 	public static String generatePerfTargets(HttpServletRequest request,
 			HttpServletResponse response) {
 		
+		perfTargets=null;
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		
 		
@@ -44,12 +47,31 @@ private static Logger log = Logger.getLogger(ClosePayroll.class);
 			e.printStackTrace();
 		}
 		
-
 		for (GenericValue perfReview : perfReviewELI) 
 		{
+			setExistingTargets(delegator, perfReview.getString("perfReviewId"));
 			addTargets(delegator, perfReview);
 		}
 		return null;
+	}
+
+	private static void setExistingTargets(Delegator delegator, String perfReviewId) {
+		List<GenericValue> existingReviewsELI = null;
+		try {
+			
+			existingReviewsELI = delegator.findList("PerfReviewItem",
+					EntityCondition.makeCondition("perfReviewId", perfReviewId), null,
+					null, null, false);
+		
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue existingReviews : existingReviewsELI) 
+		{
+			perfTargets.add(existingReviews.getString("kpiTargetId"));
+		}
+		
 	}
 
 	private static void addTargets(Delegator delegator, GenericValue perfReview) {
@@ -76,7 +98,11 @@ private static Logger log = Logger.getLogger(ClosePayroll.class);
 
 		for (GenericValue target : targetELI) 
 		{
-			listTargets.add(createTargetsToSave(delegator, perfReview.getString("employeePartyId"), perfReviewId, target.getString("kpiTargetId")));
+			if(!(perfTargets.contains(target.getString("kpiTargetId"))))
+			{
+				listTargets.add(createTargetsToSave(delegator, perfReview.getString("employeePartyId"), perfReviewId, target.getString("kpiTargetId")));
+			}
+			
 		}
 		try {
 			delegator.storeAll(listTargets);
