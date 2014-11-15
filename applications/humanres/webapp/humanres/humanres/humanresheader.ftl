@@ -51,7 +51,7 @@
          if ((fromDate.length > 0) && (leaveDuration.length > 0) && (excessdays <= 0) ){
          	calculateLeaveEndDate(reqUrlLeaveEnd, fromDate, leaveDuration, leaveTypeId);
          }
-         else if((hasBalance=='Y') && (excessdays > 0)){
+         else if(((leaveTypeId == 'COMPASSIONATE_LEAVE') || (leaveTypeId=='ANNUAL_LEAVE')) && (excessdays > 0)){
          	alert("Leave taken must be less than your leave balance of " +leaveBalance+ "days.");
          	$('input[name="leaveDuration"]').val("");
             $('input[name="thruDate_i18n"]').val("");
@@ -126,7 +126,7 @@
           if ((fromDate.length > 0) && (leaveDuration.length > 0) && (diff <= 0)){
          	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId);
          }
-         else if((diff > 0)){
+         else if(((leaveTypeId == 'COMPASSIONATE_LEAVE') || (leaveTypeId=='ANNUAL_LEAVE')) && (diff > 0)){
          	alert("Leave taken must be less than your leave balance of " +leaveBalance+ "days.");
          	$('input[name="leaveDuration"]').val("");
          $('input[name="thruDate_i18n"]').val("");
@@ -524,7 +524,7 @@
 
     	var message = '';
     	if ((nationalIDNumberState == 'USED')){
-    		message = "ID Number already used, Try another one ! ";
+    		message = "ID Number already used, Try another one aaa! ";
     		isValid = false;
     	}
 
@@ -652,6 +652,9 @@
     	if ((onceAyearState == 'PAST')){
     		message = message+" You can not start leave in the past!!";
     		isValid = false;
+    	}
+    	if ((onceAyearState == 'VALID')){
+    		isValid = true;
     	}
     	
     	

@@ -79,6 +79,13 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="editStaffConfirmation">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="editStaffConfirmation"
+			save-home-view="true" />
+	</request-map>
+	
+	
 	<request-map uri="resetStaffAnnualLostLeaveDays">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="resetStaffAnnualLostLeaveDays"
@@ -105,6 +112,14 @@ under the License.
 		<response name="success" type="view" value="bankdetails"
 			save-home-view="true" />
 	</request-map>
+	
+	 <request-map uri="findProbationEmployees">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="findProbationEmployees"
+			save-home-view="true" />
+	</request-map>
+	
+	
 	
 	 <request-map uri="partyContentTypes">
 		<security https="true" auth="true" />
@@ -616,6 +631,38 @@ under the License.
         <event type="service" invoke="sentLeaveBackWithReason"/>
         <response name="success" type="view" value="viewEmplLeaveDetails"/>
     </request-map>
+    
+    <!-- ================EDIT STAFF CONFIRMATION DATE========================= -->
+     <request-map uri="updateStaffConfirmation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateStaffConfirmation"/>
+        <response name="success" type="view" value="findProbationEmployees"/>
+    </request-map>
+    
+     <!-- ================STAFF CONFIRMATION========================= -->
+     <request-map uri="ConfirmStaff">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ConfirmStaff"/>
+        <response name="success" type="view" value="findProbationEmployees"/>
+    </request-map>
+    
+    <!-- ================STAFF DISMISSAL========================= -->
+     <request-map uri="dismissStaff">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="dismissStaff"/>
+        <response name="success" type="request-redirect" value="findProbationEmployees">
+        <redirect-parameter name="partyId"/>
+        </response>
+        
+        
+    </request-map>
+    
+     <request-map uri="dismissStaffOnProbation">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="dismissStaffOnProbation" />
+		<response name="success" type="view" value="FindEmplLeaves" />
+		<response name="error" type="view" value="addOpeningLeaveBalances" />
+	</request-map>
     
     
     <!-- ================COURSE SPECIALIZATION========================= -->
@@ -2680,6 +2727,8 @@ under the License.
     <!-- ==================HR Definitions View Map===================== -->
     
     <view-map name="tribe" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewTribe"/>
+    <view-map name="editStaffConfirmation" type="screen" page="component://humanres/widget/EmployeeScreens.xml#editStaffConfirmationDate"/>
+    
     <view-map name="county" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewCounty"/>
     <view-map name="bloodgroup" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewBloodGroup"/>
     <view-map name="religion" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewReligion"/>
@@ -2691,6 +2740,8 @@ under the License.
     <view-map name="spouse" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewSpouseDetails"/>
     <view-map name="dependant" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewDependantDetails"/>
     <view-map name="nextofkin" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewNextOfKinDetails"/>
+     <view-map name="findProbationEmployees" type="screen" page="component://humanres/widget/EmployeeScreens.xml#employeesOnProbation"/>
+
     
 	<view-map name="station" type="screen" page="component://payroll/widget/payroll/PayrollScreens.xml#NewStation"/>
     

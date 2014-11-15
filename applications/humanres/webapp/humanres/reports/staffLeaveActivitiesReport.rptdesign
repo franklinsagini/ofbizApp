@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 4.4.0.v201405191524 Build &lt;4.4.0.v20140606-1451></property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">8</property>
-        </structure>
-        <structure>
-            <property name="name">queryTimeOut</property>
-            <property name="id">8</property>
-        </structure>
-        <structure>
-            <property name="name">rowFetchSize</property>
-            <property name="id">8</property>
-        </structure>
-    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -24,19 +10,13 @@
             <text-property name="promptText">Enter Staff payroll number</text-property>
             <property name="valueType">static</property>
             <property name="isRequired">true</property>
-            <property name="dataSetName">leaveLogs</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["payroll"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["payroll"]</expression>
             <expression name="sortByColumn">dataSetRow["last_updated_stamp"]</expression>
             <property name="sortDirection">desc</property>
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
-            <property name="mustMatch">false</property>
-            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -152,12 +132,13 @@
             <list-property name="filter"/>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">payroll</property>
+                    <property name="name">employee_number</property>
                     <property name="paramName">payroll_NO</property>
                     <property name="nativeName"></property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -344,10 +325,9 @@
   leave_status_log
   INNER JOIN Person ON leave_status_log.party_id= Person.party_id
   INNER JOIN Person p ON leave_status_log.next_approver= p.party_id
-  INNER JOIN empl_leave ON empl_leave.leave_id= leave_status_log.leave_id
-  WHERE
-  Person.employee_number=?
-  
+  INNER JOIN empl_leave ON empl_leave.leave_id= leave_status_log.leave_id 
+  WHERE Person.employee_number=?
+  ORDER BY leave_status_log.last_updated_stamp DESC
   ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -408,6 +388,9 @@
         <style name="rownum" id="468">
             <property name="backgroundColor">#808000</property>
         </style>
+        <style name="row_num" id="777">
+            <property name="backgroundColor">#808000</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -423,7 +406,7 @@
         </simple-master-page>
     </page-setup>
     <body>
-        <table id="619">
+        <table id="652">
             <property name="dataSet">leaveLogs</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -505,74 +488,307 @@
                     <property name="dataType">date</property>
                 </structure>
             </list-property>
-            <column id="632"/>
-            <column id="633"/>
-            <column id="634"/>
+            <column id="683"/>
+            <column id="684"/>
+            <column id="685"/>
+            <column id="686"/>
+            <column id="687"/>
+            <column id="688"/>
+            <column id="689"/>
+            <column id="690"/>
+            <column id="691"/>
             <header>
-                <row id="641">
-                    <cell id="642">
-                        <data id="649">
+                <row id="747">
+                    <property name="height">1.6666666666666667in</property>
+                    <cell id="748"/>
+                    <cell id="749"/>
+                    <cell id="750"/>
+                    <cell id="751">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <image id="770">
+                            <property name="height">1.5625in</property>
+                            <property name="width">1.5208333333333333in</property>
+                            <property name="source">embed</property>
+                            <property name="imageName">ofbiz_logo_2.gif</property>
+                        </image>
+                    </cell>
+                    <cell id="754"/>
+                    <cell id="755"/>
+                    <cell id="756"/>
+                </row>
+                <row id="737">
+                    <property name="height">0.3645833333333333in</property>
+                    <cell id="738"/>
+                    <cell id="739"/>
+                    <cell id="740">
+                        <property name="colSpan">5</property>
+                        <property name="rowSpan">1</property>
+                        <label id="771">
+                            <property name="fontSize">14pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textUnderline">underline</property>
+                            <text-property name="text">STAFF LEAVE LOGS REPORT</text-property>
+                        </label>
+                    </cell>
+                    <cell id="745"/>
+                    <cell id="746"/>
+                </row>
+                <row id="757">
+                    <cell id="758">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="772">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Payroll Number:</text-property>
+                        </label>
+                    </cell>
+                    <cell id="760">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <data id="774">
+                            <property name="fontWeight">bold</property>
+                            <property name="fontStyle">italic</property>
+                            <property name="textUnderline">underline</property>
+                            <property name="textAlign">left</property>
                             <property name="resultSetColumn">payroll</property>
                         </data>
                     </cell>
-                    <cell id="643"/>
-                    <cell id="644"/>
+                    <cell id="762"/>
+                    <cell id="763"/>
+                    <cell id="764"/>
+                    <cell id="765"/>
+                    <cell id="766"/>
                 </row>
-                <row id="645">
-                    <property name="height">0.8645833333333334in</property>
-                    <cell id="646">
-                        <data id="650">
+                <row id="727">
+                    <property name="height">0.5104166666666666in</property>
+                    <cell id="728">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="773">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Names:</text-property>
+                        </label>
+                    </cell>
+                    <cell id="730">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <data id="775">
+                            <property name="fontWeight">bold</property>
+                            <property name="fontStyle">italic</property>
+                            <property name="textUnderline">underline</property>
+                            <property name="textAlign">left</property>
                             <property name="resultSetColumn">first_name</property>
                         </data>
-                        <data id="651">
+                        <data id="776">
+                            <property name="fontWeight">bold</property>
+                            <property name="fontStyle">italic</property>
+                            <property name="textUnderline">underline</property>
+                            <property name="textAlign">left</property>
                             <property name="resultSetColumn">last_name</property>
                         </data>
                     </cell>
-                    <cell id="647"/>
-                    <cell id="648"/>
+                    <cell id="732"/>
+                    <cell id="733"/>
+                    <cell id="734"/>
+                    <cell id="735"/>
+                    <cell id="736"/>
                 </row>
-                <row id="620">
-                    <cell id="621">
-                        <label id="635">
-                            <text-property name="text">replace</text-property>
+                <row id="717">
+                    <cell id="718"/>
+                    <cell id="719"/>
+                    <cell id="720"/>
+                    <cell id="721"/>
+                    <cell id="722"/>
+                    <cell id="723"/>
+                    <cell id="724"/>
+                    <cell id="725"/>
+                    <cell id="726"/>
+                </row>
+                <row id="653">
+                    <property name="backgroundColor">green</property>
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="color">yellow</property>
+                    <property name="borderBottomColor">#FFFF00</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">medium</property>
+                    <property name="borderLeftColor">#FFFF00</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">medium</property>
+                    <property name="borderRightColor">#FFFF00</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">medium</property>
+                    <property name="borderTopColor">#FFFF00</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">medium</property>
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.5in</property>
+                    <cell id="654">
+                        <property name="borderRightColor">#FFFF00</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="692">
+                            <text-property name="text">Leave Id</text-property>
                         </label>
                     </cell>
-                    <cell id="622">
-                        <label id="637">
-                            <text-property name="text">approval_status</text-property>
+                    <cell id="655">
+                        <property name="borderRightColor">#FFFF00</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="694">
+                            <text-property name="text">Leave Type</text-property>
                         </label>
                     </cell>
-                    <cell id="623">
-                        <label id="639">
-                            <text-property name="text">last_updated_stamp</text-property>
+                    <cell id="656">
+                        <property name="borderRightColor">#FFFF00</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="696">
+                            <text-property name="text">Leave Duration</text-property>
+                        </label>
+                    </cell>
+                    <cell id="657">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderRightColor">#FFFF00</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="713">
+                            <text-property name="text">Leave Approver</text-property>
+                        </label>
+                    </cell>
+                    <cell id="659">
+                        <property name="borderRightColor">#FFFF00</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="708">
+                            <text-property name="text">Leave Status</text-property>
+                        </label>
+                    </cell>
+                    <cell id="660">
+                        <property name="borderRightColor">#FFFF00</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="704">
+                            <text-property name="text">Leave Start Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="661">
+                        <property name="borderRightColor">#FFFF00</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="702">
+                            <text-property name="text">Leave End Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="662">
+                        <label id="700">
+                            <text-property name="text">Log Date</text-property>
                         </label>
                     </cell>
                 </row>
             </header>
             <detail>
-                <row id="624">
-                    <cell id="625">
-                        <data id="636">
+                <row id="663">
+                    <property name="height">0.375in</property>
+                    <list-property name="highlightRules">
+                        <structure>
+                            <property name="operator">ne</property>
+                            <expression name="testExpr" type="javascript">row.__rownum%2</expression>
+                            <simple-property-list name="value1">
+                                <value type="javascript">0</value>
+                            </simple-property-list>
+                            <property name="style">row_num</property>
+                        </structure>
+                    </list-property>
+                    <cell id="664">
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="693">
+                            <property name="resultSetColumn">leave_id</property>
+                        </data>
+                    </cell>
+                    <cell id="665">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="695">
                             <property name="resultSetColumn">replace</property>
                         </data>
                     </cell>
-                    <cell id="626">
-                        <data id="638">
+                    <cell id="666">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="697">
+                            <property name="resultSetColumn">leave_duration</property>
+                        </data>
+                    </cell>
+                    <cell id="667">
+                        <data id="714">
+                            <property name="resultSetColumn">approver_first_name</property>
+                        </data>
+                    </cell>
+                    <cell id="668">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="716">
+                            <property name="resultSetColumn">approver_last_name</property>
+                        </data>
+                    </cell>
+                    <cell id="669">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="709">
                             <property name="resultSetColumn">approval_status</property>
                         </data>
                     </cell>
-                    <cell id="627">
-                        <data id="640">
+                    <cell id="670">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="705">
+                            <property name="resultSetColumn">from_date</property>
+                        </data>
+                    </cell>
+                    <cell id="671">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="703">
+                            <property name="resultSetColumn">thru_date</property>
+                        </data>
+                    </cell>
+                    <cell id="672">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="701">
                             <property name="resultSetColumn">last_updated_stamp</property>
                         </data>
                     </cell>
                 </row>
             </detail>
             <footer>
-                <row id="628">
-                    <cell id="629"/>
-                    <cell id="630"/>
-                    <cell id="631"/>
+                <row id="673">
+                    <cell id="674"/>
+                    <cell id="675"/>
+                    <cell id="676"/>
+                    <cell id="677"/>
+                    <cell id="678"/>
+                    <cell id="679"/>
+                    <cell id="680"/>
+                    <cell id="681"/>
+                    <cell id="682"/>
                 </row>
             </footer>
         </table>

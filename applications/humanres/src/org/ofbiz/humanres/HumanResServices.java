@@ -27,6 +27,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -37,6 +38,8 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -151,6 +154,7 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 		BigDecimal annualBal=BigDecimal.ZERO;
 		BigDecimal annualUsed=BigDecimal.ZERO;
 		BigDecimal annualCarryOver=BigDecimal.ZERO;
+		BigDecimal annualAccrued=BigDecimal.ZERO;
 		try {
 			 
 			 getAnualLeaveBalanceELI = delegator.findOne("LeaveBalances", 
@@ -164,10 +168,12 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 			annualBal=getAnualLeaveBalanceELI.getBigDecimal("availableLeaveDays");
 			annualUsed=getAnualLeaveBalanceELI.getBigDecimal("usedLeaveDays");
 			annualCarryOver=getAnualLeaveBalanceELI.getBigDecimal("LeaveDaysCarriedOver");
+			annualAccrued=getAnualLeaveBalanceELI.getBigDecimal("accruedDays");
 			
 			
 		} else {
 			annualBal=new BigDecimal(accruedLeaveDay);
+			annualAccrued=new BigDecimal(accruedLeaveDay);
 		}
 		
 		
@@ -180,7 +186,7 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 	
 		//return leaveBalance;
 		result.put("approvedLeaveSumed",annualUsed );
-		result.put("accruedLeaveDays", accruedLeaveDays);
+		result.put("accruedLeaveDays", annualAccrued);
 		result.put("leaveBalance" , annualBal);
 		result.put("carryOverLeaveDays" , annualCarryOver);
 
@@ -285,6 +291,7 @@ GenericValue employeeLeaveType = null;
 	result.put("approvedLeaveSumed",approvedLeaveSum );
 	result.put("accruedLeaveDays", days);
 	result.put("leaveBalance" , leaveBalance);
+	result.put("carryOverLeaveDays" , 0.000);
 
 	Gson gson = new Gson();
 	String json = gson.toJson(result);
@@ -483,13 +490,13 @@ GenericValue employeeLeaveType = null;
 			String errorMsg = "================================NOTHING FOUND HERE===============";
 		}
 		
-		if (daytype.equalsIgnoreCase("Work Days")) {
+		if (daytype.equalsIgnoreCase("Work_days")) {
 			endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
 			int leaveTillResumption = leaveDuration+1;
 			resumeDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveTillResumption);
 			
-		} else if(daytype.equalsIgnoreCase("Calendar Days")){
-			endDate = calculateEndCalenderDay(fromDate, leaveDuration);
+		} else /*if(daytype.equalsIgnoreCase("Calendar_days"))*/{
+			 endDate = calculateEndCalenderDay(fromDate, leaveDuration);
 			int leaveTillResumption = leaveDuration+1;
 			resumeDate = calculateEndCalenderDay(fromDate, leaveTillResumption);
 			
@@ -497,7 +504,7 @@ GenericValue employeeLeaveType = null;
 		}
 		
 		
-		
+	
 		
 		
 		
@@ -1108,6 +1115,55 @@ GenericValue employeeLeaveType = null;
 
 		return localDateEndDate.toDate();
 	}
+	
+	
+	public static String getDateToday(Date confirmDate) {
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		LocalDateTime today = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
+		LocalDateTime confirm = new LocalDateTime(confirmDate);
+		String state="";
+		
+		if (today.isAfter(confirm)) {
+			state="CONFIRM";
+		} else if(today.isBefore(confirm)){
+			state="NOCONFIRM";
+
+		}
+
+		log.info("+++++++++++++++++++++++Today: "+today);
+		log.info("+++++++++++++++++++++++confirm: "+confirm);
+		log.info("+++++++++++++++++++++++state: "+state);
+		return state;
+	}
+	
+	public static Map<String, Object>  dismissStaffOnProbation(DispatchContext ctx,	Map<String, ? extends Object> context) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String partyId = (String) context.get("partyId");
+		
+		log.info("+++++++++++++++++++++++PARTYID: "+partyId);
+		
+		try {
+			delegator.removeByAnd("Person",
+					UtilMisc.toMap("partyId", partyId));
+			delegator.removeByAnd("PartyRole",
+					UtilMisc.toMap("partyId", partyId));
+			delegator.removeByAnd("userLogin",
+					UtilMisc.toMap("partyId", partyId));
+			delegator.removeByAnd("Party",
+					UtilMisc.toMap("partyId", partyId));
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			// if this fails no problem
+		}
+
+		result.put("partyId", partyId);
+		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+		return result;
+		
+	
+	}
+	
 	
 	
 	

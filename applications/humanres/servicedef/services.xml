@@ -44,6 +44,12 @@ under the License.
         
  </service>
  
+  <service name="dismissStaffOnProbation" engine="java" 
+            location="org.ofbiz.humanres.HumanResServices" invoke="dismissStaffOnProbation" auth="false">
+        <description>Create a Person</description>
+        
+ </service>
+ 
   <service name="changePayrollPrefix" engine="java" default-entity-name="EmplLeaveOpeningBalance"
             location="org.ofbiz.humanres.HumanResServices" invoke="changePayrollPrefix" auth="false">
         <description>Create a Person</description>
@@ -1162,6 +1168,36 @@ under the License.
         <description>Forward Valid Employee Leave</description>
         <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+      <!-- ============================ EDIT STAFF CONFIRMATION DATE ======================================== -->
+    
+    <service name="updateStaffConfirmation" engine="simple" default-entity-name="Person"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateStaffConfirmation" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <!-- ============================ STAFF CONFIRMATION ======================================== -->
+    
+    <service name="ConfirmStaff" engine="simple" default-entity-name="Person"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="ConfirmStaff" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <!-- ============================ STAFF DISMISSAL ======================================== -->
+    
+    <service name="dismissStaff" engine="simple" 
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="dismissStaff" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     

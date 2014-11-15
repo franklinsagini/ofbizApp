@@ -4,6 +4,7 @@ package org.ofbiz.humanres;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,16 +40,16 @@ public class EmployeeUpdateValidation {
 	public static String uniqueFieldsValidation(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
 		String nationalIDNumber = (String) request.getParameter("nationalIDNumber");
 		String pinNumber = (String) request.getParameter("pinNumber");
 		String mobNo = (String) request.getParameter("mobNo");
 		String emailAddress = (String) request.getParameter("emailAddress");
-		String employeeNumber = (String) request.getParameter("employeeNumber");
+		/*String employeeNumber = (String) request.getParameter("employeeNumber");*/
 		String socialSecurityNumber = (String) request.getParameter("socialSecurityNumber");
 		String nhifNumber = (String) request.getParameter("nhifNumber");
 		String passportNumber = (String) request.getParameter("passportNumber");
+		String partyId = (String) request.getParameter("partyId");
 
 		String nationalIDNumberState = "FREE";
 		String pinNumberState = "FREE";
@@ -59,13 +60,13 @@ public class EmployeeUpdateValidation {
 		String emailAddressState = "FREE";
 		String idNumberSize = "";
 
-		nationalIDNumberState = getIdNumberState(nationalIDNumber,employeeNumber);
-		pinNumberState = getPinNumberState(pinNumber,employeeNumber);
-		passportNumberState = getPassportNumberState(passportNumber,employeeNumber);
-		mobileNumberState = getMobileNumberState(mobNo,employeeNumber);
-		nhifNumberState = getNhifNumberState(nhifNumber,employeeNumber);
-		emailAddressState = getEmailAddressState(emailAddress,employeeNumber);
-		socialSecurityNumberState = getSocialSecurityNumberState(socialSecurityNumber,employeeNumber);
+		nationalIDNumberState = getIdNumberState(nationalIDNumber,partyId);
+		pinNumberState = getPinNumberState(pinNumber,partyId);
+		passportNumberState = getPassportNumberState(passportNumber,partyId);
+		mobileNumberState = getMobileNumberState(mobNo,partyId);
+		nhifNumberState = getNhifNumberState(nhifNumber,partyId);
+		emailAddressState = getEmailAddressState(emailAddress,partyId);
+		socialSecurityNumberState = getSocialSecurityNumberState(socialSecurityNumber,partyId);
 		
 		
 		if (nationalIDNumber.length() < 6){
@@ -121,17 +122,19 @@ public class EmployeeUpdateValidation {
 		return json;
 	}
 
-	private static String getIdNumberState( String nationalIDNumber, String employeeNumber) {
+	private static String getIdNumberState( String nationalIDNumber, String partyId) {
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> idConditions = EntityCondition.makeCondition(UtilMisc.toList(
-				EntityCondition.makeCondition("employeeNumber",EntityOperator.NOT_EQUAL, employeeNumber),
-					EntityCondition.makeCondition("nationalIDNumber", EntityOperator.EQUALS, nationalIDNumber)
-						),EntityOperator.AND);
+				EntityCondition.makeCondition("nationalIDNumber", EntityOperator.EQUALS, nationalIDNumber),
+				    EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, partyId)),EntityOperator.AND);
 		
 		List<GenericValue> memberELI = null;		
 		
 		try {
+			List<String> orderByList = new ArrayList<String>();
+			orderByList.add("-partyId");
+			
 			memberELI = delegator.findList("Person",idConditions, null, null, null, false);
 		} catch (GenericEntityException e2) {
 			//e2.printStackTrace();
@@ -139,22 +142,24 @@ public class EmployeeUpdateValidation {
 		}
 		
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
-			log.info("################## "+genericValue.getString("nationalIDNumber")+ " Employee Number "+genericValue.getString("employeeNumber"));
+		if (memberELI.size() > 0) {
 			state = "USED";
-		}
+		} else {
+			state = "FREE";
 
+		}
+		
+		
 		return state;
 	}
 
-	private static String getPinNumberState(String pinNumber, String employeeNumber) {
+	private static String getPinNumberState(String pinNumber, String partyId) {
 	
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> idConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition("nationalIDNumber", EntityOperator.EQUALS, pinNumber),
-						EntityCondition.makeCondition("employeeNumber",EntityOperator.NOT_EQUAL, employeeNumber),
-					null,null),EntityOperator.AND);
+						EntityCondition.makeCondition("pinNumber", EntityOperator.EQUALS, pinNumber),
+					    EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, partyId)),EntityOperator.AND);
 		
 		List<GenericValue> memberELI = null;		
 		
@@ -166,14 +171,18 @@ public class EmployeeUpdateValidation {
 		}
 
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
+		if (memberELI.size() > 0) {
 			state = "USED";
+		} else {
+			state = "FREE";
+
 		}
+		
 
 		return state;
 	}
 
-	private static String getPassportNumberState(String passportNumber, String employeeNumber){
+	private static String getPassportNumberState(String passportNumber, String partyId){
 		if ((passportNumber == null) || (passportNumber.equals(""))){
 			return "FREE";
 		}
@@ -181,9 +190,8 @@ public class EmployeeUpdateValidation {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> idConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition("nationalIDNumber", EntityOperator.EQUALS, passportNumber),
-						EntityCondition.makeCondition("employeeNumber",EntityOperator.NOT_EQUAL, employeeNumber),
-					null,null),EntityOperator.AND);
+						EntityCondition.makeCondition("passportNumber", EntityOperator.EQUALS, passportNumber),
+					    EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, partyId)),EntityOperator.AND);
 		
 		List<GenericValue> memberELI = null;		
 		
@@ -195,21 +203,24 @@ public class EmployeeUpdateValidation {
 		}
 
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
+		if (memberELI.size() > 0) {
 			state = "USED";
+		} else {
+			state = "FREE";
+
 		}
+		
 
 		return state;
 	}
 
-	private static String getMobileNumberState(String mobNo, String employeeNumber){
+	private static String getMobileNumberState(String mobNo, String partyId){
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> idConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition("nationalIDNumber", EntityOperator.EQUALS, mobNo),
-						EntityCondition.makeCondition("employeeNumber",EntityOperator.NOT_EQUAL, employeeNumber),
-					null,null),EntityOperator.AND);
+						EntityCondition.makeCondition("mobNo", EntityOperator.EQUALS, mobNo),
+					    EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, partyId)),EntityOperator.AND);
 		
 		List<GenericValue> memberELI = null;		
 		
@@ -221,21 +232,23 @@ public class EmployeeUpdateValidation {
 		}
 
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
+		if (memberELI.size() > 0) {
 			state = "USED";
-		}
+		} else {
+			state = "FREE";
 
+		}
+		
 		return state;
 	}
 	
-	private static String getNhifNumberState(String nhifNumber, String employeeNumber) {
+	private static String getNhifNumberState(String nhifNumber, String partyId) {
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> idConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition("nationalIDNumber", EntityOperator.EQUALS, nhifNumber),
-						EntityCondition.makeCondition("employeeNumber",EntityOperator.NOT_EQUAL, employeeNumber),
-					null,null),EntityOperator.AND);
+						EntityCondition.makeCondition("nhifNumber", EntityOperator.EQUALS, nhifNumber),
+					    EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, partyId)),EntityOperator.AND);
 		
 		List<GenericValue> memberELI = null;		
 		
@@ -247,14 +260,18 @@ public class EmployeeUpdateValidation {
 		}
 
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
+		if (memberELI.size() > 0) {
 			state = "USED";
+		} else {
+			state = "FREE";
+
 		}
+		
 
 		return state;
 	}
 	
-	private static String getEmailAddressState(String emailAddress, String employeeNumber) {
+	private static String getEmailAddressState(String emailAddress, String partyId) {
 		
 		if ((emailAddress == null) || (emailAddress.equals(""))){
 			return "FREE";
@@ -263,9 +280,8 @@ public class EmployeeUpdateValidation {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> idConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition("nationalIDNumber", EntityOperator.EQUALS, emailAddress),
-						EntityCondition.makeCondition("employeeNumber",EntityOperator.NOT_EQUAL, employeeNumber),
-					null,null),EntityOperator.AND);
+						EntityCondition.makeCondition("emailAddress", EntityOperator.EQUALS, emailAddress),
+					    EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, partyId)),EntityOperator.AND);
 		
 		List<GenericValue> memberELI = null;		
 		
@@ -277,21 +293,24 @@ public class EmployeeUpdateValidation {
 		}
 
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
+		if (memberELI.size() > 0) {
 			state = "USED";
+		} else {
+			state = "FREE";
+
 		}
+		
 
 		return state;
 	}
 	
-	private static String getSocialSecurityNumberState(String socialSecurityNumber, String employeeNumber) {
+	private static String getSocialSecurityNumberState(String socialSecurityNumber, String partyId) {
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> idConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition("nationalIDNumber", EntityOperator.EQUALS, socialSecurityNumber),
-						EntityCondition.makeCondition("employeeNumber",EntityOperator.NOT_EQUAL, employeeNumber),
-					null,null),EntityOperator.AND);
+						EntityCondition.makeCondition("socialSecurityNumber", EntityOperator.EQUALS, socialSecurityNumber),
+					    EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, partyId)),EntityOperator.AND);
 		
 		List<GenericValue> memberELI = null;		
 		
@@ -303,9 +322,13 @@ public class EmployeeUpdateValidation {
 		}
 
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
+		if (memberELI.size() > 0) {
 			state = "USED";
+		} else {
+			state = "FREE";
+
 		}
+		
 
 		return state;
 	}

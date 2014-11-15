@@ -1052,6 +1052,67 @@ under the License.
     </screen>
     
     
+   <!--  ++++++++++++++++++++++++++++++++STAFF ON PROBATION +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    
+    <screen name="employeesOnProbation">
+		<section>
+			<actions>
+				<set field="headerItem" value="probationEmployees" />
+				<set field="tabButtonItem" value="probationEmployees" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Search Staff">
+									<include-form name="FindEmployeeOnProbation" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Staff List (Search Results)">
+									<include-form name="listEmployeeOnProbation" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!--  ++++++++++++++++++++++++++++++++ EDIT CONFIRMATION DATE FOR STAFF ON PROBATION +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    
+    <screen name="editStaffConfirmationDate">
+		<section>
+			<actions>
+				<set field="headerItem" value="probationEmployees" />
+				<set field="tabButtonItem" value="probationEmployees" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Search Staff">
+									<include-form name="editStaffConfirmationDate" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+    
     
     
 </screens>

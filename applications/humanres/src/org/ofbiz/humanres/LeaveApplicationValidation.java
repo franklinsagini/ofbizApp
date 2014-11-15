@@ -67,21 +67,13 @@ public class LeaveApplicationValidation {
 			e2.printStackTrace();
 		}
 		
-		/*if (leaveTypeId=="ANNUAL_LEAVE") {*/
+		
 			result.put("GenderState", getGenderState(leaveTypeId, partyId));
 			result.put("NoticePeriodState",	getNoticePeriodState(leaveTypeId, fromDate));
 			result.put("durationState", getLeaveDurationState(leaveTypeId, leaveDuration));
 			result.put("onceAyearState", getLeaveOnceAyearState(partyId, fromDate, leaveTypeId));
-	  /*   } 
-		
-		else if(leaveTypeId!="ANNUAL_LEAVE") {
-			result.put("GenderState", getGenderState(leaveTypeId, partyId));
-			result.put("NoticePeriodState",	getNoticePeriodState(leaveTypeId, fromDate));
-			result.put("durationState", getLeaveDurationState(leaveTypeId, leaveDuration));
-			result.put("onceAyearState", "VALID");
-		}
-		*/
-
+			result.put("employmentStatusState", getEmploymentStatusState(partyId));
+	
 		
 
 		Gson gson = new Gson();
@@ -253,6 +245,7 @@ public class LeaveApplicationValidation {
 			Date fromDate=null;
 			String approvedLeaveYear=null; 
 			String status="Rejected";
+			String state = "";
 			
 			 List<GenericValue> getLeaveELI=null;
 			 GenericValue leave = null;
@@ -283,22 +276,65 @@ public class LeaveApplicationValidation {
      
 			LocalDateTime fromb = new LocalDateTime(from);
 			userYear = fromb.getYear();
-			String state = "";
+		
 			
 			log.info("=================================userYear : "+userYear);
 			log.info("=================================fromDate : "+fromDate);
 			log.info("=================================approvedLeaveYear : "+approvedLeaveYear);
 			log.info("=================================leaveTypeId : "+leaveTypeId);
 			
-			if ((userYear == Integer.valueOf(approvedLeaveYear)) && (leaveTypeId.equalsIgnoreCase("ANNUAL_LEAVE"))) {
+			if((approvedLeaveYear==null || fromDate==null) && (fromb.isAfter(today) || fromb.isEqual(today))){
+				state = "VALID";
+			}
+			else if((approvedLeaveYear==null || fromDate==null) && fromb.isBefore(today)){
+				state = "PAST";
+			}
+			
+			else if ((userYear == Integer.valueOf(approvedLeaveYear)) && (leaveTypeId.equalsIgnoreCase("ANNUAL_LEAVE"))) {
 
 				state = "INVALID";
 
-			} else if(fromb.isBefore(today)) { 
+			} else if(fromb.isBefore(today) && userYear == Integer.valueOf(approvedLeaveYear) && leaveTypeId.equalsIgnoreCase("ANNUAL_LEAVE")) { 
 				state = "PAST";
 			
 		  } 
 			return state;
 
 		}
+		
+		public static String getEmploymentStatusState(String partyId) {
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+			String status=null;
+
+			List<GenericValue> statusELI = null;
+			GenericValue userStatus = null;
+			try {
+				
+				statusELI = delegator.findList("Person",
+						EntityCondition.makeCondition("partyId", partyId), null,
+						null, null, false);
+
+				if (statusELI.size() > 0) {
+					userStatus = statusELI.get(0);
+					status = userStatus.getString("employmentStatusEnumId");
+
+				}
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+			}
+
+			String state = "";
+			if (status.equalsIgnoreCase("15")) {
+
+				state = "INVALID";
+
+			} else {
+
+				state = "VALID";
+			}
+			return state;
+
+		}
+
 }
