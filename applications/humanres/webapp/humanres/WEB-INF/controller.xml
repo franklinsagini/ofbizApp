@@ -822,13 +822,17 @@ under the License.
         <event type="service" invoke="deletePartySkill"/>
         <response name="success" type="view" value="FindPartySkills"/>
     </request-map>
+    
+    
     <request-map uri="FindPerfReviews">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPerfReviews"/>
     </request-map>
     <request-map uri="EditPerfReview">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditPerfReviews"/>
+        <response name="success" type="view" value="EditPerfReviews">
+        	<redirect-parameter name="perfManagerId"/>
+        </response>
     </request-map>
     <request-map uri="createPerfReview">
         <security https="true" auth="true"/>
@@ -876,6 +880,30 @@ under the License.
         <response name="success" type="view" value="EditPerformanceNotes"/>
         <response name="error" type="view" value="EditPerformanceNotes"/>
     </request-map>
+    
+      <request-map uri="PerfManagement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PerfManagement"/>
+    </request-map>
+    <request-map uri="createPerfManager">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPerfManager"/>
+        <response name="success" type="request-redirect-noparam" value="PerfManagement"/>
+        <response name="error" type="view" value="PerfManagement"/>
+    </request-map>
+    <request-map uri="updatePerfManager">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePerfManager"/>
+        <response name="success" type="request-redirect-noparam" value="PerfManagement"/>
+        <response name="error" type="view" value="PerfManagement"/>
+    </request-map>
+    <request-map uri="deletePerfManager">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePerfManager"/>
+        <response name="success" type="request-redirect-noparam" value="PerfManagement"/>
+        <response name="error" type="view" value="PerfManagement"/>
+    </request-map>
+    
     
     <!--Additional Performance Management Views -->
     
@@ -1023,6 +1051,15 @@ under the License.
         <response name="success" type="request-redirect-noparam" value="perfRatingType"/>   
         <response name="error" type="view" value="perfRatingType" />
     </request-map>
+    
+     <request-map uri="generateTargets">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.humanres.GeneratePerformanceTargets" invoke="generatePerfTargets" ></event>
+        <response name="success" type="view" value="FindPerfReviews">
+				<redirect-parameter name="perfManagerId"/>
+		</response>
+		<response name="error" type="view" value="FindPerfReviews" />
+     </request-map>
     
     
     
@@ -2654,7 +2691,7 @@ under the License.
     <view-map name="FindPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#FindPerfReviews"/>
     <view-map name="EditPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviews"/>
     <view-map name="EditPerfReviewItems" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviewItems"/>
-    
+    <view-map name="PerfManagement" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfManagement"/>
     <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
     <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>
     <view-map name="kpiglobaltargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIGlobalTargets"/>

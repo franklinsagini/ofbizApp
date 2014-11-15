@@ -278,7 +278,7 @@ under the License.
     </view-entity>
     
     
-    
+    <!--================ Performance Review Entities ================-->
     
     <entity entity-name="PerfRatingType"
             package-name="org.ofbiz.humanres.ability"
@@ -287,11 +287,29 @@ under the License.
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
+      <field name="points" type="numeric"></field>
       <prim-key field="perfRatingTypeId"/>
       <relation type="one" fk-name="PERF_RATNG_TYP" title="Parent" rel-entity-name="PerfRatingType">
         <key-map field-name="parentTypeId" rel-field-name="perfRatingTypeId"/>
       </relation>
     </entity>
+    
+    <entity entity-name="PerfManager" 
+   		package-name="org.ofbiz.humanres.ability" 
+    	title="Performance Central Management">
+      <field name="perfManagerId" type="id-ne"></field>
+      <field name="name" type="name"></field>      
+      <field name="branchId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="endDate" type="date-time"></field>
+      <field name="status" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="perfManagerId"/>
+       <relation type="one" fk-name="PERF_Branch" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId" rel-field-name="branchId"/>
+      </relation>
+    </entity>
+    
     <entity entity-name="PerfReview"
             package-name="org.ofbiz.humanres.ability"
             title="Employee Performance Review Entity">
@@ -305,6 +323,7 @@ under the License.
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
+      <field name="perfManagerId" type="id"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
@@ -327,6 +346,9 @@ under the License.
       </relation>
       <relation type="one-nofk" fk-name="PERF_REV_PSTN" rel-entity-name="EmplPosition">
         <key-map field-name="emplPositionId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_MAN" rel-entity-name="PerfManager">
+        <key-map field-name="perfManagerId"/>
       </relation>
     </entity>
     <entity entity-name="PerfReviewItem"
