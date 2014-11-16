@@ -109,9 +109,20 @@
                 <decorator-screen name="CommonPerfReviewDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListPerfReviewItems" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
-                        <screenlet id="AddPerfReviewItemPanel" title="Scores" collapsible="true">
+                        <!-- screenlet id="AddPerfReviewItemPanel" title="Scores" collapsible="true">
                             <include-form name="AddPerfReviewItem" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
-                        </screenlet>
+                        </screenlet -->                        
+                           <screenlet>
+                           	<section>
+                           		<widgets>
+									<container style="button-bar">                                                   
+                                           <link target="submitAppraisal?employeePartyId=${parameters.employeePartyId}&amp;employeeRoleTypeId=${parameters.employeeRoleTypeId}&amp;perfReviewId=${parameters.perfReviewId}"  text="Submit Appraisal" style="buttontext create">
+                                               <image url-mode="raw" src="${iconsLocation}/add.png"/>                                                                                                       
+                                           </link>
+                                           </container>
+                           		</widgets>
+                           	</section>
+                           </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

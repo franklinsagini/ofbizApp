@@ -1059,8 +1059,23 @@ under the License.
 				<redirect-parameter name="perfManagerId"/>
 		</response>
 		<response name="error" type="view" value="FindPerfReviews" />
-     </request-map>
-    
+     </request-map> 
+     
+     <request-map uri="submitAppraisal">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.humanres.SubmitAppraisals" invoke="submitScores" ></event>
+        <response name="success" type="view" value="EditPerfReviewItems">
+				<redirect-parameter name="employeePartyId"/>
+				<redirect-parameter name="employeeRoleTypeId"/>
+				<redirect-parameter name="perfReviewId"/>
+		</response>
+		<response name="error" type="view" value="EditPerfReviewItems" >
+			<redirect-parameter name="employeePartyId"/>
+			<redirect-parameter name="employeeRoleTypeId"/>
+			<redirect-parameter name="perfReviewId"/>		
+		</response>
+		
+     </request-map>   
     
     
     
