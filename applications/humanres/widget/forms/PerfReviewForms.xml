@@ -34,6 +34,12 @@ under the License.
         <field name="fromDate"><date-find type="date"/></field>
         <field name="thruDate"><date-find type="date"/></field>
         <field name="perfManagerId" parameter-name="perfManagerId"><hidden/></field>
+        <field name="status" title="Status">
+        	<drop-down>
+        		<option key="Unsubmitted" description="Unsubmitted"/>
+        		<option key="Submitted" description="Submitted"/>
+        	</drop-down>
+        </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
         
         <field name="paymentId"><hidden/></field> 
@@ -73,6 +79,7 @@ under the License.
         </field>
         <field name="fromDate"><display type="date"/></field>
         <field name="thruDate"><display type="date"/></field>
+        <field name="status" title="Status"><display/></field>
         <field name="paymentId"><hidden/></field>
         <field name="perfManagerId"><hidden/></field> 
     </form>
@@ -98,11 +105,13 @@ under the License.
         <!--field name="paymentId" title="${uiLabelMap.FormFieldTitle_paymentId}"><lookup target-form-name="LookupPayment"/></field-->
         <field name="paymentId"><hidden/></field>
         <field name="perfManagerId" parameter-name="perfManagerId"><hidden/></field>
+        <field name="status"><hidden value="Unsubmitted"/></field>
         <field name="submitButton" use-when="perfReview==null" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="perfReview!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListPerfReviewItems" type="list" target="updatePerfReviewItem" title="updatePerfReviewItem" paginate-target="findPerfReviewItems"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    <form name="ListPerfReviewItems" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerfReviewItem" 
+    	title="updatePerfReviewItem" paginate-target="findPerfReviewItems"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">        
         <actions>
             <entity-condition entity-name="PerfReviewItem">
                 <condition-expr field-name="perfReviewId" from-field="perfReviewId"/>
@@ -110,30 +119,38 @@ under the License.
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="display" service-name="updatePerfReviewItem"/>
-        <field name="employeePartyId"><ignored/></field>
-        <field name="employeeRoleTypeId"><ignored/></field>
-        <field name="perfReviewId"><ignored/></field>
+        <field name="employeePartyId"><hidden/></field>
+        <field name="employeeRoleTypeId"><hidden/></field>
+        <field name="perfReviewId"><hidden/></field>
         <field name="perfReviewItemTypeId"><hidden/></field>
         <field name="perfReviewItemSeqId"><hidden/></field>
+        <field name="isSubmitted"><hidden/></field> 
         
         <field name="kpiTargetId" title="Target">
         	<display-entity entity-name="KPITargets" key-field-name="kpiTargetId" description="${kpitarget}"></display-entity>
         </field>
-        <field name="perfRatingTypeId" title="Performance Rating"><display-entity entity-name="PerfRatingType"/></field>
-        <field name="kpiAchievementStatusId" title="Achievement Status">
-	        <display-entity entity-name="KPIAchievementStatus" key-field-name="kpiAchievementStatusId" description="${achievementstatus}">
-	        </display-entity>
+        <field name="perfRatingTypeId" title="Performance Rating" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${description}" entity-name="PerfRatingType" key-field-name="perfRatingTypeId"></entity-options>
+        	</drop-down>
         </field>
-        <field name="achievementDate" title="Achievement Date"><display type="date"></display></field>
-        
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="kpiAchievementStatusId" title="Achievement Status" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<drop-down>
+        		<entity-options description="${achievementstatus}" entity-name="KPIAchievementStatus" key-field-name="kpiAchievementStatusId"></entity-options>
+        	</drop-down>	        
+        </field>
+        <field name="achievementDate" title="Achievement Date" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<date-time type="date"/>
+        </field>
+        <field name="submitButton" title="Save" widget-style="buttontext"> <submit button-type="button"/></field>
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePerfReviewItem" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="perfReviewId"/>
                 <parameter param-name="employeePartyId"/>
                 <parameter param-name="employeeRoleTypeId"/>
                 <parameter param-name="perfReviewItemSeqId"/>
             </hyperlink>
-        </field>
+        </field -->
     </form>
     <form name="AddPerfReviewItem" type="single" target="createPerfReviewItem" title=""
         header-row-style="header-row" default-table-style="basic-table">
@@ -152,7 +169,7 @@ under the License.
             </drop-down>
         </field>      
         
-        <field name="perfRatingTypeId" title="Performance Rating">
+        <field name="perfRatingTypeId" title="Performance Rating" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="perfRatingTypeId" entity-name="PerfRatingType">
                     <entity-order-by field-name="-perfRatingTypeId"/><!-- order from good to bad -->

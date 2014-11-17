@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindAcctgTrans" target="FindAcctgTrans" type="single" title="" default-map-name="journal"
@@ -763,7 +763,7 @@ under the License.
         <field name="description"><textarea/></field>
         <field name="createButton" widget-style="smallSubmit"><submit button-type="button"/></field>
         <sort-order>
-            <sort-field name="organizationPartyId"/>        
+            <sort-field name="organizationPartyId"/>
             <sort-field name="acctgTransTypeId"/>
             <sort-field name="glFiscalTypeId"/>
             <sort-field name="glJournalId"/>
@@ -1169,6 +1169,50 @@ under the License.
         <field name="exchangeRate" use-when="${origCurrencyUomId!=currencyUomId}"><display description="${origAmount/amount} ${origCurrencyUomId}/${currencyUomId}"/></field>
         <field name="debitAmount"><display type="currency" currency="${currencyUomId}" description="${groovy:if(debitCreditFlag.equals('D'))return(amount);if(debitCreditFlag.equals('C'))return(0);}"/></field>
         <field name="creditAmount"><display type="currency" currency="${currencyUomId}" description="${groovy:if(debitCreditFlag.equals('C'))return(amount);if(debitCreditFlag.equals('D'))return(0);}"/></field>
+    </form>
+
+    <!-- Payroll Totals -->
+    <form name="FindPayrollTotalsForm" default-map-name="payrollPeriodSummary" target="FindPayrollTotalsScreen" type="single">
+        <auto-fields-entity entity-name="PayrollPeriodSummary" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <!--
+           ListPayrollTotalsForm
+     -->
+
+    <form name="ListPayrollTotalsForm" type="list" list-name="listIt" target="" title="PayrollPeriodSummary List" paginate-target="FindPayrollTotalsScreen" default-entity-name="PayrollPeriodSummary"
+        separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="payrollTotalsCtx" />
+                <field-map field-name="entityName" value="PayrollPeriodSummary" />
+                <field-map field-name="orderBy" from-field="parameters.sortField" />
+                <field-map field-name="viewIndex" from-field="viewIndex" />
+                <field-map field-name="viewSize" from-field="viewSize" />
+            </service>
+        </actions>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="payrollPeriodSummaryId" title="PayrollPeriodSummary Id" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${payrollPeriodSummaryId}" target="supplierOverview">
+                <parameter param-name="payrollPeriodSummaryId" />
+            </hyperlink>
+        </field>
+        <field name="elementName" sort-field="true">
+            <display />
+        </field>
+        <field name="TotalAmount" sort-field="true">
+            <display />
+        </field>
+        <field name="Accounting">
+            <hyperlink target="/accounting/control/AdminMain" target-type="inter-app" description="Approve/Post">
+                <parameter param-name="organizationPartyId" from-field="partyId"/>
+            </hyperlink>
+        </field>
     </form>
 
 </forms>

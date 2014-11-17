@@ -1,5 +1,7 @@
 package org.ofbiz.humanres;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +18,20 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 
+
+
+import org.ofbiz.webapp.event.EventHandlerException;
+
 public class GeneratePerformanceTargets {
+	
+	static ArrayList<String> perfTargets = new ArrayList<String>();
+
 private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 	
 	public static String generatePerfTargets(HttpServletRequest request,
 			HttpServletResponse response) {
 		
+
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		
 		
@@ -43,12 +53,55 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 			e.printStackTrace();
 		}
 		
-
 		for (GenericValue perfReview : perfReviewELI) 
 		{
+			log.info("######### Review ID " + perfReview.getString("perfReviewId"));
+			setExistingTargets(delegator, perfReview.getString("perfReviewId"));
 			addTargets(delegator, perfReview);
+			/*try
+			{
+				
+			}catch(Exception e)
+			{
+				log.info("#@#@##@##@##@#@##   " +e.getMessage());
+			}*/
 		}
-		return null;
+		
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return "";
+	}
+
+	private static void setExistingTargets(Delegator delegator, String perfReviewId) {
+		List<GenericValue> existingReviewsELI = null;
+		try {
+			perfTargets = new ArrayList<String>();
+			
+			existingReviewsELI = delegator.findList("PerfReviewItem", EntityCondition
+					.makeCondition("perfReviewId", perfReviewId), null,
+					null, null, false);
+		
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue existingReviews : existingReviewsELI) 
+		{
+			log.info("######### target " + existingReviews.getString("kpiTargetId"));
+			perfTargets.add(existingReviews.getString("kpiTargetId"));
+		}
+		
 	}
 
 	private static void addTargets(Delegator delegator, GenericValue perfReview) {
@@ -75,7 +128,10 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 
 		for (GenericValue target : targetELI) 
 		{
-			listTargets.add(createTargetsToSave(delegator, perfReview.getString("employeePartyId"), perfReviewId, target.getString("kpiTargetId")));
+			if(!(perfTargets.contains(target.getString("kpiTargetId"))))
+			{
+				listTargets.add(createTargetsToSave(delegator, perfReview.getString("employeePartyId"), perfReviewId, target.getString("kpiTargetId")));
+			}
 		}
 		try {
 			delegator.storeAll(listTargets);
@@ -90,6 +146,8 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 			String partyId, String perfReviewId, String kpitargetId) {
 		
 		String perfReviewItemSequenceId = delegator.getNextSeqId("PerfReviewItem");
+//		String perfReviewItemSequenceId = delegator.getNextSeqId("");
+		
 
 		GenericValue perfReviewItem = delegator.makeValidValue(
 				"PerfReviewItem", UtilMisc.toMap(
@@ -97,12 +155,13 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 						"employeePartyId", partyId, 
 						"employeeRoleTypeId", "EMPLOYEE", 
 						"perfReviewId", perfReviewId, 
-						"kpiTargetId", kpitargetId));
-		try {
+						"kpiTargetId", kpitargetId,
+						"isSubmitted","N"));
+/*		try {
 			perfReviewItem = delegator.createSetNextSeqId(perfReviewItem);
 		} catch (GenericEntityException e1) {
 			e1.printStackTrace();
-		}
+		}*/
 		return perfReviewItem;
 	}
 
