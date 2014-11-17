@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+	<form name="FindLogs" type="single" target="allLogs"
+		default-entity-name="EntityAuditLog" default-map-name="entityAuditLogCtx">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		
+		<field name="changedEntityName" title="Changed Entity/Table/Function">
+			<text-find />
+		</field>
+		<field name="changedFieldName" title="Field Changed">
+			<text-find />
+		</field>
+		<field name="pkCombinedValueText" title="Primary Key">
+			<text-find />
+		</field>
+		<field name="oldValueText" title="Changed From">
+			<text-find />
+		</field>
+		<field name="newValueText" title="Changed To">
+			<text-find />
+		</field>
+		<field name="changedDate" title="Date Changed">
+			<date-find default-option-from="greaterThanFromDayStart" default-option-thru="lessThan" type="timestamp"/>
+		</field>
+		<field name="changedByInfo">
+			<text-find />
+		</field>
+		<field name="changedSessionInfo">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+	<!-- listChangeLogs -->
+		<form name="listChangeLogs" type="list" list-name="listIt"
+		paginate-target="allLogs" default-entity-name="EntityAuditLog"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="entityAuditLog">
+		<actions>
+
+			 <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="entityAuditLogCtx"/>
+                <field-map field-name="entityName" value="EntityAuditLog"/>
+                <field-map field-name="orderBy" value="-auditHistorySeqId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>						
+		</actions>
+		<field name="changedEntityName"  title="Changed Entity/Table/Function">
+			<display also-hidden="false" />
+		</field>
+		<field name="changedFieldName" title="Field Changed">
+			<display also-hidden="false" />
+		</field>
+		<field name="pkCombinedValueText"  title="Primary Key">
+			<display also-hidden="false" />
+		</field>
+		<field name="oldValueText"  title="Changed From">
+			<display also-hidden="false" />
+		</field>
+		<field name="newValueText"  title="Changed To">
+			<display also-hidden="false" />
+		</field>
+		<field name="changedDate"  title="Date Changed">
+			<display also-hidden="false" type="date-time" />
+		</field>
+		<field name="changedByInfo">
+			<display also-hidden="false" />
+		</field>
+		<field name="changedSessionInfo">
+			<display also-hidden="false" />
+		</field>
+		
+	</form>
+	
+</forms>

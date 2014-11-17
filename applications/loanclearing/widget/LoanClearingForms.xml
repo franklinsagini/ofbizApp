@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+			<!-- Add Find Member Form -->
+	<form name="FindMember" type="single" target="main"
+		default-entity-name="Member">
+		<actions>
+			<!-- set field="statusName" value="ACTIVE"/> <set field="memberStatusId" 
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ -->
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+				<condition-expr field-name="isBranch" operator="equals"
+					value="Y" />
+			</entity-condition>
+
+			<entity-condition entity-name="MemberStatus" list="statusList"></entity-condition>
+		</actions>
+
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+
+		<field name="firstName" title="First Name">
+			<text-find />
+		</field>
+
+		<field name="idNumber" title="ID Number" position="2">
+			<text-find />
+		</field>
+
+		<field name="middleName" title="Middle Name">
+			<text-find />
+		</field>
+
+		<field name="payrollNumber" title="Payroll Number" position="2">
+			<text-find />
+		</field>
+
+		<field name="lastName" title="Last Name">
+			<text-find />
+		</field>
+
+		<field name="memberNumber" title="Member No." position="2">
+			<text-find />
+		</field>
+
+		<field name="memberStatusId" title="Status">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="MemberStatus"
+					key-field-name="memberStatusId">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="mobileNumber" title="Phone Number" position="2">
+        	<text-find></text-find>
+        </field>
+		
+		<field name="stationId" title="Station">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${name}" key-field-name="stationId"
+					entity-name="Station">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="branchId" title="Branch">
+			<drop-down allow-empty="true" current-description="">
+				<!-- entity-options description="${groupName}" key-field-name="partyId" 
+					entity-name="PartyGroup"/ -->
+				<list-options key-name="partyId" list-name="partyGroups"
+					description="${groupName}" />
+			</drop-down>
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+
+	<form name="members" type="list" list-name="listIt"
+		use-row-submit="true" separate-columns="true" target="updateMember"
+		paginate-target="main" odd-row-style="alternate-row" header-row-style="header-row-2"
+		default-table-style="basic-table hover-bar">
+
+		<actions>
+			<!-- set field="statusName" value="ACTIVE"/> <set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+				<entity-condition entity-name="Member"> <condition-expr field-name="memberStatusId" 
+				operator="equals" value="${statusId}"/> <order-by field-name="-partyId"/> 
+				</entity-condition -->
+
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+				<condition-expr field-name="isBranch" operator="equals"
+					value="Y" />
+			</entity-condition>
+			<entity-condition entity-name="Station" list="stationList"></entity-condition>
+
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="memberCtx" />
+				<field-map field-name="entityName" value="Member" />
+				<field-map field-name="orderBy" from-field="parameters.sortField" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+
+		</actions>
+		<!-- field name="firstName" title="First Name"><display also-hidden="false"/></field> 
+			<field name="middleName" title="Middle Name"><display also-hidden="false"/></field> 
+			<field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
+		<field name="Member Running Loans" use-when="${branchId}==${memberBranchId}">
+			<hyperlink target="myrunningloans"
+				description="${firstName} ${middleName} ${lastName} Loans">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		
+		<field name="noOfRunningLoans" title="Number Of Running Loans">
+			<display default-value="${bsh:org.ofbiz.loans.LoanServices.countRunningLoansByMember(partyId);}" also-hidden="false"></display>
+		</field>
+		
+		<field name="idNumber" title="ID Number">
+			<display also-hidden="false"></display>
+		</field>
+		<field name="createdStamp" title="Created">
+			<display type="date"></display>
+		</field>
+		<field name="createdBy" title="Created By">
+			<display></display>
+		</field>
+		<field name="payrollNumber" title="Payroll Number">
+			<display />
+		</field>
+		<field name="mobileNumber" title="Mobile">
+			<display also-hidden="false"></display>
+		</field>
+		<field name="memberNumber" title="Member Number">
+			<display></display>
+		</field>
+
+		<field name="memberStatusId" title="Status">
+			<display-entity entity-name="MemberStatus"
+				description="${name}" key-field-name="memberStatusId">
+
+			</display-entity>
+		</field>
+
+		<field name="stationId" title="Station">
+			<display-entity entity-name="Station" description="${name}"
+				key-field-name="stationId">
+
+			</display-entity>
+		</field>
+		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
+			<display-entity entity-name="PartyGroup" description="${groupName}"
+				key-field-name="partyId"></display-entity>
+		</field>
+	</form>
+	
+	<form name="listMyLoans" type="list" list-name="listIt"
+		paginate-target="myrunningloans" default-entity-name="LoanApplication"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
+		<actions>
+			<set field="guarantorLoansStatusName" value="GUARANTORLOAN"/>
+	   		<set field="guarantorLoansStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(guarantorLoansStatusName);}"/> 
+						
+			<set field="disbursedLoansStatusName" value="DISBURSED"/>
+	   		<set field="disbursedLoansStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(disbursedLoansStatusName);}"/> 
+		
+			<entity-condition entity-name="LoanApplication">
+				<condition-list combine="and">
+						<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+					<condition-list combine="or">
+						<condition-expr field-name="loanStatusId" operator="equals" value="${guarantorLoansStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${disbursedLoansStatusId}"></condition-expr>
+						
+					</condition-list>
+					
+				</condition-list>				
+				
+				<order-by field-name="-loanApplicationId"/>
+			</entity-condition>
+				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
+			 <!-- service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanApplicationCtx"/>
+                <field-map field-name="entityName" value="LoanApplication"/>
+                <field-map field-name="orderBy" value="-loanApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service -->
+           	<set field="yes" value="Y"/>				
+		</actions>
+		<field name="loanApplicationId"><hidden/></field>
+		<field name="loanNo">
+			<display also-hidden="false" />
+		</field>
+		<field name="partyId" title="Member">
+			<display-entity description="${firstName} ${middleName} ${lastName}"
+				entity-name="Member" also-hidden="false"></display-entity>
+			
+		</field>
+	
+		<field name="loanProductId" title="Product">
+			<display-entity description="${name} ${code}"
+				entity-name="LoanProduct" also-hidden="false"></display-entity>
+			
+		</field>
+
+		<field name="loanAmt" title="Amount">
+			<display also-hidden="false" />
+		</field>
+		
+		<field name="totalRepaid" title="Total Repaid">
+			<display default-value="${bsh:org.ofbiz.loans.LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationId);}" also-hidden="false" />
+		</field>
+		
+		<field name="totalRemaining" title="Total Remaining">
+			<display default-value="${bsh:org.ofbiz.loans.LoanServices.getLoanRemainingBalance(loanApplicationId);}" also-hidden="false" />
+		</field>
+		
+		<field name="percentageRepaid" title="Repaid %">
+			<display default-value="${bsh:org.ofbiz.loans.LoanServices.getLoanPercentageRepaid(loanApplicationId);}" also-hidden="false" />
+		</field>
+		
+		<field name="interestRatePM" title="Interest Rate(P.M)">
+			<display also-hidden="false" />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<display also-hidden="false" />
+		</field>
+
+
+		<field name="paymentMethodTypeId" title="Payment Method">
+			<display-entity description="${description}"
+				entity-name="PaymentMethodType"></display-entity>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		<field name="allowed"><hidden value="${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}"/></field>
+		
+		<field name="addToClearList" title="Add To Clear List"
+			widget-style="buttontext" use-when="${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}==${yes}" >
+			<hyperlink  target="addToClearList" description="Add To Clear List"
+				also-hidden="true" >
+				
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+		<field name="detailsLink" title="Add Guarantors"
+			widget-style="buttontext">
+			<hyperlink target="viewapplicationprofile" description="Guarantors"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+		<field name="loanLogs" title="Logs" widget-style="buttontext">
+			<hyperlink target="loanLogs" description="Logs"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+	</form>
+	
+	    <!-- Loan Clearing Limit -->
+    <form name="NewLoanClearLimit" type="single" target="createLoanClearLimit"
+        focus-field-name="limitPercent" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusContext">
+        
+       
+        <field name="limitPercent" title="Percentage Rapayment (To Allow Clearance)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listLoanClearLimit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClearLimit" paginate-target="loanClearingLimit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanClearLimit">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanClearLimit"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="limitPercent"> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanClearLimit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanClearLimitId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+	
+	
+</forms>
