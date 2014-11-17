@@ -271,7 +271,7 @@
     
     <form name="AddEmployeeQualificationFromMenu" type="single" target="createEmployeeQualification">
         <!--auto-fields-service service-name="createPartyQual"/-->
-          <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+          <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupEmployee"/></field>
         <field name="partyQualTypeId" title="Select Qualification" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
@@ -403,7 +403,7 @@
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="timestamp"></date-time></field>
         <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="timestamp"></date-time></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
-        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployee"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplLeaves" type="list" list-name="listIt" separate-columns="true" target="updateEmplLeave" paginate-target="FindEmplLeaves"
@@ -416,7 +416,7 @@
         </actions>
         <auto-fields-service service-name="updateEmplLeave"/>
         <field name="partyId"><hidden/></field>
-        <field name="approverPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approverPartyId"><lookup target-form-name="LookupEmployee"/></field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
@@ -1088,7 +1088,8 @@
     <form name="FindEmployeeRelations" type="single" target="employeeRelations" default-entity-name="RoleTypeAndPersonEmployeeAndBranch">
      
          <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId"><text-find/></field>
+        
+        <field name="partyId" title="Staff"><lookup target-form-name="LookupEmployee"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="nationalIDNumber" title="Id Number"><text-find/></field>
@@ -1141,7 +1142,8 @@
     <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="RoleTypeAndPersonEmployeeAndBranch">
     
            <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId"><text-find/></field>
+     
+         <field name="partyId" title="Staff"><lookup target-form-name="LookupEmployee"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="nationalIDNumber" title="Id Number"><text-find/></field>

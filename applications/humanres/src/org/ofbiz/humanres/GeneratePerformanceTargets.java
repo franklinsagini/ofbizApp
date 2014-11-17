@@ -15,10 +15,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.payroll.ClosePayroll;
 
 public class GeneratePerformanceTargets {
-private static Logger log = Logger.getLogger(ClosePayroll.class);
+private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 	
 	public static String generatePerfTargets(HttpServletRequest request,
 			HttpServletResponse response) {

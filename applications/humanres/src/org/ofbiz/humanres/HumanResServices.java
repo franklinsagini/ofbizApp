@@ -381,10 +381,10 @@ GenericValue employeeLeaveType = null;
 			String errorMsg = "================================NOTHING FOUND HERE===============";
 		}
 		
-		if (daytype.equalsIgnoreCase("Work Days")) {
+		if (daytype.equalsIgnoreCase("Work_days")) {
 			leaveDuration = AccHolderTransactionServices.calculateWorkingDaysBetweenDates(fromDate, thruDate);
 			
-		} else if(daytype.equalsIgnoreCase("Calendar Days")){
+		} else if(daytype.equalsIgnoreCase("Calendar_days")){
 			leaveDuration = calculateCalenderDaysBetweenDates(fromDate, thruDate);
 
 		}
@@ -486,21 +486,21 @@ GenericValue employeeLeaveType = null;
 			
 			log.info("======================================DAYTYPE : "+daytype);
 			
-		} else {
-			String errorMsg = "================================NOTHING FOUND HERE===============";
-		}
 		
-		if (daytype.equalsIgnoreCase("Work_days")) {
-			endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
-			int leaveTillResumption = leaveDuration+1;
-			resumeDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveTillResumption);
-			
-		} else /*if(daytype.equalsIgnoreCase("Calendar_days"))*/{
+		
+		 if(daytype.equalsIgnoreCase("Calendar_days")){
 			 endDate = calculateEndCalenderDay(fromDate, leaveDuration);
 			int leaveTillResumption = leaveDuration+1;
 			resumeDate = calculateEndCalenderDay(fromDate, leaveTillResumption);
 			
 
+		}else if (daytype.equalsIgnoreCase("Work_days")) {
+			endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
+			int leaveTillResumption = leaveDuration+1;
+			resumeDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveTillResumption);
+			
+		}
+		 
 		}
 		
 		

@@ -22,7 +22,16 @@
          
          var reqUrl = '/humanres/control/emplCompassionateleavebalance';
           if ((partyId.length > 0) && (leaveTypeId.length > 0)){
-         	calculateCompassionateLeaveBalance(reqUrl, leaveTypeId, partyId)
+         	calculateCompassionateLeaveBalance(reqUrl, leaveTypeId, partyId);
+                  }
+             }
+             
+              else if ((leaveTypeId !="COMPASSIONATE_LEAVE") && (leaveTypeId !="ANNUAL_LEAVE")){
+          if (leaveTypeId.length > 0){
+         	 $('input[name="approvedLeaveSumed"]').val('NOT APPLICABLE');
+					 $('input[name="accruedLeaveDays"]').val('NOT APPLICABLE');
+					 $('input[name="leaveBalance"]').val('NOT APPLICABLE');
+					 $('input[name="carryOverLeaveDays"]').val('NOT APPLICABLE');
                   }
              }
          
@@ -30,35 +39,10 @@
         });
         
         
+     
+        
 
-   jQuery('input[name="fromDate"]').change(function(){
-		 
-         var fromDate = this.value;
-         var hasBalance = data.hasBalance;
-         var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
-        if(leaveTypeId != null){        
-         var thruDate =  jQuery('input[name="thruDate"]').val();
-         var reqUrl = '/humanres/control/emplleaveduration';
-          if ((fromDate.length > 0) && (thruDate.length > 0)){
-         	calculateDuration(reqUrl, fromDate, thruDate, leaveTypeId);
-         }
-         
-         var leaveDuration = jQuery('input[name="leaveDuration"]').val();
-         var leaveBalance = jQuery('input[name="leaveBalance"]').val();
-
-         var excessdays =	leaveDuration - leaveBalance;
-         var reqUrlLeaveEnd = '/humanres/control/emplleaveend';
-         if ((fromDate.length > 0) && (leaveDuration.length > 0) && (excessdays <= 0) ){
-         	calculateLeaveEndDate(reqUrlLeaveEnd, fromDate, leaveDuration, leaveTypeId);
-         }
-         else if(((leaveTypeId == 'COMPASSIONATE_LEAVE') || (leaveTypeId=='ANNUAL_LEAVE')) && (excessdays > 0)){
-         	alert("Leave taken must be less than your leave balance of " +leaveBalance+ "days.");
-         	$('input[name="leaveDuration"]').val("");
-            $('input[name="thruDate_i18n"]').val("");
-          
-                 }
-           }
-       });
+  
         
    jQuery('input[name="thruDate"]').change(function(){
 		 
@@ -113,8 +97,9 @@
         });
         
         
-        
-    jQuery('input[name="leaveDuration"]').change(function(){
+   
+		 
+		   jQuery('input[name="leaveDuration"]').change(function(){
 		 
          var leaveDuration = this.value;
          var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
@@ -123,20 +108,28 @@
         var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
         var diff = leaveDuration - leaveBalance;
         var reqUrl = '/humanres/control/emplleaveend';
-          if ((fromDate.length > 0) && (leaveDuration.length > 0) && (diff <= 0)){
+		if((leaveTypeId == 'COMPASSIONATE_LEAVE') || (leaveTypeId=='ANNUAL_LEAVE')) {
+		 if ((fromDate.length > 0) && (leaveDuration.length > 0) && (diff <= 0)){
          	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId);
-         }
-         else if(((leaveTypeId == 'COMPASSIONATE_LEAVE') || (leaveTypeId=='ANNUAL_LEAVE')) && (diff > 0)){
+         } if(diff > 0){
          	alert("Leave taken must be less than your leave balance of " +leaveBalance+ "days.");
          	$('input[name="leaveDuration"]').val("");
          $('input[name="thruDate_i18n"]').val("");
           
          }
+		}
+		else if((leaveTypeId != 'COMPASSIONATE_LEAVE') && (leaveTypeId!='ANNUAL_LEAVE')) {
+		 if ((fromDate.length > 0) && (leaveDuration.length > 0)){
+         	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId);
+         }
+		}
+       
+        
      }
 
         });
+        });
 		
-		 });
 		 
 		 
 		 
@@ -177,6 +170,7 @@
 	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
 					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
 					 $('input[name="leaveBalance"]').val(data.leaveBalance);
+					 $('input[name="carryOverLeaveDays"]').val('NOT APPLICABLE');
 					 
 	               },
 	      error : function(errorData){
@@ -185,7 +179,8 @@
 	              }
 	    });
 	    } 
-
+	    
+	  
 	  function calculateDuration(reqUrl, fromDate, thruDate, leaveTypeId){
 	  
 	  
@@ -585,17 +580,9 @@
     
    
    
-   
-   
-   
-   
-   
-    /** ==================LEAVE APPLICATION VALIDATION ==========================================**/
+    /** ==========================================LEAVE APPLICATION VALIDATION ==========================================**/
 	   
 	      function staffLeaveFormValidation(){
-		/** alert(' Checking for unique fields ... '); **/
-		
-		
 		var leaveTypeId =  jQuery('select[name="leaveTypeId"]').val();
     	var fromDate  = jQuery('input[name="fromDate"]').val();
     	var partyId  = jQuery('input[name="partyId"]').val();
