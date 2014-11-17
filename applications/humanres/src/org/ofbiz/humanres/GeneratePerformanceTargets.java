@@ -17,11 +17,15 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+
+
+
 import org.ofbiz.webapp.event.EventHandlerException;
 
 public class GeneratePerformanceTargets {
 	
 	static ArrayList<String> perfTargets = new ArrayList<String>();
+
 private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 	
 	public static String generatePerfTargets(HttpServletRequest request,

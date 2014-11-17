@@ -783,4 +783,25 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <screen name="approvePayrollTotals">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingCreateAcctgTransAndEntries"/>
+                <set field="tabButtonItem" value="FindAcctgTrans"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <set field="labelTitleProperty" value="AccountingCreateAcctgTransAndEntries"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.AccountingCreateAcctgTransAndEntries}">
+                            <include-form name="approvePayrollTotals" location="component://accounting/widget/GlForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
