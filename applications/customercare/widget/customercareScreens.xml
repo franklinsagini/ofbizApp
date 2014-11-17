@@ -23,7 +23,14 @@
                 <set field="headerItem" value="receiveLoanApplication"/>
                 <set field="tabButtonItem" value="findmember"/>
                 <set field="memberCtx" from-field="parameters"/>
-
+				<set field="employeePartyId" from-field="userLogin.partyId"/>
+				<entity-one value-field="person" entity-name="Person">
+					<field-map field-name="partyId" from-field="employeePartyId"/>
+				</entity-one>
+				<set field="memberBranchId" value="${person.branchId}" global="true"/>
+				<entity-one value-field="branch" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="${memberBranchId}"/>
+				</entity-one>
                 <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
             </actions>
             <widgets>
@@ -41,7 +48,7 @@
                                 <screenlet title="Search Members">
                                         <include-form name="FindMember" location="component://customercare/widget/customercareForms.xml"/>
                             	</screenlet>
-                                <screenlet title="Members List">
+                                <screenlet title="Members List (Apply loans for ${branch.groupName} branch only)">
                                 		<include-form  name="members" location="component://customercare/widget/customercareForms.xml"/>
                                 </screenlet>
                             </widgets>

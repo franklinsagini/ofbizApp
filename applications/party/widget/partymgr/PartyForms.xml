@@ -1085,11 +1085,11 @@ Gender
         </field>
 
         <!--field name="monthlySalaryAmount" title="Salary Amount"  required-field="true" widget-style="required"  position="1"><text/></field -->
-        <field name="shareAmount" title="Share Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
-        <field name="memberDepositAmount" title="Member Deposit Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
+        <!-- field name="shareAmount" title="Share Amount"  required-field="true" widget-style="required"  position="1"><text/></field>
+        <field name="memberDepositAmount" title="Member Deposit Amount"  required-field="true" widget-style="required"  position="1"><text/></field -->
 
 
-        <field name="atmApplication" title="ATL Application" required-field="true" widget-style="required">
+        <field name="atmApplication" title="ATM Application" required-field="true" widget-style="required">
 
             <drop-down allow-empty="false">
                 <option key="Y" description="Yes"/>
@@ -1105,7 +1105,7 @@ Gender
         </field>
 
         <!-- field name="memberStatus"><text default-value="NEW" disabled="true"></text></field -->
-        <field name="memberStatusId" title="Member Status" widget-style="required" required-field="true">
+        <field name="memberStatusId" title="Member Status" widget-style="required" required-field="true" use-when="partyId!=null">
             <drop-down allow-empty="true" >
                 <entity-options entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
                     <entity-order-by field-name="name" />
@@ -1130,14 +1130,9 @@ Gender
             </drop-down>
         </field>
 
-        <field name="introducingMember" title="Introducing Member">
-			<drop-down allow-empty="true" current-description="">
-				<entity-options description="${firstName} ${lastName}"
-					key-field-name="partyId" entity-name="Member">
-					<entity-order-by field-name="firstName" />
-				</entity-options>
-			</drop-down>
-		</field>
+ 
+			<field name="introducingMember" title="Introducing Member"><lookup target-form-name="LookupActiveMember"/></field>
+
 
 		<field name="recuiterNames" title="Recruiter Names"><text></text></field>
 		<field name="recruiterEmail" title="Recruiter Email"><text ></text></field>
@@ -1172,6 +1167,9 @@ Gender
         		</entity-options>
         	</drop-down>
         </field>
+        <field name="mobileNumber" title="Phone Number" position="2">
+        	<text-find></text-find>
+        </field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -1179,12 +1177,26 @@ Gender
                 </entity-options>
             </drop-down>
         </field>
+        
+
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
                 <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
                 <list-options key-name="partyId" list-name="banchesList" description="${groupName}"/>
             </drop-down>
         </field>
+        
+        <field name="joinDate">
+        	<date-find default-value="${fromDate}" default-option-from="greaterThanFromDayStart" default-option-thru="upThruDay" type="date" />
+        </field>
+        
+       	<field name="recruitingAgentId">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="RecruitingAgent"></entity-options>
+			</drop-down>
+		</field>
+    	<field name="introducingMember" title="Introducing Member"><lookup target-form-name="LookupActiveMember"/></field>
+        
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
 
@@ -1246,9 +1258,15 @@ Gender
         		
         	</display-entity>
         </field>
+        
+        
 		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
 			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
 		</field>
+		<field name="joinDate" title="Joined">
+			<display type="date"></display>
+		</field>
+		
         <field name="Edit">
         	<hyperlink target="NewMember" description="Edit">
         		<parameter param-name="partyId"/>
@@ -2158,6 +2176,7 @@ Gender
 <!-- Reject -->
 	<form name="RejectMember" type="single" target="createRejectMemberLog"
         focus-field-name="comment" header-row-style="header-row"  default-table-style="basic-table" default-map-name="memberStatusLogContext">
+       	
         <field name="memberStatusLogId"><hidden/></field>
         <field name="partyId" parameter-name="partyId"><hidden/></field>
         <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
@@ -2195,6 +2214,9 @@ Gender
         	</entity-condition>
         </actions -->
         <!-- if this isn't there then with all fields empty no query will be done -->
+        <actions>
+       		<set field="fromDate" value="2014-04-01"/>
+       	</actions>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
 
@@ -2216,6 +2238,9 @@ Gender
         		</entity-options>
         	</drop-down>
         </field>
+        <field name="mobileNumber" title="Phone Number" position="2">
+        	<text-find></text-find>
+        </field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -2223,11 +2248,17 @@ Gender
                 </entity-options>
             </drop-down>
         </field>
-        <!-- field name="branchId" title="Branch">
-            <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
-            </drop-down>
-        </field -->
+        
+        <field name="joinDate">
+        	<date-find default-option-from="greaterThanFromDayStart" default-option-thru="upThruDay" type="date" />
+        </field>
+
+		<field name="recruitingAgentId">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="RecruitingAgent"></entity-options>
+			</drop-down>
+		</field>
+    	<field name="introducingMember" title="Introducing Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
 
@@ -2270,6 +2301,18 @@ Gender
         		
         	</display-entity>
         </field>
+        
+        <field name="joinDate" title="Joined">
+        	<display type="date"></display>
+        </field>
+        
+         <field name="recruitingAgentId" title="Recruiting Agent">
+         	<display-entity entity-name="RecruitingAgent" description="${name}" key-field-name="recruitingAgentId"></display-entity>
+		</field>
+    	<field name="introducingMember" title="Introducing Member">
+    		<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+    	</field>
+        
 
         <field name="Edit">
         	<hyperlink target="NewMember" description="Edit Member">
@@ -2326,6 +2369,10 @@ Gender
                 </entity-options>
             </drop-down>
         </field>
+        
+         <field name="mobileNumber" title="Phone Number" position="2">
+        	<text-find></text-find>
+        </field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -2339,6 +2386,17 @@ Gender
                 <list-options key-name="partyId" list-name="branchesList" description="${groupName}"/>
             </drop-down>
         </field>
+        <field name="joinDate">
+        	<date-find default-value="${fromDate}" default-option-from="greaterThanFromDayStart" default-option-thru="upThruDay" type="date" />
+        </field>
+        
+        <field name="recruitingAgentId">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="RecruitingAgent"></entity-options>
+			</drop-down>
+		</field>
+    	<field name="introducingMember" title="Introducing Member"><lookup target-form-name="LookupActiveMember"/></field>
+        
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
 
@@ -2416,6 +2474,10 @@ Gender
         </field>
 		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
 			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
+		</field>
+		
+		<field name="joinDate" title="Joined">
+			<display type="date"></display>
 		</field>
 
         <field name="Edit">

@@ -53,6 +53,11 @@
 				</entity-options>
 			</drop-down>
 		</field>
+		
+		<field name="mobileNumber" title="Phone Number" position="2">
+        	<text-find></text-find>
+        </field>
+		
 		<field name="stationId" title="Station">
 			<drop-down allow-empty="true" current-description="">
 				<entity-options description="${name}" key-field-name="stationId"
@@ -101,11 +106,12 @@
 				<field-map field-name="viewIndex" from-field="viewIndex" />
 				<field-map field-name="viewSize" from-field="viewSize" />
 			</service>
+
 		</actions>
 		<!-- field name="firstName" title="First Name"><display also-hidden="false"/></field> 
 			<field name="middleName" title="Middle Name"><display also-hidden="false"/></field> 
 			<field name="lastName" title="Last Name"><display also-hidden="false"/></field -->
-		<field name="Loan Application">
+		<field name="Loan Application" use-when="${branchId}==${memberBranchId}">
 			<hyperlink target="loanapplication"
 				description="Apply for ${firstName} ${middleName} ${lastName}">
 				<parameter param-name="partyId" />
@@ -405,7 +411,7 @@
 	</form>
 
 	<form name="listLoanApplications" type="list" list-name="listIt"
-		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
+		paginate-target="receivedLoanApplication" default-entity-name="LoanApplication"
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar"
 		default-map-name="loanApplication">

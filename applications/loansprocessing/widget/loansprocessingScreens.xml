@@ -17,7 +17,7 @@
     </screen>
     
       <!-- forwardedLoanApplications -->
-            <screen name="forwardedLoanApplications">
+       <screen name="forwardedLoanApplications">
         <section>
             <actions>
                 <set field="titleProperty" value="Create New Loan Application"/>
@@ -158,7 +158,8 @@
                             </condition>
                             <widgets>
                                <screenlet title="My Guaranteed Loans List">
-                                            	<include-form name="myGuaranteedLoans" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                            	<!-- include-form name="myGuaranteedLoans" location="component://loansprocessing/widget/loansprocessingForms.xml"/ -->
+                                          <include-form name="listMyGuaranteedLoansList" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
                                  </screenlet>
                                
                             </widgets>
@@ -914,4 +915,340 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- myLoans -->
+         <screen name="myLoans">
+        <section>
+            <actions>
+                <set field="titleProperty" value="My Loans"/>
+                <set field="headerItem" value="myLoans"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="partyId" from-field="parameters.guarantorId"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                
+                <!-- entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one -->
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+
+                        		<screenlet title=" ${member.firstName} ${member.middleName} ${member.lastName} Loans">
+                        			<include-form name="listMyLoanApplications" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- myGuaranteedLoans -->
+    <screen name="myGuaranteedLoans">
+        <section>
+            <actions>
+                <set field="titleProperty" value="My Guaranteed Loans"/>
+                <set field="headerItem" value="myLoans"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="partyId" from-field="parameters.guarantorId"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+                <!-- entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one -->
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+
+                        		
+                        		<screenlet   title=" Loans Guranteed By  ${member.firstName} ${member.middleName} ${member.lastName} ">
+                        			<include-form name="listMyGuaranteedLoansList" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- lastrepaymentdate -->
+      <screen name="lastrepaymentdate">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Last Repayment"/>
+                <set field="headerItem" value="lastrepaymentdate"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindLoansLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Loans">
+                        			<include-form name="listLoanLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!--  lastrepaymentdateonemonthago -->
+        <screen name="lastrepaymentdateonemonthago">
+        <section>
+            <actions>
+                <set field="titleProperty" value="One Month Ago"/>
+                <set field="headerItem" value="lastrepaymentdateonemonthago"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindLoansLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Loans">
+                        			<include-form name="listLoanLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!--  lastrepaymentdatetwomonthsago -->
+        <screen name="lastrepaymentdatetwomonthsago">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Two Months Ago"/>
+                <set field="headerItem" value="lastrepaymentdatetwomonthsago"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindLoansLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Loans">
+                        			<include-form name="listLoanLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!--  lastrepaymentdatethreemonthsago -->
+        <screen name="lastrepaymentdatethreemonthsago">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Three Months Ago"/>
+                <set field="headerItem" value="lastrepaymentdatethreemonthsago"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindLoansLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Loans">
+                        			<include-form name="listLoanLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!--  lastrepaymentdatemorethanthreemonthsago -->
+        <screen name="lastrepaymentdatemorethanthreemonthsago">
+        <section>
+            <actions>
+                <set field="titleProperty" value="More than Three Months Ago"/>
+                <set field="headerItem" value="lastrepaymentdatemorethanthreemonthsago"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindLoansLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Loans">
+                        			<include-form name="listLoanLastRepayment" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+
+
+
+    
 </screens>

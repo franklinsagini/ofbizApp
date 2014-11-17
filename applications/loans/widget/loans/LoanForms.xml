@@ -247,6 +247,17 @@ under the License.
         </field>
         <field name="guaranteedPercentage" title="Guaranteed %"><text size="20" maxlength="60"/></field>
 		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field> 
+		<field name="myLoans" title="My Loans" widget-style="buttontext">
+            <hyperlink target="myLoans" description="My Loans" also-hidden="false">
+                <parameter param-name="guarantorId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="myGuaranteedLoans" title="My Guaranteed Loans" widget-style="buttontext">
+            <hyperlink target="myGuaranteedLoans" description="My Guaranteed Loans" also-hidden="false">
+                <parameter param-name="guarantorId"/>
+            </hyperlink>
+        </field>
 		
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanApplicationGuarantor" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -1566,7 +1577,8 @@ under the License.
         
         <field name="parentChargeId" title="Parent Charge">
         	<drop-down allow-empty="true" text-size="15">
-                <list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/>
+                <!-- list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/ -->
+                <entity-options description="${name}" entity-name="ProductCharge" key-field-name="productChargeId"></entity-options>
             </drop-down>
         </field>
         

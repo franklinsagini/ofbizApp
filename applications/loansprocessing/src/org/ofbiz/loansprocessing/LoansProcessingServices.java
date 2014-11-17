@@ -2,10 +2,22 @@ package org.ofbiz.loansprocessing;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.DurationFieldType;
+import org.joda.time.Months;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -14,6 +26,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.loans.AmortizationServices;
 import org.ofbiz.loans.LoanServices;
+
+import com.ibm.icu.util.Calendar;
 
 /***
  * @author Japheth Odonya  @when Nov 7, 2014 5:30:47 PM
@@ -113,6 +127,11 @@ public class LoansProcessingServices {
 		return LoanServices.getLoansRepaid(memberId);
 	}
 	
+	
+	public static BigDecimal getLoansRepaidByLoanApplicationId(Long loanApplicationId){
+		return LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationId);
+	}
+	
 	/****
 	 * @author Japheth Odonya  @when Nov 8, 2014 9:09:48 PM
 	 * 
@@ -130,6 +149,24 @@ public class LoansProcessingServices {
 		return bdLoansBalance;
 	}
 	
+	/***
+	 * Getting Balance for specific Loan
+	 * */
+	public static BigDecimal getTotalLoanBalancesByLoanApplicationId(Long loanApplicationId){
+		BigDecimal bdLoansBalance = BigDecimal.ZERO;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		BigDecimal bdTotalLoanAmount = getLoanAmount(delegator, loanApplicationId);
+		
+		//		= LoanServices.calculateExistingAccountLessLoansTotal(String.valueOf(memberId), String.valueOf(loanProductId), delegator);
+		//		BigDecimal bdTotalLoansWithAccountAmount = LoanServices.calculateExistingLoansTotal(String.valueOf(memberId), String.valueOf(loanProductId), delegator);
+		
+		BigDecimal bdLoansRepaidAmount = getLoansRepaidByLoanApplicationId(loanApplicationId);
+		
+		bdLoansBalance = bdTotalLoanAmount.subtract(bdLoansRepaidAmount);
+		return bdLoansBalance;
+	}
+	
+
 	public static BigDecimal getTotalLoansRunning(Long memberId, Long loanProductId){
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		BigDecimal bdTotalLoansWithoutAccountAmount = LoanServices.calculateExistingAccountLessLoansTotal(String.valueOf(memberId), String.valueOf(loanProductId), delegator);
@@ -202,6 +239,171 @@ public class LoansProcessingServices {
 		}
 		return loanStatusId;
 	}
+	
+	public static String lastRepaymentDurationToDate(Timestamp lastRepaymentDate){
+		String days ="";
+		if (lastRepaymentDate == null)
+			return days;
+		
+		DateTime startDate = new DateTime(lastRepaymentDate.getTime());
+		DateTime endDate = new DateTime(Calendar.getInstance().getTimeInMillis());
+		
+		Days noOfDays = Days.daysBetween(startDate, endDate);
+		Months noOfMonths = Months.monthsBetween(startDate, endDate);
+		if (noOfDays.get(DurationFieldType.days()) <= 60){
+			days = noOfDays.get(DurationFieldType.days())+" days ago";
+		} else{
+			days = noOfMonths.getMonths()+" months ago";
+		}
+		return days;
+	}
+	
+	//transferToGuarantors
+	public static String transferToGuarantors(
+			HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String loanApplicationId = (String) request
+				.getParameter("loanApplicationId");
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session
+				.getAttribute("userLogin");
+		String userLoginId = userLogin.getString("userLoginId");
+
+		GenericValue loanApplication = null;
+
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		try {
+			loanApplication = delegator.findOne(
+					"LoanApplication",
+					UtilMisc.toMap("loanApplicationId",
+							Long.valueOf(loanApplicationId)), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String statusName = "DEFAULTED";
+		Long loanStatusId =  LoanServices.getLoanStatusId(statusName);
+
+		loanApplication.set("loanStatusId", loanStatusId);
+		
+		//Updates the loan to defaulted
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		// Create a Log
+		GenericValue loanStatusLog;
+		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog", 1);
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
+				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
+				Long.valueOf(loanApplicationId), "loanStatusId", loanStatusId,
+				"createdBy", userLoginId, "comment", "forwarded to Loans"));
+		try {
+			delegator.createOrStore(loanStatusLog);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		//Create New Loans and Attach them to the Guarantors
+		BigDecimal bdLoanBalance = getTotalLoanBalancesByLoanApplicationId(Long.valueOf(loanApplicationId));
+		List<GenericValue> loanGuarantorELI = getNumberOfGuarantors(Long.valueOf(loanApplicationId));
+		
+		int noOfGuarantors = loanGuarantorELI.size();
+		
+		if (noOfGuarantors <= 0)
+			return "success";
+		BigDecimal bdGuarantorLoanAmount = bdLoanBalance.divide(new BigDecimal(noOfGuarantors), 6, RoundingMode.HALF_UP);
+		
+		for (GenericValue loanGuarantor : loanGuarantorELI) {
+			createGuarantorLoans(bdGuarantorLoanAmount, loanGuarantor, loanApplication, userLoginId);
+		}
+		
+		return "success";
+	}
+	
+	private static void createGuarantorLoans(BigDecimal bdGuarantorLoanAmount,
+			GenericValue loanGuarantor, GenericValue loanApplication, String userLoginId) {
+		// TODO Auto-generated method stub
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanStatusId = LoanServices.getLoanStatusId("GUARANTORLOAN");
+		Long loanApplicationId = delegator.getNextSeqIdLong("LoanApplication", 1);
+		GenericValue newLoanApplication;
+		newLoanApplication = delegator.makeValue("LoanApplication", UtilMisc.toMap(
+				"loanApplicationId", loanApplicationId, "parentLoanApplicationId",
+				loanApplication.getLong("loanApplicationId"), "loanNo", String.valueOf(loanApplicationId),
+				"createdBy", userLoginId,
+				"isActive", "Y",
+				"partyId",
+				loanGuarantor.getLong("guarantorId"),"loanProductId",
+				loanApplication.getLong("loanProductId"), "interestRatePM",
+				loanApplication.getBigDecimal("interestRatePM")
+				
+				, "repaymentPeriod",
+				loanApplication.getLong("repaymentPeriod")
+				
+				, "loanAmt",
+				bdGuarantorLoanAmount
+				, "appliedAmt",
+				bdGuarantorLoanAmount
+				, "appraisedAmt",
+				bdGuarantorLoanAmount
+				, "approvedAmt",
+				bdGuarantorLoanAmount
+				, "loanStatusId",
+				loanStatusId
+				,
+				"deductionType",
+				loanApplication.getString("deductionType"),
+				
+				"accountProductId",
+				loanApplication.getLong("accountProductId")
+				
+				));
+		try {
+			delegator.createOrStore(newLoanApplication);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+	}
+
+	private static List<GenericValue> getNumberOfGuarantors(Long loanApplicationId) {
+		List<GenericValue> loanGuarantorELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId", loanApplicationId), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		
+		return loanGuarantorELI;
+	}
+
+	private static BigDecimal getLoanAmount(Delegator delegator,
+			Long loanApplicationId) {
+		GenericValue loanApplication = null;
+
+		try {
+			loanApplication = delegator.findOne(
+					"LoanApplication",
+					UtilMisc.toMap("loanApplicationId",
+							Long.valueOf(loanApplicationId)), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (loanApplication == null)
+			return BigDecimal.ZERO;
+		return loanApplication.getBigDecimal("loanAmt");
+	}
+
 
 
 }

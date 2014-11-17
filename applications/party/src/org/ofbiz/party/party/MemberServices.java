@@ -243,5 +243,27 @@ public class MemberServices {
 		 
 		return branch;
 	}
+	
+	public static Long getMemberStatusId(String name) {
+		List<GenericValue> memberStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberStatusELI = delegator.findList("MemberStatus",
+					EntityCondition.makeCondition("name", name), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long memberStatusId = 0L;
+		for (GenericValue genericValue : memberStatusELI) {
+			memberStatusId = genericValue.getLong("memberStatusId");
+		}
+
+		String statusIdString = String.valueOf(memberStatusId);
+		statusIdString = statusIdString.replaceAll(",", "");
+		memberStatusId = Long.valueOf(statusIdString);
+		return memberStatusId;
+	}
 
 }

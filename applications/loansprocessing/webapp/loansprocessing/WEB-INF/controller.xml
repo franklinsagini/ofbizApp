@@ -513,10 +513,65 @@
 			value="changeLoanDetails"></response>
 		<response name="error" type="view" value="changeLoanDetails" />
 	</request-map>
+	
+	<!-- myLoans -->
+		<request-map uri="myLoans">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="myLoans">
+			<redirect-parameter name="guarantorId" />
+		</response>
+	</request-map>
+	<!-- myGuaranteedLoans -->
+		<request-map uri="myGuaranteedLoans">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="myGuaranteedLoans">
+			<redirect-parameter name="guarantorId" />
+		</response>
+	</request-map>
+	
+	<!-- lastrepaymentdate -->
+	<request-map uri="lastrepaymentdate">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="lastrepaymentdate" />
+	</request-map>
+	<!-- lastrepaymentdateonemonthago -->
+	<request-map uri="lastrepaymentdateonemonthago">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="lastrepaymentdateonemonthago" />
+	</request-map>
+	<!-- lastrepaymentdatetwomonthsago -->
+	<request-map uri="lastrepaymentdatetwomonthsago">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="lastrepaymentdatetwomonthsago" />
+	</request-map>
+	<!-- lastrepaymentdatethreemonthsago -->
+	<request-map uri="lastrepaymentdatethreemonthsago">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="lastrepaymentdatethreemonthsago" />
+	</request-map>
+	<!-- lastrepaymentdatemorethanthreemonthsago -->
+	<request-map uri="lastrepaymentdatemorethanthreemonthsago">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="lastrepaymentdatemorethanthreemonthsago" />
+	</request-map>
+
+
+
+
+
 
 	<request-map uri="LookupActiveMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="LookupActiveMember" />
+	</request-map>
+	
+		<request-map uri="transferToGuarantors">
+		<security auth="true" https="true" />
+		
+		<event type="java" path="org.ofbiz.loansprocessing.LoansProcessingServices" invoke="transferToGuarantors" />
+		<response name="success" type="request-redirect" value="lastrepaymentdatemorethanthreemonthsago">
+		</response>
+		<response name="error" type="view" value="lastrepaymentdatemorethanthreemonthsago" />
 	</request-map>
 
 
@@ -526,6 +581,26 @@
 
 	<view-map name="forwardedLoanApplications" type="screen"
 		page="component://loansprocessing/widget/loansprocessingScreens.xml#forwardedLoanApplications" />
+		
+	<view-map name="lastrepaymentdate" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#lastrepaymentdate" />
+		
+		<!-- lastrepaymentdateonemonthago -->
+	<view-map name="lastrepaymentdateonemonthago" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#lastrepaymentdateonemonthago" />
+
+	<!-- lastrepaymentdatetwomonthsago -->
+	<view-map name="lastrepaymentdatetwomonthsago" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#lastrepaymentdatetwomonthsago" />
+
+	<!-- lastrepaymentdatethreemonthsago -->
+	<view-map name="lastrepaymentdatethreemonthsago" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#lastrepaymentdatethreemonthsago" />
+
+	<!-- lastrepaymentdatemorethanthreemonthsago -->
+	<view-map name="lastrepaymentdatemorethanthreemonthsago" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#lastrepaymentdatemorethanthreemonthsago" />
+		
 	<view-map name="viewapplicationprofile" type="screen"
 		page="component://loansprocessing/widget/loansprocessingScreens.xml#viewapplicationprofile" />
 
@@ -555,7 +630,13 @@
 		
 	<view-map name="addDeductions" type="screen"
 		page="component://loansprocessing/widget/loansprocessingScreens.xml#addDeductions" />
-		
+	
+	<!-- myLoans -->
+	<view-map name="myLoans" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#myLoans" />
+	<!-- myGuaranteedLoans -->
+	<view-map name="myGuaranteedLoans" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#myGuaranteedLoans" />
 
 	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />

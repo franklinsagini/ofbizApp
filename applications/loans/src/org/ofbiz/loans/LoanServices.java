@@ -1450,6 +1450,23 @@ public class LoanServices {
 		bdTotalRepaid = bdOpeningRepayment.add(bdTotalRepayment);
 		return bdTotalRepaid;
 	}
+	
+	/**
+	 * Total Repaid By Loan ApplicationId
+	 * */
+	public static BigDecimal getLoansRepaidByLoanApplicationId(Long loanApplicationId) {
+		BigDecimal bdTotalRepaid = BigDecimal.ZERO;
+
+		// Get total repayments opening repayments
+		BigDecimal bdOpeningRepayment = getTotalOpeningRepaymentsByLoanApplicationId(loanApplicationId);
+
+		// get total repayments from repayments table
+		BigDecimal bdTotalRepayment = getTotalRepaymentFromRunningRepaymentsByLoanApplicationId(loanApplicationId);
+
+		// sum up the repayments
+		bdTotalRepaid = bdOpeningRepayment.add(bdTotalRepayment);
+		return bdTotalRepaid;
+	}
 
 	/***
 	 * @author Japheth Odonya @when Nov 8, 2014 4:19:04 PM
@@ -1468,6 +1485,23 @@ public class LoanServices {
 		// TODO Auto-generated method stub
 		return bdDisbursedLoansRunningRepaymentTotal;
 	}
+	
+	/****
+	 * 
+	 * Get Total Repayment from Running Repayments By Loan Application ID
+	 * */	
+	private static BigDecimal getTotalRepaymentFromRunningRepaymentsByLoanApplicationId(
+				Long loanApplicationId) {
+			
+			//Get the disbursed loans for this member
+			List<Long> loanApplicationIdList = getDisbursedLoansIdsByLoanApplicationId(loanApplicationId);
+			
+			//get the repayments for the disbursed loans
+			BigDecimal bdDisbursedLoansRunningRepaymentTotal = getDisbursedLoansRunningRepayment(loanApplicationIdList);
+
+			// TODO Auto-generated method stub
+			return bdDisbursedLoansRunningRepaymentTotal;
+		}
 
 	private static BigDecimal getDisbursedLoansRunningRepayment(
 			List<Long> loanApplicationIdList) {
@@ -1533,6 +1567,40 @@ public class LoanServices {
 		
 		return loansDisbursedIdList;
 	}
+	
+	/****
+	 * Disbursed Loan IDs by Loan Application Id
+	 * getDisbursedLoansIdsByLoanApplicationId
+	 * */
+	private static List<Long> getDisbursedLoansIdsByLoanApplicationId(Long loanApplicationId) {
+		Long loanStatusId = getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS, loanApplicationId),
+						EntityCondition.makeCondition("loanStatusId",
+								EntityOperator.EQUALS,
+								Long.valueOf(loanStatusId))),
+						EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (loanApplicationELI == null) {
+			return null;
+		}
+		List<Long> loansDisbursedIdList = new ArrayList<Long>();
+		for (GenericValue genericValue : loanApplicationELI) {
+			loansDisbursedIdList.add(genericValue.getLong("loanApplicationId"));
+		}
+		
+		return loansDisbursedIdList;
+	}
 
 	/***
 	 * @author Japheth Odonya @when Nov 8, 2014 4:16:09 PM Get total opening
@@ -1568,6 +1636,150 @@ public class LoanServices {
 			}
 		}
 		return bdTotalRepayments;
+	}
+
+	/***
+	 * Total Repayments By Loan Application Id
+	 * */
+	private static BigDecimal getTotalOpeningRepaymentsByLoanApplicationId(Long loanApplicationId) {
+		Long loanStatusId = getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS, loanApplicationId),
+						EntityCondition.makeCondition("loanStatusId",
+								EntityOperator.EQUALS,
+								Long.valueOf(loanStatusId))),
+						EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (loanApplicationELI == null) {
+			return BigDecimal.ZERO;
+		}
+		BigDecimal bdTotalRepayments = BigDecimal.ZERO;
+		for (GenericValue genericValue : loanApplicationELI) {
+			if (genericValue.getBigDecimal("totalRepayment") != null) {
+				bdTotalRepayments = bdTotalRepayments.add(genericValue
+						.getBigDecimal("totalRepayment"));
+			}
+		}
+		return bdTotalRepayments;
+	}
+	
+	/***
+	 *@author Japheth Odonya  @when Nov 17, 2014 8:17:44 PM
+	 *
+	 * Count Loans By Member
+	 *
+	 * */
+	
+	public static Long countRunningLoansByMember(Long memberId) {
+		
+		Long disbursedLoanStatusId = getLoanStatusId("DISBURSED");
+		Long guarantorLoanStatusId  = getLoanStatusId("GUARANTORLOAN");
+
+		Long disbursedLoansCount = getLoansCount(memberId, disbursedLoanStatusId);
+		Long guarantorLoansCount = getLoansCount(memberId, guarantorLoanStatusId);
+		Long totalLoansCount = disbursedLoansCount + guarantorLoansCount;
+		
+		return totalLoansCount;
+	}
+
+	private static Long getLoansCount(Long memberId, Long loanStatusId) {
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId),
+						EntityCondition.makeCondition("loanStatusId",
+								EntityOperator.EQUALS,
+								Long.valueOf(loanStatusId))),
+						EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (loanApplicationELI == null) {
+			return null;
+		}
+		
+		
+		
+		return new Long(loanApplicationELI.size());
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Nov 17, 2014 10:08:46 PM
+	 * 
+	 * Get Remaining Loan Balance
+	 * */
+	public static BigDecimal getLoanRemainingBalance(Long loanApplicationId){
+		BigDecimal bdRemainingBalance =  BigDecimal.ZERO;
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		bdRemainingBalance = getLoanAmount(delegator, String.valueOf(loanApplicationId)).subtract(getLoansRepaidByLoanApplicationId(loanApplicationId));
+		
+		return bdRemainingBalance;
+		
+	}
+	
+	public static String getLoanPercentageRepaid(Long loanApplicationId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		BigDecimal repaidPercent = (getLoansRepaidByLoanApplicationId(loanApplicationId).divide(getLoanAmount(delegator, String.valueOf(loanApplicationId)), 2, RoundingMode.HALF_UP)).multiply(new BigDecimal(100));
+		
+		String percentageRepaid = String.valueOf(repaidPercent)+" %";
+		return percentageRepaid;
+	}
+	
+	private static BigDecimal getLoanPercentageRepaidValue(Long loanApplicationId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		BigDecimal repaidPercent = (getLoansRepaidByLoanApplicationId(loanApplicationId).divide(getLoanAmount(delegator, String.valueOf(loanApplicationId)), 2, RoundingMode.HALF_UP)).multiply(new BigDecimal(100));
+		
+		return repaidPercent;
+	}
+	
+	public static BigDecimal getAllowedPercentageLimitForClearance(){
+		BigDecimal bdPercentage = new BigDecimal(100);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanClearLimitELI = null;
+		try {
+			loanClearLimitELI = delegator.findList("LoanClearLimit",
+					null, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (loanClearLimitELI == null) {
+			return new BigDecimal(100);
+		}
+		for (GenericValue genericValue : loanClearLimitELI) {
+			bdPercentage = genericValue.getBigDecimal("limitPercent");
+		}
+		
+		return bdPercentage;
+		
+		
+	}
+	
+	public static String alloweToClear(Long loanApplicationId){
+		String allowed = "N";
+		
+		if (getLoanPercentageRepaidValue(loanApplicationId).compareTo(getAllowedPercentageLimitForClearance()) >= 0){
+			allowed = "Y";
+		}
+		return allowed;
 	}
 
 }

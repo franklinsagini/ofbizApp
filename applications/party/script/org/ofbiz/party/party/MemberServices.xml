@@ -619,12 +619,19 @@
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         
-        <set field="entityName" value="Member"></set>
-        <set field="newEntity.partyId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-
-		<set field="memberNo" value="${newEntity.partyId}"/>
-		<to-string field="memberNo"/>
-        <set field="newEntity.memberNumber" value="${memberNo}"></set>
+        <if-not-empty field="newEntity.partyId">
+        	<call-simple-method method-name="updateMember"></call-simple-method>
+        </if-not-empty>
+        
+        <if-empty field="newEntity.partyId">
+        
+        	<set field="entityName" value="Member"></set>
+        	<set field="newEntity.partyId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+			<set field="statusName" value="NEW"/>
+			<set field="newEntity.memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName)}"/>
+			<set field="memberNo" value="${newEntity.partyId}"/>
+			<to-string field="memberNo"/>
+        	<set field="newEntity.memberNumber" value="${memberNo}"></set>
         <!-- sequenced-id sequence-name="MemberType" field="newEntity.memberTypeId" / -->
         
         <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
@@ -633,6 +640,11 @@
         <call-simple-method method-name="saveParty" scope="inline">
         </call-simple-method>
         <create-value value-field="newEntity"/>
+        
+        </if-empty>
+       
+        
+        
     </simple-method>
     
     <simple-method method-name="saveParty">

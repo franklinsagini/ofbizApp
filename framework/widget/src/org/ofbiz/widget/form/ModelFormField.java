@@ -2589,6 +2589,7 @@ public class ModelFormField {
 					&& !this.entityName.equals("LoanApplicationCharge")
 					&& !this.entityName.equals("LoanProductCharge")
 					&& !this.entityName.equals("ProductCharge")
+					&& !this.entityName.equals("RecruitingAgent")
 					
 					
 					&& !this.entityName.equals("LoanProduct")
