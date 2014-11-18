@@ -1781,5 +1781,62 @@ public class LoanServices {
 		}
 		return allowed;
 	}
+	
+	public static String addToClearList(
+			HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String loanApplicationId = (String) request
+				.getParameter("loanApplicationId");
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session
+				.getAttribute("userLogin");
+		String userLoginId = userLogin.getString("userLoginId");
+
+		GenericValue loanApplication = null;
+
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		try {
+			loanApplication = delegator.findOne(
+					"LoanApplication",
+					UtilMisc.toMap("loanApplicationId",
+							Long.valueOf(loanApplicationId)), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//Create LoanClear and add loan to it
+		GenericValue loanClear;
+		Long loanClearId = delegator.getNextSeqIdLong("LoanClear", 1);
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		loanClear = delegator.makeValue("LoanClear", UtilMisc.toMap(
+				"loanClearId", loanClearId, "partyId",
+				loanApplication.getLong("partyId"), "loanTotalAmt", getLoanRemainingBalance(Long.valueOf(loanApplicationId)),
+				"createdBy", userLoginId, "isActive", "Y"));
+		try {
+			delegator.createOrStore(loanClear);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		
+		//Save LoanClearItem
+		
+		GenericValue loanClearItem;
+		Long loanClearItemId = delegator.getNextSeqIdLong("LoanClearItem", 1);
+		//loanApplicationId = loanApplicationId.replaceAll(",", "");
+		loanClearItem = delegator.makeValue("LoanClearItem", UtilMisc.toMap(
+				"loanClearId", loanClearId, "loanClearItemId", loanClearItemId, "loanApplicationId",
+				Long.valueOf(loanApplicationId), "loanAmt", getLoanRemainingBalance(Long.valueOf(loanApplicationId)),
+				"createdBy", userLoginId, "isActive", "Y"));
+		try {
+			delegator.createOrStore(loanClearItem);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		return "success";
+	}
+
 
 }

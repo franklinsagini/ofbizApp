@@ -306,5 +306,62 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 	
+	<!-- listLoanClear -->
+	    <form name="listLoanClear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClearLimit" paginate-target="loanClearingLimit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanClear">
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanClearLimit"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId">
+        		
+        	</display-entity>
+         </field>
+         
+         <field name="loanTotalAmt">
+        	<display></display>
+         </field>
+         
+         <field name="clearAll" title="Clear All" widget-style="buttontext">
+            <hyperlink target="clearAll" description="Clear All" also-hidden="false">
+                <parameter param-name="loanClearId"/>
+            </hyperlink>
+        </field>
+        <field name="loanClearItem" title="Show Items" widget-style="buttontext">
+            <hyperlink target="loanClearItem" description="Show Loans To Clear" also-hidden="false">
+                <parameter param-name="loanClearId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    
+    	    <form name="listLoanClearItem" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClearLimit" paginate-target="loanClearingLimit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanClearItem">
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanClearLimit"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="loanClearItemId"><hidden/></field>
+        <field name="loanClearId"><hidden/></field>
+        <field name="loanApplicationId" title="Loan No">
+        	<display-entity entity-name="LoanApplication" description="${loanNo}" key-field-name="loanApplicationId">
+        		
+        	</display-entity>
+         </field>
+         
+         <field name="loanAmt">
+        	<display></display>
+         </field>
+        
+    </form>
 	
 </forms>

@@ -103,6 +103,74 @@
                         value="loanClearingLimit"></response>
                 <response name="error" type="view" value="loanClearingLimit" />
         </request-map>
+        
+      	<request-map uri="loanClear">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="loanClear"
+                        save-current-view="true" />
+        </request-map>
+        
+        <request-map uri="createLoanClear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanClear" />
+                <response name="success" type="request-redirect"
+                        value="loanClear"></response>
+                <response name="error" type="view" value="loanClear" />
+        </request-map>
+
+        <request-map uri="updateLoanClear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanClear" />
+                <response name="success" type="request-redirect"
+                        value="loanClear"></response>
+                <response name="error" type="view" value="loanClear" />
+        </request-map>
+
+        <request-map uri="deleteLoanClear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanClear" />
+                <response name="success" type="request-redirect"
+                        value="loanClear"></response>
+                <response name="error" type="view" value="loanClear" />
+        </request-map>
+        
+             	<request-map uri="loanClearItem">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="loanClearItem"
+                        save-current-view="true" />
+        </request-map>
+        
+        <request-map uri="createLoanClearItem">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanClearItem" />
+                <response name="success" type="request-redirect"
+                        value="loanClearItem"></response>
+                <response name="error" type="view" value="loanClearItem" />
+        </request-map>
+
+        <request-map uri="updateLoanClearItem">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanClearItem" />
+                <response name="success" type="request-redirect"
+                        value="loanClearItem"></response>
+                <response name="error" type="view" value="loanClearItem" />
+        </request-map>
+
+        <request-map uri="deleteLoanClearItem">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanClearItem" />
+                <response name="success" type="request-redirect"
+                        value="loanClearItem"></response>
+                <response name="error" type="view" value="loanClearItem" />
+        </request-map>
+        
+      <request-map uri="addToClearList">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.loans.LoanServices" invoke="addToClearList" />
+		<response name="success" type="request-redirect" value="myrunningloans">
+		</response>
+		<response name="error" type="view" value="myrunningloans" />
+	</request-map>
 	
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://loanclearing/widget/LoanClearingScreens.xml#main"/ -->
@@ -131,6 +199,11 @@
 		
 	<view-map name="loanClearingLimit" type="screen"
                 page="component://loanclearing/widget/LoanClearingScreens.xml#loanClearingLimit" />
+	
+	<view-map name="loanClear" type="screen"
+                page="component://loanclearing/widget/LoanClearingScreens.xml#loanClear" />
+	<view-map name="loanClearItem" type="screen"
+                page="component://loanclearing/widget/LoanClearingScreens.xml#loanClearItem" />
 	
 	
 </site-conf>
