@@ -153,7 +153,7 @@ under the License.
                                     <widgets>
                                         <container style="profile-left">
                                             <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="ConductInformation" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            <include-screen name="ContactInformation" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             <include-screen name="EmployeeIdentificationNumbers" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                              <include-screen name="trainingsList"/>
                                           <!--   <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/> -->
@@ -327,7 +327,7 @@ under the License.
                 <set field="tabButtonItem" value="EditEmployeeLeaves"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
-                <entity-one entity-name="LeaveBalances" value-field="leavebal"/>
+                <entity-one entity-name="LeavesBalanceView" value-field="leavebal"/>
                 
                
                 <entity-condition list="leaveLogs" entity-name="LeaveStatusLog">
@@ -347,10 +347,11 @@ under the License.
                            <!--  <include-form name="AddEmplLeave" location="component://humanres/widget/forms/EmployeeForms.xml"/> -->
                             <include-form name="EmplProfileLeaves" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
                         </screenlet>
+                        <!-- 
                          <screenlet id="AddEmplLeavePanel" title="Leave Logs" collapsible="true">
                             <include-form name="ListLeaveLogsForProfile"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-                        </screenlet>
+                        </screenlet> -->
                        
                     </decorator-section>
                 </decorator-screen>
@@ -1050,6 +1051,67 @@ under the License.
         </section>
     </screen>
     
+    
+   <!--  ++++++++++++++++++++++++++++++++STAFF ON PROBATION +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    
+    <screen name="employeesOnProbation">
+		<section>
+			<actions>
+				<set field="headerItem" value="probationEmployees" />
+				<set field="tabButtonItem" value="probationEmployees" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Search Staff">
+									<include-form name="FindEmployeeOnProbation" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Staff List (Search Results)">
+									<include-form name="listEmployeeOnProbation" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!--  ++++++++++++++++++++++++++++++++ EDIT CONFIRMATION DATE FOR STAFF ON PROBATION +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    
+    <screen name="editStaffConfirmationDate">
+		<section>
+			<actions>
+				<set field="headerItem" value="probationEmployees" />
+				<set field="tabButtonItem" value="probationEmployees" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Search Staff">
+									<include-form name="editStaffConfirmationDate" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
     
     
     

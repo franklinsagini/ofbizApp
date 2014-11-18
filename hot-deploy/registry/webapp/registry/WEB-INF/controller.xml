@@ -60,7 +60,17 @@
 		<response name="success" type="view" value="main" />
 	</request-map>
 
-	<request-map uri="reqfileURL">
+	<request-map uri="requestfiles"> 
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="reqfile" />
+	</request-map>
+	
+	<request-map uri="releasefiles">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="reqfile" />
+	</request-map>
+	
+	<request-map uri="issuefiles">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="reqfile" />
 	</request-map>
@@ -74,6 +84,10 @@
     
      <request-map uri="LookupActiveMember"><security https="true" auth="true"/>
      	<response name="success" type="view" value="LookupActiveMember"/>
+     </request-map>
+     
+      <request-map uri="lookupPartyName"><security https="true" auth="true"/>
+     	<response name="success" type="view" value="lookupPartyName"/>
      </request-map>
 
 
@@ -163,6 +177,20 @@
 		<response name="success" type="view" value="afterAction" />
 		<response name="error" type="view" value="afterAction" />
 	</request-map>
+	
+	<request-map uri="issuefiles">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="issuefiles" />
+		<response name="success" type="view" value="afterAction" />
+		<response name="error" type="view" value="afterAction" />
+	</request-map>
+	
+	<request-map uri="releasefiles">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="releasefiles" />
+		<response name="success" type="view" value="afterAction" />
+		<response name="error" type="view" value="afterAction" />
+	</request-map>
 
 	
 	
@@ -236,6 +264,7 @@
 	
 	<!-- Lookup Active Memeber Viewmap -->
 	<view-map name="LookupActiveMember" type="screen" page="component://purchases/widget/LookupScreens.xml#LookupActiveMember"/>
+	<view-map name="lookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
 
 
 

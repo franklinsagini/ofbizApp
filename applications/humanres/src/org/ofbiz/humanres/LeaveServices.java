@@ -9,21 +9,24 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.common.JsLanguageFilesMapping.datejs;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -32,6 +35,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.workflow.WorkflowServices;
 
@@ -56,17 +62,22 @@ public static String closeFinacialYear(HttpServletRequest request,
 		String partyId ="", appointmentdate = ""; 
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
-			appointmentdate = genericValue.getString("appointmentdate");
+			appointmentdate = genericValue.getString("confirmationdate");
 
 			if (appointmentdate !=null && appointmentdate !="") {
 						log.info("-----++++++-----partyId-----------------" +appointmentdate);
 			log.info("---------------------			appointmentdate--------------------------" +partyId);
-			calculateCarryOverLost(partyId, appointmentdate);// call method to calculate	
+			
+			calculateCarryOverLost(partyId, appointmentdate);// call method to calculate
+			Leave.closeFinacialYearForCompassionate(request, response);
+			deleteExistingResetAnnualLost(delegator);
+			deleteExistingLeaveOpeningBalances(delegator);
 			}
 			
 			
 		}
 		//log.info("------------------------------------------------" +partyId);
+		
 		return partyId;
 	}
 
@@ -80,8 +91,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 		List<GenericValue> getApprovedLeaveSumELI = null;		
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
@@ -115,6 +125,73 @@ public static String closeFinacialYear(HttpServletRequest request,
 		} else {
 			System.out.println("######## Accrual Rate not found #### ");
 		}
+		
+		//===============================Consider Opening Balances and Reset lost days=====================================
+		GenericValue getAnualOpeningSumELI=null;
+		GenericValue getAnualResetDaysELI=null;
+		BigDecimal annualResetLeaveDays = BigDecimal.ZERO;
+		
+		BigDecimal LeaveBalanceCarriedForward = BigDecimal.ZERO; 
+		BigDecimal LeaveDaysUsed= BigDecimal.ZERO; 
+		try {
+			 
+			 getAnualOpeningSumELI = delegator.findOne("EmplLeaveOpeningBalance", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		try {
+			 
+			 getAnualResetDaysELI = delegator.findOne("AnnualLeaveBalancesReset", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		//===================Consider Annual Leave Balances====================================
+		GenericValue getAnualLeaveBalanceELI=null;
+		BigDecimal annualBal=BigDecimal.ZERO;
+		try {
+			 
+			 getAnualLeaveBalanceELI = delegator.findOne("LeaveBalances", 
+					            UtilMisc.toMap("partyId",partyId), false);
+			 
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		if (getAnualLeaveBalanceELI!=null) {
+			annualBal=getAnualLeaveBalanceELI.getBigDecimal("availableLeaveDays");
+			
+			
+		} else {
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
+		if (getAnualResetDaysELI!=null) {
+			annualResetLeaveDays=getAnualResetDaysELI.getBigDecimal("annualLeaveDaysLost");
+			
+			
+		} else {
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
+		
+		if (getAnualOpeningSumELI!=null) {
+			LeaveBalanceCarriedForward = getAnualOpeningSumELI.getBigDecimal("annualLeaveBalanceCarriedForward");
+			LeaveDaysUsed = getAnualOpeningSumELI.getBigDecimal("annualLeaveDaysUsed");
+			
+			
+		} else {
+			
+			String errorMsg = "================================NOTHING FOUND HERE===============";
+		}
+		
 		//========= ==============================//
 		LocalDateTime today = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
 		LocalDateTime firstDayOfYear = today.dayOfYear().withMinimumValue();
@@ -134,9 +211,11 @@ public static String closeFinacialYear(HttpServletRequest request,
 		PeriodType monthDay = PeriodType.months();
 		Period difference = new Period(accrueStart, stCurrentDate, monthDay);
 		int months = difference.getMonths();
-		double accruedLeaveDay = months * accrualRate;
-		double leaveBalances =  accruedLeaveDay - usedLeaveDays;
-		if (leaveBalances > MAXCARRYOVER) {
+		double accruedLeaveDay = (months * accrualRate)+LeaveBalanceCarriedForward.doubleValue()+annualResetLeaveDays.doubleValue();
+		log.info("++++accruedLeaveDay===="+accruedLeaveDay+"====LeaveBalanceCarriedForward:"+LeaveBalanceCarriedForward+"annualResetLeaveDays:"+annualResetLeaveDays);
+		double totalUsed=usedLeaveDays+LeaveDaysUsed.doubleValue();
+		double leaveBalances =  accruedLeaveDay - totalUsed;
+		/*if (leaveBalances > MAXCARRYOVER) {
 			lostLeaveDays = leaveBalances - MAXCARRYOVER;
 			carryOverLeaveDays = MAXCARRYOVER;		 	
 		 } 
@@ -144,14 +223,31 @@ public static String closeFinacialYear(HttpServletRequest request,
 		 	lostLeaveDays = 0;
 			carryOverLeaveDays = leaveBalances;
 		 }
+		 */
+		 if (annualBal.doubleValue() > MAXCARRYOVER) {
+				lostLeaveDays = annualBal.doubleValue() - MAXCARRYOVER;
+				carryOverLeaveDays = MAXCARRYOVER;		 	
+			 } 
+			 if (annualBal.doubleValue() <= MAXCARRYOVER) {
+			 	lostLeaveDays = 0;
+				carryOverLeaveDays = annualBal.doubleValue();
+			 }
 		// Delete record if it was created before end of this year
 		deleteExistingCarryOverLost(delegator, partyId, currentYear);
 		//Create record afresh
-		GenericValue leavelog = delegator.makeValue("EmplCarryOverLost", 
+		String carryOverLostId=null;
+		if (UtilValidate.isEmpty(carryOverLostId)) {
+			try {
+				carryOverLostId = delegator.getNextSeqId("EmplCarryOverLost");
+			} catch (IllegalArgumentException e) {
+				return;
+			}
+		}
+		GenericValue leavelog = delegator.makeValue("EmplCarryOverLost",
 				"partyId", partyId,
 				"financialYear", currentYear,
 	            "accruedDays", accruedLeaveDay , 
-	            "usedLeaveDays", usedLeaveDays,
+	            "usedLeaveDays", totalUsed,
 	            "lostLeaveDays", lostLeaveDays, 
 	            "carryOverLeaveDays", carryOverLeaveDays);
 	try {
@@ -162,7 +258,26 @@ public static String closeFinacialYear(HttpServletRequest request,
 	}		
 	}
 	public static void deleteExistingCarryOverLost(Delegator delegator, String partyId, String currentYear) {
-       try {
+		
+		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),null,null),EntityOperator.AND);
+
+		/*try {
+			List<GenericValue> ExistingCarryOverLost  = delegator.findList("EmplCarryOverLost",
+					leaveConditions, null, null, null, false);
+			
+			for (GenericValue genericValue : ExistingCarryOverLost) {
+				ExistingCarryOverLost.remove(genericValue);
+			}
+			
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}*/
+		
+    try {
              GenericValue ExistingCarryOverLost = delegator.findOne("EmplCarryOverLost", 
              	UtilMisc.toMap( "partyId", partyId), false);
              if (ExistingCarryOverLost != null && !ExistingCarryOverLost.isEmpty()) {
@@ -173,6 +288,7 @@ public static String closeFinacialYear(HttpServletRequest request,
     	   e.printStackTrace();
        }  
 }
+	
 	public static String resetUnusedCarryOver(HttpServletRequest request,
 			HttpServletResponse response) {
 		Delegator delegator;
@@ -196,6 +312,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 		}
 		return partyIds;
 	}
+	
 
 public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, String financialYear ,double resetLeaveDays) {
 
@@ -225,6 +342,8 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> personsELI = null; // =
 		deleteExistingLeaveBalance(delegator);
+		Timestamp now = UtilDateTime.nowTimestamp();
+		String thisYear=getCurrentYear(now);
 		try {
 			personsELI = delegator.findAll("LeaveBalancesView", true);
 			log.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"+personsELI);
@@ -237,10 +356,10 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		String partyId ="", appointmentdate = ""; 
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
-			appointmentdate = genericValue.getString("appointmentdate");
+			appointmentdate = genericValue.getString("confirmationdate");
 			//log.info("===================="+partyId);
 			//log.info("++++++++++++++++++++"+appointmentdate);
-			calculateLeaveBalanceSave(partyId, appointmentdate);
+			calculateLeaveBalanceSave(partyId, appointmentdate, thisYear);
 		}
 		//log.info("------------------------------------------------" +partyId);
 		return partyId;
@@ -248,8 +367,7 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 
 
 	
-	public static void calculateLeaveBalanceSave(String partyId,
-			String appointmentdate) {
+	public static void calculateLeaveBalanceSave(String partyId, String appointmentdate, String year) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator;
 		delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -261,7 +379,8 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 				.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, partyId),
-					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
+						EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, year),
+					EntityCondition.makeCondition("isDeductedFromAnnual",EntityOperator.EQUALS, "Y"),// changed leavetypeId to isDeductedFromAnnual
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
 
@@ -284,17 +403,30 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		
 		// ============ get accrual rate ================ //
 	BigDecimal accrualRate = BigDecimal.ZERO; 
+	BigDecimal carryOverLeaveDays= BigDecimal.ZERO; 
 	GenericValue employeeLeaveType = null;
+	GenericValue carryGV = null;
 		try {
 			employeeLeaveType = delegator.findOne("EmplLeaveType",
 					UtilMisc.toMap("leaveTypeId", "ANNUAL_LEAVE"), false);
+			
+			 carryGV = delegator.findOne("EmplCarryOverLost", 
+		             	UtilMisc.toMap("partyId", partyId), false);
+		           	log.info("++++++++++++++carryGV++++++++++++++++" +carryGV);
+			
+			
+			
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			
 		}
+ 
+	       
+		
 		if (accrualRate != null) {
 
 			accrualRate = employeeLeaveType.getBigDecimal("accrualRate");
+			carryOverLeaveDays = carryGV.getBigDecimal("carryOverLeaveDays");
 			
 		} else {
 			System.out.println("######## Accrual Rate not found #### ");
@@ -324,13 +456,16 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 
 		int months = difference.getMonths();
 		BigDecimal accruedLeaveDay = accrualRate.multiply(new BigDecimal(months));
-		BigDecimal leaveBalances =  accruedLeaveDay.subtract(approvedLeaveSum); 
+		BigDecimal leaveBalances =  (accruedLeaveDay.subtract(approvedLeaveSum)).add(carryOverLeaveDays); 
+		/*BigDecimal leaveBalances =  accruedLeaveDay.subtract(approvedLeaveSum); */
 
 
-		GenericValue leavelog = delegator.makeValue("LeaveBalances", "partyId", partyId, 
+		GenericValue leavelog = delegator.makeValue("LeaveBalances",
+				"partyId", partyId, 
 	            "accruedDays", accruedLeaveDay.doubleValue() , 
 	            "usedLeaveDays", approvedLeaveSum.doubleValue(),
 	            "lostLeaveDays", lostLeaveDays.doubleValue(), 
+	            "LeaveDaysCarriedOver", carryOverLeaveDays.doubleValue(), 
 	            "availableLeaveDays", leaveBalances.doubleValue());
 	try {
 		delegator.create(leavelog);
@@ -354,6 +489,35 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		log.info("DELETED  ALL RECORDS!" );
 		
 	}
+	
+	// DELETE ALL RESET ANNUAL LEAVE DAYS
+	
+	private static void deleteExistingResetAnnualLost(Delegator delegator){
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+
+		try {
+			delegator.removeAll("AnnualLeaveBalancesReset");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED  ALL RECORDS IN RESET LEAVE DAYS!");
+		
+	}
+	
+	// DELETE ALL LEAVE OPENING BALANCES
+	private static void deleteExistingLeaveOpeningBalances(Delegator delegator){
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+
+		try {
+			delegator.removeAll("EmplLeaveOpeningBalance");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED ALL LEAVE OPENING BALANCES!");
+		
+	}
 
 public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, String partyId) {
 	Map<String, Object> UsedDays = FastMap.newInstance();
@@ -363,6 +527,8 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 	log.info("++++++++++partyId++++++++++++++++++++" +partyId);
 	log.info("++++++++++leaveDuration++++++++++++++++++++" +leaveDuration);
 	GenericValue carryGV = null; //GenericValue result = null;
+	
+	double carryOverLeaveDays = 0;
 
       try {
             carryGV = delegator.findOne("EmplCarryOverLost", 
@@ -372,7 +538,14 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
        catch (GenericEntityException e) {
             e.printStackTrace();;
        }  
-       double carryOverLeaveDays = carryGV.getDouble("carryOverLeaveDays");
+      
+      if (carryGV != null) {
+    	  carryOverLeaveDays = carryGV.getDouble("carryOverLeaveDays");
+	} else {
+
+	}
+      
+       
        log.info("++++++++++++++++carryOverLeaveDays++++++++++++++" +carryOverLeaveDays);
        if (carryOverLeaveDays > leaveDuration) {
        	carryOverUsed = leaveDuration;
@@ -622,7 +795,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		}
 
 		for (GenericValue genericValue : getLeaveappointmentdateELI) {
-			appointmentdate = genericValue.getString("appointmentdate");
+			appointmentdate = genericValue.getString("confirmationdate");
 		}
 
 		return appointmentdate;
@@ -677,6 +850,15 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 
 		return partyIdFromV;
 	}
+	
+	public static String getCurrentYear(Date fromDate) {
+		LocalDateTime today = new LocalDateTime(fromDate);
+		int thisYear = today.getYear();
+		String currentYear = Integer.toString(thisYear);
+		log.info("==================CURRENT YEAR ############ " + currentYear);
+		return currentYear;
+	}
+
 
 	public static String getSupervisorLevel(GenericValue party) {
 		String superVisorLevelValue = "";
@@ -706,5 +888,66 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		return superVisorLevelValue;
 	}
 
+	public static Map<String, Object> addStaffOpeningBalance(DispatchContext ctx,
+			Map<String, ? extends Object> context) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = ctx.getDelegator();
+		Timestamp now = UtilDateTime.nowTimestamp();
+		List<GenericValue> toBeStored = FastList.newInstance();
+		Locale locale = (Locale) context.get("locale");
+		// in most cases userLogin will be null, but get anyway so we can keep
+		// track of that info if it is available
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String partyId = (String) context.get("partyId");
+
+		// if specified partyId starts with a number, return an error
+		/*if (UtilValidate.isNotEmpty(leaveBalanceId) && leaveBalanceId.matches("\\d+")) {
+			return ServiceUtil.returnError(UtilProperties.getMessage(
+					null, "party.id_is_digit", locale));
+		}
+
+		// partyId might be empty, so check it and get next seq party id if
+		// empty
+		if (UtilValidate.isEmpty(leaveBalanceId)) {
+			try {
+				leaveBalanceId = delegator.getNextSeqId("EmplLeaveOpeningBalance");
+			} catch (IllegalArgumentException e) {
+				return ServiceUtil.returnError(UtilProperties.getMessage(
+						null, "party.id_generation_failure", locale));
+			}
+		}*/
+
+		// check to see if party object exists, if so make sure it is PERSON
+		// type party
+		GenericValue EmplLeaveOpeningBalance = null;
+
+		try {
+			EmplLeaveOpeningBalance = delegator.findOne("EmplLeaveOpeningBalance",
+					UtilMisc.toMap("partyId", partyId), false);
+		} catch (GenericEntityException e) {
+			Debug.logWarning(e.getMessage(), null);
+		}
+
+	
+		EmplLeaveOpeningBalance = delegator.makeValue("EmplLeaveOpeningBalance",
+				UtilMisc.toMap("partyId", partyId));
+		EmplLeaveOpeningBalance.setNonPKFields(context);
+		toBeStored.add(EmplLeaveOpeningBalance);
+
+		try {
+			delegator.storeAll(toBeStored);
+		} catch (GenericEntityException e) {
+			Debug.logWarning(e.getMessage(), null);
+			return ServiceUtil.returnError(UtilProperties.getMessage(
+					null, "person.create.db_error",
+					new Object[] { e.getMessage() }, locale));
+		}
+
+		result.put("partyId", partyId);
+		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+		return result;
+	}
+	
+	
 	
 }

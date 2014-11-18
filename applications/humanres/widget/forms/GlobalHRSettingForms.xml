@@ -332,6 +332,7 @@ under the License.
         <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
+    
     <form name="AddEmplLeaveType" type="single" target="updateEmplLeaveType" 
         default-map-name="editleavetype"
         header-row-style="header-row" default-table-style="basic-table">
@@ -350,8 +351,8 @@ under the License.
         <field name="days" title="Days" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="daytype"  title="Day Specification" >
             <drop-down allow-empty="false">
-                <option key="Work Days" description="Work Days"/>
-                <option key="Calendar Days" description="Calendar Days"/>
+                <option key="Work_days" description="Work Days"/>
+                <option key="Calendar_days" description="Calendar Days"/>
             </drop-down>
         </field>
         <field name="gender"  title="Gender" >
@@ -359,6 +360,12 @@ under the License.
             	<option key="All" description="All"/>
                 <option key="Male" description="Male"/>
                 <option key="Female" description="Female"/>
+            </drop-down>
+        </field>
+         <field name="isDeductedFromAnnual"  title="Deducted From Annual Leave Balance" >
+            <drop-down allow-empty="false">
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
             </drop-down>
         </field>
         <field name="isforwarded"  title="Can Be Forwarded" >
@@ -370,6 +377,8 @@ under the License.
         <field name="forwardmax" title="Max Days Forwarded" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="noticeperiod" title="Notice Period (Days)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="validity" title="Validity (Months)"><text size="30" maxlength="60"/></field>
+        <field name="minDays" title="Minimum Days Allowed"><text size="30" maxlength="60"/></field>
+        <field name="maxDays" title="Maximum Days Allowed"><text size="30" maxlength="60"/></field>
         <field name="isallocated"  title="Allocated" >
             <drop-down allow-empty="false">
                 <option key="No" description="No"/>
@@ -424,13 +433,15 @@ under the License.
         <field name="days" title="Days"><display/></field>
         <field name="daytype" title="Day type"><display/></field>
         <field name="gender" title="Gender"><display/></field>
+        <field name="minDays" title="Minimum Days Allowed"><display/></field>
+        <field name="maxDays" title="Maximum Days Allowed"><display/></field>
         <field name="isforwarded" title="Is forwarded">
             <display />
         </field>
         <field name="forwardmax" title="Forward max}"><display/></field>
         <field name="noticeperiod" title="Noticeperiod"><display/></field>
         <field name="validity" title="Validity"><display/></field>
-
+    	<field name="isDeductedFromAnnual"><display/></field>
         <field name="isallocated" title="Is allocated"><display/></field>
         <field name="isencashable" title="Is encashable"><display/></field>
         <field name="isaccrued" title="Is accrued"><display/></field>
@@ -585,5 +596,29 @@ under the License.
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+  <!--   ===========================================PAYROLL PREFIX======================================================= -->
+  
+    <form name="addPayrollPrefix" type="single" target="createPayrollPrefix"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="PayrollPrefixContext">
+        
+        <actions>
+        </actions>
+        
+        <field name="prefixId"><hidden/></field>
+        <field name="lowerCase" title="Payroll Prefix" tooltip="(Allows 3 characters only)" ><text/></field>
+      <!--   <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return staffPayrollPrefixValidation();"><submit button-type="text-link"/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" action="javascript: return staffPayrollPrefixValidation();" event="onclick"><submit button-type="button"/></field>
+        </form>
+        
+        <form name="listPayrollPrefix" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="payRollPrefix"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="payRollPrefix">
+            </entity-condition>
+        </actions>
+        <field name="prefixId"> <hidden/> </field>
+        <field name="payRollPrefix"><display/> </field>
     </form>
 </forms>

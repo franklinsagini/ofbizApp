@@ -3,7 +3,6 @@ package org.ofbiz.payroll;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
-import org.joda.time.JodaTimePermission;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -26,7 +24,6 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.payroll.TaxTracker;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 
@@ -34,7 +31,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
  * @author charles
  * **/
 public class MigratePayroll {
-	private static Logger log = Logger.getLogger(PayrollProcess.class);
+	private static Logger log = Logger.getLogger(MigratePayroll.class);
 	
 	static Timestamp curTimeStamp = null;
 	static Timestamp newPeriodEndDate = null;
@@ -45,49 +42,57 @@ public class MigratePayroll {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
-		String oldPayrollPeriodId = (String) request.getParameter("payrollPeriodId");
+//		String oldPayrollPeriodId = (String) request.getParameter("payrollPeriodId");
+		String oldPayrollPeriodId = getActivePayrollPeriod(delegator);
 		
-		// Get employees
-		List<GenericValue> employeesELI = null;
-		// String partyId = party.getString("partyId");
-		log.info("######### Old payrollPeriodId is :::: " + oldPayrollPeriodId);
-		
-		newPayrollPeriodId = getNewPayrollPeriodID(oldPayrollPeriodId, delegator);
-		log.info("######### New payrollPeriodId is :::: " + newPayrollPeriodId);
-		
-		curTimeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		newPeriodEndDate = getPeriodEndDate(newPayrollPeriodId, delegator);
+		if(!(oldPayrollPeriodId==null))
+		{
+			// Get employees
+			List<GenericValue> employeesELI = null;
+			// String partyId = party.getString("partyId");
+			log.info("######### Old payrollPeriodId is :::: " + oldPayrollPeriodId);
+			
+			newPayrollPeriodId = getNewPayrollPeriodID(oldPayrollPeriodId, delegator);
+			log.info("######### New payrollPeriodId is :::: " + newPayrollPeriodId);
+			
+			curTimeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+			newPeriodEndDate = getPeriodEndDate(newPayrollPeriodId, delegator);
 
-		try {
-			employeesELI = delegator.findList("StaffPayroll", EntityCondition
-					.makeCondition("payrollPeriodId", oldPayrollPeriodId), null,
-					null, null, false);
-		
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		
-
-		for (GenericValue genericValue : employeesELI) {
-				
-			if(!(genericValue.getString("closed").equals("Y")))
-			{
-				rollOverPayroll(genericValue, genericValue.getString("staffPayrollId"), newPayrollPeriodId, delegator);
-				log.info("######### Staff ID "+ genericValue.getString("staffPayrollId"));
-				
-				genericValue.setString("closed", "Y");
-				try {
-					delegator.createOrStore(genericValue);
-				} catch (GenericEntityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}else
-			{
-				log.info(">>>>>>>>>>>>>>>>>>>>>>>>>Period Already Closed<<<<<<<<<<<<<<<<<<<<<<<<<");
+			try {
+				employeesELI = delegator.findList("StaffPayroll", EntityCondition
+						.makeCondition("payrollPeriodId", oldPayrollPeriodId), null,
+						null, null, false);
+			
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
 			}
 			
-			
+
+			for (GenericValue genericValue : employeesELI) {
+					
+				if(genericValue.getString("closed").equals("Y"))
+				{
+					rollOverPayroll(genericValue, genericValue.getString("staffPayrollId"), newPayrollPeriodId, delegator);
+					log.info("######### Staff ID "+ genericValue.getString("staffPayrollId"));
+					
+	/*				genericValue.setString("closed", "Y");
+					try {
+						delegator.createOrStore(genericValue);
+					} catch (GenericEntityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}*/
+				}else
+				{
+					log.info(">>>>>>>>>>>>>>>>>>>>>>>>> Cannot Migrate An Open Period <<<<<<<<<<<<<<<<<<<<<<<<<");
+				}
+				
+				
+			}
+		}
+		else
+		{
+			log.info("No Active Period ID Found");
 		}
 
 	
@@ -105,6 +110,27 @@ public class MigratePayroll {
 			}
 		}
 		return "";				
+	}
+
+	private static String getActivePayrollPeriod(Delegator delegator) {
+		String PayrollPeriodId = null;
+		List<GenericValue> ppELI = null;
+		
+		try {
+			ppELI = delegator.findList("PayrollPeriod", EntityCondition
+					.makeCondition("status", "Open"), null,
+					null, null, false);
+		
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+
+		for (GenericValue genericValue : ppELI) {
+			PayrollPeriodId=genericValue.getString("payrollPeriodId");			
+		}
+		
+		return PayrollPeriodId;
 	}
 
 	private static Timestamp getPeriodEndDate(String newPayrollPeriodId, Delegator delegator) {
@@ -202,6 +228,7 @@ public class MigratePayroll {
 			
 			period.setString("currentperiod", "Y");
 			period.setString("status", "Open");
+			period.setString("payrollcheck", "O");
 			try {
 				delegator.createOrStore(period);
 			} catch (GenericEntityException e) {

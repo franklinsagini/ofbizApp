@@ -20,6 +20,46 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        
+    <form name="LookupEmployee" type="single" target="LookupEmployee"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="Person" default-field-type="hidden"/>
+        <field name="partyId"><hidden /></field>
+        <field name="employeeNumber" title="Employee Payroll Number">
+        	<text-find default-value=""></text-find>
+        </field>
+        <field name="lastName" title="Surname"><text-find/></field>
+        <field name="firstName" title="First Names"><text-find/></field>
+        <field name="nationalIDNumber" title="ID Number"><text-find/></field>
+        
+		<!-- field name="noConditionFind"><hidden value="Y"/></field -->
+		
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListEmployees" type="list" list-name="listIt" paginate-target="LookupEmployee"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="Person">
+        		<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        	</entity-condition>
+        	<set field="inputFields" from-field="parameters"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Person"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="Person" default-field-type="hidden"/>
+        <field name="partyId"><display also-hidden="false"/></field>
+        <field name="employeeNumber" title="Employee Payroll Number">
+        	<hyperlink also-hidden="false" target-type="content" description="${employeeNumber}" target="javascript:set_values('${partyId}', '${firstName} ${lastName} (${employeeNumber})')"/>
+        </field>
+        <field name="lastName" title="Surname"><display/></field>
+        <field name="firstName" title="First Names"><display/></field>          
+        <field name="nationalIDNumber" title="ID Number"><display/></field>      
+    </form>
+        
     <form name="LookupBudget" type="single" target="LookupBudget"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="Budget" default-field-type="hidden"/>

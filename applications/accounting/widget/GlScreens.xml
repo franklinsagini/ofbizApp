@@ -701,4 +701,107 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <screen name="SyncPayrollTotals">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditGroupInformation" />
+                <set field="tabButtonItem" value="viewprofile" />
+                <set field="headerItem" value="find" />
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation" />
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile" />
+                <set field="partyId" from-field="parameters.partyId" />
+                <entity-one entity-name="PayrollPeriodSummary" value-field="payrollPeriodSummary" />
+            </actions>
+            <widgets>
+                  <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                                        <include-form name="SyncPayrollTotals" location="component://accounting/widget/GlForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="SyncPayrollTotalsList" location="component://accounting/widget/GlForms.xml" />
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="addBranch">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditGroupInformation" />
+                <set field="tabButtonItem" value="viewprofile" />
+                <set field="headerItem" value="find" />
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation" />
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile" />
+                <set field="partyId" from-field="parameters.partyId" />
+                <entity-one entity-name="PartyAndGroup" value-field="partyGroup" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Branch Information ">
+                            <include-form name="addBranch" location="component://party/widget/partymgr/PartyForms.xml" />
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="FindPayrollTotalsScreen">
+        <section>
+            <actions>
+                <set field="headerItem" value="suppliers"/><!-- this highlights the selected menu-item with name "suppliers" -->
+                <set field="tabButtonItem" value="find"/>
+                <set field="payrollTotalsCtx" from-field="parameters" />
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindPayrollTotalsForm" location="component://accounting/widget/GlForms.xml" />
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPayrollTotalsForm" location="component://accounting/widget/GlForms.xml" />
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="approvePayrollTotals">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingCreateAcctgTransAndEntries"/>
+                <set field="tabButtonItem" value="FindAcctgTrans"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <set field="labelTitleProperty" value="AccountingCreateAcctgTransAndEntries"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.AccountingCreateAcctgTransAndEntries}">
+                            <include-form name="approvePayrollTotals" location="component://accounting/widget/GlForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>

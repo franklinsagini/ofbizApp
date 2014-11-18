@@ -271,7 +271,7 @@
     
     <form name="AddEmployeeQualificationFromMenu" type="single" target="createEmployeeQualification">
         <!--auto-fields-service service-name="createPartyQual"/-->
-          <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+          <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupEmployee"/></field>
         <field name="partyQualTypeId" title="Select Qualification" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
@@ -403,7 +403,7 @@
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="timestamp"></date-time></field>
         <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="timestamp"></date-time></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
-        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployee"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplLeaves" type="list" list-name="listIt" separate-columns="true" target="updateEmplLeave" paginate-target="FindEmplLeaves"
@@ -416,7 +416,7 @@
         </actions>
         <auto-fields-service service-name="updateEmplLeave"/>
         <field name="partyId"><hidden/></field>
-        <field name="approverPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approverPartyId"><lookup target-form-name="LookupEmployee"/></field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
@@ -1078,6 +1078,7 @@
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmploymentHistory" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete This Employment History?">
                 <parameter param-name="employmentHistoryId"/>
+                <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
@@ -1087,7 +1088,8 @@
     <form name="FindEmployeeRelations" type="single" target="employeeRelations" default-entity-name="RoleTypeAndPersonEmployeeAndBranch">
      
          <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId"><text-find/></field>
+        
+        <field name="partyId" title="Staff"><lookup target-form-name="LookupEmployee"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="nationalIDNumber" title="Id Number"><text-find/></field>
@@ -1119,7 +1121,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-         <field name="partyId"><display also-hidden="false"/></field>
+         <field name="partyId" title="Payroll Number"><display-entity entity-name="Person" key-field-name="partyId" description="${employeeNumber}"></display-entity></field>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
         <field name="nationalIDNumber" title="Id Number"><display also-hidden="false"/></field>
@@ -1140,7 +1142,8 @@
     <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="RoleTypeAndPersonEmployeeAndBranch">
     
            <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId"><text-find/></field>
+     
+         <field name="partyId" title="Staff"><lookup target-form-name="LookupEmployee"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="nationalIDNumber" title="Id Number"><text-find/></field>
@@ -1173,7 +1176,8 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-         <field name="partyId"><display also-hidden="false"/></field>
+        
+         <field name="partyId" title="Payroll Number"><display-entity entity-name="Person" key-field-name="partyId" description="${employeeNumber}"></display-entity></field>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
         <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
         <field name="nationalIDNumber" title="Id Number"><display also-hidden="false"/></field>
@@ -1337,8 +1341,74 @@
     </form>
     
     
+    <!-- ================================EMPLOYEES ON PROBATION====================================================================== -->
+     <form name="FindEmployeeOnProbation" default-map-name="FindEmployeeOnProbationContext" target="findProbationEmployees" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<set field="roleTypeId" value="EMPLOYEE"/> 
+        </actions>
+        <auto-fields-entity entity-name="employeesOnProbationView" default-field-type="find"/>
+		<field name="roleTypeId"><hidden/></field>
+		<field name="employmentStatusEnumId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <!-- List Memeber Files -->
+
+    <form name="listEmployeeOnProbation" target="" title="" list-name="listIt" type="list" paginate-target="FindEmployeeOnProbation"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <entity-condition entity-name="employeesOnProbationView" >
+        <condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE"/>
+        </entity-condition>
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="employeesOnProbationView"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+           
+        </actions>
+        <auto-fields-entity entity-name="employeesOnProbationView" default-field-type="display"/>
+        <field name="roleTypeId"><hidden/></field>
+         <field name="employmentStatusEnumId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="state"><display default-value="${bsh:org.ofbiz.humanres.HumanResServices.getDateToday(confirmationdate);}"/></field>
+		 <field name="changeConfirmationDate" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Edit Confirmation Date" target="editStaffConfirmation">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		 <field name="ConfirmStaff" title="-" widget-style="buttontext" use-when="${state=='CONFIRM'}">
+			<hyperlink also-hidden="false" description="Confirm Staff" target="ConfirmStaff">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		 <field name="dismissStaff" title="-" widget-style="buttontext" use-when="${state=='CONFIRM'}">
+			<hyperlink also-hidden="false" description="Dismis Staff" target="dismissStaffOnProbation">
+				<!-- <parameter param-name="partyId" /> -->
+			</hyperlink>
+		</field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
     
-    
+   <!--  =========================== EDIT STAFF CONFIRMATION DATE ===================================================== -->
+   
+    <form name="editStaffConfirmationDate" type="single" target="updateStaffConfirmation"
+		default-map-name="updateStaffConfirmationContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+		  <set field="partyId" from-field="parameters.partyId"/> 
+        </actions>
+
+		<field name="partyId" title="Staff:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="confirmationdate" title="New Confirmation Date:"><date-time type="date"/></field>
+		
+		 <!-- <field name="submitButton" title="Reset Leave Days" widget-style="smallSubmit"><submit button-type="button"/></field> -->
+		 <field name="submitButton" title="Save Changes"><submit button-type="button"/></field>
+	</form>
     
     
     

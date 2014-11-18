@@ -45,6 +45,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVFormat.CSVFormatBuilder;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
@@ -60,9 +61,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
-import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -86,7 +85,7 @@ public class PartyServices {
 	public static final String module = PartyServices.class.getName();
 	public static final String resource = "PartyUiLabels";
 	public static final String resourceError = "PartyErrorUiLabels";
-
+	public static Logger log = Logger.getLogger(PartyServices.class);
 	/**
 	 * Deletes a Party.
 	 * 
@@ -159,6 +158,9 @@ public class PartyServices {
 		// check to see if party object exists, if so make sure it is PERSON
 		// type party
 		GenericValue party = null;
+		
+		//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
+		GenericValue partyRoleEmployee = null;
 
 		try {
 			party = delegator.findOne("Party",
@@ -184,6 +186,11 @@ public class PartyServices {
 					partyId, "partyTypeId", "PERSON", "description",
 					description, "createdDate", now, "lastModifiedDate", now,
 					"statusId", statusId);
+			
+			/*//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
+			Map<String, Object> newPartyRoleMap = UtilMisc.toMap("partyId",
+					partyId, "roleTypeId", "EMPLOYEE");*/
+			
 			String preferredCurrencyUomId = (String) context
 					.get("preferredCurrencyUomId");
 			if (!UtilValidate.isEmpty(preferredCurrencyUomId)) {
@@ -200,8 +207,15 @@ public class PartyServices {
 				newPartyMap.put("lastModifiedByUserLogin",
 						userLogin.get("userLoginId"));
 			}
+			
+			//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
+			partyRoleEmployee = delegator.makeValue("PartyRole",
+					UtilMisc.toMap("partyId", partyId, "roleTypeId", "EMPLOYEE"));
+			
+			
 			party = delegator.makeValue("Party", newPartyMap);
 			toBeStored.add(party);
+			toBeStored.add(partyRoleEmployee);
 
 			// create the status history
 			GenericValue statusRec = delegator.makeValue("PartyStatus",
@@ -3824,5 +3838,35 @@ public class PartyServices {
 			nomineesavailabe = "Y";
 		}
 		return nomineesavailabe;
+	}
+	
+	public static String NextPayrollNumber(Delegator delegator) {
+		String employeeNumber=null;
+		
+		try {
+
+			String helperNam = delegator.getGroupHelperName("org.ofbiz");    // gets the helper (localderby, localmysql, localpostgres, etc.) for your entity group org.ofbiz
+			Connection conn = ConnectionFactory.getConnection(helperNam); 
+			Statement statement = conn.createStatement();
+			String sqlw=("SELECT * FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
+			//statement.execute("SELECT party_id,employee_number FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
+			ResultSet results = statement.executeQuery(sqlw);
+				String emplNo=results.getString("employee_number");
+				 String trancatemplNo= StringUtils.substring(emplNo, 3);
+				 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+				 String h=String.valueOf(newEmplNo);
+				/* newPayrollNo="HCS".concat(h);*/
+				 employeeNumber="HCS"+h;
+				
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +employeeNumber);
+				
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		return employeeNumber;
+
+		
 	}
 }

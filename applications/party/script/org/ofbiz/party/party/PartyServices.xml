@@ -1089,7 +1089,7 @@ under the License.
         
         <call-simple-method method-name="savePartyRole" scope="inline"></call-simple-method>
         
-         <set field="newEntity.employeeNumber" value="${bsh:org.ofbiz.humanres.HumanResServices.setEmployeePayrollNumber();}" type="String"/>
+         <!-- <set field="newEntity.employeeNumber" value="${bsh:org.ofbiz.party.party.PartyServices.NNextPayrollNumber(delegator);}" type="String"/> -->
         <set field="partyId" from-field="parameters.partyId"/>
         <entity-one entity-name="Party" value-field="party"/>
         <set field="personContext.partyId" from-field="partyId"/>
@@ -1097,6 +1097,7 @@ under the License.
         <if-empty field="party">
             <call-service service-name="createPerson" in-map-name="personContext">
                 <result-to-field result-name="partyId" field="partyId"/>
+                <result-to-field result-name="employeeNumber" field="employeeNumber"/>
             </call-service>
         <else><!-- If party object already exist, update the person record. -->
             <set field="personContext.userLogin" from-field="parameters.userLogin"/>
@@ -1128,6 +1129,8 @@ under the License.
         <call-service service-name="createPerson" in-map-name="personInMap">
             <result-to-field result-name="partyId"/>
             <result-to-result result-name="partyId"/>
+            <result-to-field result-name="employeeNumber"/>
+            <result-to-result result-name="employeeNumber"/>
         </call-service>
 
         <!-- Create email address -->

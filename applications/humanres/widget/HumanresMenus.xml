@@ -18,10 +18,13 @@
     under the License.
 -->
 
+
+
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="HumanResAppBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="Employees" title="${uiLabelMap.HumanResEmployees}"><link target="findEmployees"/></menu-item>
+         <menu-item name="probationEmployees" title="Employees On Probation"><link target="findProbationEmployees"/></menu-item>
         <menu-item name="Employment" title="Employee Postings"><link target="FindEmployments"/></menu-item>
         <menu-item name="EmplPosition" title="${uiLabelMap.HumanResEmployeePosition}"><link target="FindEmplPositions"/></menu-item>
         <menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>
@@ -127,10 +130,24 @@
     </menu>
     <menu name="PerfReviewBar" type="simple" default-menu-item-name="kpidefinition"
         menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
-        <menu-item name="kpidefinition" title="KPI Definition">
+        <menu-item name="kpidefinition" title="Setup">
         	<link target="kpidefinition"/>
         </menu-item>
-        <menu-item name="kpiachievementstatus" title="KPI Achievement Status">
+        
+         <menu-item name="PerfManagement" title="Performance Management">
+        	<link target="PerfManagement"/>
+        </menu-item>
+        <menu-item name="perfReviewReport" title="Performance Reports">
+        	<link target="perfReviewReport"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="PerfSetupBar" type="simple" default-menu-item-name="kpidefinition"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+    	 <menu-item name="kpidefinition" title="KPI Definition">
+        	<link target="kpidefinition"/>
+        </menu-item>
+         <menu-item name="kpiachievementstatus" title="KPI Achievement Status">
         	<link target="kpiachievementstatus"/>
         </menu-item>
         <menu-item name="perfRatingType" title="Performance Ratings">
@@ -138,26 +155,43 @@
         </menu-item> 
         <menu-item name="kpiglobaltargets" title="KPI Targets">
         	<link target="kpiglobaltargets"/>
-        </menu-item>
-        
+        </menu-item>     
+    </menu>
+    
+    <menu name="PerfBar" type="simple" default-menu-item-name="EditPerfReview"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">        
         <menu-item name="Find" title="${uiLabelMap.CommonFind}">
-            <link target="FindPerfReviews"/>
+            <link target="FindPerfReviews">
+            	<parameter param-name="perfManagerId"/>
+            </link>
         </menu-item>
-        <menu-item name="EditPerfReview" title="${uiLabelMap.HumanResPerfReview}">
+        <!-- menu-item name="EditPerfReview" title="${uiLabelMap.HumanResPerfReview}">
             <link target="EditPerfReview">
                 <parameter param-name="employeePartyId"/>
                 <parameter param-name="employeeRoleTypeId"/>
                 <parameter param-name="perfReviewId"/>
             </link>
-        </menu-item>
+        </menu-item -->
         <menu-item name="EditPerfReviewItems" title="Performance Review Scores">
             <link target="EditPerfReviewItems">
                 <parameter param-name="employeePartyId"/>
                 <parameter param-name="employeeRoleTypeId"/>
                 <parameter param-name="perfReviewId"/>
+                <parameter param-name="perfManagerId"/>
             </link>
         </menu-item>
     </menu>
+    
+    <menu name="PerfReportsBar" type="simple" default-menu-item-name="kpidefinition"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+    	 <menu-item name="perfReviewReport" title="Performance Review Report">
+        	<link target="perfReviewReport"/>
+        </menu-item>
+         <menu-item name="perfScoresReport" title="Performance Scores Report">
+        	<link target="perfScoresReport"/>
+        </menu-item>
+    </menu>
+    
     <menu name="KPITargetManagementBar" type="simple" default-menu-item-name="kpiglobaltargets"
         menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
     	 <menu-item name="kpiglobaltargets" title="Global Targets">
@@ -168,9 +202,9 @@
         </menu-item>
          <menu-item name="kpidepartmenttargets" title="Department Targets">
         	<link target="kpidepartmenttargets"/>
-        </menu-item>    
-    
+        </menu-item>        
     </menu>
+    
     <menu name="SalaryBar" default-menu-item-name="EditSalaryStep" default-selected-style="selected"
         type="simple" menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="subTabButtonItem">
         <menu-item name="EditPayGrade" title="${uiLabelMap.HumanResPayGrade}">
@@ -194,6 +228,9 @@
         </menu-item>
          <menu-item name="bloodgroup" title="Blood Group Defintion">
             <link target="bloodgroup"/>
+        </menu-item>
+        <menu-item name="payrollPrefix" title="Change Payroll Prefix">
+            <link target="payrollPrefix"/>
         </menu-item>
         <menu-item name="county" title="County Definition">
             <link target="county"/>
@@ -468,20 +505,26 @@
             <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="FindLeaveApprovals"/>
         </menu-item>
-<!--         <menu-item name="staffLeaveBalances" title="Staff Leave Balances">
-            <link target="staffLeaveBalances"/>
-        </menu-item>   -->
+          <menu-item name="leaveCalender" title="Leave Calender">
+            <link target="leaveCalender"/>
+        </menu-item>   
         <menu-item name="CloseFinacialYear" title="Close Finacial Year Leaves">
             <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="CloseFinacialYear"/>
         </menu-item>        
        <menu-item name="LeaveBalances" title="Leave Balances">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
-            <link target="LeaveBalances"/>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="generateLeaveBalances"/>
         </menu-item>        
         <menu-item name="ActiveEmplLeaves" title="Active Leaves">
             <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="ActiveEmplLeaves"/>
+        </menu-item>
+        
+        <menu-item name="openingLeaveBalance" title="Opening Leave Balances">
+            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <link target="createOpeningLeaveBalances"/>
         </menu-item>
     </menu>
     <menu name="ApproveReject" menu-container-style="button-bar button-style-2" default-selected-style="selected">
@@ -493,13 +536,15 @@
                 <parameter param-name="leaveId" />
             </link>
         </menu-item>
-        <menu-item name="Reject" title="Reject Employee Leave">
+       <!--  <menu-item name="Reject" title="Reject Employee Leave">
             <link target="rejectEmplLeaveStatus">
                 <parameter param-name="partyId"/>
                 <parameter param-name="fromDate"/>
                 <parameter param-name="leaveTypeId"/>
+                 <parameter param-name="leaveId" />
             </link>
-        </menu-item>
+        </menu-item> -->
+        
     </menu>
     
     <menu name="EmployeeReportsTabBar" type="simple" default-menu-item-name="staffList"

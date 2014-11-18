@@ -40,6 +40,8 @@
 		short-description="Delete Supervisor Level">
 		<entity-one entity-name="SupervisorLevel" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	<!-- Party Qualification -->
 	<simple-method method-name="createPartyQual"
@@ -72,6 +74,8 @@
 		short-description="Delete Qualification of a Party">
 		<entity-one entity-name="PartyQual" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<!-- Party Qualification Type -->
@@ -100,6 +104,8 @@
 		short-description="Delete Party Qualification Type">
 		<entity-one entity-name="PartyQualType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
  <!-- ================COURSE SPECIALIZATION========================= -->
@@ -125,6 +131,8 @@
 		short-description="Delete Party Qualification Type">
 		<entity-one entity-name="PartyCourseSpecialization" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
  
  
@@ -151,6 +159,8 @@
 		short-description="Delete Party Qualification Type">
 		<entity-one entity-name="PartyQualInstitute" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 	
@@ -177,6 +187,35 @@
 		short-description="Delete Party Qualification Type">
 		<entity-one entity-name="PartyCourseGrade" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	<!-- ================LEAVE CALENDER========================= -->
+ 
+ <simple-method method-name="createLeaveCalender"
+		short-description="Create a Party Qualification Type">
+		<make-value entity-name="EmplLeaveCalender" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="EmplLeaveCalender" field="leaveCalenderId" />
+		<set from-field="leaveCalenderId" field="newEntity.leaveCalenderId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateLeaveCalender"
+		short-description="Update Party Qualification Type">
+		<entity-one entity-name="EmplLeaveCalender" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteLeaveCalender"
+		short-description="Delete Party Qualification Type">
+		<entity-one entity-name="EmplLeaveCalender" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 	
@@ -206,6 +245,8 @@
 		short-description="Delete Party Qualification Group">
 		<entity-one entity-name="PartyQualGroup" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 
@@ -230,6 +271,8 @@
 		short-description="Delete a Resume of a Party">
 		<entity-one entity-name="PartyResume" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createPartySkill"
@@ -272,7 +315,34 @@
 		short-description="Delete a Skill of Party">
 		<entity-one entity-name="PartySkill" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+	
+	<simple-method method-name="createPerfManager" short-description="Create Perf Manager">
+        <make-value entity-name="PerfManager" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PerfManager" field="perfManagerId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="perfManagerId" field="newEntity.perfManagerId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePerfManager" short-description="Update Perf Manager">
+        <entity-one entity-name="PerfManager" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePerfManager" short-description="Delete Perf Manager">
+        <entity-one entity-name="PerfManager" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
 
 	<simple-method method-name="createPerfReview"
 		short-description="Create a Performance Review">
@@ -306,6 +376,8 @@
 		short-description="Delete Performance Review">
 		<entity-one entity-name="PerfReview" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createPerfReviewItem"
@@ -331,6 +403,8 @@
 		short-description="Delete Performance Review Items">
 		<entity-one entity-name="PerfReviewItem" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 	<simple-method method-name="createKPIDefinition" short-description="create KPI Definition">
@@ -354,6 +428,8 @@
     <simple-method method-name="deleteKPIDefinition" short-description="Delete KPI Definition">
         <entity-one entity-name="KeyPerformanceIndicators" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
     <simple-method method-name="createKPIAchievementStatus" short-description="create KPI Achievement Status">
@@ -377,6 +453,8 @@
     <simple-method method-name="deleteKPIAchievementStatus" short-description="Delete KPI Achievement Status">
         <entity-one entity-name="KPIAchievementStatus" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
 	
 	<simple-method method-name="createGlobalKPITarget" short-description="create Global KPI Target">
@@ -400,6 +478,8 @@
     <simple-method method-name="deleteGlobalKPITarget" short-description="Delete Global KPI Target">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
     <simple-method method-name="createBranchKPITarget" short-description="create Branch KPI Target">
@@ -423,6 +503,8 @@
     <simple-method method-name="deleteBranchKPITarget" short-description="Delete Branch KPI Target">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
     <simple-method method-name="createDepartmentKPITarget" short-description="create Department KPI Target">
@@ -446,6 +528,8 @@
     <simple-method method-name="deleteDepartmentKPITarget" short-description="Delete Department KPI Target">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
 	
 	<simple-method method-name="createPerfRatingType" short-description="create Performance Rating Type">
@@ -469,6 +553,8 @@
     <simple-method method-name="deletePerfRatingType" short-description="Delete Performance Rating Type">
         <entity-one entity-name="PerfRatingType" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
 	
 
@@ -495,6 +581,8 @@
 		short-description="Delete Performance Note">
 		<entity-one entity-name="PerformanceNote" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<!-- Employment Group -->
@@ -526,6 +614,8 @@
 		short-description="Delete Employment">
 		<entity-one entity-name="Employment" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createEmploymentApp"
@@ -549,6 +639,8 @@
 		short-description="Delete EmploymentApp">
 		<entity-one entity-name="EmploymentApp" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 	<simple-method method-name="createEmploymentHistory" short-description="Create Employment History">
@@ -572,6 +664,8 @@
     <simple-method method-name="deleteEmploymentHistory" short-description="Delete Employment History">
         <entity-one entity-name="EmploymentHistory" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
 
 	<simple-method method-name="createPartyBenefit"
@@ -600,6 +694,8 @@
 		<set field="lookedUpValue.thruDate" from-field="nowTimeStamp" />
 		<store-value value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createPayGrade"
@@ -628,6 +724,8 @@
 		short-description="Delete Pay Grade">
 		<entity-one entity-name="PayGrade" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	 -->
 	
@@ -636,6 +734,8 @@
 		<set field="payGradeId" from-field="parameters.payGradeId" />
 		<entity-one entity-name="PayGrade" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 	
@@ -666,6 +766,8 @@
 		<set field="lookedUpValue.thruDate" from-field="nowTimeStamp" />
 		<store-value value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createPayrollPreference"
@@ -691,6 +793,8 @@
 		short-description="Delete Payroll Preference">
 		<entity-one entity-name="PayrollPreference" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createSalaryStep"
@@ -714,6 +818,8 @@
 		short-description="Delete Salary Step">
 		<entity-one entity-name="SalaryStep" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createTerminationReason"
@@ -741,6 +847,8 @@
 		short-description="Delete Termination Reason">
 		<entity-one entity-name="TerminationReason" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createUnemploymentClaim"
@@ -767,6 +875,8 @@
 		<entity-one entity-name="UnemploymentClaim" value-field="lookedUpValue" />
 		<set field="lookedUpValue.thruDate" from-field="nowTimeStamp" />
 		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<!-- Employee Position Group -->
@@ -791,6 +901,8 @@
 		short-description="Delete Employee Position">
 		<entity-one entity-name="EmplPosition" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createEmplPositionFulfillment"
@@ -819,6 +931,8 @@
 		<entity-one entity-name="EmplPositionFulfillment"
 			value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createEmplPositionReportingStruct"
@@ -863,6 +977,8 @@
 		<entity-one entity-name="EmplPositionReportingStruct"
 			value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createEmplPositionResponsibility"
@@ -891,6 +1007,8 @@
 		<entity-one entity-name="EmplPositionResponsibility"
 			value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createValidResponsibility"
@@ -916,6 +1034,8 @@
 		short-description="Delete Valid Responsibility">
 		<entity-one entity-name="ValidResponsibility" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	<!-- Skill Types -->
 	<simple-method method-name="createSkillType"
@@ -942,6 +1062,8 @@
 		short-description="Delete SkillType">
 		<entity-one entity-name="SkillType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
     <simple-method method-name="createPartyRole" short-description="Create Party Role">
         <entity-one entity-name="PartyRole" value-field="partyRole"/>
@@ -1006,6 +1128,8 @@
 		short-description="Delete ResponsibilityType">
 		<entity-one entity-name="ResponsibilityType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createTerminationType"
@@ -1033,6 +1157,8 @@
 		short-description="Delete TerminationType">
 		<entity-one entity-name="TerminationType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createEmplPositionType"
@@ -1058,6 +1184,8 @@
 		short-description="Delete EmplPositionType">
 		<entity-one entity-name="EmplPositionType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="updateEmplPositionTypeRate"
@@ -1102,6 +1230,8 @@
 		<set field="delRateAmount.fromDate" from-field="parameters.rateAmountFromDate" />
 		<call-service service-name="deleteRateAmount"
 			in-map-name="delRateAmount" />
+			<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createAgreementEmploymentAppl"
@@ -1129,6 +1259,8 @@
 		<entity-one entity-name="AgreementEmploymentAppl"
 			value-field="agreementEmploymentAppl" />
 		<remove-value value-field="agreementEmploymentAppl" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 
@@ -1159,14 +1291,31 @@
 			property="HumanResLeaveCreationSuccess" field="successMessage" />
 	</simple-method> -->
 	
-	<simple-method method-name="updateEmplLeave"
+	<!-- <simple-method method-name="updateEmplLeave"
 		short-description="Update Employee Leave">
 		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
 
+	</simple-method>  -->
+	
+	<simple-method method-name="updateEmplLeave" short-description="Update an existing user estate">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+       
+    </simple-method>
+    
+	
+	<simple-method method-name="updateEmplLeave2"
+		short-description="Update Employee Leave">
+		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
 	</simple-method>
+	
+	
 
     <simple-method method-name="approveEmplLeaveStatus"
         short-description="Approved Employee Leave">
@@ -1201,6 +1350,105 @@
         <log message="===== Leave Approved log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
 
     </simple-method>
+    
+     <!-- ==============================EMPLOYEE CALL BACK FROM LEAVE================================== -->
+     <simple-method method-name="updateLeaveDuration"
+        short-description="Reject Employee Leave">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.leaveDuration" from-field="lookedUpValue.newDuration" />
+        
+        <set field="lookedUpValue.thruDate" from-field="lookedUpValue.callBackDate" />
+        <store-value value-field="lookedUpValue" />
+			
+        
+        <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
+        <set-pk-fields map="parameters" value-field="newEntity" />
+        <set-nonpk-fields map="parameters" value-field="newEntity" />
+        <sequenced-id sequence-name="LeaveStatusLog" field="leaveStsLogId" />
+        <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
+        <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
+        <set field="newEntity.approvalStatus" value="Called Back" />
+        <create-value value-field="newEntity" />
+			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+    </simple-method>
+    
+     <!-- ==============================RESET STAFF LOST LEAVE DAYS================================== -->
+     <simple-method method-name="updateAnnualLeaveBalanceNOT"
+        short-description="Reject Employee Leave">
+        <entity-one entity-name="LeaveBalances" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lost" from-field="lookedUpValue.lostLeaveDays" type="String"/>
+        <set field="bal" from-field="lookedUpValue.availableLeaveDays" type="String"/>
+        <set field="lookedUpValue.availableLeaveDays" value="${bsh:org.ofbiz.humanres.Leave.getValuesForAnnualLeaveReset(bal,lost);}" />
+        <set field="lookedUpValue.lostLeaveDays" value="0" type="Double"/>
+        <store-value value-field="lookedUpValue" />
+    </simple-method>
+    
+    <simple-method method-name="updateAnnualLeaveBalance"
+        short-description="Reject Employee Leave">
+         <make-value value-field="newEntity" entity-name="AnnualLeaveBalancesReset" />
+        <set-pk-fields map="parameters" value-field="newEntity" />
+        <set-nonpk-fields map="parameters" value-field="newEntity" />
+        <create-value value-field="newEntity" />
+    </simple-method>
+    
+    
+    
+    <!-- ==============================REJECT LEAVE WITH REASON================================== -->
+     <simple-method method-name="rejectLeaveWithReason"
+        short-description="Reject Employee Leave">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.responsibleEmployee" value="" />
+        <set field="lookedUpValue.applicationStatus" value="Rejected" />
+        <set field="lookedUpValue.approvalStatus" value="Rejected" />
+        <set field="lookedUpValue.rejectReason" from-field="lookedUpValue.rejectReason" />
+        <store-value value-field="lookedUpValue" />
+			
+        
+        <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
+        <set-pk-fields map="parameters" value-field="newEntity" />
+        <set-nonpk-fields map="parameters" value-field="newEntity" />
+        <sequenced-id sequence-name="LeaveStatusLog" field="leaveStsLogId" />
+        <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
+        <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
+        <set field="newEntity.approvalStatus" value="Rejected" />
+        <create-value value-field="newEntity" />
+			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+    </simple-method>
+    
+     <!-- ==============================SEND BACK LEAVE WITH REASON================================== -->
+     <simple-method method-name="sentLeaveBackWithReason"
+        short-description="Reject Employee Leave">
+        <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.responsibleEmployee" value="NEW" />
+        <set field="lookedUpValue.applicationStatus" value="Send Back" />
+        <set field="lookedUpValue.approvalStatus" value="Send Back" />
+        <set field="lookedUpValue.rejectReason" from-field="lookedUpValue.rejectReason" />
+        <store-value value-field="lookedUpValue" />
+			
+        
+        <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
+        <set-pk-fields map="parameters" value-field="newEntity" />
+        <set-nonpk-fields map="parameters" value-field="newEntity" />
+        <sequenced-id sequence-name="LeaveStatusLog" field="leaveStsLogId" />
+        <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
+        <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
+        <set field="newEntity.approvalStatus" value="Send Back" />
+        <create-value value-field="newEntity" />
+			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+    </simple-method>
+    
+     
+    
     <simple-method method-name="rejectEmplLeaveStatus"
         short-description="Reject Employee Leave">
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
@@ -1210,29 +1458,90 @@
         <set field="lookedUpValue.approvalStatus" value="Rejected" />
         <store-value value-field="lookedUpValue" />
 			
+        
         <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
         <set-pk-fields map="parameters" value-field="newEntity" />
         <set-nonpk-fields map="parameters" value-field="newEntity" />
-        <sequenced-id sequence-name="leavestatuslogSequence" stagger-max="1" field="leaveStsLogId" />
+        <sequenced-id sequence-name="LeaveStatusLog" stagger-max="1" field="leaveStsLogId" />
         <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
-        <set field="newEntity.rejectedBy" from="userLogin.userLoginId" />
+        <set field="newEntity.partyId" from="lookedUpValue.partyId" />
+        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
         <set field="newEntity.approvalStatus" value="Rejected" />
-        <!-- <set field="newEntity.leaveLogStatus" value="Rejected" /> -->
         <create-value value-field="newEntity" />
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
     </simple-method>
+    
+    <!-- ==============================EDIT STAFF CONFIRMATION DATE================================== -->
+     <simple-method method-name="updateStaffConfirmation"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="Person" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.confirmationdate" from-field="lookedUpValue.confirmationdate"/>
+        <store-value value-field="lookedUpValue" />
+        </simple-method>
+        
+        <!-- ==============================STAFF CONFIRMATION================================== -->
+     <simple-method method-name="ConfirmStaff"
+        short-description="Change staff confirmation status">
+        <entity-one entity-name="Person" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="lookedUpValue.employmentStatusEnumId" value="16"/>
+        <store-value value-field="lookedUpValue" />
+        </simple-method>
+        
+         <!-- ==============================STAFF DISMISSAL================================== -->
+         
+        <simple-method method-name="dismissStaff"
+		short-description="Delete Employee">
+		<set field="partyId" from-field="lookedUpValue.partyId" />
+		<entity-one entity-name="Person" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		
+		<call-simple-method method-name="dismissStaffFromPartyRole" scope="inline"></call-simple-method>
+		<call-simple-method method-name="dismissStaffFromParty" scope="inline"></call-simple-method>
+		
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	 <simple-method method-name="dismissStaffFromPartyRole"
+		short-description="Delete Employee">
+		<set field="partyId" from-field="lookedUpValue.partyId" />
+		<entity-one entity-name="PartyRole" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	 <simple-method method-name="dismissStaffFromParty"
+		short-description="Delete Employee">
+		<set field="partyId" from-field="lookedUpValue.partyId" />
+		<entity-one entity-name="Party" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	
+    
+    
 	<simple-method method-name="createEmplLeave"
 		short-description="Create Employee Leave">
 		<make-value entity-name="EmplLeave" value-field="newEntity"/>
 		<set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <now-timestamp field="createdDate"/>
+        
+        <entity-one value-field="deduct" entity-name="EmplLeaveType">
+			<field-map field-name="leaveTypeId" value="${newEntity.leaveTypeId}"/>
+		</entity-one>
+        
 		<set field="documentName" value="LEAVE"  />
+		<set field="fromDate" from-field="newEntity.fromDate"  />
 		<if-empty field="parameters.workflowDocumentTypeId">
 			<set field="newEntity.workflowDocumentTypeId" 
 			value="${bsh:org.ofbiz.humanres.LeaveServices.getWorkflowDocumentType(documentName);}"/>
 		</if-empty>
+		<set field="newEntity.financialYear" value="${bsh:org.ofbiz.humanres.LeaveServices.getCurrentYear(fromDate);}" type="String"/>
+		<set field="newEntity.isDeductedFromAnnual" value="${deduct.isDeductedFromAnnual}"/>
+		<set field="newEntity.hasbalance" value="${deduct.hasbalance}"/>
 		<set field="newEntity.applicationStatus" value="NEW"/>
 		<set field="newEntity.leaveStatus" value="DRAFT"/>
 		<set field="newEntity.createdDate" from-field="createdDate"/>
@@ -1281,8 +1590,23 @@
 	<simple-method method-name="deleteEmplLeave"
 		short-description="Delete Employee Leave">
 		<set field="leaveId" from-field="parameters.leaveId" />
-		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" /> 
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+
+	
+	<simple-method method-name="createOpeningLeaveBalances"
+		short-description="Create File Type">
+		<make-value entity-name="EmplLeaveOpeningBalance" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="EmplLeaveOpeningBalance" field="leaveBalanceId" />
+
+		<set from-field="leaveBalanceId" field="newEntity.leaveBalanceId" />
+		<create-value value-field="newEntity" />
 	</simple-method>
 	
 
@@ -1309,6 +1633,10 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
 	</simple-method>
+	
+    
+	
+	
 
 	<simple-method method-name="deleteEmplLeaveType"
 		short-description="Delete leaveType">
@@ -1344,6 +1672,8 @@
 		short-description="Delete Staff Leave Balances">
 		<entity-one entity-name="StaffLeaveBalances" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 
@@ -1413,6 +1743,8 @@
 		short-description="Delete Job Requisition">
 		<entity-one entity-name="JobRequisition" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createInternalJobPosting"
@@ -1440,6 +1772,8 @@
 		short-description="Delete Internal Job Posting">
 		<entity-one entity-name="EmploymentApp" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createJobInterview"
@@ -1463,6 +1797,8 @@
 		short-description="Delete Job Interview">
 		<entity-one entity-name="JobInterview" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createJobInterviewType"
@@ -1492,6 +1828,8 @@
 		short-description="Delete Interview Type">
 		<entity-one entity-name="JobInterviewType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="updateApprovalStatus"
@@ -1559,6 +1897,8 @@
 		short-description="Delete Training Types">
 		<entity-one entity-name="TrainingClassType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 
@@ -1584,6 +1924,8 @@
     <simple-method method-name="deleteTrainingCostType" short-description="Delete Training Cost Type">
         <entity-one entity-name="TrainingCostType" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
     <!-- Training Costs Starts Here -->
@@ -1608,6 +1950,8 @@
     <simple-method method-name="deleteTrainingCosts" short-description="Delete Training Cost">
         <entity-one entity-name="TrainingCosts" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
 
 	<simple-method method-name="createEmplLeaveReasonType"
@@ -1635,6 +1979,8 @@
 		short-description="Delete leave Reason Type">
 		<entity-one entity-name="EmplLeaveReasonType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="updateEmplLeaveStatus"
@@ -1675,6 +2021,8 @@
 		short-description="Delete Tribe">
 		<entity-one entity-name="Tribe" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createCounty"
@@ -1698,6 +2046,8 @@
 		short-description="Delete County">
 		<entity-one entity-name="County" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createBloodGroup"
@@ -1721,6 +2071,8 @@
 		short-description="Delete Blood Group">
 		<entity-one entity-name="BloodGroup" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createReligion"
@@ -1752,6 +2104,8 @@
 		short-description="Delete Religion">
 		<entity-one entity-name="Religion" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="createFamilyRelations"
@@ -1780,6 +2134,8 @@
 		short-description="Delete Family Relations">
 		<entity-one entity-name="FamilyRelations" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<!-- Staff Spouse Details Start Here -->
@@ -1807,6 +2163,8 @@
 		short-description="Delete Spouse Details">
 		<entity-one entity-name="StaffSpouse" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<!-- Staff Dependant Details Start Here -->
@@ -1834,6 +2192,8 @@
 		short-description="Delete Dependant Details">
 		<entity-one entity-name="StaffDependant" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
 	<!-- Staff Next Of Kin Details Start Here -->
@@ -1861,6 +2221,8 @@
 		short-description="Delete Next Of Kin Details">
 		<entity-one entity-name="StaffNextOfKin" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 	 <!-- Bank Details Starts Here -->
@@ -1885,8 +2247,28 @@
     <simple-method method-name="deleteBankDetails" short-description="Delete Bank Details">
         <entity-one entity-name="BankDetails" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
+    
+      
+    <!--======================== payroll Prefix ======================== -->
+    
+    
+    <simple-method method-name="createPayrollPrefix" short-description="Add Bank Details">
+        <make-value entity-name="payRollPrefix" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="payRollPrefix" field="prefixId"/>
+        <set field="newEntity.prefixId" from-field="prefixId"/>
+        
+         <set field="payRoll" value="${newEntity.lowerCase}" type="String"/>
+        <set field="newEntity.payRollPrefix" value="${bsh:org.ofbiz.humanres.HumanResServices.payrollUpperCase(payRoll);}" /> 
+        
+        
+        <create-value value-field="newEntity"/>
+    </simple-method>
     
     <!--======================== party Content Types======================== -->
     
@@ -1911,6 +2293,8 @@
     <simple-method method-name="deletePartyContentType" short-description="Delete Bank Details">
         <entity-one entity-name="PartyContentType" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
     <!-- Bank Branch Starts Here -->
@@ -1936,6 +2320,8 @@
     <set field="bankDetailsId" from-field="parameters.bankDetailsId"/>
         <entity-one entity-name="BankBranch" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
     <!-- Pay Point Starts Here -->
@@ -1960,6 +2346,8 @@
     <simple-method method-name="deletePayPoint" short-description="Delete Pay Point">
         <entity-one entity-name="PayPoint" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
 

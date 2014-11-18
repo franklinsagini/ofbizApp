@@ -131,7 +131,7 @@ function getFinAccountTransRunningTotalAndBalances() {
           <th>${uiLabelMap.CommonStatus}</th>
           <th>${uiLabelMap.CommonComments}</th>
           <#if grandTotal?exists>
-            <th>${uiLabelMap.AccountingCancelTransactionStatus}</th>
+            <th>Transactions Actions</th>
           </#if>
           <#if !grandTotal?exists>
             <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
@@ -254,6 +254,7 @@ function getFinAccountTransRunningTotalAndBalances() {
               <td>
                 <#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
                   <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">${uiLabelMap.CommonCancel}</a>
+                  <a href="javascript:document.approveFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">Approve</a>
                 </#if>
               </td>
             </#if>
@@ -294,6 +295,12 @@ function getFinAccountTransRunningTotalAndBalances() {
             <input name="finAccountTransId" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="finAccountId" type="hidden" value="${finAccountTrans.finAccountId}"/>
             <input name="statusId" type="hidden" value="FINACT_TRNS_CANCELED"/>
+          </form>
+          <form name="approveFinAccountTrans_${finAccountTrans.finAccountTransId}" method="post" action="<@ofbizUrl>setFinAccountTransStatus</@ofbizUrl>">
+            <input name="noConditionFind" type="hidden" value="Y"/>
+            <input name="finAccountTransId" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
+            <input name="finAccountId" type="hidden" value="${finAccountTrans.finAccountId}"/>
+            <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
           </form>
         </#if>
       </#list>

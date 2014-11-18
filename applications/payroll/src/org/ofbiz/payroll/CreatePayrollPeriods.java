@@ -2,11 +2,13 @@ package org.ofbiz.payroll;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -22,6 +24,9 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 public class CreatePayrollPeriods {
@@ -52,12 +57,31 @@ public class CreatePayrollPeriods {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
-
-		for (GenericValue payrollYear : yearsELI) 
+		int cnt=getPeriodCount(payrollYearId, delegator);
+		if(cnt==0)
 		{
-			createStdPeriods(payrollYear.getString("name"), payrollYearId, null, delegator);
+			for (GenericValue payrollYear : yearsELI) 
+			{
+				log.info("Create Periods#######################1");
+				createStdPeriods(payrollYear.getString("name"), payrollYearId, null, delegator);
+			}
 		}
+		else if(cnt>0 && cnt!=12)
+		{
+			deletePeriods(payrollYearId, delegator);
+			
+			for (GenericValue payrollYear : yearsELI) 
+			{
+				log.info("Create Periods#######################2");
+				createStdPeriods(payrollYear.getString("name"), payrollYearId, null, delegator);
+			}
+		}
+		else
+		{
+			log.info("No new Periods#######################");
+		}
+
+		
 			
 			/*genericValue.setString("closed", "Y");
 			try {
@@ -84,7 +108,88 @@ public class CreatePayrollPeriods {
 	}
 	
 	
-	
+	private static void deletePeriods(String payrollYearId, Delegator delegator) {
+		List<GenericValue> listPeriods = getPeriods(payrollYearId, delegator);
+		
+		deletePayrollPeriods(listPeriods, payrollYearId, delegator);
+		
+	}
+
+
+	private static void deletePayrollPeriods(List<GenericValue> listPeriods,
+			String payrollYearId, Delegator delegator) {
+		for (GenericValue genericValue : listPeriods) {
+			deleteRecord(delegator, genericValue.getString("payrollPeriodId"), payrollYearId );
+		}
+		
+	}
+
+	private static void deleteRecord(Delegator delegator, String payrollPeriodId,
+			String payrollYearId) {
+		// TODO Auto-generated method stub
+		List<GenericValue> payrollPeriodELI = null;
+		
+		EntityConditionList<EntityExpr> payrollPeriodConditions = EntityCondition
+		.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+				"payrollYearId", EntityOperator.EQUALS, payrollYearId),
+				EntityCondition.makeCondition("payrollPeriodId",
+						EntityOperator.EQUALS, payrollPeriodId)),
+				EntityOperator.AND);
+		
+		try {
+			payrollPeriodELI = delegator.findList("PayrollPeriod",
+					payrollPeriodConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			delegator.removeAll(payrollPeriodELI);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	private static List<GenericValue> getPeriods(String payrollYearId,
+			Delegator delegator) {
+		List<GenericValue> payrollPeriodELI = new LinkedList<GenericValue>();
+		try {
+			payrollPeriodELI = delegator.findList("PayrollPeriod",
+					EntityCondition.makeCondition("payrollYearId",
+							payrollYearId),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return payrollPeriodELI;
+	}
+
+
+	private static int getPeriodCount(String payrollYearId, Delegator delegator) {
+		int count=0;
+		List<GenericValue> payrollPeriodELI = new LinkedList<GenericValue>();
+		try {
+			payrollPeriodELI = delegator.findList("PayrollPeriod",
+					EntityCondition.makeCondition("payrollYearId",
+							payrollYearId),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue payrollPeriod : payrollPeriodELI) {
+			count++;
+		}
+		
+		log.info("Count Is #######################"+count);
+		return count;
+	}
+
+
+
 	public static String createStdPeriods(String yearName, String payrollYearId, Locale locale, Delegator delegator)
 	{
 		int year=0;
@@ -167,7 +272,8 @@ public class CreatePayrollPeriods {
 						"currentperiod", "N", 
 						"status", "Inactive",
 						"startDate", start,
-						"endDate", end));
+						"endDate", end,
+						"payrollcheck", null));
 		try {
 			payrollPeriods = delegator.createSetNextSeqId(payrollPeriods);
 		} catch (GenericEntityException e1) {

@@ -75,4 +75,55 @@ under the License.
               }
     });
     }
+    
+     function paymentCodesFormValidation(){
+		/** alert(' Checking for unique fields ... '); 
+		alert('Things ...');**/
+		 
+		var staffPayrollId = jQuery('input[name="staffPayrollId"]').val();
+    	var payrollElementId  = jQuery('select[name="payrollElementId"]').val();
+
+    	var isValid = true;
+     	var staffpayrollState = 'FREE';
+    	
+
+    	var reqUrl = '/payroll/control/payelementsValidation';
+
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'staffPayrollId': staffPayrollId, 'payrollElementId': payrollElementId},
+			     success : function(data){
+
+							staffpayrollState = data.staffpayrollState;
+							
+			               },
+			      error : function(errorData){
+
+			              alert("Some error occurred while validating Payrol Elements");
+			              }
+
+
+		});
+
+    	var message = '';
+    	if ((staffpayrollState == 'E')){
+    		message = "Staff Payroll Element  already added, Try another one ! ";
+    		isValid = false;
+    	} 
+
+		
+
+    	if (!isValid){
+    		alert(message);
+    	} else{
+    		
+    	}
+
+
+    	return isValid;
+
+    }
 </script>

@@ -278,7 +278,7 @@ under the License.
     </view-entity>
     
     
-    
+    <!--================ Performance Review Entities ================-->
     
     <entity entity-name="PerfRatingType"
             package-name="org.ofbiz.humanres.ability"
@@ -287,11 +287,29 @@ under the License.
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
+      <field name="points" type="numeric"></field>
       <prim-key field="perfRatingTypeId"/>
       <relation type="one" fk-name="PERF_RATNG_TYP" title="Parent" rel-entity-name="PerfRatingType">
         <key-map field-name="parentTypeId" rel-field-name="perfRatingTypeId"/>
       </relation>
     </entity>
+    
+    <entity entity-name="PerfManager" 
+   		package-name="org.ofbiz.humanres.ability" 
+    	title="Performance Central Management">
+      <field name="perfManagerId" type="id-ne"></field>
+      <field name="name" type="name"></field>      
+      <field name="branchId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="endDate" type="date-time"></field>
+      <field name="status" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="perfManagerId"/>
+       <relation type="one" fk-name="PERF_Branch" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId" rel-field-name="branchId"/>
+      </relation>
+    </entity>
+    
     <entity entity-name="PerfReview"
             package-name="org.ofbiz.humanres.ability"
             title="Employee Performance Review Entity">
@@ -305,6 +323,8 @@ under the License.
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
+      <field name="perfManagerId" type="id"></field>
+      <field name="status" type="name"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
@@ -328,6 +348,9 @@ under the License.
       <relation type="one-nofk" fk-name="PERF_REV_PSTN" rel-entity-name="EmplPosition">
         <key-map field-name="emplPositionId"/>
       </relation>
+      <relation type="one" fk-name="PERF_MAN" rel-entity-name="PerfManager">
+        <key-map field-name="perfManagerId"/>
+      </relation>
     </entity>
     <entity entity-name="PerfReviewItem"
             package-name="org.ofbiz.humanres.ability"
@@ -342,6 +365,7 @@ under the License.
       <field name="kpiAchievementStatusId" type="id-ne"></field>
       <field name="achievementDate" type="date"></field>
       <field name="perfReviewItemTypeId" type="id"></field>
+      <field name="isSubmitted" type="indicator"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
@@ -425,7 +449,11 @@ under the License.
       </relation>
     </entity>
     
-    
+     <entity entity-name="PerfReviewItemSeq" package-name="org.ofbiz.humanres.ability"
+		title="Perf Review Item Seq">
+		<field name="perfReviewItemSeqId" type="id-ne"></field>
+		<prim-key field="perfReviewItemSeqId"/>
+	</entity>
     
     <entity entity-name="PerformanceNote"
             package-name="org.ofbiz.humanres.ability"
@@ -705,6 +733,17 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
     </entity>
+    
+   <!--  ====================PAYROLL PREFIX====================================== -->
+   
+    <entity entity-name="payRollPrefix"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee payRoll Prefix">
+        <field name="prefixId" type="id-ne"/>
+        <field name="payRollPrefix" type="name"/>
+        <field name="lowerCase" type="name"/>
+        <prim-key field="prefixId"/>
+    </entity> 
 
         <!-- ===========  Leave Status Logs  =========== -->
     <entity entity-name="LeaveStatusLog"
@@ -716,6 +755,7 @@ under the License.
       <field name="approvedBy" type="id-ne"></field>
       <field name="nextApprover" type="id"></field>
       <field name="rejectedBy" type="id-ne"></field>
+       <field name="rejectReason" type="description"></field>
       <!-- <field name="leaveLogStatus" type="description"></field> -->
       <field name="approvalStatus" type="description"></field>
       <prim-key field="leaveStsLogId"/>
@@ -731,17 +771,33 @@ under the License.
     </entity>
     
     
+    <view-entity entity-name="EmployeeLeavesLogsView"
+            package-name="org.ofbiz.humanres.position"
+            title="EmplLeavesBalances Entity">
+      <member-entity entity-alias="LOGS" entity-name="LeaveStatusLog"></member-entity>
+      <member-entity entity-alias="PERSON" entity-name="Person"></member-entity>
+      <alias-all entity-alias="LOGS"/>
+      <alias name="partyId" entity-alias="PERSON"/>
+       <alias name="first_name" entity-alias="PERSON"/>
+       <alias name="last_name" entity-alias="PERSON"/>
+      <alias name="employee_number" entity-alias="PERSON"/>
+      
+      <view-link entity-alias="LOGS" rel-entity-alias="PERSON">
+        <key-map field-name="partyId"/>
+      </view-link>
+    </view-entity>
     
-    <entity entity-name="EmplLeaveOpeningBalance"
+    
+     <entity entity-name="EmplLeaveOpeningBalance"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Opening Balance Entity">
             
         <field name="partyId" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="openingLeaveBalance" type="floating-point"/>  
-        <field name="isActive" type="indicator"></field>
+        <field name="annualLeaveBalanceCarriedForward" type="floating-point"/>  
+        <field name="annualLeaveDaysUsed" type="floating-point"/>  
+        <field name="compassionateLeaveDaysUsed" type="floating-point"/>  
          <field name="openingDate" type="date"/>
-     
+         <prim-key field="partyId"/>
         <relation type="one" fk-name="EMPL_LEAVE_OPENINGBAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
@@ -749,7 +805,6 @@ under the License.
             <key-map field-name="leaveTypeId"/>
         </relation>
     </entity>  
-    
     
     
     <entity entity-name="EmplLeave"
@@ -761,10 +816,16 @@ under the License.
         <field name="leaveTypeId" type="id-ne"/>
         <field name="emplLeaveReasonTypeId" type="id-ne"/>
         <field name="fromDate" type="date"/>
-        <field name="leaveDuration" type="floating-point"/>     
+        <field name="leaveDuration" type="floating-point"/>    
+        <field name="newDuration" type="floating-point"/>  
         <field name="carryOverUsed" type="floating-point"/>     
 
         <field name="thruDate" type="date"/>
+        <field name="callBackDate" type="date"/>
+        <field name="isDeductedFromAnnual" type="name"></field>
+        <field name="rejectReason" type="description"></field>
+        <field name="financialYear" type="id-ne"></field>
+         <field name="hasbalance" type="name"></field>
         <field name="resumptionDate" type="date"/>
         <field name="isActive" type="indicator"></field>
         <field name="leaveBalance" type="numeric"/>
@@ -802,7 +863,54 @@ under the License.
         <!-- <relation type="one" fk-name="EMPL_LEAVE_STS" rel-entity-name="StatusItem">
             <key-map field-name="leaveStatus" rel-field-name="statusId"/>
         </relation> -->
-    </entity>   
+    </entity>  
+    
+    
+    <entity entity-name="EmplCompassionateLost"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Entity">
+            
+        <field name="partyId" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
+         <field name="financialYear" type="id-ne"/>
+       <field name="allocatedLeaveDays" type="fixed-point"></field>
+        <field name="usedLeaveDays" type="fixed-point"></field>
+        <field name="lostLeaveDays" type="id"></field>
+        <field name="carriedOverDays" type="id"></field>
+        <prim-key field="partyId"/>
+        <relation type="one" fk-name="EMPL_LEAVEBAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVEBAL_ELETP" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
+        </relation>
+    </entity>  
+    
+    
+    
+    
+    
+    <entity entity-name="EmplLeaveCalender"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Calender">
+            
+        <field name="leaveCalenderId" type="id-ne"/>
+        <field name="partyId" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
+        <field name="fromDate" type="date"/>
+        <field name="leaveDuration" type="floating-point"/> 
+        <prim-key field="leaveCalenderId"/>
+        <relation type="one" fk-name="EMPL_LEAVECALENDER_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVECALENDER_ELETP" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
+        </relation>
+    </entity>  
+    
+    
+    
+    
     <!-- Leave Balances Entity --> 
     <entity entity-name="LeaveBalances"
             package-name="org.ofbiz.humanres.employment"
@@ -811,17 +919,76 @@ under the License.
         <field name="accruedDays" type="floating-point"/>
         <field name="usedLeaveDays" type="floating-point"/>
         <field name="lostLeaveDays" type="floating-point"/>
+        <field name="LeaveDaysCarriedOver" type="floating-point"/>
         <field name="availableLeaveDays" type="floating-point"/>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
-    </entity>    
+    </entity> 
+    
+     <entity entity-name="AnnualLeaveBalancesReset"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Balances Reset Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="annualLeaveDaysLost" type="floating-point"/>
+        <prim-key field="partyId"/>
+        <relation type="one" fk-name="LEAVE_BALRESET_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity> 
+    
+    <entity entity-name="CompassionateLeaveBalances"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Balances Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="days" type="numeric"/>
+        <field name="usedLeaveDays" type="floating-point"/>
+        <field name="lostLeaveDays" type="floating-point"/>
+        <field name="availableLeaveDays" type="floating-point"/>
+        <prim-key field="partyId"/>
+        <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity> 
+    
+     <view-entity entity-name="LeavesBalanceView"
+            package-name="org.ofbiz.humanres.position"
+            title="EmplLeavesBalances Entity">
+      <member-entity entity-alias="ANNUAL" entity-name="LeaveBalances"></member-entity>
+      <member-entity entity-alias="COMPASSIONATE" entity-name="CompassionateLeaveBalances"></member-entity>
+      <member-entity entity-alias="P" entity-name="Person"></member-entity>
+      <alias-all entity-alias="ANNUAL"/>
+      <alias name="partyId" entity-alias="ANNUAL"/>
+      <alias name="employmentStatusEnumId" entity-alias="P"/>
+       <alias name="annualaccruedDays" entity-alias="ANNUAL" field="accruedDays"/>
+       <alias name="annualCarriedOverDays" entity-alias="ANNUAL" field="LeaveDaysCarriedOver"/>
+      <alias name="annualUsedLeaveDays" entity-alias="ANNUAL" field="usedLeaveDays"/>
+      <alias name="annualLostLeaveDays" entity-alias="ANNUAL" field="lostLeaveDays"/>
+      <alias name="annualAvailableLeaveDays" entity-alias="ANNUAL" field="availableLeaveDays"/>
+       <alias name="compassionateAllocatedLeaveDays" entity-alias="COMPASSIONATE" field="days"/>
+       <alias name="compassionateUsedLeaveDays" entity-alias="COMPASSIONATE" field="usedLeaveDays"/>
+       <alias name="compassionateAvailableLeaveDays" entity-alias="COMPASSIONATE" field="availableLeaveDays"/>
+      <view-link entity-alias="ANNUAL" rel-entity-alias="COMPASSIONATE">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="ANNUAL" rel-entity-alias="P">
+        <key-map field-name="partyId"/>
+      </view-link>
+    </view-entity>
+    
+    
+    
+    
+    
+       
     <entity entity-name="EmplCarryOverLost"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Carry Over  And Lost Leave Entity">
+            
         <field name="partyId" type="id-ne"/>
         <field name="financialYear" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
         <field name="accruedDays" type="floating-point"/>
         <field name="usedLeaveDays" type="floating-point"/>
         <field name="lostLeaveDays" type="floating-point"/>
@@ -829,9 +996,11 @@ under the License.
         <field name="resetLeaveDays" type="floating-point"/>
 
         <prim-key field="partyId"/>
-        <!-- <prim-key field="financialYear"/> -->
         <relation type="one" fk-name="CRRYOVER_LOST_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="LEAVE_CARRYOVER_TYPE" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
         </relation>
     </entity>
 
@@ -849,9 +1018,12 @@ under the License.
         <field name="daytype" type="description"></field>
         <field name="gender" type="name"></field>
         <field name="isforwarded" type="name"></field>
+        <field name="isDeductedFromAnnual" type="name"></field>
         <field name="forwardmax" type="numeric"></field>
         <field name="noticeperiod" type="numeric"></field>
         <field name="validity" type="numeric"></field>
+        <field name="minDays" type="numeric"></field>
+        <field name="maxDays" type="numeric"></field>
         <field name="isallocated" type="name"></field>
         <field name="isencashable" type="name"></field>
         <field name="isaccrued" type="name"></field>
@@ -866,11 +1038,8 @@ under the License.
     
     <entity entity-name="StaffLeaveBalances" package-name="org.ofbiz.humanres.employment" title="Staff Leave Balances">
         <field name="staffLeaveBalancesId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="partyId" type="id"></field>
-        <!-- field name="staffNo" type="name"></field-->
-        <!--field name="staffName" type="name"></field-->        
+        <field name="partyId" type="id"></field>       
         <field name="leaveTypeId" type="id"></field>
-        <!--field name="hrYearId" type="id"></field-->
         <field name="allocated" type="fixed-point"></field>
         <field name="bbf" type="fixed-point"></field>
         <field name="taken" type="fixed-point"></field>
@@ -1719,7 +1888,9 @@ under the License.
       <member-entity entity-alias="PartyRoleView" entity-name="PartyRole"></member-entity>
 
       <alias entity-alias="PersonView" name="partyId" field="partyId"/>
-      <alias entity-alias="PersonView" name="appointmentdate" field="appointmentdate"/>      <alias entity-alias="PersonView" name="firstName" field="firstName"/>
+      <alias entity-alias="PersonView" name="appointmentdate" field="appointmentdate"/>   
+       <alias entity-alias="PersonView" name="confirmationdate" field="confirmationdate"/>   
+      <alias entity-alias="PersonView" name="firstName" field="firstName"/>
       <alias entity-alias="PersonView" name="lastName" field="lastName"/>
       <alias entity-alias="PartyRoleView" name="roleTypeId" field="roleTypeId"/>
         
@@ -1728,6 +1899,29 @@ under the License.
        <entity-condition>
        <condition-expr field-name="roleTypeId" entity-alias="PartyRoleView" operator="equals" value="EMPLOYEE"/>
        </entity-condition>
+      </view-link>
+    </view-entity>
+    
+    
+    <view-entity entity-name="employeesOnProbationView" package-name="org.ofbiz.humanres">
+      <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
+      <member-entity entity-alias="PartyRoleView" entity-name="PartyRole"></member-entity>
+
+      <alias entity-alias="PersonView" name="partyId" field="partyId"/>
+      <alias entity-alias="PersonView" name="employeeNumber" field="employeeNumber"/>
+       <alias entity-alias="PersonView" name="firstName" field="firstName"/>
+      <alias entity-alias="PersonView" name="lastName" field="lastName"/>
+      <alias entity-alias="PersonView" name="appointmentdate" field="appointmentdate"/>   
+       <alias entity-alias="PersonView" name="confirmationdate" field="confirmationdate"/>   
+      <alias entity-alias="PersonView" name="employmentStatusEnumId" field="employmentStatusEnumId"/>
+      <alias entity-alias="PartyRoleView" name="roleTypeId" field="roleTypeId"/>
+    
+       <view-link  entity-alias="PersonView" rel-entity-alias="PartyRoleView">
+        <key-map field-name="partyId" rel-field-name="partyId"/>
+         <entity-condition>
+      <condition-expr field-name="employmentStatusEnumId" entity-alias="PersonView" operator="equals" value="15"/> 
+       </entity-condition>
+      
       </view-link>
     </view-entity>
     
