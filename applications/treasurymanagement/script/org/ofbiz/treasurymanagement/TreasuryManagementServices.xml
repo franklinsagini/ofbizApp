@@ -155,5 +155,26 @@ under the License.
         <entity-one entity-name="TransferRule" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+    
+    <simple-method method-name="createDenomination" short-description="Create Denomination">
+       <make-value entity-name="Denomination" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateDenomination" short-description="Update Denomination">
+        <entity-one entity-name="Denomination" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteDenomination" short-description="Delete Denomination">
+        <entity-one entity-name="Denomination" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 		
 </simple-methods>

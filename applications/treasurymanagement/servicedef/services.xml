@@ -59,7 +59,7 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     <!-- TreasuryTransaction -->
-    	<service name="createTreasuryTransaction" engine="simple" default-entity-name="TreasuryTransaction"
+     <service name="createTreasuryTransaction" engine="simple" default-entity-name="TreasuryTransaction"
              location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="createTreasuryTransaction" auth="true">
         <description>Create TreasuryTransaction</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
@@ -82,7 +82,7 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     <!-- TreasuryTransfer -->
-    	<service name="createTreasuryTransfer" engine="simple" default-entity-name="TreasuryTransfer"
+    <service name="createTreasuryTransfer" engine="simple" default-entity-name="TreasuryTransfer"
              location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="createTreasuryTransfer" auth="true">
         <description>Create TreasuryTransfer</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
@@ -124,6 +124,30 @@
     <service name="deleteTransferRule" engine="simple" default-entity-name="TransferRule"
              location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="deleteTransferRule" auth="true">
         <description>Delete TransferRule</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+    <!-- Denomination -->
+    <service name="createDenomination" engine="simple" default-entity-name="Denomination"
+             location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="createDenomination" auth="true">
+        <description>Create Denomination</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateDenomination" engine="simple" default-entity-name="Denomination"
+             location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="updateDenomination" auth="true">
+        <description>Update Denomination</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteDenomination" engine="simple" default-entity-name="Denomination"
+             location="component://treasurymanagement/script/org/ofbiz/treasurymanagement/TreasuryManagementServices.xml" invoke="deleteDenomination" auth="true">
+        <description>Delete Denomination</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>

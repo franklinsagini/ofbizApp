@@ -70,7 +70,7 @@
                 <security auth="true" https="true"/>
         <!-- event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" / -->
         <event type="java" path="org.ofbiz.loans.LoanServices" invoke="forwardLoanApplication" />
-                <response name="view" type="request-redirect"
+                <response name="success"  type="request-redirect"
                         value="forwardedLoanApplications"> 
                         </response>
                 <response name="error" type="view" value="forwardedLoanApplications" />
@@ -451,6 +451,58 @@
 			value="changeLoanDetails"></response>
 		<response name="error" type="view" value="changeLoanDetails" />
 	</request-map>
+	
+		<request-map uri="appraisal">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="appraisal">
+			<redirect-parameter name="loanApplicationId" />
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
+	
+		<request-map uri="addDeductions">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addDeductions">
+			<redirect-parameter name="loanApplicationId" />
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
+	
+	
+	<request-map uri="approveLoan">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="approveLoan">
+			<redirect-parameter name="loanApplicationId" />
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
+	
+	<request-map uri="createLoanApproval">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanApproval" />
+		<response name="success" type="request-redirect" value="approveLoan">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="approveLoan" />
+	</request-map>
+	
+	
+		<request-map uri="returnToLoans">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="returnToLoans">
+			<redirect-parameter name="loanApplicationId" />
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
+	
+	<request-map uri="createReturnToLoans">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createReturnToLoans" />
+		<response name="success" type="request-redirect" value="returnToLoans">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="returnToLoans" />
+	</request-map>
         
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#main"/>
@@ -473,5 +525,21 @@
                 
      <view-map name="changeLoanDetails" type="screen"
                 page="component://loansmanager/widget/loansmanagerScreens.xml#changeLoanDetails" />
+                
+ 	<view-map name="addDeductions" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#addDeductions" />
+		
+		
+	<view-map name="appraisal" type="screen"
+		page="component://loansprocessing/widget/loansprocessingScreens.xml#appraisal" />
+	
+	<view-map name="approveLoan" type="screen"
+		page="component://loansmanager/widget/loansmanagerScreens.xml#approveLoan" />
+		
+	<view-map name="returnToLoans" type="screen"
+		page="component://loansmanager/widget/loansmanagerScreens.xml#returnToLoans" />
+		
+		
+     
     
 </site-conf>

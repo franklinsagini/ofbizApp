@@ -137,8 +137,8 @@
          <menu-item name="PerfManagement" title="Performance Management">
         	<link target="PerfManagement"/>
         </menu-item>
-        <menu-item name="PerfReports" title="Performance Reports">
-        	<link target="PerfManagement"/>
+        <menu-item name="perfReviewReport" title="Performance Reports">
+        	<link target="perfReviewReport"/>
         </menu-item>
     </menu>
     
@@ -160,22 +160,35 @@
     
     <menu name="PerfBar" type="simple" default-menu-item-name="EditPerfReview"
         menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">        
-        <!-- menu-item name="Find" title="${uiLabelMap.CommonFind}">
-            <link target="FindPerfReviews"/>
-        </menu-item -->
-        <menu-item name="EditPerfReview" title="${uiLabelMap.HumanResPerfReview}">
+        <menu-item name="Find" title="${uiLabelMap.CommonFind}">
+            <link target="FindPerfReviews">
+            	<parameter param-name="perfManagerId"/>
+            </link>
+        </menu-item>
+        <!-- menu-item name="EditPerfReview" title="${uiLabelMap.HumanResPerfReview}">
             <link target="EditPerfReview">
                 <parameter param-name="employeePartyId"/>
                 <parameter param-name="employeeRoleTypeId"/>
                 <parameter param-name="perfReviewId"/>
             </link>
-        </menu-item>
+        </menu-item -->
         <menu-item name="EditPerfReviewItems" title="Performance Review Scores">
             <link target="EditPerfReviewItems">
                 <parameter param-name="employeePartyId"/>
                 <parameter param-name="employeeRoleTypeId"/>
                 <parameter param-name="perfReviewId"/>
+                <parameter param-name="perfManagerId"/>
             </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="PerfReportsBar" type="simple" default-menu-item-name="kpidefinition"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+    	 <menu-item name="perfReviewReport" title="Performance Review Report">
+        	<link target="perfReviewReport"/>
+        </menu-item>
+         <menu-item name="perfScoresReport" title="Performance Scores Report">
+        	<link target="perfScoresReport"/>
         </menu-item>
     </menu>
     

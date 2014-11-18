@@ -2,18 +2,92 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+			<form name="FindLoansForwarded" type="single" target="forwardedLoanApplications"
+		default-entity-name="LoanApplication" default-map-name="loanApplicationCtx">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="loanNo" title="Loan No.">
+			<text-find />
+		</field>
+		<!-- field name="partyId" title="Member">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${firstName} ${middleName} ${lastName} - ${memberNumber}"
+					key-field-name="partyId" entity-name="Member">
+					
+					<entity-constraint name="memberStatusId" operator="equals" value="1"/>
+					<entity-order-by field-name="firstName" />
+				</entity-options>
+			</drop-down>
+		</field -->
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+
+		<field name="loanProductId" title="Loan Type">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${name} ${code}"
+					key-field-name="loanProductId" entity-name="LoanProduct">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+			</drop-down>
+		</field>
+		<!--  field name="applicationStatus" title="Status">
+			<text-find />
+		</field -->
+		<field name="loanAmt" title="Amount">
+			<text-find></text-find>
+		</field>
+		<field name="percentInterestPerMonthAmt" title="Interest Per Month">
+			<text-find />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
 	<!-- listForwardedLoanApplications -->
 		<form name="listForwardedLoanApplications" type="list" list-name="listIt"
 		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
+			<set field="forwardedLoansStatusName" value="FORWARDEDLOANS"/>
+	   		<set field="forwardedLoansStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedLoansStatusName);}"/> 
+			
+			<!-- set field="forwardApprovalStatusName" value="FORWAREDAPPROVAL"/>
+	   		<set field="forwardedApprovalStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardApprovalStatusName);}"/ --> 
+			
+			<set field="forwardedStatusName" value="FORWARDED"/>
+	   		<set field="forwardedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedStatusName);}"/> 
+		
+			<set field="statusName" value="FORWARDEDLOANS"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+		
+			<set field="returnedStatusName" value="RETURNEDTOAPPRAISAL"/>
+	   		<set field="returnedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(returnedStatusName);}"/> 
+			
+		
 			<entity-condition entity-name="LoanApplication">
 				<condition-list combine="and">
 					<condition-list combine="or">
-						<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDEDLOANS"></condition-expr>
-						<condition-expr field-name="applicationStatus" operator="equals" value="FORWAREDAPPROVAL"></condition-expr>
-						<condition-expr field-name="applicationStatus" operator="equals" value="FORWARDED"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedLoansStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedApprovalStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${returnedStatusId}"></condition-expr>
+						
 					</condition-list>
 					
 				</condition-list>				
@@ -21,7 +95,13 @@
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
-			    							
+			 <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanApplicationCtx"/>
+                <field-map field-name="entityName" value="LoanApplication"/>
+                <field-map field-name="orderBy" value="-loanApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>						
 		</actions>
 		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
 		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
@@ -32,17 +112,22 @@
 		<field name="partyId" title="Member">
 			<display-entity description="${firstName} ${middleName} ${lastName}"
 				entity-name="Member" also-hidden="false"></display-entity>
-			<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
-				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
+			
 		</field>
+		
+		<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
+				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
+				
 		<!-- field name="firstName"> <text></text> </field> <field name="middleName"> 
 			<text></text> </field> <field name="lastName"> <text></text> </field -->
 		<field name="loanProductId" title="Product">
 			<display-entity description="${name} ${code}"
 				entity-name="LoanProduct" also-hidden="false"></display-entity>
-			<!-- drop-down allow-empty="true"> <entity-options description="${name} 
-				${code}" entity-name="SaccoProduct"> </entity-options> </drop-down -->
+			
 		</field>
+		
+		<!-- drop-down allow-empty="true"> <entity-options description="${name} 
+				${code}" entity-name="SaccoProduct"> </entity-options> </drop-down -->
 		<field name="loanAmt" title="Amount">
 			<display also-hidden="false" />
 		</field>
@@ -59,14 +144,18 @@
 			<display-entity description="${description}"
 				entity-name="PaymentMethodType"></display-entity>
 		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
 
 		<!-- field name="loanSecurityId" title="LoanSecurity"> <drop-down allow-empty="true"> 
 			<entity-options description="${description}" entity-name="PaymentMethodType" -->
 		<!-- entity-order-by field-name="description"/ -->
 		<!-- /entity-options> </drop-down> </field -->
-		<field name="applicationStatus">
+		<!-- field name="applicationStatus">
 			<display also-hidden="false" />
-		</field>
+		</field -->
 		
 		<field name="createdStamp" title="Created">
 			<display type="date-time" />
@@ -80,12 +169,24 @@
 			<hyperlink target="loanapplication?partyId=${partyId}&amp;loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
 		</field -->
+		<!-- applicationStatus.equals(&quot;FORWARDEDLOANS&quot;) 
+		use-when="loanStatusId==${forwardedLoansStatusId}"
+		-->
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;FORWARDEDLOANS&quot;)" event="onclick"
+		<field name="Forward"  use-when="(loanStatusId==${statusId}) &amp;&amp; (guarantorsAdded=='Y')" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
-			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
+			<hyperlink target="forwardApplication"
 				description="Forward Application To Approver" link-type="anchor">
-					
+					<parameter param-name="loanApplicationId"/>
+				</hyperlink>
+				
+				
+		</field>
+		
+		<field name="Reject" >
+			<hyperlink target="returnToCustomerCare"
+				description="Return to CustomerCare" link-type="anchor">
+					<parameter param-name="loanApplicationId"/>
 				</hyperlink>
 				
 				
@@ -109,9 +210,9 @@
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
 		</field>
-		<field name="detailsLink" title="Details"
+		<field name="detailsLink" title="Add Guarantors"
 			widget-style="buttontext">
-			<hyperlink target="viewapplicationprofile" description="Details"
+			<hyperlink target="viewapplicationprofile" description="Add Guarantors"
 				also-hidden="false">
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
@@ -140,7 +241,8 @@
                 
 			<entity-condition entity-name="LoanGuarantor">
 				<!-- condition-expr field-name="memberNo" operator="equals" value="${memberNumber}"/ -->
-				<condition-expr field-name="memberNo" operator="equals" value="${memberNumber}"/>
+				<!-- condition-expr field-name="memberNo" operator="equals" value="${memberNumber}"/ -->
+				<condition-expr field-name="guarantorId" operator="equals" from-field="partyId"/>
 				
 			</entity-condition>
 		</actions>
@@ -149,9 +251,11 @@
                 <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
         </field -->
         
-        <field name="loanApplicationId" title="Loanee">
-        	<display-entity entity-name="LoanApplication" key-field-name="loanApplicationId"  description="${firstName} ${middleName} ${lastName} - (${loanNo} - ${loanAmt})" also-hidden="false"/>
+        <field name="guarantorId" title="Guarantor">
+        	<display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
         </field>
+
+		
         
         <field name="memberNo" title="Member No."><display also-hidden="false"/></field>
         <field name="payrolNo" title="Payrol No."><display also-hidden="false"/></field>
@@ -180,9 +284,9 @@
             	</condition-list>
             </entity-condition>
             
-        	<entity-condition entity-name="Member" list="membersList">
+        	<!-- entity-condition entity-name="Member" list="membersList">
         		<order-by field-name="firstName"/>
-        	</entity-condition>
+        	</entity-condition -->
         	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
         	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
@@ -286,20 +390,23 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>
+        	<set field="statusName" value="ACTIVE"/>
+	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+ 
         	<set field="partyId" from-field="parameters.partyId"/>
-        	<entity-condition entity-name="Member">
+        	<!-- entity-condition entity-name="Member">
         		<condition-list combine="and">
-        			<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
+        			<condition-expr field-name="memberStatusId" operator="equals" value="${memberStatusId}"/>
         			<condition-expr field-name="partyId" operator="not-equals" value="${partyId}"/>
         		</condition-list>
         		
         		<order-by field-name="-partyId"/>
-        	</entity-condition>
+        	</entity-condition -->
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
-        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	<!-- entity-condition entity-name="Station" list="stationList"></entity-condition -->
         	
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
@@ -327,7 +434,9 @@
         <!-- viewapplicationprofile -->
         <!-- loanapplication?partyId=${partyId} -->
         <field name="Loan Application">
-        	<hyperlink target="loanapplication?partyId=${partyId}" description="Add ${firstName} ${middleName} ${lastName} to guarantors"></hyperlink>
+        	<hyperlink target="loanapplication" description="Add ${firstName} ${middleName} ${lastName} to guarantors">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
         </field>
      </form>
      
@@ -361,8 +470,25 @@
         </field>
     </form>
     
+    <!-- New LoanStatusLog -->
+    <form name="NewLoanStatusLog" type="single" target="returnToCustomerCareProcess"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        <actions>
+        	<set field="statusName" value="RETURNEDTOCUSTOMERCARE" />
+			<set field="statusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"
+				type="Integer" />
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanStatusLogId"><hidden/></field>
+       	<field name="loanStatusId"><hidden value="${statusId}"/></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><textarea/></field>
+        <field name="submitButton" title="Return" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
     <!-- Logs -->
-    <form name="loanLogs" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateReviewLoan" paginate-target="loanStatusLog"
+    <form name="loanLogs" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateReviewLoan" paginate-target="loanLogs"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="LoanStatusLog">
@@ -375,7 +501,10 @@
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
          <field name="createdBy"><display also-hidden="false"></display> </field>
-        <field name="applicationStatus"><display also-hidden="false"></display>  </field>
+        <field name="loanStatusId" title="Status">
+        	<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+        </field>
+         <field name="comment"><display also-hidden="false"></display> </field>
         <field name="createdStamp"><display also-hidden="false" type="date-time"></display> </field>
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteReviewLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -385,5 +514,434 @@
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
     
+    <!-- addDeductions -->
+     <form name="NewLoanDeductionEvaluation" type="single" target="createLoanDeductionEvaluation"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanDeductionEvaluationContext">
+        <!-- actions>
+        	<set field="statusName" value="RETURNEDTOCUSTOMERCARE" />
+			<set field="statusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"
+				type="Integer" />
+        </actions -->
+        <actions>
+        	<set field="monthlyRepaymentAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getMonthlyLoanRepayment(loanApplicationId);}" type="BigDecimal"/>
+        	<set field="firstMonthInsuranceAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getInsuranceAmount(loanApplicationId);}" type="BigDecimal"/>
+        	<set field="loanDeductionAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanRepayment(monthlyRepaymentAmt, firstMonthInsuranceAmt);}" type="BigDecimal"/>
+        	
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanDeductionEvaluationId"><hidden/></field>
+        <field name="grossSalaryAmt" title="Gross Salary Amount (G)"><text/></field>
+        
+        <field name="payslipDeductionAmt" title="Payslip Deduction Amount (P)"  widget-style="required" required-field="true"><text/></field>
+        <field name="currentContributionAmt" title="Current Contribution Amount (C)"  widget-style="required" required-field="true"><text/></field>
+        
+        <field name="monthlyRepaymentAmt" title="Monthly Repayment (M)"  widget-style="required" required-field="true"><text/></field>
+        <field name="firstMonthInsuranceAmt" title="First Month Insurance (F)"  widget-style="required" required-field="true"><text/></field>
+        
+        
+        <field name="loanDeductionAmt" title="Loan Deduction Amount (M+F))"  widget-style="required" required-field="true"><text/></field>
+        <field name="totalDeductionAmt" title="Total Deduction Amount (P-C+M+F)"  widget-style="required" required-field="true"><text/></field>
+        <field name="newMemberDepostContributionAmt" title="New Member Contribution Amount (N)"  widget-style="required" required-field="true"><text/></field>
+        <field name="totalDeductionAfterLoanAddedAmt" title="Total Deduction When Loan Added (P-C+M+F+N)"  widget-style="required" required-field="true"><text/></field>
+        <field name="twothirdAmt" title="Two Third Amount (2/3 of G)"  widget-style="required" required-field="true"><text/></field>
+        <field name="violationDecision" title="Violation Verdict"  widget-style="required" required-field="true"><text/></field>
+        
+        <field name="submitButton" title="Save" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Logs -->
+    <form name="LoanDeductionEvaluationList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanDeductionEvaluation" paginate-target="addDeductions"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanDeductionEvaluation">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            	<order-by field-name="-loanDeductionEvaluationId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanDeductionEvaluation"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanDeductionEvaluationId"><hidden/></field>
+        <field name="grossSalaryAmt" title="Gross Salary Amount"  ><display></display></field>
+        
+        <field name="payslipDeductionAmt" title="Payslip Deduction Amount"  ><display></display></field>
+        <field name="currentContributionAmt" title="Current Contribution Amount"  ><display></display></field>
+        <field name="loanDeductionAmt" title="Loan Deduction Amount"  ><display></display></field>
+        <field name="totalDeductionAmt" title="Total Deduction Amount"  ><display></display></field>
+        <field name="newMemberDepostContributionAmt" title="New Member Contribution Amount"  ><display></display></field>
+        <field name="totalDeductionAfterLoanAddedAmt" title="Total Deduction When Loan Added"  ><display></display></field>
+        <field name="twothirdAmt" title="Two Third Amount"  ><display></display></field>
+        <field name="violationDecision" title="Violation Verdict"  ><display></display></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- appraisal -->
+    <form name="NewAppraisal" type="single" target="createLoanAppraisal"
+        focus-field-name="appraisedAmt" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusLogContext">
+        <!-- actions>
+        	<set field="statusName" value="RETURNEDTOCUSTOMERCARE" />
+			<set field="statusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}"
+				type="Integer" />
+        </actions -->
+        <actions>
+        	<set field="status" value="APPRAISED"  type="String"/>
+        	<set field="statusId" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanStatus(status);}"/>
+        </actions>
+        
+        <field name="loanApplicationId"><hidden/></field>
+       	<field name="loanStatusLogId"><hidden/></field>
+       	<field name="loanStatusId"><hidden value="${statusId}"/></field>
+        <field name="appraisedAmt" title="Appraised Amount"  widget-style="required" required-field="true"><text default-value="${appraisedAmt}"/></field>
+        
+        <field name="comment" title="Comment "  widget-style="required" required-field="true"><textarea/></field>
+                
+        <field name="submitButton" title="Save" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- listMyLoanApplication -->
+    <form name="listMyLoanApplications" type="list" list-name="listIt"
+		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
+		<actions>
+			<set field="forwardedLoansStatusName" value="FORWARDEDLOANS"/>
+	   		<set field="forwardedLoansStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedLoansStatusName);}"/> 
+			
+			<!-- set field="forwardApprovalStatusName" value="FORWAREDAPPROVAL"/>
+	   		<set field="forwardedApprovalStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardApprovalStatusName);}"/ --> 
+			
+			<set field="forwardedStatusName" value="FORWARDED"/>
+	   		<set field="forwardedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedStatusName);}"/> 
+		
+			<set field="statusName" value="FORWARDEDLOANS"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+		
+			<set field="returnedStatusName" value="RETURNEDTOAPPRAISAL"/>
+	   		<set field="returnedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(returnedStatusName);}"/> 
+			
+		
+			<entity-condition entity-name="LoanApplication">
+				<!-- condition-list combine="and">
+					<condition-list combine="or">
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedLoansStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedApprovalStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${forwardedStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals" value="${returnedStatusId}"></condition-expr>
+						
+					</condition-list>
+					
+					
+				</condition-list -->				
+				<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+				<order-by field-name="-loanApplicationId"/>
+			</entity-condition>
+				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
+			 <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanApplicationCtx"/>
+                <field-map field-name="entityName" value="LoanApplication"/>
+                <field-map field-name="orderBy" value="-loanApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>						
+		</actions>
+		<!-- auto-fields-service default-field-type="hidden" service-name="updateLoanApplication"/ -->
+		<!-- field name="skillTypeId"> <display-entity entity-name="SkillType" 
+			description="${description}"/> </field -->
+		<field name="loanNo">
+			<display also-hidden="false" />
+		</field>
+		<field name="partyId" title="Member">
+			<display-entity description="${firstName} ${middleName} ${lastName}"
+				entity-name="Member" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		
+		<field name="loanProductId" title="Product">
+			<display-entity description="${name} ${code}"
+				entity-name="LoanProduct" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<!-- drop-down allow-empty="true"> <entity-options description="${name} 
+				${code}" entity-name="SaccoProduct"> </entity-options> </drop-down -->
+		<field name="loanAmt" title="Amount">
+			<display also-hidden="false" />
+		</field>
+		
+		<field name="interestRatePM" title="Interest Rate(P.M)">
+			<display also-hidden="false" />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<display also-hidden="false" />
+		</field>
+
+
+		<field name="paymentMethodTypeId" title="Payment Method">
+			<display-entity description="${description}"
+				entity-name="PaymentMethodType"></display-entity>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
+
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		<!-- field name="Forward"  use-when="(loanStatusId==${statusId}) &amp;&amp; (guarantorsAdded=='Y')" event="onclick"
+			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
+			<hyperlink target="forwardApplication"
+				description="Forward Application To Approver" link-type="anchor">
+					<parameter param-name="loanApplicationId"/>
+				</hyperlink>
+				
+				
+		</field>
+		
+		<field name="Reject" >
+			<hyperlink target="returnToCustomerCare"
+				description="Return to CustomerCare" link-type="anchor">
+					<parameter param-name="loanApplicationId"/>
+				</hyperlink>
+				
+				
+		</field>
+
+		<field name="changeLoanDetails" title="Change Loan Details"
+			widget-style="buttontext">
+			<hyperlink target="changeLoanDetails" description="Change"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		<field name="detailsLink" title="Add Guarantors"
+			widget-style="buttontext">
+			<hyperlink target="viewapplicationprofile" description="Add Guarantors"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field -->
+		
+		<field name="loanLogs" title="Logs" widget-style="buttontext">
+			<hyperlink target="loanLogs" description="Logs"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+	</form>
+	
+	<!-- myGuaranteedLoans -->
+	  <form name="listMyGuaranteedLoansList" type="list" list-name="loanGuarantorsList"
+		paginate-target="viewapplicationprofile" default-entity-name="MyGuaranteedLoan"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="myGuaranteedLoan" >
+		
+		<actions>
+			<entity-condition entity-name="MyGuaranteedLoan">
+				<condition-expr field-name="guarantorId" operator="equals" from-field="partyId"/>
+			</entity-condition>
+			
+			
+		</actions>
+        <field name="loanGuarantorId"> <hidden/> </field>
+        <field name="partyId" title="Member">
+                <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
+        </field>
+        
+         <field name="loanApplicationId" title="Loan No">
+                <display-entity entity-name="LoanApplication" key-field-name="loanApplicationId"  description="${loanNo}" also-hidden="false"/>
+        </field>
+        
+        <field name="loanAmt" title="Loan Amt">
+                <display  also-hidden="false"/>
+        </field>
+
+        
+        <field name="loanProductId" title="Loan Type">
+                <display-entity entity-name="LoanProduct" key-field-name="loanProductId"  description="${name} - ${code}" also-hidden="false"/>
+        </field>
+        
+         <field name="loanStatusId" title="Status">
+                <display-entity entity-name="LoanStatus" key-field-name="loanStatusId"  description="${name}" also-hidden="false"/>
+        </field>
+    
+    	
+        <field name="depositamt" title="Deposit Amount"><display also-hidden="false"/></field>
+        <field name="stationId" title="Current Station">
+        	 <display-entity entity-name="Station" key-field-name="stationId"  description="${name}" also-hidden="false"/>
+        </field>
+        <field name="guaranteedPercentage" title="Guaranteed %"><display></display></field>
+		<field name="guaranteedValue" title="Guaranteed Amount"><display></display></field> 
+		<field name="myLoans" title="My Loans" widget-style="buttontext">
+            <hyperlink target="myLoans" description="My Loans" also-hidden="false">
+                <parameter param-name="guarantorId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="myGuaranteedLoans" title="My Guaranteed Loans" widget-style="buttontext">
+            <hyperlink target="myGuaranteedLoans" description="My Guaranteed Loans" also-hidden="false">
+                <parameter param-name="guarantorId"/>
+            </hyperlink>
+        </field>
+		
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanApplicationGuarantor" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanGuarantorId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- FindLoansLastRepayment -->
+     <form name="FindLoansLastRepayment" type="single" target="lastrepaymentdate"
+		default-entity-name="LoanApplication" default-map-name="loanApplicationCtx">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="loanNo" title="Loan No.">
+			<text-find />
+		</field>
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+
+		<field name="loanProductId" title="Loan Type">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${name} ${code}"
+					key-field-name="loanProductId" entity-name="LoanProduct">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+			</drop-down>
+		</field>
+		<!--  field name="applicationStatus" title="Status">
+			<text-find />
+		</field -->
+		<field name="loanAmt" title="Amount">
+			<text-find></text-find>
+		</field>
+		<field name="percentInterestPerMonthAmt" title="Interest Per Month">
+			<text-find />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<text-find />
+		</field>
+		<field name="lastRepaymentDate" title="Last Repayment">
+			<date-find type="date"  default-option-from="greaterThan" default-option-thru="upThruDay" />
+		</field>
+		
+		
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+	<!-- lastrepaymentdate -->
+	<form name="listLoanLastRepayment" type="list" list-name="listIt"
+		paginate-target="lastrepaymentdate" default-entity-name="LoanApplication"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
+		<actions>
+			
+			 <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanApplicationCtx"/>
+                <field-map field-name="entityName" value="LoanApplication"/>
+                <field-map field-name="orderBy" value="-loanApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>						
+		</actions>
+		<field name="loanNo">
+			<display also-hidden="false" />
+		</field>
+		<field name="partyId" title="Member">
+			<display-entity description="${firstName} ${middleName} ${lastName}"
+				entity-name="Member" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<field name="loanProductId" title="Product">
+			<display-entity description="${name} ${code}"
+				entity-name="LoanProduct" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<field name="loanAmt" title="Amount">
+			<display also-hidden="false" />
+		</field>
+		
+		<field name="interestRatePM" title="Interest Rate(P.M)">
+			<display also-hidden="false" />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<display also-hidden="false" />
+		</field>
+
+
+		<field name="paymentMethodTypeId" title="Payment Method">
+			<display-entity description="${description}"
+				entity-name="PaymentMethodType"></display-entity>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
+		
+		<field name="lastRepaymentDate" title="Last Repayment">
+			<display type="date"></display>
+		</field>
+		
+		<field name="repaidLastDuration" use-when="lastRepaymentDate!=null" title="Repaid Last Duration">
+			<display default-value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.lastRepaymentDurationToDate(lastRepaymentDate);}"></display>
+		</field>
+
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		<field name="detailsLink" title="Add Guarantors"
+			widget-style="buttontext">
+			<hyperlink target="viewapplicationprofile" description="Add Guarantors"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+		<field name="loanLogs" title="Logs" widget-style="buttontext">
+			<hyperlink target="loanLogs" description="Logs"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+		<field name="transferToGuarantors" title="Transfer To Guarantors" widget-style="buttontext">
+			<hyperlink target="transferToGuarantors" description="Transfer To Guarantors"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+	</form>
 
 </forms>

@@ -76,12 +76,17 @@
             <request-map uri="forwardApplicationToLoans">
                 <security auth="true" https="true"/>
         <!-- event type="java" path="org.ofbiz.workflow.WorkflowServices" invoke="forwardApplication" / -->
-        <event type="java" path="org.ofbiz.loans.LoanServices" invoke="forwardLoanApplicationToLoans" />
-                <response name="view" type="request-redirect"
+              <event type="java" path="org.ofbiz.loans.LoanServices" invoke="forwardLoanApplicationToLoans"  />
+                <response name="success" type="request-redirect"
                         value="receivedLoanApplication"> 
                         </response>
                 <response name="error" type="view" value="forwardedLoanApplications" />
     </request-map>
+    
+    	<request-map uri="LookupActiveMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupActiveMember" />
+	</request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://customercare/widget/customercareScreens.xml#main"/>
@@ -93,4 +98,6 @@
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#loanLogs" />  	
 	<view-map name="loanapplication" type="screen"
                 page="component://customercare/widget/customercareScreens.xml#NewLoanApplication" />
+    <view-map name="LookupActiveMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
 </site-conf>

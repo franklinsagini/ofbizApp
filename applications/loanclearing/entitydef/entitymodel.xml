@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of LoanClearing Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+       <entity entity-name="LoanClearLimit" package-name="org.ofbiz.loanclearing"
+		title="Loan Clearing Limit">
+		<field name="loanClearLimitId" type="id-vlong-int"></field>
+		
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="limitPercent" type="fixed-point" enable-audit-log="true" ></field>
+	
+		
+		<prim-key field="loanClearLimitId"/>
+		
+	</entity>
+	
+	 <entity entity-name="LoanClear" package-name="org.ofbiz.loanclearing"
+		title="LoanClear">
+		<field name="loanClearId" type="id-vlong-int"></field>
+		
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="partyId" type="id-vlong-int"></field>
+		<field name="loanTotalAmt" type="fixed-point" enable-audit-log="true" ></field>
+	
+		
+		<prim-key field="loanClearId"/>
+		
+	</entity>
+	
+	 <entity entity-name="LoanClearItem" package-name="org.ofbiz.loanclearing"
+		title="LoanClear">
+		<field name="loanClearItemId" type="id-vlong-int"></field>
+		<field name="loanClearId" type="id-vlong-int"></field>
+		
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="loanApplicationId" type="id-vlong-int" enable-audit-log="true"></field>
+		<field name="loanAmt" type="fixed-point" enable-audit-log="true" ></field>
+	
+		
+		<prim-key field="loanClearItemId"/>
+		
+	</entity>
+	
+
+</entitymodel>

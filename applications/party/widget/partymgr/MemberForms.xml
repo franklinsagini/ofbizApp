@@ -174,7 +174,7 @@ under the License.
                 <option key="No" description="No"/>
             </drop-down>
         </field>
-        <field name="contributingAmount" title="Contributing Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="contributingAmount" title="Contributing Amount"><text></text></field>
 			
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <!-- field name="cancelLink" title=" " widget-style="smallSubmit">
@@ -183,26 +183,28 @@ under the License.
             </hyperlink>
         </field -->
     </form>
-    
+
     <form name="memberReferee" type="single" target="createMemberReferee"
-        focus-field-name="refreeId" header-row-style="header-row" default-table-style="basic-table">
+       header-row-style="header-row" default-table-style="basic-table">
         <!-- auto-fields-service service-name="createUserLogin"/ -->
-        <actions>
+        <!-- actions>
             <entity-condition entity-name="Member" list="membersList">
             </entity-condition>
-        </actions>
+        </actions -->
+       
         <field name="partyId"><hidden/></field>
         <field name="enabled"><hidden/></field>
         
         
-        <field name="refreeId" title="Referee"  widget-style="required" required-field="true">
+        <!-- field name="refreeId" title="Referee"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="membersList" key-name="partyId" description="${firstName} ${lastName}" />
             </drop-down>
-        </field>
-       <field name="memberNo" title="Member No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        </field -->
+         <field name="refreeId" title="Referee"><lookup target-form-name="LookupActiveMember"/></field>
+       <!-- field name="memberNo" title="Member No" ><text size="30" maxlength="60"/></field>
 
-       <field name="payrollNo" title="Payroll No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+       <field name="payrollNo" title="Payroll No"><text size="30" maxlength="60"/></field -->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -456,7 +458,7 @@ under the License.
                 <option key="No" description="No"/>
             </drop-down>
         </field>
-        <field name="contributingAmount" title="Contributing Amount"  widget-style="required" required-field="true"><text size="10"></text></field>
+        <field name="contributingAmount" title="Contributing Amount"><text size="10"></text></field>
         
         
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
@@ -469,7 +471,7 @@ under the License.
 	
 <!--  memberReferee List-->
 	<form name="listMemberReferee" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberReferee" paginate-target="findMemberReferee"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" >
         <actions>
             <entity-condition entity-name="MemberReferee">
             	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
@@ -479,14 +481,13 @@ under the License.
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
-        <field name="partyId" title="Member">
+        <!-- field name="partyId" title="Member">
         	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
-          </field>
+          </field -->
           <field name="refreeId" title="Referee">
-        	<display-entity key-field-name="partyId" description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
+        	<display-entity  key-field-name="partyId" description="${firstName} ${middleName} ${lastName} - Member No. ${memberNumber} - ID NO - ${idNumber} " entity-name="Member" also-hidden="false" ></display-entity>
           </field>
-        <field name="memberNo"><display also-hidden="false"/></field>
-        <field name="payrollNo"><display also-hidden="false"/></field>
+
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteMemberReferee" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="memberRefereeId"/>
@@ -675,23 +676,28 @@ under the License.
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
         <field name="memberAccountDetailsId"><hidden/></field>
-        <field name="partyId" title="Member">
+        <!-- field name="partyId" title="Member">
         	<display-entity description="${firstName} ${middleName} ${lastName}" entity-name="Member" also-hidden="false" ></display-entity>
-            <!--  drop-down allow-empty="true">
+           
+        </field -->
+        
+         <!--  drop-down allow-empty="true">
                 <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
                 </entity-options>
             </drop-down -->
-        </field>
         
-        <field name="openingBalanceDate"><display also-hidden="false"/></field>
+        <field name="openingBalanceDate"><display also-hidden="false" type="date"/></field>
         
         <!-- field name="memberAccountPayableId" title="Account Payable">
         	<display-entity description="${accountName} ${accountCode}" key-field-name="glAccountId" entity-name="GlAccount" also-hidden="false" ></display-entity>
         </field -->
         <field name="memberAccountId" title="Member Account" >
-            <drop-down allow-empty="true">
+            <!-- drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
-            </drop-down>
+            </drop-down -->
+            <display-entity  entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}"> 
+            	
+            </display-entity>
         </field>
         
         <field name="apOpeningBalance"><display also-hidden="false"/></field>

@@ -23,7 +23,14 @@
                 <set field="headerItem" value="receiveLoanApplication"/>
                 <set field="tabButtonItem" value="findmember"/>
                 <set field="memberCtx" from-field="parameters"/>
-
+				<set field="employeePartyId" from-field="userLogin.partyId"/>
+				<entity-one value-field="person" entity-name="Person">
+					<field-map field-name="partyId" from-field="employeePartyId"/>
+				</entity-one>
+				<set field="memberBranchId" value="${person.branchId}" global="true"/>
+				<entity-one value-field="branch" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="${memberBranchId}"/>
+				</entity-one>
                 <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
             </actions>
             <widgets>
@@ -41,7 +48,7 @@
                                 <screenlet title="Search Members">
                                         <include-form name="FindMember" location="component://customercare/widget/customercareForms.xml"/>
                             	</screenlet>
-                                <screenlet title="Members List">
+                                <screenlet title="Members List (Apply loans for ${branch.groupName} branch only)">
                                 		<include-form  name="members" location="component://customercare/widget/customercareForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -66,22 +73,21 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
-                
+                <set field="loanApplicationCtx" from-field="parameters"/>
                 <entity-one entity-name="LoanApplication" value-field="applicationContext">
                 	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
                 </entity-one>
                 
-            <entity-condition entity-name="Member" list="membersList">
+            <!-- entity-condition entity-name="Member" list="membersList">
             </entity-condition>
              <entity-condition entity-name="LoanProduct" list="productsList">
-             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
             </entity-condition>
             <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
             </entity-condition>
             <entity-condition entity-name="LoanStatus" list="loanStatusList">
-            </entity-condition>
+            </entity-condition -->
             
-
+				
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -107,6 +113,7 @@
                         </section>
                         <section name="search-results">
                         	<widgets>
+                        		
                         		<screenlet title="Loan Applications">
                         			<include-form name="listLoanApplications" location="component://customercare/widget/customercareForms.xml"/>
                         		</screenlet>
@@ -128,6 +135,7 @@
                 <set field="target" value="createLoanApplication"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 
                 <entity-one entity-name="LoanApplication" value-field="applicationContext">
@@ -150,6 +158,9 @@
 
                         <section name="search-results">
                         	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindNewLoans" location="component://customercare/widget/customercareForms.xml"/>
+                        		</screenlet>
                         		<screenlet title="Loan Applications">
                         			<include-form name="listLoanApplications" location="component://customercare/widget/customercareForms.xml"/>
                         		</screenlet>

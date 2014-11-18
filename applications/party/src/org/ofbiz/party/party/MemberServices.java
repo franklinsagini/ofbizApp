@@ -100,11 +100,13 @@ public class MemberServices {
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> memberAccountELI = null;
+		partyId = partyId.replaceAll(",", "");
+		accountProductId = accountProductId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
 						EntityCondition.makeCondition("accountProductId",
-								EntityOperator.EQUALS, accountProductId)),
+								EntityOperator.EQUALS, Long.valueOf(accountProductId))),
 						EntityOperator.AND);
 
 		try {
@@ -134,10 +136,10 @@ public class MemberServices {
 	private static String getMemberNumber(String partyId) {
 		GenericValue member = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-
+		partyId = partyId.replaceAll(",", "");
 		try {
 			member = delegator.findOne("Member",
-					UtilMisc.toMap("partyId", partyId),
+					UtilMisc.toMap("partyId", Long.valueOf(partyId)),
 					false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -160,10 +162,10 @@ public class MemberServices {
 		
 		GenericValue accountProduct = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-
+		accountProductId = accountProductId.replaceAll(",", "");
 		try {
 			accountProduct = delegator.findOne("AccountProduct",
-					UtilMisc.toMap("accountProductId", accountProductId),
+					UtilMisc.toMap("accountProductId", Long.valueOf(accountProductId)),
 					false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -184,9 +186,10 @@ public class MemberServices {
 	private static String getBranchCode(String partyId) {
 		// TODO Auto-generated method stub
 		List<GenericValue> memberELI = null;
+		partyId = partyId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> memberConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId)),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId))),
 						EntityOperator.AND);
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -227,7 +230,7 @@ public class MemberServices {
 	private static GenericValue getBranch(String branchId) {
 		GenericValue branch = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-
+		
 		try {
 			branch = delegator.findOne("PartyGroup",
 					UtilMisc.toMap("partyId", branchId),
@@ -239,6 +242,28 @@ public class MemberServices {
 
 		 
 		return branch;
+	}
+	
+	public static Long getMemberStatusId(String name) {
+		List<GenericValue> memberStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberStatusELI = delegator.findList("MemberStatus",
+					EntityCondition.makeCondition("name", name), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long memberStatusId = 0L;
+		for (GenericValue genericValue : memberStatusELI) {
+			memberStatusId = genericValue.getLong("memberStatusId");
+		}
+
+		String statusIdString = String.valueOf(memberStatusId);
+		statusIdString = statusIdString.replaceAll(",", "");
+		memberStatusId = Long.valueOf(statusIdString);
+		return memberStatusId;
 	}
 
 }

@@ -11,4 +11,44 @@
         </description>
     </service> 
     
+    <!-- returnToCustomerCareProcess -->
+      <service name="returnToCustomerCareProcess" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="returnToCustomerCareProcess" auth="true">
+        <description>Return to Customer Care</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="createLoanAppraisal" engine="simple" default-entity-name="LoanStatusLog"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createLoanAppraisal" auth="true">
+        <description>Loan Appraisal</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>   
+    
+    <service name="createLoanDeductionEvaluation" engine="simple" default-entity-name="LoanDeductionEvaluation"
+             location="component://loansprocessing/script/org/ofbiz/loansprocessing/LoansProcessingServices.xml" invoke="createLoanDeductionEvaluation" auth="true">
+        <description>Create LoanDeductionEvaluation</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+   
+    
+    <service name="updateLoanDeductionEvaluation" engine="simple" default-entity-name="LoanDeductionEvaluation"
+             location="component://loansprocessing/script/org/ofbiz/loansprocessing/LoansProcessingServices.xml" invoke="updateLoanDeductionEvaluation" auth="true">
+        <description>Update LoanDeductionEvaluation</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteLoanDeductionEvaluation" engine="simple" default-entity-name="LoanDeductionEvaluation"
+             location="component://loansprocessing/script/org/ofbiz/loansprocessing/LoansProcessingServices.xml" invoke="deleteLoanDeductionEvaluation" auth="true">
+        <description>Delete LoanDeductionEvaluation</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
 </services>
