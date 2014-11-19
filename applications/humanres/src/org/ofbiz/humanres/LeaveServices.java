@@ -696,6 +696,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			// responsibleEmployee
 
 			leave.set("responsibleEmployee",	documentApproval.getString("responsibleEmployee"));
+			leave.set("rejectReason" , "-");
 			try {
 				delegator.createOrStore(leave);
 				//delegator.create("LeaveStatusLog", leavelog);
