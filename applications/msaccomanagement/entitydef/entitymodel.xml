@@ -8,5 +8,106 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+     <entity entity-name="MSaccoApplication" package-name="org.ofbiz.msaccomanagement"
+		title="MSaccoApplication Entity">
+		<field name="msaccoApplicationId" type="id-vlong-int"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="partyId" type="id-vlong-int"></field>
+		
+		<field name="mobilePhoneNumber" type="name" not-null="true" enable-audit-log="true"></field>
+		
+		
+		<field name="cardStatusId" type="id-int" enable-audit-log="true"></field>
+		 <!-- Applied, Active, Renewing, Deactivated -->
+		
+		
+		<field name="memberAccountId" type="id-vlong-int"></field>
+		
+		<field name="minimumTransactionAmount" type="fixed-point"  enable-audit-log="true"></field>
+		<field name="maximumTransactionAmount" type="fixed-point"  enable-audit-log="true"></field>
+		
+		<prim-key field="msaccoApplicationId"/>
+		<relation type="one" fk-name="MSaccoApplication_Member" rel-entity-name="Member">
+        	<key-map field-name="partyId"/>
+      	</relation>
+      	<relation type="one" fk-name="MSaccoApplication_MemberAccount" rel-entity-name="MemberAccount">
+        	<key-map field-name="memberAccountId"/>
+      	</relation>
+      	
+      	<relation type="one" fk-name="MSaccoApplication_CardStatus" rel-entity-name="CardStatus">
+        	<key-map field-name="cardStatusId"/>
+      	</relation>
+	</entity>
+	
+	<!-- Card Logs -->
+	<entity entity-name="MSaccoLog" package-name="org.ofbiz.msaccomanagement"
+		title="CardLog Entity">
+		
+		<field name="msaccoLogId" type="id-vlong-int"></field>
+		<field name="msaccoApplicationId" type="id-vlong-int"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="cardStatusId" type="id-int"   enable-audit-log="true"></field>
+		<field name="comment" type="description"></field>
+		
+		<field name="minimumTransactionAmount" type="fixed-point"  enable-audit-log="true"></field>
+		<field name="maximumTransactionAmount" type="fixed-point"  enable-audit-log="true"></field>
+		
+		<prim-key field="msaccoLogId"/>
+		<relation type="one" fk-name="MSaccoLog_CardApplication" rel-entity-name="MSaccoApplication">
+        	<key-map field-name="msaccoApplicationId"/>
+      	</relation>
+      	
+      	<relation type="one" fk-name="MSaccoLog_CardStatus" rel-entity-name="CardStatus">
+        	<key-map field-name="cardStatusId"/>
+      	</relation>
+	</entity>
+	
+	<!-- MSaccoTransactionLog -->
+	<entity entity-name="MSaccoTransactionLog" package-name="org.ofbiz.msaccomanagement"
+		title="MSaccoTransactionLog Entity">
+		
+		<field name="msaccoTransactionLogId" type="id-vlong-int"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="transactionType" type="name"></field>
+		<field name="amount" type="fixed-point"></field>
+		<field name="loanNumber" type="name"></field>
+		<field name="phoneNumber" type="name"></field>
+		<field name="status" type="name"></field>
+		<prim-key field="msaccoTransactionLogId"/>
+	</entity>
+	
+	<!-- MSaccoLimit -->
+	<entity entity-name="MSaccoLimit" package-name="org.ofbiz.msaccomanagement"
+		title="MSaccoLimit Entity">
+		
+		<field name="msaccoLimitId" type="id-vlong-int"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		
+		<field name="minimumTransactionAmount" type="fixed-point"  enable-audit-log="true"></field>
+		<field name="maximumTransactionAmount" type="fixed-point"  enable-audit-log="true"></field>
+		
+		<prim-key field="msaccoLimitId"/>
+		
+	</entity>
 
 </entitymodel>

@@ -185,7 +185,7 @@ under the License.
          
          <request-map uri="createOpeningLeaveBalances">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="addOpeningLeaveBalances"/>
+        <response name="success" type="view" value="createOpeningLeaveBalances"/>
     </request-map> 
          
          
@@ -361,8 +361,8 @@ under the License.
     <request-map uri="addStaffOpeningBalance">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="addStaffOpeningBalance" />
-		<response name="success" type="view" value="FindEmplLeaves" />
-		<response name="error" type="view" value="addOpeningLeaveBalances" />
+		<response name="success" type="request-redirect-noparam" value="createOpeningLeaveBalances" />
+		<response name="error" type="view" value="createOpeningLeaveBalances" />
 	</request-map>
 	
 	 <request-map uri="changePayrollPrefix">
@@ -661,7 +661,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="dismissStaffOnProbation" />
 		<response name="success" type="view" value="FindEmplLeaves" />
-		<response name="error" type="view" value="addOpeningLeaveBalances" />
+		<response name="error" type="view" value="FindEmplLeaves" />
 	</request-map>
     
     
@@ -2956,7 +2956,7 @@ under the License.
 	<view-map name="staffOnLeave" type="screen" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"/>
 	<view-map name="advanceSalary" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
 	<view-map name="EditSalaryAdvanceTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
-	<view-map name="addOpeningLeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffOpeningBalance"/> 
+	<view-map name="createOpeningLeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffOpeningBalance"/> 
 	<view-map name="popup" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveRejectionReason"/> 
 	<view-map name="popupSentBack" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveSentBackReason"/> 
 	<view-map name="leaveCalender" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffLeaveCalender"/> 

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of DeathManagement Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+    	   <entity entity-name="DeathNotification" package-name="org.ofbiz.deathmanagement" title="DeathNotification Entity">
+     		<field name="deathNotificationId" type="id-vlong-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		<field name="notificationNo" type="name"></field>
+     		
+     		
+     		<field name="dateReported" type="date-time"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
+     		
+     		<field name="dateofDeath" type="date-time"></field>
+     		<field name="causeOfDeath" type="name"></field>
+     		<field name="deathCertificateNo" type="name"></field>
+     		<field name="reportedBy" type="name"></field>
+     		<field name="relationship" type="name"></field>
+     		
+     		
+      		
+			<prim-key field="deathNotificationId"/>
+
+    	<relation type="one" fk-name="DeathNotification_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partId"/>
+        </relation>
+     </entity>
+     
+     <entity entity-name="DeathInsuranceClaim" package-name="org.ofbiz.deathmanagement" title="DeathInsuranceClaim Entity">
+     		<field name="deathInsuranceClaimId" type="id-vlong-int"></field>
+     		<field name="deathNotificationId" type="id-vlong-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		<field name="totalDeposit" type="fixed-point"></field>
+     		<field name="insuranceCompanyId" type="id-vlong-int"></field>
+     		<field name="totalLoanBalance" type="fixed-point"></field>
+     		<field name="loanBalance" type="fixed-point"></field>
+     		<field name="accruedInterest" type="fixed-point"></field>
+     		<field name="accruedInsurance" type="fixed-point"></field>
+     		<field name="funeralFee" type="fixed-point"></field>
+     		
+			<prim-key field="deathInsuranceClaimId"/>
+
+    	<relation type="one" fk-name="DeathInsuranceClaim_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="DeathInsuranceClaim_DeathNotification" rel-entity-name="DeathNotification">
+            <key-map field-name="deathNotificationId"/>
+        </relation>
+     </entity>
+     
+     <!-- Funeral Expense Payment -->
+	     <entity entity-name="FuneralExpensePayment" package-name="org.ofbiz.deathmanagement" title="FuneralExpensePayment Entity">
+     		<field name="funeralExpensePaymentId" type="id-vlong-int"></field>
+     		<field name="deathNotificationId" type="id-vlong-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
+     		
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+			
+     		<field name="amountPayable" type="fixed-point"></field>
+     		<field name="authorizedBy" type="id-vlong-int"></field>
+     		
+     		<field name="nominee" type="name"></field>
+     		<field name="nomineePercentage" type="fixed-point"></field>
+     		
+     		<field name="comment" type="name"></field>
+     		
+			<prim-key field="funeralExpensePaymentId"/>
+
+    	<relation type="one" fk-name="FuneralExpensePayment_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="FuneralExpensePayment_DeathNotification" rel-entity-name="DeathNotification">
+            <key-map field-name="deathNotificationId"/>
+        </relation>
+     </entity>
+     
+     <!-- NomineeClaim -->
+    	<entity entity-name="NomineeClaim" package-name="org.ofbiz.deathmanagement" title="NomineeClaim Entity">
+     		<field name="nomineeClaimId" type="id-vlong-int"></field>
+     		<field name="deathNotificationId" type="id-vlong-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
+     		
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+			
+			<field name="deathCertificateNo" type="name"></field>
+     		<field name="sharesPayable" type="fixed-point"></field>
+     		<field name="dateOfDeath" type="date-time"></field>
+     		
+			<prim-key field="funeralExpensePaymentId"/>
+
+    	<relation type="one" fk-name="FuneralExpensePayment_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="FuneralExpensePayment_DeathNotification" rel-entity-name="DeathNotification">
+            <key-map field-name="deathNotificationId"/>
+        </relation>
+     </entity>
+     
+     <entity entity-name="InsuranceCompany" package-name="org.ofbiz.deathmanagement" title="InsuranceCompany Entity">
+     		<field name="insuranceCompanyId" type="id-vlong-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+			<field name="code" type="name"></field>
+			<field name="name" type="name"></field>
+			<prim-key field="insuranceCompanyId"/>
+     </entity>
+</entitymodel>

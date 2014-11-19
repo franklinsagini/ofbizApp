@@ -723,9 +723,13 @@
 		default-table-style="basic-table" default-map-name="applicationContext">
 
 		<actions>
-			<entity-condition entity-name="Member" list="membersList">
-				<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
-			</entity-condition>
+		
+			<set field="statusName" value="ACTIVE"/>
+			<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+			
+			<!-- entity-condition entity-name="Member" list="membersList">
+				<condition-expr field-name="memberStatusId" operator="equals" value="${statusId}"/>
+			</entity-condition -->
 			<!-- entity-condition entity-name="SaccoProduct" list="productsList"> 
 				<condition-expr field-name="productType" operator="equals" value="Loan"/> 
 				</entity-condition -->
@@ -743,9 +747,11 @@
 				<condition-expr field-name="loanProductId" operator="in" value="${productClassList}" />
 			</entity-condition -->
 			
-			<entity-condition entity-name="LoanProductClassView" list="productsList">
-				<condition-expr field-name="memberClass" operator="equals" value="${member.memberClass}"/>
-			</entity-condition>
+			<!-- entity-condition entity-name="LoanProductClassView" list="productsList">
+				
+			</entity-condition -->
+			<!-- condition-expr field-name="memberClass" operator="equals" value="${member.memberClass}"/ -->
+			<entity-condition entity-name="LoanProduct" list="productsList"></entity-condition>
 
 			<entity-condition entity-name="PaymentMethodType"
 				list="paymentMethodsList">
@@ -753,8 +759,15 @@
 
 			<entity-condition entity-name="LoanStatus" list="loanStatusList">
 			</entity-condition>
-
-
+			<entity-one entity-name="Member" value-field="member">
+				<field-map field-name="partyId" from-field="parameters.partyId"/>
+			</entity-one>
+			<entity-one entity-name="MemberType" value-field="memberType">
+				<field-map field-name="memberTypeId" value="${member.memberTypeId}"/>
+			</entity-one>
+			<entity-one entity-name="MemberClass" value-field="memberClass">
+				<field-map field-name="memberClassId" value="${member.memberClassId}"/>
+			</entity-one>
 			<!--entity-condition entity-name="LoanSecurity" list="loanSecurityList"> 
 				</entity-condition -->
 				
@@ -796,13 +809,13 @@
 			required-field="true">
 			<text size="30" maxlength="60" default-value="${member.idNumber}"  />
 		</field>
-		<field name="memberType" title="Member Type" widget-style="required"
+		<field name="memberTypeId" title="Member Type" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" default-value="${member.memberType}"  />
+			<display default-value="${memberType.name}"></display>
 		</field>
-		<field name="memberClass" title="Member Class" widget-style="required"
+		<field name="memberClassId" title="Member Class" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" default-value="${member.memberClass}"  />
+			<display default-value="${memberClass.name}"></display>
 		</field>
 		<field name="memberNumber" title="Member Number" widget-style="required"
 			required-field="true">
@@ -907,14 +920,17 @@
 		<field name="loanNo" title="Loan No.">
 			<text-find />
 		</field>
-		<field name="partyId" title="Member">
+		<!-- field name="partyId" title="Member">
 			<drop-down allow-empty="true" current-description="">
-				<entity-options description="${firstName} ${lastName}"
+				<entity-options description="${firstName} ${middleName} ${lastName} - ${memberNumber}"
 					key-field-name="partyId" entity-name="Member">
+					
+					<entity-constraint name="memberStatusId" operator="equals" value="1"/>
 					<entity-order-by field-name="firstName" />
 				</entity-options>
 			</drop-down>
-		</field>
+		</field -->
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
 
 		<field name="loanProductId" title="Loan Type">
 			<drop-down allow-empty="true" current-description="">
@@ -924,9 +940,9 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="applicationStatus" title="Status">
+		<!--  field name="applicationStatus" title="Status">
 			<text-find />
-		</field>
+		</field -->
 		<field name="loanAmt" title="Amount">
 			<text-find></text-find>
 		</field>
@@ -949,13 +965,13 @@
 		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table 
 		hover-bar" -->
 	<form name="listLoanApplications" type="list" list-name="listIt"
-		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
+		paginate-target="FindLoanApplication" 
 		separate-columns="true" odd-row-style="alternate-row"
-		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
+			
 			<entity-condition entity-name="LoanApplication">
-				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
-				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
+				
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
@@ -970,9 +986,11 @@
 		<field name="partyId" title="Member">
 			<display-entity description="${firstName} ${middleName} ${lastName}"
 				entity-name="Member" also-hidden="false"></display-entity>
-			<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
-				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
+			
 		</field>
+		
+		<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
+				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
 		<!-- field name="firstName"> <text></text> </field> <field name="middleName"> 
 			<text></text> </field> <field name="lastName"> <text></text> </field -->
 		<field name="loanProductId" title="Product">
@@ -985,7 +1003,7 @@
 			<display also-hidden="false" />
 		</field>
 		
-		<field name="salaryAmt" title="Salary Amount">
+		<!-- field name="salaryAmt" title="Salary Amount">
 			<display also-hidden="false" />
 		</field>
 		<field name="interestRatePM" title="Interest Rate(P.M)">
@@ -999,30 +1017,32 @@
 		<field name="paymentMethodTypeId" title="Payment Method">
 			<display-entity description="${description}"
 				entity-name="PaymentMethodType"></display-entity>
-		</field>
+		</field -->
 
 		<!-- field name="loanSecurityId" title="LoanSecurity"> <drop-down allow-empty="true"> 
 			<entity-options description="${description}" entity-name="PaymentMethodType" -->
 		<!-- entity-order-by field-name="description"/ -->
 		<!-- /entity-options> </drop-down> </field -->
-		<field name="applicationStatus">
+		<!-- field name="applicationStatus">
 			<display also-hidden="false" />
+		</field -->
+		
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
 		</field>
-		
-		
 		
 		<field name="Edit Application">
 			<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
 		</field>
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
+		<!-- field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)" event="onclick"
 			action="javascript: return loanApplicationFormComplete(${loanApplicationId});">
 			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
 				
 				
-		</field>
+		</field -->
 		<!-- field name="formStatus" title="Form" use-when="loanApplication.collateralsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsAvailable.equals(&quot;N&quot;)&amp;&amp;loanApplication.guarantorsTotalDepositsEnough.equals(&quot;N&quot;)&amp;&amp;loanApplication.eacherGuarantorGreaterThanAverage.equals(&quot;N&quot;)"><display default-value="Form Incomplete, Provide Details (Guarantors, Collateral etc)"></display></field -->
 		
 
@@ -1059,11 +1079,14 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
-			<entity-condition entity-name="LoanApplication">
-				<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
+			<!-- entity-condition entity-name="LoanApplication">
+				<limit-range size="20" start="1"/>
+				
+			</entity-condition -->
+			
+			<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
 				<!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
 				<!-- order-by field-name="saccoProductId"/ -->
-			</entity-condition>
 
 			<service service-name="performFind" result-map="result"
 				result-map-list="listIt">
@@ -1082,7 +1105,9 @@
 		</field>
 		<field name="partyId" title="Member">
 			<display-entity description="${firstName} ${middleName} ${lastName}"
-				entity-name="Member" also-hidden="false"></display-entity>
+				entity-name="Member" also-hidden="false">
+					
+				</display-entity>
 			<!-- drop-down allow-empty="true"> <entity-options description="${firstName} 
 				${middleName} ${lastName}" entity-name="Member"> </entity-options> </drop-down -->
 		</field>
@@ -1113,18 +1138,25 @@
 			<entity-options description="${description}" entity-name="PaymentMethodType" -->
 		<!-- entity-order-by field-name="description"/ -->
 		<!-- /entity-options> </drop-down> </field -->
-		<field name="applicationStatus">
-			<display also-hidden="false" />
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
 		</field>
 		<field name="Edit Application">
 			<hyperlink target="loanapplication?loanApplicationId=${loanApplicationId}"
 				description="Edit Application"></hyperlink>
 		</field>
 		
-		<field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)">
+		<field name="details" title="Details">
+			<hyperlink target="viewapplicationprofile" description="Details"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+		<!-- field name="Forward" use-when="applicationStatus.equals(&quot;NEW&quot;)">
 			<hyperlink target="forwardApplication?loanApplicationId=${loanApplicationId}"
 				description="Forward Application"></hyperlink>
-		</field>
+		</field -->
 		
 		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext">

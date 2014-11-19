@@ -95,4 +95,27 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <simple-method method-name="createDepositPolicyAmount" short-description="Create DepositPolicyAmount">
+        <make-value entity-name="DepositPolicyAmount" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="DepositPolicyAmount"></set>
+        <set field="newEntity.depositPolicyAmountId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateDepositPolicyAmount" short-description="Update DepositPolicyAmount">
+        <entity-one entity-name="DepositPolicyAmount" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteDepositPolicyAmount" short-description="Delete DepositPolicyAmount">
+        <entity-one entity-name="DepositPolicyAmount" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

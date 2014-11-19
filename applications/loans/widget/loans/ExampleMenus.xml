@@ -20,9 +20,18 @@ under the License.
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+   
     <menu name="ExampleAppBar" title="Loans Management" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- menu-item name="ExampleMenuItem" title="${uiLabelMap.ExampleExample}"-->
-        
+       	<actions>
+       		<set field="statusId" from-field="loanApplication.loanStatusId" type="PlainString"/>
+       		<set field="approvedStatusName" value="APPROVED"/>
+	   		<set field="approvedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(approvedStatusName);}" type="PlainString"/> 
+
+      		<set field="disbursedStatusName" value="DISBURSED"/>
+	   		<set field="disbursedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(disbursedStatusName);}" type="PlainString"/> 
+       		
+       	</actions> 
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
         <menu-item name="FindLoanApplication" title="Loans Management">
             <link target="FindLoanApplication"/>
@@ -124,12 +133,14 @@ under the License.
         </link>
         </menu-item>
         <menu-item name="disburseLoan" title="Disburse">
-        
+       
         <condition>
-        		
         		<or>
-        			<if-compare field="loanApplication.applicationStatus" operator="equals" value="APPROVED" />
-        			<if-compare field="loanApplication.applicationStatus" operator="equals" value="DISBURSED" />
+        			
+        			<!-- if-compare field="loanApplication.loanStatusId" operator="equals" value="APPROVED" / -->
+        			<!-- if-compare  field="statusId" operator="equals" value="${approvedStatusId}"/ -->
+        			<!-- if-compare field="loanApplication.loanStatusId" operator="equals" value="DISBURSED" / -->
+        			<if-compare field="statusId" operator="equals"  value="${disbursedStatusId}"/>
         		</or>
         </condition>
         <link target="disburseLoan">

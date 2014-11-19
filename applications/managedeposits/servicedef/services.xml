@@ -81,4 +81,27 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+    <service name="createDepositPolicyAmount" engine="simple" default-entity-name="DepositPolicyAmount"
+             location="component://managedeposits/script/org/ofbiz/managedeposits/ManageDepositsServices.xml" invoke="createDepositPolicyAmount" auth="true">
+        <description>Create DepositPolicyAmount</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateDepositPolicyAmount" engine="simple" default-entity-name="DepositPolicyAmount"
+             location="component://managedeposits/script/org/ofbiz/managedeposits/ManageDepositsServices.xml" invoke="updateDepositPolicyAmount" auth="true">
+        <description>Update DepositPolicyAmount</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteDepositPolicyAmount" engine="simple" default-entity-name="DepositPolicyAmount"
+             location="component://managedeposits/script/org/ofbiz/managedeposits/ManageDepositsServices.xml" invoke="deleteDepositPolicyAmount" auth="true">
+        <description>Delete DepositPolicyAmount</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service> 
+    
 </services>

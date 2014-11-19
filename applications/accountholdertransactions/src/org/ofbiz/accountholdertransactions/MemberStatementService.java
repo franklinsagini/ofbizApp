@@ -23,8 +23,7 @@ import com.google.gson.Gson;
 public class MemberStatementService {
 
 	public final static String module = MemberStatementService.class.getName();
-//transactions
-	// 
+
 	public static Map<String, Object> memberTransactions(DispatchContext dctx,
 			Map<String, ?> context) {
 		Delegator delegator = dctx.getDelegator();
@@ -45,7 +44,7 @@ public class MemberStatementService {
 
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId)),
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId))),
 						EntityOperator.AND);
 		List<GenericValue> accountTransactionELI = null;
 		List<String> orderByList = new ArrayList<String>();
@@ -90,7 +89,7 @@ public class MemberStatementService {
 				memberAccount = delegator.findOne(
 						"MemberAccount",
 						UtilMisc.toMap("memberAccountId",
-								genericValue.getString("memberAccountId")),
+								genericValue.getLong("memberAccountId")),
 						false);
 			} catch (GenericEntityException e) {
 				e.printStackTrace();

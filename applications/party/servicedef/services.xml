@@ -254,7 +254,7 @@ under the License.
     </service>
 
     <service name="findPartiesById" engine="java"  auth="true"
-            location="org.ofbiz.party.party.PartyServices" invoke="findPartyById">
+            location="org.ofbiz.party.party.PartyServices" invoke="findPartyById" export="true">
         <description>Find the partyId corresponding to a reference and a reference type</description>
         <attribute type="String" mode="IN" name="idToFind" optional="false"/>
         <attribute type="String" mode="IN" name="partyIdentificationTypeId" optional="true"/>
@@ -1424,24 +1424,34 @@ under the License.
 		<attribute name="firstName" mode="IN" type="String" optional="false"></attribute>
 		<attribute name="lastName" mode="IN" type="String" optional="false"></attribute>
 		<!-- attribute name="emailAddress" mode="IN" type="String" optional="false"></attribute -->
-		<attribute name="salutation" mode="IN" type="String" optional="false"></attribute>
-		<attribute name="gender" mode="IN" type="String" optional="false"></attribute>
-		<attribute name="maritalStatus" mode="IN" type="String" optional="false"></attribute>
+		<!-- attribute name="salutation" mode="IN" type="String" optional="false"></attribute>
+		<attribute name="gender" mode="IN" type="String" optional="false"></attribute -->
+
 		<attribute name="idNumber" mode="IN" type="String" optional="false"></attribute>
 		<attribute name="pinNumber" mode="IN" type="String" optional="true"></attribute>
 		<attribute name="physicalAddress" mode="IN" type="String" optional="false"></attribute>
 		<attribute name="postalAddress" mode="IN" type="String" optional="false"></attribute>
-		<attribute name="memberTypeName" mode="IN" type="String" optional="false"></attribute>
+
 		<attribute name="incomeScaleId" mode="IN" type="String" optional="true"></attribute>
+		
+		<attribute name="memberClassId" mode="IN" type="Long" optional="true"></attribute>
+		<attribute name="memberStatusId" mode="IN" type="Long" optional="true"></attribute>
+		<attribute name="salutationId" mode="IN" type="Long" optional="true"></attribute>
+		<attribute name="maritalStatusId" mode="IN" type="Long" optional="true"></attribute>
+		<attribute name="memberTypeId" mode="IN" type="Long" optional="true"></attribute>
+		<attribute name="recruitingAgentId" mode="IN" type="Long" optional="true"></attribute>
+		<attribute name="employmentTypeId" mode="IN" type="Long" optional="true"></attribute>
+		<attribute name="genderId" mode="IN" type="Long" optional="true"></attribute>
+		
 
 		<attribute name="atmApplication" mode="IN" type="String" optional="true"></attribute>
 		<attribute name="msaccoApplication" mode="IN" type="String" optional="true"></attribute>
-		<attribute name="recruitingAgent" mode="IN" type="String" optional="true"></attribute>
+		<!-- attribute name="recruitingAgent" mode="IN" type="String" optional="true"></attribute -->
 		<attribute name="introducingMember" mode="IN" type="String" optional="true"></attribute>
 		<attribute name="recuiterNames" mode="IN" type="String" optional="true"></attribute>
 		<attribute name="recruiterEmail" mode="IN" type="String" optional="true"></attribute>
 		<attribute name="recruiterPhone" mode="IN" type="String" optional="true"></attribute>
-		<attribute name="employeeType" mode="IN" type="String" optional="false"></attribute>
+		<!-- attribute name="employeeType" mode="IN" type="String" optional="false"></attribute -->
 		<attribute name="payrollNumber" mode="IN" type="String" optional="false"></attribute>
 		<attribute name="mobileNumber" mode="IN" type="String" optional="false"></attribute>
 		<attribute name="birthDate" mode="IN" type="Date" optional="false"></attribute>
@@ -1559,6 +1569,30 @@ under the License.
     <service name="deleteMemberContribution" engine="simple" default-entity-name="MemberContribution"
              location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="deleteMemberContribution" auth="true">
         <description>Delete MemberContribution</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+    <!-- createMember -->
+    <service name="createMember" engine="simple" default-entity-name="Member"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createMember" auth="true">
+        <description>Create Member</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+     <service name="updateMember" engine="simple" default-entity-name="Member"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="updateMember" auth="true">
+        <description>Update Member</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteMember" engine="simple" default-entity-name="Member"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="deleteMember" auth="true">
+        <description>Delete Member</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
@@ -2115,7 +2149,176 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    
+    <!-- MemberClass -->
+	   <service name="createMemberClass" engine="simple" default-entity-name="MemberClass"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createMemberClass" auth="true">
+        <description>New MemberClass</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
 
+    <service name="updateMemberClass" engine="simple" default-entity-name="MemberClass"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updateMemberClass" auth="true">
+        <description>Update MemberClass</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteMemberClass" engine="simple" default-entity-name="MemberClass"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteMemberClass" auth="true">
+        <description>Delete MemberClass</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+       <service name="createMemberStatus" engine="simple" default-entity-name="MemberStatus"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createMemberStatus" auth="true">
+        <description>New MemberStatus</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateMemberStatus" engine="simple" default-entity-name="MemberStatus"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updateMemberStatus" auth="true">
+        <description>Update MemberStatus</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteMemberStatus" engine="simple" default-entity-name="MemberStatus"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteMemberStatus" auth="true">
+        <description>Delete MemberStatus</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+       <service name="createSalutation" engine="simple" default-entity-name="Salutation"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createSalutation" auth="true">
+        <description>New Salutation</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateSalutation" engine="simple" default-entity-name="Salutation"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updateSalutation" auth="true">
+        <description>Update Salutation</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteSalutation" engine="simple" default-entity-name="Salutation"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteSalutation" auth="true">
+        <description>Delete Salutation</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+       <service name="createMaritalStatus" engine="simple" default-entity-name="MaritalStatus"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createMaritalStatus" auth="true">
+        <description>New MaritalStatus</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateMaritalStatus" engine="simple" default-entity-name="MaritalStatus"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updateMaritalStatus" auth="true">
+        <description>Update MaritalStatus</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteMaritalStatus" engine="simple" default-entity-name="MaritalStatus"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteMaritalStatus" auth="true">
+        <description>Delete MaritalStatus</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <!-- 
+    	MemberStatus
+		Salutation
+		MaritalStatus
+     -->
+     <service name="createRecruitingAgent" engine="simple" default-entity-name="RecruitingAgent"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createRecruitingAgent" auth="true">
+        <description>New RecruitingAgent</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateRecruitingAgent" engine="simple" default-entity-name="RecruitingAgent"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updateRecruitingAgent" auth="true">
+        <description>Update RecruitingAgent</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteRecruitingAgent" engine="simple" default-entity-name="RecruitingAgent"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteRecruitingAgent" auth="true">
+        <description>Delete RecruitingAgent</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+         <service name="createEmploymentType" engine="simple" default-entity-name="EmploymentType"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createEmploymentType" auth="true">
+        <description>New EmploymentType</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateEmploymentType" engine="simple" default-entity-name="EmploymentType"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updateEmploymentType" auth="true">
+        <description>Update EmploymentType</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteEmploymentType" engine="simple" default-entity-name="EmploymentType"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteEmploymentType" auth="true">
+        <description>Delete EmploymentType</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+         <service name="createGender" engine="simple" default-entity-name="Gender"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createGender" auth="true">
+        <description>New Gender</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateGender" engine="simple" default-entity-name="Gender"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="updateGender" auth="true">
+        <description>Update Gender</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteGender" engine="simple" default-entity-name="Gender"
+             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="deleteGender" auth="true">
+        <description>Delete Gender</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 
 
 </services>

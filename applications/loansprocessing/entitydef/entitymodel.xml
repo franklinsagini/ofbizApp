@@ -8,5 +8,87 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+    <entity entity-name="LoanDeductionEvaluation" package-name="org.ofbiz.loansprocessing"
+		title="Loan Deductions Evaluation">
+		<field name="loanDeductionEvaluationId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="grossSalaryAmt" type="fixed-point" enable-audit-log="true" ></field>
+		<field name="payslipDeductionAmt" type="fixed-point"></field>
+		
+		<field name="currentContributionAmt" type="fixed-point"></field>
+		
+		<field name="monthlyRepaymentAmt" type="fixed-point"></field>
+		<field name="firstMonthInsuranceAmt" type="fixed-point"></field>
+		
+		<field name="loanDeductionAmt" type="fixed-point"></field>
+		<field name="totalDeductionAmt" type="fixed-point"></field>
+		<field name="newMemberDepostContributionAmt" type="fixed-point"></field>
+		<field name="totalDeductionAfterLoanAddedAmt" type="fixed-point"></field>
+		<field name="twothirdAmt" type="fixed-point"></field>
+		<field name="violationDecision" type="name"></field>
+		
+		<prim-key field="loanDeductionEvaluationId"/>
+		
+		<relation type="one" fk-name="LoanDeductionEvaluation_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
+	<view-entity entity-name="MyGuaranteedLoan" package-name="org.ofbiz.loansprocessing">
+	
+		<member-entity entity-name="LoanGuarantor" entity-alias="LG" ></member-entity>
+		<member-entity entity-name="LoanApplication" entity-alias="LA" ></member-entity>
+		<member-entity entity-name="LoanProduct" entity-alias="LP" ></member-entity>
+		<member-entity entity-name="Member" entity-alias="ME" ></member-entity>
+		<member-entity entity-name="LoanStatus" entity-alias="LS" ></member-entity>
+		
+		<alias entity-alias="LG" name="depositamt" />
+		<alias entity-alias="LG" name="guaranteedPercentage" />
+		<alias entity-alias="LG" name="guaranteedValue" />
+		<alias entity-alias="LG" name="loanApplicationId" />
+		<alias entity-alias="LG" name="guarantorId" />
+		
+		<alias entity-alias="LA" name="partyId" />
+		<alias entity-alias="LA" name="loanNo" />
+		<alias entity-alias="LA" name="loanAmt" />
+		<alias entity-alias="LA" name="interestRatePM" />
+		<alias entity-alias="LA" name="repaymentPeriod" />
+		<alias entity-alias="LA" name="loanProductId" />
+		<alias entity-alias="LA" name="loanStatusId" />
+		
+		
+		<alias entity-alias="ME" name="firstName" />
+		<alias entity-alias="ME" name="middleName" />
+		<alias entity-alias="ME" name="lastName" />
+		<alias entity-alias="ME" name="memberNumber"/>
+		<alias entity-alias="ME" name="stationId"/>
+		
+		
+		
+		<alias entity-alias="LP" name="code" />
+		<alias entity-alias="LP" name="name" />
+		
+		<view-link entity-alias="LG" rel-entity-alias="LA">
+        	<key-map field-name="loanApplicationId" rel-field-name="loanApplicationId" />
+      </view-link>
+      
+      <view-link entity-alias="LA" rel-entity-alias="ME">
+        <key-map field-name="partyId" rel-field-name="partyId" />
+      </view-link>
+      
+      <view-link entity-alias="LA" rel-entity-alias="LP">
+        <key-map field-name="loanProductId" rel-field-name="loanProductId" />
+      </view-link>
+      
+      <view-link entity-alias="LA" rel-entity-alias="LS">
+        <key-map field-name="loanStatusId" rel-field-name="loanStatusId" />
+      </view-link>
+	</view-entity>
 
 </entitymodel>

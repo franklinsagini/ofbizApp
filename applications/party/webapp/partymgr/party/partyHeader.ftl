@@ -60,6 +60,7 @@
    **/
     function memberRegistrationFormValidation(){
 		/** alert(' Checking for unique fields ... '); **/
+		var partyId = jQuery('input[name="partyId"]').val();
 		var idNumber = jQuery('input[name="idNumber"]').val();
     	var pinNumber  = jQuery('input[name="pinNumber"]').val();
 		var payrollNumber = jQuery('input[name="payrollNumber"]').val();
@@ -73,6 +74,10 @@
     	var mobileNumberState = '';
 		var employeeNumberState = '';
 		var idNumberSize = '';
+		
+		if (partyId != ''){
+			return true;
+		}
 
     	var reqUrl = '/partymgr/control/memberRegistrationFormValidation';
 

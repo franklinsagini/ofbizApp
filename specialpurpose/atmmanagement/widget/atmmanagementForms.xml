@@ -2,13 +2,38 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-	<form name="FindMember" type="single" target="main" default-entity-name="Member">
+		<form name="FindMember" type="single" target="main" default-entity-name="Member">
+        <actions>
+        	<!-- set field="statusName" value="ACTIVE"/>
+	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ --> 
+	        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="MemberStatus" list="statusList"></entity-condition>
+        </actions>
+        
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
         <field name="firstName" title="First Name"><text-find/></field>
+
+        <field name="idNumber" title="ID Number" position="2"><text-find/></field>
+
+        <field name="middleName" title="Middle Name"><text-find/></field>
+
+        <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
+
         <field name="lastName" title="Last Name"><text-find/></field>
-        <field name="idNumber" title="ID Number"><text-find/></field>
-        <!-- field name="memberStatus" title="Status"><text-find default-value="ACTIVE"/></field -->
-        <field name="memberStatus" title="Status"><text-find/></field>
+
+        <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+
+        <field name="memberStatusId" title="Status" >
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberStatus" key-field-name="memberStatusId">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -18,51 +43,67 @@
         </field>
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
-                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/>
+                <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
+                <list-options key-name="partyId" list-name="partyGroups" description="${groupName}" />
             </drop-down>
         </field>
+
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
     
-    <form name="members" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="members"
+    <form name="members" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="main"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>
-        	<entity-condition entity-name="Member">
-        		<condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/>
-        	</entity-condition>
-        	
+			<!-- entity-condition entity-name="Member" list="membersList"></entity-condition -->
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
-        	
+        	<entity-condition entity-name="MemberStatus" list="memberStatusList">
+            </entity-condition>
+            <entity-one entity-name="MemberStatus"></entity-one>
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
+                
             </service>
+        	
+        	
         </actions>
-         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
-        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
-        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
-   
-       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
-	     <field name="stationId" title="Station">
-	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
-            <!-- drop-down allow-empty="true" >
-                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
-            </drop-down -->
-        </field>
-        
-        <field name="memberStatus"><display also-hidden="false"></display></field>
-        
         <field name="Transactions">
-        	<hyperlink target="cardApplication?partyId=${partyId}" description="Manage Card for ${firstName} ${lastName}"></hyperlink>
+        	<hyperlink target="cardApplication?partyId=${partyId}" description="Manage Card for ${firstName} ${middleName} ${lastName}"></hyperlink>
         </field>
+        <field name="idNumber" title="ID Number"><display also-hidden="false"></display></field>
+   
+         <field name="createdStamp" title="Created"><display  type="date"></display></field>
+        <field name="createdBy" title="Created By"><display ></display></field>
+ 		<field name="payrollNumber" title="Payroll Number"><display/></field>
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+        <field name="memberNumber" title="Member Number"><display ></display></field>
+        <!-- viewapplicationprofile -->
+        <!-- loanapplication?partyId=${partyId} -->
+
+        
+        <field name="memberStatusId" title="Status">
+        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
+        		
+        	</display-entity>
+        </field>
+        
+        <field name="stationId" title="Station">
+        	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
+        		
+        	</display-entity>
+        </field>
+		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
+			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
+		</field>
      </form>
+
      
      <!-- CardApplication -->
     <form name="NewCardApplication" type="single" target="createCardApplication"
@@ -73,9 +114,9 @@
         	<entity-one entity-name="Member" value-field="member">
         		<field-map field-name="partyId" from-field="parameters.partyId"/>
         	</entity-one>
-         	<entity-condition entity-name="Member" list="memberList">
+         	<!--entity-condition entity-name="Member" list="memberList">
         		<order-by field-name="firstName"/>
-        	</entity-condition>
+        	</entity-condition -->
         	
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
@@ -83,24 +124,22 @@
             </entity-condition>
         </actions>
         <field name="cardApplicationId"><hidden/></field>
-        <field name="partyId"><hidden/></field>
-		<field name="idNumber" title="ID Number"  widget-style="required" required-field="true"><text default-value="${member.idNumber}"></text></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+		<!-- field name="idNumber" title="ID Number"  widget-style="required" required-field="true"><text default-value="${member.idNumber}"></text></field>
 		<field name="mobilePhoneNumber" title="Mobile Number"  widget-style="required" required-field="true"><text default-value="${member.mobileNumber}"></text></field>
 		<field name="firstName" title="First Name"  widget-style="required" required-field="true"><text default-value="${member.firstName}"></text></field>
 		<field name="middleName" title="Middle Name"  widget-style="required" required-field="true"><text default-value="${member.middleName}"></text></field>
 		<field name="lastName" title="Last Name"  widget-style="required" required-field="true"><text default-value="${member.lastName}"></text></field>
-		<field name="payrollNumber" title="Payroll Number"  widget-style="required" required-field="true"><text default-value="${member.payrollNumber}"></text></field>
+		<field name="payrollNumber" title="Payroll Number"  widget-style="required" required-field="true"><text default-value="${member.payrollNumber}"></text></field -->
 		
 		
-		<field name="cardStatus" title="Card Status">
-        	<drop-down allow-empty="false">
-                <option key="Applied" description="Applied"/>
-                <option key="Active" description="Active"/>
-                <option key="Renewing" description="Renewing"/>
-                <option key="Deactivated" description="Deactivated"/>
-            </drop-down>
+		<field name="cardStatusId" title="Card Status">
+      		<drop-down>
+      			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
+      		</drop-down>
       	</field>
-		<field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field>
+      	
+		<!-- field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field -->
 		
 		              
          <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
@@ -114,52 +153,220 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
-      <form name="listCardApplication" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplication"
+      <form name="listCardApplication" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplicationReceived"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="CardApplication" >
+            <!-- entity-condition entity-name="CardApplication" >
             	
-            	<condition-list combine="and">
-            		<condition-expr field-name="isActive" value="Y"/>
-            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
-            	</condition-list>
+            	
             	<order-by field-name="-cardApplicationId"></order-by>
-            </entity-condition>
+            </entity-condition -->
             
-            <entity-condition entity-name="Member" list="memberList">
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="cardApplicationCtx"/>
+                <field-map field-name="entityName" value="CardApplication"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
+            
+            <!-- entity-condition entity-name="Member" list="memberList">
         		<order-by field-name="firstName"/>
-        	</entity-condition>
+        	</entity-condition -->
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateCardApplication"/>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateCardApplication"/ -->
 		
 		<field name="cardApplicationId"><hidden/></field>
-        <field name="partyId"><hidden/></field>
-		<field name="idNumber" title="ID Number"  widget-style="required" required-field="true"><text></text></field>
-		<field name="mobilePhoneNumber" title="Mobile Number"  widget-style="required" required-field="true"><text></text></field>
-		<field name="firstName" title="First Name"  widget-style="required" required-field="true"><text></text></field>
-		<field name="middleName" title="Middle Name"  widget-style="required" required-field="true"><text></text></field>
-		<field name="lastName" title="Last Name"  widget-style="required" required-field="true"><text></text></field>
-		<field name="payrollNumber" title="Payroll Number"  widget-style="required" required-field="true"><text></text></field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
 		
-		
-		<field name="cardStatus" title="Card Status">
-        	<drop-down allow-empty="false">
-                <option key="Applied" description="Applied"/>
-                <option key="Active" description="Active"/>
-                <option key="Renewing" description="Renewing"/>
-                <option key="Deactivated" description="Deactivated"/>
-            </drop-down>
+		<field name="cardStatusId" title="Card Status">
+        	<display-entity entity-name="CardStatus" description="${name}" key-field-name="cardStatusId"></display-entity>
       	</field>
-		<field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field>
+		<field name="cardApplicationId" title="Form Number"  ><display></display></field>
 		
 		              
-         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
+         <field name="memberAccountId" title="Member Account">
+         	<display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}" key-field-name="memberAccountId"></display-entity>
+            <!-- drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
-            </drop-down>
+            </drop-down -->
+        </field>
+        <field name="cardNumber" title="Card Number"><display></display></field>
+        <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
+        <field name="createdBy" title="Created By"  ><display></display></field>
+        <field name="logs">
+        	<hyperlink target="cardLog" description="Logs">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field>
+    </form>
+    
+    <!-- Card Applications -->
+     <form name="listCardApplicationReceived" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplicationReceived"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <!-- entity-condition entity-name="CardApplication" >
+            	
+            	
+            	<order-by field-name="-cardApplicationId"></order-by>
+            </entity-condition -->
+            
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="cardApplicationCtx"/>
+                <field-map field-name="entityName" value="CardApplication"/>
+                <field-map field-name="orderBy" value="-cardApplicationId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
+            
+            <!-- entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition -->
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateCardApplication"/ -->
+		
+		<field name="cardApplicationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+		
+		<field name="cardStatusId" title="Card Status">
+        	<display-entity entity-name="CardStatus" description="${name}" key-field-name="cardStatusId"></display-entity>
+      	</field>
+		<field name="cardApplicationId" title="Form Number"  ><display></display></field>
+		
+		              
+         <field name="memberAccountId" title="Member Account">
+         	<display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}" key-field-name="memberAccountId"></display-entity>
+            <!-- drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down -->
+        </field>
+        <field name="cardNumber" title="Card Number"><display></display></field>
+        <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
+        <field name="createdBy" title="Created By"  ><display></display></field>
+        
+        <!-- field name="applyforATMCard">
+        	<hyperlink target="applyforATMCard" description="Apply for ATM Card">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field -->
+        <!-- use-when="applicationStatus.equals(&quot;NEW&quot;)" -->
+        <field name="applyforATM"  event="onclick"
+			action="javascript: return validateCardApplication(${cardApplicationId});">
+			<hyperlink target="applyforATM?cardApplicationId=${cardApplicationId}"
+				description="Apply for ATM Card"></hyperlink>
+		</field>
+		
+		  <field name="atmCardActions">
+        	<hyperlink target="atmCardActions" description="ATM Card Actions">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
         </field>
         
+        <field name="logs">
+        	<hyperlink target="cardLog" description="Logs">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field>
     </form>
+    
+    <!-- ReceiveCardLog -->
+    <form name="ReceiveCardLog" type="single" target="receiveCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="cardNumber" title="Card Number"  widget-style="required" required-field="true"><text></text></field>
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Receive" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+	<!-- Issue Card -->
+	<form name="IssueCardLog" type="single" target="issueCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Issue" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      
+      <!-- ActivateCardLog -->
+	<form name="ActivateCardLog" type="single" target="activateCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Activate" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      <!-- RenewCardLog -->
+	<form name="RenewCardLog" type="single" target="renewCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Renewal Request" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      <!-- DeactivateCardLog -->
+	<form name="DeactivateCardLog" type="single" target="deactivateCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Deactivate" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      <!-- ReplaceCardLog -->
+	<form name="ReplaceCardLog" type="single" target="replaceCardProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Replacement Request" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      
+      <!-- ReceivePIN -->
+      	<form name="ReceivePIN" type="single" target="receivePINProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="atmPINApplication">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Receive PIN" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+      <!-- IssuePIN -->
+      	<form name="IssuePIN" type="single" target="issuePINProcess"
+	focus-field-name="cardStatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cardLogContext">
+        
+       <field name="cardLogId"><hidden/></field>
+        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
+		
+		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+        <field name="submitButton" title="Issue PIN" widget-style="smallSubmit"><submit button-type="button"/></field>
+      </form>
+	
     
     <!-- CardLog -->
     <form name="NewCardLog" type="single" target="createCardLog"
@@ -171,6 +378,8 @@
 
 		<field name="cardStatus" title="Card Status"  widget-style="required" required-field="true"><text></text></field>
 		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+       
+        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
       </form>
         
@@ -185,16 +394,16 @@
             	</condition-list>
             	<order-by field-name="-cardLogId"></order-by>
             </entity-condition>
-            
-            
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateCardLog"/>
-		
 		<field name="cardLogId"><hidden/></field>
         <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
 
-		<field name="cardStatus" title="Card Status"  widget-style="required" required-field="true"><text></text></field>
-		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+		<field name="cardStatusId" title="Card Status">
+			<display-entity entity-name="CardStatus" description="${name}" key-field-name="cardStatusId"></display-entity>
+		</field>
+		<field name="comment" title="Comment"><display></display></field>
+		<field name="createdStamp" title="Date"><display type="date-time"></display></field>
+		<field name="createdBy" title="Created By"><display></display></field>
     </form>
     
     <!-- CardReceipt -->
@@ -210,26 +419,280 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
       </form>
         
-      <form name="listCardReceipt" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardReceipt" paginate-target="cardReceipt"
+        
+    <!-- CardReceipt
+    	 CardRenewal
+    	 CardDeactivation
+    	 CardReplacementRequest
+     -->
+     <form name="listCardReceipt" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplication"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="CardReceipt" >
+            <entity-condition entity-name="CardApplication" >
             	
-            	<condition-list combine="and">
+            	<!-- condition-list combine="and">
             		<condition-expr field-name="isActive" value="Y"/>
-            		<condition-expr field-name="cardApplicationId" from-field="parameters.cardApplicationId"/>
-            	</condition-list>
-            	<order-by field-name="-cardReceiptId"></order-by>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	</condition-list -->
+            	<order-by field-name="-cardApplicationId"></order-by>
             </entity-condition>
             
-            
+            <!-- entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition -->
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateCardReceipt"/>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateCardApplication"/ -->
 		
-		<field name="cardReceiptId"><hidden/></field>
-        <field name="cardApplicationId" parameter-name="cardApplicationId"><hidden/></field>
-		<field name="cardNumber" title="Card Number"  widget-style="required" required-field="true"><text></text></field>
-		<field name="cardStatus" title="Card Status"  widget-style="required" required-field="true"><text></text></field>
-		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
+		<field name="cardApplicationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+		
+		<field name="cardStatus" title="Card Status">
+        	<display></display>
+      	</field>
+		<field name="formNo" title="Form Number"  ><display></display></field>
+		
+		              
+         <field name="memberAccountId" title="Member Account">
+         	<display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}" key-field-name="memberAccountId"></display-entity>
+            <!-- drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down -->
+        </field>
+        
+        <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
+        <field name="createdBy" title="Created By"  ><display></display></field>
+        <field name="cardReceipt">
+        	<hyperlink target="cardReceipt" description="Receive Card">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field>
     </form>
+    
+    <!-- listCardRenewal -->
+    <form name="listCardRenewal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplication"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="CardApplication" >
+            	
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	</condition-list -->
+            	<order-by field-name="-cardApplicationId"></order-by>
+            </entity-condition>
+            
+            <!-- entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition -->
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateCardApplication"/ -->
+		
+		<field name="cardApplicationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+		
+		<field name="cardStatus" title="Card Status">
+        	<display></display>
+      	</field>
+		<field name="formNo" title="Form Number"  ><display></display></field>
+		
+		              
+         <field name="memberAccountId" title="Member Account">
+         	<display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}" key-field-name="memberAccountId"></display-entity>
+            <!-- drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down -->
+        </field>
+        
+        <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
+        <field name="createdBy" title="Created By"  ><display></display></field>
+        <field name="cardRenewal">
+        	<hyperlink target="cardRenewal" description="Card Renewal">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field>
+    </form>
+    
+    <!-- listCardDeactivation -->
+        <form name="listCardDeactivation" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplication"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="CardApplication" >
+            	
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	</condition-list -->
+            	<order-by field-name="-cardApplicationId"></order-by>
+            </entity-condition>
+            
+            <!-- entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition -->
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateCardApplication"/ -->
+		
+		<field name="cardApplicationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+		
+		<field name="cardStatus" title="Card Status">
+        	<display></display>
+      	</field>
+		<field name="formNo" title="Form Number"  ><display></display></field>
+		
+		              
+         <field name="memberAccountId" title="Member Account">
+         	<display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}" key-field-name="memberAccountId"></display-entity>
+            <!-- drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down -->
+        </field>
+        
+        <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
+        <field name="createdBy" title="Created By"  ><display></display></field>
+        <field name="cardDeactivation">
+        	<hyperlink target="cardDeactivation" description="Deactivate Card">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field>
+    </form>
+    
+    <!-- listCardReplacementRequest -->
+       <form name="listCardReplacementRequest" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardApplication" paginate-target="cardApplication"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="CardApplication" >
+            	
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	</condition-list -->
+            	<order-by field-name="-cardApplicationId"></order-by>
+            </entity-condition>
+            
+            <!-- entity-condition entity-name="Member" list="memberList">
+        		<order-by field-name="firstName"/>
+        	</entity-condition -->
+        </actions>
+        
+		
+		<field name="cardApplicationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+		
+		<field name="cardStatusId" title="Card Status">
+        	<display-entity entity-name="CardStatus" description="${name}" key-field-name="cardStatusId"></display-entity>
+      	</field>
+		<field name="formNo" title="Form Number"  ><display></display></field>
+		
+		              
+         <field name="memberAccountId" title="Member Account">
+         	<display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}" key-field-name="memberAccountId"></display-entity>
+            <!-- drop-down allow-empty="true">
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+            </drop-down -->
+        </field>
+        
+        <field name="createdStamp" title="Date Applied"  ><display type="date-time"></display></field>
+        <field name="createdBy" title="Created By"  ><display></display></field>
+        <field name="replacementRequest">
+        	<hyperlink target="replacementRequest" description="Replacement Request">
+        		<parameter param-name="cardApplicationId"/>
+        	</hyperlink>
+        </field>
+    </form>
+    
+    <!-- Find Application -->
+    <form name="FindCardApplication" type="single" target="cardApplicationReceived" default-entity-name="CardApplication">
+        <actions>
+        	<!-- set field="statusName" value="ACTIVE"/>
+	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ --> 
+	        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="MemberStatus" list="statusList"></entity-condition>
+        </actions>
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+
+        <!-- field name="cardStatus" title="Card Status">
+        	<drop-down allow-empty="false">
+                <option key="Applied" description="Applied"/>
+                <option key="Active" description="Active"/>
+                <option key="Renewing" description="Renewing"/>
+                <option key="Deactivated" description="Deactivated"/>
+            </drop-down>
+      	</field -->
+      	<field name="cardStatusId" title="Card Status">
+      		<drop-down allow-empty="true">
+      			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
+      		</drop-down>
+      	</field>
+      	<field name="cardNumber" title="Card Number"><text-find></text-find></field>
+      	<field name="cardApplicationId" title="Form Number"><text-find></text-find></field>
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    <!-- CardStatus -->
+       <form name="NewCardStatus" type="single" target="createCardStatus"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="cardStatusContext">
+        
+       
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        <field name="isCharged" title="Is Charged">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+       	<field name="productChargeId" title="Charge" >
+       		<drop-down allow-empty="true">
+       			<entity-options description="${name}" entity-name="ProductCharge" ></entity-options>
+       		</drop-down>
+       	</field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listCardStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCardStatus" paginate-target="cardStatus"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="CardStatus">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateCardStatus"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="cardStatusId"><hidden/></field>
+        <field name="name"> <text></text> </field>
+        <field name="isCharged" title="Is Charged">
+        	 <drop-down allow-empty="true">
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
+            </drop-down>
+        </field>
+       	<field name="productChargeId" title="Charge">
+       		<drop-down allow-empty="true">
+       			<entity-options description="${name}" entity-name="ProductCharge" ></entity-options>
+       		</drop-down>
+       	</field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteCardStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="cardStatusId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
 </forms>

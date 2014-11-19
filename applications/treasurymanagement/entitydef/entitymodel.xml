@@ -81,6 +81,10 @@
         <field name="branchId" type="id"></field>
         <field name="sourceTreasury" type="id-ne"></field>
         <field name="destinationTreasury" type="id-ne"></field>
+        
+        <field name="employeeResponsible" type="id"/>
+        <field name="transactionNumber" type="name"/>
+        
         <field name="transactionAmount" type="fixed-point"></field>
         <field name="comments" type="description"></field>
         
@@ -95,7 +99,11 @@
         
         <relation type="one" fk-name="TreasuryTransactionDest_Treasury" rel-entity-name="Treasury">
             <key-map  field-name="destinationTreasury" rel-field-name="treasuryId"/>
-        </relation>   
+        </relation>
+        
+         <relation type="one" fk-name="TreasuryTransfer_Employee" rel-entity-name="Person">
+            <key-map field-name="employeeResponsible" rel-field-name="partyId"/>
+        </relation>
     </entity>
     
     <!-- Transfer Rules -->
@@ -116,5 +124,96 @@
             <key-map  field-name="destinationTreasuryType" rel-field-name="treasuryTypeId"/>
         </relation>   
     </entity>
+    
+    <!-- CashRequest -->
+    <entity entity-name="CashRequest" package-name="org.ofbiz.treasurymanagement" title="CashRequest Entity">
+        <field name="cashRequestId" type="id-vlong-int"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <field name="requestingEmployee" type="id-ne"></field>
+        <field name="comment" type="name"></field>
+        <field name="transactionAmount" type="fixed-point"></field>
+        
+        <field name="approvalStatus" type="name"></field>
+        <field name="approve" type="name"></field>
+        <field name="reject" type="name"></field>
+        
+        <field name="dateApprovedReject" type="name"></field>
+        <field name="approveRejectComment" type="name"></field>
+       
+        <prim-key field="cashRequestId"/>
+        <relation type="one" fk-name="CashRequest_Treasury" rel-entity-name="Person">
+            <key-map  field-name="requestingEmployee" rel-field-name="partyId"/>
+        </relation>
+    </entity>
+    
+    <!-- CashRequestItem -->
+        <entity entity-name="CashRequestItem" package-name="org.ofbiz.treasurymanagement" title="CashRequest Entity">
+        <field name="cashRequestItemId" type="id-vlong-int"><description>primary sequenced ID</description></field>
+        <field name="cashRequestId" type="id-vlong-int"></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        
+        <field name="denominationId" type="id-int"></field>
+        <field name="denominationCount" type="id-int"></field>
+        <field name="transactionAmount" type="fixed-point"></field>
+        
+        
+       
+        <prim-key field="cashRequestItemId"/>
+        <relation type="one" fk-name="CashRequestItem_CashRequest" rel-entity-name="CashRequest">
+            <key-map  field-name="cashRequestId"/>
+        </relation>
+        <relation type="one" fk-name="CashRequestItem_Denomination" rel-entity-name="Denomination">
+            <key-map  field-name="denominationId"/>
+        </relation>
+    </entity>
+    <!-- CashRequestLog -->
+    
+     <entity entity-name="CashRequestLog" package-name="org.ofbiz.treasurymanagement" title="CashRequestLog Entity">
+        <field name="cashRequestLogId" type="id-vlong-int"><description>primary sequenced ID</description></field>
+        <field name="cashRequestId" type="id-vlong-int"></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        
+        <field name="approvalStatus" type="name"></field>
+        <field name="comment" type="name"></field>
+       
+        <prim-key field="cashRequestLogId"/>
+        <relation type="one" fk-name="CashRequestLog_CashRequest" rel-entity-name="CashRequest">
+            <key-map  field-name="cashRequestId"/>
+        </relation>
+    </entity>
+    
+    <!-- Denomination -->
+      <entity entity-name="Denomination" package-name="org.ofbiz.treasurymanagement" title="Denomination Entity">
+        <field name="denominationId" type="id-int"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"></field>
+        <field name="createdBy" type="id"></field>
+        <field name="updatedBy" type="id"></field>
+        <prim-key field="denominationId"/>
+    </entity>
+    
+    <view-entity entity-name="TreasuryDestinations" package-name="org.ofbiz.treasurymanagement">
+    	<member-entity entity-alias="T" entity-name="Treasury"></member-entity>
+    	<member-entity entity-alias="TR" entity-name="TransferRule"></member-entity>
+    	
+    	<alias entity-alias="T" name="name" ></alias>
+    	<alias entity-alias="T" name="treasuryId"/>
+    	<alias entity-alias="T" name="treasuryTypeId"/>
+      	<alias entity-alias="TR" name="sourceTreasuryType" />
+      	<alias entity-alias="TR" name="destinationTreasuryType" />
+    	
+    	<view-link  entity-alias="T" rel-entity-alias="TR">
+    		<key-map field-name="treasuryTypeId" rel-field-name="sourceTreasuryType"/>
+    		<entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition>
+    	</view-link>
+    	
+    </view-entity>
 
 </entitymodel>

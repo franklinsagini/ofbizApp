@@ -49,16 +49,16 @@ under the License.
     	
     <!-- ========================================================= -->
     <entity entity-name="AccountTransaction" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
-        <field name="accountTransactionId" type="id-ne"><description>primary sequenced ID</description></field>
-		<field name="accountTransactionParentId" type="id"></field>
+        <field name="accountTransactionId" type="name"><description>primary sequenced ID</description></field>
+		<field name="accountTransactionParentId" type="name"></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="id"></field>
-        <field name="partyId" type="id"></field>
-        <field name="memberAccountId" type="id"></field>
+        <field name="branchId" type="name"></field>
+        <field name="partyId" type="id-vlong-int"></field>
+        <field name="memberAccountId" type="id-vlong-int"></field>
         <field name="slipNumber" type="name"></field>
-        <field name="transactionAmount" type="currency-amount"></field>
+        <field name="transactionAmount" type="currency-amount" encrypt="true"></field>
         <field name="availableAmount" type="currency-amount"></field>
         <field name="bookBalanceAmount" type="currency-amount"></field>
         <field name="transactionType" type="name"></field>
@@ -70,17 +70,17 @@ under the License.
         
         <!-- Cheque Deposit -->
         <field name="internalexternal" type="name"></field> <!-- INTERNAL or EXTERNAL -->
-         <field name="chequeTypeId" type="id"></field> <!-- Bankers or Ordinary Cheque -->
-        <field name="bankDetailsId" type="id"></field>
-         <field name="bankBranchId" type="id"></field>
+         <field name="chequeTypeId" type="id-int"></field> <!-- Bankers or Ordinary Cheque -->
+        <field name="bankDetailsId" type="id-int"></field>
+         <field name="bankBranchId" type="id-int"></field>
          <field name="drawer" type="name"></field>
          <field name="receiptNo" type="name"></field>
-         <field name="saccoAccountId" type="id"></field>
+         <field name="saccoAccountId" type="id-int"></field>
          
          <field name="clearDuration" type="numeric"></field>
          <field name="clearDate" type="date-time"></field>
          
-         <field name="productChargeId" type="id-ne"></field>
+         <field name="productChargeId" type="id-int"></field>
          <field name="increaseDecrease" type="indicator"></field>
          <field name="isPosted" type="name"></field>
          <field name="datePosted" type="date-time"></field>
@@ -124,13 +124,13 @@ under the License.
     </entity>
     
     <entity entity-name="AccountTransactionParent" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
-        <field name="accountTransactionParentId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="accountTransactionParentId" type="name"><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="id"></field>
-        <field name="partyId" type="id"></field>
-        <field name="memberAccountId" type="id"></field>
+        <field name="branchId" type="name"></field>
+        <field name="partyId" type="id-vlong-int"></field>
+        <field name="memberAccountId" type="id-vlong-int"></field>
         
         <field name="approved" type="name"></field>
         <field name="approvedBy" type="name"></field>
@@ -152,12 +152,12 @@ under the License.
      </entity>
     
     <entity entity-name="CashWithdrawal" package-name="org.ofbiz.accountholdertransactions" title="CashWithdrawal Entity">
-        <field name="cashWithdrawalId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="cashWithdrawalId" type="id-vlong-int"><description>primary sequenced ID</description></field>
         <field name="active" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-        <field name="partyId" type="id"></field>
-        <field name="memberAccountId" type="id"></field>
+        <field name="partyId" type="id-vlong-int"></field>
+        <field name="memberAccountId" type="id-int"></field>
         <field name="slipNumber" type="name"></field>
         <field name="cashAmount" type="currency-amount"></field>
         <field name="availableAmount" type="currency-amount"></field>
@@ -174,13 +174,13 @@ under the License.
     </entity>
     
     <entity entity-name="StationAccountTransaction" package-name="org.ofbiz.accountholdertransactions" sequence-bank-size="1" title="StationAccountTransaction Entity">
-        <field name="stationAccountTransactionId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="stationAccountTransactionId" type="id-vlong-int"><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="id-ne"></field>
-         <field name="stationId" type="id-ne"></field>
-        <field name="partyId" type="id"></field>
+        <field name="branchId" type="id-int"></field>
+         <field name="stationId" type="id-int"></field>
+        <field name="partyId" type="id-vlong-int"></field>
         <field name="slipNumber" type="name"></field>
         <field name="monthyear" type="name"></field>
         <field name="chequeNumber" type="name"></field>
@@ -197,12 +197,12 @@ under the License.
     </entity>
 
     <entity entity-name="CashDeposit" package-name="org.ofbiz.accountholdertransactions" title="CashDeposit Entity">
-        <field name="cashDepositId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="cashDepositId" type="id-vlong-int"><description>primary sequenced ID</description></field>
         <field name="active" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-        <field name="partyId" type="id"></field>
-        <field name="memberAccountId" type="id"></field>
+        <field name="partyId" type="id-vlong-int"></field>
+        <field name="memberAccountId" type="id-vlong-int"></field>
         <field name="slipNumber" type="name"></field>
         <field name="cashAmount" type="currency-amount"></field>
         
@@ -225,7 +225,7 @@ under the License.
     </entity>
     
      <entity entity-name="ChequeType" package-name="org.ofbiz.accountholdertransactions" title="ChequeType Entity">
-        <field name="chequeTypeId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="chequeTypeId" type="id-int"><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
@@ -235,12 +235,12 @@ under the License.
     </entity>
     
     <entity entity-name="ChequeWithdrawal" package-name="org.ofbiz.accountholdertransactions" title="ChequeWithdrawal Entity">
-        <field name="chequeWithdrawalId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="chequeWithdrawalId" type="id-vlong-int"><description>primary sequenced ID</description></field>
         <field name="active" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-         <field name="partyId" type="id"></field>
-         <field name="memberAccountId" type="id"></field>
+         <field name="partyId" type="id-vlong-int"></field>
+         <field name="memberAccountId" type="id-vlong-int"></field>
         <field name="chequeNo" type="name"></field>
         <field name="payee" type="name"></field>
         <field name="chequeAmount" type="currency-amount"></field>
@@ -257,23 +257,22 @@ under the License.
     
     
      <entity entity-name="ChequeDeposit" package-name="org.ofbiz.accountholdertransactions" title="ChequeDeposit Entity">
-        <field name="chequeDepositId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="chequeDepositId" type="id-vlong-int"><description>primary sequenced ID</description></field>
         <field name="active" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-         <field name="partyId" type="id"></field>
-         <field name="memberAccountId" type="id"></field>
+         <field name="partyId" type="id-vlong-int"></field>
+         <field name="memberAccountId" type="id-vlong-int"></field>
          <field name="internalexternal" type="name"></field> <!-- INTERNAL or EXTERNAL -->
          
          
-         <field name="chequeTypeId" type="id"></field> <!-- Bankers or Ordinary Cheque -->
+         <field name="chequeTypeId" type="id-int"></field> <!-- Bankers or Ordinary Cheque -->
         
-        <field name="bankDetailsId" type="id"></field>
-         <field name="bankBranchId" type="id"></field>
+        <field name="bankDetailsId" type="id-int"></field>
+         <field name="bankBranchId" type="id-int"></field>
          <field name="drawer" type="name"></field>
          <field name="chequeNo" type="name"></field>
          <field name="receiptNo" type="name"></field>
-         <field name="saccoAccountId" type="id"></field>
         <field name="chequeAmount" type="currency-amount"></field>
         
         
@@ -304,22 +303,22 @@ under the License.
     </entity>
     
      <entity entity-name="LoanRepayment" package-name="org.ofbiz.accountholdertransactions" title="LoanRepayment Entity">
-        <field name="loanRepaymentId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="loanRepaymentId" type="id-vlong-int"><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-         <field name="partyId" type="id"></field>
-         <field name="branchId" type="id"></field>
+         <field name="partyId" type="id-vlong-int"></field>
+         <field name="branchId" type="id-int"></field>
          
          
-         <field name="memberAccountId" type="id"></field>
+         <field name="memberAccountId" type="id-vlong-int"></field>
          <field name="accountNo" type="name"></field>
          <field name="accountName" type="name"></field>
          <field name="accountBalance" type="currency-amount"></field>
          
-         <field name="loanApplicationId" type="id"></field>
+         <field name="loanApplicationId" type="id-vlong-int"></field>
          <field name="loanNo" type="name"></field>
-         <field name="loanTypeId" type="id"></field> <!-- Sacco Product Id type of LOAN -->
+         <field name="loanTypeId" type="id-int"></field> <!-- Sacco Product Id type of LOAN -->
          
          <field name="loanAmt" type="currency-amount"></field>
          <field name="loanBalanceAmt" type="currency-amount"></field>
@@ -359,12 +358,12 @@ under the License.
     </entity>
     
      <entity entity-name="StandingOrder" package-name="org.ofbiz.accountholdertransactions" title="StandingOrder Entity">
-        <field name="standingOrderId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="standingOrderId" type="id-vlong-int"><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-        <field name="partyId" type="id"></field>
-        <field name="branchId" type="id"></field>
+        <field name="partyId" type="id-vlong-int"></field>
+        <field name="branchId" type="id-int"></field>
         
         <field name="memberNo" type="name"></field>
         <field name="payrollNo" type="name"></field>
@@ -377,19 +376,19 @@ under the License.
      	
      	<!-- LOAN -->
      	
-         <field name="loanTypeId" type="id"></field> <!-- Sacco Product Id type of LOAN -->
-         <field name="loanApplicationId" type="id"></field>
+         <field name="loanTypeId" type="id-int"></field> <!-- Sacco Product Id type of LOAN -->
+         <field name="loanApplicationId" type="id-vlong-int"></field>
          <field name="loanBalanceAmt" type="currency-amount"></field>
      	
      	<!-- Inhouse Beneficiary -->
-     	<field name="beneficiaryId" type="id"></field> <!-- Member -->
-     	<field name="memberAccountId" type="id"></field>
+     	<field name="beneficiaryId" type="id-vlong-int"></field> <!-- Member -->
+     	<field name="memberAccountId" type="id-vlong-int"></field>
      	<field name="accountNo" type="name"></field>
      	<field name="accountName" type="name"></field>
      	
      	<!-- External Beneficiary -->
-     	<field name="bankDetailsId" type="id"></field>
-         <field name="bankBranchId" type="id"></field>
+     	<field name="bankDetailsId" type="id-int"></field>
+         <field name="bankBranchId" type="id-int"></field>
      	
      	
      	<prim-key field="standingOrderId"/>  
@@ -403,7 +402,7 @@ under the License.
      </entity>
      
      <entity entity-name="ChequeSetup" package-name="org.ofbiz.accountholdertransactions" title="ChequeSetup Entity">
-        <field name="chequeSetupId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="chequeSetupId" type="id"><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
@@ -416,7 +415,7 @@ under the License.
     </entity>
     
     <entity entity-name="AccountHolderTransactionSetup" package-name="org.ofbiz.accountholdertransactions" title="AccountHolderTransactionSetup Entity">
-        <field name="accountHolderTransactionSetupId" type="name"><description>primary sequenced ID</description></field>
+        <field name="accountHolderTransactionSetupId" type="id"><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
@@ -562,6 +561,5 @@ under the License.
         <prim-key field="name"/>
         
     </entity>
-    
     
 </entitymodel>
