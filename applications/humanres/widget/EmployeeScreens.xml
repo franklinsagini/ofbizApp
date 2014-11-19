@@ -1051,6 +1051,97 @@ under the License.
         </section>
     </screen>
     
+    <screen name="SeparationTypes">
+	    <section>
+	            <actions>
+	                <set field="titleProperty" value="Separation Types"/>
+	                <set field="headerItem" value="separationTypes"/>
+	                <set field="displayPassword" value="Y"/>
+               		<set field="tabButtonItem" value="separationTypes"/>
+	                <set field="target" value="createSeparationTypes"/>
+	                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+	                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+	                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+	                
+	                <entity-one entity-name="SeparationType" value-field="separationTypesContext"/>
+	            </actions>
+	            <widgets>
+	                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+	                    <decorator-section name="body">
+                    		<include-menu name="SeparationTabBar" location="component://humanres/widget/HumanresMenus.xml"/>                  		
+                    		<include-menu name="SeparationSetupTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+	                        <section>
+	                            <condition>
+	                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+	                            </condition>
+	                            <widgets>
+	                                <screenlet title="New Separation Type">
+	                                    <include-form name="NewSeparationTypes" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+	                                </screenlet>
+	                            </widgets>
+	                            <fail-widgets>
+	                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+	                            </fail-widgets>
+	                        </section>
+	                        
+	                        <section name="search-results">
+	                        	<widgets>
+	                        		<screenlet title="List Separation Types">
+	                        			<include-form name="listSeparationTypes" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+	                        		</screenlet>
+	                        	</widgets>
+	                        </section>
+	                    </decorator-section>
+	                </decorator-screen>
+	            </widgets>
+	        </section>
+    </screen>
+    
+     <screen name="SeparationApplication">
+     	<section>
+            <actions>
+                <set field="titleProperty" value="Separation Application"/>
+                <set field="headerItem" value="separationApplication"/>
+                <set field="displayPassword" value="Y"/>
+               	<set field="tabButtonItem" value="separationApplication"/>
+                <set field="target" value="createSeparationApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="SeparationApplication" value-field="separationApplicationContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    		<include-menu name="SeparationTabBar" location="component://humanres/widget/HumanresMenus.xml"/>                  		        
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Separation Appliacation">
+                                    <include-form name="NewSeparationApplication" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="List Separation Appliacation">
+                        			<include-form name="listSeparationAppliacation" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
    <!--  ++++++++++++++++++++++++++++++++STAFF ON PROBATION +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     
