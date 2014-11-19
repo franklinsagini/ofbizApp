@@ -772,6 +772,15 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+     <service name="LoanWebService" engine="java" auth="false" 
+            location="org.ofbiz.loans.LoanServices" invoke="getLoanRemainingBalance"  export="true">
+        <description>Loan Web Services </description>
+        
+        <attribute name="loanApplicationId" type="Long" mode="IN" optional="false"/>
+        <attribute name="loanBalance" type="BigDecimal" mode="OUT" optional="false"/>
+        
+    </service>
+    
 
     
 </services>
