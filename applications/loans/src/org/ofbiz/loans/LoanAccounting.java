@@ -350,7 +350,7 @@ public class LoanAccounting {
 
 		try {
 			productCharge = delegator.findOne("ProductCharge",
-					UtilMisc.toMap("productChargeId", productChargeId), false);
+					UtilMisc.toMap("productChargeId", Long.valueOf(productChargeId)), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			log.error("######## Cannot get product charge ");
@@ -374,7 +374,7 @@ public class LoanAccounting {
 
 		try {
 			productCharge = delegator.findOne("ProductCharge",
-					UtilMisc.toMap("productChargeId", productChargeId), false);
+					UtilMisc.toMap("productChargeId", Long.valueOf(productChargeId)), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			log.error("######## Cannot get product charge ");

@@ -26,7 +26,6 @@ import org.joda.time.LocalDate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
-import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -36,6 +35,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.service.DispatchContext;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -1453,7 +1453,31 @@ public class AccHolderTransactionServices {
 		 bdOpeningBalance = calculateOpeningBalance(memberAccountId,
 		 delegator);
 		// // Get Total Deposits
+		 if (balanceDate == null)
+			 balanceDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		return (getAvailableBalanceVer2(memberAccountId, balanceDate).add(bdOpeningBalance));
+	}
+	
+	public static Map<String, Object> getTotalBalanceNow(DispatchContext ctx, Map<String, ? extends Object> context) {
+		Map<String, Object> result = FastMap.newInstance();
+		
+		String memberAccountId=(String) context.get("memberAccountId");
+		
+		log.info(" ##### Account "+memberAccountId);
+	
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		 BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+		// // Get Opening Balance
+		 bdOpeningBalance = calculateOpeningBalance(memberAccountId,
+		 delegator);
+		// // Get Total Deposits
+		 Timestamp balanceDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		 
+		 BigDecimal balance = getAvailableBalanceVer2(memberAccountId, balanceDate).add(bdOpeningBalance);
+				 
+		 log.info(" #####BBBBBBB  Balance "+balance);
+		 result.put("balance", balance) ;
+		return result;
 	}
 	
 	public static BigDecimal getAvailableBalanceVer2(String memberAccountId,
