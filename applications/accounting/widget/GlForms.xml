@@ -503,14 +503,16 @@ under the License.
         <field name="description"><text size="60"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
     </form>
-    <form name="approvePayrollTotals" type="single" target="quickCreateAcctgTransAndEntries" title=""
+    <form name="approvePayrollTotals" type="single" target="approvePayrollTotalsService" title="" default-map-name="payrollPeriodSummary"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
             <set field="debitGlAccountClassId" from-field="parameters.debitGlAccountClassId"/>
             <set field="creditGlAccountClassId" from-field="parameters.creditGlAccountClassId"/>
+             <set field="payrollPeriodSummaryId" from-field="parameters.payrollPeriodSummaryId"/>
         </actions>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}" position="1">
+        <field name="payrollPeriodSummaryId"><hidden value="${payrollPeriodSummaryId}"/></field>
+<!--         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}" position="1">
             <drop-down>
                 <entity-options entity-name="AcctgTransType" description="${description}">
                     <entity-order-by field-name="acctgTransTypeId"/>
@@ -545,6 +547,15 @@ under the License.
                     <entity-order-by field-name="fixedAssetId"/>
                 </entity-options>
             </drop-down>
+        </field> -->
+        <field name="payrollPeriodId" >
+            <display />
+        </field>
+        <field name="elementName" >
+            <display />
+        </field>
+        <field name="TotalAmount" sort-field="true">
+            <display />
         </field>
         <field name="debitGlAccountId" use-when="debitGlAccountClassId!=null">
             <drop-down>
@@ -580,10 +591,10 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="amount"><text size="20" maxlength="20"/></field>
+        <field name="TotalAmount"><text size="20" maxlength="20" value="${TotalAmount}" /></field>
         <field name="transactionDate"><date-time/></field>
         <field name="description"><text size="60"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitButton" title="Approve"><submit button-type="button"/></field>
     </form>
 
     <form name="EditAcctgTrans" type="single" target="updateAcctgTrans" default-map-name="acctgTrans"
@@ -1293,6 +1304,7 @@ under the License.
         <field name="Accounting">
             <hyperlink target="/accounting/control/approvePayrollTotals" target-type="inter-app" description="Approve/Post">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
+                <parameter param-name="payrollPeriodSummaryId" from-field="payrollPeriodSummaryId"/>
             </hyperlink>
         </field>
     </form>

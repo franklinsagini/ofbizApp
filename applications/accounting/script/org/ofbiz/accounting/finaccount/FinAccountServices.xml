@@ -434,6 +434,8 @@ under the License.
             <condition-expr field-name="paymentId" operator="in" from-field="paymentIds"/>
         </entity-condition>
         <iterate list="payments" entry="payment">
+            <set field="paymentRunningTotal" value="${paymentRunningTotal + payment.amount}" type="BigDecimal"/>
+            <if-not-empty field="payment.finAccountTransId">
                 <add-error>
                     <fail-property resource="AccountingUiLabels" property="AccountingPaymentAlreadyAssociatedToFinAccountError"/>
                 </add-error>

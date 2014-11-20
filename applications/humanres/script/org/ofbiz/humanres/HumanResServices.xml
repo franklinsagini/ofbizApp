@@ -2350,5 +2350,56 @@
 			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
+    <!-- =======================Employee Separation Service================================== -->
+	<simple-method method-name="createSeparationTypes" short-description="Create Separation Types">
+        <make-value entity-name="SeparationType" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="SeparationType" field="separationTypeId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="separationTypeId" field="newEntity.separationTypeId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateSeparationTypes" short-description="Update Separation Types">
+        <entity-one entity-name="SeparationType" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteSeparationTypes" short-description="Delete Separation Types">
+        <entity-one entity-name="SeparationType" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
+    
+   	<simple-method method-name="createSeparationApplication" short-description="Create Separation Application">
+        <make-value entity-name="SeparationApplication" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="SeparationApplication" field="separationApplicationId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="separationApplicationId" field="newEntity.separationApplicationId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateSeparationApplication" short-description="Update Separation Application">
+        <entity-one entity-name="SeparationApplication" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteSeparationApplication" short-description="Delete Separation Application">
+        <entity-one entity-name="SeparationApplication" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
+    
 
 </simple-methods>
