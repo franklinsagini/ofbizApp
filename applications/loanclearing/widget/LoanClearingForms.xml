@@ -363,5 +363,38 @@
          </field>
         
     </form>
-	
+    
+    <!-- LoanClearRate -->
+	   <form name="NewLoanClearRate" type="single" target="createLoanClearRate"
+        focus-field-name="lowerLimit" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanClearRateContext">
+        
+       
+        <field name="lowerLimit" title="Lower Limit" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="upperLimit" title="Upper Limit" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="chargeRate" title="Rate" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="listLoanClearRate" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClearRate" paginate-target="loanClearingLimit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanClearRate">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanClearRate"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="lowerLimit" title="Lower Limit"><text size="30" maxlength="60"/></field>
+        <field name="upperLimit" title="Upper Limit"><text size="30" maxlength="60"/></field>
+        <field name="chargeRate" title="Rate"><text size="30" maxlength="60"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanClearLimit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanClearRateId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+		
 </forms>
