@@ -150,54 +150,9 @@ under the License.
     </entity>
     
     <!-- Sacco Product and Applications -->
-    <!-- -org.ofbiz.loans -->
-	<entity entity-name="SaccoProduct" package-name="org.ofbiz.loans"
-		title="Sacco Product Entity">
-		<field name="saccoProductId" type="id-ne"></field>
-		<field name="name" type="name"></field>
-		<field name="code" type="name"></field>
-		<field name="minBalanceAmt" type="fixed-point"></field>
-		<field name="minSavingsAmt" type="fixed-point"></field>
-		<field name="minInterestEarningbalAmt" type="fixed-point"></field>
-		<field name="productType" type="name"></field>
-		<field name="perYearWithdrawals" type="name"></field>
-		<field name="noofWithdrawals" type="numeric"></field>
-		<field name="minNoofPeople" type="numeric"></field>
-		<field name="maxAmt" type="fixed-point"></field>
-		<field name="percentInterestPerMonthAmt" type="fixed-point"></field>
-
-		<field name="maxRepaymentPeriod" type="numeric"></field>
-		<field name="maxMultipleofSavings" type="name"></field>
-		<field name="multipleCount" type="numeric"></field>
-		<field name="maxPercentageofNetSalary" type="numeric"></field>
-
-		<!-- Extra Account -->
-		<field name="allowPercentageDiscountonBankCheque" type="name"></field>
-		<field name="percentageDiscountonBankChequeAmt" type="fixed-point"></field>
-		<field name="minimumPeriodMonths" type="numeric"></field>
-		<field name="allowLedgerFees" type="name"></field>
-
-		<!-- Extra Loan -->
-		<field name="retainBosaDeposit" type="name"></field>
-		<field name="retainBosaDepositAmt" type="numeric"></field>
-		<field name="maxIsPercentageOfMemberSalary" type="name"></field>
-		<field name="percentageOfMemberSalaryAmt" type="numeric"></field>
-		<field name="salaryPointShouldbeFosa" type="name"></field>
-
-		<field name="paymentsProcessDeductsfromMonthly" type="name"></field>
-		<field name="paymentsProcessDeductsfromBonus" type="name"></field>
-		
-		<field name="loanStatus" type="name"></field>
-		
-		<field name="minimumPeriodToEligibility" type="numeric"></field>
-
-		<prim-key field="saccoProductId" />
-
-	</entity>
-	
-	<entity entity-name="LoanProduct" package-name="org.ofbiz.loans"
+  	<entity entity-name="LoanProduct" package-name="org.ofbiz.loans"
 		title="Loan Product Entity">
-		<field name="loanProductId" type="id-ne"></field>
+		<field name="loanProductId" type="id-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
@@ -216,7 +171,7 @@ under the License.
 		<field name="percentageOfSavings" type="name"></field>
 		<field name="percentageOfSavingsAmt" type="fixed-point"></field>
 		
-		<field name="accountProductId" type="id"></field>
+		<field name="accountProductId" type="id-int"></field>
 		<field name="multipleOfSavings" type="name"></field>
 		<field name="multipleOfSavingsAmt" type="fixed-point"></field>
 		
@@ -265,7 +220,7 @@ under the License.
 	
 	<entity entity-name="AccountProduct" package-name="org.ofbiz.loans"
 		title="Account Product Entity">
-		<field name="accountProductId" type="id-ne"></field>
+		<field name="accountProductId" type="id-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
@@ -277,7 +232,12 @@ under the License.
 		<field name="minBalanceAmt" type="currency-amount"></field>
 		<field name="minSavingsAmt" type="currency-amount"></field>
 		
+		<field name="earnsInterest" type="name"></field> <!-- YES, NO -->
+		<field name="interestCalculatedPeriod" type="name"></field> <!-- DAILY, MONTHLY, ANNUALLY -->
+		<field name="hasMinimumInterestEarningAmount" type="name"></field> <!-- YES, NO -->
 		<field name="minInterestEarningAmt" type="currency-amount"></field>
+		<field name="whenToAddInterestToAccount" type="name"></field> <!-- MATURITY, ONREQUEST, MONTHLY, ANNUALLY -->
+		<field name="accountToAddInterestTo" type="id-int"></field> <!-- Savings Account -->
 		
 		<field name="minInterestPercentageAboveSavingsAcct" type="fixed-point"></field>
 		<field name="discountOnBankersCheque" type="name"></field>
@@ -311,7 +271,7 @@ under the License.
 	<!-- org.ofbiz.loans.LoanSecurity -->
 	<entity entity-name="LoanSecurity" package-name="org.ofbiz.loans"
 		title="Loan Security Entity">
-		<field name="loanSecurityId" type="id-ne"></field>
+		<field name="loanSecurityId" type="id-int"></field>
 		<field name="description" type="description"></field>
 		<prim-key field="loanSecurityId"/>
 	</entity>
@@ -327,7 +287,7 @@ under the License.
 	<entity entity-name="Bank" package-name="org.ofbiz.loans.Bank"
 		title="Bank Entity">
 		<!-- field name="loanSecurityId" type="id-ne"></field -->
-		<field name="bankId" type="id-ne"></field>
+		<field name="bankId" type="id-int"></field>
 		<field name="description" type="description"></field>
 		
 		<prim-key field="bankId"/>
@@ -338,8 +298,8 @@ under the License.
 	<entity entity-name="LoanApplicationLog" package-name="org.ofbiz.loans.LoanApplicationLog"
 		title="LoanApplicationLog Entity">
 		<!-- field name="loanSecurityId" type="id-ne"></field -->
-		<field name="loanApplicationLogId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id-ne"></field>
+		<field name="loanApplicationLogId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="name" type="description"></field>
 		
@@ -350,67 +310,72 @@ under the License.
 	<!-- -org.ofbiz.loans -->
 	<entity entity-name="LoanApplication" package-name="org.ofbiz.loans"
 		title="Loan Application Entity" sequence-bank-size="1">
-		<field name="loanApplicationId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		
-		<field name="isActive" type="indicator"></field>
-		<field name="createdBy" type="name"></field>
-		<field name="updatedBy" type="name"></field>
+		<field name="isActive" type="indicator" enable-audit-log="true"></field>
+		<field name="createdBy" type="name" enable-audit-log="true"></field>
+		<field name="updatedBy" type="name" enable-audit-log="true"></field>
 		
-		<field name="loanNo" type="name"></field>
-		<field name="loanNoSeq" type="name"></field>
-		<field name="partyId" type="id-ne"></field>
+		<field name="loanNo" type="name" enable-audit-log="true"></field>
+		<field name="loanNoSeq" type="name" enable-audit-log="true"></field>
+		<field name="partyId" type="id-vlong-int" enable-audit-log="true"></field>
 	  
-		<field name="firstName" type="name"></field>
-		<field name="middleName" type="name"></field>
-		<field name="lastName" type="name"></field>
+		<field name="firstName" type="name" enable-audit-log="true"></field>
+		<field name="middleName" type="name" enable-audit-log="true"></field>
+		<field name="lastName" type="name" enable-audit-log="true"></field>
 		
-		<field name="idNumber" type="name"></field>
-		<field name="memberType" type="very-short"></field>
-		<field name="memberNumber" type="name"></field>
-		<field name="mobileNumber" type="name"></field>
+		<field name="idNumber" type="name" enable-audit-log="true"></field>
+		<field name="memberType" type="very-short" enable-audit-log="true"></field>
+		<field name="memberNumber" type="name" enable-audit-log="true"></field>
+		<field name="mobileNumber" type="name" enable-audit-log="true"></field>
 		
 		
 		
 		<!-- Loan Type -->
-		<field name="loanProductId" type="id-ne"></field>
+		<field name="loanProductId" type="id-int" enable-audit-log="true"></field>
 		
-		<field name="interestPerMonthAmt" type="fixed-point"></field>
-		
-		
-		<field name="interestRatePM" type="fixed-point"></field>
-		<field name="maxRepaymentPeriod" type="numeric"></field>
-		
-		<field name="repaymentPeriod" type="numeric"></field>
-		
-		<field name="maxLoanAmt" type="fixed-point"></field>
-		
-		<field name="loanAmt" type="fixed-point"></field>
-		<field name="salaryAmt" type="fixed-point"></field>
-		<field name="existingLoans" type="fixed-point"></field>
+		<field name="interestPerMonthAmt" type="fixed-point" enable-audit-log="true"></field>
 		
 		
-		<field name="paymentMethodTypeId" type="id-ne"></field>
+		<field name="interestRatePM" type="fixed-point" enable-audit-log="true"></field>
+		<field name="maxRepaymentPeriod" type="numeric" enable-audit-log="true"></field>
+		
+		<field name="repaymentPeriod" type="numeric" enable-audit-log="true"></field>
+		
+		<field name="maxLoanAmt" type="fixed-point" enable-audit-log="true"></field>
+		
+		<field name="loanAmt" type="fixed-point" enable-audit-log="true"></field>
+		
+		<field name="appliedAmt" type="fixed-point" enable-audit-log="true"></field>
+		<field name="appraisedAmt" type="fixed-point" enable-audit-log="true"></field>
+		<field name="approvedAmt" type="fixed-point" enable-audit-log="true"></field>
+		
+		
+		
+		<field name="salaryAmt" type="fixed-point" enable-audit-log="true"></field>
+		<field name="existingLoans" type="fixed-point" enable-audit-log="true"></field>
+		
+		
+		<field name="paymentMethodTypeId" type="id-ne" enable-audit-log="true"></field>
 				
-		<field name="loanStatusId" type="id"></field>
+		<field name="loanStatusId" type="id-int" enable-audit-log="true"></field>
 		
 		<!-- Extra Loan Fields -->
-		<field name="loanDuration" type="numeric"></field>
-		<field name="loanStartDate" type="date-time"></field>
-		<field name="outstandingBalance" type="fixed-point"></field>
-		<field name="principalDue" type="fixed-point"></field>
-		<field name="interestDue" type="fixed-point"></field>
-		<field name="panaltyInterestDue" type="fixed-point"></field>
-		<field name="monthlyRepayment" type="fixed-point"></field>
-		<field name="nextInstallmentDate" type="date-time"></field>
+		<field name="loanDuration" type="numeric" enable-audit-log="true"></field>
+		<field name="loanStartDate" type="date-time" enable-audit-log="true"></field>
+		<field name="outstandingBalance" type="fixed-point" enable-audit-log="true"></field>
+		<field name="principalDue" type="fixed-point" enable-audit-log="true"></field>
+		<field name="interestDue" type="fixed-point" enable-audit-log="true"></field>
+		<field name="panaltyInterestDue" type="fixed-point" enable-audit-log="true"></field>
+		<field name="monthlyRepayment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="nextInstallmentDate" type="date-time" enable-audit-log="true"></field>
 		
-		<field name="isOpeningBalance" type="name"></field>
+		<field name="isOpeningBalance" type="name" enable-audit-log="true"></field>
 		
-		<field name="applicationStatus" type="name"></field>
+		<field name="purpose" type="name" enable-audit-log="true"></field>
+		<field name="deductionType" type="name" enable-audit-log="true"></field>
 		
-		<field name="purpose" type="name"></field>
-		<field name="deductionType" type="name"></field>
-		
-		<field name="memberClass" type="very-short"></field>
+		<field name="memberClassId" type="id-int" enable-audit-log="true"></field>
 	
 		<!-- 
 			REDUCING BALANCE
@@ -418,27 +383,32 @@ under the License.
 		 -->
 		 
 		 <!-- Membership Duration -->
-		 <field name="joinDate" type="date"></field>
-		 <field name="membershipDuration" type="numeric"></field>
+		 <field name="joinDate" type="date" enable-audit-log="true"></field>
+		 <field name="membershipDuration" type="numeric" enable-audit-log="true"></field>
 		 
-		 <field name="amortationGenerated" type="indicator"></field>
-		 <field name="dateAmortationGenerated" type="date-time"></field>
+		 <field name="amortationGenerated" type="indicator" enable-audit-log="true"></field>
+		 <field name="dateAmortationGenerated" type="date-time" enable-audit-log="true"></field>
 		 
-		 <field name="isDisbursed" type="indicator"></field>
-		 <field name="disbursementDate" type="date-time"></field>
-		 <field name="repaymentStartDate" type="date-time"></field>
+		 <field name="isDisbursed" type="indicator" enable-audit-log="true"></field>
+		 <field name="disbursementDate" type="date-time" enable-audit-log="true"></field>
+		 <field name="repaymentStartDate" type="date-time" enable-audit-log="true"></field>
+		 <field name="lastRepaymentDate" type="date-time" enable-audit-log="true"></field>
 		 
-		 <field name="totalRepayment" type="fixed-point"></field>
+		 <field name="totalRepayment" type="fixed-point" enable-audit-log="true"></field>
 		 
-		 <field name="organizationUnitId" type="id"></field>
-		 <field name="workflowDocumentTypeId" type="id"></field>
-		 <field name="documentApprovalId" type="id"></field>
-		 <field name="responsibleEmployee" type="id"></field>
-		 <field name="accountProductId" type="id"></field>
+		 <field name="organizationUnitId" type="id" enable-audit-log="true"></field>
+		 <field name="workflowDocumentTypeId" type="id" enable-audit-log="true"></field>
+		 <field name="documentApprovalId" type="id" enable-audit-log="true"></field>
+		 <field name="responsibleEmployee" type="id" enable-audit-log="true"></field>
+		 <field name="accountProductId" type="id-int" enable-audit-log="true"></field>
 		 
-		 <field name="approvalStatus" type="name"></field> <!-- In Progress (at Level N), Approved by Level N -->
+		 <field name="approvalStatus" type="name" enable-audit-log="true"></field> <!-- In Progress (at Level N), Approved by Level N -->
 		 
-		 <field name="repaymentStarted" type="indicator"></field>
+		 <field name="repaymentStarted" type="indicator" enable-audit-log="true"></field>
+		 <field name="guarantorsAdded" type="indicator" enable-audit-log="true"></field>
+		 <field name="appraised" type="indicator" enable-audit-log="true"></field>
+		 <field name="parentLoanApplicationId" type="id-vlong-int" enable-audit-log="true"></field>
+		 
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
@@ -467,14 +437,14 @@ under the License.
       <relation type="one" fk-name="LOANAPP_APPROVAL_FK" rel-entity-name="DocumentApproval">
         <key-map field-name="documentApprovalId"/>
       </relation>
-	</entity>
+  	</entity>
 	
 	<!-- Loan Application Security -->
 	<entity entity-name="LoanApplicationSecurity" package-name="org.ofbiz.loans"
 		title="Loan Application Security Entity">
-		<field name="loanApplicationSecurityId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
-		<field name="loanSecurityId" type="id"></field>
+		<field name="loanApplicationSecurityId" type="id-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
+		<field name="loanSecurityId" type="id-int"></field>
 		<field name="noOfGuarantors" type="numeric"></field>
 		<prim-key field="loanApplicationSecurityId"/>
 		<relation type="one" fk-name="LOANSECURITY_FK" rel-entity-name="LoanSecurity">
@@ -491,11 +461,11 @@ under the License.
 		title="LoanProductClass Entity">
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
-		<field name="loanProductId" type="id"></field>
-		<field name="memberClass" type="very-short"></field>
+		<field name="loanProductId" type="id-int"></field>
+		<field name="memberClassId" type="id-int"></field>
 		
 		<prim-key field="loanProductId"/>
-		<prim-key field="memberClass"/>
+		<prim-key field="memberClassId"/>
 		<relation type="one" fk-name="LoanProductClass_LoanProduct" rel-entity-name="LoanProduct">
         	<key-map field-name="loanProductId"/>
       	</relation>
@@ -505,8 +475,8 @@ under the License.
 		<!-- Loan Application Security -->
 	<entity entity-name="LoanAmortization" package-name="org.ofbiz.loans"
 		title="Loan Amortization">
-		<field name="loanAmortizationId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanAmortizationId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="paymentNo" type="numeric"></field>
 		
 		<field name="paymentAmount" type="fixed-point"></field>
@@ -531,8 +501,8 @@ under the License.
 	<!-- Loan Application Collateral -->
 	<entity entity-name="LoanApplicationCallateral" package-name="org.ofbiz.loans"
 		title="Loan Application Collateral Entity">
-		<field name="loanApplicationCallateralId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanApplicationCallateralId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="collateralValue" type="fixed-point"></field>
 		<field name="valuingAgency" type="name"></field>
 		<field name="collateralType" type="name"></field>
@@ -549,8 +519,8 @@ under the License.
 	<!-- Collateral Document -->
 	<entity entity-name="CollateralDocument" package-name="org.ofbiz.loans"
 		title="Collateral Document Entity">
-		<field name="collateralDocumentId" type="id-ne"></field>
-		<field name="loanApplicationCallateralId" type="id"></field>
+		<field name="collateralDocumentId" type="id-int"></field>
+		<field name="loanApplicationCallateralId" type="id-vlong-int"></field>
 		<prim-key field="collateralDocumentId"/>
 		<relation type="one" fk-name="COLLATERAL_FK" rel-entity-name="LoanApplicationCallateral">
        		<key-map field-name="loanApplicationCallateralId"/>
@@ -560,7 +530,7 @@ under the License.
 	<!-- Loan Guarantors -->
 	<entity entity-name="MemberStation" package-name="org.ofbiz.loans"
 		title="Member Station Entity">
-		<field name="memberStationId" type="id-ne"></field>
+		<field name="memberStationId" type="id-int"></field>
 		<field name="name" type="name"></field>
 		<prim-key field="memberStationId"/>
 	</entity>
@@ -568,15 +538,15 @@ under the License.
 	<!-- Loan Guarantors -->
 	<entity entity-name="LoanGuarantor" package-name="org.ofbiz.loans"
 		title="Loan Guarantor Entity">
-		<field name="loanGuarantorId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
-		<field name="guarantorId" type="id"></field>
+		<field name="loanGuarantorId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
+		<field name="guarantorId" type="id-vlong-int"></field>
 		<field name="memberNo" type="name"></field>
 		<field name="payrolNo" type="name"></field>
-		<field name="depositamt" type="fixed-point"></field>
+		<field name="depositamt" type="fixed-point" enable-audit-log="true"></field>
 		<field name="guaranteedPercentage" type="fixed-point"></field>
 		<field name="guaranteedValue" type="fixed-point"></field>
-		<field name="currentStationId" type="id"></field>
+		<field name="currentStationId" type="id-int"></field>
 		<prim-key field="loanGuarantorId"/>
 		<relation type="one" fk-name="GUARANTOR_LOANAPPLICATION_FK" rel-entity-name="LoanApplication">
        		<key-map field-name="loanApplicationId"/>
@@ -589,20 +559,13 @@ under the License.
       	</relation>
 	</entity>
 	
-	<!-- Loan Status -->
-	<entity entity-name="LoanStatus" package-name="org.ofbiz.loans"
-		title="Loan Status Entity">
-		<field name="loanStatusId" type="id-ne"></field>
-		<field name="name" type="name"></field>
-		<prim-key field="loanStatusId"/>
-	</entity>
 	
 	<entity entity-name="MemberAccountDetails" package-name="org.ofbiz.loans"
 		title="MemberAccountDetails Entity">
-		<field name="memberAccountDetailsId" type="id-ne"></field>
-		<field name="partyId" type="id"></field>
+		<field name="memberAccountDetailsId" type="id-vlong-int"></field>
+		<field name="partyId" type="id-vlong-int"></field>
 		<field name="openingBalanceDate" type="date-time"></field>
-		<field name="memberAccountId" type="id"></field>
+		<field name="memberAccountId" type="id-vlong-int"></field>
 		<field name="memberAccountPayableId" type="id"></field>
 		<!-- field name="glAccountId" type="id"></field -->
 		
@@ -623,8 +586,8 @@ under the License.
 	
 	<entity entity-name="MemberShare" package-name="org.ofbiz.loans"
 		title="MemberShare Entity">
-		<field name="memberShareId" type="id-ne"></field>
-		<field name="partyId" type="id"></field>
+		<field name="memberShareId" type="id-int"></field>
+		<field name="partyId" type="id-vlong-int"></field>
 		<field name="shareAccountId" type="id"></field>
 		<field name="sharePrice" type="fixed-point"></field>
 		<field name="noOfShares" type="numeric"></field>
@@ -641,8 +604,8 @@ under the License.
 	
 	<entity entity-name="LoanStatusLog" package-name="org.ofbiz.loans"
 		title="LoanStatusLog Entity">
-		<field name="loanStatusLogId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanStatusLogId" type="id-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
@@ -650,13 +613,20 @@ under the License.
 		
 		
 		
-		<field name="applicationStatus" type="name"></field>
+		<field name="loanStatusId" type="id-int"></field>
+		
+		<field name="loanAmt" type="fixed-point"></field>
+		<field name="appliedAmt" type="fixed-point"></field>
+		<field name="appraisedAmt" type="fixed-point"></field>
+		<field name="approvedAmt" type="fixed-point"></field>
+		
+		
 		<field name="comment" type="name"></field>
 		
 		<field name="disbursementDate" type="date-time"></field>
 		 <field name="repaymentStartDate" type="date-time"></field>
 		
-		<field name="branchId" type="name"></field>
+		<field name="branchId" type="id-int"></field>
 		
 		<prim-key field="loanStatusLogId"/>
 		<!-- relation type="one" fk-name="LoanStatusLog_MemberCreate" title="Parent" rel-entity-name="Member">
@@ -678,11 +648,11 @@ under the License.
 	
 	<entity entity-name="SalaryProcessingDate" package-name="org.ofbiz.loans"
                 title="SalaryProcessingDate Entity">
-                <field name="salaryProcessingDateId" type="id-ne"></field>
+                <field name="salaryProcessingDateId" type="id-int"></field>
                 <field name="isActive" type="indicator"></field>
                 <field name="createdBy" type="name"></field>
                 <field name="updatedBy" type="name"></field>
-                <field name="branchId" type="name"></field>
+                <field name="branchId" type="id-int"></field>
 
                 <field name="processingDay" type="numeric"></field>
                 <prim-key field="salaryProcessingDateId"/>
@@ -690,12 +660,16 @@ under the License.
 	
 	<entity entity-name="ProductCharge" package-name="org.ofbiz.loans"
 		title="ProductCharge Entity">
-		<field name="productChargeId" type="id-ne"></field>
+		<field name="productChargeId" type="id-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		<field name="name" type="name"></field>
 		<field name="chargeAccountId" type="id"></field>
+		
+		<field name="isRate" type="name"></field>
+		<field name="rateAmount" type="fixed-point"></field>
+		<field name="fixedAmount" type="fixed-point"></field>
 		
 		<prim-key field="productChargeId"/>
 		<relation type="one" fk-name="ProductCharge_ACC" rel-entity-name="GlAccount">
@@ -705,14 +679,14 @@ under the License.
 	
 	<entity entity-name="LoanProductCharge" package-name="org.ofbiz.loans"
 		title="LoanProductCharge Entity">
-		<field name="loanProductChargeId" type="id-ne"></field>
+		<field name="loanProductChargeId" type="id-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
-		<field name="loanProductId" type="id-ne"></field>
-		<field name="productChargeId" type="id-ne"></field>
+		<field name="loanProductId" type="id-int"></field>
+		<field name="productChargeId" type="id-int"></field>
 		<field name="isFixed" type="indicator"></field>
 		<field name="chargedUpfront" type="indicator"></field>
 		<field name="rateAmount" type="fixed-point"></field>
@@ -731,15 +705,15 @@ under the License.
 	
 	<entity entity-name="LoanApplicationCharge" package-name="org.ofbiz.loans"
 		title="LoanApplicationCharge Entity">
-		<field name="loanApplicationChargeId" type="id-ne"></field>
+		<field name="loanApplicationChargeId" type="id-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
 		
-		<field name="loanApplicationId" type="id-ne"></field>
-		<field name="productChargeId" type="id-ne"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
+		<field name="productChargeId" type="id-int"></field>
 		<field name="isFixed" type="indicator"></field>
 		<field name="chargedUpfront" type="indicator"></field>
 		<field name="rateAmount" type="fixed-point"></field>
@@ -758,14 +732,14 @@ under the License.
 	
 	<entity entity-name="AccountProductCharge" package-name="org.ofbiz.loans"
 		title="AccountProductCharge Entity">
-		<field name="accountProductChargeId" type="id-ne"></field>
+		<field name="accountProductChargeId" type="id-int"></field>
 		
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
-		<field name="accountProductId" type="id-ne"></field>
-		<field name="productChargeId" type="id-ne"></field>
+		<field name="accountProductId" type="id-int"></field>
+		<field name="productChargeId" type="id-int"></field>
 		
 		<field name="transactionType" type="name"></field>
 		
@@ -773,7 +747,7 @@ under the License.
 		<field name="rateAmount" type="fixed-point"></field>
 		
 		<field name="isPercentageOfOtherCharge" type="indicator"></field>
-		<field name="parentChargeId" type="id-ne"></field>
+		<field name="parentChargeId" type="id-int"></field>
 		
 		<field name="fixedAmount" type="fixed-point"></field>
 		
@@ -795,9 +769,9 @@ under the License.
 	<!-- Loan Expectation -->
 	<entity entity-name="LoanExpectation" package-name="org.ofbiz.loans"
 		title="Loan Expectation">
-		<field name="loanExpectationId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
-		<field name="partyId" type="id"></field>
+		<field name="loanExpectationId" type="id-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
+		<field name="partyId" type="id-vlong-int"></field>
 		
 		<field name="loanNo" type="name"></field>
 		<field name="dateDue" type="date-time"></field>
@@ -814,7 +788,7 @@ under the License.
 		
 		<field name="loanAmt" type="fixed-point"></field>
 		
-		<field name="loanAmortizationId" type="id-ne"></field>
+		<field name="loanAmortizationId" type="id-vlong-int"></field>
 		
 		<prim-key field="loanExpectationId"/>
 		<relation type="one" fk-name="LOANEXPECTATION_LOANAPPLICATIONFK" rel-entity-name="LoanApplication">
@@ -845,21 +819,22 @@ under the License.
     <!-- LoanStatus -->
     <entity entity-name="LoanStatus" package-name="org.ofbiz.loans"
 		title="LoanStatus Entity">
-		
+		<field name="loanStatusId" type="id-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
 		<field name="name" type="name"></field>
+		<field name="description" type="name"></field>
 		
-		<prim-key field="name"/>
+		<prim-key field="loanStatusId"/>
 	</entity>
 	
 	<!-- LoanStatusChange -->
 	<entity entity-name="LoanStatusChange" package-name="org.ofbiz.loans"
 		title="LoanStatusChange Entity">
-		<field name="loanStatusChangeId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanStatusChangeId" type="id-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
@@ -876,14 +851,14 @@ under the License.
 	<!-- LoanInterestChange -->
 	<entity entity-name="LoanInterestChange" package-name="org.ofbiz.loans"
 		title="LoanInterestChange Entity">
-		<field name="loanInterestChangeId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanInterestChangeId" type="id-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
 		<field name="fromInterestRate" type="fixed-point"></field>
-		<field name="toInterestRate" type="name"></field>
+		<field name="toInterestRate" type="fixed-point"></field>
 		<field name="changedBy" type="name"></field>
 		
 		<prim-key field="loanInterestChangeId"/>
@@ -894,8 +869,8 @@ under the License.
 	<!-- LoanAmountChange -->
 	<entity entity-name="LoanAmountChange" package-name="org.ofbiz.loans"
 		title="LoanAmountChange Entity">
-		<field name="loanAmountChangeId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanAmountChangeId" type="id-int"></field>
+		<field name="loanApplicationId" type="fixed-point"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
@@ -913,7 +888,7 @@ under the License.
 	<entity entity-name="LoanRepaymentPeriodChange" package-name="org.ofbiz.loans"
 		title="LoanRepaymentPeriodChange Entity">
 		<field name="loanRepaymentPeriodChangeId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
@@ -930,8 +905,8 @@ under the License.
 	<!-- LoanSalaryAmount -->
 	<entity entity-name="LoanSalaryAmount" package-name="org.ofbiz.loans"
 		title="LoanSalaryAmount Entity">
-		<field name="loanSalaryAmountId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanSalaryAmountId" type="id-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
@@ -948,30 +923,30 @@ under the License.
 	<!-- LoanGuarantorChange -->
 	<entity entity-name="LoanGuarantorChange" package-name="org.ofbiz.loans"
 		title="LoanGuarantorChange Entity">
-		<field name="loanGuarantorChangeId" type="id-ne"></field>
-		<field name="loanApplicationId" type="id"></field>
+		<field name="loanGuarantorChangeId" type="id-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		
-		<field name="fromGuarantor" type="id"></field>
+		<field name="fromGuarantor" type="id-vlong-int"></field>
 		
 		<field name="memberNo" type="name"></field>
 		<field name="payrolNo" type="name"></field>
 		<field name="depositamt" type="fixed-point"></field>
 		<field name="guaranteedPercentage" type="fixed-point"></field>
 		<field name="guaranteedValue" type="fixed-point"></field>
-		<field name="currentStationId" type="id"></field>
+		<field name="currentStationId" type="id-int"></field>
 		
 		
-		<field name="toGuarantor" type="id"></field>
+		<field name="toGuarantor" type="id-vlong-int"></field>
 		
 		<field name="toMemberNo" type="name"></field>
 		<field name="toPayrolNo" type="name"></field>
 		<field name="toDepositamt" type="fixed-point"></field>
 		<field name="toGuaranteedPercentage" type="fixed-point"></field>
 		<field name="toGuaranteedValue" type="fixed-point"></field>
-		<field name="toCurrentStationId" type="id"></field>
+		<field name="toCurrentStationId" type="id-int"></field>
 		
 		
 		<field name="changedBy" type="name"></field>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="LoanClearingCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FindMember">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Members"/>
+                <set field="headerItem" value="receiveLoanApplication"/>
+                <set field="tabButtonItem" value="findmember"/>
+                <set field="memberCtx" from-field="parameters"/>
+				<set field="employeePartyId" from-field="userLogin.partyId"/>
+				<entity-one value-field="person" entity-name="Person">
+					<field-map field-name="partyId" from-field="employeePartyId"/>
+				</entity-one>
+				<set field="memberBranchId" value="${person.branchId}" global="true"/>
+				<entity-one value-field="branch" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="${memberBranchId}"/>
+				</entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Search Members">
+                                        <include-form name="FindMember" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+                            	</screenlet>
+                                <screenlet title="Members List (Apply loans for ${branch.groupName} branch only)">
+                                		<include-form  name="members" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="myrunningloans">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Running Loans"/>
+                <set field="headerItem" value="forwardedLoanApplications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                
+                <entity-one entity-name="Member" value-field="member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<!-- screenlet>
+                        			<include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                        		</screenlet -->
+                        		<screenlet title="Running Loans for ${member.firstName} ${member.middleName} ${member.lastName}">
+                        			<include-form name="listMyLoans" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="loanClearingLimit">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Loan Clearing"/>
+                <set field="headerItem" value="loanClearingLimit"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanClearLimit"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!--  property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <set field="name" from-field="parameters.name"/>
+                
+                <entity-one entity-name="LoanClearLimit" value-field="loanClearLimitContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="LOANCLEARING" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Limit">
+                                    <include-form name="NewLoanClearLimit" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="List">
+                        			<include-form name="listLoanClearLimit" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- loanClear -->
+        <screen name="loanClear">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Loans To Clear"/>
+                <set field="headerItem" value="loanClear"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanClear"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!--  property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <set field="name" from-field="parameters.name"/>
+                
+                <entity-one entity-name="LoanClear" value-field="loanClearContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="List">
+                        			<include-form name="listLoanClear" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- loanClearItem -->
+    <screen name="loanClearItem">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Loan Clear Items"/>
+                <set field="headerItem" value="loanClearItem"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanClearItem"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!--  property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <set field="name" from-field="parameters.name"/>
+                
+                <entity-one entity-name="LoanClearItem" value-field="loanClearItemContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="List">
+                        			<include-form name="listLoanClearItem" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

@@ -23,8 +23,191 @@
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
     
+    <request-map uri="msaccoApplication">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoApplication"
+			save-current-view="true" />
+	</request-map>
+	
+	<request-map uri="createMSaccoApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMSaccoApplication" />
+		<response name="success" type="request-redirect"
+			value="msaccoApplication">
+			</response>
+		<response name="error" type="view" value="msaccoApplication" />
+	</request-map>
+	
+	<request-map uri="updateMSaccoApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMSaccoApplication" />
+		<response name="success" type="request-redirect"
+			value="msaccoApplication">
+			</response>
+		<response name="error" type="view" value="msaccoApplication" />
+	</request-map>
+	
+	<request-map uri="deleteMSaccoApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMSaccoApplication" />
+		<response name="success" type="request-redirect"
+			value="msaccoApplication">
+			</response>
+		<response name="error" type="view" value="msaccoApplication" />
+	</request-map>
+	
+	<request-map uri="msaccoLogs">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoLogs">
+			<redirect-parameter name="msaccoApplicationId" />
+		</response>
+	</request-map>
+	
+	<request-map uri="msaccoApproval">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoApproval"
+			save-current-view="true" />
+	</request-map>
+	
+	<!-- msaccoActivate -->
+	<request-map uri="msaccoActivate">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoActivate"
+			save-current-view="true" />
+	</request-map>
+	<!-- msaccoCancel -->
+	<request-map uri="msaccoCancel">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoCancel"
+			save-current-view="true" />
+	</request-map>
+	
+	<!-- msaccoApproveAction -->
+			<request-map uri="msaccoApproveAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoApproveAction"
+			save-current-view="true">
+				<redirect-parameter name="msaccoApplicationId"/>
+			</response>
+	</request-map>
+	<!-- msaccoActivateAction -->
+	<request-map uri="msaccoActivateAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoActivateAction"
+			save-current-view="true">
+				<redirect-parameter name="msaccoApplicationId"/>
+			</response>
+	</request-map>
+	<!-- msaccoCancelAction -->
+	<request-map uri="msaccoCancelAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoCancelAction"
+			save-current-view="true">
+				<redirect-parameter name="msaccoApplicationId"/>
+			</response>
+	</request-map>
+
+
+		<request-map uri="msaccoApproval">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoApproval"
+			save-current-view="true" />
+	</request-map>
+	
+	<!-- MSacco Update approve, activate and cancel processes -->
+		<request-map uri="approveMSaccoProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="approveMSaccoProcess" />
+		<response name="success" type="request-redirect"
+			value="msaccoApproveAction">
+				<redirect-parameter name="msaccoApplicationId"/>
+			</response>
+		<response name="error" type="view" value="msaccoApproveAction" />
+	</request-map>
+	
+	<request-map uri="activateMSaccoProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="activateMSaccoProcess" />
+		<response name="success" type="request-redirect"
+			value="msaccoActivateAction">
+				<redirect-parameter name="msaccoApplicationId"/>
+			</response>
+		<response name="error" type="view" value="msaccoActivateAction" />
+	</request-map>
+	
+		<request-map uri="cancelMSaccoProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="cancelMSaccoProcess" />
+		<response name="success" type="request-redirect"
+			value="msaccoCancelAction">
+				<redirect-parameter name="msaccoApplicationId"/>
+			</response>
+		<response name="error" type="view" value="msaccoCancelAction" />
+	</request-map>
+	
+	<request-map uri="msaccoLimit">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="msaccoLimit"
+			save-current-view="true">
+			</response>
+	</request-map>
+	
+		<request-map uri="createMSaccoLimit">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMSaccoLimit" />
+		<response name="success" type="request-redirect"
+			value="msaccoLimit">
+			</response>
+		<response name="error" type="view" value="msaccoLimit" />
+	</request-map>
+	
+	<request-map uri="updateMSaccoLimit">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMSaccoLimit" />
+		<response name="success" type="request-redirect"
+			value="msaccoLimit">
+			</response>
+		<response name="error" type="view" value="msaccoLimit" />
+	</request-map>
+	
+	<request-map uri="deleteMSaccoLimit">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMSaccoLimit" />
+		<response name="success" type="request-redirect"
+			value="msaccoLimit">
+			</response>
+		<response name="error" type="view" value="msaccoLimit" />
+	</request-map>
+	
+	
+	<request-map uri="LookupActiveMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupActiveMember" />
+	</request-map>
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#main"/ -->
     
-    <view-map name="main" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#FindMember"/>
+    <view-map name="main" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#FindMember"/>
+    <view-map name="msaccoApplication" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoApplication"/>
+    <view-map name="msaccoLogs" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoLogs"/>
+   
+   	<view-map name="msaccoApproval" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoApproval"/>
+   
+   <!-- msaccoActivate -->
+   	<view-map name="msaccoActivate" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoActivate"/>
+   		<!-- msaccoCancel -->
+      	<view-map name="msaccoCancel" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoCancel"/>
+   <!-- msaccoApproveAction  -->
+   		<view-map name="msaccoApproveAction" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoApproveAction"/>
+   	<!-- msaccoActivateAction  -->
+   		<view-map name="msaccoActivateAction" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoActivateAction"/>
+   	<!-- msaccoCancelAction  -->
+   		<view-map name="msaccoCancelAction" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoCancelAction"/>
+   		
+   		<view-map name="msaccoLimit" type="screen" page="component://msaccomanagement/widget/msaccomanagementScreens.xml#msaccoLimit"/>
+
+
+   
+    <view-map name="LookupActiveMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
 </site-conf>

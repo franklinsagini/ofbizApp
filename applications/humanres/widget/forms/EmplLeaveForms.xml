@@ -13,26 +13,211 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-	<form name="FindActiveLeaves" type="single" target="FindActiveLeaves"
+ <!-- <form name="FindActiveLeaves" type="single" target="FindActiveLeaves"
 		odd-row-style="header-row" default-table-style="basic-table"
 		default-entity-name="EmplLeave">
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<lookup target-form-name="LookupPartyName" />
+			<lookup target-form-name="LookupEmployee" />
 		</field>
 		<field name="noConditionFind"><hidden value="Y" />
-		<!-- if this isn't there then with all fields empty no query will be done -->
+		
 		</field>
 		<field name="searchButton" title="${uiLabelMap.CommonFind}"
 			widget-style="smallSubmit">
 			<submit button-type="button" image-location="/images/icons/magnifier.png" />
 		</field>
-	</form>	
+	</form>	 -->
+	
+	
+	<form name="FindActiveLeaves" default-map-name="LeaveApp" target="FindActiveLeaves" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<!-- <set field="status" value="AVAILABLE"/> -->
+        	
+        </actions>
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<lookup target-form-name="LookupEmployee" />
+		</field>
+		<field name="description">
+			<hidden />
+		</field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+	
+	<form name="ListActivelLeaves" list-name="EmplLeave" type="list"
+		odd-row-style="alternate-row" header-row-style="header-row-2"
+		paginate-target="FindActiveLeaves" default-table-style="basic-table hover-bar">
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="EmplLeave">
+				<field-map field-name="inputFields" from-field="leaveCtx" />
+				<field-map field-name="entityName" value="EmplLeave" />
+				<field-map field-name="orderBy" from-field="parameters.sortField" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+
+		</actions>
+		<field name="leaveId"><hidden /></field>
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
+				<sub-hyperlink target="/partymgr/control/viewprofile"
+					target-type="inter-app" description="${partyId}" link-style="buttontext">
+					<parameter param-name="partyId" from-field="partyId" />
+				</sub-hyperlink>
+			</display-entity>
+		</field>
+		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
+			<display-entity entity-name="EmplLeaveType" />
+		</field>
+		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
+			<display-entity entity-name="EmplLeaveReasonType" />
+		</field>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="thruDate">
+			<display />
+		</field>
+		<field name="leaveDuration">
+			<display />
+		</field>
+		<field name="responsibleEmployee" title="Approver">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+
+			</display-entity>
+		</field>
+		<field name="handedOverTo" title="Handed Over To">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+			</display-entity>
+		</field>
+		<field name="updateLeaved" title="-" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
+			<hyperlink also-hidden="false" description="Employee Callback"
+				target="callBackEmployee">
+				<parameter param-name="thruDate" /> 
+				<parameter param-name="leaveId" /> 
+				<parameter param-name="partyId" />
+				<parameter param-name="leaveDuration" />  
+				<parameter param-name="leaveTypeId" /> 
+			</hyperlink>
+		</field> 
+		<field name="updateLeave" title="-" widget-style="buttontext" use-when="${leaveTypeId=='COMPASSIONATE_LEAVE'}">
+			<hyperlink also-hidden="false" description="Employee Callback"
+				target="callBackEmployee">
+				<parameter param-name="thruDate" /> 
+				<parameter param-name="leaveId" /> 
+				<parameter param-name="partyId" />
+				<parameter param-name="leaveDuration" /> 
+				<parameter param-name="leaveTypeId" /> 
+			</hyperlink>
+		</field> 
+				<field name="description">
+			<hidden />
+		</field>
+	</form>
+	
+	
+	
+	
+    
+     <form name="ListActivelLdsssseaves" target="" title="" list-name="listIt" type="list" paginate-target="FindActiveLeaves"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+         
+        
+           <!--  <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="EmplLeave"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> -->
+            
+            <service service-name="performFind" result-map="result"
+				result-map-list="EmplLeave">
+				<field-map field-name="inputFields" from-field="leaveCtx" />
+				<field-map field-name="entityName" value="EmplLeave" />
+				<field-map field-name="orderBy" from-field="parameters.leaveId" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+          
+        </actions>
+       <field name="leaveId"><hidden /></field>
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
+				<sub-hyperlink target="/partymgr/control/viewprofile"
+					target-type="inter-app" description="${partyId}" link-style="buttontext">
+					<parameter param-name="partyId" from-field="partyId" />
+				</sub-hyperlink>
+			</display-entity>
+		</field>
+		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
+			<display-entity entity-name="EmplLeaveType" />
+		</field>
+		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
+			<display-entity entity-name="EmplLeaveReasonType" />
+		</field>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="thruDate">
+			<display />
+		</field>
+		<field name="leaveDuration">
+			<display />
+		</field>
+		<field name="responsibleEmployee" title="Approver">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+
+			</display-entity>
+		</field>
+		<field name="handedOverTo" title="Handed Over To">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+			</display-entity>
+		</field>
+		<field name="updateLeaved" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
+			<hyperlink also-hidden="false" description="Employee Callback"
+				target="callBackEmployee">
+				<parameter param-name="thruDate" /> 
+				<parameter param-name="leaveId" /> 
+				<parameter param-name="partyId" />
+				<parameter param-name="leaveDuration" />  
+				<parameter param-name="leaveTypeId" /> 
+			</hyperlink>
+		</field> 
+		<field name="updateLeave" title="" widget-style="buttontext" use-when="${leaveTypeId=='COMPASSIONATE_LEAVE'}">
+			<hyperlink also-hidden="false" description="Employee Callback"
+				target="callBackEmployee">
+				<parameter param-name="thruDate" /> 
+				<parameter param-name="leaveId" /> 
+				<parameter param-name="partyId" />
+				<parameter param-name="leaveDuration" /> 
+				<parameter param-name="leaveTypeId" /> 
+			</hyperlink>
+		</field> 
+				<field name="description">
+			<hidden />
+		</field>
+    </form>
+	
+	
+	
+	
+	
+	
+	
+	
 
 	<form name="FindCarryOverLost" type="single" target="FindCarryOverLost"
 		odd-row-style="header-row" default-table-style="basic-table"
 		default-entity-name="EmplCarryOverLost">
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<lookup target-form-name="LookupPartyName" />
+			<lookup target-form-name="LookupEmployee" />
 		</field>
 		<field name="noConditionFind"><hidden value="Y" /><!-- if this isn't there then with all fields empty no query will be done -->
 		</field>
@@ -41,19 +226,7 @@
 			<submit button-type="button" image-location="/images/icons/magnifier.png" />
 		</field>
 	</form>	
-	<form name="FindLeaveBalances" type="single" target="FindLeaveBalances"
-		odd-row-style="header-row" default-table-style="basic-table"
-		default-entity-name="LeaveBalances">
-		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<lookup target-form-name="LookupPartyName" />
-		</field>
-		<field name="noConditionFind"><hidden value="Y" /><!-- if this isn't there then with all fields empty no query will be done -->
-		</field>
-		<field name="searchButton" title="${uiLabelMap.CommonFind}"
-			widget-style="smallSubmit">
-			<submit button-type="button" image-location="/images/icons/magnifier.png" />
-		</field>
-	</form>	
+	
 
 	<form name="ListCarryOverLost" list-name="listIt" type="list"
 		odd-row-style="alternate-row" header-row-style="header-row-2"
@@ -99,76 +272,44 @@
 		</field>
 		 -->
 	</form>	
-	<!-- <form name="ListLeaveBalances" list-name="listIt" type="list"
-		odd-row-style="alternate-row" header-row-style="header-row-2"
-		paginate-target="LeaveBalances" default-table-style="basic-table hover-bar">
-		<actions>
- 			
-			<entity-condition entity-name="LeaveBalances">
-				<condition-expr field-name="partyId"
-										operator="equals" from-field="userLogin.partyId" />
-			</entity-condition>
-
-			<service service-name="performFind" result-map="result"
-				result-map-list="listIt">
-				<field-map field-name="inputFields" from-field="leaveBalanceCtx" />
-				<field-map field-name="entityName" value="LeaveBalances" />
-				<field-map field-name="viewIndex" from-field="viewIndex" />
-				<field-map field-name="viewSize" from-field="viewSize" />
-			</service>
-
-		</actions>
-		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}">
-				<sub-hyperlink target="/partymgr/control/viewprofile"
-					target-type="inter-app" description="${partyId}" link-style="buttontext">
-					<parameter param-name="partyId" from-field="partyId" />
-				</sub-hyperlink>
-			</display-entity>
-		</field>
-		<field name="accruedDays" title="Accrued Leave Days">
-			<display />
-		</field>
-		<field name="usedLeaveDays" title="Used Leave Days">
-			<display />
-		</field>
-		<field name="LeaveDaysCarriedOver" title="Leave Days Brought Forward">
-			<display />
-		</field>			
-		<field name="lostLeaveDays" title="Lost Leave Days">
-			<display />
-		</field>		
-		<field name="availableLeaveDays" title="Available Leave Days">
-			<display />
-		</field>
-		
-	</form> -->
 	
-	<form name="ListAllLeaveBalances" list-name="listIt" type="list"
-		odd-row-style="alternate-row" header-row-style="header-row-2"
-		paginate-target="LeavesBalanceView" default-table-style="basic-table hover-bar">
-		<actions>
- 			
-<!-- 			<entity-condition entity-name="LeaveBalances">
-				<condition-expr field-name="partyId"
-										operator="equals" from-field="userLogin.partyId" />
-			</entity-condition> -->
-
-			<service service-name="performFind" result-map="result"
-				result-map-list="listIt">
-				<field-map field-name="inputFields" from-field="leaveBalanceCtx" />
-				<field-map field-name="entityName" value="LeavesBalanceView" />
-				<field-map field-name="viewIndex" from-field="viewIndex" />
-				<field-map field-name="viewSize" from-field="viewSize" />
-			</service>
-			
-			<entity-condition entity-name="LeavesBalanceView">
+	
+	<form name="FindLeaveBalances" default-map-name="LeaveApp" target="FindLeaveBalances" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<!-- <set field="status" value="AVAILABLE"/> -->
+        	
+        </actions>
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<lookup target-form-name="LookupEmployee" />
+		</field>
+		<field name="description">
+			<hidden />
+		</field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+     <form name="ListAllLeaveBalances" target="" title="" list-name="listIt" type="list" paginate-target="FindLeaveBalances"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        
+       <entity-condition entity-name="LeavesBalanceView">
 				<condition-expr field-name="employmentStatusEnumId" operator="not-equals" value="15" />
 			</entity-condition> 
-			
-			
-
-		</actions>
+        
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="LeavesBalanceView"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+          
+        </actions>
+        <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
+          
+      
+		
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="Person" description="${lastName}, ${firstName}">
 				<!-- <sub-hyperlink target="/partymgr/control/viewprofile" -->
@@ -211,8 +352,7 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field> 
-
-	</form>
+    </form>
 	
 	
 	
@@ -279,82 +419,7 @@
 	</form>
 
 
-	<form name="ListActivelLeaves" list-name="EmplLeave" type="list"
-		odd-row-style="alternate-row" header-row-style="header-row-2"
-		paginate-target="EmplLeave" default-table-style="basic-table hover-bar">
-		<actions>
-			<service service-name="performFind" result-map="result"
-				result-map-list="EmplLeave">
-				<field-map field-name="inputFields" from-field="leaveCtx" />
-				<field-map field-name="entityName" value="EmplLeave" />
-				<field-map field-name="orderBy" from-field="parameters.leaveId" />
-				<field-map field-name="viewIndex" from-field="viewIndex" />
-				<field-map field-name="viewSize" from-field="viewSize" />
-			</service>
-
-		</actions>
-		<field name="leaveId"><hidden /></field>
-		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
-				<sub-hyperlink target="/partymgr/control/viewprofile"
-					target-type="inter-app" description="${partyId}" link-style="buttontext">
-					<parameter param-name="partyId" from-field="partyId" />
-				</sub-hyperlink>
-			</display-entity>
-		</field>
-		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
-			<display-entity entity-name="EmplLeaveType" />
-		</field>
-		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
-			<display-entity entity-name="EmplLeaveReasonType" />
-		</field>
-		<field name="fromDate">
-			<display />
-		</field>
-		<field name="thruDate">
-			<display />
-		</field>
-		<field name="leaveDuration">
-			<display />
-		</field>
-		<field name="responsibleEmployee" title="Approver">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}"
-				key-field-name="partyId">
-
-			</display-entity>
-		</field>
-		<field name="handedOverTo" title="Handed Over To">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}"
-				key-field-name="partyId">
-			</display-entity>
-		</field>
-		<field name="updateLeaved" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
-			<hyperlink also-hidden="false" description="Employee Callback"
-				target="callBackEmployee">
-				<parameter param-name="thruDate" /> 
-				<parameter param-name="leaveId" /> 
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveDuration" />  
-				<parameter param-name="leaveTypeId" /> 
-			</hyperlink>
-		</field> 
-		<field name="updateLeave" title="" widget-style="buttontext" use-when="${leaveTypeId=='COMPASSIONATE_LEAVE'}">
-			<hyperlink also-hidden="false" description="Employee Callback"
-				target="callBackEmployee">
-				<parameter param-name="thruDate" /> 
-				<parameter param-name="leaveId" /> 
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveDuration" /> 
-				<parameter param-name="leaveTypeId" /> 
-			</hyperlink>
-		</field> 
-				<field name="description">
-			<hidden />
-		</field>
-	</form>
 	
-	
-
 
   <form name="EmployeeCallBack" type="single" target="updateLeaveDuration"
 		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
@@ -410,18 +475,21 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         
+        <entity-condition entity-name="EmplLeave">
+        			 <condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/> 
+        	</entity-condition> 
+        
             <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map field-name="inputFields" from-field="leaveCtx"/>
+                <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="EmplLeave"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-          <entity-condition entity-name="EmplLeave" list="EmplLeave">
-        			<condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>
-        	</entity-condition>
+          
+        	
 			
-            
+            <set field="partyId" value="${userLogin.partyId}"/>
         </actions>
         <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
           
@@ -512,13 +580,6 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
 	<form name="EditEmplLeave" type="single" target="createEmplLeaveExt"
 		default-map-name="leaveApp" header-row-style="header-row"
 		default-table-style="basic-table">
@@ -595,8 +656,7 @@
 		<field name="leaveBalance" title="Leave Balance">
 			<text default-value="${leaveBalance}" disabled="true"></text>
 		</field>
-		<field name="submitButton" title="${uiLabelMap.CommonCreate}" action="javascript: return staffLeaveFormValidation();" event="onclick"
-			widget-style="smallSubmit">
+		<field name="submitButton" title="${uiLabelMap.CommonCreate}" action="javascript: return staffLeaveFormValidation();" event="onclick" widget-style="smallSubmit">
 			<submit button-type="button" />
 		</field>
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" action="javascript: return staffLeaveFormValidation();" event="onclick"
@@ -608,21 +668,20 @@
 			<submit button-type="button" />
 		</field> 
 	</form>
-	<form name="FindLeaveApprovals" type="single" target="FindLeaveApprovals"
-		odd-row-style="header-row" default-table-style="basic-table"
-		default-entity-name="EmplLeave">
-		<field name="noConditionFind">
-			<hidden value="Y" /><!-- if this isn't there then with all fields 
-				empty no query will be done -->
+
+	
+	
+	 <form name="FindLeaveApprovals" default-map-name="LeaveApp" target="FindLeaveApprovals" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<!-- <set field="status" value="AVAILABLE"/> -->
+        	
+        </actions>
+        <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/> -->
+       <field name="responsibleEmployee">
+			<hidden value="${userLogin.partyId}" />
 		</field>
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<lookup target-form-name="LookupPartyName" />
-		</field>
-		<field name="leaveStatus">
-			<hidden value="Approved" />
-		</field>
-		<field name="responsibleEmployee">
-			<hidden value="userLogin.partyId" />
+			<lookup target-form-name="LookupEmployee" />
 		</field>
 		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
 			<drop-down allow-empty="true">
@@ -639,31 +698,33 @@
 		<field name="description">
 			<hidden />
 		</field>
-		<field name="searchButton" title="${uiLabelMap.CommonFind}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
-	</form>
-
-	<form name="ListLeaveApprovals" list-name="listIt" type="list"
-		odd-row-style="alternate-row" header-row-style="header-row-2"
-		default-table-style="basic-table hover-bar" paginate-target="EmplLeave">
-		<actions>
-			<!-- <set field="entityName" value="EmplLeave" /> -->
-			<entity-condition entity-name="EmplLeave">
-				<condition-expr field-name="responsibleEmployee"
-					operator="equals" from-field="userLogin.partyId" />
-			</entity-condition>
-
-			<service service-name="performFind" result-map="result"
-				result-map-list="listIt">
-				<field-map field-name="inputFields" from-field="leaveApprovalCtx" />
-				<field-map field-name="entityName" value="EmplLeave" />
-				<field-map field-name="orderBy" from-field="parameters.leaveId" />
-				<field-map field-name="viewIndex" from-field="viewIndex" />
-				<field-map field-name="viewSize" from-field="viewSize" />
-			</service>
-		</actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+     <form name="ListLeaveApprovals" target="" title="" list-name="listIt" type="list" paginate-target="FindLeaveApprovals"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        
+        <entity-condition entity-name="EmplLeave">
+        			 <condition-expr field-name="responsibleEmployee" operator="equals" from-field="userLogin.partyId"/> 
+        	</entity-condition> 
+        
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="EmplLeave"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+          
+        	
+			
+            <set field="responsibleEmployee" value="${userLogin.partyId}"/>
+        </actions>
+        <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
+          
+      
 		
 		<field name="partyId" field-name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="PartyNameView"
@@ -688,16 +749,33 @@
 				<parameter param-name="leaveId" />
 			</hyperlink>
 		</field> -->
-		<field name="ApproveLeaves" title="${uiLabelMap.viewdetails}"
-			widget-style="buttontext">
+		<field name="ApproveLeaves" title="${uiLabelMap.viewdetails}" widget-style="buttontext" use-when="${approvalStatus != 'Rejected'}&amp;&amp;${approvalStatus != 'Approved'}">
 			<hyperlink target="viewEmplLeaveDetails" description="${uiLabelMap.viewdetails}">
 			    <parameter param-name="leaveId" />
 				<parameter param-name="partyId" value="${partyId}" />
 				<parameter param-name="fromDate" />
 				<parameter param-name="leaveTypeId" />
+				
 			</hyperlink>
 		</field>
-	</form>
+		<field name="description">
+			<hidden />
+		</field>
+    </form>
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	<form name="approveEmplLeaveStatus" type="single" target="forwardApplication"
 		default-map-name="leaveApp">
@@ -1008,7 +1086,7 @@
 			</entity-condition>
 		</actions>
 		<!-- <field name="leaveBalanceId"><hidden /></field> -->
-		 <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+		 <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><lookup target-form-name="LookupEmployee"/></field>
 		
 		<!-- <field name="LeaveBalanceCarriedForward"><text size="45"></text></field>
 		<field name="LeaveDaysUsed"><text size="45"></text></field> -->
@@ -1039,105 +1117,6 @@
 	
 	
 	
-	<!-- =============================FOR LEAVE UPDATE============================================ -->
-	
-	<form name="ListEmplLeavesForUpdateAndDelete" list-name="listIt" type="list"
-		odd-row-style="alternate-row" header-row-style="header-row-2"
-		paginate-target="EditEmplLeave" default-table-style="basic-table hover-bar">
-		<actions>
-
-			<entity-condition entity-name="EmplLeave">
-				<condition-expr field-name="partyId" operator="equals"
-					from-field="userLogin.partyId" />
-			</entity-condition>
-		</actions>
-		<field name="leaveId"><hidden/></field>
-		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<display-entity entity-name="Person" key-field-name="partyId"
-				description="${firstName} ${lastName}">
-			</display-entity>
-		</field>
-		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
-			<!-- <display-entity entity-name="EmplLeaveType" /> -->
-			<drop-down allow-empty="true">
-				<entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
-			</drop-down>
-		</field>
-		<field name="emplLeaveReasonTypeId">
-			<!-- <display-entity entity-name="EmplLeaveReasonType" /> -->
-			<drop-down allow-empty="true">
-				<entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType" />
-			</drop-down>
-		</field>
-		<field name="fromDate">
-			<date-time type="date"/>
-		</field>
-		<field name="thruDate">
-			<date-time type="date"/>
-		</field>
-		<field name="leaveDuration">
-			<text />
-		</field>		
-		<!-- <field name="carryOverUsed">
-			<display />
-		</field> -->
-		<field name="applicationStatus" title="Application Status">
-			<display />
-		</field>
-	<field name="approvalStatus" title="Approval Status">
-			<display />
-		</field>
-
-		<field name="responsibleEmployee" title="Approver">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}"
-				key-field-name="partyId">
-	
-			</display-entity>
-		</field>		
-		<field name="handedOverTo" title="Handed Over To">
-		<!-- 	<display-entity entity-name="Person" description="${firstName} ${lastName}"
-				key-field-name="partyId">
-			</display-entity> -->
-			<drop-down allow-empty="true">
-				<entity-options description="${firstName} ${lastName}" key-field-name="partyId" entity-name="Person" />
-			</drop-down>
-		</field>
-		
-		<field name="forwardLeave" title="${uiLabelMap.forward}"
-			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
-			<hyperlink also-hidden="false" description="${uiLabelMap.forward}"
-				target="forwardApplication">
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveId" />
-				<parameter param-name="leaveTypeId" />
-				<parameter param-name="fromDate" />
-			</hyperlink>
-		</field>
-		
-		<field name="updateLeave" title="${uiLabelMap.CommonUpdate}"
-			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
-			<hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}"
-				target="updateEmplLeave2">
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveTypeId" />
-				<parameter param-name="fromDate" /> 
-				<parameter param-name="leaveId" />
-			</hyperlink>
-		</field>
-		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
-			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
-			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
-				target="deleteEmplLeave">
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveTypeId"/>
-				<parameter param-name="fromDate" />
-				<parameter param-name="leaveId" />
-			</hyperlink>
-		</field>
-		<field name="description">
-			<hidden />
-		</field>
-	</form>
 	
 	
 	<!-- ====================================THIS IS FOR LEAVE REJECTION REASON POPUP====================================================== -->
@@ -1239,11 +1218,12 @@
 	</form>
 	
 	<form name="EditEmplLeaveCalenderListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLeaveCalender"
-		paginate-target="EditOpeningLeaveBalanceForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		paginate-target="EmplLeaveCalender" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="EmplLeaveCalender">
-			<condition-expr field-name="partyId" from-field="${userLogin.partyId}"/>
+			<condition-expr field-name="partyId" from-field="userLogin.partyId"/> 
 			</entity-condition>
+			<!-- <set field="partyId" value="${userLogin.partyId}"/> -->
 		</actions>
 		
 		<field name="leaveCalenderId"><hidden /></field>
@@ -1259,7 +1239,7 @@
 	<!-- ======================================FOR HR ADMIN=========================================== -->
 	
 	<form name="EditEmplLeaveCalenderListForHRForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLeaveCalender"
-		paginate-target="EditOpeningLeaveBalanceForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		paginate-target="EmplLeaveCalender" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="EmplLeaveCalender"></entity-condition>
 		</actions>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>InterestManagement Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service>
+    
+        <service name="createFixedDepositContract" engine="simple" default-entity-name="FixedDepositContract"
+             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="createFixedDepositContract" auth="true">
+        <description>Create FixedDepositContract</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+   
+    
+    <service name="updateFixedDepositContract" engine="simple" default-entity-name="FixedDepositContract"
+             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="updateFixedDepositContract" auth="true">
+        <description>Update FixedDepositContract</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteFixedDepositContract" engine="simple" default-entity-name="FixedDepositContract"
+             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="deleteFixedDepositContract" auth="true">
+        <description>Delete FixedDepositContract</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+            <service name="createSavingsTypeContract" engine="simple" default-entity-name="SavingsTypeContract"
+             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="createSavingsTypeContract" auth="true">
+        <description>Create SavingsTypeContract</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+   
+    
+    <service name="updateSavingsTypeContract" engine="simple" default-entity-name="SavingsTypeContract"
+             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="updateSavingsTypeContract" auth="true">
+        <description>Update SavingsTypeContract</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteSavingsTypeContract" engine="simple" default-entity-name="SavingsTypeContract"
+             location="component://interestmanagement/script/org/ofbiz/interestmanagement/InterestManagementServices.xml" invoke="deleteSavingsTypeContract" auth="true">
+        <description>Delete SavingsTypeContract</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+    <service name="calculateInterestEarned" engine="java" location="org.ofbiz.interestmanagement.InterestManagementServices" invoke="calculateFixedDepositInterest">
+    	<description>Interest Earned</description>
+		<attribute name="message" type="String" mode="IN"/>
+	</service>
+    
+    
+</services>

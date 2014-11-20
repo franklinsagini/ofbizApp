@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
-import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -31,10 +30,10 @@ import org.ofbiz.webapp.event.EventHandlerException;
  * 
  **/
 public class AmortizationServices {
-	private static int ONEHUNDRED = 100;
+	public static int ONEHUNDRED = 100;
 	private static int ONE = 1;
 	private static String LINEAR = "LINEAR";
-	private static String REDUCING_BALANCE = "REDUCING_BALANCE";
+	public static String REDUCING_BALANCE = "REDUCING_BALANCE";
 	
 	public static Logger log = Logger.getLogger(AmortizationServices.class);
 	
@@ -51,10 +50,10 @@ public class AmortizationServices {
 		String loanApplicationId = (String) request
 				.getParameter("loanApplicationId");
 		GenericValue loanApplication = null, loanAmortization;
-
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
-					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					UtilMisc.toMap("loanApplicationId", Long.valueOf(loanApplicationId)),
 					false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -80,9 +79,10 @@ public class AmortizationServices {
 		 * */
 		GenericValue loanProduct = null;
 		String loanProductId = loanApplication.getString("loanProductId");
+		loanProductId = loanProductId.replaceAll(",", "");
 		try {
 			loanProduct = delegator.findOne("LoanProduct",
-					UtilMisc.toMap("loanProductId", loanProductId), false);
+					UtilMisc.toMap("loanProductId", Long.valueOf(loanProductId)), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -100,7 +100,7 @@ public class AmortizationServices {
 		}
 		// This value will be changing as we go along
 		BigDecimal bdPreviousBalance = dbLoanAmt;
-		String loanAmortizationId;
+		Long loanAmortizationId;
 
 		int iAmortizationCount = 0;
 
@@ -117,7 +117,7 @@ public class AmortizationServices {
 
 		while (iAmortizationCount < iRepaymentPeriod) {
 			iAmortizationCount++;
-			loanAmortizationId = delegator.getNextSeqId("LoanAmortization", 1);
+			loanAmortizationId = delegator.getNextSeqIdLong("LoanAmortization", 1);
 
 			if (deductionType.equals(REDUCING_BALANCE)){
 			bdRepaymentInterestAmt = bdPreviousBalance
@@ -136,12 +136,12 @@ public class AmortizationServices {
 			
 			//Insurance Amount = insuranceRate times balance divide by 100
 			bdInsuranceAmount = bdInsuranceRate.multiply(bdPreviousBalance.setScale(6, RoundingMode.HALF_UP)).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
-			
+			loanApplicationId = loanApplicationId.replaceAll(",", "");
 			loanAmortization = delegator.makeValue("LoanAmortization", UtilMisc
 					.toMap("loanAmortizationId", loanAmortizationId,
 							"paymentNo", new Long(iAmortizationCount)
 									.longValue(), "loanApplicationId",
-							loanApplicationId, "paymentAmount", paymentAmount
+							Long.valueOf(loanApplicationId), "paymentAmount", paymentAmount
 									.setScale(6, RoundingMode.HALF_UP),
 							"interestAmount", bdRepaymentInterestAmt.setScale(
 									6, RoundingMode.HALF_UP),
@@ -221,12 +221,13 @@ public class AmortizationServices {
 		//Get the Charge Amount for InsuranceRate in the Loan_Product_Charge
 		//LoanProductCharge
 		List<GenericValue> loanProductChargeELI = null;
+		productChargeId = productChargeId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> chargesConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"productChargeId", EntityOperator.EQUALS,
-						productChargeId), EntityCondition
+						Long.valueOf(productChargeId)), EntityCondition
 						.makeCondition("loanProductId",
-								EntityOperator.EQUALS, loanApplication.getString("loanProductId"))),
+								EntityOperator.EQUALS, loanApplication.getLong("loanProductId"))),
 						EntityOperator.AND);
 		
 		try {
@@ -280,7 +281,7 @@ public class AmortizationServices {
 	 * @author Japheth Odonya @when Aug 10, 2014 1:04:44 PM Calculcate Repayment
 	 *         Amount for Flat Rate Loan Repayment Method
 	 * */
-	private static BigDecimal calculateFlatRatePaymentAmount(
+	public static BigDecimal calculateFlatRatePaymentAmount(
 			BigDecimal loanAmt, BigDecimal interestRatePM, int repaymentPeriod) {
 		BigDecimal bdPaymentAmount;
 
@@ -325,11 +326,11 @@ public class AmortizationServices {
 		// delete them
 		log.info("######## Tyring to Delete ######## !!!");
 		List<GenericValue> loanAmortizationELI = null; // =
-
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		try {
 			loanAmortizationELI = delegator.findList("LoanAmortization",
 					EntityCondition.makeCondition("loanApplicationId",
-							loanApplicationId), null, null, null, false);
+							Long.valueOf(loanApplicationId)), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -367,9 +368,10 @@ public class AmortizationServices {
 	public static void updateLoanApplicationRepayments(Delegator delegator, String loanApplicationId, BigDecimal paymentAmount, int iRepaymentPeriod){
 		//Update Loan 
 		GenericValue loanApplication = null;
+		loanApplicationId = loanApplicationId.replaceAll("", "");
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
-					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+					UtilMisc.toMap("loanApplicationId", Long.valueOf(loanApplicationId)), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}

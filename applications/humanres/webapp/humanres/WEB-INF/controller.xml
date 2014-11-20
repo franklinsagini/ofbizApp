@@ -185,7 +185,7 @@ under the License.
          
          <request-map uri="createOpeningLeaveBalances">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="addOpeningLeaveBalances"/>
+        <response name="success" type="view" value="createOpeningLeaveBalances"/>
     </request-map> 
          
          
@@ -361,8 +361,8 @@ under the License.
     <request-map uri="addStaffOpeningBalance">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="addStaffOpeningBalance" />
-		<response name="success" type="view" value="FindEmplLeaves" />
-		<response name="error" type="view" value="addOpeningLeaveBalances" />
+		<response name="success" type="request-redirect-noparam" value="createOpeningLeaveBalances" />
+		<response name="error" type="view" value="createOpeningLeaveBalances" />
 	</request-map>
 	
 	 <request-map uri="changePayrollPrefix">
@@ -661,7 +661,7 @@ under the License.
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="dismissStaffOnProbation" />
 		<response name="success" type="view" value="FindEmplLeaves" />
-		<response name="error" type="view" value="addOpeningLeaveBalances" />
+		<response name="error" type="view" value="FindEmplLeaves" />
 	</request-map>
     
     
@@ -1837,10 +1837,10 @@ under the License.
     <request-map uri="updateEmplLeaveExt">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplLeave"/>
-        <response name="success" type="view" value="EditEmplLeave">
+        <response name="success" type="view" value="FindEmplLeaves">
         	
         </response>
-        <response name="error" type="view" value="EditEmplLeave"/>
+        <response name="error" type="view" value="FindEmplLeaves"/>
     </request-map>
 
     <!--====================Recruitment Requests===================================-->
@@ -2460,6 +2460,93 @@ under the License.
 			</response>
 		<response name="error" type="view" value="station" />
 	</request-map>
+	
+	<!-- ================Employee Separation===================================== -->
+	<request-map uri="separationTypes">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="separationTypes"
+			save-home-view="true">
+			</response>
+	</request-map>
+	
+	<!-- Create Separation Details -->
+	<request-map uri="createSeparationTypes">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createSeparationTypes" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="separationTypes">
+			</response>
+		<response name="error" type="view" value="separationTypes" />
+	</request-map>
+	
+	<request-map uri="updateSeparationTypes">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStaffNextOfKin" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="separationTypes">
+			</response>
+		<response name="error" type="view" value="separationTypes" />
+	</request-map>
+	
+	<request-map uri="deleteSeparationTypes">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteSeparationTypes" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="separationTypes">
+			</response>
+		<response name="error" type="view" value="separationTypes" />
+	</request-map>
+	
+	<request-map uri="separationApplication">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="separationApplication"
+			save-home-view="true">
+			</response>
+	</request-map>
+	
+	<!-- Create Separation Details -->
+	<request-map uri="createSeparationApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createSeparationApplication" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="separationApplication">
+			</response>
+		<response name="error" type="view" value="separationApplication" />
+	</request-map>
+	
+	<request-map uri="updateSeparationApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateSeparationApplication" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="separationApplication">
+			</response>
+		<response name="error" type="view" value="separationApplication" />
+	</request-map>
+	
+	<request-map uri="deleteSeparationApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteSeparationApplication" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="separationApplication">
+			</response>
+		<response name="error" type="view" value="separationApplication" />
+	</request-map>
+	
+	 <request-map uri="separateEmployee">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.humanres.SeparateEmployee" invoke="separateEmployee" ></event>
+        <response name="success" type="request-redirect-noparam" value="separationApplication"/> 
+		<response name="error" type="view" value="separationApplication" />
+     </request-map>
+	
+	
+	
     
     
     <!-- ============Reports================================================ -->
@@ -2591,7 +2678,14 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<!-- ========================Perf Reports========================== -->
 	
+	<request-map uri="perfReviewReport"><security https="true" auth="true"/><response name="success" type="view" value="perfReviewReport"/></request-map>
+	<request-map uri="perfScoresReport"><security https="true" auth="true"/><response name="success" type="view" value="perfScoresReport"/></request-map>
+	
+	
+	<!-- ========================Training Reports========================== -->
+	<request-map uri="trainingSummaryReport"><security https="true" auth="true"/><response name="success" type="view" value="trainingSummaryReport"/></request-map>
 	
 	
     
@@ -2768,10 +2862,13 @@ under the License.
     <view-map name="FindTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#FindTrainingApprovals"/>
     <view-map name="EditTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#EditTrainingApprovals"/>
     <view-map name="LookupTraining" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupTraining"/>
-    
-    
     <view-map name="trainingCostType" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#NewTrainingCostType"/>
     <view-map name="trainingCosts" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#NewTrainingCosts"/>
+    
+    <!-- =======================Employee Separation============================ -->
+    <view-map name="separationTypes" type="screen" page="component://humanres/widget/EmployeeScreens.xml#SeparationTypes"/>
+    <view-map name="separationApplication" type="screen" page="component://humanres/widget/EmployeeScreens.xml#SeparationApplication"/>
+    
     
     <!-- ==================PayRoll History View Map===================== -->
     <view-map name="PayrollHistory" type="screen" page="component://humanres/widget/EmployeeScreens.xml#PayrollHistory"/>
@@ -2859,10 +2956,15 @@ under the License.
 	<view-map name="staffOnLeave" type="screen" page="component://humanres/widget/ReportScreens.xml#staff_on_leave_Report"/>
 	<view-map name="advanceSalary" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
 	<view-map name="EditSalaryAdvanceTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindSalaryAdvanceTypes"/>
-	<view-map name="addOpeningLeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffOpeningBalance"/> 
+	<view-map name="createOpeningLeaveBalances" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffOpeningBalance"/> 
 	<view-map name="popup" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveRejectionReason"/> 
 	<view-map name="popupSentBack" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#leaveSentBackReason"/> 
 	<view-map name="leaveCalender" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffLeaveCalender"/> 
 	<view-map name="payrollPrefix" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewPayrollPrefix"/>
+	
+	<view-map name="perfReviewReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfReviewReport"/>
+    <view-map name="perfScoresReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfScoresReport"/>
+    
+    <view-map name="trainingSummaryReport" type="screen" page="component://humanres/widget/TrainingReportScreens.xml#TrainingSummaryReport"/>
 						
 </site-conf>

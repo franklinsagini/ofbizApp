@@ -271,7 +271,7 @@
     
     <form name="AddEmployeeQualificationFromMenu" type="single" target="createEmployeeQualification">
         <!--auto-fields-service service-name="createPartyQual"/-->
-          <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+          <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupEmployee"/></field>
         <field name="partyQualTypeId" title="Select Qualification" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
@@ -403,7 +403,7 @@
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="timestamp"></date-time></field>
         <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="timestamp"></date-time></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
-        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployee"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplLeaves" type="list" list-name="listIt" separate-columns="true" target="updateEmplLeave" paginate-target="FindEmplLeaves"
@@ -416,7 +416,7 @@
         </actions>
         <auto-fields-service service-name="updateEmplLeave"/>
         <field name="partyId"><hidden/></field>
-        <field name="approverPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approverPartyId"><lookup target-form-name="LookupEmployee"/></field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
@@ -1088,7 +1088,8 @@
     <form name="FindEmployeeRelations" type="single" target="employeeRelations" default-entity-name="RoleTypeAndPersonEmployeeAndBranch">
      
          <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId"><text-find/></field>
+        
+        <field name="partyId" title="Staff"><lookup target-form-name="LookupEmployee"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="nationalIDNumber" title="Id Number"><text-find/></field>
@@ -1141,7 +1142,8 @@
     <form name="FindEmployeeBank" type="single" target="employeeBankDetails" default-entity-name="RoleTypeAndPersonEmployeeAndBranch">
     
            <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId"><text-find/></field>
+     
+         <field name="partyId" title="Staff"><lookup target-form-name="LookupEmployee"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
         <field name="nationalIDNumber" title="Id Number"><text-find/></field>
@@ -1294,6 +1296,97 @@
          <submit button-type="button"/>
          </field>
     </form>
+    
+    <!-- ========================Employee Separation Forms================================ -->
+    
+     <form name="NewSeparationTypes" type="single" target="createSeparationTypes"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="separationTypesContext">
+        
+        <field name="separationTypeId"><hidden/></field>
+        <field name="name" title="Separation Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="description" title="Description"><textarea/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listSeparationTypes" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSeparationTypes" paginate-target="separationTypes"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SeparationType">
+            	<order-by field-name="name"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateSeparationTypes"/>
+        
+        <field name="separationTypeId"><hidden/></field>
+        <field name="name" title="Separation Type"> <display/> </field>
+        <field name="description" title="Description"> <display/> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteSeparationTypes" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="separationTypeId"/>
+            </hyperlink>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <form name="NewSeparationApplication" type="single" target="createSeparationApplication"
+       focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="separationApplicationContext">
+       
+      <field name="separationApplicationId"><hidden/></field>
+        <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="separationTypeId" title="Separation Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="SeparationType" key-field-name="separationTypeId"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="reason" title="Reason For Separation"><textarea/></field>
+        <field name="effectiveDate" title="Effective Date"><date-time type="date"/></field>
+        <field name="separated"><hidden value="N"/></field>
+        <field name="status"><hidden value="Not Separated"/></field>
+       
+       <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+       
+       <form name="listSeparationAppliacation" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSeparationApplication" paginate-target="separationApplication"
+       odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <actions>
+           <entity-condition entity-name="SeparationApplication">
+           </entity-condition>
+       </actions>
+       <!-- auto-fields-service default-field-type="hidden" service-name="updateSeparationApplication"/ -->
+       
+       <field name="separationApplicationId"><hidden/></field>
+        <field name="partyId" title="Employee">
+        	<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})"></display-entity>
+        </field>
+        <field name="separationTypeId" title="Separation Type">
+        	<display-entity entity-name="SeparationType" key-field-name="separationTypeId" description="${name}"></display-entity>
+        </field>
+        <field name="reason" title="Reason For Separation"><display/></field>
+        <field name="effectiveDate" title="Effective Date"><display type="date"/></field>
+        <field name="status" title="Status"><display /></field>
+        
+       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+           <hyperlink target="deleteSeparationApplication" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+               <parameter param-name="separationApplicationId"/>
+           </hyperlink>
+       </field>
+       <field name="separateEmployee" title="Separate Employee" widget-style="buttontext">
+           <hyperlink target="separateEmployee" description="Separate Employee" also-hidden="false">
+               <parameter param-name="partyId"/>
+           </hyperlink>
+       </field>
+       <!--<field name="createpayrollperiods" title="Create Periods" widget-style="buttontext">
+           <hyperlink target="createpayrollperiods" description="Create Periods" also-hidden="false" 
+           	request-confirmation="true" confirmation-message="Do you wish to create periods for this Year?">
+               <parameter param-name="payrollYearId"/>
+           </hyperlink>
+       </field> 
+      <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>-->
+    </form>
+    
     
     <!-- ========================Employee profile contact information================================ -->
     

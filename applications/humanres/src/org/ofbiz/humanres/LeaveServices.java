@@ -527,6 +527,8 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 	log.info("++++++++++partyId++++++++++++++++++++" +partyId);
 	log.info("++++++++++leaveDuration++++++++++++++++++++" +leaveDuration);
 	GenericValue carryGV = null; //GenericValue result = null;
+	
+	double carryOverLeaveDays = 0;
 
       try {
             carryGV = delegator.findOne("EmplCarryOverLost", 
@@ -536,7 +538,14 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
        catch (GenericEntityException e) {
             e.printStackTrace();;
        }  
-       double carryOverLeaveDays = carryGV.getDouble("carryOverLeaveDays");
+      
+      if (carryGV != null) {
+    	  carryOverLeaveDays = carryGV.getDouble("carryOverLeaveDays");
+	} else {
+
+	}
+      
+       
        log.info("++++++++++++++++carryOverLeaveDays++++++++++++++" +carryOverLeaveDays);
        if (carryOverLeaveDays > leaveDuration) {
        	carryOverUsed = leaveDuration;
@@ -687,6 +696,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			// responsibleEmployee
 
 			leave.set("responsibleEmployee",	documentApproval.getString("responsibleEmployee"));
+			leave.set("rejectReason" , "-");
 			try {
 				delegator.createOrStore(leave);
 				//delegator.create("LeaveStatusLog", leavelog);
@@ -938,5 +948,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
 		return result;
 	}
+	
+	
 	
 }

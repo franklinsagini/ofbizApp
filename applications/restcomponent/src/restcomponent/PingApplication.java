@@ -14,6 +14,7 @@ public class PingApplication extends Application {
       Set<Class<?>> classes = new HashSet<Class<?>>();
       classes.add(PingResource.class);
       classes.add(MemberStatement.class);
+      classes.add(MSaccoServices.class);
       return classes;
   }
 }

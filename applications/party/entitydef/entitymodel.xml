@@ -2772,6 +2772,7 @@ under the License.
       <field name="cardId" type="id-long" ></field>
       <field name="isDisabled" type="indicator" ></field>
       <field name="disabilityDetails" type="long-varchar" ></field>
+      <field name="isSeparated" type="indicator" ></field>
 
       <field name="branchId" type="name"></field>
  	  <!-- field name="stationId" type="id"></field -->
@@ -3105,59 +3106,57 @@ under the License.
     <!-- Sacco Member Entity -->
     <!-- Member Entity and Related Entities -->
     <entity entity-name="Member" package-name="org.ofbiz.party.party" title="Member Entity" sequence-bank-size="1">
-    	<field name="partyId" type="id-ne"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
 
-    	<field name="isActive" type="indicator"></field>
+    	<field name="isActive" type="indicator" enable-audit-log="true"></field>
         <field name="createdBy" type="name"></field>
         <field name="updatedBy" type="name"></field>
-        <field name="branchId" type="name"></field>
+        <field name="branchId" type="name" enable-audit-log="true"></field>
 
-    	<field name="firstName" type="name"></field>
-    	<field name="middleName" type="name"></field>
-    	<field name="lastName" type="name"></field>
-    	<field name="salutation" type="name"></field>
-    	<field name="gender" type="indicator"></field>
-    	<field name="maritalStatus" type="indicator"></field>
-    	<field name="idNumber" type="name"></field>
-    	<field name="pinNumber" type="name"></field>
-    	<field name="passportNumber" type="name"></field>
-    	<field name="email" type="name"></field>
-    	<field name="emailAddress" type="name"></field>
-    	<field name="physicalAddress" type="name"></field>
-    	<field name="postalAddress" type="name"></field>
-    	<field name="memberClass" type="very-short"></field>
+    	<field name="firstName" type="name" enable-audit-log="true"></field>
+    	<field name="middleName" type="name" enable-audit-log="true"></field>
+    	<field name="lastName" type="name" enable-audit-log="true"></field>
+    	
+    	<field name="salutationId" type="id-int" enable-audit-log="true"></field>
+    	<field name="genderId" type="id-int" enable-audit-log="true"></field>
+    	<field name="maritalStatusId" type="id-int" enable-audit-log="true"></field>
+    	<field name="idNumber" type="name" enable-audit-log="true"></field>
+    	<field name="pinNumber" type="name" enable-audit-log="true"></field>
+    	<field name="passportNumber" type="name" enable-audit-log="true"></field>
+    	<field name="emailAddress" type="name" enable-audit-log="true"></field>
+    	<field name="physicalAddress" type="name" enable-audit-log="true"></field>
+    	<field name="postalAddress" type="name" enable-audit-log="true"></field>
+    	<field name="memberClassId" type="id-int" enable-audit-log="true"></field>
 
-    	<!-- <field name="memberType" type="very-short"></field> -->
-
-
-    	<field name="memberTypeName" type="name"></field>
+    	<field name="memberTypeId" type="id-int" enable-audit-log="true"></field>
 
 
-    	<field name="employeeNumber" type="name"></field>
-    	<field name="employeeType" type="name"></field>
-    	<field name="payrollNumber" type="name"></field>
-    	<field name="memberNumber" type="name"></field>
-    	<field name="mobileNumber" type="name"></field>
-    	<field name="birthDate" type="date"></field>
-    	<field name="permanentAddress" type="name"></field>
-    	<field name="currentAddress" type="name"></field>
-    	<field name="countryOfResidence" type="very-short"></field>
-    	<field name="country" type="very-short"></field>
-    	<field name="citizenship" type="very-short"></field>
-    	<field name="membershipofOtherSacco" type="indicator"></field>
+    	<field name="employeeNumber" type="name" enable-audit-log="true"></field>
+    	<field name="employmentTypeId" type="id-int" enable-audit-log="true"></field>
+    	<field name="payrollNumber" type="name" enable-audit-log="true"></field>
+    	<field name="memberNumber" type="name" enable-audit-log="true"></field>
+    	<field name="mobileNumber" type="name" enable-audit-log="true"></field>
+    	<field name="birthDate" type="date" enable-audit-log="true"></field>
+    	<field name="permanentAddress" type="name" enable-audit-log="true"></field>
+    	<field name="currentAddress" type="name" enable-audit-log="true"></field>
+    	<field name="countryOfResidence" type="very-short" enable-audit-log="true"></field>
+    	<field name="country" type="very-short" enable-audit-log="true"></field>
+    	<field name="citizenship" type="very-short" enable-audit-log="true"></field>
+    	<field name="membershipofOtherSacco" type="indicator" enable-audit-log="true"></field>
 
-    	<field name="joinDate" type="date"></field>
-    	<field name="registrationFee" type="fixed-point"></field>
-    	<field name="paidAmount" type="fixed-point"></field>
-    	<field name="finAccountId" type="id"></field>
+    	<field name="joinDate" type="date" enable-audit-log="true"></field>
+    	<field name="registrationFee" type="fixed-point" enable-audit-log="true"></field>
+    	<field name="paidAmount" type="fixed-point" enable-audit-log="true"></field>
+    	<field name="finAccountId" type="id" enable-audit-log="true"></field>
 
     	<!-- Images -->
-    	<field name="photourl" type="name"></field>
-    	<field name="idfronturl" type="name"></field>
-    	<field name="idbackurl" type="name"></field>
-    	<field name="signatureurl" type="name"></field>
+    	<field name="photourl" type="name" enable-audit-log="true"></field>
+    	<field name="idfronturl" type="name" enable-audit-log="true"></field>
+    	<field name="idbackurl" type="name" enable-audit-log="true"></field>
+    	<field name="signatureurl" type="name" enable-audit-log="true"></field>
 
-    	<field name="stationId" type="id"></field>
+    	<field name="stationId" type="id-int" enable-audit-log="true"></field>
+    	<field name="stationCode" type="id" enable-audit-log="true"></field>
 
     	<!--
     		NEW
@@ -3167,24 +3166,24 @@ under the License.
     		WITHDRAWN
     		DEAD
     	 -->
-    	<field name="memberStatus" type="name"></field>
+    	<field name="memberStatusId" type="id-int" enable-audit-log="true"></field>
 
-    	<field name="monthlySalaryAmount" type="fixed-point"></field>
-    	<field name="shareAmount" type="fixed-point"></field>
-    	<field name="memberDepositAmount" type="fixed-point"></field>
+    	<field name="monthlySalaryAmount" type="fixed-point" enable-audit-log="true"></field>
+    	<field name="shareAmount" type="fixed-point" enable-audit-log="true"></field>
+    	<field name="memberDepositAmount" type="fixed-point" enable-audit-log="true"></field>
 
-    	<field name="incomeScaleId" type="id"></field>
+    	<field name="incomeScaleId" type="id-int" enable-audit-log="true"></field>
 
-    	<field name="atmApplication" type="name"></field>
-    	<field name="msaccoApplication" type="name"></field>
+    	<field name="atmApplication" type="indicator" enable-audit-log="true"></field>
+    	<field name="msaccoApplication" type="indicator" enable-audit-log="true"></field>
 
     	<!-- Introducer -->
-    	<field name="recruitingAgent" type="name"></field>
-    	<field name="introducingMember" type="id"></field>
+    	<field name="recruitingAgentId" type="id-int" enable-audit-log="true"></field>
+    	<field name="introducingMember" type="id-vlong-int" enable-audit-log="true"></field>
 
-    	<field name="recuiterNames" type="name"></field>
-    	<field name="recruiterEmail" type="name"></field>
-    	<field name="recruiterPhone" type="name"></field>
+    	<field name="recuiterNames" type="name" enable-audit-log="true"></field>
+    	<field name="recruiterEmail" type="name" enable-audit-log="true"></field>
+    	<field name="recruiterPhone" type="name" enable-audit-log="true"></field>
 
     	<prim-key field="partyId"/>
 
@@ -3211,10 +3210,39 @@ under the License.
        <relation type="one" fk-name="MEMBER_STATION" rel-entity-name="Station">
             <key-map field-name="stationId"/>
         </relation>
+        
+        <relation type="one" fk-name="MEMBER_Status" rel-entity-name="MemberStatus">
+            <key-map field-name="memberStatusId"/>
+        </relation>
 
         <relation type="one" fk-name="MEMBER_MemberTypeName" rel-entity-name="MemberType">
-            <key-map field-name="memberTypeName" rel-field-name="memberTypeId"/>
+            <key-map field-name="memberTypeId" rel-field-name="memberTypeId"/>
         </relation>
+        
+            	 <relation type="one" fk-name="MEMBER_Salutation" rel-entity-name="Salutation">
+            <key-map field-name="salutationId"/>
+        </relation>
+        
+         <relation type="one" fk-name="MEMBER_Class" rel-entity-name="MemberClass">
+            <key-map field-name="memberClassId"/>
+        </relation>
+        
+        <relation type="one" fk-name="MEMBER_MaritalStatus" rel-entity-name="MaritalStatus">
+            <key-map field-name="maritalStatusId"/>
+        </relation>
+        
+         <relation type="one" fk-name="MEMBER_RecruitingAgent" rel-entity-name="RecruitingAgent">
+            <key-map field-name="recruitingAgentId"/>
+        </relation>
+        
+         <relation type="one" fk-name="MEMBER_EmploymentType" rel-entity-name="EmploymentType">
+            <key-map field-name="employmentTypeId"/>
+        </relation>
+        
+        <relation type="one" fk-name="MEMBER_Gender" rel-entity-name="Gender">
+            <key-map field-name="genderId"/>
+        </relation>
+        
 
         <index unique="true" name="index_idNumber">
     		<index-field name="idNumber"/>
@@ -3222,7 +3250,6 @@ under the License.
     	<index unique="true" name="index_payrollNumber">
     		<index-field name="payrollNumber"/>
     	</index>
-
     </entity>
 
     <!-- County -->
@@ -3234,10 +3261,10 @@ under the License.
 
     <!-- Member Attachments -->
     <entity entity-name="MemberAttachment" package-name="org.ofbiz.party.party" title="Member Attachment">
-    	<field name="memberAttachmentId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
+    	<field name="memberAttachmentId" type="id-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
     	<field name="name" type="name"></field>
-    	<field name="isactive" type="indicator"></field>
+    	<field name="isActive" type="indicator"></field>
 
     	<!-- Add attachment field -->
     	<prim-key field="memberAttachmentId"/>
@@ -3266,14 +3293,14 @@ under the License.
 
     <!-- Employee Details -->
     <entity entity-name="EmploymentDetails" package-name="org.ofbiz.party.party" title="Employee Details">
-    	<field name="employmentDetailsId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
-    	<field name="employerId" type="id"></field>
+    	<field name="employmentDetailsId" type="id-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
+    	<field name="employerId" type="id-int"></field>
 
     	<field name="department" type="name"></field>
 
     	<field name="worstation" type="name"></field>
-    	<field name="sourceOfFundId" type="id"></field>
+    	<field name="sourceOfFundId" type="id-int"></field>
     	<prim-key field="employmentDetailsId"/>
     	<relation type="one" fk-name="EMPLOYMENTDETAILS_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
@@ -3290,13 +3317,13 @@ under the License.
 
     <!-- Business Details -->
     <entity entity-name="BusinessDetails" package-name="org.ofbiz.party.party" title="BusinessDetails Entity">
-    	<field name="businessDetailsId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
+    	<field name="businessDetailsId" type="id-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
 
     	<field name="name" type="name"></field>
     	<field name="address" type="name"></field>
     	<field name="natureOfBusiness" type="name"></field>
-    	<field name="sourceOfFundId" type="id"></field>
+    	<field name="sourceOfFundId" type="id-int"></field>
 
     	<prim-key field="businessDetailsId"/>
 
@@ -3311,8 +3338,8 @@ under the License.
 
     <!-- Member Contributio -->
      <entity entity-name="MemberContribution" package-name="org.ofbiz.party.party" title="MemberContribution Entity">
-    	<field name="memberContributionId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
+    	<field name="memberContributionId" type="id-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
     	<field name="contributionAmt" type="fixed-point"></field>
     	<field name="paymentMethodTypeId" type="id"></field>
     	<field name="contributionEffectiveDate" type="date"></field>
@@ -3335,15 +3362,21 @@ under the License.
      		<field name="name" type="name"></field>
 			<prim-key field="accountStatusId"/>
      </entity>
-
+     
+     <!-- Member Status -->
+    <entity entity-name="MemberStatus" package-name="org.ofbiz.party.party" title="MemberStatus Entity">
+     		<field name="memberStatusId" type="id-int"></field>
+     		<field name="name" type="name"></field>
+			<prim-key field="memberStatusId"/>
+     </entity>
     <!-- Member Account -->
      <entity entity-name="MemberAccount" package-name="org.ofbiz.party.party" title="MemberAccount Entity">
-     		<field name="memberAccountId" type="id-ne"></field>
-     		<field name="partyId" type="id"></field>
-			<field name="accountProductId" type="id"></field>
+     		<field name="memberAccountId" type="id-vlong-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
+			<field name="accountProductId" type="id-int"></field>
 			<field name="accountNo" type="name"></field>
-			<field name="accountName" type="name"></field>
-			<field name="accountStatusId" type="id"></field>
+			<field name="accountName" type="name" enable-audit-log="true"></field>
+			<field name="accountStatusId" type="id-int"></field>
 			<field name="withdrawable" type="name"></field>
 
 			<field name="contributing" type="name"></field>
@@ -3370,9 +3403,9 @@ under the License.
 
      <!-- MemberReferee -->
      <entity entity-name="MemberReferee" package-name="org.ofbiz.party.party" title="MemberReferee Entity">
-     		<field name="memberRefereeId" type="id-ne"></field>
-     		<field name="partyId" type="id"></field>
-     		<field name="refreeId" type="id"></field>
+     		<field name="memberRefereeId" type="id-vlong-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
+     		<field name="refreeId" type="id-vlong-int"></field>
      		<field name="memberNo" type="name"></field>
      		<field name="payrollNo" type="name"></field>
 
@@ -3396,8 +3429,8 @@ under the License.
 
     <!-- Member Nominee -->
     <entity entity-name="MemberNominee" package-name="org.ofbiz.party.party" title="MemberNominee Entity">
-     		<field name="memberNomineeId" type="id-ne"></field>
-     		<field name="partyId" type="id"></field>
+     		<field name="memberNomineeId" type="id-vlong-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
      		<field name="firstName" type="name"></field>
      		<field name="middleName" type="name"></field>
      		<field name="lastName" type="name"></field>
@@ -3406,7 +3439,7 @@ under the License.
      		<field name="postalAddress" type="name"></field>
      		<field name="telephoneNumber" type="name"></field>
      		<field name="mobilePhone" type="name"></field>
-     		<field name="relationshipId" type="id"></field>
+     		<field name="relationshipId" type="id-int"></field>
      		<field name="isAdministrator" type="indicator"></field>
      		<field name="percentage" type="fixed-point"></field>
      		<field name="independentwitnessnames" type="name"></field>
@@ -3429,8 +3462,8 @@ under the License.
 
      <!-- Terms and Conditions -->
      <entity entity-name="TermsAndConditions" package-name="org.ofbiz.party.party" title="TermsAndConditions Entity">
-     		<field name="termsAndConditionsId" type="id-ne"></field>
-     		<field name="partyId" type="id"></field>
+     		<field name="termsAndConditionsId" type="id-vlong-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
      		<field name="acceptTermsAndConditions" type="indicator"></field>
      		<field name="dateAccepted" type="date"></field>
      		<prim-key field="termsAndConditionsId"/>
@@ -3440,15 +3473,15 @@ under the License.
             package-name="org.ofbiz.party.party"
             title="MemberStatusLog Entity">
 
-      <field name="memberStatusLogId" type="id-ne"></field>
+      <field name="memberStatusLogId" type="id-int"></field>
 
       <field name="isActive" type="indicator"></field>
       <field name="createdBy" type="id"></field>
       <field name="updatedBy" type="id"></field>
       <field name="branchId" type="name"></field>
 
-      <field name="partyId" type="id"></field>
-      <field name="memberStatus" type="name"></field>
+      <field name="partyId" type="id-vlong-int"></field>
+      <field name="memberStatusId" type="id-int"></field>
       <field name="comment" type="name"></field>
 
 
@@ -3464,17 +3497,61 @@ under the License.
 
     <!-- Member Type -->
     <entity entity-name="MemberType" package-name="org.ofbiz.party.party" title="Member Type Entity">
-        <field name="memberTypeId" type="id-ne"></field>
+        <field name="memberTypeId" type="id-int"></field>
      		<field name="name" type="name"></field>
 		  <prim-key field="memberTypeId"/>
+    </entity>
+    
+    <!-- MemberClass -->
+    <entity entity-name="MemberClass" package-name="org.ofbiz.party.party" title="MemberClass Entity">
+        <field name="memberClassId" type="id-int"></field>
+     		<field name="name" type="name"></field>
+		  <prim-key field="memberClassId"/>
+    </entity>
+     <!-- MemberStatus  -->
+    <entity entity-name="MemberStatus" package-name="org.ofbiz.party.party" title="MemberStatus Entity">
+        <field name="memberStatusId" type="id-int"></field>
+     		<field name="name" type="name"></field>
+		  <prim-key field="memberStatusId"/>
+    </entity>
+     <!-- Salutation  -->
+    <entity entity-name="Salutation" package-name="org.ofbiz.party.party" title="Salutation Entity">
+        <field name="salutationId" type="id-int"></field>
+     		<field name="name" type="name"></field>
+		  <prim-key field="salutationId"/>
+    </entity>
+     <!-- MaritalStatus  -->
+     <entity entity-name="MaritalStatus" package-name="org.ofbiz.party.party" title="MaritalStatus Entity">
+        <field name="maritalStatusId" type="id-int"></field>
+     		<field name="name" type="name"></field>
+		  <prim-key field="maritalStatusId"/>
+    </entity>
+    
+    <!-- RecruitingAgent -->
+    <entity entity-name="RecruitingAgent" package-name="org.ofbiz.party.party" title="RecruitingAgent Entity">
+        <field name="recruitingAgentId" type="id-int"></field>
+     		<field name="name" type="name"></field>
+		  <prim-key field="recruitingAgentId"/>
+    </entity>
+    <!-- EmploymentType -->
+    <entity entity-name="EmploymentType" package-name="org.ofbiz.party.party" title="EmploymentType Entity">
+        <field name="employmentTypeId" type="id-int"></field>
+     		<field name="name" type="name"></field>
+		  <prim-key field="employmentTypeId"/>
+    </entity>
+    <!-- Gender -->
+    <entity entity-name="Gender" package-name="org.ofbiz.party.party" title="Gender Entity">
+        <field name="genderId" type="id-int"></field>
+     		<field name="name" type="name"></field>
+		  <prim-key field="genderId"/>
     </entity>
 
      <!-- ChangeMemberStation -->
      <entity entity-name="ChangeMemberStation" package-name="org.ofbiz.party.party" title="ChangeMemberStation">
-    	<field name="changeMemberStationId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
-    	<field name="fromStation" type="id"></field>
-    	<field name="toStation" type="id"></field>
+    	<field name="changeMemberStationId" type="id-vlong-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
+    	<field name="fromStation" type="id-int"></field>
+    	<field name="toStation" type="id-int"></field>
     	<field name="changedBy" type="name"></field>
 
     	<!-- Add attachment field -->
@@ -3491,8 +3568,8 @@ under the License.
     </entity>
      <!-- ChangeMemberEmploymentType -->
      <entity entity-name="ChangeMemberEmploymentType" package-name="org.ofbiz.party.party" title="ChangeMemberEmploymentType">
-    	<field name="changeMemberEmploymentTypeId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
+    	<field name="changeMemberEmploymentTypeId" type="id-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
     	<field name="fromEmploymentType" type="name"></field>
     	<field name="toEmploymentType" type="name"></field>
     	<field name="changedBy" type="name"></field>
@@ -3506,8 +3583,8 @@ under the License.
     </entity>
      <!-- ChangeMemberEmployeeNumber -->
      <entity entity-name="ChangeMemberEmployeeNumber" package-name="org.ofbiz.party.party" title="ChangeMemberEmployeeNumber">
-    	<field name="changeMemberEmployeeNumberId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
+    	<field name="changeMemberEmployeeNumberId" type="id-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
     	<field name="fromEmployeeNumber" type="name"></field>
     	<field name="toEmployeeNumber" type="name"></field>
     	<field name="changedBy" type="name"></field>
@@ -3522,9 +3599,9 @@ under the License.
      <!-- ChangeMemberBranch -->
      <entity entity-name="ChangeMemberBranch" package-name="org.ofbiz.party.party" title="ChangeMemberBranch">
     	<field name="changeMemberBranchId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
-    	<field name="fromBranch" type="id"></field>
-    	<field name="toBranch" type="id"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
+    	<field name="fromBranch" type="name"></field>
+    	<field name="toBranch" type="name"></field>
     	<field name="changedBy" type="name"></field>
 
     	<!-- Add attachment field -->
@@ -3543,8 +3620,8 @@ under the License.
     </entity>
      <!-- ChangeMemberShareAmount -->
      <entity entity-name="ChangeMemberShareAmount" package-name="org.ofbiz.party.party" title="ChangeMemberShareAmount">
-    	<field name="changeMemberShareAmountId" type="id-ne"></field>
-    	<field name="partyId" type="id"></field>
+    	<field name="changeMemberShareAmountId" type="id-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
     	<field name="fromShareAmount" type="fixed-point"></field>
     	<field name="toShareAmount" type="fixed-point"></field>
     	<field name="changedBy" type="name"></field>

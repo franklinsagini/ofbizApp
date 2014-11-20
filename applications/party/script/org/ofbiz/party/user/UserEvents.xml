@@ -454,13 +454,32 @@ under the License.
                 <!-- process field="firstName"><copy to-field="firstName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty></process>
                 <process field="middleName"><copy to-field="middleName"/></process>
                 <process field="lastName"><copy to-field="lastName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty></process -->
-               <process field="partyId"><copy to-field="partyId"/></process>
+               <process field="partyId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
                <process field="firstName"><copy to-field="firstName"/></process>
                <process field="middleName"><copy to-field="middleName"/></process>
                <process field="lastName"><copy to-field="lastName"/></process>
-               <process field="salutation"><copy to-field="salutation"/></process>
+               
+               <!-- process field="salutation"><copy to-field="salutation"/></process>
                <process field="gender"><copy to-field="gender"/></process>
                <process field="maritalStatus"><copy to-field="maritalStatus"/></process>
+                <process field="memberClass"><copy to-field="memberClass"/></process>
+               <process field="memberTypeName"><copy to-field="memberTypeName"/></process>
+                <process field="employeeType"><copy to-field="employeeType"/></process>
+                <process field="memberStatus"><copy to-field="memberStatus"/></process>
+                 <process field="recruitingAgent"><copy to-field="recruitingAgent"/></process -->
+                 
+               <process field="memberClassId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+               <process field="genderId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+               <process field="memberStatusId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+               
+                <process field="salutationId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+               <process field="maritalStatusId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+                <process field="memberTypeId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+                <process field="recruitingAgentId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+                 <process field="employmentTypeId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+                 <process field="genderId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+                 
+               
                <process field="idNumber"><copy to-field="idNumber"/></process>
                <process field="pinNumber"><copy to-field="pinNumber"/></process>
                <process field="passportNumber"><copy to-field="passportNumber"/></process>
@@ -468,10 +487,9 @@ under the License.
                <process field="emailAddress"><copy to-field="emailAddress"/></process>
                <process field="physicalAddress"><copy to-field="physicalAddress"/></process>
                <process field="postalAddress"><copy to-field="postalAddress"/></process>
-               <process field="memberClass"><copy to-field="memberClass"/></process>
-               <process field="memberTypeName"><copy to-field="memberTypeName"/></process>
+              
                <process field="employeeNumber"><copy to-field="employeeNumber"/></process>
-               <process field="employeeType"><copy to-field="employeeType"/></process>
+              
                <process field="payrollNumber"><copy to-field="payrollNumber"/></process>
                <process field="memberNumber"><copy to-field="memberNumber"/></process>
                <process field="mobileNumber"><copy to-field="mobileNumber"/></process>
@@ -485,12 +503,12 @@ under the License.
                <process field="joinDate"><convert type="Date"> <fail-message message="Not a Date"/></convert></process>
                <process field="registrationFee"><convert type="BigDecimal"> <fail-message message="Not a Big Decimal"/></convert></process>
                <process field="paidAmount" > <convert type="BigDecimal"> <fail-message message="Not Big Decimal"/> </convert></process>
-               <process field="branchId"><copy to-field="branchId"/></process>
-               <process field="stationId"><copy to-field="stationId"/></process>
+               <process field="branchId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
+               <process field="stationId"><convert type="Long"> <fail-message message="Not long"/></convert></process>
                
                 <process field="incomeScaleId"><copy to-field="incomeScaleId"/></process>
                 
-                <process field="recruitingAgent"><copy to-field="recruitingAgent"/></process>
+               
                 <process field="introducingMember"><copy to-field="introducingMember"/></process>
                 <process field="recuiterNames"><copy to-field="recuiterNames"/></process>
                 <process field="recruiterEmail"><copy to-field="recruiterEmail"/></process>
@@ -501,7 +519,7 @@ under the License.
                  <process field="msaccoApplication"><copy to-field="msaccoApplication"/></process>
               
     	
-               <process field="memberStatus"><copy to-field="memberStatus"/></process>
+               
                
                <process field="monthlySalaryAmount"><convert type="BigDecimal"> <fail-message message="Not Big Decimal"/> </convert></process>
                <process field="shareAmount"><convert type="BigDecimal"> <fail-message message="Not Big Decimal"/> </convert></process>
@@ -539,7 +557,7 @@ under the License.
         
         <if-empty field="parameters.partyId">
             <set field="memberContext.createdBy" from-field="userLogin.userLoginId"/>
-            <set field="memberContext.memberStatus" value="NEW"/>
+            <!-- set field="memberContext.memberStatus" value="NEW"/ -->
             <set field="memberContext.isActive" value="Y"/>
             <sequenced-id sequence-name="MemberNo" field="memberContext.memberNumber"/>
         <else>
@@ -549,7 +567,7 @@ under the License.
         	</entity-one>
            <set field="memberContext.updatedBy" from-field="userLogin.userLoginId"/>
            <set field="memberContext.createdBy" from-field="currentMember.createdBy"/>
-            <set field="memberContext.memberStatus" from-field="currentMember.memberStatus"/>
+            <!-- set field="memberContext.memberStatus" from-field="currentMember.memberStatus"/ -->
             <set field="memberContext.isActive" from-field="currentMember.isActive"/>
             <set field="memberContext.memberNumber" from-field="currentMember.memberNumber"/>
         </else>

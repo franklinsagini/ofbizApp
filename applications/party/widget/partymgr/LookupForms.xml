@@ -433,4 +433,63 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
+    
+    <!-- Members -->
+    <form name="lookupActiveMember" target="LookupActiveMember" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="middleName"  title="Middle Name">  <text-find></text-find> </field>
+        <field name="lastName"  title="Last Name"><text-find/></field>
+        
+        <field name="idNumber" title="ID Number"><text-find/></field>
+         <field name="payrollNumber"  title="Payroll Number"> <text-find></text-find></field>
+        <field name="memberNumber" title="Member Number"> <text-find></text-find></field>
+        
+        <field name="mobileNumber"  title="Mobile Number"> <text-find></text-find></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupActiveMember" type="list" list-name="listIt" paginate-target="LookupActiveMember"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+
+            <set field="inputFields" from-field="parameters"/>
+
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" value="partyId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="partyId" title="Member"  widget-style="smallSubmit">
+            <hyperlink  also-hidden="false" target-type="content" description="${firstName} ${middleName} ${lastName}"  target="javascript:set_values('${partyId}'.replace(/,/g, '') ,'${firstName} ${middleName} ${lastName} - ${memberNumber}'); accountsListing('${partyId}');">
+            	<!-- parameter param-name="partyId" from-field="partyId"/ -->
+            	
+            </hyperlink>
+        </field>
+        <field name="totalDeposits" title="Deposits" >
+        	<display default-value="${bsh:org.ofbiz.loans.LoanServices.getTotalMemberDeposits(partyId);}"></display>
+        </field>
+        <!-- field name="totalExistingLoans" title="Total Loans" >
+        	<display></display>
+        </field>
+        
+        <field name="lastRepaymentDate" title="Last Loan Repayment Date" >
+        	<display></display>
+        </field -->
+        
+        
+        <field name="idNumber" title="ID Number"><display/></field>
+        
+        <field name="payrollNumber"  title="Payroll Number">
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${payrollNumber}"></display-entity>
+        </field>
+        <field name="memberNumber" title="Member Number"><display/></field>
+        
+        <field name="mobileNumber"  title="Mobile Number"><display/></field>
+        
+    </form>
 </forms>

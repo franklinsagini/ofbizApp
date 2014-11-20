@@ -2,6 +2,18 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+	<screen name="mainTreasury">
+		<section>
+			<widgets>
+			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				
+                    <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
+                    </decorator-section>
+             </decorator-screen>
+             </widgets>
+		</section>
+	</screen>
     <screen name="main">
         <section>
             <actions>
@@ -34,6 +46,7 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="TREASURYMANAGEMENT" action="_CREATE"/>
@@ -79,6 +92,7 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="TREASURYMANAGEMENT" action="_CREATE"/>
@@ -122,7 +136,9 @@
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                	
                     <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="TREASURYMANAGEMENT" action="_CREATE"/>
@@ -167,6 +183,7 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="TREASURYMANAGEMENT" action="_CREATE"/>
@@ -212,6 +229,7 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         <!-- section>
                             <condition>
                                 <if-has-permission permission="TREASURYMANAGEMENT" action="_CREATE"/>
@@ -279,7 +297,7 @@
                                 <label style="h3">Error</label>
                             </fail-widgets>
                         </section -->
-                        
+                        <include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         <section name="Transactions">
                         	<widgets>
                         		<screenlet>
@@ -327,6 +345,7 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         <section name="Source of Transfer">
                         	<widgets>
                         		
@@ -361,6 +380,7 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         <section name="Transfer Destinations">
                         	<widgets>
                         	<container>
@@ -400,12 +420,59 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-
+						<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
                         
                         <section name="search-results">
                         	<widgets>
                         		<screenlet title="Source Treasury">
                         			<include-form name="listTransferSources" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- currencyDenominations -->
+    <screen name="currencyDenominations">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Denomination"/>
+                <set field="headerItem" value="currencyDenominations"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createDenomination"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="Denomination" value-field="treasuryContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+						<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
+                        
+                       <section>
+                            <condition>
+                                <if-has-permission permission="TREASURYMANAGEMENT" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Denomination">
+                                    <include-form name="NewDenomination" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">Error</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Denominations">
+                        			<include-form name="listDenomination" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

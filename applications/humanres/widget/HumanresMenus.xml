@@ -37,6 +37,7 @@
         <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="kpidefinition"/></menu-item>       
         <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item>
         <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
+        <menu-item name="EmpSeparation" title="Separation Management"><link target="separationApplication"/></menu-item>
         <menu-item name="GlobalHRSettings" title="${uiLabelMap.HumanResGlobalHRSettings}" selected-style="selected"><link target="globalHRSettings"/></menu-item>
       
         <!-- menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><link target="FindJobRequisitions"/></menu-item --> 
@@ -137,8 +138,8 @@
          <menu-item name="PerfManagement" title="Performance Management">
         	<link target="PerfManagement"/>
         </menu-item>
-        <menu-item name="PerfReports" title="Performance Reports">
-        	<link target="PerfManagement"/>
+        <menu-item name="perfReviewReport" title="Performance Reports">
+        	<link target="perfReviewReport"/>
         </menu-item>
     </menu>
     
@@ -160,22 +161,35 @@
     
     <menu name="PerfBar" type="simple" default-menu-item-name="EditPerfReview"
         menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">        
-        <!-- menu-item name="Find" title="${uiLabelMap.CommonFind}">
-            <link target="FindPerfReviews"/>
-        </menu-item -->
-        <menu-item name="EditPerfReview" title="${uiLabelMap.HumanResPerfReview}">
+        <menu-item name="Find" title="${uiLabelMap.CommonFind}">
+            <link target="FindPerfReviews">
+            	<parameter param-name="perfManagerId"/>
+            </link>
+        </menu-item>
+        <!-- menu-item name="EditPerfReview" title="${uiLabelMap.HumanResPerfReview}">
             <link target="EditPerfReview">
                 <parameter param-name="employeePartyId"/>
                 <parameter param-name="employeeRoleTypeId"/>
                 <parameter param-name="perfReviewId"/>
             </link>
-        </menu-item>
+        </menu-item -->
         <menu-item name="EditPerfReviewItems" title="Performance Review Scores">
             <link target="EditPerfReviewItems">
                 <parameter param-name="employeePartyId"/>
                 <parameter param-name="employeeRoleTypeId"/>
                 <parameter param-name="perfReviewId"/>
+                <parameter param-name="perfManagerId"/>
             </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="PerfReportsBar" type="simple" default-menu-item-name="kpidefinition"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+    	 <menu-item name="perfReviewReport" title="Performance Review Report">
+        	<link target="perfReviewReport"/>
+        </menu-item>
+         <menu-item name="perfScoresReport" title="Performance Scores Report">
+        	<link target="perfScoresReport"/>
         </menu-item>
     </menu>
     
@@ -469,7 +483,20 @@
             <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
             <link target="FindTrainingApprovals"/>
         </menu-item>
+        <menu-item name="trainingSummaryReport" title="Training Reports">
+            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <link target="trainingSummaryReport"/>
+        </menu-item>
     </menu>
+    
+     <menu name="TrainingSummaryReportsTabBar" type="simple" default-menu-item-name="trainingSummaryReport"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        <menu-item name="trainingSummaryReport" title="Training Summary Report">
+            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <link target="trainingSummaryReport"/>
+        </menu-item>
+        
+     </menu>
     
     <menu name="EmplLeaveReasonTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Employee Leave Reason Type" type="simple" menu-container-style="button-bar tab-bar" 
@@ -561,5 +588,34 @@
             <link target="employeeNOKDetails"/>
         </menu-item>
     </menu>
+    
+     <menu name="SeparationTabBar" type="simple" default-menu-item-name="separationApplication"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">        
+        <menu-item name="separationTypes" title="Setup">
+            <link target="separationTypes"/>
+        </menu-item>        
+        <menu-item name="separationApplication" title="Separation Application">
+            <link target="separationApplication"/>
+        </menu-item>
+        <menu-item name="separationSummaryReport" title="Reports">
+            <link target="separationSummaryReport"/>
+        </menu-item>
+     </menu>
+     
+     <menu name="SeparationSetupTabBar" type="simple" default-menu-item-name="separationTypes"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">        
+        <menu-item name="separationTypes" title="Separation Types">
+            <link target="separationTypes"/>
+        </menu-item>        
+     </menu>
+     
+     <menu name="SeparationReportsTabBar" type="simple" default-menu-item-name="separationTypes"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">        
+        <menu-item name="separationSummaryReport" title="Separation Summary Report">
+            <link target="separationSummaryReport"/>
+        </menu-item>        
+     </menu>
+    
+    
 
 </menus>

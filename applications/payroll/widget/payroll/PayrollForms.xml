@@ -744,13 +744,22 @@ under the License.
             </entity-condition>
            <entity-condition entity-name="PayrollPeriod" list="periodList">
             </entity-condition>
+            <set field="partyId" from-field="partyId"/>
+            <entity-one entity-name="Person" value-field="person">
+            	<field-map field-name="partyId" value="${partyId}" />
+            </entity-one>
         </actions>
+        
+        <!-- auto-fields-entity entity-name="" map-name=""/ -->
         <auto-fields-service default-field-type="hidden" service-name="updateStaffPayroll"/>
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
+        <!-- auto-fields-entity entity-name="Person" map-name="person"/ -->
         <field name="payrollPeriodId"><hidden/></field>
+        <field name="staffPayrollId"><hidden/></field>
          <field name="partyId" title="Employee">
+         	
          	<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
          	</display-entity>
          </field>
@@ -765,11 +774,31 @@ under the License.
                 <parameter param-name="staffPayrollId"/>
             </hyperlink>
         </field>
-        <field name="addpayrollelements" title="Add Payroll Elements" widget-style="buttontext">
-            <hyperlink target="staffpayrollelements" description="Add Payroll Elements" also-hidden="false">
+        <field name="addpayrollelements" title="Manage Payroll Codes" widget-style="buttontext">
+            <hyperlink target="staffpayrollelements" description="Manage Payroll Codes" also-hidden="false">
                 <parameter param-name="staffPayrollId"/>
             </hyperlink>
         </field>
+        <field name="Print Payslip" title="Print" >
+        	<!-- display-entity entity-name="Person"  key-field-name="partyId" description=" Print " >
+        		
+        		<sub-hyperlink description="Print" target-type="inter-app" target="http://127.0.0.1:55555/viewer/frameset?__report=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll%5CemployeePayslip.rptdesign&amp;__format=html&amp;name=${payrollperiod.name}&amp;employee_number=${employeeNumber}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll&amp;__dpi=96&amp;__parameterpage=true&amp;909056612"></sub-hyperlink>
+        	</display-entity -->
+        	<hyperlink description="Print PDF" target-type="inter-app" target="http://127.0.0.1:55555/viewer/frameset?__report=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll%5CemployeePayslip.rptdesign&amp;__format=pdf&amp;name=${payrollperiod.name}&amp;employee_number=${partyId}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll&amp;__dpi=96&amp;__parameterpage=false&amp;909056612">
+        		
+        	</hyperlink>
+        </field>
+        
+               <field name="Print Payslip HTML" title="Print" >
+        	<!-- display-entity entity-name="Person"  key-field-name="partyId" description=" Print " >
+        		
+        		<sub-hyperlink description="Print" target-type="inter-app" target="http://127.0.0.1:55555/viewer/frameset?__report=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll%5CemployeePayslip.rptdesign&amp;__format=html&amp;name=${payrollperiod.name}&amp;employee_number=${employeeNumber}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll&amp;__dpi=96&amp;__parameterpage=true&amp;909056612"></sub-hyperlink>
+        	</display-entity -->
+        	<hyperlink description="Print HTML" target-type="inter-app" target="http://127.0.0.1:55555/viewer/frameset?__report=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll%5CemployeePayslip.rptdesign&amp;__format=html&amp;name=${payrollperiod.name}&amp;employee_number=${partyId}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll&amp;__dpi=96&amp;__parameterpage=false&amp;909056612">
+        		
+        	</hyperlink>
+        </field>
+ 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     

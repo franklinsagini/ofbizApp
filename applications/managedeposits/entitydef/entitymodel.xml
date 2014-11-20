@@ -50,5 +50,28 @@
 		<prim-key field="shareMinimumId"/>
 		<prim-key field="memberClass"/>
 	</entity>
+	
+	<entity entity-name="DepositPolicyAmount" package-name="org.ofbiz.managedeposits"
+		title="Deposit Policy Amount">
+		<field name="depositPolicyAmountId" type="id-int"></field>
+		<field name="amount" type="fixed-point"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<prim-key field="depositPolicyAmountId"/>
+	</entity>
+	
+		<entity entity-name="DepositPolicyAmountLog" package-name="org.ofbiz.managedeposits"
+		title="Deposit Policy Amount Log">
+		<field name="depositPolicyAmountLogId" type="id-int"></field>
+		<field name="depositPolicyAmountId" type="id-int"></field>
+		<field name="amount" type="fixed-point"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<prim-key field="depositPolicyAmountId"/>
+		
+		<relation type="one" fk-name="DepositPolicyAmountLog_DepositPolicyAmount" rel-entity-name="DepositPolicyAmount">
+        	<key-map field-name="depositPolicyAmountId"/>
+      	</relation>
+	</entity>
 
 </entitymodel>

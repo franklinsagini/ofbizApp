@@ -411,7 +411,7 @@ under the License.
                 <response name="error" type="view" value="NewLoanSecurity" />
         </request-map>
 
-                <request-map uri="createLoanStatus">
+        <request-map uri="createLoanStatus">
                 <security https="true" auth="true" />
                 <event type="service" invoke="createLoanStatus" />
                 <response name="success" type="request-redirect-noparam"
@@ -1236,6 +1236,8 @@ under the License.
 			value="changeLoanDetails"></response>
 		<response name="error" type="view" value="changeLoanDetails" />
 	</request-map>
+	
+	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
 
     <!-- end of request mappings -->
 
@@ -1373,6 +1375,8 @@ under the License.
 		
 		<view-map name="changeLoanDetails" type="screen"
                 page="component://loans/widget/loans/LoanScreens.xml#changeLoanDetails" />
+                
+        <view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
     <!-- Supported Content Types -->
     <!--
        text/html

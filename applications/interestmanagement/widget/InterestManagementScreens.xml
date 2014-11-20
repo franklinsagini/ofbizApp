@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="InterestManagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FindMember">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Members"/>
+                <set field="headerItem" value="receiveLoanApplication"/>
+                <set field="tabButtonItem" value="findmember"/>
+                <set field="memberCtx" from-field="parameters"/>
+
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <!-- condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition -->
+                            <widgets>
+                                <!-- platform-specific>
+                                    <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
+                                </platform-specific -->
+                                <screenlet title="Search Members">
+                                        <include-form name="FindMember" location="component://interestmanagement/widget/interestmanagementForms.xml"/>
+                            	</screenlet>
+                                <screenlet title="Members List">
+                                		<include-form  name="members" location="component://interestmanagement/widget/interestmanagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <!-- fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets -->
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="fixedDepositContracts">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Fixed Deposit Contracts" />
+				<set field="tabButtonItem" value="fixedDepositContracts" />
+				<set field="labelTitleProperty" value="Fixed Deposit Contracts" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="fixedDepositContracts" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				
+				<set field="partyId" from-field="parameters.partyId" />
+				<entity-one value-field="member" entity-name="Member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet>
+								<screenlet title="Add Fixed Deposit Contract">
+									<include-form name="fixedDepositContracts"
+										location="component://interestmanagement/widget/InterestManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Fixed Deposit Contracts List">
+									<include-form name="listfixedDepositContracts"
+										location="component://interestmanagement/widget/InterestManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<!-- interestEarnings -->
+	    <screen name="interestEarnings">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Interest Earnings" />
+				<set field="tabButtonItem" value="interestEarnings" />
+				<set field="labelTitleProperty" value="Interest Earnings" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="interestEarnings" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<entity-one value-field="member" entity-name="Member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet>
+								<screenlet title="Add Interest Contract">
+									<include-form name="interestEarnings"
+										location="component://interestmanagement/widget/InterestManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Interest Contracts List">
+									<include-form name="listinterestEarnings"
+										location="component://interestmanagement/widget/InterestManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- fixedDepositContractEarnings -->
+	    <screen name="fixedDepositContractEarnings">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Contracts Contract Earnings" />
+				<set field="tabButtonItem" value="fixedDepositContractEarnings" />
+				<set field="labelTitleProperty" value="Contract Earnings" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="fixedDepositContractEarnings" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="fixedDepositContractId" from-field="parameters.fixedDepositContractId"/>
+				<entity-one value-field="fixedDepositContract" entity-name="FixedDepositContract"></entity-one>
+				<set field="partyId" from-field="fixedDepositContract.partyId" />
+				<entity-one value-field="member" entity-name="Member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet>
+								
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Contract Earnings">
+									<include-form name="listFixedDepositContractEarnings"
+										location="component://interestmanagement/widget/InterestManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- interestContractEarnings -->
+	    <screen name="interestContractEarnings">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Contract Interest Earnings" />
+				<set field="tabButtonItem" value="interestContractEarnings" />
+				<set field="labelTitleProperty" value="Interest Contract Earnings" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="interestContractEarnings" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="savingsTypeContractId" from-field="parameters.savingsTypeContractId"/>
+				<entity-one value-field="savingsTypeContract" entity-name="SavingsTypeContract"></entity-one>
+				<set field="partyId" from-field="savingsTypeContract.partyId" />
+				<entity-one value-field="member" entity-name="Member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet>
+								
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Interest Contract Earnings">
+									<include-form name="listInterestContractEarnings"
+										location="component://interestmanagement/widget/InterestManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- interestschedule -->
+	<screen name="interestschedule">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Interest Schedule" />
+				<set field="tabButtonItem" value="interestschedule" />
+				<set field="labelTitleProperty" value="Interest Schedule" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="interestschedule" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet>
+									<link target="scheduleInterestCalculations"  text="Schedule Interest Calculations" style="buttontext create">
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                                
+                                            </link>
+								</screenlet>
+								
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+</screens>
