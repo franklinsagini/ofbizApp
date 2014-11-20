@@ -519,6 +519,7 @@ under the License.
 	    <field name="trainingClassTypeId" type="id-ne"></field>
 	    <field name="trainingCostTypesId" type="id-ne"></field>
 	    <field name="cost" type="currency-amount"></field>
+	    <field name="fromDate" type="date-time"></field>
 	    <prim-key field="trainingCostId"/>
 	      <relation type="one" fk-name="PERS_TRNG_PRTY" rel-entity-name="Party">
 	        <key-map field-name="partyId"/>
@@ -1722,7 +1723,32 @@ under the License.
         <relation type="one" fk-name="POST_ADDR_CGEO" title="Country" rel-entity-name="Geo">
         <key-map field-name="geoId"/>
       </relation>
-        </entity>       
+        </entity>   
+        
+        <!-- ========================================================= -->
+  			<!-- org.ofbiz.humanres.employment -->
+  		<!-- ========================================================= -->    
+  		
+  		<entity entity-name="SeparationType" package-name="org.ofbiz.humanres.employment" title="Separation Types">
+        <field name="separationTypeId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="name" type="name"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="separationTypeId"/>
+        </entity>  
+        
+        <entity entity-name="SeparationApplication" package-name="org.ofbiz.humanres.employment" title="Separation Application">
+        <field name="separationApplicationId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id"></field>
+        <field name="separationTypeId" type="id"></field>
+        <field name="effectiveDate" type="id"></field>
+        <field name="reason" type="description"></field>
+        <field name="separated" type="indicator"></field>
+        <field name="status" type="name"></field>
+        <prim-key field="separationTypeId"/>
+         <relation type="one" fk-name="SEP_TYPE" rel-entity-name="SeparationType">
+            <key-map field-name="separationTypeId"/>
+        </relation>
+        </entity>   
         
       
        <view-entity entity-name="PartyAndSpouse" package-name="org.ofbiz.humanres.employment"

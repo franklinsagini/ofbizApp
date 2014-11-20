@@ -52,7 +52,7 @@ under the License.
                 </tr>
                 <tr><td class='label'>Employee</td>
                     <td>
-                      <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
+                      <@htmlTemplate.lookupField value='${requestParameters.partyId?if_exists}' formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupEmployee"/>
                     </td>
                 </tr>
                 <tr><td class="label">${uiLabelMap.PartyUserLogin}</td>
