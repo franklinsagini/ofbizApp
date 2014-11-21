@@ -168,7 +168,15 @@ public class LoanAccounting {
 			increaseDecrease = "I";
 		} else{
 			increaseDecrease = "D";
+			productChargeId = productChargeId.replaceAll(",", "");
 		}
+		Long productChargeIdLong;
+		if (productChargeId != null){
+			 productChargeIdLong = Long.valueOf(productChargeId);
+		} else{
+			productChargeIdLong = null;
+		}
+		 
 		memberAccountId = memberAccountId.replaceAll(",", "");
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId, 
@@ -179,7 +187,7 @@ public class LoanAccounting {
 						"increaseDecrease", increaseDecrease,
 						"slipNumber", AccHolderTransactionServices.getNextSlipNumber(),
 						"memberAccountId", Long.valueOf(memberAccountId),
-						"productChargeId", productChargeId,
+						"productChargeId", productChargeIdLong,
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType));
 		try {
