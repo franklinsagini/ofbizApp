@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1147,22 +1148,58 @@ public class AccHolderTransactionServices {
 		String branchId = getEmployeeBranch((String) userLogin.get("partyId"));
 		String partyId = loanApplication.getString("partyId");
 		String increaseDecrease;
+		
+		
+		
 		if (productChargeId == null) {
 			increaseDecrease = "I";
 		} else {
 			increaseDecrease = "D";
 		}
+		
+		//Check for withdrawal and deposit - overrides the earlier settings for product charges
+		if (productChargeId == null){
+			if ((transactionType != null) && (transactionType.equals("CASHWITHDRAWAL")))
+			{
+				increaseDecrease = "D";
+			}
+			
+			if ((loanApplication.getString("transactionType") != null) && (transactionType.equals("CASHDEPOSIT")))
+			{
+				increaseDecrease = "I";
+			}
+		}
+		
+		Long memberAccountIdLong = null;
+		Long productChargeIdLong = null;
+		Long partyIdLong = null;
 
-		productChargeId = productChargeId.replaceAll(",", "");
-		memberAccountId = memberAccountId.replaceAll(",", "");
+		if (productChargeId != null)
+		{
+			productChargeId = productChargeId.replaceAll(",", "");
+			productChargeIdLong = Long.valueOf(productChargeId);
+		}
+		if (memberAccountId != null){
+			memberAccountId = memberAccountId.replaceAll(",", "");
+			memberAccountIdLong = Long.valueOf(memberAccountId);
+		}
+		
+		if (partyId != null){
+			partyId= partyId.replaceAll(",", "");
+			partyIdLong = Long.valueOf(partyId);
+		}
+		
+		
+		
+		//"partyId", Long.valueOf(partyId),
 		
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId,
 						"isActive", "Y", "createdBy", createdBy, "updatedBy",
-						updatedBy, "branchId", branchId, "partyId", Long.valueOf(partyId),
+						updatedBy, "branchId", branchId, "partyId", partyIdLong, 
 						"increaseDecrease", increaseDecrease,
-						"memberAccountId", Long.valueOf(memberAccountId), "productChargeId",
-						Long.valueOf(productChargeId), "transactionAmount",
+						"memberAccountId", memberAccountIdLong, "productChargeId",
+						productChargeIdLong, "transactionAmount",
 						transactionAmount, "transactionType", transactionType, "accountTransactionParentId", accountTransactionParentId));
 		try {
 			delegator.createOrStore(accountTransaction);
@@ -1616,4 +1653,346 @@ public class AccHolderTransactionServices {
 		}
 		return bdBalance;
 	}
+	
+	/***
+	 * Cash Withdrawal from a service
+	 * */
+	public static String cashWithdrawal(BigDecimal amount, String memberAccountId){
+		GenericValue accountTransaction = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		accountTransaction = delegator.makeValue("AccountTransaction");
+		accountTransaction.put("memberAccountId", memberAccountId);
+		accountTransaction.put("transactionAmount", amount);
+		
+		Map<String, String> userLogin = new HashMap<String, String>();
+		userLogin.put("userLoginId", "admin");
+		
+		return "success";
+	}
+	
+	public static String cashWithdrawal(GenericValue accountTransaction, Map<String, String> userLogin){
+		
+		log.info(" UserLogin ---- "+userLogin.get("userLoginId"));
+		log.info(" Transaction Amount ---- "+accountTransaction.getBigDecimal("transactionAmount"));
+		
+		//Save Parent
+		GenericValue accountTransactionParent = createAccountTransactionParent(accountTransaction, userLogin);
+		String transactionType = "CASHWITHDRAWAL";
+		String memberAccountId = accountTransaction.getString("memberAccountId");
+		BigDecimal transactionAmount = accountTransaction.getBigDecimal("transactionAmount");
+		accountTransaction.set("accountTransactionParentId", accountTransactionParent.getString("accountTransactionParentId"));
+		addChargesToTransaction(accountTransaction, userLogin, transactionType);
+		//increaseDecrease
+		createTransaction(accountTransaction, transactionType, userLogin, memberAccountId, transactionAmount, null, accountTransactionParent.getString("accountTransactionParentId"));
+		postCashWithdrawalTransaction(accountTransaction, userLogin);
+		
+		
+		return "success";
+	}
+
+	private static void postCashWithdrawalTransaction(
+			GenericValue accountTransaction, Map<String, String> userLogin) {
+		// TODO Auto-generated method stub
+		String acctgTransId = creatAccountTransRecord(accountTransaction, userLogin);
+		createMemberDepositEntry(accountTransaction, acctgTransId);
+		createMemberCashEntry(accountTransaction, acctgTransId);
+		
+	}
+
+	private static void createMemberCashEntry(GenericValue accountTransaction,
+			String acctgTransId) {
+		
+			GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
+			
+			GenericValue acctgTransEntry = null;
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			acctgTransEntry = delegator.makeValidValue("AcctgTransEntry",
+					UtilMisc.toMap("acctgTransId", acctgTransId,
+							
+							"acctgTransEntrySeqId", "2",
+							"partyId", "Company",
+							"glAccountTypeId", "MEMBER_DEPOSIT",
+							"glAccountId", accountHolderTransactionSetup.getString("cashAccountId"),
+							"organizationPartyId", "Company",
+							"amount", accountTransaction.getBigDecimal("transactionAmount"),
+							"currencyUomId", "KES",
+							"origAmount", accountTransaction.getBigDecimal("transactionAmount"),
+							"origCurrencyUomId", "KES",
+							"debitCreditFlag", "C",
+							"reconcileStatusId", "AES_NOT_RECONCILED"));
+			try {
+				delegator.createOrStore(acctgTransEntry);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+				log.error("Could not create acctgTransEntry");
+			}
+	}
+
+	private static void createMemberDepositEntry(
+			GenericValue accountTransaction, String acctgTransId) {
+		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
+		
+		GenericValue acctgTransEntry = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry",
+				UtilMisc.toMap("acctgTransId", acctgTransId,
+						
+						"acctgTransEntrySeqId", "1",
+						"partyId", "Company",
+						"glAccountTypeId", "MEMBER_DEPOSIT",
+						"glAccountId", accountHolderTransactionSetup.getString("memberDepositAccId"),
+						"organizationPartyId", "Company",
+						"amount", accountTransaction.getBigDecimal("transactionAmount"),
+						"currencyUomId", "KES",
+						"origAmount", accountTransaction.getBigDecimal("transactionAmount"),
+						"origCurrencyUomId", "KES",
+						"debitCreditFlag", "D",
+						"reconcileStatusId", "AES_NOT_RECONCILED"));
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create acctgTransEntry");
+		}
+		
+	}
+
+	private static GenericValue getAccountHolderTransactionSetup(String accountHolderTransactionSetupId) {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountHolderTransactionSetup = delegator
+					.findOne("AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId", accountHolderTransactionSetupId),
+							false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return accountHolderTransactionSetup;
+	}
+
+	// Create a record in AcctgTrans
+	private static String creatAccountTransRecord(
+			GenericValue accountTransaction,  Map<String, String> userLogin) {
+		
+		GenericValue acctgTrans = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String acctgTransId = delegator.getNextSeqId("AcctgTrans", 1);
+		String createdBy = (String) userLogin.get("userLoginId");
+		String updatedBy = (String) userLogin.get("userLoginId");
+
+		acctgTrans = delegator.makeValidValue("AcctgTrans",
+				UtilMisc.toMap("acctgTransId", acctgTransId,
+						
+						"acctgTransTypeId", "MEMBER_DEPOSIT",
+						 "transactionDate", new Timestamp(Calendar.getInstance().getTimeInMillis()), "isPosted", "Y",
+						 "postedDate", new Timestamp(Calendar.getInstance().getTimeInMillis()), 
+						 
+						 "glFiscalTypeId", "ACTUAL", "partyId", "Company",
+						 "createdDate", new Timestamp(Calendar.getInstance().getTimeInMillis()),
+						 "createdByUserLogin", createdBy,
+						 "lastModifiedDate", new Timestamp(Calendar.getInstance().getTimeInMillis()),
+						 "lastModifiedByUserLogin", updatedBy));
+		try {
+			delegator.createOrStore(acctgTrans);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create acctgTrans");
+		}
+		return acctgTransId;
+	}
+
+	private static GenericValue createAccountTransactionParent(
+			GenericValue accounTransaction, Map<String, String> userLogin) {
+		GenericValue transactionParent;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String accountTransactionParentId = delegator
+				.getNextSeqId("AccountTransactionParent");
+		String createdBy = (String) userLogin.get("userLoginId");
+		String updatedBy = (String) userLogin.get("userLoginId");
+		//String branchId = getEmployeeBranch((String) userLogin.get("partyId"));
+		//String partyId = loanApplication.getString("partyId");
+				
+		transactionParent = delegator.makeValidValue("AccountTransactionParent",
+				UtilMisc.toMap("accountTransactionParentId", accountTransactionParentId,
+						"isActive", "Y", "createdBy", createdBy, "updatedBy",
+						updatedBy, 
+						"memberAccountId", accounTransaction.getLong("memberAccountId"),
+						 "approved", "NO", "rejected", "NO", "posted", "posted"));
+		try {
+			delegator.createOrStore(transactionParent);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create Transaction Parent");
+		}
+
+		return transactionParent;
+	}
+	
+	public static BigDecimal getChargesTotal(
+			Long memberAccountId, BigDecimal baseAmount, String transactionType) {
+		BigDecimal bdTotalChargeAmount = BigDecimal.ZERO;
+		// Get the Product by first accessing the MemberAccount
+		String accountProductId = getAccountProduct(memberAccountId);
+
+		// Get the Charges for the Product
+		List<GenericValue> accountProductChargeELI = null;
+		accountProductChargeELI = getAccountProductCharges(
+				accountProductId, transactionType);
+		log.info("NNNNNNNNNNNNNN The Number of Charges is ::::: "+accountProductChargeELI.size());
+		// Create a transaction in Account Transaction for each of the Charges
+		for (GenericValue accountProductCharge : accountProductChargeELI) {
+			//addCharge(accountProductCharge, accountTransaction, userLogin);
+			bdTotalChargeAmount = bdTotalChargeAmount.add(getCharge(accountProductCharge, baseAmount));
+		}
+		// Create an Account Transaction for each of the Charges
+
+		return bdTotalChargeAmount;
+	}
+	
+	private static String getAccountProduct(Long memberAccountId) {
+
+		//String memberAccountId = String.valueOf(memberAccountId);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//memberAccountId = memberAccountId.replaceAll(",", "");
+		GenericValue memberAccount = null;
+		try {
+			memberAccount = delegator.findOne("MemberAccount",
+					UtilMisc.toMap("memberAccountId", memberAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Get AccountProduct
+		String accountProductId = memberAccount.getString("accountProductId");
+		return accountProductId;
+	}
+	
+	private static List<GenericValue> getAccountProductCharges(
+			String accountProductId,
+			String transactionType) {
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		accountProductId = accountProductId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> accountChargeConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						Long.valueOf(accountProductId)), EntityCondition.makeCondition(
+						"transactionType", EntityOperator.EQUALS,
+						transactionType)), EntityOperator.AND);
+		List<GenericValue> accountProductChargeELI = null;
+		try {
+			accountProductChargeELI = delegator.findList(
+					"AccountProductCharge", accountChargeConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		if (accountProductChargeELI == null) {
+			// result.put("", "No Member Accounts");
+			log.info(" ######### The Account Has no Charges #########");
+		}
+		return accountProductChargeELI;
+	}
+	
+	private static BigDecimal getCharge(GenericValue accountProductCharge,
+			BigDecimal baseAmount) {
+		// Add Account Transaction
+		BigDecimal bdChargeAmount;
+		bdChargeAmount = getChargeAmount(accountProductCharge,
+				baseAmount);
+		return bdChargeAmount;
+	}
+	
+	private static BigDecimal getChargeAmount(
+			GenericValue accountProductCharge, BigDecimal baseAmount) {
+		String strFixed = accountProductCharge.getString("isFixed");
+		BigDecimal bdChargeAmount;
+		String isPercentageOfOtherCharge;
+		BigDecimal bdTransactionAmount = baseAmount;
+		//Delegator delegator = accountProductCharge.getDelegator();
+		if (strFixed.equals("Y")) {
+			bdChargeAmount = accountProductCharge.getBigDecimal("fixedAmount");
+		} else {
+			// Its not fixed
+			// It is a rate/percentage
+			// Can either be the rate of parent charge or the rate of the
+			// transaction
+			isPercentageOfOtherCharge = accountProductCharge
+					.getString("isPercentageOfOtherCharge");
+			if (isPercentageOfOtherCharge.equals("Y")) {
+				// Get the value of the charge
+				GenericValue parentAccountCharge = getAccoutCharge(
+						accountProductCharge.getString("parentChargeId"),
+						accountProductCharge);
+				BigDecimal bdParentAmount;
+				if (parentAccountCharge.getString("isFixed").equals("Y")) {
+					bdParentAmount = parentAccountCharge
+							.getBigDecimal("fixedAmount");
+				} else {
+					bdParentAmount = parentAccountCharge
+							.getBigDecimal("rateAmount")
+							.setScale(6, RoundingMode.HALF_UP)
+							.multiply(
+									bdTransactionAmount.setScale(6,
+											RoundingMode.HALF_UP))
+							.divide(new BigDecimal(100), 6,
+									RoundingMode.HALF_UP);
+				}
+
+				bdChargeAmount = bdParentAmount
+						.setScale(6, RoundingMode.HALF_UP)
+						.multiply(
+								accountProductCharge
+										.getBigDecimal("rateAmount").setScale(
+												6, RoundingMode.HALF_UP))
+						.divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
+
+			} else {
+				bdChargeAmount = accountProductCharge
+						.getBigDecimal("rateAmount")
+						.setScale(6, RoundingMode.HALF_UP)
+						.multiply(
+								bdTransactionAmount.setScale(6,
+										RoundingMode.HALF_UP))
+						.divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
+			}
+		}
+		return bdChargeAmount;
+	}
+	
+	/**
+	 * Get Minimum Balance
+	 * */
+	public static BigDecimal getMinimumBalance(Long memberAccountId){
+		BigDecimal bdMinimumBalance = BigDecimal.ZERO;
+		String accountProductId = getAccountProduct(memberAccountId);
+		
+		GenericValue accountProduct = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProduct = delegator
+					.findOne("AccountProduct", UtilMisc.toMap(
+							"accountProductId", accountProductId),
+							false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (accountProduct != null)
+		{
+			if (accountProduct.getBigDecimal("minBalanceAmt") != null){
+				bdMinimumBalance = accountProduct.getBigDecimal("minBalanceAmt");
+			}
+		}
+		
+		
+		return bdMinimumBalance;
+	}
+
+
+
+	
 }

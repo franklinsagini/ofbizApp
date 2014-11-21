@@ -164,6 +164,36 @@
                 <response name="error" type="view" value="loanClearItem" />
         </request-map>
         
+        	 <request-map uri="loanClearRate">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="loanClearRate"
+                        save-current-view="true" />
+        </request-map>
+        
+                <request-map uri="createLoanClearRate">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createLoanClearRate" />
+                <response name="success" type="request-redirect"
+                        value="loanClearRate"></response>
+                <response name="error" type="view" value="loanClearRate" />
+        </request-map>
+
+        <request-map uri="updateLoanClearRate">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateLoanClearRate" />
+                <response name="success" type="request-redirect"
+                        value="loanClearRate"></response>
+                <response name="error" type="view" value="loanClearRate" />
+        </request-map>
+
+        <request-map uri="deleteLoanClearRate">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteLoanClearRate" />
+                <response name="success" type="request-redirect"
+                        value="loanClearRate"></response>
+                <response name="error" type="view" value="loanClearRate" />
+        </request-map>
+        
       <request-map uri="addToClearList">
 		<security auth="true" https="true" />
 		<event type="java" path="org.ofbiz.loans.LoanServices" invoke="addToClearList" />
@@ -204,6 +234,9 @@
                 page="component://loanclearing/widget/LoanClearingScreens.xml#loanClear" />
 	<view-map name="loanClearItem" type="screen"
                 page="component://loanclearing/widget/LoanClearingScreens.xml#loanClearItem" />
+    
+    <view-map name="loanClearRate" type="screen"
+                page="component://loanclearing/widget/LoanClearingScreens.xml#loanClearRate" />
 	
 	
 </site-conf>

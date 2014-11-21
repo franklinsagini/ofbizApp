@@ -445,5 +445,39 @@ under the License.
         
     </service>
     
+     <service name="ATMTransactionMemberBalance" engine="java"  auth="true" 
+            location="org.ofbiz.accountholdertransactions.ATMTransactionServices" invoke="getMemberBalance"  export="true" >
+            
+        <description>Member Balance </description>
+        
+        <attribute name="cardNumber" form-label="Card Number" type="String" mode="IN" optional="false"/>
+        <attribute name="balance" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="status" type="String" mode="OUT" optional="false"/>
+        
+    </service>
+    
+    <service name="ATMTransactionWithdrawMemberCash" engine=java  auth="true" 
+            location="org.ofbiz.accountholdertransactions.ATMTransactionServices" invoke="withdrawMemberCash"  export="true" >
+            
+        <description>Withdraw Member Cash </description>
+        
+        <attribute name="cardNumber" form-label="Card Number" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="status" type="String" mode="OUT" optional="false"/>
+        
+    </service>
+    
+
+    
+     <service name="ATMTransactionMemberStatement" engine="java"  auth="true" 
+            location="org.ofbiz.accountholdertransactions.ATMTransactionServices" invoke="getMemberStatement"  export="true" >
+            
+        <description>Member Statement </description>
+        
+        <attribute name="cardNumber" form-label="Card Number" type="String" mode="IN" optional="false"/>
+         <attribute name="statementList" type="List" mode="OUT" optional="false"/>
+        <attribute name="status" type="String" mode="OUT" optional="false"/>
+        
+    </service>
     
 </services>
