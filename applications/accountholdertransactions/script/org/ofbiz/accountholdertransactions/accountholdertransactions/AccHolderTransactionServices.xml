@@ -34,47 +34,6 @@ under the License.
         <!-- set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/ -->
     </simple-method>
     
-    <simple-method method-name="cashWithdrawalSave" use-transaction="true">
-    	<!-- call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
-        <make-value entity-name="AccountTransaction" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-         <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
-        <set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
-        <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/ -->
-        <!-- set field="newEntity.branchId" value="Company"/ -->
-        <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
-        <set field="newEntity.transactionType" value="CASHWITHDRAWAL"/>
-        <set field="transactionType" value="CASHWITHDRAWAL"/>
-        <set field="newEntity.increaseDecrease" value="D"/>
-        <create-value value-field="newEntity"/ -->
-
-        <!-- set field="entityName" value="AccountTransaction"></set>
-        <set field="newEntity.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
-        <!-- set field="memberAccountId" from-field="newEntity.memberAccountId"/ -->
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/ -->
-        <!-- set field="newEntity.branchId" value="Company"/ -->
-        <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
-        
-
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        
-        <!-- Set Posting Type -->
-        <set field="memberDepostPosting" value="D"/>
-        <set field="cashPosting" value="C"/>
-        
-     
-        <call-simple-method method-name="createMemberTransaction"></call-simple-method>
-    
-    </simple-method>
    
     <simple-method method-name="createMemberTransaction" short-description="Member Transaction Entry" use-transaction="true">
         <!-- Create Account Transaction -->
@@ -701,12 +660,10 @@ under the License.
         <set field="transactionParent.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
         <!-- set field="memberAccountId" from-field="newEntity.memberAccountId"/ -->
-        <!-- set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-<<<<<<< HEAD
         <!-- set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/-->
-=======
+
         <!--set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/-->
->>>>>>> c18c04602aa4c4612d628d6977dc0b0432c6d7b6
+
         
         
         <set field="transactionParent.approved" value="NO"/>
