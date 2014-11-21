@@ -49,8 +49,8 @@ under the License.
     	
     <!-- ========================================================= -->
     <entity entity-name="AccountTransaction" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
-        <field name="accountTransactionId" type="name"><description>primary sequenced ID</description></field>
-		<field name="accountTransactionParentId" type="name"></field>
+        <field name="accountTransactionId" type="id"><description>primary sequenced ID</description></field>
+		<field name="accountTransactionParentId" type="id"></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
@@ -58,7 +58,7 @@ under the License.
         <field name="partyId" type="id-vlong-int"></field>
         <field name="memberAccountId" type="id-vlong-int"></field>
         <field name="slipNumber" type="name"></field>
-        <field name="transactionAmount" type="currency-amount" encrypt="true"></field>
+        <field name="transactionAmount" type="currency-amount"></field>
         <field name="availableAmount" type="currency-amount"></field>
         <field name="bookBalanceAmount" type="currency-amount"></field>
         <field name="transactionType" type="name"></field>
@@ -75,7 +75,6 @@ under the License.
          <field name="bankBranchId" type="id-int"></field>
          <field name="drawer" type="name"></field>
          <field name="receiptNo" type="name"></field>
-         <field name="saccoAccountId" type="id-int"></field>
          
          <field name="clearDuration" type="numeric"></field>
          <field name="clearDate" type="date-time"></field>
@@ -106,10 +105,6 @@ under the License.
         <relation type="one" fk-name="ACCOUNTTRANSACTION_PMT" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
-      
-      <relation type="one" fk-name="CHEQUEDEPOSIT_FINACCT" rel-entity-name="FinAccount">
-            <key-map field-name="saccoAccountId" rel-field-name="finAccountId"/>
-        </relation>
         
         <relation type="one" fk-name="CHEQUEDEPOSIT_CHEQUETYPE" rel-entity-name="ChequeType">
             <key-map field-name="chequeTypeId"/>
@@ -124,7 +119,7 @@ under the License.
     </entity>
     
     <entity entity-name="AccountTransactionParent" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
-        <field name="accountTransactionParentId" type="name"><description>primary sequenced ID</description></field>
+        <field name="accountTransactionParentId" type="id"><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>

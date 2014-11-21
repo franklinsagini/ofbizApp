@@ -168,7 +168,15 @@ public class LoanAccounting {
 			increaseDecrease = "I";
 		} else{
 			increaseDecrease = "D";
+			productChargeId = productChargeId.replaceAll(",", "");
 		}
+		Long productChargeIdLong;
+		if (productChargeId != null){
+			 productChargeIdLong = Long.valueOf(productChargeId);
+		} else{
+			productChargeIdLong = null;
+		}
+		 
 		memberAccountId = memberAccountId.replaceAll(",", "");
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId, 
@@ -179,7 +187,7 @@ public class LoanAccounting {
 						"increaseDecrease", increaseDecrease,
 						"slipNumber", AccHolderTransactionServices.getNextSlipNumber(),
 						"memberAccountId", Long.valueOf(memberAccountId),
-						"productChargeId", productChargeId,
+						"productChargeId", productChargeIdLong,
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType));
 		try {
@@ -350,7 +358,7 @@ public class LoanAccounting {
 
 		try {
 			productCharge = delegator.findOne("ProductCharge",
-					UtilMisc.toMap("productChargeId", productChargeId), false);
+					UtilMisc.toMap("productChargeId", Long.valueOf(productChargeId)), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			log.error("######## Cannot get product charge ");
@@ -374,7 +382,7 @@ public class LoanAccounting {
 
 		try {
 			productCharge = delegator.findOne("ProductCharge",
-					UtilMisc.toMap("productChargeId", productChargeId), false);
+					UtilMisc.toMap("productChargeId", Long.valueOf(productChargeId)), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			log.error("######## Cannot get product charge ");
