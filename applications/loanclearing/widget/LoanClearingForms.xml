@@ -192,7 +192,8 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service -->
-           	<set field="yes" value="Y"/>				
+           	<set field="yes" value="Y"/>
+           	<set field="addStatus" value="Y"/>			
 		</actions>
 		<field name="loanApplicationId"><hidden/></field>
 		<field name="loanNo">
@@ -254,8 +255,8 @@
 		<field name="allowed"><hidden value="${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}"/></field>
 		
 		<field name="addToClearList" title="Add To Clear List"
-			widget-style="buttontext" use-when="&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)" >
-			<hyperlink  target="addToClearList" description="Add To Clear List"
+			widget-style="buttontext" use-when="(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;(isAddedToClear==null))||(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;!isAddedToClear.equals(&quot;${yes}&quot;))" >
+			<hyperlink  target="addToClearList" description="Add To Clear List ${isAddedToClear} - ${addStatus}"
 				also-hidden="true" >
 				
 				<parameter param-name="loanApplicationId" />
@@ -317,6 +318,9 @@
         <!-- field name="skillTypeId">
             <display-entity entity-name="SkillType" description="${description}"/>
         </field -->
+        <field name="loanClearId" title="Loan Clear No">
+        	<display></display>
+         </field>
         <field name="partyId" title="Member">
         	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId">
         		
@@ -327,7 +331,11 @@
         	<display></display>
          </field>
          
-         <field name="clearAll" title="Clear All" widget-style="buttontext">
+         <field name="isCleared">
+        	<hidden/>
+         </field>
+         
+         <field name="clearAll" title="Clear All" widget-style="buttontext" use-when="isCleared==null&amp;&amp;isCleared!='Y'">
             <hyperlink target="clearAll" description="Clear All" also-hidden="false">
                 <parameter param-name="loanClearId"/>
             </hyperlink>
@@ -344,6 +352,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="LoanClearItem">
+            	<condition-expr field-name="loanClearId" operator="equals" from-field="loanClearId"/>
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanClearLimit"/ -->
