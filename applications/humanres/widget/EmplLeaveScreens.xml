@@ -224,8 +224,6 @@
 			<!-- <entity-condition entity-name="EmplLeave"></entity-condition> -->
 			 <entity-condition entity-name="EmplLeave" list="EmplLeave">
 				  <condition-list>
-				<!-- 	 <condition-expr field-name="responsibleEmployee"
-						operator="equals" from-field="userLogin.partyId" /> -->
 					<condition-expr field-name="fromDate" operator="less-equals"
 						from-field="today" />
 					<condition-expr field-name="thruDate" operator="greater-equals"
@@ -233,6 +231,7 @@
 					<condition-expr field-name="applicationStatus" operator="equals"
 						value="Approved" />
 				</condition-list> 
+				<order-by field-name="leaveId"/>
 			</entity-condition> 
         	
             </actions>
@@ -655,18 +654,18 @@
                 		<parameter param-name="leaveId" />
             			</link>
 								
-						<link target="popup" link-type="ajax-window" height="500" width="500" text="REJECT EMPLOYEE LEAVE" style="buttontext create">
+						<link target="popup" link-type="ajax-window" height="400" width="700" text="REJECT EMPLOYEE LEAVE" style="buttontext create">
 						<parameter param-name="partyId"/>
                         <parameter param-name="fromDate"/>
                         <parameter param-name="leaveTypeId"/>
                          <parameter param-name="leaveId" />
 						</link>
-						<link target="popupSentBack" link-type="ajax-window" height="500" width="500" text="SEND BACK LEAVE APPLICATION" style="buttontext create">
+						<!-- <link target="popupSentBack" link-type="ajax-window" height="500" width="500" text="SEND BACK LEAVE APPLICATION" style="buttontext create">
 						<parameter param-name="partyId"/>
                         <parameter param-name="fromDate"/>
                         <parameter param-name="leaveTypeId"/>
                          <parameter param-name="leaveId" />
-						</link>
+						</link> -->
 						</container>
 						
 						<container style="button-bar">
