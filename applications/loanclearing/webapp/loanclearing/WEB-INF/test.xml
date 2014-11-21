@@ -1,29 +1,22 @@
-     	<request-map uri="loanClearItem">
-                <security https="true" auth="true" />
-                <response name="success" type="view" value="loanClearItem"
-                        save-current-view="true" />
-        </request-map>
+       <simple-method method-name="createLoanClearRate" short-description="Create LoanClearRate">
+        <make-value entity-name="LoanClearRate" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="LoanClearRate"></set>
+        <set field="newEntity.loanClearRateId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         
-        <request-map uri="createLoanClearItem">
-                <security https="true" auth="true" />
-                <event type="service" invoke="createLoanClearItem" />
-                <response name="success" type="request-redirect"
-                        value="loanClearItem"></response>
-                <response name="error" type="view" value="loanClearItem" />
-        </request-map>
-
-        <request-map uri="updateLoanClearItem">
-                <security https="true" auth="true" />
-                <event type="service" invoke="updateLoanClearItem" />
-                <response name="success" type="request-redirect"
-                        value="loanClearItem"></response>
-                <response name="error" type="view" value="loanClearItem" />
-        </request-map>
-
-        <request-map uri="deleteLoanClearItem">
-                <security https="true" auth="true" />
-                <event type="service" invoke="deleteLoanClearItem" />
-                <response name="success" type="request-redirect"
-                        value="loanClearItem"></response>
-                <response name="error" type="view" value="loanClearItem" />
-        </request-map>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateLoanClearRate" short-description="Update LoanClearRate">
+        <entity-one entity-name="LoanClearRate" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteLoanClearRate" short-description="Delete LoanClearRate">
+        <entity-one entity-name="LoanClearRate" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
