@@ -35,12 +35,15 @@
 
 	<entity entity-name="RegistryFiles" package-name="org.ofbiz.registry"
 		title="Member File Book">
-		<field name="partyId" type="id-ne"></field>
+		<field name="partyId" type="id-vlong-int"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="status" type="name" ></field>
 		<field name="creator" type="id-ne"></field>
 		<field name="actionBy" type="id-ne"></field>
-		<field name="memberOrEmployee" type="name"></field>
+		<field name="payrollNumber" type="name"></field>
+		<field name="memberNumber" type="name"></field>
+		<field name="firstName" type="name" ></field>
+    	<field name="lastName" type="name"></field>
 		<field name="fileLocation" type="name"></field>
 		<field name="creationDate" type="date-time"></field>
 		<prim-key field="partyId" />
@@ -52,11 +55,23 @@
 	     </relation>
 	</entity>
 	
+	<entity entity-name="RegistryRequestedFiles" package-name="org.ofbiz.registry"
+		title="Member File Book">
+		<field name="partyId" type="id-vlong-int"></field>
+		<field name="folioNo" type="name"></field>
+		<field name="actionBy" type="id-ne"></field>
+		<field name="creationDate" type="date-time"></field>
+		<prim-key field="partyId" />
+		<relation type="one" fk-name="FILE_REQ" rel-entity-name="RegistryFiles">
+			<key-map field-name="partyId" />
+		</relation>
+	</entity>
+	
 	<entity entity-name="RegistryFileActions" package-name="org.ofbiz.registry"
 		title="Member File actions">
 		<field name="actionId" type="id-ne"></field>
 		<field name="fileActionTypeId" type="id-ne"></field>
-		<field name="partyId" type="id-ne"></field>
+		<field name="partyId" type="id-vlong-int"></field>
 		<field name="actionBy" type="name"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="actionId" />
