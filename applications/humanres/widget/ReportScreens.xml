@@ -984,6 +984,54 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="SeparationSummaryReport">
+       <section>
+            <actions>
+                <set field="titleProperty" value="Separation Summary Report"/>
+                <set field="headerItem" value="SeparationSummaryReport"/>
+                <set field="tabButtonItem" value="separationSummaryReport"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="SeparationSummaryReport"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="SeparationTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="SeparationReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>                                
+                                <screenlet>
+                                	<section>
+                                		<widgets>
+    										<container style="button-bar">                                                   
+                                                <link url-mode="inter-app" target="http://127.0.0.1:64289/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwebapp%2Fhumanres%2Freports%2FSeparatedEmployeesReport.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-387869057"  text="Employee Separation HTML Report" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
+                                                   
+                                                </link>
+                                                 <link url-mode="inter-app" target="http://127.0.0.1:64289/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwebapp%2Fhumanres%2Freports%2FSeparatedEmployeesReport.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-387869057"  text="Employee Separation PDF Report" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
+                                                </link>                                               
+                                                </container>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>       
+       </screen>
 
 
 </screens>
