@@ -36,6 +36,29 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
+        <service name="createLoanClearRate" engine="simple" default-entity-name="LoanClearRate"
+             location="component://loanclearing/script/org/ofbiz/loanclearing/LoanClearingServices.xml" invoke="createLoanClearRate" auth="true">
+        <description>Create LoanClearRate</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
     
+   
+    
+    <service name="updateLoanClearRate" engine="simple" default-entity-name="LoanClearRate"
+             location="component://loanclearing/script/org/ofbiz/loanclearing/LoanClearingServices.xml" invoke="updateLoanClearRate" auth="true">
+        <description>Update LoanClearRate</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteLoanClearRate" engine="simple" default-entity-name="LoanClearRate"
+             location="component://loanclearing/script/org/ofbiz/loanclearing/LoanClearingServices.xml" invoke="deleteLoanClearRate" auth="true">
+        <description>Delete LoanClearRate</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
     
 </services>

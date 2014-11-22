@@ -261,7 +261,7 @@ under the License.
                 <entity-one entity-name="LoanApplication" value-field="loanApplication">
                                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 </entity-one>
-                
+               <set field="partyId" value="${loanApplication.partyId}" global="true"/> 
                  
             </actions>
             <widgets>
@@ -382,7 +382,7 @@ under the License.
 				<set field="guarantorsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasGuarantors(loanApplicationId);}" type="String"   />
 				<set field="guarantorsTotalDepositsEnough" value="${bsh:org.ofbiz.loans.LoanServices.guarantorTotalsEqualLoanTotal(loanApplicationId);}" type="String"   />
 				<!-- set field="eacherGuarantorGreaterThanAverage" value="${bsh:org.ofbiz.loans.LoanServices.checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);}" type="String"   /-->
-                
+                <set field="partyId" value="${lookupLoanApplication.partyId}" global="true"/>
             </actions>
             <widgets>
                 <section>

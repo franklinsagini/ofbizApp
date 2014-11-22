@@ -345,10 +345,11 @@ under the License.
         <set from-field="loanApplicationSecurityId" field="newEntity.loanApplicationSecurityId"/-->
         <set field="entityName" value="LoanApplicationSecurity"></set>
 		<set field="newEntity.loanApplicationSecurityId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
+        <set field="loanApplicationId" value="newEntity.loanApplicationId"/>
+        <set field="status" value="${bsh:org.ofbiz.loans.LoanServices.updateLoanApplicationToSelfGuaranteed(loanApplicationId);}"/>
     </simple-method>
     <simple-method method-name="updateLoanApplicationSecurity" short-description="Update Loan Application Security">
         <entity-one entity-name="LoanApplicationSecurity" value-field="lookedUpValue"/>
