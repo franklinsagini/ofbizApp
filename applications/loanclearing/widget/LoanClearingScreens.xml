@@ -173,8 +173,14 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!--  property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <set field="name" from-field="parameters.name"/>
+                <set field="loanClearId" from-field="parameters.loanClearId"/>
+                <entity-one entity-name="LoanClear" value-field="loanClear">
+                	<field-map field-name="loanClearId" from-field="loanClearId"/>
+                </entity-one>
                 
-                <entity-one entity-name="LoanClearItem" value-field="loanClearItemContext"/>
+                <entity-one entity-name="Member" value-field="member">
+                	<field-map field-name="partyId" value="${loanClear.partyId}"/>
+                </entity-one>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -183,6 +189,11 @@
                         
                         <section name="search-results">
                         	<widgets>
+                        		<screenlet>
+                        			<container>
+                        				<label style="h3">Loan Clear No : ${loanClearId} for ${member.firstName} ${member.middleName} ${member.lastName}</label>
+                        			</container>
+                        		</screenlet>
                         		<screenlet title="List">
                         			<include-form name="listLoanClearItem" location="component://loanclearing/widget/LoanClearingForms.xml"/>
                         		</screenlet>

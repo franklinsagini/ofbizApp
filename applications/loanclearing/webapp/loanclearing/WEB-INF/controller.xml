@@ -72,6 +72,7 @@
     <request-map uri="myrunningloans">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="myrunningloans">
+			<redirect-parameter name="partyId"/>
 		</response>
 	</request-map>
 	
@@ -198,10 +199,18 @@
 		<security auth="true" https="true" />
 		<event type="java" path="org.ofbiz.loans.LoanServices" invoke="addToClearList" />
 		<response name="success" type="request-redirect" value="myrunningloans">
+			<redirect-parameter name="partyId"/>
 		</response>
 		<response name="error" type="view" value="myrunningloans" />
 	</request-map>
 	
+	<request-map uri="clearAll">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.loans.LoanServices" invoke="clearAll" />
+		<response name="success" type="request-redirect" value="loanClear">
+		</response>
+		<response name="error" type="view" value="loanClear" />
+	</request-map>
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://loanclearing/widget/LoanClearingScreens.xml#main"/ -->
     <view-map name="main" type="screen" page="component://loanclearing/widget/LoanClearingScreens.xml#FindMember"/>

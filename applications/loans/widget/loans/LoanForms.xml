@@ -118,6 +118,11 @@ under the License.
         <actions>
         	<entity-condition entity-name="LoanSecurity" list="loanSecurityList">
             </entity-condition>
+            <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+            <entity-one entity-name="LoanApplication" value-field="loanApplication">
+            	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+            </entity-one>
+            <set field="partyId" value="${loanApplication.partyId}" type="Long"/>
         </actions>
         
         <field name="loanApplicationSecurityId"><hidden/></field>
@@ -127,7 +132,11 @@ under the License.
                 <list-options list-name="loanSecurityList"   key-name="loanSecurityId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="noOfGuarantors" title="No Of Guarantors"> <text></text> </field>
+        
+        <field name="totalDepositAmount" title="Total Deposit Amount"> <text default-value="${bsh:org.ofbiz.loans.LoanServices.getTotalMemberDeposits(partyId);}" disabled="true"></text> </field>
+        <field name="totalGuaranteedAmount" title="Total Guaranteed Amount"> <text  default-value="${bsh:org.ofbiz.loans.LoanServices.getTotalGuaranteedValueByMember(partyId);}" disabled="true"></text> </field>
+        <field name="totalAvailableAmount" title="Available Amount"> <text  default-value="${bsh:org.ofbiz.loans.LoanServices.getTotalAvailableValueByMember(partyId);}" disabled="true"></text> </field>
+        
         <!--  field name="loanSecurityId" title="Security">
         	<drop-down allow-empty="true">
                 <list-options list-name="loanSecurityList" key-name="loanSecurityId" description="${description}"/>
@@ -140,13 +149,22 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
         	<entity-condition entity-name="LoanApplicationSecurity">
-        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId" />
+        		<!-- condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId" / -->
         	</entity-condition>
         </actions>
-        <field name="loanSecurityId" title="Security">
-        	<display-entity description="${description}" entity-name="LoanSecurity" also-hidden="false"></display-entity>
+        <!-- field name="loanSecurityId" title="Security">
+        	<display-entity description="${description}" entity-name="LoanSecurity" key-field-name="loanSecurityId" also-hidden="false"></display-entity>
+        </field -->
+         <field name="loanSecurityId" title="Security">
+         	<display></display>
         </field>
-        <field name="noOfGuarantors" title="No Of Guarantors"> <text></text> </field>
+        <field name="loanApplicationSecurityId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <!-- field name="noOfGuarantors" title="No Of Guarantors"> <text></text> </field>
+        <field name="totalDepositAmount" title="Total Deposit Amount"> <text disabled="true"></text> </field>
+        <field name="totalGuaranteedAmount" title="Total Guaranteed Amount"> <text   disabled="true"></text> </field>
+        <field name="totalAvailableAmount" title="Available Amount"> <text  disabled="true"></text> </field -->
+        
     </form>
     
     <!-- Loan Application Collateral-->
