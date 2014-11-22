@@ -1997,6 +1997,57 @@ public class LoanServices {
 			e.printStackTrace();
 		}
 	}
+	
+	public static BigDecimal getTotalGuaranteedValueByMember(Long partyId) {
+		BigDecimal bdTotalGuaranteed = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> myGuaranteedLoanELI = null;
+		EntityConditionList<EntityExpr> guarantorConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"guarantorId", EntityOperator.EQUALS,
+						partyId)),
+						EntityOperator.AND);
+
+		try {
+			myGuaranteedLoanELI = delegator.findList("MyGuaranteedLoan",
+					guarantorConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : myGuaranteedLoanELI) {
+			bdTotalGuaranteed = bdTotalGuaranteed.add(genericValue.getBigDecimal("guaranteedValue"));
+		}
+		return bdTotalGuaranteed;
+	}
+	
+	
+	public static BigDecimal getTotalAvailableValueByMember(Long partyId){
+		return getTotalMemberDeposits(partyId).subtract(getTotalGuaranteedValueByMember(partyId));
+	}
+	
+	public static String updateLoanApplicationToSelfGuaranteed(String loanApplicationId){
+		GenericValue loanApplication = null;
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		loanApplicationId = loanApplicationId.replaceAll("", ",");
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", Long.valueOf(loanApplicationId)), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			return "Cannot Get Loan Application";
+		}
+		
+		loanApplication.set("isSelfGuaranteed", "Y");
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
+	}
 
 	
 }
