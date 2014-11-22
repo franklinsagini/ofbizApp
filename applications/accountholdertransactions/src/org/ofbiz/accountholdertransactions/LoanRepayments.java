@@ -1579,12 +1579,13 @@ public class LoanRepayments {
 
 		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
 		partyId = partyId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId)),
 
 				EntityCondition.makeCondition("loanApplicationId",
-						EntityOperator.EQUALS, loanApplicationId)
+						EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
 
 				), EntityOperator.AND);
 

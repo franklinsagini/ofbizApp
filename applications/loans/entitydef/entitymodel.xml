@@ -409,6 +409,8 @@ under the License.
 		 <field name="appraised" type="indicator" enable-audit-log="true"></field>
 		 <field name="parentLoanApplicationId" type="id-vlong-int" enable-audit-log="true"></field>
 		 
+		 <field name="isAddedToClear" type="indicator"></field>
+		 <field name="isSelfGuaranteed" type="indicator"></field>
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
@@ -446,6 +448,9 @@ under the License.
 		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="loanSecurityId" type="id-int"></field>
 		<field name="noOfGuarantors" type="numeric"></field>
+		<field name="totalDepositAmount" type="fixed-point"></field>
+		<field name="totalGuaranteedAmount" type="fixed-point"></field>
+		<field name="totalAvailableAmount" type="fixed-point"></field>
 		<prim-key field="loanApplicationSecurityId"/>
 		<relation type="one" fk-name="LOANSECURITY_FK" rel-entity-name="LoanSecurity">
         	<key-map field-name="loanSecurityId"/>
