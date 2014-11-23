@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1936,6 +1937,8 @@ public class LoanServices {
 		GenericValue userLogin = (GenericValue) session
 				.getAttribute("userLogin");
 		String userLoginId = userLogin.getString("userLoginId");
+		
+		
 
 		GenericValue loanClear = null;
 
@@ -1949,6 +1952,9 @@ public class LoanServices {
 			e.printStackTrace();
 		}
 		
+		Map<String, String> userLoginMap = new HashMap<String, String>();
+		userLoginMap.put("userLoginId", userLoginId);
+		userLoginMap.put("partyId", String.valueOf(loanClear.getLong("partyId")));
 		//Get all applications under this clearance and set their status to cleared
 		Long loanClearedStatusId = getLoanStatusId("CLEARED");
 		List<GenericValue> 	loanClearItemELI = new ArrayList<GenericValue>();
@@ -1962,9 +1968,12 @@ public class LoanServices {
 			e.printStackTrace();
 		}
 		
+		BigDecimal bdClearAmount = BigDecimal.ZERO;
+		
 		for (GenericValue genericValue : loanClearItemELI) {
 			//genericValue.set(name, value);
 			updateLoanToCleared(genericValue.getLong("loanApplicationId"), loanClearedStatusId);
+			bdClearAmount = bdClearAmount.add(genericValue.getBigDecimal("loanAmt"));
 		}
 		//Update the LoanClearance by setting isCleared to 'Y'
 		loanClear.set("isCleared", "Y");
@@ -1974,6 +1983,34 @@ public class LoanServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//Post the Loan Clearance
+		
+		//Cr Loan Receivable
+		//Dr Loan Clearance 
+		//AccHolderTransactionServices.
+		//AccHolderTransactionServices.postTransactionEntry(delegator, bdLoanAmount, partyId, loanReceivableAccount, postingType, acctgTransId, acctgTransType, entrySequenceId);
+		// POST Charge
+		String acctgTransType = "LOAN_CLEARANCE";
+
+		// Create the Account Trans Record
+		String acctgTransId = AccHolderTransactionServices.createAccountingTransaction(null,
+				acctgTransType, userLoginMap);
+		//Debit Loan Clearance
+		//Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String partyId = String.valueOf(loanClear.getLong("partyId"));
+		String loanClearanceAccountId = AccHolderTransactionServices.getCashAccount(null, "LOANCLEARANCE");
+		String postingType = "D";
+		String entrySequenceId = "00001";
+		AccHolderTransactionServices.postTransactionEntry(delegator, bdClearAmount, partyId, loanClearanceAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
+		
+		//Credit Loan Receivables
+		String loanReceivablesAccountId = AccHolderTransactionServices.getMemberDepositAccount(null, "LOANCLEARANCE");
+		postingType = "C";
+		entrySequenceId = "00002";
+		AccHolderTransactionServices.postTransactionEntry(delegator, bdClearAmount, partyId, loanReceivablesAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
+
+		
 		return "success";
 	}
 
