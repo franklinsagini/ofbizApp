@@ -3684,8 +3684,25 @@ under the License.
 
 
     	<prim-key field="id"/>
-
-
-
     </entity>
+    
+    <view-entity entity-name="PersonActiveAndPartyGroup" package-name="org.ofbiz.party.party" 
+    	title="Person And Party Group">  
+        <member-entity entity-alias="PER" entity-name="Person" />     
+    	<member-entity entity-alias="PG" entity-name="PartyGroup" />
+        <alias-all entity-alias="PER"/>
+        <alias-all entity-alias="PG" />  
+         <view-link entity-alias="PER" rel-entity-alias="PG">
+            <key-map field-name="branchId" rel-field-name="partyId"/>
+            <entity-condition>
+            	<condition-list combine="and">
+            		<condition-expr entity-alias="PER" field-name="employeeNumber" operator="not-equals" value=""/>
+            		<condition-expr entity-alias="PER" field-name="isSeparated" operator="equals" value="N"/>
+            		<condition-expr entity-alias="PG" field-name="isBranch" operator="equals" value="Y"/>
+            	</condition-list>        		
+    		</entity-condition>
+        </view-link>
+    </view-entity>
+    
+    
 </entitymodel>

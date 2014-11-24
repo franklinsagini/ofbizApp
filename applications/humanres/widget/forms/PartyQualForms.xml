@@ -23,7 +23,7 @@ under the License.
      <form name="FindPartyQuals" type="single" target="FindPartyQuals" header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="PartyQual" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="partyId" title="Employee"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
         <field name="partyQualTypeId" title="Qualification Type">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">
@@ -120,7 +120,7 @@ under the License.
         <!-- auto-fields-service service-name="createPartyQual"/ -->
         
         <field name="partyId" title="Employee" use-when="partyQual!=null"><hidden/></field>
-        <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Employee" use-when="partyQual==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupEmployee"/></field>
         <field name="partyQualTypeId" title="Qualification Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="partyQualTypeId" entity-name="PartyQualType">

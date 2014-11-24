@@ -24,7 +24,7 @@
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createPayGrade" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="payGradeId"><lookup target-form-name="LookupPayGrade"/></field>
+        <field name="payGradeId"><hidden/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPayGrades" type="list" list-name="listIt" title="" target="updatePayGrade" paginate-target="FindPayGrade"
@@ -44,6 +44,14 @@
                 <parameter param-name="payGradeId"/>
             </hyperlink>
         </field> -->
+        
+        <field name="SalarySteps" title="Salary Steps" widget-style="">
+            <hyperlink target="EditSalarySteps" description="Salary Steps" also-hidden="false">
+                <parameter param-name="payGradeId"/>
+            </hyperlink>
+        </field>
+        
+        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePayGrade" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="payGradeId"/>

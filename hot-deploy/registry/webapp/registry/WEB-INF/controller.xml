@@ -60,7 +60,7 @@
 		<response name="success" type="view" value="main" />
 	</request-map>
 
-	<request-map uri="requestfiles"> 
+	<request-map uri="req"> 
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="reqfile" />
 	</request-map>
@@ -89,8 +89,55 @@
       <request-map uri="lookupPartyName"><security https="true" auth="true"/>
      	<response name="success" type="view" value="lookupPartyName"/>
      </request-map>
-
-
+     
+      <request-map uri="LookupEmployee"><security https="true" auth="true"/>
+     	<response name="success" type="view" value="LookupEmployee"/>
+     </request-map>
+     
+    <!--  =====================================================FILES VIEWS============================================================ -->
+    
+    <request-map uri="regFileRequest">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileRquestScreen" />
+	</request-map>
+	
+	
+	<request-map uri="regFileIssue">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileIssueScreen" />
+	</request-map>
+	
+	<request-map uri="regFileDispatch">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileDispatchScreen" />
+	</request-map>
+	
+	<request-map uri="regFileRelease">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileReleaseScreen" />
+	</request-map>
+	
+	
+	
+	<request-map uri="goRequestFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="requestingFiles" />
+	</request-map>
+	
+	<request-map uri="goIssueFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="issuingFiles" />
+	</request-map>
+	
+	<request-map uri="goDispatchFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="dispatchingFiles" />
+	</request-map>
+	
+	<request-map uri="goReleaseFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="releasingFiles" />
+	</request-map>
 
 
 
@@ -135,7 +182,7 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="updatefileType" />
 		<response name="success" type="request-redirect" value="editfiletypeURL">
-			<redirect-parameter name="fileTypeId" />
+			<redirect-parameter name="DocumentTypeId" />
 		</response>
 		<response name="error" type="view" value="editfiletypeURL" />
 	</request-map>
@@ -185,6 +232,20 @@
 		<response name="error" type="view" value="afterAction" />
 	</request-map>
 	
+	<request-map uri="sendFiles">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="sendFiles" />
+		<response name="success" type="view" value="afterAction" />
+		<response name="error" type="view" value="afterAction" />
+	</request-map>
+	
+	<request-map uri="recievefiles">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="recievefiles" />
+		<response name="success" type="view" value="afterAction" />
+		<response name="error" type="view" value="afterAction" />
+	</request-map>
+	
 	<request-map uri="releasefiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="releasefiles" />
@@ -197,6 +258,11 @@
 	<request-map uri="LookupActiveMember">
 	<security https="true" auth="true"/>
 	<response name="success" type="view" value="LookupActiveMember"/>
+	</request-map>
+	
+	<request-map uri="LookupEmployee">
+	<security https="true" auth="true"/>
+	<response name="success" type="view" value="LookupEmployee"/>
 	</request-map>
 	
 	<request-map uri="createfileActionTypes">
@@ -265,6 +331,22 @@
 	<!-- Lookup Active Memeber Viewmap -->
 	<view-map name="LookupActiveMember" type="screen" page="component://purchases/widget/LookupScreens.xml#LookupActiveMember"/>
 	<view-map name="lookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+	<view-map name="LookupEmployee" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployee"/>
+	
+	<!-- =====================================================File Actions views================================= -->
+	
+	<view-map name="fileRquestScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileRequest" />
+	<view-map name="fileIssueScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileIssue" />
+	<view-map name="fileDispatchScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileDispatch" />
+	<view-map name="fileReleaseScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileRelease" />
+	
+	<view-map name="requestingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#requestingFiles" />
+	<view-map name="releasingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#releasingFiles" />
+	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
+	<view-map name="issuingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#issuingFiles" />
+
+
+
 
 
 

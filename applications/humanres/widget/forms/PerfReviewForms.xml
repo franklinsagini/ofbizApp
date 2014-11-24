@@ -91,6 +91,42 @@ under the License.
         <field name="paymentId"><hidden/></field>
         <field name="perfManagerId"><hidden/></field> 
     </form>
+    
+    <form name="ListMyPerfReviews" type="list" title="" separate-columns="true" default-entity-name="PerfReview" list-name="listIt" paginate-target="MyPerfReviews" paginate="true"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="PerfReview">
+        		<condition-expr field-name="managerPartyId" operator="equals" value="${userLogin.partyId}"/>
+        	</entity-condition>
+            <set field="managerPartyId" value="${userLogin.partyId}"/>
+        </actions>
+        <auto-fields-entity entity-name="PerfReview" default-field-type="display"/>
+        <field name="employeePartyId" title="Employee">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${lastName} ${firstName} (${employeeNumber})"/>
+        </field>
+        <field name="employeeRoleTypeId" title="Employee"><ignored/></field>
+        <field name="managerPartyId" title="Appraiser" >
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${lastName} ${firstName} (${employeeNumber})"/>
+        </field>
+        <field name="emplPositionId" title="Employee Position"><display also-hidden="true"></display></field>
+        <field name="managerRoleTypeId" title="Appraiser Role"><ignored/></field>
+        <field name="perfReviewId" title="Appraisal Code"><hidden/></field>
+        <field name="fromDate"><display type="date"/></field>
+        <field name="thruDate"><display type="date"/></field>
+        <field name="status" title="Status"><display/></field>
+          <field name="appraisal" title="Performance Appraisals" >
+            <hyperlink target="EditPerfReviewItems" description="Performance Appraisals" also-hidden="false">
+            	<parameter param-name="perfReviewId"/>
+                <parameter param-name="employeePartyId"/>
+                <parameter param-name="employeeRoleTypeId"/>                
+                <parameter param-name="perfManagerId"/>
+            </hyperlink>
+        </field>
+        <field name="paymentId"><hidden/></field>
+        <field name="perfManagerId"><hidden/></field> 
+    </form>
+    
+    
     <form name="EditPerfReview" type="single" target="updatePerfReview" title="" default-map-name="perfReview"
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="perfReview==null" target="createPerfReview"/>
@@ -220,11 +256,11 @@ under the License.
         <field name="description" title="Description"><textarea/></field>
         <field name="fromDate" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"> <date-time type="date"/></field>
         <field name="endDate" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"> <date-time type="date"/></field>
-        <field name="status" title="Status">
-        	<drop-down allow-empty="false">
+        <field name="status" title="Status"> <hidden value="Open"/>
+        	<!--<drop-down allow-empty="false">
         		<option key="Open" description="Open"/>
                 <option key="Closed" description="Closed"/>
-        	</drop-down>
+        	</drop-down>-->
         </field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
@@ -233,7 +269,9 @@ under the License.
         <form name="listPerfManagement" type="list" list-name="listIt" use-row-submit="true" separate-columns="true"  paginate-target="PerfManagement"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="PerfManager"></entity-condition>
+            <entity-condition entity-name="PerfManager">
+            	<condition-expr field-name="status" operator="equals" value="Open"/>
+            </entity-condition>
         </actions>
         <field name="perfManagerId"><hidden/></field>
          <field name="name" title="Performance Management Title"><display/></field>
@@ -246,12 +284,43 @@ under the License.
             	<parameter param-name="perfManagerId"/>
             </hyperlink>
         </field>
+        <field name="closeReviews" title="Close Reviews" widget-style="buttontext">
+            <hyperlink target="closeReviews" description="Close Reviews" also-hidden="false">
+            	<parameter param-name="perfManagerId"/>
+            </hyperlink>
+        </field>
+        
          <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deletePerfManager" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="perfManagerId"/>
             </hyperlink>
         </field>
         <!--field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <form name="listClosedPerfManagement" type="list" list-name="listIt" use-row-submit="true" separate-columns="true"  paginate-target="PerfManagement"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PerfManager">
+            	<condition-expr field-name="status" operator="equals" value="Closed"/>
+            </entity-condition>
+        </actions>
+        <field name="perfManagerId"><hidden/></field>
+         <field name="name" title="Performance Management Title"><display/></field>
+        <field name="description" title="Description"><display/></field>
+        <field name="fromDate" title="From"> <display type="date"/></field>
+        <field name="endDate" title="To"> <display type="date"/></field>
+        <field name="status" title="Status"><display/> </field>
+        <field name="perfReviews" title="Performance Reviews" widget-style="buttontext">
+            <hyperlink target="FindPerfReviews" description="Performance Reviews" also-hidden="false">
+            	<parameter param-name="perfManagerId"/>
+            </hyperlink>
+        </field>
+        <field name="perfReviews" title="Performance Reviews" widget-style="buttontext">
+            <hyperlink target="FindPerfReviews" description="Performance Reviews" also-hidden="false">
+            	<parameter param-name="perfManagerId"/>
+            </hyperlink>
+        </field>
     </form>
     
      <!-- New Performance Rating Types -->
