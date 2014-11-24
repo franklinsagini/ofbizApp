@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -45,10 +46,17 @@ public class AmortizationServices {
 	public static String generateschedule(HttpServletRequest request,
 			HttpServletResponse response) {
 		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String loanApplicationId = null;
 		
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		String loanApplicationId = (String) request
+		loanApplicationId = (String) request
 				.getParameter("loanApplicationId");
+		
+		if (loanApplicationId == null)
+			loanApplicationId = String.valueOf((Long)request.getAttribute("loanApplicationId"));
+		
+		log.info("RRRRRRR The real application ID is "+loanApplicationId);
 		GenericValue loanApplication = null, loanAmortization;
 		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		try {
@@ -272,7 +280,7 @@ public class AmortizationServices {
 		// divideOnePlusInterestMinusOne
 		bdPaymentAmount = bdInterestByPrincipal.multiply(
 				bdOnePlusInterestPowerPeriod).divide(
-				bdOnePlusInterestPowerPeriodMinusOne, RoundingMode.HALF_UP);
+				bdOnePlusInterestPowerPeriodMinusOne, 6, RoundingMode.HALF_UP);
 
 		return bdPaymentAmount;
 	}

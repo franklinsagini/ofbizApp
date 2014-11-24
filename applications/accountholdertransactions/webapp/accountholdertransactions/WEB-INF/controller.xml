@@ -136,6 +136,18 @@ under the License.
                 <response name="error" type="view" value="chequedepositposting" />
 	</request-map>
 	
+	
+	<!-- Generate AMortization Schedules 
+		Mostly for imported Loan Applications
+	-->
+	<request-map uri="generateLoansAmortizationSchedules">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accountholdertransactions.LoanRepayments" invoke="generateLoansAmortizationSchedules" />
+                <response name="success" type="view"
+                        value="loansrepaymentexpected">
+                        </response>
+                <response name="error" type="view" value="loansrepaymentexpected" />
+	</request-map>
 	<!-- Generate Repayments 
 		generateLoansRepaymentExpected
 	-->
