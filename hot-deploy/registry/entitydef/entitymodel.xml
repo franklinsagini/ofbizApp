@@ -17,12 +17,12 @@
 
 
 	<!-- Registry File Type Entity -->
-	<entity entity-name="RegistryFileType" package-name="org.ofbiz.registry"
+	<entity entity-name="RegistryDocumentType" package-name="org.ofbiz.registry"
 		title="File Types">
-		<field name="fileTypeId" type="id-ne"></field>
-		<field name="fileType" type="name" not-null="true"></field>
-		<field name="description" type="description"></field>
-		<prim-key field="fileTypeId" />
+		<field name="DocumentTypeId" type="id-ne"></field>
+		<field name="DocumentType" type="name" not-null="true"></field>
+		<field name="retentionPeriod" type="name"></field>
+		<prim-key field="DocumentTypeId" />
 	</entity>
 	
 	<entity entity-name="RegistryFileActionTypes" package-name="org.ofbiz.registry"
@@ -35,12 +35,15 @@
 
 	<entity entity-name="RegistryFiles" package-name="org.ofbiz.registry"
 		title="Member File Book">
-		<field name="partyId" type="id-ne"></field>
+		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="status" type="name" ></field>
 		<field name="creator" type="id-ne"></field>
 		<field name="actionBy" type="id-ne"></field>
-		<field name="memberOrEmployee" type="name"></field>
+		<field name="payrollNumber" type="name"></field>
+		<field name="memberNumber" type="name"></field>
+		<field name="firstName" type="name" ></field>
+    	<field name="lastName" type="name"></field>
 		<field name="fileLocation" type="name"></field>
 		<field name="creationDate" type="date-time"></field>
 		<prim-key field="partyId" />
@@ -52,12 +55,56 @@
 	     </relation>
 	</entity>
 	
+	<entity entity-name="RegistryRequestedFiles" package-name="org.ofbiz.registry"
+		title="Member File Book">
+		<field name="partyId" type="id"></field>
+		<field name="folioNo" type="name"></field>
+		<field name="Reason" type="name"></field>
+		<field name="actionBy" type="id-ne"></field>
+		<field name="creationDate" type="date-time"></field>
+		<prim-key field="partyId" />
+		<relation type="one" fk-name="FILE_REQ" rel-entity-name="RegistryFiles">
+			<key-map field-name="partyId" />
+		</relation>
+	</entity>
+	
+	<entity entity-name="RegistryFilesInCirculation" package-name="org.ofbiz.registry"
+		title="Member File Book">
+		<field name="partyId" type="id"></field>
+		<field name="currentPossesser" type="id-ne"></field>
+		<field name="folioNo" type="name"></field>
+		<field name="Reason" type="name"></field>
+		<field name="creationDate" type="date-time"></field>
+		<prim-key field="partyId" />
+		<relation type="one" fk-name="FILE_CIRC" rel-entity-name="RegistryFiles">
+			<key-map field-name="partyId" />
+		</relation>
+	</entity>
+	
+	<entity entity-name="RegistryFileLogs" package-name="org.ofbiz.registry"
+		title="Member File actions">
+		<field name="logId" type="id-ne"></field>
+		<field name="fileActionTypeId" type="name"></field>
+		<field name="currentPossesser" type="id-ne"></field>
+		<field name="carriedBy" type="name"></field>
+		<field name="nextPossesser" type="id"></field>
+		<field name="receiptStatus" type="name"></field>
+		<field name="partyId" type="id"></field>
+		<field name="folioNo" type="name"></field>
+		<field name="actionBy" type="id"></field>
+		<field name="actionDate" type="date-time"></field>
+		<prim-key field="logId" />
+		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
+			<key-map field-name="partyId" />
+		</relation>
+	</entity>
+	
 	<entity entity-name="RegistryFileActions" package-name="org.ofbiz.registry"
 		title="Member File actions">
 		<field name="actionId" type="id-ne"></field>
 		<field name="fileActionTypeId" type="id-ne"></field>
-		<field name="partyId" type="id-ne"></field>
-		<field name="actionBy" type="name"></field>
+		<field name="partyId" type="id"></field>
+		<field name="actionBy" type="id-ne"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="actionId" />
 		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
@@ -68,13 +115,12 @@
 	<entity entity-name="RegistryDocuments" package-name="org.ofbiz.registry"
 		title="Member Documents">
 		<field name="documentId" type="id-ne"></field>
-		<field name="fileTypeId" type="id-ne"></field>
+		<field name="DocumentTypeId" type="id-ne"></field>
 		<field name="partyId" type="id-ne" ></field>
 		<field name="referenceNo" type="name" ></field>
 		<field name="documentValue" type="currency-amount" ></field>
 		<field name="receiptDate" type="date-time"></field>
 		<prim-key field="documentId" />
-		<prim-key field="partyId" />
 		<relation type="one" fk-name="DOCUMENT_FILE" rel-entity-name="RegistryFiles">
 			<key-map field-name="partyId" />
 		</relation>
