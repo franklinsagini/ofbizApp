@@ -11,8 +11,8 @@
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" 
 	invoke="createfiletype" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes entity-name="RegistryFileType" include="pk" mode="IN" optional="true" />
-		<auto-attributes entity-name="RegistryFileType" include="nonpk" mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryDocumentType" include="pk" mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryDocumentType" include="nonpk" mode="IN" optional="true" />
 	</service>
 	
 	<service name="createfileActionTypes" engine="simple" 
@@ -43,7 +43,7 @@
 	
 
 	<service name="updatefileType" engine="simple"
-		default-entity-name="RegistryFileType"
+		default-entity-name="RegistryDocumentType"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
 		invoke="updatefileType" auth="true">
 		<description>Update estate</description>
@@ -53,7 +53,7 @@
 
 
 	<service name="deletefileType" engine="simple"
-		default-entity-name="RegistryFileType"
+		default-entity-name="RegistryDocumentType"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
 		invoke="deletefileType" auth="true">
 		<description>remove file type</description>
@@ -114,6 +114,20 @@
 		<description>Create File Request header record</description>
 		<auto-attributes entity-name="RegistryFileActions" include="pk" mode="IN" optional="true" />
 		<auto-attributes entity-name="RegistryFileActions" include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	<service name="sendFiles" engine="simple" default-entity-name="saveSendActionToLogs"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="sendFiles" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes  include="pk" mode="IN" optional="false" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	<service name="recievefiles" engine="simple" default-entity-name="saveSendActionToLogs"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="recievefiles" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes  include="pk" mode="IN" optional="false" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
 	</service>
 	
 	
