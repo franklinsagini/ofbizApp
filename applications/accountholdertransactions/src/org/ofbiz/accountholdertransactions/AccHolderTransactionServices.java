@@ -781,9 +781,9 @@ public class AccHolderTransactionServices {
 		return "POSTED";
 	}
 
-	private static String getCashAccount(GenericValue accountTransaction, String setUpId) {
+	public static String getCashAccount(GenericValue accountTransaction, String setUpId) {
 		GenericValue accountHolderTransactionSetup = null;
-		Delegator delegator = accountTransaction.getDelegator();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			accountHolderTransactionSetup = delegator.findOne(
 					"AccountHolderTransactionSetup", UtilMisc.toMap(
@@ -804,11 +804,11 @@ public class AccHolderTransactionServices {
 		return cashAccountId;
 	}
 
-	private static String getMemberDepositAccount(
+	public static String getMemberDepositAccount(
 			GenericValue accountTransaction, String setUpId) {
 
 		GenericValue accountHolderTransactionSetup = null;
-		Delegator delegator = accountTransaction.getDelegator();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			accountHolderTransactionSetup = delegator.findOne(
 					"AccountHolderTransactionSetup", UtilMisc.toMap(
@@ -866,7 +866,8 @@ public class AccHolderTransactionServices {
 
 		GenericValue acctgTrans;
 		String acctgTransId;
-		Delegator delegator = accountTransaction.getDelegator();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//		accountTransaction.getDelegator();
 		acctgTransId = delegator.getNextSeqId("AcctgTrans");
 
 		String partyId = (String) userLogin.get("partyId");
