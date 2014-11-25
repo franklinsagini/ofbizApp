@@ -46,7 +46,7 @@ under the License.
         <field name="hasBalance" type="indicator"></field>
         <field name="iscalulated" type="indicator"></field>
         <field name="calcRate" type="floating-point"></field>
-        <field name="calcField" type="id"></field>      
+        <field name="calcField" type="id"></field>
         <field name="relief" type="indicator"></field>
         <field name="cummulative" type="indicator"></field>
         <field name="employercontribution" type="indicator"></field>
@@ -66,10 +66,10 @@ under the License.
         <field name="payslipdisplay" type="name"></field>
         <field name="isbold" type="indicator"></field>
         <field name="childId" type="id"></field>
-        <field name="elementCode" type="name"></field>        
+        <field name="elementCode" type="name"></field>
         <field name="lowInterestBenefitRate" type="floating-point"></field>
-        
-        
+
+
         <prim-key field="payrollElementId"/>
         <relation type="one" fk-name="parent_Element" rel-entity-name="PayrollElement">
             <key-map field-name="calcField"/>
@@ -84,13 +84,13 @@ under the License.
             <key-map field-name="statusId"/>
         </relation -->
     </entity>
-    
+
      <entity entity-name="JobGrade" package-name="org.ofbiz.payroll" title="Job Grade Entity">
         <field name="jobGradeId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="name" type="name"></field>
         <prim-key field="jobGradeId"/>
         </entity>
-    
+
      <entity entity-name="SalaryScale" package-name="org.ofbiz.payroll" title="Salary Scale Entity">
         <field name="salaryScaleId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="jobGradeId" type="id"></field>
@@ -100,16 +100,16 @@ under the License.
         <relation type="one" fk-name="salary_Jobgrade" rel-entity-name="JobGrade">
             <key-map field-name="jobGradeId"/>
         </relation>
-        
+
         </entity>
-        
+
          <entity entity-name="BankDetails" package-name="org.ofbiz.payroll" title="Bank Details Entity">
         <field name="bankDetailsId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="bankName" type="name"></field>
         <prim-key field="bankDetailsId"/>
-        
+
     	</entity>
-    	
+
     	<entity entity-name="BankBranch" package-name="org.ofbiz.payroll" title="Bank Branch Entity">
         <field name="bankBranchId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="bankDetailsId" type="id"></field>
@@ -122,14 +122,14 @@ under the License.
             <key-map field-name="bankDetailsId"/>
         </relation>
         </entity>
-        
+
         <entity entity-name="PayPoint" package-name="org.ofbiz.payroll" title="Staff Paypoints Entity">
         <field name="payPointId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="partyId" type="id"></field>
         <field name="staffNo" type="name"></field>
-        <field name="staffName" type="name"></field>        
+        <field name="staffName" type="name"></field>
         <field name="bankDetailsId" type="id"></field>
-        <field name="bankBranchId" type="id"></field>       
+        <field name="bankBranchId" type="id"></field>
         <field name="accountName" type="name"></field>
         <field name="accountNumber" type="name"></field>
         <field name="payMode" type="name"></field> <!-- EFT or Cheque -->
@@ -143,19 +143,19 @@ under the License.
         <relation type="one" fk-name="paypoint_party" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
-        </entity>        
-        
+        </entity>
+
         <entity entity-name="PayrollYear" package-name="org.ofbiz.payroll" title="Payroll Year Entity">
         <field name="payrollYearId" type="id-ne"><description>primary sequenced ID</description></field>
        <field name="name" type="name"></field>
        <field name="currentyear" type="indicator"></field>
         <field name="startDate" type="date-time"></field>
-        <field name="endDate" type="date-time"></field>        
+        <field name="endDate" type="date-time"></field>
        <field name="status" type="name"></field>
        <field name="yearSeq" type="name"></field>
         <prim-key field="payrollYearId"/>
         </entity>
-        
+
         <entity entity-name="PayrollPeriod" package-name="org.ofbiz.payroll" title="Payroll Period Entity">
         <field name="payrollPeriodId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="payrollYearId" type="id"></field>
@@ -171,7 +171,7 @@ under the License.
             <key-map field-name="payrollYearId"/>
         </relation>
         </entity>
-        
+
         <entity entity-name="StaffPayroll" package-name="org.ofbiz.payroll" title="Staff Payroll Management Entity">
         <field name="staffPayrollId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="payrollPeriodId" type="id"></field>
@@ -179,8 +179,8 @@ under the License.
         <field name="staffNo" type="name"></field>
         <field name="staffName" type="name"></field>
        <field name="closed" type="indicator"></field>
-       <field name="pensionpercentage" type="currency-amount"></field> 
-       <field name="nssfVolAmount" type="currency-amount"></field> 
+       <field name="pensionpercentage" type="currency-amount"></field>
+       <field name="nssfVolAmount" type="currency-amount"></field>
         <prim-key field="staffPayrollId"/>
         <relation type="one" fk-name="management_period" rel-entity-name="PayrollPeriod">
             <key-map field-name="payrollPeriodId"/>
@@ -189,15 +189,15 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
         </entity>
-        
+
         <entity entity-name="StaffPayrollElements" package-name="org.ofbiz.payroll" title="Staff Payroll Elements Entity">
         <field name="staffPayrollElementsId" type="id-ne"><description>primary sequenced ID</description></field>
         <field name="staffPayrollId" type="id"></field>
         <field name="payrollElementId" type="id"></field>
-        <field name="amount" type="currency-amount"></field> 
-        <field name="balance" type="currency-amount"></field> 
+        <field name="amount" type="currency-amount"></field>
+        <field name="balance" type="currency-amount"></field>
         <field name="recurrencyExpiry" type="date-time"></field>
-        <field name="valueChanged" type="indicator"></field>     
+        <field name="valueChanged" type="indicator"></field>
         <prim-key field="staffPayrollElementsId"/>
         <relation type="one" fk-name="payrollelements_period" rel-entity-name="StaffPayroll">
             <key-map field-name="staffPayrollId"/>
@@ -206,11 +206,11 @@ under the License.
             <key-map field-name="payrollElementId"/>
         </relation>
         <index name="unique_Codes" unique="true">
-        	<index-field name="payrollElementId"/>    
-        	<index-field name="staffPayrollId"/>        
+        	<index-field name="payrollElementId"/>
+        	<index-field name="staffPayrollId"/>
         </index>
-        </entity> 
-        
+        </entity>
+
         <!-- The Stations Entity -->
         <entity entity-name="Station" package-name="org.ofbiz.payroll" title="Station Entity">
         	<field name="stationId" type="id-ne"><description>primary sequenced ID</description></field>
@@ -218,90 +218,88 @@ under the License.
         	<field name="createdBy" type="name"></field>
         	<field name="updatedBy" type="name"></field>
         	<field name="branchId" type="name"></field>
-        	
         	<field name="stationNumber" type="id"></field>
-        	
        		<field name="name" type="name"></field>
         	<field name="employerId" type="id"></field>
         	<field name="partyId" type="id"></field>
-        	
+
         	<field name="boxAddress" type="name"></field>
         	<field name="fax" type="name"></field>
         	<field name="telephoneNo" type="name"></field>
         	<field name="mobile" type="name"></field>
         	<field name="email" type="name"></field>
         	<field name="contactPerson" type="name"></field>
-           
+
         	<prim-key field="stationId"/>
         	<relation type="one" fk-name="station_employer" rel-entity-name="Employer">
             	<key-map field-name="employerId"/>
         	</relation>
-        	
+
         	<relation type="one" fk-name="station_branch" rel-entity-name="PartyGroup">
             	<key-map field-name="partyId"/>
         	</relation>
         </entity>
-        
+
         <entity entity-name="PayrollConstants" package-name="org.ofbiz.payroll" title="Payroll Constants Entity">
 	        <field name="payrollConstantsId" type="id-ne"><description>primary sequenced ID</description></field>
 	        <field name="disability_relief" type="currency-amount"></field>
-	        <field name="lowInterstRate" type="numeric"></field> 
-	        <field name="pension_maxContibution" type="currency-amount"></field> 
+	        <field name="lowInterstRate" type="numeric"></field>
+	        <field name="pension_maxContibution" type="currency-amount"></field>
 	        <field name="monthlyPersonalRelief" type="currency-amount"></field>
 	        <field name="insuranceReliefmax" type="currency-amount"></field>
 	        <field name="insuranceReliefRate" type="floating-point"></field>
 	        <field name="staticnssfAmount" type="currency-amount"></field>
-	        
+
 	        <prim-key field="payrollConstantsId"/>
         </entity>
-        
+
          <entity entity-name="PAYETable" package-name="org.ofbiz.payroll" title="PAYE Table Entity">
 	        <field name="payeTableId" type="id-ne"><description>primary sequenced ID</description></field>
 	        <field name="lowerbracket" type="currency-amount"></field>
 	        <field name="upperbracket" type="currency-amount"></field>
-	        <field name="percentage" type="floating-point"></field> 
-	        <field name="amount" type="currency-amount"></field> 
+	        <field name="percentage" type="floating-point"></field>
+	        <field name="amount" type="currency-amount"></field>
 	        <prim-key field="payeTableId"/>
         </entity>
-        
+
         <entity entity-name="NHIFTable" package-name="org.ofbiz.payroll" title="NHIF Table Entity">
 	        <field name="nhifTableId" type="id-ne"><description>primary sequenced ID</description></field>
 	        <field name="lowerbracket" type="currency-amount"></field>
 	        <field name="upperbracket" type="currency-amount"></field>
-	        <field name="contribution" type="currency-amount"></field> 
+	        <field name="contribution" type="currency-amount"></field>
 	        <prim-key field="nhifTableId"/>
         </entity>
-        
+
         <entity entity-name="NSSFTable" package-name="org.ofbiz.payroll" title="NSSF Table Entity">
 	        <field name="nssfTableId" type="id-ne"><description>primary sequenced ID</description></field>
 	        <field name="tiername" type="currency-amount"></field>
 	        <field name="upperbracket" type="currency-amount"></field>
-	        <field name="percentage" type="floating-point"></field> 
+	        <field name="percentage" type="floating-point"></field>
 	        <prim-key field="nssfTableId"/>
         </entity>
-        
-        <view-entity entity-name="PayrollElementAndStaffPayrollElement" package-name="org.ofbiz.payroll" 
+
+        <view-entity entity-name="PayrollElementAndStaffPayrollElement" package-name="org.ofbiz.payroll"
     	title="Staff Payroll Elements">
         <member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
     	<member-entity entity-alias="PE" entity-name="PayrollElement" />
         <alias-all entity-alias="SPE"/>
-        <alias-all entity-alias="PE" />        
+        <alias-all entity-alias="PE" />
         <view-link entity-alias="SPE" rel-entity-alias="PE">
             <key-map field-name="payrollElementId" />
         </view-link>
-    
+
     </view-entity>
-    
-    <view-entity entity-name="PayPoints" package-name="org.ofbiz.payroll" 
+
+    <view-entity entity-name="PayPoints" package-name="org.ofbiz.payroll"
     	title="Staff Paypoints Report View">
-        <member-entity entity-alias="PPT" entity-name="PayPoint" />   
-        <member-entity entity-alias="PER" entity-name="Person" />     
+        <member-entity entity-alias="PPT" entity-name="PayPoint" />
+        <member-entity entity-alias="PER" entity-name="Person" />
     	<member-entity entity-alias="BDE" entity-name="BankDetails" />
     	<member-entity entity-alias="BBR" entity-name="BankBranch" />
         <alias-all entity-alias="PPT"/>
         <alias-all entity-alias="PER"/>
-        <alias-all entity-alias="BDE" />        
-        <alias-all entity-alias="BBR" />        
+        <alias-all entity-alias="BDE" />
+        <alias-all entity-alias="BBR" />
         <view-link entity-alias="PPT" rel-entity-alias="PER">
             <key-map field-name="partyId" />
         </view-link>
@@ -310,9 +308,9 @@ under the License.
         </view-link>
          <view-link entity-alias="PPT" rel-entity-alias="BBR">
             <key-map field-name="bankBranchId" />
-        </view-link>    
+        </view-link>
     </view-entity>
-        
+
          <!-- entity entity-name="PayrollOverview" package-name="org.ofbiz.payroll" title="Payroll Overview">
 	        <field name="payrollOverViewId" type="id-ne"><description>primary sequenced ID</description></field>
 	        <field name="payrollPeriodId" type="id-ne"></field>
@@ -322,14 +320,14 @@ under the License.
             	<key-map field-name="payrollPeriodId"/>
         	</relation>
         </entity -->
-        
+
         <entity entity-name="PayrollYearNo" package-name="org.ofbiz.payroll"
 		title="PayrollYearNo Entity">
 		<field name="payrollYearNoId" type="id-ne"></field>
 		<field name="description" type="description"></field>
 		<prim-key field="payrollYearNoId"/>
 	</entity>
-	
+
 	<entity entity-name="PayslipMessage" package-name="org.ofbiz.payroll"
 		title="Payslip Message">
 		<field name="payslipMessageId" type="id-ne"></field>
@@ -337,24 +335,24 @@ under the License.
 		<field name="display" type="indicator"></field>
 		<prim-key field="payslipMessageId"/>
 	</entity>
-	
+
 	<entity entity-name="EmployerDetails" package-name="org.ofbiz.payroll"
 		title="Employer Details">
 		<field name="employerDetailsId" type="id-ne"></field>
 		<field name="employer" type="name"></field>
 		<field name="pinNumber" type="long-varchar"></field>
-		<field name="nssfNumber" type="long-varchar"></field>		
+		<field name="nssfNumber" type="long-varchar"></field>
 		<field name="nhifNumber" type="long-varchar"></field>
 		<prim-key field="employerDetailsId"/>
 	</entity>
-	
+
 	<entity entity-name="PayrollPeriodSummary" package-name="org.ofbiz.payroll"
 		title="Payroll Period Summary">
 		<field name="payrollPeriodSummaryId" type="id-ne"></field>
-		<field name="payrollPeriodId" type="id"></field>		
+		<field name="payrollPeriodId" type="id"></field>
 		<field name="closed" type="indicator"></field>
 		<field name="elementName" type="name"></field>
-        <field name="TotalAmount" type="currency-amount"></field> 
+        <field name="amount" type="currency-amount"></field>
 		<prim-key field="payrollPeriodSummaryId"/>
 		 <relation type="one" fk-name="management_period" rel-entity-name="PayrollPeriod">
             <key-map field-name="payrollPeriodId"/>
@@ -363,8 +361,8 @@ under the License.
             <key-map field-name="payrollElementId"/>
         </relation>
 	</entity>
-	
-        
-            
-	
+
+
+
+
 </entitymodel>
