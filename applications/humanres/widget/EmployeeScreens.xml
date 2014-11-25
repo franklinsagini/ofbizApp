@@ -20,7 +20,56 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="FindEmployee">
+        
+    <!-- FindEmployee -->
+        <screen name="FindEmployee">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Employee"/>
+                <set field="headerItem" value="Employees"/>
+                <set field="employeeCtx" from-field="parameters"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <actions>
+                                <service service-name="findParty" auto-field-map="true"/>
+                                <set field="tabButtonItem" value="Employee"/>
+                            </actions>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="NewEmployee" text="${uiLabelMap.HumanResNewEmployee}" style="buttontext create"/>
+                                </container>
+                                <section>                                	
+                                    <widgets>
+                                    	<screenlet title="Search Employees">
+                                        	<include-form name="FindEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                            			</screenlet>
+                                		<screenlet title="Employees Found">
+                                			<include-form  name="employeesList" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                		</screenlet>                                    	
+                                        <!--<platform-specific>
+                                            <html><html-template location="component://humanres/webapp/humanres/humanres/findEmployee.ftl"/></html>
+                                        </platform-specific>-->
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
+        
+        
+    <!-- screen name="FindEmployee">
         <section>
             <actions>
                 <set field="titleProperty" value="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}"/>
@@ -54,7 +103,8 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen -->
+    
     <screen name="NewEmployee">
         <section>
             <actions>

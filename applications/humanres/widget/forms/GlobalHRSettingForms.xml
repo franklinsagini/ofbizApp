@@ -163,12 +163,12 @@ under the License.
             </service>
         </actions>
         <auto-fields-service service-name="updateEmplPositionType" default-field-type="hidden"/>
-        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmplPositionType}">
-            <hyperlink also-hidden="false" description="${emplPositionTypeId}" target="EditEmplPositionTypes">
+        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmplPositionType}"><hidden/></field>
+        <field name="emplPositionType" title="Position Type">
+        	<hyperlink also-hidden="false" description="${emplPositionType}" target="EditEmplPositionTypes">
                 <parameter param-name="emplPositionTypeId"/>
             </hyperlink>
         </field>
-        <field name="emplPositionType" title="Position Type"><display/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmplPositionType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${emplPositionType} position Type?">
                 <parameter param-name="emplPositionTypeId"/>
@@ -183,7 +183,7 @@ under the License.
          <field name="hasTable"><hidden/></field>
         
         <!-- <field name="emplPositionTypeId" use-when="emplPositionType==null"><text/></field> -->
-        <field name="emplPositionTypeId" use-when="emplPositionType!=null"><display/></field>
+        <field name="emplPositionTypeId" use-when="emplPositionType!=null"><hidden/></field>
         <field name="emplPositionType" title="Employee Position Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="emplPositionType!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -311,13 +311,13 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTrainingTypes" type="multi" title="" target="updateTrainingTypes" odd-row-style="alternate-row" header-row-style="header-row-2" 
-        default-table-style="basic-table hover-bar">
+        default-table-style="basic-table hover-bar" separate-columns="true">
         <actions>
             <entity-condition entity-name="TrainingClassType"><order-by field-name="trainingClassTypeId"/></entity-condition>
         </actions>
-        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"><display/></field>
+        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"><hidden/></field>
+        <field name="description" title="Training Type"><text/></field>
         <field name="parentTypeId" title="${uiLabelMap.HumanResPreRequisiteSkill}" widget-style="buttontext"><text/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteTrainingTypes" request-confirmation="true" confirmation-message="Delete this training type?"> 
                 <parameter param-name="trainingClassTypeId"/> 
@@ -328,7 +328,7 @@ under the License.
     </form>            
     <form name="AddTrainingTypes" type="single" target="createTrainingTypes" header-row-style="header-row" default-table-style="basic-table">
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="parentTypeId" title="${uiLabelMap.HumanResPreRequisiteSkill}"><lookup target-form-name="LookupTraining"/></field>
+        <field name="parentTypeId" title="Pre Requisite Training"><lookup target-form-name="LookupTraining"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>

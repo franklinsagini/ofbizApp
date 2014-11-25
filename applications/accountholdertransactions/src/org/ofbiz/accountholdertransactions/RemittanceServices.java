@@ -30,6 +30,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.loans.LoanServices;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -70,6 +71,8 @@ public class RemittanceServices {
 				setMemberStations.add(stationId);
 			}
 		}
+		
+		log.info("SSSSSSSSSSSS The Stations Size is ######### "+setMemberStations.size());
 		String createdBy = (String) request.getAttribute("userLoginId");
 		String month = getCurrentMonth();
 		// With the set IDs create ExpectatedStation
@@ -163,7 +166,7 @@ public class RemittanceServices {
 		GenericValue station = findStation(member.getString("stationId"));
 
 		String month = getCurrentMonth();
-		String employerName = getEmployer(station.getString("employerId"));
+		String employerName = station.getString("name"); //getEmployer(station.getString("employerId"));
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Create an expectation
@@ -203,7 +206,7 @@ public class RemittanceServices {
 				UtilMisc.toMap("isActive", "Y", "branchId",
 						member.getString("branchId"), "remitanceCode",
 						remitanceCode, "stationNumber",
-						station.getString("stationNumber"), "stationName",
+						station.getString("stationNumber").trim(), "stationName",
 						station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
@@ -236,7 +239,7 @@ public class RemittanceServices {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			memeberELI = delegator.findList("Member",
-					EntityCondition.makeCondition("memberStatus", "ACTIVE"),
+					EntityCondition.makeCondition("memberStatusId", getMemberStatusId("ACTIVE")),
 					null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -268,7 +271,7 @@ public class RemittanceServices {
 						"contributing", EntityOperator.EQUALS, "YES"),
 						EntityCondition.makeCondition("partyId",
 								EntityOperator.EQUALS,
-								member.getString("partyId"))
+								member.getLong("partyId"))
 
 				), EntityOperator.AND);
 
@@ -304,7 +307,7 @@ public class RemittanceServices {
 			GenericValue memberAccount, GenericValue member, int sequence) {
 		GenericValue station = findStation(member.getString("stationId"));
 		String month = getCurrentMonth();
-		String employerName = getEmployer(station.getString("employerId"));
+		String employerName = station.getString("name");//getEmployer(station.getString("employerId"));
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Create an expectation
@@ -327,7 +330,7 @@ public class RemittanceServices {
 				UtilMisc.toMap("isActive", "Y", "branchId",
 						member.getString("branchId"), "remitanceCode",
 						remitanceCode, "stationNumber",
-						station.getString("stationNumber"), "stationName",
+						station.getString("stationNumber").trim(), "stationName",
 						station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
@@ -368,13 +371,13 @@ public class RemittanceServices {
 	}
 
 	private static void addExpectedShares(String shareCode) {
-
+		//Long memberStatusId = 
 		// for each member save a share expected
 		List<GenericValue> memeberELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			memeberELI = delegator.findList("Member",
-					EntityCondition.makeCondition("memberStatus", "ACTIVE"),
+					EntityCondition.makeCondition("memberStatusId", getMemberStatusId("ACTIVE")),
 					null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -391,7 +394,8 @@ public class RemittanceServices {
 			GenericValue member) {
 		GenericValue station = findStation(member.getString("stationId"));
 		String month = getCurrentMonth();
-		String employerName = getEmployer(station.getString("employerId"));
+		String employerName = station.getString("name");
+		//getEmployer(station.getString("employerId"));
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Create an expectation
@@ -408,7 +412,7 @@ public class RemittanceServices {
 				UtilMisc.toMap("isActive", "Y", "branchId",
 						member.getString("branchId"), "remitanceCode",
 						shareCode, "stationNumber",
-						station.getString("stationNumber"), "stationName",
+						station.getString("stationNumber").trim(), "stationName",
 						station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
@@ -432,7 +436,7 @@ public class RemittanceServices {
 
 	}
 
-	private static String getEmployer(String employerId) {
+	private static String getEmployert(String employerId) {
 		GenericValue employer = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -487,7 +491,7 @@ public class RemittanceServices {
 		 * 
 		 * **/
 		String branchId = station.getString("branchId");
-		String stationNumber = station.getString("stationNumber");
+		String stationNumber = station.getString("stationNumber").trim();
 		String stationName = station.getString("name");
 		GenericValue stationExpectation = null;
 		stationExpectation = delegator.makeValue("StationExpectation", UtilMisc
@@ -547,10 +551,11 @@ public class RemittanceServices {
 	private static GenericValue findAccountProduct(String accountProductId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue accountProduct = null;
+		accountProductId = accountProductId.replaceFirst(",", "");
 		try {
 			accountProduct = delegator
 					.findOne("AccountProduct", UtilMisc.toMap(
-							"accountProductId", accountProductId), false);
+							"accountProductId", Long.valueOf(accountProductId)), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -560,9 +565,10 @@ public class RemittanceServices {
 	private static GenericValue findMember(String partyId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue member = null;
+		partyId = partyId.replaceAll(",", "");
 		try {
 			member = delegator.findOne("Member",
-					UtilMisc.toMap("partyId", partyId), false);
+					UtilMisc.toMap("partyId", Long.valueOf(partyId)), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -572,9 +578,10 @@ public class RemittanceServices {
 	private static GenericValue findLoanProduct(String loanProductId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue loanProduct = null;
+		loanProductId = loanProductId.replaceAll(",", "");
 		try {
 			loanProduct = delegator.findOne("LoanProduct",
-					UtilMisc.toMap("loanProductId", loanProductId), false);
+					UtilMisc.toMap("loanProductId", Long.valueOf(loanProductId)), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -584,9 +591,10 @@ public class RemittanceServices {
 	private static GenericValue findLoanApplication(String loanApplicationId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue loanApplication = null;
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
-					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					UtilMisc.toMap("loanApplicationId", Long.valueOf(loanApplicationId)),
 					false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -765,7 +773,7 @@ public class RemittanceServices {
 		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"stationId", EntityOperator.EQUALS,
-						station.getString("stationId")), EntityCondition
+						Long.valueOf(station.getString("stationId"))), EntityCondition
 						.makeCondition("monthyear", EntityOperator.EQUALS,
 								month)
 
@@ -1142,6 +1150,28 @@ public class RemittanceServices {
 		}
 
 		return acctgTransId;
+	}
+	
+	public static Long getMemberStatusId(String name) {
+		List<GenericValue> memberStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberStatusELI = delegator.findList("MemberStatus",
+					EntityCondition.makeCondition("name", name), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long memberStatusId = 0L;
+		for (GenericValue genericValue : memberStatusELI) {
+			memberStatusId = genericValue.getLong("memberStatusId");
+		}
+
+		String memberStatusIdString = String.valueOf(memberStatusId);
+		memberStatusIdString = memberStatusIdString.replaceAll(",", "");
+		memberStatusId = Long.valueOf(memberStatusIdString);
+		return memberStatusId;
 	}
 
 }
