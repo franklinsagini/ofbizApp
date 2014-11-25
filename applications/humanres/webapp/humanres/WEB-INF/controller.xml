@@ -828,6 +828,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPerfReviews"/>
     </request-map>
+    <request-map uri="MyPerfReviews">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MyPerfReviews"/>
+    </request-map>
     <request-map uri="EditPerfReview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPerfReviews">
@@ -1059,6 +1063,14 @@ under the License.
 				<redirect-parameter name="perfManagerId"/>
 		</response>
 		<response name="error" type="view" value="FindPerfReviews" />
+     </request-map> 
+     
+     <request-map uri="closeReviews">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.humanres.CloseReviews" invoke="closeReviews" ></event>
+        <response name="success" type="view" value="PerfManagement">
+		</response>
+		<response name="error" type="view" value="PerfManagement" />
      </request-map> 
      
      <request-map uri="submitAppraisal">
@@ -2545,7 +2557,7 @@ under the License.
 		<response name="error" type="view" value="separationApplication" />
      </request-map>
 	
-	
+	<request-map uri="separationSummaryReport"><security https="true" auth="true"/><response name="success" type="view" value="separationSummaryReport"/></request-map>
 	
     
     
@@ -2798,6 +2810,7 @@ under the License.
     <view-map name="EditPayGrade" type="screen" page="component://humanres/widget/PayGradeScreens.xml#EditPayGrade"/>
 
     <view-map name="FindPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#FindPerfReviews"/>
+    <view-map name="MyPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#MyPerfReviews"/>
     <view-map name="EditPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviews"/>
     <view-map name="EditPerfReviewItems" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviewItems"/>
     <view-map name="PerfManagement" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfManagement"/>
@@ -2966,5 +2979,6 @@ under the License.
     <view-map name="perfScoresReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfScoresReport"/>
     
     <view-map name="trainingSummaryReport" type="screen" page="component://humanres/widget/TrainingReportScreens.xml#TrainingSummaryReport"/>
+    <view-map name="separationSummaryReport" type="screen" page="component://humanres/widget/ReportScreens.xml#SeparationSummaryReport"/>
 						
 </site-conf>

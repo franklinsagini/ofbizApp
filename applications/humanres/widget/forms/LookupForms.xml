@@ -31,6 +31,7 @@ under the License.
         <field name="lastName" title="Surname"><text-find/></field>
         <field name="firstName" title="First Names"><text-find/></field>
         <field name="nationalIDNumber" title="ID Number"><text-find/></field>
+        <field name="isSeparated"><hidden value="N"/></field>
         
 		<!-- field name="noConditionFind"><hidden value="Y"/></field -->
 		
@@ -39,9 +40,13 @@ under the License.
     <form name="ListEmployees" type="list" list-name="listIt" paginate-target="LookupEmployee"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
-        	<entity-condition entity-name="Person">
-        		<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        	<entity-condition entity-name="Person" >
+        		<condition-list combine="and">
+        			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>        		
+        		</condition-list>
         	</entity-condition>
+        	
         	<set field="inputFields" from-field="parameters"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

@@ -23,7 +23,7 @@ under the License.
     <form name="FindPartySkills" type="single" target="FindPartySkills"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="PartySkill" default-field-type="find"/>
-        <field name="partyId" title="Employee"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
         <field name="skillTypeId" title="Skill Type">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="SkillType">
@@ -59,7 +59,7 @@ under the License.
         <field name="rating"><hidden/></field>
         <field name="skillLevel"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deletePartySkill" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deletePartySkill" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete Skill?">
                 <parameter param-name="skillTypeId"/>
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -73,7 +73,7 @@ under the License.
         </actions>
         <alt-target use-when="insideEmployee != null" target="createPartySkillExt"/>
         <field name="partyId" use-when="partySkill != null" title="Employee"><hidden/></field>
-        <field name="partyId" use-when="partySkill == null" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" use-when="partySkill == null" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupEmployee"/></field>
         <field name="skillTypeId" title="Skill Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down>
                 <entity-options description="${description}" entity-name="SkillType">

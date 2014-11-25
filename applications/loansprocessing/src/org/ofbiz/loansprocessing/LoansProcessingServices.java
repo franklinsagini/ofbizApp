@@ -215,8 +215,12 @@ public class LoansProcessingServices {
 		}
 
 		GenericValue graduatedScale = null;
+		
+		if (bdAmount.compareTo(BigDecimal.ZERO) == -1)
+			bdAmount = new BigDecimal(1);
 
 		for (GenericValue genericValue : graduatedScaleELI) {
+			log.info("TTTTTTTTT The Amount is AAAAAAAAAA "+bdAmount);
 			// bdTotalRepayment =
 			// bdTotalRepayment.add(genericValue.getBigDecimal("principalAmount"));
 			if (!(bdAmount.compareTo(genericValue.getBigDecimal("lowerValue")) == -1)
@@ -225,6 +229,7 @@ public class LoansProcessingServices {
 				graduatedScale = genericValue;
 			}
 		}
+		
 
 		BigDecimal bdContributedAmount = BigDecimal.ZERO;
 		// Use the graduated scale to compute the contribution

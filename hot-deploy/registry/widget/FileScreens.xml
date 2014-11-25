@@ -384,7 +384,8 @@
 				<set field="partyId" from-field="parameters.partyId"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="mainDecorator" location="component://registry/widget/FileScreens.xml">
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
 							<widgets>
@@ -405,6 +406,158 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- ======================================================FILE REQUEST====================================================== -->
+	<screen name="registryFileRequest">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesRequest" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Request File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForRequest" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listFindMemberfilesForRequest" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILE ISSUE====================================================== -->
+	<screen name="registryFileIssue">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesIssue" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Issue File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForIssue" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForIssue" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILE DISPATCH====================================================== -->
+	<screen name="registryFileDispatch">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesDispatch" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Send or Recieve File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForDispatch" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForDispatch" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILE RELEASE====================================================== -->
+	<screen name="registryFileRelease">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesRelease" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Return File Back to Registry" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 
 	<screen name="filetype">
@@ -415,7 +568,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createfiletype" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="RegistryFileType" value-field="filetypeContext" />
+				<entity-one entity-name="RegistryDocumentType" value-field="filetypeContext" />
 			</actions>
 			<widgets>
 				<decorator-screen name="ducumentTYpesDecorator"
@@ -567,6 +720,8 @@
 				<entity-one entity-name="RegistryDocuments" value-field="documentContext" />
 				<set field="partyId" from-field="FilesContext.partyId"
 					default-value="${FilesContext.partyId}" />
+					<set field="folioNo" from-field="FilesContext.folioNo"
+					default-value="${FilesContext.folioNo}" />
 			</actions>
 			<widgets>
 				<decorator-screen name="documentsDecorator"
@@ -618,8 +773,8 @@
 					<section>
 							<widgets>
 								<screenlet title="${folioNo} File Actions Saved">
-									<!-- <include-form name="RequestFileForm"
-										location="component://registry/widget/FileForms.xml" /> -->
+									 <include-form name="RequestFileForm"
+										location="component://registry/widget/FileForms.xml" /> 
 								</screenlet>
 							</widgets>
 						</section>
@@ -912,6 +1067,136 @@
             </widgets>
         </section>
     </screen>
+    
+    
+    <!-- ==============================================REQUESTS========================================================== -->
+    
+    <screen name="requestingFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesRequest" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+				
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Request File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="requestFileForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	  <!-- ==============================================ISSUES========================================================== -->
+    
+    <screen name="issuingFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesIssue" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Issue File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="issueFileForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	  <!-- ==============================================DISPATCH========================================================== -->
+    
+    <screen name="dispatchingFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesDispatch" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Send File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="dispatchFileForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	  <!-- ==============================================RELEASE========================================================== -->
+    
+    <screen name="releasingFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesRelease" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Release File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="releaseFileForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 
 </screens>

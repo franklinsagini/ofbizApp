@@ -22,121 +22,16 @@
         </actions>
         
        <!--  <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/> -->
-        <field name="partyId" title="Employee"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <form name="ListActivelLeaves" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePartySkillExt" paginate-target="FindActiveLeaves"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-        
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="EmplLeave"/>
-                <field-map field-name="orderBy" value="leaveId"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-             
-        </actions>
-        <field name="leaveId"><hidden /></field>
-		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
-				<sub-hyperlink target="/partymgr/control/viewprofile"
-					target-type="inter-app" description="${partyId}" link-style="buttontext">
-					<parameter param-name="partyId" from-field="partyId" />
-				</sub-hyperlink>
-			</display-entity>
-		</field>
-		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
-			<display-entity entity-name="EmplLeaveType" />
-		</field>
-		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
-			<display-entity entity-name="EmplLeaveReasonType" />
-		</field>
-		<field name="fromDate">
-			<display />
-		</field>
-		<field name="thruDate">
-			<display />
-		</field>
-		<field name="leaveDuration">
-			<display />
-		</field>
-		<field name="responsibleEmployee" title="Approver">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}"
-				key-field-name="partyId">
-
-			</display-entity>
-		</field>
-		<field name="handedOverTo" title="Handed Over To">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}"
-				key-field-name="partyId">
-			</display-entity>
-		</field>
-		<field name="updateLeaved" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
-			<hyperlink also-hidden="false" description="Employee Callback"
-				target="callBackEmployee">
-				<parameter param-name="thruDate" /> 
-				<parameter param-name="leaveId" /> 
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveDuration" />  
-				<parameter param-name="leaveTypeId" /> 
-			</hyperlink>
-		</field> 
-		<field name="updateLeave" title="" widget-style="buttontext" use-when="${leaveTypeId=='COMPASSIONATE_LEAVE'}">
-			<hyperlink also-hidden="false" description="Employee Callback"
-				target="callBackEmployee">
-				<parameter param-name="thruDate" /> 
-				<parameter param-name="leaveId" /> 
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveDuration" /> 
-				<parameter param-name="leaveTypeId" /> 
-			</hyperlink>
-		</field> 
-				<field name="description">
-			<hidden />
-		</field>
-    </form>
+   
     
     
-    
-    
-
- <form name="dewFindActiveLeaves" type="single" target="FindActiveLeaves"
-		odd-row-style="header-row" default-table-style="basic-table"
-		default-entity-name="EmplLeave">
-		 <field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<lookup target-form-name="LookupEmployee" />
-		</field> 
-		<!-- <field name="partyId"><text-find/></field> -->
-		<field name="noConditionFind"><hidden value="Y" /></field>
-		<field name="searchButton" title="${uiLabelMap.CommonFind}"
-			widget-style="smallSubmit">
-			<submit button-type="button" image-location="/images/icons/magnifier.png" />
-		</field>
-	</form>	 
 	
-	
-	<!-- <form name="FindActiveLeaves" default-map-name="LeaveApp" target="FindActiveLeaves" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
-        <actions>
-        	
-        	
-        </actions>
-        
-		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<lookup target-form-name="LookupEmployee" />
-		</field>
-		
-		<field name="description">
-			<hidden />
-		</field>
-        <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form> -->
-	
-	<form name="sdwewListActivelLeaves" list-name="EmplLeave" type="list"
+	<form name="ListActivelLeaves" list-name="EmplLeave" type="list"
 		odd-row-style="alternate-row" header-row-style="header-row-2"
 		paginate-target="FindActiveLeaves" default-table-style="basic-table hover-bar">
 		<actions>
@@ -659,8 +554,7 @@
 		<!-- <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field> -->
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
-			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"
-				target="deleteEmplLeave">
+			<hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}"	target="deleteEmplLeave" request-confirmation="true" confirmation-message="Delete leave application?">
 				<parameter param-name="partyId" />
 				<parameter param-name="leaveTypeId" />
 				<parameter param-name="fromDate" />
@@ -1205,7 +1099,8 @@
 		<field name="compassionateLeaveDaysUsed"><display/></field>
 		<field name="openingDate" title="Date"><display/></field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
-		<hyperlink target="deletefileType" description="${uiLabelMap.CommonDelete}"	also-hidden="false"><parameter param-name="leaveBalanceId" /></hyperlink></field>
+		<hyperlink target="deletefileType" description="${uiLabelMap.CommonDelete}"	also-hidden="false" request-confirmation="true" confirmation-message="Delete this?">
+		<parameter param-name="leaveBalanceId" /></hyperlink></field>
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
 	
@@ -1326,7 +1221,8 @@
 		<field name="fromDate"><display/></field>
 		<field name="leaveDuration"><display /></field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
-		<hyperlink target="deleteLeaveCalender" description="${uiLabelMap.CommonDelete}"	also-hidden="false"><parameter param-name="leaveCalenderId" /></hyperlink></field>
+		<hyperlink target="deleteLeaveCalender" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this record?">
+		<parameter param-name="leaveCalenderId" /></hyperlink></field>
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
 	

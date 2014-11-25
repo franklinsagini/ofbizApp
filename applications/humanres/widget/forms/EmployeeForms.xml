@@ -20,6 +20,40 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        
+    <!-- Find Employee -->
+    <form name="FindEmployee" type="single" target="findEmployees" default-entity-name="PersonActiveAndPartyGroup">
+    
+     	<auto-fields-entity entity-name="Person" default-field-type="hidden"/>
+         <field name="noConditionFind"><hidden value="Y"/></field><!-- if this isn't there then with all fields empty no query will be done -->        
+        <field name="partyId" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        <field name="lastName" title="Last Name"><text-find/></field>
+        <field name="searchButton" title="LOOKUP EMPLOYEE" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    <form name="employeesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="findEmployees" paginate-target="findEmployees"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">        
+        <actions>
+        	<set field="inputFields" from-field="parameters"/>
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="employeeCtx"/>
+                <field-map field-name="entityName" value="PersonActiveAndPartyGroup"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <!-- auto-fields-entity entity-name="PersonActiveAndPartyGroup" default-field-type="hidden"/ -->
+         <field name="partyId" title="Payroll Number"><display-entity entity-name="Person" key-field-name="partyId" description="${employeeNumber}"></display-entity></field>
+         <field name="firstName" title="First Name"><display also-hidden="false"/></field>
+        <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
+         <field name="details" widget-style="col align-float">
+            <hyperlink target="EmployeeProfile" description="DETAILS" also-hidden="false">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+     </form>
     <!--form name="AddEmployee" type="single" target="createEmployee"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="salutation" title="${uiLabelMap.CommonTitle}"><text size="10" maxlength="30"/></field>
@@ -497,7 +531,7 @@
         <field name="balance" title="Balance"><text size="30" maxlength="60"/></field>
        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteStaffLeaveBalances" description="${uiLabelMap.CommonDelete}" also-hidden="false" >
+            <hyperlink target="deleteStaffLeaveBalances" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this record?">
                 <parameter param-name="staffLeaveBalancesId"/>
             </hyperlink>
         </field>
@@ -1322,7 +1356,7 @@
         <field name="name" title="Separation Type"> <display/> </field>
         <field name="description" title="Description"> <display/> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteSeparationTypes" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteSeparationTypes" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this seperation type?">
                 <parameter param-name="separationTypeId"/>
             </hyperlink>
         </field>
@@ -1369,7 +1403,7 @@
         <field name="status" title="Status"><display /></field>
         
        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-           <hyperlink target="deleteSeparationApplication" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+           <hyperlink target="deleteSeparationApplication" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete record?">
                <parameter param-name="separationApplicationId"/>
            </hyperlink>
        </field>
@@ -1472,16 +1506,16 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		 <field name="ConfirmStaff" title="-" widget-style="buttontext" use-when="${state=='CONFIRM'}">
+		 <field name="ConfirmStaff" title="-" widget-style="buttontext" >
 			<hyperlink also-hidden="false" description="Confirm Staff" target="ConfirmStaff">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		 <field name="dismissStaff" title="-" widget-style="buttontext" use-when="${state=='CONFIRM'}">
-			<hyperlink also-hidden="false" description="Dismis Staff" target="dismissStaffOnProbation">
-				<!-- <parameter param-name="partyId" /> -->
+		  <field name="dismissStaff" title="-" widget-style="buttontext"  >
+			<hyperlink also-hidden="false" description="Dismis Staff" target="separationApplication">
+				<parameter param-name="partyId" />
 			</hyperlink>
-		</field>
+		</field> 
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
