@@ -531,7 +531,7 @@
         <field name="balance" title="Balance"><text size="30" maxlength="60"/></field>
        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteStaffLeaveBalances" description="${uiLabelMap.CommonDelete}" also-hidden="false" >
+            <hyperlink target="deleteStaffLeaveBalances" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this record?">
                 <parameter param-name="staffLeaveBalancesId"/>
             </hyperlink>
         </field>
@@ -1356,7 +1356,7 @@
         <field name="name" title="Separation Type"> <display/> </field>
         <field name="description" title="Description"> <display/> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteSeparationTypes" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteSeparationTypes" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this seperation type?">
                 <parameter param-name="separationTypeId"/>
             </hyperlink>
         </field>
@@ -1403,7 +1403,7 @@
         <field name="status" title="Status"><display /></field>
         
        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-           <hyperlink target="deleteSeparationApplication" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+           <hyperlink target="deleteSeparationApplication" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete record?">
                <parameter param-name="separationApplicationId"/>
            </hyperlink>
        </field>
@@ -1506,16 +1506,16 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		 <field name="ConfirmStaff" title="-" widget-style="buttontext" use-when="${state=='CONFIRM'}">
+		 <field name="ConfirmStaff" title="-" widget-style="buttontext" >
 			<hyperlink also-hidden="false" description="Confirm Staff" target="ConfirmStaff">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		 <field name="dismissStaff" title="-" widget-style="buttontext" use-when="${state=='CONFIRM'}">
-			<hyperlink also-hidden="false" description="Dismis Staff" target="dismissStaffOnProbation">
-				<!-- <parameter param-name="partyId" /> -->
+		  <field name="dismissStaff" title="-" widget-style="buttontext"  >
+			<hyperlink also-hidden="false" description="Dismis Staff" target="separationApplication">
+				<parameter param-name="partyId" />
 			</hyperlink>
-		</field>
+		</field> 
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     

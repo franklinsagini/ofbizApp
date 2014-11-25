@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+
+
+
+    <!-- ========= Payrol Ledger Methods ========= -->
+    <simple-method method-name="createPayrollAcctgTransAndEntries" short-description="Creates an AcctgTrans and two offsetting AcctgTransEntry records">
+        <!-- TODO: Do we need to create a GlJournal record here? -->
+
+        <!-- first, create the AcctgTrans which is the header -->
+        <set-service-fields service-name="createAcctgTrans" to-map="createAcctgTransParams" map="parameters"/>
+        <if-empty field="createAcctgTransParams.transactionDate">
+            <now-timestamp field="createAcctgTransParams.transactionDate"/>
+        </if-empty>
+        <if-empty field="createAcctgTransParams.glFiscalTypeId">
+            <set field="createAcctgTransParams.glFiscalTypeId" value="ACTUAL" />
+        </if-empty>
+        <if-empty field="createAcctgTransParams.acctgTransTypeId">
+            <set field="createAcctgTransParams.acctgTransTypeId" value="_NA_" />
+        </if-empty>
+        <call-service service-name="createAcctgTrans" in-map-name="createAcctgTransParams">
+            <result-to-field result-name="acctgTransId"/>
+        </call-service>
+
+        <!-- TODO: if someday there are more than one type of acctgTransEntryTypeId (other than _NA_, we should get rid of the lines below
+            that fix those values -->
+        <!-- now, create the debit AcctgTransEntry -->
+        <set-service-fields service-name="createAcctgTransEntry" map="parameters" to-map="createAcctgTransEntryParams"/>
+        <set field="createAcctgTransEntryParams.acctgTransId" from-field="acctgTransId"/>
+        <set field="createAcctgTransEntryParams.glAccountId" from-field="parameters.debitGlAccountId"/>
+        <set field="createAcctgTransEntryParams.debitCreditFlag" value="D"/>
+        <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
+        <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+
+        <!-- now the credit AcctgTransEntry -->
+        <set-service-fields service-name="createAcctgTransEntry" map="parameters" to-map="createAcctgTransEntryParams"/>
+        <set field="createAcctgTransEntryParams.acctgTransId" from-field="acctgTransId"/>
+        <set field="createAcctgTransEntryParams.glAccountId" from-field="parameters.creditGlAccountId"/>
+        <set field="createAcctgTransEntryParams.debitCreditFlag" value="C"/>
+        <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
+        <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+
+        <field-to-result field="acctgTransId" result-name="acctgTransId"/>
+    </simple-method>
+
+</simple-methods>
