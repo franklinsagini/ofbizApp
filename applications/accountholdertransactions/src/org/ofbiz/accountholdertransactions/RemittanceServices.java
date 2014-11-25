@@ -31,6 +31,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -400,8 +401,24 @@ public class RemittanceServices {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Create an expectation
 		GenericValue expectedPaymentSent = null;
+		BigDecimal bdShareAmount = BigDecimal.ZERO;
+		
+		
+		bdShareAmount = getMemberShareContribution(member.getLong("partyId"));
+		
+		if (bdShareAmount == null){
+			bdShareAmount = getMinimumShareContribution("901");
+		}
+		
 
+		
 		String employeeNames = getNames(member);
+		if (memberHasLoan(member.getLong("partyId"))){
+			BigDecimal bdGraduatedAmount = getGraduatedScaleShareContribution(member.getLong("partyId"));
+			if(bdGraduatedAmount.compareTo(bdShareAmount) == 1)
+				bdShareAmount = bdGraduatedAmount;
+			//bdShareAmount = getGraduatedScaleShareContribution(member.getLong("partyId"));
+		}
 
 		try {
 			TransactionUtil.begin();
@@ -417,7 +434,7 @@ public class RemittanceServices {
 
 						"payrollNo", member.getString("payrollNumber"),
 						"loanNo", "0", "employerNo", employerName, "amount",
-						member.getBigDecimal("shareAmount"),
+						bdShareAmount,
 						"remitanceDescription", "SHARES", "employeeName",
 						employeeNames, "expectationType", "SHARES",
 
@@ -434,6 +451,94 @@ public class RemittanceServices {
 			e.printStackTrace();
 		}
 
+	}
+
+	private static BigDecimal getMemberShareContribution(Long memberId) {
+		String accountProductId = LoanServices.getShareDepositAccountId("901");
+		BigDecimal bdShareAmount = null;
+		
+		accountProductId = accountProductId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						memberId), EntityCondition
+						.makeCondition("accountProductId", EntityOperator.EQUALS,
+								Long.valueOf(accountProductId))
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList(
+					"LoanApplication",
+					memberAccountConditions, null, null, null,
+					false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		for (GenericValue genericValue : loanApplicationELI) {
+			bdShareAmount = genericValue.getBigDecimal("contributingAmount");
+		}
+		
+		return bdShareAmount;
+	}
+
+	private static BigDecimal getMinimumShareContribution(String code) {
+		List<GenericValue> accountProductELI = null; // =
+		BigDecimal minSavingsAmt = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					EntityCondition.makeCondition("code", code), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : accountProductELI) {
+			minSavingsAmt = genericValue.getBigDecimal("minSavingsAmt");
+		}
+		return minSavingsAmt;
+	}
+
+	private static boolean memberHasLoan(Long memberId) {
+		
+		log.info(" MMMMMMMMMMM "+memberId+" Has a loan");
+		
+		Long disbursedLoanStatusId = LoansProcessingServices.getLoanStatus("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						memberId), EntityCondition
+						.makeCondition("loanStatusId", EntityOperator.EQUALS,
+								disbursedLoanStatusId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList(
+					"LoanApplication",
+					loanApplicationConditions, null, null, null,
+					false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (loanApplicationELI.size() > 0){
+			return true;
+		}
+		return false;
+	}
+
+	private static BigDecimal getGraduatedScaleShareContribution(Long memberId) {
+		// TODO Auto-generated method stub
+		//LoanServices.
+		return LoansProcessingServices.getLoanCurrentContributionAmount(memberId, null);
 	}
 
 	private static String getEmployert(String employerId) {
