@@ -189,7 +189,8 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonSearch}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListTrainingStatus" list-name="listIt" title="" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    <form name="ListTrainingStatus" list-name="listIt" title="" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"
+    	separate-columns="true">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -199,24 +200,27 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PersonTraining" default-field-type="display"/>
-        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="buttontext">
-            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
+        <field name="partyId" title="Employee" widget-style="buttontext">
+            <display-entity entity-name="Person" description="${firstName} ${middleName} ${lastName} (${employeeNumber})">
+                <!-- sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyId"/>
-                </sub-hyperlink>
+                </sub-hyperlink -->
             </display-entity>
         </field>
         <field name="approverId" widget-style="buttontext">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="buttontext">
+            <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} (${employeeNumber})">
+                <!-- sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="approverId"/>
-                </sub-hyperlink>
+                </sub-hyperlink -->
             </display-entity>
         </field>
-        <field name="trainingRequestId" widget-style="buttontext"/>
+        <field name="workEffortId" widget-style="buttontext"><hidden/></field>
+        <field name="trainingRequestId" widget-style="buttontext"><hidden/></field>
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
         <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
+        <field name="fromDate" title="From"><display type="date"/></field>
+        <field name="thruDate" title="To"><display type="date"/></field>
     </form>
 
     <form name="simpleListTrainingStatus" list-name="listIt" title="" type="list" odd-row-style="alternate-row" default-table-style="basic-table">
