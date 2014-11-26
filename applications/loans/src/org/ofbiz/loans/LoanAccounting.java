@@ -31,7 +31,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * 
  * **/
 public class LoanAccounting {
-
+	
 	public static Logger log = Logger.getLogger(LoanAccounting.class);
 
 	public static String postDisbursement(GenericValue loanApplication,
@@ -410,6 +410,7 @@ public class LoanAccounting {
 		String loanReceivableAccount = getLoanReceivableAccount(delegator);
 		String partyId = (String) userLogin.get("partyId");
 		BigDecimal bdLoanAmount = loanApplication.getBigDecimal("loanAmt");
+		
 		String postingType = "D";
 		String entrySequenceId = "00002";
 		postTransactionEntry(delegator, bdLoanAmount, partyId,

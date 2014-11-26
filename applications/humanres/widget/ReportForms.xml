@@ -170,10 +170,12 @@ under the License.
         <field name="employeeNumber" title="Employee Number"> <display/> </field>
         <field name="firstName" title="First Name"> <display/> </field>
         <field name="lastName" title="Surname"> <display/> </field>        
-        <field name="branchId" title="Branch"> <display/> </field>
-        <field name="station" title="Station"> <display/> </field>
-        <field name="fromDate"> <display/> </field>
-        <field name="thruDate"> <display/> </field>
+        <field name="branchId" title="Branch">
+        	<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>        	
+        </field>
+        <!-- field name="station" title="Station"> <display/> </field -->
+        <field name="fromDate"> <display type="date"/> </field>
+        <field name="thruDate"> <display type="date"/> </field>
     </form>
     <form name="listPositionDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="positionDetails" paginate-target="positionDetails"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -186,9 +188,12 @@ under the License.
         <field name="employeeNumber" title="Employee Number"> <display/> </field>
         <field name="firstName" title="First Name"> <display/> </field>
         <field name="lastName" title="Surname"> <display/> </field>
-        <field name="positionName" title="Position Name"> <display/> </field>
-        <field name="employeefromDate" title="From Date"> <display/> </field>
-        <field name="employeethruDate" title="Through Date"> <display/> </field>
+        <field name="emplPositionTypeId" title="Job Title ">
+        	<display-entity entity-name="EmplPositionType" key-field-name="emplPositionTypeId" description="${emplPositionType}"/>
+        </field>
+        <field name="positionName" title="Position Name"> <hidden/> </field>
+        <field name="employeefromDate" title="From Date"> <display type="date"/> </field>
+        <field name="employeethruDate" title="Through Date"> <display type="date"/> </field>
     </form>
     
     <form name="printbutton" type="single" separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">

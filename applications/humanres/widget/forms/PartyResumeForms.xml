@@ -40,11 +40,12 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PartyResume" default-field-type="display"/>
-        <field name="resumeId" title="Resume Code" widget-style="linktext">
+        <field name="resumeId"><hidden/></field>
+        <!-- field name="resumeId" title="Resume Code" widget-style="linktext">
             <hyperlink also-hidden="false" description="${resumeId}" target="EditPartyResume">
                 <parameter param-name="resumeId"/>
             </hyperlink>
-        </field>
+        </field -->
         <field name="partyId" title="Employee">
            <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
                <sub-hyperlink target="viewprofile" link-style="smallSubmit" target-type="inter-app" description="${partyId}">
@@ -61,8 +62,8 @@ under the License.
     <form name="EditPartyResume" type="single" target="createPartyResume" title="" default-map-name="partyResume"
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="partyResume != null" target="updatePartyResume"/>
-        <field name="resumeId" use-when="partyResume!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field name="resumeId" use-when="partyResume==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="resumeId" use-when="partyResume!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
+        <field name="resumeId" use-when="partyResume==null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><hidden/></field>
         <field name="contentId" title="Uploaded Resume"><lookup target-form-name="LookupContent"/></field>
         <field name="partyId" use-when="partyResume!=null&amp;&amp;partyId!=null" title="Employee"><hidden/></field>
         <field name="partyId" use-when="partyResume==null&amp;&amp;partyId==null" title="Employee"><lookup target-form-name="LookupPartyName"/></field>
