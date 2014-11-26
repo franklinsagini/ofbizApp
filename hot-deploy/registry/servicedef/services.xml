@@ -116,20 +116,12 @@
 		<auto-attributes entity-name="RegistryFileActions" include="nonpk" mode="IN" optional="true" />
 	</service>
 	
-	<service name="sendFiles" engine="simple" default-entity-name="saveSendActionToLogs"
-	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="sendFiles" auth="true">
+	<service name="recieveFiles" engine="simple"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="recieveFiles" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes  include="pk" mode="IN" optional="false" />
-		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+		<auto-attributes entity-name="RegistryFileLogs" include="pk" mode="IN" optional="false" />
+		<auto-attributes entity-name="RegistryFileLogs" include="nonpk" mode="IN" optional="true" />
 	</service>
-	
-	<service name="recievefiles" engine="simple" default-entity-name="saveSendActionToLogs"
-	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="recievefiles" auth="true">
-		<description>Create File Request header record</description>
-		<auto-attributes  include="pk" mode="IN" optional="false" />
-		<auto-attributes  include="nonpk" mode="IN" optional="true" />
-	</service>
-	
 	
 	 
 

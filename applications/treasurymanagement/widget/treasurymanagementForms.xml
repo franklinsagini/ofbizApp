@@ -231,14 +231,14 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     <!-- TreasuryTransfer -->
-    <form name="NewTreasuryTransfer" type="single" target="createTreasuryTransfer"
+    <form name="NewTreasuryTransfer" type="single" target="createTreasuryTransfer?treasuryId=${treasuryId}"
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="TreasuryTransferContext">
         <actions>
         	<entity-one entity-name="Treasury" value-field="treasury">
 				<field-map field-name="treasuryId" from-field="parameters.treasuryId"/>
 			</entity-one>
-			<set field="treasuryId" from-field="parameters.treasuryId"/>
+			<set field="treasuryId" from-field="treasuryId"/>
         	<entity-condition entity-name="Treasury" list="treasuryFromList">
 			</entity-condition>
 			
@@ -266,11 +266,12 @@
        			<list-options key-name="treasuryId" list-name="treasuryFromList" description="${name}"/>
        		</drop-down>
         </field -->
-        <field name="from" title="From">
+        <field name="from" title="From" widget-style="required" required-field="true">
         	<text disabled="true" default-value="${treasury.name}"></text>
         </field>
-        <field name="sourceTreasury">
+        <field name="sourceTreasury" widget-style="required" required-field="true">
         	<hidden value="${treasuryId}"/>
+        	<!-- display-entity entity-name="Treasury" description="${name}" key-field-name="treasuryId" ></display-entity -->
         </field>
         
         <field name="destinationTreasury" title="To"   widget-style="required" required-field="true">
@@ -279,14 +280,14 @@
        		</drop-down>
         </field>
         
-        <field name="employeeResponsible" title="Employee Responsible" >
+        <field name="employeeResponsible" title="Employee Responsible" widget-style="required" required-field="true" >
        		<drop-down allow-empty="true">
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
        		</drop-down>
         </field>
         
-        <field name="transactionNumber" title="Transaction No."><text></text></field>
-        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="transactionNumber" title="Transaction No." widget-style="required" required-field="true"><text></text></field>
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"> <text></text> </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
@@ -294,6 +295,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="TreasuryTransfer">
+            	<order-by field-name="-treasuryTransferId"/>
             </entity-condition>
             
             <entity-condition entity-name="Treasury" list="treasuryFromList">
@@ -325,12 +327,13 @@
         </field>
         <field name="transactionNumber" title="Transaction No."  widget-style="required" required-field="true"><text size="15"></text></field>
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text size="15"></text></field>
+        <field name="createdStamp" title="When"><display type="date-time"></display></field>
          <!-- field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea cols="40"></textarea></field -->       
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteTreasuryTransfer" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="treasuryTransferId"/>
             </hyperlink>
-        </field>
+        </field -->
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     

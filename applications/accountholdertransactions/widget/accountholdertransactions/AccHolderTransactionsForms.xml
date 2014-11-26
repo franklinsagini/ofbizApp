@@ -55,12 +55,13 @@ under the License.
 	focus-field-name="transactionAmount" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="cashWithdrawalContext" extends="TransactionForm">
         
-        
+
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
         <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
 		 <field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return checkAvailableBalance();"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="(tellerBalance!=null) &amp;&amp; (tellerBalance.compareTo(BigDecimal.ZERO) &gt; 1)" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return checkAvailableBalance();"><submit button-type="button"/></field>
+        <field name="tellerAllocated" title="Teller Not ALlocated" use-when="(tellerBalance!=null) &amp;&amp; (tellerBalance.compareTo(BigDecimal.ZERO) &lt; 1)"><display default-value="Teller Must be allocated before any transaction can happen"></display></field>
        </form>
         
       <form name="listCashWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashWithdrawal" paginate-target="cashWithdrawal"
@@ -148,7 +149,9 @@ under the License.
         <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
 		<field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
        
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" ><submit button-type="button" /></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" use-when="(tellerBalance!=null) &amp;&amp; (tellerBalance.compareTo(BigDecimal.ZERO) &gt; 1)" widget-style="smallSubmit" ><submit button-type="button" /></field>
+      	<field name="tellerAllocated" title="Teller Not ALlocated" use-when="(tellerBalance!=null) &amp;&amp; (tellerBalance.compareTo(BigDecimal.ZERO) &lt; 1)"><display default-value="Teller Must be allocated before any transaction can happen"></display></field>
+      	
        </form>
         
       <form name="listCashDeposit" id="listCashDeposit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashDeposit" paginate-target="cashDeposit"

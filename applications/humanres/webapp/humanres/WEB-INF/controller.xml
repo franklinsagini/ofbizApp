@@ -2212,6 +2212,14 @@ under the License.
         <response name="error" type="view" value="county"
         	save-home-view="true"/>
     </request-map>
+    
+    <request-map uri="department">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="department"/>
+        <response name="error" type="view" value="department"
+        	save-home-view="true"/>
+    </request-map>
+    
     <request-map uri="createCounty">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCounty"/>
@@ -2230,6 +2238,31 @@ under the License.
         <response name="success" type="view" value="county"/>
         <response name="error" type="view-last"/>
     </request-map>
+    
+    <!-- =============================== DEPARTMENT DEFINITION =============================================== -->
+    
+    <request-map uri="createDepartment">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createDepartment" />
+        <response name="success" type="request-redirect-noparam" value="department" />
+        <response name="error" type="view" value="department" />
+    </request-map>
+    
+    
+    <request-map uri="deleteDepartment">
+        <security https="true" auth="true" />
+        <event type="service" invoke="deleteDepartment" />
+        <response name="success" type="request-redirect-noparam" value="department"></response>
+        <response name="error" type="view" value="department" />
+    </request-map>
+    
+    <request-map uri="updateDepartment">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updateDepartment" />
+        <response name="success" type="view" value="department"></response>
+        <response name="error" type="view" value="department" />
+    </request-map>
+    
     
     <request-map uri="bloodgroup">
         <security https="true" auth="true"/>
@@ -2892,6 +2925,8 @@ under the License.
     <view-map name="editStaffConfirmation" type="screen" page="component://humanres/widget/EmployeeScreens.xml#editStaffConfirmationDate"/>
     
     <view-map name="county" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewCounty"/>
+    <view-map name="department" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#editDepartment"/>
+    
     <view-map name="bloodgroup" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewBloodGroup"/>
     <view-map name="religion" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewReligion"/>
     <view-map name="familyrelations" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewFamilyRelations"/>
