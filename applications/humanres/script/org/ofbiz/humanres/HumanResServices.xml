@@ -617,6 +617,32 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+	
+	<!-- ========================= DEPARTMENT DEFINITION =================================== -->
+	
+	<!-- Estate -->
+    <simple-method method-name="createDepartment" short-description="Create Estate">
+            <make-value entity-name="department" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="department" field="departmentId"/>
+            <set from-field="departmentId" field="newEntity.departmentId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteDepartment" short-description="Remove an estate">
+        <set field="departmentId" from-field="parameters.departmentId"/>
+        <entity-one entity-name="department" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="updateDepartment" short-description="Update an existing Budget">
+        <entity-one entity-name="department" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+       
+    </simple-method>
 
 	<simple-method method-name="createEmploymentApp"
 		short-description="Create an Employment Application">
