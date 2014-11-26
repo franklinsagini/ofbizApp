@@ -621,4 +621,44 @@ under the License.
         <field name="prefixId"> <hidden/> </field>
         <field name="payRollPrefix"><display/> </field>
     </form>
+    
+    
+     <!--   ===========================================BRANCH DEPARTMENTS======================================================= -->
+  
+    <form name="editDepartment" type="single" target="createDepartment"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="departmentContext">
+        
+        <actions>
+        <entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        </actions>
+        <alt-target use-when="departmentContext!=null" target="updateDepartment"/>
+        <field name="departmentId"><hidden/></field>
+         <field name="branchId" title=" Select Branch" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        <field name="departmentName" title="Department Name" required-field="true"><text/></field>
+         <field use-when="departmentContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="departmentContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listDepartment" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="department"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" target="updateDepartment">
+        <actions>
+            <entity-condition entity-name="department">
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="department" default-field-type="display"/>
+        <field name="departmentId"> <hidden/> </field>
+         <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>
+          <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteDepartment" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="departmentId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
 </forms>

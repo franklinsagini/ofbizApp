@@ -209,6 +209,9 @@ under the License.
 
         	<entity-condition entity-name="County" list="countyList"></entity-condition>
         	<set field="countyId" from-field="countyId"/>
+        	
+        	<entity-condition entity-name="department" list="departmentList"></entity-condition>
+        	<set field="departmentId" from-field="departmentId"/>
 
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
@@ -289,6 +292,12 @@ under the License.
          <field name="branchId" title=" Select Branch" required-field="true" widget-style="required">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
+        <field name="departmentId" title=" Select Department" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="departmentList" key-name="departmentId"  description="${departmentName}" />
             </drop-down>
         </field>
         
