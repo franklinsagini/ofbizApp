@@ -197,7 +197,7 @@ under the License.
        <field name="emplPositionTypeId"><hidden /></field>
        <field name="emplPositionType" title="Position Type"> <text/> </field>
        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-                <hyperlink target="deleteEmplPositionType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <hyperlink target="deleteEmplPositionType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this?">
                     <parameter param-name="emplPositionTypeId"/>
                 </hyperlink>
         </field>
@@ -277,7 +277,7 @@ under the License.
         <field name="description" title="Termination Reason"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteTerminationReason" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteTerminationReason" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete termination reason?">
                 <parameter param-name="terminationReasonId"/>
             </hyperlink>
         </field>
@@ -298,7 +298,7 @@ under the License.
         <field name="jobInterviewTypeId"><hidden/></field>
         <field name="description" title="Interview Type"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteJobInterviewType"> 
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteJobInterviewType" request-confirmation="true" confirmation-message="Delete interview type?"> 
                 <parameter param-name="jobInterviewTypeId"/> 
             </hyperlink>
         </field>
@@ -319,7 +319,7 @@ under the License.
         <field name="description" title="Training Type"><text/></field>
         <field name="parentTypeId" title="${uiLabelMap.HumanResPreRequisiteSkill}" widget-style="buttontext"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteTrainingTypes"> 
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteTrainingTypes" request-confirmation="true" confirmation-message="Delete this training type?"> 
                 <parameter param-name="trainingClassTypeId"/> 
             </hyperlink>
         </field>
@@ -376,7 +376,7 @@ under the License.
         </field>
         <field name="forwardmax" title="Max Days Forwarded" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="noticeperiod" title="Notice Period (Days)" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="validity" title="Validity (Months)"><text size="30" maxlength="60"/></field>
+       <!--  <field name="validity" title="Validity (Months)"><text size="30" maxlength="60"/></field> -->
         <field name="minDays" title="Minimum Days Allowed"><text size="30" maxlength="60"/></field>
         <field name="maxDays" title="Maximum Days Allowed"><text size="30" maxlength="60"/></field>
         <field name="isallocated"  title="Allocated" >
@@ -452,7 +452,7 @@ under the License.
         </field>
             <!-- <field name="allowoverflow" title="Allow overflow"><display/></field> -->
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteEmplLeaveType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteEmplLeaveType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${leaveTypeId} leave type?">
                 <parameter param-name="leaveTypeId"/>
             </hyperlink>
         </field>
@@ -480,7 +480,7 @@ under the License.
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteEmplLeaveReasonType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteEmplLeaveReasonType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this leave reason type?">
                 <parameter param-name="emplLeaveReasonTypeId"/>
             </hyperlink>
         </field>
@@ -554,7 +554,7 @@ under the License.
         </field -->
         <field name="bankName"> <text></text> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteBankDetails" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deleteBankDetails" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${bankName} Bank?">
                 <parameter param-name="bankDetailsId"/>
             </hyperlink>
         </field>
@@ -591,7 +591,7 @@ under the License.
         <field name="parentTypeId"> <hidden/> </field>
         <field name="description" title="Content Type"> <text></text> </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deletePartyContentType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink target="deletePartyContentType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete party content type?">
                 <parameter param-name="partyContentTypeId"/>
             </hyperlink>
         </field>
@@ -620,5 +620,45 @@ under the License.
         </actions>
         <field name="prefixId"> <hidden/> </field>
         <field name="payRollPrefix"><display/> </field>
+    </form>
+    
+    
+     <!--   ===========================================BRANCH DEPARTMENTS======================================================= -->
+  
+    <form name="editDepartment" type="single" target="createDepartment"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="departmentContext">
+        
+        <actions>
+        <entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        </actions>
+        <alt-target use-when="departmentContext!=null" target="updateDepartment"/>
+        <field name="departmentId"><hidden/></field>
+         <field name="branchId" title=" Select Branch" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        <field name="departmentName" title="Department Name" required-field="true"><text/></field>
+         <field use-when="departmentContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="departmentContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listDepartment" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="department"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" target="updateDepartment">
+        <actions>
+            <entity-condition entity-name="department">
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="department" default-field-type="display"/>
+        <field name="departmentId"> <hidden/> </field>
+         <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>
+          <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+                <hyperlink target="deleteDepartment" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                    <parameter param-name="departmentId"/>
+                </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 </forms>

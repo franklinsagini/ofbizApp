@@ -58,6 +58,29 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         
  </service>
+ 
+              <!-- ===================== DEPARTMENT DEFINITION ================================= -->
+              
+    <service name="createDepartment" engine="simple" default-entity-name="department"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createDepartment" auth="true">
+        <description>Create User</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <service name="updateDepartment" engine="simple" default-entity-name="department"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateDepartment" auth="true">
+        <description>Update estate</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <service name="deleteDepartment" engine="simple" default-entity-name="department"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteDepartment" auth="true">
+        <description>remove estate</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
     
     
     <service name="createPartyRole" engine="simple"
@@ -1907,7 +1930,7 @@ under the License.
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createSeparationApplication" auth="true">
         <description>New Separation Application</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
@@ -1924,7 +1947,7 @@ under the License.
         <description>Delete Separation Application</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <!-- auto-attributes mode="IN" include="nonpk" optional="true"/ -->
     </service>
     
     

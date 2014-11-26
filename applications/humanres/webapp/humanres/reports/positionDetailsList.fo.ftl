@@ -35,7 +35,7 @@
                             <fo:table-cell border-bottom="thin solid grey"><fo:block>Employee No</fo:block></fo:table-cell>
                             <fo:table-cell border-bottom="thin solid grey"><fo:block>First Name</fo:block></fo:table-cell>
                             <fo:table-cell border-bottom="thin solid grey"><fo:block>Last Name</fo:block></fo:table-cell>
-                            <fo:table-cell border-bottom="thin solid grey"><fo:block>Position Name</fo:block></fo:table-cell>                            
+                            <fo:table-cell border-bottom="thin solid grey"><fo:block>Job Title</fo:block></fo:table-cell>                            
                             <fo:table-cell border-bottom="thin solid grey"><fo:block>From</fo:block></fo:table-cell>                           
                             <fo:table-cell border-bottom="thin solid grey"><fo:block>To</fo:block></fo:table-cell>
                     </fo:table-row>
@@ -55,7 +55,7 @@
                                     <fo:block>${positionList.lastName?if_exists}</fo:block>
                                 </fo:table-cell>
                                  <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${positionList.positionName?if_exists}</fo:block>
+                                    <fo:block>${positionList.emplPositionType?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
                                     <fo:block>${positionList.employeefromDate?if_exists}</fo:block>

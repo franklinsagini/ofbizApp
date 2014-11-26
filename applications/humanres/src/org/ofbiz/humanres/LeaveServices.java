@@ -60,6 +60,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 		}
 
 		String partyId ="", appointmentdate = ""; 
+	
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
 			appointmentdate = genericValue.getString("confirmationdate");

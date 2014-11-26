@@ -1328,7 +1328,9 @@ under the License.
       <member-entity entity-alias="PERS" entity-name="Person"></member-entity>      
       <member-entity entity-alias="EMPPOS" entity-name="EmplPosition"></member-entity>
       <member-entity entity-alias="EPF" entity-name="EmplPositionFulfillment"></member-entity>
+      <member-entity entity-alias="EPT" entity-name="EmplPositionType"></member-entity>
       <alias-all entity-alias="EMPPOS"/>
+      <alias-all entity-alias="EPT"/>
       <alias name="employeePartyId" entity-alias="EPF" field="partyId"/>
       <alias name="employeefromDate" entity-alias="EPF" field="fromDate"/>
       <alias name="employeethruDate" entity-alias="EPF" field="thruDate"/>
@@ -1336,7 +1338,9 @@ under the License.
       <alias name="firstName" entity-alias="PERS" field="firstName"></alias>
       <alias name="lastName" entity-alias="PERS" field="lastName"></alias>
       
-     
+     <view-link entity-alias="EMPPOS" rel-entity-alias="EPT">
+        <key-map field-name="emplPositionTypeId"/>
+      </view-link>
       <view-link entity-alias="EMPPOS" rel-entity-alias="EPF">
         <key-map field-name="emplPositionId"/>
       </view-link>
@@ -1744,7 +1748,7 @@ under the License.
         <field name="reason" type="description"></field>
         <field name="separated" type="indicator"></field>
         <field name="status" type="name"></field>
-        <prim-key field="separationTypeId"/>
+        <prim-key field="separationApplicationId"/>
          <relation type="one" fk-name="SEP_TYPE" rel-entity-name="SeparationType">
             <key-map field-name="separationTypeId"/>
         </relation>
@@ -1950,6 +1954,14 @@ under the License.
       
       </view-link>
     </view-entity>
+    
+     
+    <entity entity-name="department" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="departmentId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="departmentName" type="name"></field>
+       <field name="branchId" type="name"></field>
+       <prim-key field="departmentId"/>
+    </entity>
     
    
     
