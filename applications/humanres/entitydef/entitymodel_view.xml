@@ -27,22 +27,28 @@ under the License.
     <description>None</description>
     <version>1.0</version>
 
-  <!-- ========================================================= -->
-  <!-- ======================== Data Model ===================== -->
-  <!-- The modules in this file are as follows:                  -->
-  <!--  - org.ofbiz.order.order -->
-  <!--  - org.ofbiz.order.picklist -->
-  <!--  - org.ofbiz.order.quote -->
-  <!--  - org.ofbiz.order.request -->
-  <!--  - org.ofbiz.order.shoppingcart -->
-  <!--  - org.ofbiz.order.shoppinglist -->
-  <!--  - org.ofbiz.order.communication -->
-  <!-- ========================================================= -->
-
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.order.order -->
-  <!-- ========================================================= -->
+<view-entity entity-name="EmployeeRoleView"
+          package-name="org.ofbiz.humanres"
+          never-cache="true"
+          title="View with role Employee">
+    <member-entity entity-alias="PER" entity-name="Person"/>
+    <member-entity entity-alias="PTR" entity-name="PartyRole"/>
+    <alias entity-alias="PTR" name="partyId" field="partyId"/>
+    <alias entity-alias="PTR" name="roleTypeId" field="roleTypeId"/>
+    <alias entity-alias="PER" name="employeeNumber" field="employeeNumber"/>
+    <alias entity-alias="PER" name="firstName" field="firstName"/>
+    <alias entity-alias="PER" name="lastName" field="lastName" />
+    <alias entity-alias="PER" name="gender" field="gender"/>
+    <alias entity-alias="PER" name="appointmentdate" field="appointmentdate"/>
+    <alias entity-alias="PER" name="nationalIDNumber" field="nationalIDNumber"/>
+    <alias entity-alias="PER" name="mobNo" field="mobNo"/>
+    <view-link entity-alias="PER" rel-entity-alias="PTR">
+      <key-map field-name="partyId" rel-field-name="partyId"/>
+      <entity-condition>
+        <condition-expr field-name="roleTypeId" entity-alias="PTR" operator="equals" value="EMPLOYEE"/>
+      </entity-condition>
+    </view-link>
+</view-entity>
 
 
 

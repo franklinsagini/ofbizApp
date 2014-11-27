@@ -92,7 +92,7 @@ under the License.
                                 <link target="stafflistpdf" text="Staff List PDF" style="buttontext">
                             		<image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
 
-                                </link> 
+                                </link>
                                 <link url-mode="content" text="Staff on Leave" style="buttontext" target="http://127.0.0.1:62763/viewer/frameset?__report=F%3A\\projects\\web\\ofbiz\\applications\\humanres\\webapp\\humanres\\reports\\staffOnLeaveReport.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A\\projects\\web\\ofbiz&amp;__dpi=96&amp;-234628748&amp;" target-window="_BLANK">
 
                         		<image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
@@ -984,7 +984,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="SeparationSummaryReport">
        <section>
             <actions>
@@ -994,7 +994,7 @@ under the License.
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="SeparationSummaryReport"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
+
                 <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
             </actions>
             <widgets>
@@ -1006,18 +1006,18 @@ under the License.
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
-                            <widgets>                                
+                            <widgets>
                                 <screenlet>
                                 	<section>
                                 		<widgets>
-    										<container style="button-bar">                                                   
+    										<container style="button-bar">
                                                 <link url-mode="inter-app" target="http://127.0.0.1:64289/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwebapp%2Fhumanres%2Freports%2FSeparatedEmployeesReport.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-387869057"  text="Employee Separation HTML Report" style="buttontext create">
                                                     <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
+
                                                 </link>
                                                  <link url-mode="inter-app" target="http://127.0.0.1:64289/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwebapp%2Fhumanres%2Freports%2FSeparatedEmployeesReport.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-387869057"  text="Employee Separation PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
+                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />
+                                                </link>
                                                 </container>
                                 		</widgets>
                                 	</section>
@@ -1030,8 +1030,132 @@ under the License.
                     </decorator-section>
                 </decorator-screen>
             </widgets>
-        </section>       
+        </section>
        </screen>
 
+    <screen name="employeeSpouseDetailsFTLOLD">
+        <section>
+            <actions>
+                <set field="labelTitleProperty" value="Employee Dependant Details"/>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="employeeDependantDetails"/>
+                <set field="tabButtonItem" value="employeeSpouseDetailsFTL"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                            <include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="InventoryValuation" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <section>
+                                    <condition>
+                                        <if-compare field="parameters.showSearchResults" operator="equals" value="Y"/>
+                                    </condition>
+                                    <widgets>
+                                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="button" target="InventoryValuation.pdf" target-window="_BLANK">
+                                            <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                                            <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+                                            <parameter param-name="productId" from-field="parameters.productId"/>
+                                            <parameter param-name="thruDate" from-field="parameters.thruDate"/>
+                                        </link>
+                                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="button" target="InventoryValuation.csv">
+                                            <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                                            <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+                                            <parameter param-name="productId" from-field="parameters.productId"/>
+                                            <parameter param-name="thruDate" from-field="parameters.thruDate"/>
+                                        </link>
+                                        <screenlet title="${uiLabelMap.AccountingInventoryValuationList}">
+                                            <include-form name="InventoryValuationList" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="employeeSpouseDetailsFTLPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeSpouseDetailsFTL.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/employeeSpouseDetails.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <screen name="staffListingPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffListing.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffListing.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="employeeSpouseDetailsFTL">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <container style="lefthalf">
+                            <screenlet title="Employee Spouse Report">
+                                <include-form name="employeeSpouseDetailsFTL" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet title="Employee Next of Kin Report">
+                                <include-form name="nextOfKinForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet title="Staff Listing">
+                                <include-form name="staffListingForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="righthalf">
+                            <screenlet title="Employee Next of Kin Report">
+                                <include-form name="xxxx" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet title="${uiLabelMap.OrderReportPurchasesByOrganization}">
+                                <include-form name="xxxxxx" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet title="${uiLabelMap.OrderReportPurchasesByOrganization}">
+                                <include-form name="xxxxxx" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>
