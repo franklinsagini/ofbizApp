@@ -257,6 +257,39 @@
         </section>
     </screen>
     
+    <!-- showTransfers -->
+        <screen name="showTransfers">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Show Transfers"/>
+                <set field="headerItem" value="showTransfers"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createTreasuryTransfer"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="destinationTreasury" from-field="parameters.destinationTreasury"/>
+                <set field="transferDate" from-field="parameters.transferDate"/>
+                <entity-one entity-name="TreasuryTransfer" value-field="treasuryTransferContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
+                        <section name="Transfers">
+                        	<widgets>
+                        		<screenlet title="Treasury Transfers">
+                        			<include-form name="listShowTreasuryTransfers" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- reconcileTreasuryOutgoing -->
         <screen name="reconcileTreasuryOutgoing">
         <section>
