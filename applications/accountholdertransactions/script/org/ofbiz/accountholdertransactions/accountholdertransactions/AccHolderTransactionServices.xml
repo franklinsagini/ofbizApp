@@ -27,7 +27,7 @@ under the License.
         <make-value entity-name="AccountTransaction" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-
+		<set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
 		<set field="withdrawalStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, userLogin);}" type="String"/>
 				
 		<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
@@ -165,7 +165,7 @@ under the License.
         <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
         <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
 		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
-        
+        <set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
          <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="loggedInPartyId" from-field="userLogin.partyId"/>
@@ -202,6 +202,7 @@ under the License.
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <call-simple-method method-name="saveChequeWithdrawal" scope="inline"> </call-simple-method>
         <set field="transactionType" value="CHEQUEWITHDRAWAL"/>
+        <set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
         <set field="postedStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.createChequeTransaction(newEntity, userLogin);}" type="String"/>
         <set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
     </simple-method>
@@ -257,6 +258,7 @@ under the License.
          <entity-one value-field="accountTransaction" entity-name="AccountTransaction">
          	<field-map field-name="accountTransactionId" from-field="newEntity.accountTransactionId"/>
          </entity-one>
+         <set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
         <set field="endDate" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.calculateChequeClearance(accountTransaction);}" type="Timestamp"/>
         <!-- call-class-method  class-name="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" method-name="calculateChequeClearance" ret-field="endDate">
         	<string value="${accountTransactionId}"/>
