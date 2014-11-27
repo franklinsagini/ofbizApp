@@ -1100,21 +1100,58 @@ under the License.
             </widgets>
         </section>
     </screen>
+   <screen name="staffListingPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffListing.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffListing.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="employeeSpouseDetailsFTL">
         <section>
             <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeSpouseDetailsFTL.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <screenlet title="${uiLabelMap.OrderReportPurchasesByOrganization}">
-                            <include-form name="employeeSpouseDetailsFTL" location="component://humanres/widget/ReportForms.xml"/>
-                        </screenlet>
+                        <container style="lefthalf">
+                            <screenlet title="Employee Spouse Report">
+                                <include-form name="employeeSpouseDetailsFTL" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet title="Employee Next of Kin Report">
+                                <include-form name="nextOfKinForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet title="Staff Listing">
+                                <include-form name="staffListingForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="righthalf">
+                            <screenlet title="Employee Next of Kin Report">
+                                <include-form name="xxxx" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet title="${uiLabelMap.OrderReportPurchasesByOrganization}">
+                                <include-form name="xxxxxx" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet title="${uiLabelMap.OrderReportPurchasesByOrganization}">
+                                <include-form name="xxxxxx" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
