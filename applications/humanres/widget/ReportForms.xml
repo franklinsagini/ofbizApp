@@ -169,21 +169,15 @@ under the License.
 
         <field name="employeeNumber" title="Employee Number"> <display/> </field>
         <field name="firstName" title="First Name"> <display/> </field>
-<<<<<<< HEAD
+
         <field name="lastName" title="Surname"> <display/> </field>
-        <field name="branchId" title="Branch"> <display/> </field>
-        <field name="station" title="Station"> <display/> </field>
-        <field name="fromDate"> <display/> </field>
-        <field name="thruDate"> <display/> </field>
-=======
-        <field name="lastName" title="Surname"> <display/> </field>        
         <field name="branchId" title="Branch">
-        	<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>        	
+        	<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
         </field>
         <!-- field name="station" title="Station"> <display/> </field -->
         <field name="fromDate"> <display type="date"/> </field>
         <field name="thruDate"> <display type="date"/> </field>
->>>>>>> 3d0f93eb9394dd4bfe72751544499cf2ebfaf8d8
+
     </form>
     <form name="listPositionDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="positionDetails" paginate-target="positionDetails"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -218,8 +212,27 @@ under the License.
 
     <form name="employeeSpouseDetailsFTL" type="single" target="employeeSpouseDetailsFTLPDF" title=""
         header-row-style="header-row" default-table-style="basic-table">
-                <field name="partyId"   title="Employee"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+                <field name="partyId"   title="Employee">
+                    <lookup target-form-name="LookupPartyName"/>
+                </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="nextOfKinForm" type="single" target="nextOfKinPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+                <field name="partyId"   title="Employee">
+                    <lookup target-form-name="LookupPartyName"/>
+                </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="staffListingForm" type="single" target="staffListingPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
     </form>
 
 
