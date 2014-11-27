@@ -81,7 +81,7 @@
         <field name="branchId" type="id"></field>
         <field name="sourceTreasury" type="id-ne" enable-audit-log="true"></field>
         <field name="destinationTreasury" type="id-ne" enable-audit-log="true"></field>
-        
+        <field name="transferDate" type="date"></field>
         <field name="employeeResponsible" type="id" enable-audit-log="true"/>
         <field name="transactionNumber" type="name" enable-audit-log="true"/>
         
@@ -219,10 +219,10 @@
     <view-entity entity-name="TreasuryTransfersIncomingTotal" package-name="org.ofbiz.treasurymanagement">
     	<member-entity entity-alias="TT" entity-name="TreasuryTransfer"></member-entity>
     	<member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="destinationTreasury" group-by="true"></alias>
     	<alias entity-alias="TR" name="name" group-by="true"/> 
-    	<!--alias entity-alias="TR" name="createdStamp" col-alias="treasuryCreatedStamp" group-by="true">
-    		<complex-alias operator="cast(treasuryCreatedStamp As Date)"></complex-alias>
-    	</alias -->
+    	
+    	<alias entity-alias="TT" name="transferDate" group-by="true" />
     	<alias entity-alias="TT" name="transactionAmount" function="sum"/> 
     	
     	<view-link entity-alias="TT" rel-entity-alias="TR"> 
@@ -233,10 +233,9 @@
      <view-entity entity-name="TreasuryTransfersOutgoingTotal" package-name="org.ofbiz.treasurymanagement">
     	<member-entity entity-alias="TT" entity-name="TreasuryTransfer"></member-entity>
     	<member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
     	<alias entity-alias="TR" name="name" group-by="true"/> 
-    	<!-- alias entity-alias="TR" name="createdStamp" col-alias="treasuryCreatedStamp" group-by="true" >
-    		<complex-alias operator="cast(treasuryCreatedStamp As Date)"></complex-alias>
-    	</alias -->
+    	<alias entity-alias="TT" name="transferDate" group-by="true" />
     	<alias entity-alias="TT" name="transactionAmount" function="sum"/> 
     	
     	<view-link entity-alias="TT" rel-entity-alias="TR"> 
