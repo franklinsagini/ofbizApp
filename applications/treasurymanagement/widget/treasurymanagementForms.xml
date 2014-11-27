@@ -378,6 +378,71 @@
         </field>
     </form>
     
+    <!-- reconcileTreasuryOutgoing -->
+     <form name="listReconcileTreasuryOutgoing" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransferOutgoing"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TreasuryTransfersOutgoingTotal">
+            </entity-condition>
+            
+            <entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
+			</entity-condition>
+        </actions>
+       
+  
+  
+        <field name="name" title="Treasury" ><display></display></field>
+        <field name="transactionAmount" title="Amount Allocated" ><display></display></field>
+        <!-- field name="treasuryCreatedStamp" title="When?" ><display type="date-time"></display></field -->
+        <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
+            <hyperlink target="processReconciliation" description="Process Reconciliation" also-hidden="false">
+                <parameter param-name="processReconciliation"/>
+            </hyperlink>
+        </field -->
+        
+          <field name="showTransactions" title="Show Transactions" widget-style="buttontext">
+            <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
+                <!-- parameter param-name="treasuryTransferId"/ -->
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- listReconcileTreasuryIncoming -->
+         <form name="listReconcileTreasuryIncoming" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransferIncoming"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TreasuryTransfersIncomingTotal">
+            </entity-condition>
+            
+            <entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
+			</entity-condition>
+        </actions>
+       
+  
+  
+        <field name="name" title="Treasury" ><display></display></field>
+        <!-- field name="treasuryCreatedStamp" title="When?" ><display type="date-time"></display></field -->
+        
+        <field name="transactionAmount" title="Amount Allocated" ><display></display></field>
+        <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
+            <hyperlink target="processReconciliation" description="Process Reconciliation" also-hidden="false">
+                <parameter param-name="processReconciliation"/>
+            </hyperlink>
+        </field -->
+        
+          <field name="showTransactions" title="Show Transactions" widget-style="buttontext">
+            <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
+                <!-- parameter param-name="treasuryTransferId"/ -->
+            </hyperlink>
+        </field>
+    </form>
+    
     <!-- teller transactions -->
     <form name="listTellerTransactions" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateCashWithdrawal" paginate-target="showTransactions"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">

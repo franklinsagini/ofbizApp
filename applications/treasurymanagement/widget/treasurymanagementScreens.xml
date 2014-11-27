@@ -257,6 +257,70 @@
         </section>
     </screen>
     
+    <!-- reconcileTreasuryOutgoing -->
+        <screen name="reconcileTreasuryOutgoing">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Reconcile Treasury (Outgoing)"/>
+                <set field="headerItem" value="reconcileTreasuryOutgoing"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createTreasuryTransfer"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="TreasuryTransfer" value-field="treasuryTransferContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
+                        <section name="Reconcile">
+                        	<widgets>
+                        		<screenlet title="Reconcile Treasury (Outgoing)">
+                        			<include-form name="listReconcileTreasuryOutgoing" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- reconcileTreasurIncoming -->
+            <screen name="reconcileTreasurIncoming">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Reconcile Treasury (Incoming)"/>
+                <set field="headerItem" value="reconcileTreasuryIncoming"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createTreasuryTransfer"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="TreasuryTransfer" value-field="treasuryTransferContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu location="component://treasurymanagement/widget/treasurymanagementMenus.xml" name="treasurySetupsTabBar"/>
+                        <section name="Reconcile">
+                        	<widgets>
+                        		<screenlet title="Reconcile Treasury Incoming">
+                        			<include-form name="listReconcileTreasuryIncoming" location="component://treasurymanagement/widget/treasurymanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- Show Transactions -->
         <screen name="showTransactions">
         <section>
