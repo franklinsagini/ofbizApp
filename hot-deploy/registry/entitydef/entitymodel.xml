@@ -135,6 +135,20 @@
 		<field name="description" type="description" not-null="true"></field>
 		<prim-key field="locationId" />
 	</entity>
+	
+	
+	  <view-entity entity-name="fileMovementView" package-name="org.ofbiz.humanres">
+	    <member-entity entity-alias="log" entity-name="RegistryFileLogs"></member-entity>
+	    <member-entity entity-alias="action" entity-name="RegistryFileActions"></member-entity>
+	    
+	    <alias-all entity-alias="log"></alias-all>
+
+			<alias entity-alias="action" name="actionId" field="actionId"/>
+
+	    <view-link  entity-alias="log" rel-entity-alias="action">
+	    	<key-map field-name="partyId" rel-field-name="partyId"/>
+	    </view-link>
+    </view-entity>
 
 	
 	
