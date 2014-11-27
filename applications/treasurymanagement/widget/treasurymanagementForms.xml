@@ -378,6 +378,51 @@
         </field>
     </form>
     
+    <!-- listShowTreasuryTransfers -->
+        <form name="listShowTreasuryTransfers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransfer"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TreasuryTransfer">
+            	<condition-list combine="and">
+            		<condition-expr field-name="destinationTreasury" operator="equals" from-field="destinationTreasury"/>
+            		<condition-expr field-name="transferDate" operator="equals" from-field="transferDate"/>
+            	</condition-list>
+            </entity-condition>
+            
+            <entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
+			</entity-condition>
+        </actions>
+       
+        <field name="treasuryTransferId"><hidden/></field>
+		
+       
+        <field name="destinationTreasury" title="To" >
+       		<!-- drop-down allow-empty="true" text-size="20">
+       			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
+       		</drop-down -->
+       		<display-entity entity-name="Treasury" key-field-name="treasuryId" description="${name}"></display-entity>
+        </field>
+        
+        <field name="transactionAmount" title="Amount Allocated" ><display></display></field>
+         <field name="comments" title="Comments"><display></display></field>   
+          <field name="createdStamp" title="Time Tranferred"><display type="date-time"></display></field> 
+           <field name="createdBy" title="Tranferred By"><display></display></field>       
+        <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
+            <hyperlink target="processReconciliation" description="Process Reconciliation" also-hidden="false">
+                <parameter param-name="processReconciliation"/>
+            </hyperlink>
+        </field -->
+        
+          <field name="showTransactions" title="Show Transactions" widget-style="buttontext">
+            <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
+                <parameter param-name="treasuryTransferId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
     <!-- reconcileTreasuryOutgoing -->
      <form name="listReconcileTreasuryOutgoing" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransferOutgoing"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -396,7 +441,7 @@
   
         <field name="name" title="Treasury" ><display></display></field>
         <field name="transactionAmount" title="Amount Allocated" ><display></display></field>
-        <!-- field name="treasuryCreatedStamp" title="When?" ><display type="date-time"></display></field -->
+        <field name="transferDate" title="Transfer Date" ><display type="date"></display></field>
         <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
             <hyperlink target="processReconciliation" description="Process Reconciliation" also-hidden="false">
                 <parameter param-name="processReconciliation"/>
@@ -425,9 +470,9 @@
         </actions>
        
   
-  
+  		<field name="destinationTreasury"><hidden/></field>
         <field name="name" title="Treasury" ><display></display></field>
-        <!-- field name="treasuryCreatedStamp" title="When?" ><display type="date-time"></display></field -->
+        <field name="transferDate" title="Transfer Date" ><display type="date"></display></field>
         
         <field name="transactionAmount" title="Amount Allocated" ><display></display></field>
         <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
@@ -436,9 +481,18 @@
             </hyperlink>
         </field -->
         
-          <field name="showTransactions" title="Show Transactions" widget-style="buttontext">
+         <field name="showTransfers" title="Show Transfers(Issue)" widget-style="buttontext">
+            <hyperlink target="showTransfers" description="Show Tranfers" also-hidden="false">
+                <!-- parameter param-name="treasuryTransferId"/ -->
+                <parameter param-name="destinationTreasury"/>
+                <parameter param-name="transferDate"/>
+            </hyperlink>
+        </field>
+          <field name="showTransactions" title="Show Transactions(Issue)" widget-style="buttontext">
             <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
                 <!-- parameter param-name="treasuryTransferId"/ -->
+                <parameter param-name="sourceTreasury"/>
+                <parameter param-name="transferDate"/>
             </hyperlink>
         </field>
     </form>
