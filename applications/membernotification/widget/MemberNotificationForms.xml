@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+   <form name="listMemberMessage" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransfer"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberMessage">
+            	<order-by field-name="-memberMessageId"/>
+            </entity-condition>
+        </actions>
+       
+        <field name="memberMessageId"><hidden/></field>
+		
+       
+        <field name="partyId" title="Member" >
+       		<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+        <field name="name" title="Message" ><display></display></field>
+        <field name="notificationTypeId" title="Notification Type" >
+       		<display-entity entity-name="NotificationType" key-field-name="notificationTypeId" description="${name}"></display-entity>
+        </field>
+        <field name="messageStatusId" title="Message Status" >
+       		<display-entity entity-name="MessageStatus" key-field-name="messageStatusId" description="${name}"></display-entity>
+        </field>
+                
+          <field name="Logs" title="Show Logs" widget-style="buttontext">
+            <hyperlink target="showMessageLogs" description="Show Logs" also-hidden="false">
+                <parameter param-name="memberMessageId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- NotificationType  -->
+    <form name="notificationType" type="single" target="createNotificationType"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="NotificationTypeContext">
+		<field name="notificationTypeId"><hidden/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listNotificationType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNotificationType" paginate-target="notificationType"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="NotificationType">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateNotificationType"/>
+     
+        <field name="notificationTypeId"><hidden/></field>
+        <field name="name"> <!-- display also-hidden="false"/ --> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteNotificationType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="notificationTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    <!-- MessageStatus -->
+    <form name="messageStatus" type="single" target="createMessageStatus"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="MemberStatusContext">
+		<field name="messageStatusId"><hidden/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listMessageStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberStatus" paginate-target="memberStatus"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MessageStatus">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateMessageStatus"/>
+     
+        <field name="memberStatusId"><hidden/></field>
+        <field name="name"> <!-- display also-hidden="false"/ --> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMessageStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="messageStatusId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+
+</forms>

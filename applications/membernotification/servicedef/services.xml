@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>MemberNotification Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service>
+    
+        	<!-- NotificationType -->
+	<service name="createNotificationType" engine="simple" default-entity-name="NotificationType"
+             location="component://membernotification/script/org/ofbiz/membernotification/MemberNotificationServices.xml" invoke="createNotificationType" auth="true">
+        <description>Create NotificationType</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateNotificationType" engine="simple" default-entity-name="NotificationType"
+             location="component://membernotification/script/org/ofbiz/membernotification/MemberNotificationServices.xml" invoke="updateNotificationType" auth="true">
+        <description>Update NotificationType</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteNotificationType" engine="simple" default-entity-name="NotificationType"
+             location="component://membernotification/script/org/ofbiz/membernotification/MemberNotificationServices.xml" invoke="deleteNotificationType" auth="true">
+        <description>Delete NotificationType</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+        	<!-- MessageStatus -->
+	<service name="createMessageStatus" engine="simple" default-entity-name="MessageStatus"
+             location="component://membernotification/script/org/ofbiz/membernotification/MemberNotificationServices.xml" invoke="createMessageStatus" auth="true">
+        <description>Create MessageStatus</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateMessageStatus" engine="simple" default-entity-name="MessageStatus"
+             location="component://membernotification/script/org/ofbiz/membernotification/MemberNotificationServices.xml" invoke="updateMessageStatus" auth="true">
+        <description>Update MessageStatus</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteMessageStatus" engine="simple" default-entity-name="MessageStatus"
+             location="component://membernotification/script/org/ofbiz/membernotification/MemberNotificationServices.xml" invoke="deleteMessageStatus" auth="true">
+        <description>Delete MessageStatus</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+</services>

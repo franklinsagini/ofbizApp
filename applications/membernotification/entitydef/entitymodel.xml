@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of MemberNotification Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+    <!-- NotificationType -->
+     <entity entity-name="NotificationType" package-name="org.ofbiz.membernotification" title="NotificationType Entity">
+     		<field name="notificationTypeId" type="id-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		<field name="name" type="name"></field>
+			<prim-key field="notificationTypeId"/>
+     </entity>
+    <!-- MemberMessage -->
+     <entity entity-name="MemberMessage" package-name="org.ofbiz.membernotification" title="MemberMessage Entity">
+     		<field name="memberMessageId" type="id-vlong-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		<field name="name" type="name"></field>
+     		<field name="notificationTypeId" type="id-int"></field>
+     		<field name="messageStatusId" type="id-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field> <!-- for the member -->
+			<prim-key field="memberMessageId"/>
+			
+			<relation type="one" fk-name="MemberMessage_Member" rel-entity-name="Member">
+            	<key-map field-name="partyId"/>
+        	</relation>
+        	
+        	<relation type="one" fk-name="MemberMessage_NotificationType" rel-entity-name="NotificationType">
+            	<key-map field-name="notificationTypeId"/>
+        	</relation>
+        	
+        	<relation type="one" fk-name="MemberMessage_MessageStatus" rel-entity-name="MessageStatus">
+            	<key-map field-name="messageStatusId"/>
+        	</relation>
+     </entity>
+	<!-- MessageStatus -->
+	 <entity entity-name="MessageStatus" package-name="org.ofbiz.membernotification" title="MessageStatus Entity">
+     		<field name="messageStatusId" type="id-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		<field name="name" type="name"></field>
+			<prim-key field="messageStatusId"/>
+     </entity>
+	<!-- MessageLog -->
+		 <entity entity-name="MessageLog" package-name="org.ofbiz.membernotification" title="MessageLog Entity">
+     		<field name="messageLogId" type="id-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+     		<field name="name" type="name"></field>
+     		<field name="messageStatusId" type="id-int"></field>
+     		<field name="memberMessageId" type="id-vlong-int"></field>
+			<prim-key field="messageLogId"/>
+			
+			<relation type="one" fk-name="MessageLog_MemberMessage" rel-entity-name="MemberMessage">
+            	<key-map field-name="memberMessageId"/>
+        	</relation>
+        	
+        	<relation type="one" fk-name="MessageLog_MemberStatus" rel-entity-name="MemberStatus">
+            	<key-map field-name="messageStatusId"/>
+        	</relation>
+     </entity>
+</entitymodel>
