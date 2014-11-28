@@ -1,6 +1,7 @@
 package org.ofbiz.treasurymanagement;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -278,7 +279,7 @@ public class TreasuryUtility {
 		return treasuryId;
 	}
 	
-	public static Timestamp getEndOfDay(Timestamp transferDate){
+	public static Timestamp getEndOfDay(Date transferDate){
 		
 		LocalDate localTransferDate = new LocalDate(transferDate.getTime());
 		localTransferDate = localTransferDate.plusDays(1);

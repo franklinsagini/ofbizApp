@@ -506,8 +506,8 @@
         <actions>
         	    <set field="treasuryTransferId" from-field="parameters.treasuryTransferId"/>
         	    <set field="treasuryId" from-field="parameters.destinationTreasury"/>
-        	    <set field="transferDate" from-field="parameters.transferDate"/>
-        	    <set field="endOfDay" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getEndOfDay(transferDate)}"/>
+        	    <set field="transferDate" from-field="parameters.transferDate" type="Date"/>
+        	    <set field="endOfDay" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getEndOfDay(transferDate);}"/>
                 <!-- set field="creatorId" global="true" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getUserLogin(treasuryTransferId);}" type="String"/>
      			<set field="treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" / -->
             <entity-condition entity-name="AccountTransaction" >
@@ -520,6 +520,7 @@
             		<condition-expr field-name="treasuryId" operator="equals" value="${treasuryId}"/>
             		<!-- condition-expr field-name="createdStamp" operator="not-equals" value="NULL"/ -->
             		<condition-expr field-name="createdStamp" operator="greater-equals" value="${transferDate}"/>
+            		<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
             		<!-- condition-expr field-name="createdStamp" operator="less-equals" from-field="${endOfDay}"/ -->
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>
