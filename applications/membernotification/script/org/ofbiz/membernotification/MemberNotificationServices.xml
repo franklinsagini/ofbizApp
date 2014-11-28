@@ -83,4 +83,34 @@ under the License.
         <set field="messageStatus.updatedBy" from-field="userLogin.userLoginId"/>
         <store-value value-field="messageStatus"/>
     </simple-method>
+    
+        <simple-method method-name="createRepaymentDeadline" short-description="Create RepaymentDeadline">
+      	<if-empty field="parameters.repaymentDeadlineId">
+	      		<make-value entity-name="RepaymentDeadline" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <set field="entityName" value="RepaymentDeadline"></set>
+        		<set field="newEntity.repaymentDeadlineId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateRepaymentDeadline"></call-simple-method>
+      		</else>
+      	</if-empty>
+    </simple-method>
+    
+    <simple-method method-name="updateRepaymentDeadline" short-description="Update RepaymentDeadline">
+        <entity-one entity-name="RepaymentDeadline" value-field="repaymentDeadline"/>
+        <set-nonpk-fields value-field="repaymentDeadline" map="parameters"/>
+        <set field="repaymentDeadline.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="repaymentDeadline"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteRepaymentDeadline" short-description="Delete RepaymentDeadline">
+        <entity-one entity-name="RepaymentDeadline" value-field="repaymentDeadline"/>
+        <set field="repaymentDeadline.isActive" value="N"/>
+        <set field="repaymentDeadline.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="repaymentDeadline"/>
+    </simple-method>
 </simple-methods>
