@@ -28,34 +28,121 @@ under the License.
     </fo:block>
     <fo:block><fo:leader/></fo:block>
     <#-- Employee Details -->
-    <fo:block font-size="10pt" text-align="left" font-weight="bold" space-after="0.04in">
+    <fo:block font-size="12pt" text-align="center" font-weight="bold" space-after="0.04in" text-decoration="underline">
         Payroll Number: ${employee.employeeNumber}
     </fo:block>
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
+    <fo:block font-size="12pt" text-align="center" font-weight="bold" text-decoration="underline" margin-bottom="0.2in">
         Employee Name: ${employee.firstName} ${employee.lastName}
     </fo:block>
-<
- <fo:block>
-    <fo:list-block provisional-distance-between-starts="1in" text-align="center">
+
+    <fo:block font-size="12pt" text-align="Left" space-after="0.04in" text-decoration="underline" margin-left="35%">
+        Anual Leave
+    </fo:block>
+
+    <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" margin-left="35%" margin-bottom="0.2in">
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">${uiLabelMap.CommonUsername}</fo:block>
+                <fo:block font-weight="bold">Balance Brought Forward</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block><#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+                <fo:block>30</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">${uiLabelMap.CommonDate}</fo:block>
+                <fo:block font-weight="bold">Accrued Days</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${nowTimestamp?if_exists}</fo:block>
+                <fo:block>15</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Total Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Total Days Taken</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Lost Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Balance</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
             </fo:list-item-body>
         </fo:list-item>
     </fo:list-block>
- </fo:block>
+    <fo:block font-size="12pt" text-align="Left" space-after="0.04in" text-decoration="underline" margin-left="35%">
+        Compassionate Leave
+    </fo:block>
 
+    <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" margin-left="35%">
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Balance Brought Forward</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Accrued Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>15</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Total Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Total Days Taken</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Lost Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Balance</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+    </fo:list-block>
 
     <#else>
         <fo:block text-align="center">No Employees Found With that ID</fo:block>
