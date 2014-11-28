@@ -69,12 +69,12 @@
 		<response name="success" type="view" value="reqfile" />
 	</request-map>
 	
-	<request-map uri="releasefiles">
+	<request-map uri="releasefilesreereerr">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="reqfile" />
 	</request-map>
 	
-	<request-map uri="issuefiles">
+	<request-map uri="issuefileseerree">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="reqfile" />
 	</request-map>
@@ -86,9 +86,9 @@
         <response name="success" type="view" value="FindMemberScreen" save-current-view="true" />
     </request-map>
     
-     <request-map uri="LookupActiveMember"><security https="true" auth="true"/>
+    <!--  <request-map uri="LookupActiveMember"><security https="true" auth="true"/>
      	<response name="success" type="view" value="LookupActiveMember"/>
-     </request-map>
+     </request-map> -->
      
       <request-map uri="lookupPartyName"><security https="true" auth="true"/>
      	<response name="success" type="view" value="lookupPartyName"/>
@@ -121,6 +121,12 @@
 		<response name="success" type="view" value="fileReleaseScreen" />
 	</request-map>
 	
+	<request-map uri="regFileReturn">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileReturnScreen" />
+	</request-map>
+	
+	
 	
 	
 	<request-map uri="goRequestFile">
@@ -141,6 +147,11 @@
 	<request-map uri="goReleaseFile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="releasingFiles" />
+	</request-map>
+	
+	<request-map uri="goReturnFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="returningFiles" />
 	</request-map>
 
 
@@ -243,11 +254,18 @@
 		<response name="error" type="view" value="fileDispatchScreen" />
 	</request-map> 
 	
-	<request-map uri="releasefiles">
+	<request-map uri="releasefiles"> 
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="releasefiles" />
 		<response name="success" type="view" value="fileReleaseScreen" />
 		<response name="error" type="view" value="fileReleaseScreen" />
+	</request-map>
+	
+	<request-map uri="returnfiles"> 
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="returnfiles" />
+		<response name="success" type="view" value="fileReturnScreen" />
+		<response name="error" type="view" value="fileReturnScreen" />
 	</request-map>
 
 	
@@ -336,11 +354,13 @@
 	<view-map name="fileIssueScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileIssue" />
 	<view-map name="fileDispatchScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileDispatch" />
 	<view-map name="fileReleaseScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileRelease" />
+	<view-map name="fileReturnScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileReturn" />
 	
 	<view-map name="requestingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#requestingFiles" />
 	<view-map name="releasingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#releasingFiles" />
 	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
 	<view-map name="issuingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#issuingFiles" />
+	<view-map name="returningFiles" type="screen"	page="component://registry/widget/FileScreens.xml#returningFiles" />
 	 <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
 
 

@@ -1069,11 +1069,8 @@
 		<make-value entity-name="SkillType" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.skillTypeId">
-			<sequenced-id sequence-name="SkillType" field="newEntity.skillTypeId" />
-		</if-empty>
-		<field-to-result field="newEntity.skillTypeId"
-			result-name="skillTypeId" />
+			<sequenced-id sequence-name="SkillType" field="skillTypeId" />
+		<set field="newEntity.skillTypeId" from-field="skillTypeId"/>
 		<create-value value-field="newEntity" />
 	</simple-method>
 
