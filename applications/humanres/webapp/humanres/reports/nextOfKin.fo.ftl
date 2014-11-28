@@ -24,7 +24,7 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        STAFF SPOUSE REPORT
+        STAFF NEXT OF KIN REPORT
     </fo:block>
     <fo:block><fo:leader/></fo:block>
     <#-- Employee Details -->
@@ -34,10 +34,11 @@ under the License.
     <fo:block font-size="10pt" text-align="left" font-weight="bold">
         Employee Name: ${employee.firstName} ${employee.lastName}
     </fo:block>
-<#if spouses?has_content>
+<#if kins?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="130pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
@@ -45,37 +46,47 @@ under the License.
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Spouse Name</fo:block>
+                        <fo:block>Kin's Name</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="center">Relationship</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Gender</fo:block>
+                        <fo:block text-align="right">Id No.</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Date of Birth</fo:block>
+                        <fo:block text-align="right">Phone No.</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="right">Postal Address</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
 
-                  <#list spouses as spouse>
-                    <#if spouse.familyRelationsId?has_content>
-                        <#assign familyRelations = delegator.findOne("FamilyRelations", {"familyRelationsId" : spouse.familyRelationsId}, false)/>
+                  <#list kins as kin>
+                    <#if kin.familyRelationsId?has_content>
+                        <#assign familyRelations = delegator.findOne("FamilyRelations", {"familyRelationsId" : kin.familyRelationsId}, false)/>
                     </#if>
                      <fo:table-row>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${spouse.fullname?if_exists}</fo:block>
+                            <fo:block>${kin.fullname?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${familyRelations.relationship?if_exists}</fo:block>
+                            <#if familyRelations?has_content >
+                                <fo:block>${familyRelations.relationship?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${spouse.gender?if_exists}</fo:block>
+                            <fo:block>${kin.idno?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${spouse.dob?if_exists}</fo:block>
+                            <fo:block>${kin.phoneNo?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${kin.postalAddress?if_exists}</fo:block>
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
@@ -85,7 +96,7 @@ under the License.
     </fo:block>
     <#else>
      <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">No Spouses For Employee: ${employee.firstName} ${employee.lastName}</fo:block>
+        <fo:block text-align="center" font-size="14pt">No Next of kin For Employee: ${employee.firstName} ${employee.lastName}</fo:block>
     </fo:block>
   </#if>
     <#else>
