@@ -1,12 +1,14 @@
 package org.ofbiz.treasurymanagement;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -266,6 +268,23 @@ public class TreasuryUtility {
 		names = (person.getString("lastName") != null) ? names+" "+person.getString("lastName") : names+"";
 		
 		return names;
+	}
+	
+	public static String getTellerId(Map<String, String> userLogin){
+		String treasuryId = "";
+		
+		//Get the teller assigned to this partyId (name for Treasury where employeeResponsible is the guy logged in)
+		String partyId = userLogin.get("partyId"); 
+		treasuryId = getTeller(partyId).getString("treasuryId");
+		return treasuryId;
+	}
+	
+	public static Timestamp getEndOfDay(Date transferDate){
+		
+		LocalDate localTransferDate = new LocalDate(transferDate.getTime());
+		localTransferDate = localTransferDate.plusDays(1);
+
+		return new Timestamp(localTransferDate.toDate().getTime());
 	}
 	
 	

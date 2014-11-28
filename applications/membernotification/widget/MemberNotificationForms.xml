@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+   <form name="listMemberMessage" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransfer"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberMessage">
+            	<order-by field-name="-memberMessageId"/>
+            </entity-condition>
+        </actions>
+       
+        <field name="memberMessageId"><hidden/></field>
+		
+       
+        <field name="partyId" title="Member" >
+       		<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+        <field name="name" title="Message" ><display></display></field>
+        <field name="notificationTypeId" title="Notification Type" >
+       		<display-entity entity-name="NotificationType" key-field-name="notificationTypeId" description="${name}"></display-entity>
+        </field>
+        <field name="messageStatusId" title="Message Status" >
+       		<display-entity entity-name="MessageStatus" key-field-name="messageStatusId" description="${name}"></display-entity>
+        </field>
+                
+          <field name="Logs" title="Show Logs" widget-style="buttontext">
+            <hyperlink target="showMessageLogs" description="Show Logs" also-hidden="false">
+                <parameter param-name="memberMessageId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <!-- NotificationType  -->
+    <form name="notificationType" type="single" target="createNotificationType"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="NotificationTypeContext">
+		<field name="notificationTypeId"><hidden/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listNotificationType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNotificationType" paginate-target="notificationType"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="NotificationType">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateNotificationType"/>
+     
+        <field name="notificationTypeId"><hidden/></field>
+        <field name="name"> <!-- display also-hidden="false"/ --> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteNotificationType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="notificationTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    <!-- MessageStatus -->
+    <form name="messageStatus" type="single" target="createMessageStatus"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="MemberStatusContext">
+		<field name="messageStatusId"><hidden/></field>
+        <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listMessageStatus" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberStatus" paginate-target="memberStatus"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MessageStatus">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateMessageStatus"/>
+     
+        <field name="memberStatusId"><hidden/></field>
+        <field name="name"> <!-- display also-hidden="false"/ --> <text></text> </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteMessageStatus" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="messageStatusId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+     <!-- RepaymentDeadline -->
+    <form name="repaymentDeadline" type="single" target="createRepaymentDeadline"
+        focus-field-name="deadLine" header-row-style="header-row" default-table-style="basic-table" default-map-name="repaymentDeadlineContext">
+		<field name="repaymentDeadlineId"><hidden/></field>
+        <field name="deadLine" title="Dead Line" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<drop-down>
+        		<option key="15"/>
+        		<option key="16"/>
+        		<option key="17"/>
+        		<option key="18"/>
+        		<option key="19"/>
+        		<option key="20"/>
+        		<option key="21"/>
+        		<option key="22"/>
+        		<option key="23"/>
+        		<option key="24"/>
+        		<option key="25"/>
+        		<option key="26"/>
+        		<option key="27"/>
+        		<option key="28"/>
+        		<option key="29"/>
+        		<option key="30"/>
+        		<option key="31"/>
+        		<option key="1"/>
+        		<option key="2"/>
+        		<option key="3"/>
+        		<option key="4"/>
+        		<option key="5"/>
+        		<option key="6"/>
+        		<option key="7"/>
+        		<option key="8"/>
+        		<option key="9"/>
+        		<option key="10"/>
+        		<option key="11"/>
+        		<option key="12"/>
+        		<option key="13"/>
+        		<option key="14"/>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listRepaymentDeadline" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateRepaymentDeadline" paginate-target="repaymentDeadline"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="RepaymentDeadline">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateRepaymentDeadline"/>
+     
+        <field name="repaymentDeadlineId"><hidden/></field>
+        <field name="deadLine" title="Dead Line">
+        <drop-down>
+        		<option key="15"/>
+        		<option key="16"/>
+        		<option key="17"/>
+        		<option key="18"/>
+        		<option key="19"/>
+        		<option key="20"/>
+        		<option key="21"/>
+        		<option key="22"/>
+        		<option key="23"/>
+        		<option key="24"/>
+        		<option key="25"/>
+        		<option key="26"/>
+        		<option key="27"/>
+        		<option key="28"/>
+        		<option key="29"/>
+        		<option key="30"/>
+        		<option key="31"/>
+        		<option key="1"/>
+        		<option key="2"/>
+        		<option key="3"/>
+        		<option key="4"/>
+        		<option key="5"/>
+        		<option key="6"/>
+        		<option key="7"/>
+        		<option key="8"/>
+        		<option key="9"/>
+        		<option key="10"/>
+        		<option key="11"/>
+        		<option key="12"/>
+        		<option key="13"/>
+        		<option key="14"/>
+        	</drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteRepaymentDeadline" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="repaymentDeadlineId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+
+</forms>

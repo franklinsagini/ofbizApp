@@ -24,58 +24,95 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        STAFF SPOUSE REPORT
+        FILE MOVEMENT REPORT
     </fo:block>
     <fo:block><fo:leader/></fo:block>
     <#-- Employee Details -->
     <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Payroll Number: ${employee.employeeNumber}
+        File Owner: ${employee.firstName} ${employee.lastName}
+    </fo:block>
+<#if file?has_content>
+    <fo:block font-size="10pt" text-align="left" font-weight="bold">
+        Folio Number: ${file.folioNo?if_exists}
     </fo:block>
     <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Employee Name: ${employee.firstName} ${employee.lastName}
+        Current Status: ${file.status?if_exists}
     </fo:block>
-<#if spouses?has_content>
+</#if>
+<#if activities?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="120pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Spouse Name</fo:block>
+                        <fo:block text-align="left">Action</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Relationship</fo:block>
+                        <fo:block text-align="left">Action By</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Gender</fo:block>
+                        <fo:block text-align="left">Current Posesser</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Date of Birth</fo:block>
+                        <fo:block text-align="left">Carried By</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Reciept Status</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Action Date</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
 
-                  <#list spouses as spouse>
-                    <#if spouse.familyRelationsId?has_content>
-                        <#assign familyRelations = delegator.findOne("FamilyRelations", {"familyRelationsId" : spouse.familyRelationsId}, false)/>
+                  <#list activities as activity>
+                    <#if activity.carriedBy?has_content>
+                        <#assign carriedBy = delegator.findOne("Person", {"partyId" : activity.carriedBy}, false)/>
+                    </#if>
+                    <#if activity.actionBy?has_content>
+                        <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
+                    </#if>
+                    <#if activity.currentPossesser?has_content>
+                        <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
                     </#if>
                      <fo:table-row>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${spouse.fullname?if_exists}</fo:block>
+                            <fo:block>${activity.fileActionTypeId?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${familyRelations.relationship?if_exists}</fo:block>
+                            <#if actionBy?has_content>
+                                <fo:block>${actionBy.firstName?if_exists} ${actionBy.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${spouse.gender?if_exists}</fo:block>
+                            <#if currentPossesser?has_content>
+                                <fo:block>${currentPossesser.firstName?if_exists} ${currentPossesser.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${spouse.dob?if_exists}</fo:block>
+                            <#if carriedBy?has_content>
+                                <fo:block>${carriedBy.firstName?if_exists} ${carriedBy.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.receiptStatus?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.actionDate?if_exists}</fo:block>
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
