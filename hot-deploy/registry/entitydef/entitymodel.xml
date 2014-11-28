@@ -37,7 +37,9 @@
 		title="Member File Book">
 		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
+		<field name="currentPossesser" type="id-ne"></field>
 		<field name="status" type="name" ></field>
+		<field name="recieptStatus" type="name"></field>
 		<field name="creator" type="id-ne"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="payrollNumber" type="name"></field>
@@ -55,7 +57,7 @@
 	     </relation>
 	</entity>
 	
-	<entity entity-name="RegistryRequestedFiles" package-name="org.ofbiz.registry"
+     <entity entity-name="RegistryRequestedFiles" package-name="org.ofbiz.registry"
 		title="Member File Book">
 		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
@@ -88,11 +90,10 @@
 		<field name="fileActionTypeId" type="name"></field>
 		<field name="currentPossesser" type="id-ne"></field>
 		<field name="carriedBy" type="name"></field>
-		<field name="nextPossesser" type="id"></field>
+		<field name="actionBy" type="id-ne"></field>
 		<field name="receiptStatus" type="name"></field>
 		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
-		<field name="actionBy" type="id"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="logId" />
 		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
@@ -134,6 +135,20 @@
 		<field name="description" type="description" not-null="true"></field>
 		<prim-key field="locationId" />
 	</entity>
+	
+	
+	  <view-entity entity-name="fileMovementView" package-name="org.ofbiz.humanres">
+	    <member-entity entity-alias="log" entity-name="RegistryFileLogs"></member-entity>
+	    <member-entity entity-alias="action" entity-name="RegistryFileActions"></member-entity>
+	    
+	    <alias-all entity-alias="log"></alias-all>
+
+			<alias entity-alias="action" name="actionId" field="actionId"/>
+
+	    <view-link  entity-alias="log" rel-entity-alias="action">
+	    	<key-map field-name="partyId" rel-field-name="partyId"/>
+	    </view-link>
+    </view-entity>
 
 	
 	

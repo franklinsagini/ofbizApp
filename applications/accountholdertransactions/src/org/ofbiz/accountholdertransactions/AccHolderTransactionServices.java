@@ -37,6 +37,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.treasurymanagement.TreasuryUtility;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -1201,7 +1202,9 @@ public class AccHolderTransactionServices {
 						"increaseDecrease", increaseDecrease,
 						"memberAccountId", memberAccountIdLong, "productChargeId",
 						productChargeIdLong, "transactionAmount",
-						transactionAmount, "transactionType", transactionType, "accountTransactionParentId", accountTransactionParentId));
+						transactionAmount, "transactionType", transactionType,
+						"treasuryId", loanApplication.getString("treasuryId"),
+						"accountTransactionParentId", accountTransactionParentId));
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
@@ -1683,6 +1686,9 @@ public class AccHolderTransactionServices {
 		String memberAccountId = accountTransaction.getString("memberAccountId");
 		BigDecimal transactionAmount = accountTransaction.getBigDecimal("transactionAmount");
 		accountTransaction.set("accountTransactionParentId", accountTransactionParent.getString("accountTransactionParentId"));
+		//Set the the Treasury ID
+		//String treasuryId = TreasuryUtility.getTellerId(userLogin);
+		//accountTransaction.set("treasuryId", treasuryId);
 		addChargesToTransaction(accountTransaction, userLogin, transactionType);
 		//increaseDecrease
 		createTransaction(accountTransaction, transactionType, userLogin, memberAccountId, transactionAmount, null, accountTransactionParent.getString("accountTransactionParentId"));
