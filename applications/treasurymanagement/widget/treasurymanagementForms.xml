@@ -342,6 +342,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="TreasuryTransfer">
+            	<order-by field-name="-treasuryTransferId"/>
             </entity-condition>
             
             <entity-condition entity-name="Treasury" list="treasuryFromList">
@@ -428,6 +429,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="TreasuryTransfersOutgoingTotal">
+            	<order-by field-name="-transferDate"/>
             </entity-condition>
             
             <entity-condition entity-name="Treasury" list="treasuryFromList">
@@ -460,6 +462,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="TreasuryTransfersIncomingTotal">
+            	<order-by field-name="-transferDate"/>
             </entity-condition>
             
             <entity-condition entity-name="Treasury" list="treasuryFromList">
@@ -491,7 +494,7 @@
           <field name="showTransactions" title="Show Transactions(Issue)" widget-style="buttontext">
             <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
                 <!-- parameter param-name="treasuryTransferId"/ -->
-                <parameter param-name="sourceTreasury"/>
+                <parameter param-name="destinationTreasury"/>
                 <parameter param-name="transferDate"/>
             </hyperlink>
         </field>
@@ -502,15 +505,23 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         	    <set field="treasuryTransferId" from-field="parameters.treasuryTransferId"/>
-                <set field="creatorId" global="true" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getUserLogin(treasuryTransferId);}" type="String"/>
-     
+        	    <set field="treasuryId" from-field="parameters.destinationTreasury"/>
+        	    <set field="transferDate" from-field="parameters.transferDate" type="Date"/>
+        	    <set field="endOfDay" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getEndOfDay(transferDate);}"/>
+                <!-- set field="creatorId" global="true" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getUserLogin(treasuryTransferId);}" type="String"/>
+     			<set field="treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" / -->
             <entity-condition entity-name="AccountTransaction" >
             	
             	<condition-list combine="and">
             		<condition-expr field-name="isActive" value="Y"/>
             		<!-- condition-expr field-name="partyId" from-field="parameters.partyId"/ -->
             		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
-            		<condition-expr field-name="createdBy" operator="equals" from-field="creatorId"/>
+            		<!-- condition-expr field-name="createdBy" operator="equals" from-field="creatorId"/ -->
+            		<condition-expr field-name="treasuryId" operator="equals" value="${treasuryId}"/>
+            		<!-- condition-expr field-name="createdStamp" operator="not-equals" value="NULL"/ -->
+            		<condition-expr field-name="createdStamp" operator="greater-equals" value="${transferDate}"/>
+            		<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
+            		<!-- condition-expr field-name="createdStamp" operator="less-equals" from-field="${endOfDay}"/ -->
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>

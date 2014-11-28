@@ -167,8 +167,6 @@
 		
 		
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
-		
-		
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
@@ -209,6 +207,8 @@
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="ISSUED"/>
+		  <set field="registryFile.receiptStatus" value="NOTRECEIVED"/>
+		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
 		<store-value value-field="registryFile" />
 	</simple-method>
 	
@@ -244,8 +244,7 @@
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.fileActionTypeId" value="File Issue"/>
-		<set field="newEntity.currentPossesser" value="REGISTRY" />
-		<set field="newEntity.nextPossesser" from-field="parameters.actionBy"/>
+		<set field="newEntity.currentPossesser" from-field="parameters.actionBy" />
 		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
@@ -273,7 +272,7 @@
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		
-		<set value="REGISTRY" field="newEntity.currentPossesser" />
+		<set from-field="parameters.actionBy"  field="newEntity.currentPossesser" />
 		<set value="NOT RECEIVED" field="newEntity.recieptStatus" />
 		<set field="newEntity.creationDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId"/>
@@ -284,19 +283,23 @@
 	</simple-method>
 	
 
-<!-- ==========================FILE DISPATCH================================== -->
+<!-- ========================== RECEIVE FILE ================================== -->
 	
 	<simple-method method-name="recieveFiles" short-description="request File ">
+	<log message="=====================PLEASE SHOW ${parameters}" level="info"/>
 	<call-simple-method method-name="saveRecieveFileAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveRecieveActionToLogs" scope="inline"></call-simple-method>
-	<log message="=====================PLEASE SHOW${parameters}" level="info"/>
-	<set field="partyId" value="${newEntity.partyId}"/>
-		<entity-one value-field="fil" entity-name="RegistryFilesInCirculation">
-			<field-map field-name="partyId" value="partyId"/>
-		</entity-one>
-		 <set value="RECEIVED" field="fil.recieptStatus" />
-		  <set value="${userLogin.partyId}" field="fil.currentPossesser" /> 
-		<store-value value-field="fil"/>
+	
+	<set field="party" from-field="parameters.partyId"/>
+		
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		
+		 <set field="registryFile.receiptStatus" value="RECEIVED"/>
+		<store-value value-field="registryFile"/>
 	</simple-method>
 	
 	<simple-method method-name="saveRecieveFileAction">

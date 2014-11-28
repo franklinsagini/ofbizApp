@@ -366,16 +366,23 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                <set field="treasuryTransferId" from-field="parameters.treasuryTransferId"/>
-                <set field="creatorId" global="true" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getUserLogin(treasuryTransferId);}" type="String"/>
-                <set field="assignedteller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTellerName(treasuryTransferId);}" type="String"/>
-          		<set field="assignee" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getEmployeeName(treasuryTransferId);}" type="String"/>
+                <set field="destinationTreasury" from-field="parameters.destinationTreasury"/>
+                <set field="transferDate" from-field="parameters.transferDate" type="Date"/>
+                <!-- set field="creatorId" global="true" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getUserLogin(treasuryTransferId);}" type="String"/ -->
+                <set field="assignedteller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTellerNameFromDestinationTreasury(destinationTreasury);}" type="String"/>
+          		<set field="assignee" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getEmployeeNameFromDestinationTreasury(destinationTreasury);}" type="String"/>
           		
-          		<set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalance(treasuryTransferId);}" type="BigDecimal"/>
+          		<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalance(treasuryTransferId);}" type="BigDecimal"/ -->
+          		<set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
           		
-          		<set field="bdTotalAllocated" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalance(treasuryTransferId);}" type="BigDecimal"/>
+          		<!-- set field="bdTotalAllocated" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalance(treasuryTransferId);}" type="BigDecimal"/>
           		<set field="totalCashWithdrawal" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalWithdrawal(treasuryTransferId);}" type="BigDecimal"/>
-                <set field="totalCashDeposit" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalDeposits(treasuryTransferId);}" type="BigDecimal"/>
+                <set field="totalCashDeposit" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalDeposits(treasuryTransferId);}" type="BigDecimal"/ -->
+                
+                <set field="bdTotalAllocated" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalAllocated(destinationTreasury, transferDate);}" type="BigDecimal"/>
+          		<set field="totalCashWithdrawal" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalWithdrawal(destinationTreasury, transferDate);}" type="BigDecimal"/>
+                <set field="totalCashDeposit" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalDeposits(destinationTreasury, transferDate);}" type="BigDecimal"/>
+                
                 <entity-one entity-name="TreasuryTransfer" value-field="treasuryTransferContext"/>
             </actions>
             <widgets>
@@ -407,7 +414,7 @@
                                 				<label style="h3"> Today Transactions</label>
                                 				<label style="h3"> Total Available (Transfer + Deposits - Withdrawals) : Kshs. ${tellerBalance}</label>
                                 				
-                                				<label style="h3"> Start of Day Transfer  : KShs. ${bdTotalAllocated}</label>
+                                				<label style="h3"> Total Transfers  : KShs. ${bdTotalAllocated}</label>
                                 				<label style="h3"> Total Withdrawals  : KShs. ${totalCashWithdrawal}</label>
                                 				<label style="h3"> Total Deposits  : KShs. ${totalCashDeposit}</label>
                                             
