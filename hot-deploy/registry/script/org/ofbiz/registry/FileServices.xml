@@ -159,7 +159,6 @@
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.fileActionTypeId" value="Request"/>
 		<set field="newEntity.currentPossesser" value="REGISTRY" />
-		<set field="newEntity.nextPossesser" value="${userLogin.partyId}" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
@@ -204,7 +203,7 @@
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
-
+		 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="ISSUED"/>
@@ -297,10 +296,14 @@
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
+		 
+		  <entity-one entity-name="Person" value-field="person">
+		 	<field-map field-name="partyId" from-field="parameters.actionBy"/>
+		 </entity-one>
 
-		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
-		
-		 <set field="registryFile.receiptStatus" value="RECEIVED"/>
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy"/>
+		 <set field="registryFile.fileLocation" from-field="person.departmentId"/>
+		 <set field="registryFile.recieptStatus" value="RECEIVED"/>
 		<store-value value-field="registryFile"/>
 	</simple-method>
 	
