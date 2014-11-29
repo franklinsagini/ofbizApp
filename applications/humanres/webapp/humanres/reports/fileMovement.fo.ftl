@@ -95,10 +95,10 @@ under the License.
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if currentPossesser?has_content>
-                                <fo:block>${currentPossesser.firstName?if_exists} ${currentPossesser.lastName?if_exists}</fo:block>
+                            <#if activity.currentPossesser?if_exists == "REGISTRY">
+                                <fo:block>${activity.currentPossesser?if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined</fo:block>
+                                <fo:block>${currentPossesser.firstName?if_exists} ${currentPossesser.lastName?if_exists}</fo:block>
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
