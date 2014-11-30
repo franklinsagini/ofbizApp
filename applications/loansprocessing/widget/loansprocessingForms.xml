@@ -591,6 +591,14 @@
         <actions>
         	<set field="status" value="APPRAISED"  type="String"/>
         	<set field="statusId" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanStatus(status);}"/>
+        	
+        	<!-- set field="statusForwardForAppraisal" value="FORWARDEDFORAPPRAISAL"  type="String"/>
+        	<set field="statusReturnedToAppraisal" value="RETURNEDTOAPPRAISAL"  type="String"/>
+        	
+        	<set field="statusForwardForAppraisalId" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanStatus(statusForwardForAppraisal);}" type="Long"/>
+        	<set field="statusReturnedToAppraisalId" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanStatus(statusReturnedToAppraisal);}" type="Long"/ -->
+        	
+        	<set field="ready" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.loanReadyForAppraisal(theApplicationId);}" type="Boolean"/>
         </actions>
         
         <field name="loanApplicationId"><hidden/></field>
@@ -600,7 +608,7 @@
         
         <field name="comment" title="Comment "  widget-style="required" required-field="true"><textarea/></field>
                 
-        <field name="submitButton" title="Appraise" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="${ready}" title="Appraise" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <!-- listMyLoanApplication -->
