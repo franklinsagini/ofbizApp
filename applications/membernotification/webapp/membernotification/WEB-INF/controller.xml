@@ -116,6 +116,21 @@
 			value="repaymentDeadline"></response>
 		<response name="error" type="view" value="repaymentDeadline" />
 	</request-map>
+	
+	<request-map uri="defaulterMessages">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="defaulterMessages">
+		</response>
+	</request-map>
+	
+	<request-map uri="addDefaulterMessages">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.membernotification.MemberNotificationServices" invoke="addDefaulterMessages" />
+                <response name="success" type="view"
+                        value="defaulterMessages">
+                        </response>
+                <response name="error" type="view" value="defaulterMessages" />
+    </request-map>
     
 
     <!-- View Mappings -->
@@ -125,6 +140,7 @@
 	<view-map name="notificationType" type="screen" page="component://membernotification/widget/MemberNotificationScreens.xml#notificationType"/>
 	<view-map name="messageStatus" type="screen" page="component://membernotification/widget/MemberNotificationScreens.xml#messageStatus"/>
 	<view-map name="repaymentDeadline" type="screen" page="component://membernotification/widget/MemberNotificationScreens.xml#repaymentDeadline"/>
-	
+	<view-map name="defaulterMessages" type="screen"
+		page="component://membernotification/widget/MemberNotificationScreens.xml#defaulterMessages" />
 	
 </site-conf>

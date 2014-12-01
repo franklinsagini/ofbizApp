@@ -519,6 +519,7 @@ under the License.
         	<set field="statusName" value="DISBURSED"/>
 	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
         	
+        	<set field="ready" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.loanReadyForDisbursement(theLoanApplicationId);}" type="Boolean"/>
         </actions>
         <field name="loanStatusLogId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
@@ -534,7 +535,7 @@ under the License.
         <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
         <!-- field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field -->
  		<!-- use-when="loanStatusId==statusId" -->
-        <field name="submitButton"  title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="${ready}"  title="Post Disbursement" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
     

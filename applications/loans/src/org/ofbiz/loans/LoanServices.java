@@ -522,10 +522,6 @@ public class LoanServices {
 			member = delegator.findOne("Member",
 					UtilMisc.toMap("partyId", Long.valueOf(partyId)), false);
 		} catch (GenericEntityException e) {
-			// return ServiceUtil.returnError(UtilProperties.getMessage("",
-			// "Cannot Get Member Details",
-			// UtilMisc.toMap("errMessage", e.getMessage()), locale));
-			// System.out.println(e.printStackTrace());
 			e.printStackTrace();
 		}
 

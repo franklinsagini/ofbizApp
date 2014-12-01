@@ -24,9 +24,10 @@
 	     	<field name="isActive" type="indicator"></field>
 			<field name="createdBy" type="name"></field>
 			<field name="updatedBy" type="name"></field>
-     		<field name="name" type="name"></field>
+     		<field name="name" type="description"></field>
      		<field name="notificationTypeId" type="id-int"></field>
      		<field name="messageStatusId" type="id-int"></field>
+     		<field name="loanApplicationId" type="id-vlong-int"></field> 
      		<field name="partyId" type="id-vlong-int"></field> <!-- for the member -->
 			<prim-key field="memberMessageId"/>
 			
@@ -41,6 +42,10 @@
         	<relation type="one" fk-name="MemberMessage_MessageStatus" rel-entity-name="MessageStatus">
             	<key-map field-name="messageStatusId"/>
         	</relation>
+        	<relation type="one" fk-name="MemberMessage_LoanApplication" rel-entity-name="LoanApplication">
+            	<key-map field-name="loanApplicationId"/>
+        	</relation>
+        	
      </entity>
 	<!-- MessageStatus -->
 	 <entity entity-name="MessageStatus" package-name="org.ofbiz.membernotification" title="MessageStatus Entity">
