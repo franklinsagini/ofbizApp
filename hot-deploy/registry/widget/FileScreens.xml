@@ -501,7 +501,7 @@
 							<widgets>
 							<container style="leftclear">
 											<label style="h1"
-												text="Send or Recieve File" />
+												text="Recieve File" />
 										</container>
 								<screenlet title="Search File">
 									<include-form name="FindMemberfilesForDispatch" location="component://registry/widget/FileForms.xml" />
@@ -539,7 +539,7 @@
 							<widgets>
 							<container style="leftclear">
 											<label style="h1"
-												text="Return File Back to Registry" />
+												text="Release File Back to Registry" />
 										</container>
 								<screenlet title="Search File">
 									<include-form name="FindMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
@@ -550,6 +550,44 @@
 							<widgets>
 								<screenlet title="File List (Search Results)">
 									<include-form name="listMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILE RETURN====================================================== -->
+	<screen name="registryFileReturn">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesReturn" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Recieve File At Registry" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForReturn" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForReturn" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>
@@ -1189,6 +1227,36 @@
 										</container>
 								<screenlet title="Search File">
 									<include-form name="releaseFileForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	 <screen name="returningFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesReturn" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Recieve File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="returnFileForm" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>

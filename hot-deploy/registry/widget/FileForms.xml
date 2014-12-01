@@ -77,8 +77,8 @@
 	
    
 	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
-		 <!-- <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field> -->
-		 <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+		 <!-- <field name="partyId"><lookup target-form-name="lookupPartyName"/></field> -->
+		 <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
 		  <!-- <field name="memberOrEmployee" title="Select File Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
                 <option key="Member" description="Member File"/>
@@ -99,18 +99,15 @@
 		<field name="partyId" title="Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="folioNo" title="Folio Number"><display /></field>
 		<field name="status" title="File Status"><display /></field>
-		<field name="creator" title="File Created by"><display /></field>
-		<field name="fileLocation" title="Current File Location"><display /></field>
+		<field name="creator" title="File Created by"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="fileLocation" title="Current File Location"><display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"></display-entity></field>
 		<field name="creationDate" title="Creation Date"><display /></field>
+		
+		
 		<field name="addDocument" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false"  description="Add Document To File" target="editfileURL">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" />
-			</hyperlink>
-		</field>
-		<field name="fileoverview" title=" " widget-style="buttontext">
-			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
-				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
 
@@ -251,7 +248,13 @@
         </actions>
         <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
 		<field name="status"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+		<field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="creator"><hidden/></field>
+		<field name="actionBy"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="creationDate"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -278,6 +281,7 @@
         <field name="creationDate"><hidden/></field>
          <field name="actionBy"><hidden/></field>
         <field name="creator"><hidden/></field>
+        <field name="recieptStatus"><hidden/></field>
         <field name="addDocument" title="Add Document" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Add Document" target="editfileURL">
 				<parameter param-name="partyId" />
@@ -290,14 +294,13 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-        <field name="requstFile" title="-" widget-style="buttontext" use-when="${status=='AVAILABLE'}">
-			<hyperlink also-hidden="false" description="Request File" target="req">
+       <field name="requstFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Add Volume" target="req">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
-				<parameter param-name="status" /> 
 			</hyperlink>
 		</field>
-		 <field name="issueFile" title="-" widget-style="buttontext" use-when="${status=='REQUESTED'}">
+		 <!-- <field name="issueFile" title="-" widget-style="buttontext" use-when="${status=='REQUESTED'}">
 			<hyperlink also-hidden="false" description="Issue File" target="issuefiles">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
@@ -310,14 +313,17 @@
 				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 			</hyperlink>
-		</field>
-		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		</field> -->
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="fileLocation"><display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
      <!--  +++++++++++++++++++++++++++++++++++++++++++++FILE REQUESTS======================================================================= -->
+  
      
-	 <form name="FindMemberfilesForRequest" default-map-name="FindMemberfilesForRequestContext" target="regFileRequest" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+     
+	<!--  <form name="FindMemberfilesForRequest" default-map-name="FindMemberfilesForRequestContext" target="regFileRequest" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
         <actions>
         	<set field="status" value="AVAILABLE"/>
         </actions>
@@ -327,12 +333,12 @@
 		<field name="actionBy"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <!-- List Memeber Files -->
+    List Memeber Files
 
     <form name="listFindMemberfilesForRequest" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForRequest"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -357,7 +363,7 @@
         <field name="creationDate"><hidden/></field>
          <field name="actionBy"><hidden/></field>
         <field name="creator"><hidden/></field>
-        <!-- <field name="status"><hidden/></field> -->
+        <field name="status"><hidden/></field>
 
 		<field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
@@ -372,39 +378,118 @@
 			</hyperlink>
 		</field>
 		 
-		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
-    
-     <!--  ============================================== FILE ISSUE ======================================================================= -->
-     
-	 <form name="FindMemberfilesForIssue" default-map-name="FindMemberfilesForIssueContext" target="regFileIssue" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+     -->
+<form name="FindMemberfilesForRequest" default-map-name="FindMemberfilesForRequestContext" target="regFileRequest" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
         <actions>
-        	<!-- <set field="status" value="AVAILABLE"/> -->
+        	<set field="status" value="AVAILABLE"/>
         </actions>
-        <auto-fields-entity entity-name="RegistryRequestedFiles" default-field-type="find"/>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
+		<field name="status"><hidden/></field>
+		<field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="creator"><hidden/></field>
+		<field name="actionBy"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- List Memeber Files -->
 
-    <form name="listMemberfilesForIssue" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForIssue"
+    <form name="listFindMemberfilesForRequest" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForRequest"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-        <entity-condition entity-name="RegistryRequestedFiles" ></entity-condition>
+         <entity-condition entity-name="RegistryFiles" >
+        <condition-expr field-name="status" operator="equals" value="AVAILABLE"/>
+        </entity-condition>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="RegistryRequestedFiles"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
             
         </actions>
-        <auto-fields-entity entity-name="RegistryRequestedFiles" default-field-type="display"/>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
+         <field name="memberOrEmployee"><hidden/></field>
+         <field name="firstName"><hidden/></field>
+         <field name="lastName"><hidden/></field>
+        <field name="creationDate"><hidden/></field>
+         <field name="actionBy"><hidden/></field>
+        <field name="creator"><hidden/></field>
+        <field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="status"><hidden/></field>
+       <field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+        <field name="filesRequest" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Request File" target="goRequestFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+			</hyperlink>
+		</field>
+		 
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
+     <!--  ============================================== FILE ISSUE ======================================================================= -->
+     
+	 <form name="FindMemberfilesForIssue" default-map-name="FindMemberfilesForIssueContext" target="regFileIssue" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<set field="status" value="REQUESTED"/> 
+        </actions>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
+		<field name="status"><hidden/></field>
+		<field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="creator"><hidden/></field>
+		<field name="actionBy"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="creationDate"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+   
+
+    <form name="listMemberfilesForIssue" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForIssue"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <entity-condition entity-name="RegistryFiles" >
+         <condition-expr field-name="status" operator="equals" value="REQUESTED"/>
+        </entity-condition>
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+        </actions>
+         <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
+         <field name="memberOrEmployee"><hidden/></field>
+         <field name="firstName"><hidden/></field>
+         <field name="lastName"><hidden/></field>
+        <field name="creationDate"><hidden/></field>
+         <field name="actionBy"><hidden/></field>
+        <field name="creator"><hidden/></field>
+        <field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="status"><hidden/></field>
 
 		<field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
@@ -419,25 +504,77 @@
 				<parameter param-name="actionBy" /> 
 			</hyperlink>
 		</field>
-		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
-    
-     <!--  +++++++++++++++++++++++++++++++++++++++++++++FILE DISPATCH======================================================================= -->
-     
-	 <form name="FindMemberfilesForDispatch" default-map-name="FindMemberfilesForDispatchContext" target="regFileDispatch" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+  
+   <!--  <form name="FindMemberfilesForIssue" default-map-name="FindMemberfilesForIssueContext" target="regFileIssue" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
         <actions>
-        	<!-- <set field="status" value="AVAILABLE"/> -->
+        	<set field="status" value="AVAILABLE"/>
         </actions>
-        <auto-fields-entity entity-name="RegistryFilesInCirculation" default-field-type="find"/>
-		<field name="actionBy"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
+		<field name="status"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <!-- List Memeber Files -->
+    List Memeber Files
+
+    <form name="listMemberfilesForIssue" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForIssue"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+         <entity-condition entity-name="RegistryFiles" >
+        <condition-expr field-name="status" operator="equals" value="REQUESTED"/>
+        </entity-condition>
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+        </actions>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
+         <field name="memberOrEmployee"><hidden/></field>
+         <field name="firstName"><hidden/></field>
+         <field name="lastName"><hidden/></field>
+        <field name="creationDate"><hidden/></field>
+         <field name="actionBy"><hidden/></field>
+        <field name="creator"><hidden/></field>
+        <field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		 <field name="filesIssue" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Issue File" target="goIssueFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="actionBy" /> 
+			</hyperlink>
+		</field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form> -->
+     <!--  +++++++++++++++++++++++++++++++++++++++++++++FILE DISPATCH======================================================================= -->
+     
+	 <!-- <form name="FindMemberfilesForDispatch" default-map-name="FindMemberfilesForDispatchContext" target="regFileDispatch" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<set field="status" value="AVAILABLE"/>
+        </actions>
+        <auto-fields-entity entity-name="RegistryFilesInCirculation" default-field-type="find"/>
+		<field name="actionBy"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    List Memeber Files
 
     <form name="listMemberfilesForDispatch" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForDispatch"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -466,30 +603,91 @@
 				<parameter param-name="partyId"/>
 			</hyperlink>
 		</field>
-		 <field name="filesDispatch" title="-" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Send File" target="goDispatchFile">
-				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
-				<parameter param-name="currentPossesser" /> 
-			</hyperlink>
-		</field>
-		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
-    </form>
-    
-     <!--  +++++++++++++++++++++++++++++++++++++++++++++FILE RELEASE======================================================================= -->
-     
-	 <form name="FindMemberfilesForRelease" default-map-name="FindMemberfilesForReleaseContext" target="regFileRelease" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+    </form> -->
+    <form name="FindMemberfilesForDispatch" default-map-name="FindMemberfilesForDispatchContext" target="regFileDispatch" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
         <actions>
-        	<!-- <set field="status" value="AVAILABLE"/> -->
+        	<set field="status" value="ISSUED"/> 
+        	<set field="recieptStatus" value="NOTRECEIVED"/> 
+        	<set field="currentPossesser" value="${userLogin.partyId}"/>
         </actions>
-        <auto-fields-entity entity-name="RegistryFilesInCirculation" default-field-type="find"/>
-        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
+		<field name="status"><hidden/></field>
+		<field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="creator"><hidden/></field>
+		<field name="actionBy"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="creationDate"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <!-- List Memeber Files -->
+
+    <form name="listMemberfilesForDispatch" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForDispatch"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+         <entity-condition entity-name="RegistryFiles" >
+         <condition-list>
+         <condition-expr field-name="recieptStatus" operator="equals" value="NOTRECEIVED"/>
+         <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
+         </condition-list>
+        
+        </entity-condition>
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            <!-- <set field="currentPossesser" value="${userLogin.partyId}"/> -->
+            
+        </actions>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
+         <field name="memberOrEmployee"><hidden/></field>
+         <field name="firstName"><hidden/></field>
+         <field name="lastName"><hidden/></field>
+        <field name="creationDate"><hidden/></field>
+         <field name="actionBy"><hidden/></field>
+        <field name="creator"><hidden/></field>
+        <field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="status"><hidden/></field>
+       <field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		 <field name="recieveFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Recieve File" target="goDispatchFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+			</hyperlink>
+		</field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
+    
+     <!--  +++++++++++++++++++++++++++++++++++++++++++++FILE RELEASE======================================================================= -->
+     
+	 <!-- <form name="FindMemberfilesForRelease" default-map-name="FindMemberfilesForReleaseContext" target="regFileRelease" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<set field="status" value="AVAILABLE"/>
+        </actions>
+        <auto-fields-entity entity-name="RegistryFilesInCirculation" default-field-type="find"/>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    List Memeber Files
 
     <form name="listMemberfilesForRelease" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForRelease"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -519,11 +717,140 @@
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
-		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
-    
+     -->
+     
+     <form name="FindMemberfilesForRelease" default-map-name="FindMemberfilesForReleaseContext" target="regFileRelease" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions> 	 
+        	 <set field="recieptStatus" value="RECEIVED"/>
+        	 <set field="currentPossesser" value="${userLogin.partyId}"/>
+        </actions>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
+		<field name="status"><hidden/></field>
+		<field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="creator"><hidden/></field>
+		<field name="actionBy"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="creationDate"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 
+    <!-- List Memeber Files -->
+
+    <form name="listMemberfilesForRelease" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForRelease"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+         <entity-condition entity-name="RegistryFiles" >
+          <condition-list>
+         <condition-expr field-name="recieptStatus" operator="equals" value="RECEIVED"/>
+         <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
+         </condition-list>
+       
+        </entity-condition>
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+        </actions>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
+         <field name="memberOrEmployee"><hidden/></field>
+         <field name="firstName"><hidden/></field>
+         <field name="lastName"><hidden/></field>
+        <field name="creationDate"><hidden/></field>
+         <field name="actionBy"><hidden/></field>
+        <field name="creator"><hidden/></field>
+        <field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="status"><hidden/></field>
+       <field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		 <field name="filesRelease" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Return To Registry" target="goReleaseFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+			</hyperlink>
+		</field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
+
+<!-- ============================================ RETURN FILE TO REGISTRY =============================================== -->
+ <form name="FindMemberfilesForReturn" default-map-name="FindMemberfilesForReturnContext" target="regFileReturn" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	 <set field="recieptStatus" value="RELEASED"/>
+        </actions>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
+		<field name="status"><hidden/></field>
+		<field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="creator"><hidden/></field>
+		<field name="actionBy"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="creationDate"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <!-- List Memeber Files -->
+
+    <form name="listMemberfilesForReturn" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForReturn"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+         <entity-condition entity-name="RegistryFiles" >
+        <condition-expr field-name="recieptStatus" operator="equals" value="RELEASED"/>
+        </entity-condition>
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+        </actions>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
+         <field name="memberOrEmployee"><hidden/></field>
+         <field name="firstName"><hidden/></field>
+         <field name="lastName"><hidden/></field>
+        <field name="creationDate"><hidden/></field>
+         <field name="actionBy"><hidden/></field>
+        <field name="creator"><hidden/></field>
+        <field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="status"><hidden/></field>
+       <field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		 <field name="filesReturn" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Recieve File At Registry" target="goReturnFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+			</hyperlink>
+		</field>
+		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
 
 
 
@@ -536,11 +863,11 @@
     <!-- File Header Form -->
 	<form name="fileGeneralDetails" type="single"  header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
 		<field position="1" name="partyId" title="PartyID"><display /></field>
-		<field position="1" name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		<field position="1" name="partyId" title="Person Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
 		<field position="1" name="folioNo" title="Folio Number"><display /></field>
 		<field position="1" name="status" title="File Status"><display /></field>
-		<field position="1" name="creator" title="File Created by"><display /></field>
-		<field position="1" name="fileLocation" title="Current File Location"><display /></field>
+		<field position="1" name="creator" title="File Created by"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+		<field position="1" name="fileLocation" title="Current File Location"><display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"></display-entity></field>
 		<field position="1" name="creationDate" title="Creation Date"><display /></field>
 	</form>
 
@@ -570,7 +897,7 @@
         </actions>
          <field name="actionId"><display/></field>
         <field name="fileActionTypeId" title="File Action"><display-entity entity-name="RegistryFileActionTypes" description="${fileActionType}"></display-entity></field>
-        <field name="actionBy"><display/></field>
+        <field name="actionBy"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
         <field name="actionDate" encode-output="false"><display/></field>
     </form>
     
@@ -580,10 +907,11 @@
 		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
 		default-table-style="basic-table">
 		 <actions>
-		 
+				 <set field="partyId" value="${parameters.partyId}"/> 
+				 <set field="folioNo" value="${parameters.folioNo}"/> 
 		
         </actions>
-		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
 		<field name="Reason" title="Reason for this request:" required-field="true"><textarea/></field>
 		
@@ -602,7 +930,7 @@
         </actions>
 		
 		
-		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<field name="actionBy" title="File Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="Reason" title="Reason for this request:"><display/></field>
@@ -614,7 +942,7 @@
 	
 	 <!-- ================================================FILE DISPATCH========================================================= -->
     
-     <form name="dispatchFileForm" type="single" target="sendFiles"
+     <form name="dispatchFileForm" type="single" target="recieveFiles"
 		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
 		default-table-style="basic-table">
 		 <actions>
@@ -622,12 +950,11 @@
 		
         </actions>
 		
-		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
-		<field name="actionBy" title="Send File To:"><lookup target-form-name="LookupEmployee" /></field>
 		<field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>
 		
-		 <field name="submitButton" title="Send File" widget-style="smallSubmit"><submit button-type="button"/></field>
+		 <field name="submitButton" title="Recieve File" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	
 	 <!-- ================================================FILE RELEASE========================================================= -->
@@ -640,12 +967,29 @@
 		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration2();}" type="String"/> -->
 		
         </actions>
-		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>
+		
+		 <field name="submitButton" title="Release File" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
+	 <!-- ================================================FILE RETURN========================================================= -->
+    
+     <form name="returnFileForm" type="single" target="returnfiles"
+		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration();}" type="String"/> -->
+		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration2();}" type="String"/> -->
+		
+        </actions>
+		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<field name="currentPossesser" title="Released By:"><display/></field>
 		<field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>
 		
-		 <field name="submitButton" title="Release File" widget-style="smallSubmit"><submit button-type="button"/></field>
+		 <field name="submitButton" title="Recieve File" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 
 

@@ -209,6 +209,9 @@ under the License.
 
         	<entity-condition entity-name="County" list="countyList"></entity-condition>
         	<set field="countyId" from-field="countyId"/>
+        	
+        	<entity-condition entity-name="department" list="departmentList"></entity-condition>
+        	<set field="departmentId" from-field="departmentId"/>
 
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
@@ -292,6 +295,12 @@ under the License.
             </drop-down>
         </field>
         
+        <field name="departmentId" title=" Select Department" required-field="true" widget-style="required">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="departmentList" key-name="departmentId"  description="${departmentName}" />
+            </drop-down>
+        </field>
+        
 
        
          <!-- field name="stationId" title="Station" required-field="true" widget-style="required">
@@ -343,8 +352,8 @@ under the License.
         <field name="placeofbirth" title="Place of Birth"><text size="40" maxlength="60"/></field>
         <field name="nationalIDNumber"  title="National ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
         <field name="pinNumber"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
-        <field name="socialSecurityNumber" title="N.S.S.F Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
-        <field name="nhifNumber" title="N.H.I.F Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="socialSecurityNumber" title="NSSF Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="nhifNumber" title="NHIF Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
         <field name="passportNumber"><text size="40" maxlength="60"/></field>
 
         <field name="emplPositionTypeId" title="Job Title">
@@ -2672,7 +2681,7 @@ Gender
         </drop-down>
         </field>
 
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
      </form>
 
      <form name="listStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="viewstations"

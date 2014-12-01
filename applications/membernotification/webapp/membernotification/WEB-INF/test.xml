@@ -1,0 +1,30 @@
+<simple-method method-name="createMessageStatus" short-description="Create MessageStatus">
+      	<if-empty field="parameters.messageStatusId">
+	      		<make-value entity-name="MessageStatus" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <set field="entityName" value="MessageStatus"></set>
+        		<set field="newEntity.messageStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateMessageStatus"></call-simple-method>
+      		</else>
+      	</if-empty>
+    </simple-method>
+    
+    <simple-method method-name="updateMessageStatus" short-description="Update MessageStatus">
+        <entity-one entity-name="MessageStatus" value-field="messageStatus"/>
+        <set-nonpk-fields value-field="messageStatus" map="parameters"/>
+        <set field="messageStatus.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="messageStatus"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteMessageStatus" short-description="Delete MessageStatus">
+        <entity-one entity-name="MessageStatus" value-field="messageStatus"/>
+        <set field="messageStatus.isActive" value="N"/>
+        <set field="messageStatus.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="messageStatus"/>
+    </simple-method>

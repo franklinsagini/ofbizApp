@@ -2606,6 +2606,8 @@ public class ModelFormField {
 					&& !this.entityName.equals("ATMPINLog")
 					&& !this.entityName.equals("ATMPINApplication")
 					&& !this.entityName.equals("CardLog")
+					&& !this.entityName.equals("MessageStatus")
+					&& !this.entityName.equals("NotificationType")
 					&& !this.entityName.equals("CardApplication")) {
 				// try {
 				// TransactionUtil.begin();

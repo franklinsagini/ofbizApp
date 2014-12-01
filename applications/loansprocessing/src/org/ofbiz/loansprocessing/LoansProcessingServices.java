@@ -444,5 +444,56 @@ public class LoansProcessingServices {
 			return BigDecimal.ZERO;
 		return loanApplication.getBigDecimal("loanAmt");
 	}
+	
+	public static Boolean loanReadyForAppraisal(Long loanApplicationId){
+		/***
+		 * The two ready statuses are
+		 * FORWARDEDLOANS
+		 * RETURNEDTOAPPRAISAL
+		 * 
+		 * */
+		Long loanStatusId = getLoanApplication(loanApplicationId).getLong("loanStatusId");
+		
+		if ((getLoanStatus("FORWARDEDLOANS") == loanStatusId) || (getLoanStatus("RETURNEDTOAPPRAISAL") == loanStatusId))
+		{
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	public static Boolean loanReadyForApproval(Long loanApplicationId){
+		/***
+		 * The two ready statuses are
+		 * 
+		 * APPRAISED
+		 * 
+		 * */
+		Long loanStatusId = getLoanApplication(loanApplicationId).getLong("loanStatusId");
+		
+		if ((getLoanStatus("APPRAISED") == loanStatusId))
+		{
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	public static Boolean loanReadyForDisbursement(Long loanApplicationId){
+		/***
+		 * The Status that readies DISBURSEMENT
+		 * 
+		 * APPROVED
+		 * 
+		 * */
+		Long loanStatusId = getLoanApplication(loanApplicationId).getLong("loanStatusId");
+		
+		if ((getLoanStatus("APPROVED") == loanStatusId))
+		{
+			return true;
+		} else{
+			return false;
+		}
+	}
 
 }

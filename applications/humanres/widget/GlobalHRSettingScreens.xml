@@ -373,7 +373,10 @@
                         <screenlet id="AddEmplLeaveTypePanel" title="${uiLabelMap.HumanResAddEmplLeaveType}" collapsible="true">
                             <include-form name="AddEmplLeaveType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
                         </screenlet>
-                        <include-form name="ListEmplLeaveTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        <screenlet title="Leave Types">
+                         <include-form name="ListEmplLeaveTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                       
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -611,5 +614,44 @@
             </widgets>
         </section>
     </screen>
+    
+     <screen name="editDepartment">
+    <section>
+            <actions>
+                <set field="titleProperty" value="department"/>
+                <set field="tabButtonItem" value="department"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPayrollPrefix"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="lowerCase" from-field="parameters.lowerCase" />
+                <entity-one entity-name="department" value-field="departmentContext"/>
+                <set field="payRollPrefix" from-field="PayrollPrefixContext.payRollPrefix"
+					default-value="${PayrollPrefixContext.payRollPrefix}" />
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                               <screenlet>
+                               </screenlet>
+                        		<screenlet title="Add Department">
+                        			<include-form name="editDepartment" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet>
+                        		</screenlet>
+                        		 <screenlet title="Department list">
+                                    <include-form name="listDepartment" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
 </screens>

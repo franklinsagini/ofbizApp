@@ -159,7 +159,6 @@
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.fileActionTypeId" value="Request"/>
 		<set field="newEntity.currentPossesser" value="REGISTRY" />
-		<set field="newEntity.nextPossesser" value="${userLogin.partyId}" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
@@ -167,8 +166,6 @@
 		
 		
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
-		
-		
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
@@ -177,6 +174,7 @@
 		<make-value entity-name="RegistryRequestedFiles" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<log message=">>>>>>>>>>>>>>>>>>>>>>>PARAMETERS ${parameters}" level="info"/>
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
@@ -186,7 +184,7 @@
 		<set field="newEntity.creationDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
-		<set field="newEntity.Reason" from-field="lookedUpValue.Reason" />
+		<set field="newEntity.Reason" from-field="parameters.Reason" />
 		
 		<create-value value-field="newEntity" />
 	</simple-method>
@@ -195,7 +193,7 @@
 	
 	<simple-method method-name="issuefiles" short-description="request File ">
 		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
-		 <call-simple-method method-name="saveIssuedFile" scope="inline"></call-simple-method>
+		<!--  <call-simple-method method-name="saveIssuedFile" scope="inline"></call-simple-method> -->
 		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="deletefileFromRequested" scope="inline"></call-simple-method>
 		 
@@ -205,10 +203,12 @@
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
-
+		 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="ISSUED"/>
+		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
+		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
 		<store-value value-field="registryFile" />
 	</simple-method>
 	
@@ -230,6 +230,7 @@
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.fileActionTypeId" value="File Issue"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<create-value value-field="newEntity" />
 	</simple-method>
@@ -244,8 +245,7 @@
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.fileActionTypeId" value="File Issue"/>
-		<set field="newEntity.currentPossesser" value="REGISTRY" />
-		<set field="newEntity.nextPossesser" from-field="parameters.actionBy"/>
+		<set field="newEntity.currentPossesser" from-field="parameters.actionBy" />
 		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
@@ -259,7 +259,7 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
-	<simple-method method-name="saveIssuedFile">
+	<!-- <simple-method method-name="saveIssuedFile">
 		<now-timestamp field="nowTimestamp"/>
 		<make-value entity-name="RegistryFilesInCirculation" value-field="newEntity"/>
 		<set-pk-fields map="parameters" value-field="newEntity" />
@@ -273,35 +273,41 @@
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		
-		<set value="REGISTRY" field="newEntity.currentPossesser" />
+		<set from-field="parameters.actionBy"  field="newEntity.currentPossesser" />
+		<set value="NOT RECEIVED" field="newEntity.recieptStatus" />
 		<set field="newEntity.creationDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId"/>
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
 		<set field="newEntity.Reason" from-field="reason.Reason" />
 		
 		<create-value value-field="newEntity" />
-	</simple-method>
+	</simple-method> -->
 	
 
-<!-- ==========================FILE DISPATCH================================== -->
+<!-- ========================== RECEIVE FILE ================================== -->
 	
-	<simple-method method-name="sendFiles" short-description="request File ">
-	<!-- <call-simple-method method-name="saveSendFileAction" scope="inline"></call-simple-method>
-	<call-simple-method method-name="saveSendActionToLogs" scope="inline"></call-simple-method> -->
-		 
-		 <set field="partyId" from-field="parameters.partyId"/>
-		 
-		 
+	<simple-method method-name="recieveFiles" short-description="request File ">
+	<log message="=====================PLEASE SHOW ${parameters}" level="info"/>
+	<call-simple-method method-name="saveRecieveFileAction" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveRecieveActionToLogs" scope="inline"></call-simple-method>
+	
+	<set field="party" from-field="parameters.partyId"/>
+		
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
+		 
+		  <entity-one entity-name="Person" value-field="person">
+		 	<field-map field-name="partyId" from-field="parameters.actionBy"/>
+		 </entity-one>
 
-		 <!-- Get status -->
-		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy"/>
+		 <set field="registryFile.fileLocation" from-field="person.departmentId"/>
+		 <set field="registryFile.recieptStatus" value="RECEIVED"/>
 		<store-value value-field="registryFile"/>
 	</simple-method>
 	
-	<simple-method method-name="saveSendFileAction">
+	<simple-method method-name="saveRecieveFileAction">
 		<now-timestamp field="nowTimestamp"/>
 		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
@@ -311,12 +317,15 @@
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
-		<set field="newEntity.fileActionTypeId" value="Send File"/>
+		<set field="newEntity.fileActionTypeId" value="Receive File"/>
+		
+		
 		
 		<create-value value-field="newEntity" />
+		
 	</simple-method>
 	
-	<simple-method method-name="saveSendActionToLogs">
+	<simple-method method-name="saveRecieveActionToLogs">
 		<now-timestamp field="nowTimestamp"/>
 		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
@@ -326,10 +335,10 @@
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
-		<set field="newEntity.fileActionTypeId" value="Send File"/>
+		<set field="newEntity.fileActionTypeId" value="Receive File"/>
 		<set field="newEntity.currentPossesser" value="${userLogin.partyId}" />
-		<set field="newEntity.nextPossesser" from-field="parameters.actionBy"/>
-		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
+		<set field="newEntity.receiptStatus" value="RECEIVED"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
@@ -348,7 +357,7 @@
 	<simple-method method-name="releasefiles" short-description="request File ">
 	<call-simple-method method-name="saveReleaseAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveReleaseActionToLogs" scope="inline"></call-simple-method>
-	<call-simple-method method-name="deletefileFromCirculation" scope="inline"></call-simple-method>
+	
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
@@ -359,7 +368,7 @@
 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
-		 <set field="registryFile.status" value="AVAILABLE"/>
+		 <set field="registryFile.recieptStatus" value="RELEASED"/>
 		<store-value value-field="registryFile"/>
 	</simple-method>
 	
@@ -378,13 +387,6 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
-	<simple-method method-name="deletefileFromCirculation"
-		short-description="Remove an file">
-		<set field="partyId" from-field="parameters.partyId" />
-		<entity-one entity-name="RegistryFilesInCirculation" value-field="lookedUpValue" />
-		<remove-value value-field="lookedUpValue" />
-	</simple-method>
-	
 	<simple-method method-name="saveReleaseActionToLogs">
 		<now-timestamp field="nowTimestamp"/>
 		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
@@ -396,9 +398,71 @@
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.fileActionTypeId" value="Release File"/>
-		<set field="newEntity.currentPossesser" value="${userLogin.partyId}" />
-		<set field="newEntity.nextPossesser" value="REGISTRY"/>
+		<set field="newEntity.currentPossesser" value="REGISTRY" />
+		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		
+		<set field="newEntity.folioNo" from-field="reg.folioNo" />
+		
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<!-- ==========================FILE RETURN================================== -->
+	
+	<simple-method method-name="returnfiles" short-description="request File ">
+	<call-simple-method method-name="saveReturnAction" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveReturnActionToLogs" scope="inline"></call-simple-method>
+		 
+		 <set field="partyId" value="${newEntity.partyId}"/>
+		 
+		 
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+
+		 <!-- Get status -->
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		 <set field="registryFile.status" value="AVAILABLE"/>
+		 <set field="registryFile.recieptStatus" value="RELEASEDANDRECIEVED"/>
+		<store-value value-field="registryFile"/>
+	</simple-method>
+	
+	<simple-method method-name="saveReturnAction">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActions" field="actionId" />
+		<set from-field="actionId" field="newEntity.actionId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Return"/>
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	
+	<simple-method method-name="saveReturnActionToLogs">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Returned File"/>
+		<set field="newEntity.currentPossesser" value="REGISTRY" />
 		<set field="newEntity.receiptStatus" value="RECEIVED"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>

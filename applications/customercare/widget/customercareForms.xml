@@ -258,46 +258,81 @@
 			required-field="true">
 			<text size="30" maxlength="60" default-value="${member.memberNumber}" />
 		</field>
+		
 		<field name="mobileNumber" title="Mobile Number" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" default-value="${member.mobileNumber}" />
+			<hidden value="${member.mobileNumber}"/>
 		</field>
+		<field name="mobileNumberOrig" title="Mobile Number" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" default-value="${member.mobileNumber}" disabled="true" />
+		</field>
+		
+		
 
 		<field name="joinDate" title="Date Joined" required-field="true"
 			widget-style="required">
 			<date-time type="date" default-value="${member.joinDate}" />
 		</field>
+		
+		
 		<field name="membershipDuration" title="Membership Duration (Months)"
 			widget-style="required" required-field="true">
-			<text size="30" maxlength="60" default-value="${membershipDuration}" />
+			<hidden value="${membershipDuration}"/>
 		</field>
 
+<field name="membershipDuration" title="Membership Duration (Months)"
+			widget-style="required" required-field="true">
+			<text size="30" maxlength="60" default-value="${membershipDuration}" disabled="true" />
+		</field>
 		<field name="loanProductId" title="Loan Type" widget-style="required"
 			required-field="true">
 			<drop-down allow-empty="true">
-				<list-options list-name="productsList" key-name="loanProductId"
-					description="${name} - ${code}" />
+				<!-- list-options list-name="productsList" key-name="loanProductId"
+					description="${name} - ${code}" / -->
+					<entity-options description="${name} - ${code}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
 			</drop-down>
 		</field>
 
+		
 		<field name="interestRatePM" title="Interest Rate (Per Month)"
 			widget-style="required" required-field="true">
-			<text size="30" maxlength="60" />
+			<hidden value="${applicationContext.interestRatePM}"/>
 		</field>
+		
+		<field name="interestRatePMOrig" title="Interest Rate (Per Month)"
+			widget-style="required" required-field="true">
+			<text size="30" maxlength="60" disabled="true" default-value="${applicationContext.interestRatePM}" />
+		</field>
+		
 		<field name="maxLoanAmt" title="Maximum Loan Amount"
 			widget-style="required" required-field="true">
-			<text size="30" maxlength="60" />
+			<hidden value="${applicationContext.maxLoanAmt}"/>
 		</field>
-
+		<field name="maxLoanAmtOrig" title="Maximum Loan Amount"
+			widget-style="required" required-field="true">
+			<text size="30" maxlength="60" disabled="true" default-value="${applicationContext.maxLoanAmt}" />
+		</field>
+		
 		<field name="existingLoans" title="Existing Loans" widget-style="required"
 			required-field="true">
-			<text size="30" maxlength="60" />
+			<hidden value="${applicationContext.existingLoans}"/>
+		</field>
+		
+
+		<field name="existingLoansOrig" title="Existing Loans" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" disabled="true" default-value="${applicationContext.existingLoans}"/>
 		</field>
 
 
+		<field name="maxRepaymentPeriodOrig" title="Maximum Repayment Period"
+			widget-style="required" required-field="true">
+			<text size="30" maxlength="60" disabled="true" default-value="${applicationContext.maxRepaymentPeriod}"/>
+		</field>
 		<field name="maxRepaymentPeriod" title="Maximum Repayment Period"
 			widget-style="required" required-field="true">
-			<text size="30" maxlength="60" />
+			<hidden value="${applicationContext.maxRepaymentPeriod}"/>
 		</field>
 
 		<field name="loanAmt" title="Loan Amount" widget-style="required"
@@ -504,7 +539,7 @@
 			<display />
 		</field>
 		<!-- ?partyId=${partyId}&amp;loanApplicationId=${loanApplicationId} -->
-		<field name="Edit Application">
+		<field name="Edit Application" use-when="(loanStatusId==${statusId}) || (loanStatusId==${returnStatusId})">
 			<hyperlink target="loanapplication" description="Edit Application">
 				<parameter param-name="partyId" />
 				<parameter param-name="loanApplicationId" />
