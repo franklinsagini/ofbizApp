@@ -866,6 +866,41 @@ under the License.
             <key-map field-name="leaveStatus" rel-field-name="statusId"/>
         </relation> -->
     </entity>
+    
+    
+    
+    <view-entity entity-name="employeeLeavesView" package-name="org.ofbiz.humanres">
+      <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
+      <member-entity entity-alias="Leave" entity-name="EmplLeave"></member-entity>
+
+      <alias entity-alias="PersonView" name="partyId" field="partyId"/>
+      <alias entity-alias="PersonView" name="payrollNumber" field="employeeNumber"/>
+       <alias entity-alias="PersonView" name="firstName" field="firstName"/>
+      <alias entity-alias="PersonView" name="lastName" field="lastName"/>
+      <alias entity-alias="PersonView" name="appointmentdate" field="appointmentdate"/>
+       <alias entity-alias="PersonView" name="confirmationdate" field="confirmationdate"/>
+      <alias entity-alias="PersonView" name="employmentStatusEnumId" field="employmentStatusEnumId"/>
+      <alias entity-alias="Leave" name="leaveId" field="leaveId"/>
+       <alias entity-alias="Leave" name="partyId" field="partyId"/>
+        <alias entity-alias="Leave" name="leaveTypeId" field="leaveTypeId"/>
+         <alias entity-alias="Leave" name="emplLeaveReasonTypeId" field="emplLeaveReasonTypeId"/>
+          <alias entity-alias="Leave" name="fromDate" field="fromDate"/>
+           <alias entity-alias="Leave" name="leaveDuration" field="leaveDuration"/>
+            <alias entity-alias="Leave" name="thruDate" field="thruDate"/>
+             <alias entity-alias="Leave" name="financialYear" field="financialYear"/>
+              <alias entity-alias="Leave" name="resumptionDate" field="resumptionDate"/>
+               <alias entity-alias="Leave" name="applicationStatus" field="applicationStatus"/>
+                <alias entity-alias="Leave" name="approvalStatus" field="approvalStatus"/>
+                 <alias entity-alias="Leave" name="handedOverTo" field="handedOverTo"/>
+
+       <view-link  entity-alias="PersonView" rel-entity-alias="Leave">
+        <key-map field-name="partyId" rel-field-name="partyId"/>
+         <entity-condition>
+      <condition-expr field-name="employmentStatusEnumId" entity-alias="PersonView" operator="equals" value="16"/>
+       </entity-condition>
+
+      </view-link>
+    </view-entity>
 
 
     <entity entity-name="EmplCompassionateLost"
@@ -877,8 +912,8 @@ under the License.
          <field name="financialYear" type="id-ne"/>
        <field name="allocatedLeaveDays" type="fixed-point"></field>
         <field name="usedLeaveDays" type="fixed-point"></field>
-        <field name="lostLeaveDays" type="id"></field>
-        <field name="carriedOverDays" type="id"></field>
+        <field name="lostLeaveDays" type="fixed-point"></field>
+        <field name="carriedOverDays" type="fixed-point"></field>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="EMPL_LEAVEBAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
@@ -946,7 +981,7 @@ under the License.
         <field name="partyId" type="id-ne"/>
         <field name="days" type="numeric"/>
         <field name="usedLeaveDays" type="floating-point"/>
-        <field name="lostLeaveDays" type="floating-point"/>
+        <field name="carriedOverDays" type="floating-point"/>
         <field name="availableLeaveDays" type="floating-point"/>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
@@ -971,6 +1006,7 @@ under the License.
       <alias name="annualUsedLeaveDays" entity-alias="ANNUAL" field="usedLeaveDays"/>
       <alias name="annualLostLeaveDays" entity-alias="ANNUAL" field="lostLeaveDays"/>
       <alias name="annualAvailableLeaveDays" entity-alias="ANNUAL" field="availableLeaveDays"/>
+       <alias name="compassionateCarryOverLeaveDays" entity-alias="COMPASSIONATE" field="carriedOverDays"/>
        <alias name="compassionateAllocatedLeaveDays" entity-alias="COMPASSIONATE" field="days"/>
        <alias name="compassionateUsedLeaveDays" entity-alias="COMPASSIONATE" field="usedLeaveDays"/>
        <alias name="compassionateAvailableLeaveDays" entity-alias="COMPASSIONATE" field="availableLeaveDays"/>

@@ -138,8 +138,8 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 	            "leaveTypeId", "COMPASSIONATE_LEAVE" , 
 	            "usedLeaveDays", usedLeaveDays,
 	            "allocatedLeaveDays", new BigDecimal(days),
-	            "lostLeaveDays", 0,
-                "carriedOverDays", ((new BigDecimal(days)).subtract(usedLeaveDays)));
+	            "lostLeaveDays", BigDecimal.ZERO,
+                "carriedOverDays", lostLeaveDays);
 		
 		
 		
@@ -295,7 +295,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 			
 			carryCompassionate = delegator.findOne("EmplCompassionateLost", 
 		             	UtilMisc.toMap("partyId", partyId), false);
-		           	log.info("++++++++++++++carryGV++++++++++++++++" +carryCompassionate);
+		           	log.info("++++++++++++++SHOW ME THIS+=====================>" +carryCompassionate);
 			
 			
 			
@@ -306,7 +306,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
  
 		
 		if (carryCompassionate==null) {
-			String errorMsg = "================================NOTHING FOUND HERE===============";
+			carriedOverDays = BigDecimal.ZERO;
 			
 			
 		} else {
