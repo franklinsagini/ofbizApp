@@ -52,7 +52,7 @@ under the License.
                         <fo:block text-align="center">Relationship</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Id No.</fo:block>
+                        <fo:block text-align="right">ID No.</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="right">Phone No.</fo:block>

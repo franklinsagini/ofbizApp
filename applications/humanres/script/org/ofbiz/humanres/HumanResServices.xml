@@ -1081,8 +1081,7 @@
 		<store-value value-field="lookedUpValue" />
 	</simple-method>
 
-	<simple-method method-name="deleteSkillType"
-		short-description="Delete SkillType">
+	<simple-method method-name="deleteSkillType" short-description="Delete SkillType">
 		<entity-one entity-name="SkillType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 		<property-to-field resource="HumanResUiLabels"
@@ -2136,12 +2135,9 @@
 		<make-value entity-name="FamilyRelations" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.familyRelationsId">
-			<sequenced-id sequence-name="FamilyRelations"
-				field="familyRelationsId" />
-		</if-empty>
-		<field-to-result field="newEntity.familyRelationsId"
-			result-name="familyRelationsId" />
+		
+			<sequenced-id sequence-name="FamilyRelations" field="familyRelationsId" />
+		
 			<set field="newEntity.familyRelationsId" from-field="familyRelationsId"/>
 		<create-value value-field="newEntity" />
 	</simple-method>
