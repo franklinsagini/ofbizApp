@@ -2115,5 +2115,106 @@ public class LoanServices {
 		}
 		return "";
 	}
+	
+	public static String hasSavingsAccount(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Long partyId = Long.valueOf((String) request.getParameter("partyId"));
+
+	
+		result.put("hasSavingsAccount", hasSavingsAccount(partyId));
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+	
+	/***
+	 * Determine if a member has a savings account product
+	 * */
+	public static Boolean hasSavingsAccount(Long partyId){
+		List<GenericValue> accountProductELI = null; // =
+		Long accountProductId = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					EntityCondition.makeCondition("isSavings", "Y"), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : accountProductELI) {
+			accountProductId = genericValue.getLong("accountProductId");
+		}
+		
+		if (accountProductId == null)
+			return false;
+		
+		//Get the memberAccountId given accountProductId and PartyId
+		List<GenericValue> memberAccountELI = null;
+		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						partyId), EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId)), EntityOperator.AND);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					accountsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (memberAccountELI == null) {
+			return false;
+		} else {
+			if (memberAccountELI.size() > 0){
+				return true;
+			}
+		}
+		
+		return false;
+	
+	}
+	
+	public static Boolean hasMemberDepositAccount(Long partyId){
+		return false;
+	}
+	
+	public static Boolean hasBeenMemberLongEnough(Long partyId){
+		return false;
+	}
 
 }
