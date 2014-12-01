@@ -289,7 +289,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-          
+          <set field="accruedDayswe" value="ANNUAL_LEAVE"/>
         </actions>
         <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
           
@@ -304,19 +304,26 @@
 				</sub-hyperlink>
 			</display-entity>
 		</field>
+		<field name="annualCarriedOverDays" title="Annual Leave Days Brought Forward">
+			<display />
+		</field>	
 		<field name="annualaccruedDays" title="Annual Accrued Leave Days">
 			<display />
+		</field>
+		<field name="accruedDayswe" title="Monthly Annual Leave accruals(Days)">
+		<display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${accrualRate}"></display-entity>
 		</field>
 		<field name="annualUsedLeaveDays" title="Annual Used Leave Days">
 			<display />
 		</field>
-		<field name="annualCarriedOverDays" title="Annual Leave Days Brought Forward">
-			<display />
-		</field>			
+				
 		<field name="annualLostLeaveDays" title="Annual Lost Leave Days">
 			<display />
 		</field>		
 		<field name="annualAvailableLeaveDays" title="Annual Available Leave Days">
+			<display />
+		</field>
+		<field name="compassionateCarryOverLeaveDays" title="Compassionate Brought Forward Leave Days">
 			<display />
 		</field>
 		<field name="compassionateAllocatedLeaveDays" title="Compassionate Allocated Leave Days">
@@ -1174,7 +1181,7 @@
         <alt-target use-when="EmplLeaveCalenderContext!=null" target="updateLeaveCalender"/>
 		
 		<field name="leaveCalenderId"><hidden/></field>
-		<field name="leaveCalenderId" use-when="EmplLeaveCalenderContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+	<!-- 	<field name="leaveCalenderId" use-when="EmplLeaveCalenderContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field> -->
 		<field name="partyId" title="Member">
 			<hidden value="${userLogin.partyId}" />
 		</field>

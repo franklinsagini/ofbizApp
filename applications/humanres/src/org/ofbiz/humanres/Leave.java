@@ -138,7 +138,8 @@ public static String closeFinacialYearForCompassionate(HttpServletRequest reques
 	            "leaveTypeId", "COMPASSIONATE_LEAVE" , 
 	            "usedLeaveDays", usedLeaveDays,
 	            "allocatedLeaveDays", new BigDecimal(days),
-	            "lostLeaveDays", lost);
+	            "lostLeaveDays", BigDecimal.ZERO,
+                "carriedOverDays", lostLeaveDays);
 		
 		
 		
@@ -277,6 +278,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		
 		GenericValue getAnualOpeningSumELI=null;
 		BigDecimal LeaveDaysUsed=BigDecimal.ZERO;
+		
 		try {
 			 
 			 getAnualOpeningSumELI = delegator.findOne("EmplLeaveOpeningBalance", 
@@ -286,6 +288,36 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 			e2.printStackTrace();
 			
 		}
+		GenericValue carryCompassionate = null;
+		BigDecimal carriedOverDays = BigDecimal.ZERO;
+		
+		try {
+			
+			carryCompassionate = delegator.findOne("EmplCompassionateLost", 
+		             	UtilMisc.toMap("partyId", partyId), false);
+		           	log.info("++++++++++++++SHOW ME THIS+=====================>" +carryCompassionate);
+			
+			
+			
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			
+		}
+ 
+		
+		if (carryCompassionate==null) {
+			carriedOverDays = BigDecimal.ZERO;
+			
+			
+		} else {
+			carriedOverDays = carryCompassionate.getBigDecimal("carriedOverDays");
+			
+		}
+		
+		
+		
+		
+		
 		
 		if (getAnualOpeningSumELI==null) {
 			String errorMsg = "================================NOTHING FOUND HERE===============";
@@ -299,7 +331,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		//log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+getApprovedLeaveSumELI);
 	double approvedLeaveSum =0;
 	//double  usedLeaveDays = 0;
-	BigDecimal lostLeaveDays = BigDecimal.ZERO;
+	
 		for (GenericValue genericValue : getApprovedLeaveSumELI) {
 			//approvedLeaveSum += genericValue.getLong("leaveDuration");
 			approvedLeaveSum += genericValue.getDouble("leaveDuration");
@@ -332,8 +364,8 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 				"partyId", partyId, 
 	            "days", days, 
 	            "usedLeaveDays", totalUsed,
-	            "lostLeaveDays", lostLeaveDays.doubleValue(), 
-	            "availableLeaveDays", leaveBalances);
+	            "carriedOverDays", carriedOverDays.doubleValue(), 
+	            "availableLeaveDays", (leaveBalances+carriedOverDays.doubleValue()));
 	try {
 		delegator.create(leavelog);
 	} catch (GenericEntityException e) {

@@ -31,6 +31,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
+//import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.webapp.event.EventHandlerException;
 
@@ -454,7 +455,7 @@ public class RemittanceServices {
 	}
 
 	private static BigDecimal getMemberShareContribution(Long memberId) {
-		String accountProductId = LoanServices.getShareDepositAccountId("901");
+		String accountProductId = getShareDepositAccountId("901");
 		BigDecimal bdShareAmount = null;
 		
 		accountProductId = accountProductId.replaceAll(",", "");
@@ -1278,5 +1279,27 @@ public class RemittanceServices {
 		memberStatusId = Long.valueOf(memberStatusIdString);
 		return memberStatusId;
 	}
+	
+	public static String getShareDepositAccountId(String code) {
+		// TODO Auto-generated method stub
+		List<GenericValue> accountProductELI = null; // =
+		String accountProductId = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					EntityCondition.makeCondition("code", code), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : accountProductELI) {
+			accountProductId = String.valueOf(genericValue
+					.getLong("accountProductId"));
+		}
+
+		return accountProductId;
+	}
+
 
 }
