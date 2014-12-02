@@ -26,8 +26,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
-import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -382,7 +380,7 @@ GenericValue employeeLeaveType = null;
 		}
 		
 		if (daytype.equalsIgnoreCase("Work_days")) {
-			leaveDuration = AccHolderTransactionServices.calculateWorkingDaysBetweenDates(fromDate, thruDate);
+			leaveDuration = calculateWorkingDaysBetweenDates(fromDate, thruDate);
 			
 		} else if(daytype.equalsIgnoreCase("Calendar_days")){
 			leaveDuration = calculateCalenderDaysBetweenDates(fromDate, thruDate);
@@ -495,9 +493,9 @@ GenericValue employeeLeaveType = null;
 			
 
 		}else if (daytype.equalsIgnoreCase("Work_days")) {
-			endDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveDuration);
+			endDate = calculateEndWorkingDay(fromDate, leaveDuration);
 			int leaveTillResumption = leaveDuration+1;
-			resumeDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveTillResumption);
+			resumeDate = calculateEndWorkingDay(fromDate, leaveTillResumption);
 			
 		}
 		 
@@ -1164,8 +1162,99 @@ GenericValue employeeLeaveType = null;
 	
 	}
 	
+	public static Date calculateEndWorkingDay(Date startDate, int noOfDays) {
+
+		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
+
+		// If this is happening on sunday or saturday push it to start on monday
+		if (localDateEndDate.getDayOfWeek()== DateTimeConstants.SATURDAY) {
+			localDateEndDate = localDateEndDate.plusDays(2);
+		}
+
+		if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+			localDateEndDate = localDateEndDate.plusDays(1);
+		}
+		// Calculate End Date
+		int count = 1;
+		while (count < noOfDays) {
+			if (localDateEndDate.getDayOfWeek() == DateTimeConstants.FRIDAY) {
+				localDateEndDate = localDateEndDate.plusDays(3);
+			} else {
+				localDateEndDate = localDateEndDate.plusDays(1);
+			}
+			count++;
+		}
+
+		return localDateEndDate.toDate();
+	}
 	
+	public static int calculateWorkingDaysBetweenDates(Date startDate, Date endDate) {
+		int daysCount = 1;
+		LocalDate localDateStartDate = new LocalDate(startDate);
+		LocalDate localDateEndDate = new LocalDate(endDate);
+		
+		/*Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		List<GenericValue> holidaysELI = null; 
+		try {
+			holidaysELI = delegator.findAll("PublicHolidays", true);
+				
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		for (GenericValue genericValue : holidaysELI) {
+			holidayDate = new LocalDate(genericValue.getDate("holidayDate"));
+			
+			if ((localDate.getDayOfMonth() == holidayDate.getDayOfMonth()) && (localDate.getMonthOfYear() == holidayDate.getMonthOfYear())){
+				return true;
+			}
+		}*/
+		
+		
+		while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
+			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY) && isHoliday(startDate)
+					&& (localDateStartDate.getDayOfWeek() != DateTimeConstants.SUNDAY)) {
+				daysCount++;
+			}
+
+			localDateStartDate = localDateStartDate.plusDays(1);
+		}
+
+		return daysCount;
+	}
 	
-	
+	public static Boolean isHoliday(Date date) {
+//		LocalDate localDateStartDate = new LocalDate(startDate);
+//		LocalDate localDateEndDate = new LocalDate(endDate);
+		LocalDate localDate = new LocalDate(date);
+		//=================holiday consideration===========================================
+				Date holidays = null;
+				Boolean isHoliday = false;
+				int holiDate = 0, holiMonth = 0, statDate = 0, statMonth = 0;
+				
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				
+				List<GenericValue> holidaysELI = null; 
+				try {
+					holidaysELI = delegator.findAll("PublicHolidays", true);
+						
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+				
+				log.info("++++++++++++++date++++++++++++++++" +localDate);
+				
+				LocalDate holidayDate = null;
+				for (GenericValue genericValue : holidaysELI) {
+					holidayDate = new LocalDate(genericValue.getDate("holidayDate"));
+					
+					if ((localDate.getDayOfMonth() == holidayDate.getDayOfMonth()) && (localDate.getMonthOfYear() == holidayDate.getMonthOfYear())){
+						return true;
+					}
+				}
+		
+				return isHoliday;
+		
+	}
 }
 
