@@ -1356,6 +1356,10 @@
         </if-compare>
         
         <set field="lookedUpValue.leaveStatus" value="Approved" />
+        
+        <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.dateApprovedRejected"/>
+
         <store-value value-field="lookedUpValue" />
         
 		<log message="==== Leave Approved for ${lookedUpValue.partyId} by ${userLogin.userLoginId}===" level="info"/>
@@ -1428,6 +1432,9 @@
         <set field="lookedUpValue.applicationStatus" value="Rejected" />
         <set field="lookedUpValue.approvalStatus" value="Rejected" />
         <set field="lookedUpValue.rejectReason" from-field="lookedUpValue.rejectReason" />
+        
+        <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.dateApprovedRejected"/>
         <store-value value-field="lookedUpValue" />
 			
         

@@ -835,6 +835,7 @@ under the License.
         <field name="updatedBy" type="id-ne"/>
         <field name="leaveStatus" type="id-ne"/>
         <field name="createdDate" type="date-time"/>
+        <field name="dateApprovedRejected" type="date-time"/>
 
         <field name="workflowDocumentTypeId" type="id-ne"/>
         <field name="organizationUnitId" type="id"/>
@@ -869,7 +870,7 @@ under the License.
     
     
     
-    <view-entity entity-name="employeeLeavesView" package-name="org.ofbiz.humanres">
+    <view-entity entity-name="EmployeeLeavesView" package-name="org.ofbiz.humanres">
       <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
       <member-entity entity-alias="Leave" entity-name="EmplLeave"></member-entity>
 
@@ -892,11 +893,19 @@ under the License.
                <alias entity-alias="Leave" name="applicationStatus" field="applicationStatus"/>
                 <alias entity-alias="Leave" name="approvalStatus" field="approvalStatus"/>
                  <alias entity-alias="Leave" name="handedOverTo" field="handedOverTo"/>
+                  <alias entity-alias="Leave" name="createdDate" field="createdDate"/>
+                  <alias entity-alias="Leave" name="approvedDate" field="dateApprovedRejected"/>
+                 
+                 
 
        <view-link  entity-alias="PersonView" rel-entity-alias="Leave">
         <key-map field-name="partyId" rel-field-name="partyId"/>
          <entity-condition>
-      <condition-expr field-name="employmentStatusEnumId" entity-alias="PersonView" operator="equals" value="16"/>
+         <condition-list>
+         <condition-expr field-name="employmentStatusEnumId" entity-alias="PersonView" operator="equals" value="16"/>
+         <condition-expr field-name="approvalStatus" entity-alias="Leave" operator="equals" value="Approved"/>
+         </condition-list>
+      
        </entity-condition>
 
       </view-link>
