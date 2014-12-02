@@ -63,7 +63,6 @@ under the License.
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-
                   <#list kins as kin>
                     <#if kin.familyRelationsId?has_content>
                         <#assign familyRelations = delegator.findOne("FamilyRelations", {"familyRelationsId" : kin.familyRelationsId}, false)/>
@@ -90,7 +89,6 @@ under the License.
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
-
             </fo:table-body>
         </fo:table>
     </fo:block>
