@@ -1,4 +1,6 @@
 partyId = parameters.partyId
+leaveType = parameters.leaveType
+context.leaveType = leaveType
 context.title = "Chai Sacco"
 
 if (partyId) {
