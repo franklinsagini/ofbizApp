@@ -45,9 +45,11 @@
 		</actions>
 		<field name="leaveId"><hidden /></field>
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
-				<sub-hyperlink target="/partymgr/control/viewprofile"
-					target-type="inter-app" description="${partyId}" link-style="buttontext">
+			<display-entity entity-name="Person" description="${lastName}, ${firstName}">
+				<!-- <sub-hyperlink target="/partymgr/control/viewprofile"
+					target-type="inter-app" description="${partyId}" link-style="buttontext"> -->
+					<sub-hyperlink target="/humanres/control/EmployeeProfile"
+					target-type="inter-app" description="Go to Profile" link-style="buttontext">
 					<parameter param-name="partyId" from-field="partyId" />
 				</sub-hyperlink>
 			</display-entity>
@@ -289,7 +291,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-          
+          <set field="accruedDayswe" value="ANNUAL_LEAVE"/>
         </actions>
         <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
           
@@ -304,19 +306,26 @@
 				</sub-hyperlink>
 			</display-entity>
 		</field>
+		<field name="annualCarriedOverDays" title="Annual Leave Days Brought Forward">
+			<display />
+		</field>	
 		<field name="annualaccruedDays" title="Annual Accrued Leave Days">
 			<display />
+		</field>
+		<field name="accruedDayswe" title="Monthly Annual Leave accruals(Days)">
+		<display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${accrualRate}"></display-entity>
 		</field>
 		<field name="annualUsedLeaveDays" title="Annual Used Leave Days">
 			<display />
 		</field>
-		<field name="annualCarriedOverDays" title="Annual Leave Days Brought Forward">
-			<display />
-		</field>			
+				
 		<field name="annualLostLeaveDays" title="Annual Lost Leave Days">
 			<display />
 		</field>		
 		<field name="annualAvailableLeaveDays" title="Annual Available Leave Days">
+			<display />
+		</field>
+		<field name="compassionateCarryOverLeaveDays" title="Compassionate Brought Forward Leave Days">
 			<display />
 		</field>
 		<field name="compassionateAllocatedLeaveDays" title="Compassionate Allocated Leave Days">
@@ -1174,7 +1183,7 @@
         <alt-target use-when="EmplLeaveCalenderContext!=null" target="updateLeaveCalender"/>
 		
 		<field name="leaveCalenderId"><hidden/></field>
-		<field name="leaveCalenderId" use-when="EmplLeaveCalenderContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+	<!-- 	<field name="leaveCalenderId" use-when="EmplLeaveCalenderContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field> -->
 		<field name="partyId" title="Member">
 			<hidden value="${userLogin.partyId}" />
 		</field>

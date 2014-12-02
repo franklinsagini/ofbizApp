@@ -341,6 +341,32 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+    
+    <!-- ================================= PUBLIC HOLIDAY DEFINITION ===================================================== -->
+    
+     <service name="createHoliday" engine="simple" default-entity-name="PublicHolidays"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createHoliday" auth="true">
+        <description>Create Skill for a Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateHoliday" engine="simple" default-entity-name="PublicHolidays"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateHoliday" auth="true">
+        <description>Update a PartySkill</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteHoliday" engine="simple" default-entity-name="PublicHolidays"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteHoliday" auth="true">
+        <description>Delete a PartySkill</description>
+        <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
      <!-- Perf Manager -->
     <service name="createPerfManager" engine="simple" default-entity-name="PerfManager"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPerfManager" auth="true">
@@ -1568,7 +1594,7 @@ under the License.
         <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="description" optional="false"/>
+        <!-- <override name="description" optional="false"/> -->
     </service>
     
     <service name="deleteEmplLeaveReasonType" engine="simple" default-entity-name="EmplLeaveReasonType"

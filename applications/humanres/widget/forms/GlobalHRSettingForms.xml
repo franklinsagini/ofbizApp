@@ -357,12 +357,12 @@ under the License.
             title="leave Type" tooltip="${uiLabelMap.CommonNotModifRecreat}">
             <display />
         </field>
-         <field use-when="editleavetype==null&amp;&amp;leaveTypeId==null" 
-            name="leaveTypeId" title="Leave Type" widget-style="required">
+         <field use-when="editleavetype!=null&amp;&amp;leaveTypeId!=null" 
+            name="leaveTypeId" title="Leave Type">
             <text />
         </field>
 
-        <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="description" title="Name of Leave" tooltip="(This field is required)" widget-style="required" required-field="true"><text/></field>
         <field name="days" title="Days" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="daytype"  title="Day Specification" >
             <drop-down allow-empty="false">
@@ -427,11 +427,11 @@ under the License.
         </field>
             <field use-when="editleavetype==null" name="submitButton"
             title="${uiLabelMap.CommonCreate}" widget-style="buttontext">
-            <submit button-type="text-link" />
+            <submit button-type="button" />
         </field>
         <field use-when="editleavetype!=null" name="updateButton"
             title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
-            <submit button-type="text-link" />
+            <submit button-type="button" />
         </field>
 
     </form>
@@ -442,7 +442,7 @@ under the License.
         <actions>
             <entity-condition entity-name="EmplLeaveType"><order-by field-name="leaveTypeId"/></entity-condition>
         </actions>
-       <field name="leaveTypeId" title="Leave Type" >
+       <field name="description" title="Leave Type" >
          <display/>
         </field>
         <field name="days" title="Days"><display/></field>
@@ -467,7 +467,7 @@ under the License.
         </field>
             <!-- <field name="allowoverflow" title="Allow overflow"><display/></field> -->
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteEmplLeaveType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${leaveTypeId} leave type?">
+            <hyperlink target="deleteEmplLeaveType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${description} leave type?">
                 <parameter param-name="leaveTypeId"/>
             </hyperlink>
         </field>
@@ -482,9 +482,9 @@ under the License.
     <form name="AddEmplLeaveReasonType" type="single" target="createEmplLeaveReasonType" default-map-name="emplLeaveReasonType"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createEmplLeaveReasonType" default-field-type="hidden"/>
-        <field name="emplLeaveReasonTypeId"><text/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="emplLeaveReasonTypeId"><hidden/></field>
+        <field name="description" title="Provide Reason" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplLeaveReasonTypes" type="multi" title="" target="updateEmplLeaveReasonType"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -492,9 +492,14 @@ under the License.
             <entity-condition entity-name="EmplLeaveReasonType"><order-by field-name="emplLeaveReasonTypeId"/></entity-condition>
         </actions>
         <auto-fields-service service-name="updateEmplLeaveReasonType" default-field-type="hidden"/>
-        <field name="emplLeaveReasonTypeId"><display/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <field name="emplLeaveReasonTypeId"><hidden/></field>
+        <field name="description" title="Reason"><text/></field>
+        <field name="updateLink" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+            <hyperlink target="updateEmplLeaveReasonType" description="${uiLabelMap.CommonUpdate}" also-hidden="false">
+                <parameter param-name="emplLeaveReasonTypeId"/>
+            </hyperlink>
+        </field>
+          <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmplLeaveReasonType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this leave reason type?">
                 <parameter param-name="emplLeaveReasonTypeId"/>
             </hyperlink>
@@ -502,9 +507,9 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
-    <form name="AddPublicHoliday" type="single" target="createPublicHoliday" default-map-name="workEffort">
-        <alt-target use-when="workEffort!=null" target="updatePublicHoliday"/>
-        <field name="workEffortId" use-when="workEffort!=null"><hidden/></field>
+    <form name="AddPublicHoliday" type="single" target="createHoliday" default-map-name="workEffort">
+        <alt-target use-when="workEffort!=null" target="updateHoliday"/>
+ <!--        <field name="workEffortId" use-when="workEffort!=null"><hidden/></field>
         <field name="partyId"><hidden value="${parameters.userLogin.partyId}"/></field>
         <field name="roleTypeId" use-when="workEffort==null"><hidden value="CAL_OWNER"/></field>
         <field name="statusId" use-when="workEffort==null"><hidden value="PRTYASGN_ASSIGNED"/></field>
@@ -513,19 +518,22 @@ under the License.
         <field name="scopeEnumId"><hidden value="WES_PUBLIC"/></field>
         <field name="workEffortName" title="${uiLabelMap.HumanHolidayName}" tooltip="${uiLabelMap.CommonRequired}"><text size="50"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
-        <field name="estimatedStartDate" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="estimatedStartDate" title="Date" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field> -->
+        
+        <auto-fields-entity entity-name="PublicHolidays" default-field-type="edit"/>
+        <field name="holidayId"><hidden/></field>
+         <field name="holidayId" use-when="workEffort!=null"><display/></field>
         <field name="addButton" title="${uiLabelMap.CommonSubmit}" use-when="workEffort==null"><submit/></field>
         <field name="updateButton" title="${uiLabelMap.CommonUpdate}" use-when="workEffort!=null"><submit/></field>
     </form>
-    <form name="ListPublicHoliday" type="list" target="PublicHoliday" list-name="listIt" separate-columns="true"
+    <form name="ListPublicHoliday" type="list" target="updateHoliday" list-name="listIt" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="hover-bar basic-table">
         <actions>
-            <entity-and entity-name="WorkEffort" list="listIt">
-                <field-map field-name="workEffortTypeId" value="PUBLIC_HOLIDAY"/>
-                <order-by field-name="-estimatedStartDate"/>
-            </entity-and>
+          <entity-condition entity-name="PublicHolidays">
+          <order-by field-name="holidayId"/>
+          </entity-condition>
         </actions>
-        <row-actions>
+       <!--  <row-actions>
             <entity-and entity-name="WorkEffortPartyAssignment" list="assignmentList">
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
@@ -536,14 +544,16 @@ under the License.
         <field name="scopeEnumId"><hidden value="WES_PUBLIC"/></field>
         <field name="workEffortName" title="${uiLabelMap.HumanHolidayName}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="estimatedStartDate" title="${uiLabelMap.CommonFromDate}"><display type="date"/></field>
+        <field name="estimatedStartDate" title="Date"><display type="date"/></field>
         <field name="partyId" title="${uiLabelMap.CommonBy}">
             <display-entity entity-name="PartyNameView"  description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
-        </field>
+        </field> -->
+        <auto-fields-entity entity-name="PublicHolidays" default-field-type="display"/>
+        <field name="holidayId"><hidden/></field>
         <field name="updateButton" title="${uiLabelMap.CommonUpdate}"><submit/></field>
         <field name="removeHoliday" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink description="${uiLabelMap.CommonDelete}" target="deletePublicHoliday">
-                <parameter param-name="workEffortId" from-field="workEffortId"/>
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteHoliday">
+                <parameter param-name="holidayId" from-field="holidayId"/>
             </hyperlink>
         </field>
     </form>

@@ -2115,5 +2115,248 @@ public class LoanServices {
 		}
 		return "";
 	}
+	
+	public static String hasSavingsAccount(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Long partyId = Long.valueOf((String) request.getParameter("partyId"));
+
+	
+		result.put("hasSavingsAccount", hasSavingsAccount(partyId));
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+	
+	/***
+	 * Determine if a member has a savings account product
+	 * */
+	public static Boolean hasSavingsAccount(Long partyId){
+		List<GenericValue> accountProductELI = null; // =
+		Long accountProductId = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					EntityCondition.makeCondition("isSavings", "Y"), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : accountProductELI) {
+			accountProductId = genericValue.getLong("accountProductId");
+		}
+		
+		if (accountProductId == null)
+			return false;
+		
+		//Get the memberAccountId given accountProductId and PartyId
+		List<GenericValue> memberAccountELI = null;
+		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						partyId), EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId)), EntityOperator.AND);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					accountsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (memberAccountELI == null) {
+			return false;
+		} else {
+			if (memberAccountELI.size() > 0){
+				return true;
+			}
+		}
+		
+		return false;
+	
+	}
+	
+	public static Boolean hasMemberDepositAccount(Long partyId){
+		return false;
+	}
+	
+	public static Boolean hasBeenMemberLongEnough(Long partyId){
+		return false;
+	}
+	
+	/**
+	 * IsSelfGuarantee
+	 * */
+	public static String isSelfGuarantee(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		String loanSecurityId = (String) request.getParameter("loanSecurityId");
+		String loanApplicationId =  (String) request.getParameter("loanApplicationId");
+		log.info("Loan Security ID i is ##### "+loanSecurityId);
+		if (loanSecurityId == null)
+			return null;
+
+		loanSecurityId = loanSecurityId.replaceAll(",", "");
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		
+		//isSelfGuarantee
+		Boolean isSelfGuarantee = isSelfGuarantee(Long.valueOf(loanSecurityId.trim()), Long.valueOf(loanApplicationId.trim()));
+		log.info("Self Guarantee is ##### "+isSelfGuarantee);
+		result.put("isSelfGuarantee", isSelfGuarantee);
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return json;
+	}
+
+	private static Boolean isSelfGuarantee(Long loanSecurityId, Long loanApplicationId) {
+		GenericValue loanSecurity = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		try {
+			loanSecurity = delegator.findOne("LoanSecurity",
+					UtilMisc.toMap("loanSecurityId", loanSecurityId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (loanSecurity == null)
+			return false;
+		
+		if (loanSecurity.getString("description").equals("Self")){
+			//Update Loan Application to is Self Guaranteed
+			updateSelfGuaranteed(loanSecurityId, loanApplicationId, "Self");
+			return true;
+		}
+		
+		if (loanSecurity.getString("description").equals("Guarantors")){
+			//Update Loan Application to Guarantor Loan
+			updateSelfGuaranteed(loanSecurityId, loanApplicationId, "Guarantors");
+			return false;
+		}
+		
+		if (loanSecurity.getString("description").equals("Collateral")){
+			//Update Loan Application to Collateral Loan
+			updateSelfGuaranteed(loanSecurityId, loanApplicationId, "Collateral");
+			return false;
+		}
+
+		return false;
+	}
+
+	private static void updateSelfGuaranteed(Long loanSecurityId,
+			Long loanApplicationId, String securityType) {
+		GenericValue loanApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//Update to self guaranteed
+		if (securityType.equals("Self"))
+		{
+			loanApplication.set("isSelfGuaranteed", "Y");
+			
+			//Update Member to Self Guaranteed
+			updateMemberToSelfGuaranteed(loanApplication.getLong("partyId"));
+			
+		} else if (securityType.equals("Guarantors")){
+			loanApplication.set("isGuarantorLoan", "Y");
+		}else if (securityType.equals("Collateral")){
+			loanApplication.set("isCollateralLoan", "Y");
+		}
+		
+		loanApplication.set("loanSecurityId", loanSecurityId);
+		//Set the Loan Security ID
+		
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void updateMemberToSelfGuaranteed(Long partyId) {
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", partyId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		member.set("isSelfGuaranteed", "Y");
+		
+		try {
+			delegator.createOrStore(member);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

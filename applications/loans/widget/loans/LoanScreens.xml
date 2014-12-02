@@ -417,6 +417,7 @@ under the License.
 								<section>
 									<condition>
 										<and>
+											<if-compare operator="equals" value="Y" field="lookupLoanApplication.isGuarantorLoan"/>
 											<if-compare operator="equals" value="N" field="collateralsAvailable"/>
 											<if-compare operator="equals" value="N" field="guarantorsAvailable"/>
 										</and>
@@ -431,7 +432,11 @@ under the License.
 								
 								<section>
 									<condition>
-										<if-compare operator="equals" value="N" field="guarantorsTotalDepositsEnough"/>
+										<and>
+											<if-compare operator="equals" value="Y" field="lookupLoanApplication.isGuarantorLoan"/>
+											<if-compare operator="equals" value="N" field="guarantorsTotalDepositsEnough"/>
+										</and>
+										
 									</condition>
 									<widgets>
 										<container>

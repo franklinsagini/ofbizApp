@@ -1081,8 +1081,7 @@
 		<store-value value-field="lookedUpValue" />
 	</simple-method>
 
-	<simple-method method-name="deleteSkillType"
-		short-description="Delete SkillType">
+	<simple-method method-name="deleteSkillType" short-description="Delete SkillType">
 		<entity-one entity-name="SkillType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 		<property-to-field resource="HumanResUiLabels"
@@ -1357,6 +1356,10 @@
         </if-compare>
         
         <set field="lookedUpValue.leaveStatus" value="Approved" />
+        
+        <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.dateApprovedRejected"/>
+
         <store-value value-field="lookedUpValue" />
         
 		<log message="==== Leave Approved for ${lookedUpValue.partyId} by ${userLogin.userLoginId}===" level="info"/>
@@ -1429,6 +1432,9 @@
         <set field="lookedUpValue.applicationStatus" value="Rejected" />
         <set field="lookedUpValue.approvalStatus" value="Rejected" />
         <set field="lookedUpValue.rejectReason" from-field="lookedUpValue.rejectReason" />
+        
+        <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.dateApprovedRejected"/>
         <store-value value-field="lookedUpValue" />
 			
         
@@ -1638,11 +1644,8 @@
 		<make-value entity-name="EmplLeaveType" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.leaveTypeId">
-			<sequenced-id sequence-name="EmplLeaveType" field="newEntity.leaveTypeId" />
-		</if-empty>
-		<field-to-result field="newEntity.leaveTypeId"
-			result-name="leaveTypeId" />
+		<sequenced-id sequence-name="EmplLeaveType" field="leaveTypeId" />
+		<set field="newEntity.leaveTypeId" from-field="leaveTypeId"/>
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
@@ -1650,9 +1653,9 @@
 
 	<simple-method method-name="updateEmplLeaveType"
 		short-description="Update leaveType">
-		<entity-one entity-name="EmplLeaveType" value-field="lookedUpValue" />
+		<entity-one entity-name="EmplLeaveType" value-field="lookedUpValue"/>
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
-		<store-value value-field="lookedUpValue" />
+		<store-value value-field="lookedUpValue"/>
 		<property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
 	</simple-method>
@@ -1976,18 +1979,41 @@
         <property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
     </simple-method>
+    
+    <!-- =================================== PUBLIC HOLIDAYS DEFINITION =============================================== -->
+     <simple-method method-name="createHoliday" short-description="Create User Estate">
+            <make-value entity-name="PublicHolidays" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="PublicHolidays" field="holidayId"/>
+            <set from-field="holidayId" field="newEntity.holidayId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteHoliday" short-description="Remove user estate">
+    <set field="holidayId" from-field="parameters.holidayId"/>
+        <entity-one entity-name="PublicHolidays" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    
+    
+    <simple-method method-name="updateHoliday" short-description="Update an existing user estate">
+        <entity-one entity-name="PublicHolidays" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+       
+    </simple-method>
+    
+    
 
 	<simple-method method-name="createEmplLeaveReasonType"
 		short-description="Create a Leave Reason Type">
 		<make-value entity-name="EmplLeaveReasonType" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.emplLeaveReasonTypeId">
-			<sequenced-id sequence-name="EmplLeaveReasonType"
-				field="newEntity.emplLeaveReasonTypeId" />
-		</if-empty>
-		<field-to-result field="newEntity.emplLeaveReasonTypeId"
-			result-name="emplLeaveReasonTypeId" />
+			<sequenced-id sequence-name="EmplLeaveReasonType" field="emplLeaveReasonTypeId" />
+			<set field="newEntity.emplLeaveReasonTypeId" from-field="emplLeaveReasonTypeId"/>
 		<create-value value-field="newEntity" />
 	</simple-method>
 
@@ -2136,12 +2162,9 @@
 		<make-value entity-name="FamilyRelations" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<if-empty field="newEntity.familyRelationsId">
-			<sequenced-id sequence-name="FamilyRelations"
-				field="familyRelationsId" />
-		</if-empty>
-		<field-to-result field="newEntity.familyRelationsId"
-			result-name="familyRelationsId" />
+		
+			<sequenced-id sequence-name="FamilyRelations" field="familyRelationsId" />
+		
 			<set field="newEntity.familyRelationsId" from-field="familyRelationsId"/>
 		<create-value value-field="newEntity" />
 	</simple-method>

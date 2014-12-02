@@ -294,4 +294,29 @@
     	return isValid;
     
     }
+    
+    function customerCareLoanValidation(partyId){
+    	var reqUrl = '/loans/control/hasSavingsAccount';
+    	var hasSavingsAccount = false;
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'partyId': partyId}, 
+			     success : function(data){
+			     			hasSavingsAccount = data.hasSavingsAccount;
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating loan application");
+			              }
+			
+			
+		});
+		if (!hasSavingsAccount){
+			alert(' The Member must have a Savings Account - this is the account to which the Loan Will be disbursed');
+		}
+    	return hasSavingsAccount;
+    }
    </script>

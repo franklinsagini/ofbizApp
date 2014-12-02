@@ -550,7 +550,7 @@ under the License.
       <field name="skillTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="name"></field>
       <prim-key field="skillTypeId"/>
       <prim-key field="description"/>
       <relation type="one" fk-name="PARNT_SKILL_TYPE" title="Parent" rel-entity-name="SkillType">
@@ -835,6 +835,7 @@ under the License.
         <field name="updatedBy" type="id-ne"/>
         <field name="leaveStatus" type="id-ne"/>
         <field name="createdDate" type="date-time"/>
+        <field name="dateApprovedRejected" type="date-time"/>
 
         <field name="workflowDocumentTypeId" type="id-ne"/>
         <field name="organizationUnitId" type="id"/>
@@ -866,6 +867,49 @@ under the License.
             <key-map field-name="leaveStatus" rel-field-name="statusId"/>
         </relation> -->
     </entity>
+    
+    
+    
+    <view-entity entity-name="EmployeeLeavesView" package-name="org.ofbiz.humanres">
+      <member-entity entity-alias="PersonView" entity-name="Person"></member-entity>
+      <member-entity entity-alias="Leave" entity-name="EmplLeave"></member-entity>
+
+      <alias entity-alias="PersonView" name="partyId" field="partyId"/>
+      <alias entity-alias="PersonView" name="payrollNumber" field="employeeNumber"/>
+       <alias entity-alias="PersonView" name="firstName" field="firstName"/>
+      <alias entity-alias="PersonView" name="lastName" field="lastName"/>
+      <alias entity-alias="PersonView" name="appointmentdate" field="appointmentdate"/>
+       <alias entity-alias="PersonView" name="confirmationdate" field="confirmationdate"/>
+      <alias entity-alias="PersonView" name="employmentStatusEnumId" field="employmentStatusEnumId"/>
+      <alias entity-alias="Leave" name="leaveId" field="leaveId"/>
+       <alias entity-alias="Leave" name="partyId" field="partyId"/>
+        <alias entity-alias="Leave" name="leaveTypeId" field="leaveTypeId"/>
+         <alias entity-alias="Leave" name="emplLeaveReasonTypeId" field="emplLeaveReasonTypeId"/>
+          <alias entity-alias="Leave" name="fromDate" field="fromDate"/>
+           <alias entity-alias="Leave" name="leaveDuration" field="leaveDuration"/>
+            <alias entity-alias="Leave" name="thruDate" field="thruDate"/>
+             <alias entity-alias="Leave" name="financialYear" field="financialYear"/>
+              <alias entity-alias="Leave" name="resumptionDate" field="resumptionDate"/>
+               <alias entity-alias="Leave" name="applicationStatus" field="applicationStatus"/>
+                <alias entity-alias="Leave" name="approvalStatus" field="approvalStatus"/>
+                 <alias entity-alias="Leave" name="handedOverTo" field="handedOverTo"/>
+                  <alias entity-alias="Leave" name="createdDate" field="createdDate"/>
+                  <alias entity-alias="Leave" name="approvedDate" field="dateApprovedRejected"/>
+                 
+                 
+
+       <view-link  entity-alias="PersonView" rel-entity-alias="Leave">
+        <key-map field-name="partyId" rel-field-name="partyId"/>
+         <entity-condition>
+         <condition-list>
+         <condition-expr field-name="employmentStatusEnumId" entity-alias="PersonView" operator="equals" value="16"/>
+         <condition-expr field-name="approvalStatus" entity-alias="Leave" operator="equals" value="Approved"/>
+         </condition-list>
+      
+       </entity-condition>
+
+      </view-link>
+    </view-entity>
 
 
     <entity entity-name="EmplCompassionateLost"
@@ -877,8 +921,8 @@ under the License.
          <field name="financialYear" type="id-ne"/>
        <field name="allocatedLeaveDays" type="fixed-point"></field>
         <field name="usedLeaveDays" type="fixed-point"></field>
-        <field name="lostLeaveDays" type="id"></field>
-        <field name="carriedOverDays" type="id"></field>
+        <field name="lostLeaveDays" type="fixed-point"></field>
+        <field name="carriedOverDays" type="fixed-point"></field>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="EMPL_LEAVEBAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
@@ -946,7 +990,7 @@ under the License.
         <field name="partyId" type="id-ne"/>
         <field name="days" type="numeric"/>
         <field name="usedLeaveDays" type="floating-point"/>
-        <field name="lostLeaveDays" type="floating-point"/>
+        <field name="carriedOverDays" type="floating-point"/>
         <field name="availableLeaveDays" type="floating-point"/>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
@@ -971,6 +1015,7 @@ under the License.
       <alias name="annualUsedLeaveDays" entity-alias="ANNUAL" field="usedLeaveDays"/>
       <alias name="annualLostLeaveDays" entity-alias="ANNUAL" field="lostLeaveDays"/>
       <alias name="annualAvailableLeaveDays" entity-alias="ANNUAL" field="availableLeaveDays"/>
+       <alias name="compassionateCarryOverLeaveDays" entity-alias="COMPASSIONATE" field="carriedOverDays"/>
        <alias name="compassionateAllocatedLeaveDays" entity-alias="COMPASSIONATE" field="days"/>
        <alias name="compassionateUsedLeaveDays" entity-alias="COMPASSIONATE" field="usedLeaveDays"/>
        <alias name="compassionateAvailableLeaveDays" entity-alias="COMPASSIONATE" field="availableLeaveDays"/>
@@ -1969,6 +2014,13 @@ under the License.
        <field name="departmentName" type="name"></field>
        <field name="branchId" type="name"></field>
        <prim-key field="departmentId"/>
+    </entity>
+    
+     <entity entity-name="PublicHolidays" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="holidayId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="holidayName" type="name"></field>
+       <field name="holidayDate" type="date"></field>
+       <prim-key field="holidayId"/>
     </entity>
 
 

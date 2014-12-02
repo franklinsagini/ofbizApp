@@ -2591,7 +2591,7 @@ public class ModelFormField {
 					&& !this.entityName.equals("ProductCharge")
 					&& !this.entityName.equals("RecruitingAgent")
 					
-					
+					&& !this.entityName.equals("LoanSecurity")
 					&& !this.entityName.equals("LoanProduct")
 					&& !this.entityName.equals("AccountProduct")
 					&& !this.entityName.equals("MaritalStatus")
@@ -2608,13 +2608,9 @@ public class ModelFormField {
 					&& !this.entityName.equals("CardLog")
 					&& !this.entityName.equals("MessageStatus")
 					&& !this.entityName.equals("NotificationType")
+					
+					
 					&& !this.entityName.equals("CardApplication")) {
-				// try {
-				// TransactionUtil.begin();
-				// } catch (GenericTransactionException e1) {
-				// // TODO Auto-generated catch block
-				// e1.printStackTrace();
-				// }
 				try {
 					System.out.println("TTTTTTTTTT About to try TTTTTTTTT ");
 

@@ -1239,8 +1239,8 @@ under the License.
     <request-map uri="createPayGrade">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPayGrade"/>
-        <response name="success" type="view" value="EditPayGrade"/>
-        <response name="error" type="view" value="EditPayGrade"/>
+        <response name="success" type="view" value="FindPayGrades"/>
+        <response name="error" type="view" value="FindPayGrades"/>
     </request-map>
     <request-map uri="updatePayGrade">
         <security https="true" auth="true"/>
@@ -1554,6 +1554,29 @@ under the License.
         <response name="success" type="view" value="EditEmployeeSkills"/>
         <response name="error" type="view" value="EditEmployeeSkills"/>
     </request-map>
+    
+    <!-- ===============================PUBLIC HOLIDAYS DEFINITION ======================== -->
+    
+     <request-map uri="createHoliday">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createHoliday"/>
+        <response name="success" type="view" value="PublicHoliday"/>
+        <response name="error" type="view" value="PublicHoliday"/>
+    </request-map>
+    <request-map uri="updateHoliday">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateHoliday"/>
+        <response name="success" type="view" value="PublicHoliday"/>
+        <response name="error" type="view" value="PublicHoliday"/>
+    </request-map>
+    <request-map uri="deleteHoliday">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteHoliday"/>
+        <response name="success" type="view" value="PublicHoliday"/>
+        <response name="error" type="view" value="PublicHoliday"/>
+    </request-map>
+    
+    
     <request-map uri="EditEmployeeQuals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmployeeQuals"/>
@@ -2103,8 +2126,8 @@ under the License.
         <response name="error" type="view" value="EditEmplLeaveReasonTypes"/>
     </request-map>
     <request-map uri="updateEmplLeaveReasonType">
-        <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateEmplLeaveReasonType"/>
+       <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmplLeaveReasonType"/>
         <response name="success" type="view" value="EditEmplLeaveReasonTypes"/>
         <response name="error" type="view" value="EditEmplLeaveReasonTypes"/>
     </request-map>
@@ -2685,6 +2708,10 @@ under the License.
     <security https="true" auth="true" />
     <response name="success" type="view" value="leaveBalancePDF" save-home-view="true" />
   </request-map>
+  <request-map uri="staffOnLeavePDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="staffOnLeavePDF" save-home-view="true" />
+  </request-map>
   <request-map uri="fileMovementPDF">
     <security https="true" auth="true" />
     <response name="success" type="view" value="fileMovementPDF" save-home-view="true" />
@@ -3001,6 +3028,7 @@ under the License.
   <view-map name="employeeSpouseDetailsFTLPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#employeeSpouseDetailsFTLPDF" content-type="application/pdf" encoding="none"/>
   <view-map name="nextOfKinPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#nextOfKinPDF" content-type="application/pdf" encoding="none"/>
   <view-map name="leaveBalancePDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveBalancePDF" content-type="application/pdf" encoding="none"/>
+  <view-map name="staffOnLeavePDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staffOnLeavePDF" content-type="application/pdf" encoding="none"/>
   <view-map name="staffListingPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staffListingPDF" content-type="application/pdf" encoding="none"/>
 	<view-map name="fileMovementPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#fileMovementPDF" content-type="application/pdf" encoding="none"/>
   <view-map name="employeeDependantDetailscsv" type="screencsv" content-type="text/csv" page="component://humanres/widget/ReportScreens.xml#EmployeeDependantDetailscsv" />
