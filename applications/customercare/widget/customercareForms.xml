@@ -200,6 +200,8 @@
 			<set field="membershipDuration"
 				value="${bsh:org.ofbiz.loans.LoanServices.getMemberDuration(partyId);}"
 				type="Integer" />
+				
+		
 		</actions>
 
 		<field name="loanApplicationId">
@@ -382,10 +384,15 @@
 			event="onclick" action="javascript: return validLoanApplication();"> <submit 
 			button-type="button" /> </field -->
 
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+		<!-- field name="submitButton" title="${uiLabelMap.CommonSave}"
 			widget-style="smallSubmit">
 			<submit button-type="button" />
-		</field>
+		</field -->
+		
+		
+		<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" 
+			event="onclick" action="javascript: return customerCareLoanValidation(${partyId});"> <submit 
+			button-type="button" /> </field>
 	</form>
 	
 	<form name="FindNewLoans" type="single" target="receivedLoanApplication"
