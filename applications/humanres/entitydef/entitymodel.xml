@@ -892,11 +892,17 @@ under the License.
                <alias entity-alias="Leave" name="applicationStatus" field="applicationStatus"/>
                 <alias entity-alias="Leave" name="approvalStatus" field="approvalStatus"/>
                  <alias entity-alias="Leave" name="handedOverTo" field="handedOverTo"/>
+                 
+                 
 
        <view-link  entity-alias="PersonView" rel-entity-alias="Leave">
         <key-map field-name="partyId" rel-field-name="partyId"/>
          <entity-condition>
-      <condition-expr field-name="employmentStatusEnumId" entity-alias="PersonView" operator="equals" value="16"/>
+         <condition-list>
+         <condition-expr field-name="employmentStatusEnumId" entity-alias="PersonView" operator="equals" value="16"/>
+         <condition-expr field-name="approvalStatus" entity-alias="Leave" operator="equals" value="Approved"/>
+         </condition-list>
+      
        </entity-condition>
 
       </view-link>
