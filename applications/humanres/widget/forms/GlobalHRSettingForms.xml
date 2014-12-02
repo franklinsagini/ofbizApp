@@ -162,7 +162,10 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <auto-fields-service service-name="updateEmplPositionType" default-field-type="hidden"/>
+        <auto-fields-service service-name="updateEmplPositionType" default-field-type="hidden"/>        
+        <field name="payGradeId" title="Pay Grade">
+        	<display-entity entity-name="PayGrade" key-field-name="payGradeId" description="${payGradeName}"></display-entity>
+        </field>
         <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmplPositionType}"><hidden/></field>
         <field name="emplPositionType" title="Position Type">
         	<hyperlink also-hidden="false" description="${emplPositionType}" target="EditEmplPositionTypes">
@@ -175,7 +178,7 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    <form name="EditEmplPositionTypes" type="single" target="createEmplPositionType" default-map-name="emplPositionType"
+    <form name="EditEmplPositionTypes" type="single" target="createEmplPositionType" default-map-name="emplPositionType" 
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="emplPositionType!=null" target="updateEmplPositionType"/>
         <!-- <auto-fields-service service-name="updateEmplPositionType"/> -->
@@ -183,8 +186,17 @@ under the License.
          <field name="hasTable"><hidden/></field>
         
         <!-- <field name="emplPositionTypeId" use-when="emplPositionType==null"><text/></field> -->
+        <field name="payGradeId" use-when="payGradeId==null" title="Pay Grade" 
+        	tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required">
+        	<drop-down allow-empty="false">
+        		<entity-options entity-name="PayGrade" key-field-name="payGradeId" description="${payGradeName}"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="payGradeId" use-when="payGradeId!=null" title="Pay Grade" parameter-name="payGradeId">
+        	<display-entity entity-name="PayGrade" key-field-name="payGradeId" description="${payGradeName}"/>
+        </field>
         <field name="emplPositionTypeId" use-when="emplPositionType!=null"><hidden/></field>
-        <field name="emplPositionType" title="Employee Position Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="emplPositionType" title="Position" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="emplPositionType!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -195,6 +207,9 @@ under the License.
             <entity-condition entity-name="EmplPositionType"></entity-condition>
         </actions>
        <field name="emplPositionTypeId"><hidden /></field>
+       <field name="payGradeId" title="Pay Grade">
+        	<display-entity entity-name="PayGrade" key-field-name="payGradeId" description="${payGradeName}"></display-entity>
+       </field>
        <field name="emplPositionType" title="Position Type"> <text/> </field>
        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
                 <hyperlink target="deleteEmplPositionType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this?">
@@ -204,7 +219,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
-    <form name="ListEmplPositionTypeRates" type="list" title="" target="deleteEmplPositionTypeRate"
+   <!-- <form name="ListEmplPositionTypeRates" type="list" title="" target="deleteEmplPositionTypeRate"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd HH:mm:ss.S&quot;)}" type="String"/>
@@ -266,7 +281,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
-    </form>
+    </form> -->
     <form name="ListTerminationReasons" type="multi" title="" target="updateTerminationReason" paginate-target="EditTerminationReasons"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>

@@ -662,7 +662,7 @@ under the License.
 	 <request-map uri="closepayroll">
 	 	<security https="true" auth="true" />
         <event type="java" path="org.ofbiz.payroll.ClosePayroll" invoke="closePayroll" ></event>
-        <response name="success" type="request-redirect-noparam" value="payrollOverview"/> 
+        <response name="success" type="view" value="payrollOverview"/> 
 		<response name="error" type="view" value="payrollOverview" />
 		
      </request-map>
@@ -670,8 +670,8 @@ under the License.
      <request-map uri="migratepayroll">
 	 	<security https="true" auth="true" />
         <event type="java" path="org.ofbiz.payroll.MigratePayroll" invoke="migratePayroll" ></event>
-        <response name="success" type="view" value="staffpayroll">
-				<redirect-parameter name="payrollPeriodId"/>
+        <response name="success" type="view" value="payrollOverview">
+       		<!-- redirect-parameter name="payrollPeriodId"/ -->
 		</response>
 		<response name="error" type="view" value="payrollOverview" />
      </request-map>

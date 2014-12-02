@@ -112,7 +112,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="partyIdFrom" title="Employee"><display></display></field>
+        <field name="partyIdFrom" title="Employee"><hidden/></field>
         <field name="partyIdTo" title="Employee" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${partyIdTo}" target="viewprofile">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
@@ -128,7 +128,7 @@
         <field name="terminationReasonId" title="Termination Reason"><display/></field>
         <field name="editLink" title=" " widget-style="buttontext">
             <hyperlink target="EditEmployment" description="${uiLabelMap.CommonEdit}">
-                <parameter param-name="partyIdFrom"/>
+                <!-- parameter param-name="partyIdFrom"/ -->
                 <parameter param-name="partyIdTo"/>
                 <parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="fromDate"/>
@@ -149,6 +149,11 @@
         <!-- auto-fields-service service-name="createEmployment" default-field-type="hidden"/-->
         <field name="roleTypeIdFrom"><hidden value="INTERNAL_ORGANIZATIO"/></field>
         <field name="roleTypeIdTo"><hidden value="EMPLOYEE"/></field>
+        <field name="partyIdFrom"  use-when="employment==null"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}">
+        	<hidden value="Company"/>
+        </field>
+        <field name="partyIdFrom" use-when="employment!=null" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" 
+        tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
         <!-- field name="partyIdFrom" use-when="employment==null" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PartyRole" description="${partyId}" key-field-name="partyId">
@@ -160,7 +165,7 @@
         	<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"> </display-entity>
         </field>
         <field name="branchId"  use-when="employment==null" title="Branch" required-field="true" 
-        widget-style="required" tooltip="${uiLabelMap.CommonRequired}">
+        	widget-style="required" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
@@ -173,7 +178,6 @@
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field -->
-        <field name="partyIdFrom" use-when="employment!=null" title="Employee" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
         <field name="partyIdTo" use-when="employment==null" title="Employee" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployee"/></field>
         <field name="partyIdTo" use-when="employment!=null" title="Employee" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
         
