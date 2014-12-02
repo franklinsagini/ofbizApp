@@ -123,12 +123,15 @@ under the License.
             	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
             </entity-one>
             <set field="partyId" value="${loanApplication.partyId}" type="Long"/>
+            <set field="guaranteedTotal" value="${bsh:org.ofbiz.loans.LoanServices.getTotalGuaranteedValueByMember(partyId);}" type="String"/>
+            <set field="totalAvailableAmount" value="${bsh:org.ofbiz.loans.LoanServices.getTotalAvailableValueByMember(partyId);}" type="String"/>
+            <set field="loanAmt" value="${loanApplication.loanAmt}" type="String"/>
         </actions>
         
         <field name="loanApplicationSecurityId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
         <field name="loanSecurityId" title="Security" widget-style="required" required-field="true">
-        	<drop-down allow-empty="true">
+        	<drop-down allow-empty="false">
                 <list-options list-name="loanSecurityList"   key-name="loanSecurityId" description="${description}"/>
             </drop-down>
         </field>
@@ -142,21 +145,22 @@ under the License.
                 <list-options list-name="loanSecurityList" key-name="loanSecurityId" description="${description}"/>
             </drop-down>
         </field -->
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"
+        event="onclick" action="javascript: return validateLoanSecurity('${loanApplicationId}'.replace(/,/g, ''), '${guaranteedTotal}'.replace(/,/g, ''), '${totalAvailableAmount}'.replace(/,/g, ''), '${loanAmt}'.replace(/,/g, ''));"><submit button-type="button"/></field>
     </form>
-    
+
     <form name="ViewLoanSecurityList" type="list" list-name="loanApplicationSecurityList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
         	<entity-condition entity-name="LoanApplicationSecurity">
-        		<!-- condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId" / -->
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId" />
         	</entity-condition>
         </actions>
         <!-- field name="loanSecurityId" title="Security">
         	<display-entity description="${description}" entity-name="LoanSecurity" key-field-name="loanSecurityId" also-hidden="false"></display-entity>
         </field -->
          <field name="loanSecurityId" title="Security">
-         	<display></display>
+         	<display-entity entity-name="LoanSecurity" description="${description}"></display-entity>
         </field>
         <field name="loanApplicationSecurityId"><hidden/></field>
         <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>

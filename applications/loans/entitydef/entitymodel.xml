@@ -415,6 +415,11 @@ under the License.
 		 
 		 <field name="isAddedToClear" type="indicator"></field>
 		 <field name="isSelfGuaranteed" type="indicator"></field>
+		 <field name="isGuarantorLoan" type="indicator"></field>
+		 <field name="isCollateralLoan" type="indicator"></field>
+		 
+		 <field name="loanSecurityId" type="id-int"></field>
+		 
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
@@ -443,6 +448,10 @@ under the License.
       <relation type="one" fk-name="LOANAPP_APPROVAL_FK" rel-entity-name="DocumentApproval">
         <key-map field-name="documentApprovalId"/>
       </relation>
+      
+      	<relation type="one" fk-name="LOANAPP_LOANSECURITY_FK" rel-entity-name="LoanSecurity">
+        	<key-map field-name="loanSecurityId"/>
+      	</relation>
   	</entity>
 	
 	<!-- Loan Application Security -->

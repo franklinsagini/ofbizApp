@@ -317,4 +317,61 @@
     	return isValid;
     
     }
+    
+      function validateLoanSecurity(loanApplicationId, guaranteedTotal, totalAvailableAmount, loanAmt){
+    	/** 
+    	alert('loan app id '+loanApplicationId);
+    	alert('Guarateed Toatal is '+guaranteedTotal);
+    	alert('Total Available Amt is '+totalAvailableAmount);
+    	alert('loan Amt is '+loanAmt); 
+    	
+    	**/
+    	var loanSecurityId = jQuery('select[name="loanSecurityId"]').val();
+    	
+    	var isSelfGuarantee = isSelfGuaranteed(loanSecurityId, loanApplicationId);
+    	/** alert('The Self Guarantee Status is ... ');
+    	alert(isSelfGuarantee); **/
+    	
+    	if (!isSelfGuarantee){
+    		return true;
+    	}
+    	
+    	if (parseFloat(guaranteedTotal, 10) > parseFloat(0, 10))
+    	{
+    	
+    		alert('You cannot self guarantee, you have already guaranteed loans');
+    		return false;
+    	}
+    	
+    	if (parseFloat(loanAmt, 10) > parseFloat(totalAvailableAmount, 10))
+    	{
+    	
+    		alert('You cannot self guarantee because the loan amount is more than the available shares');
+    		return false;
+    	}
+    	
+    	
+    	return isSelfGuarantee;
+    }
+    
+    function isSelfGuaranteed(loanSecurityId, loanApplicationId){
+    	var reqUrl = '/loansprocessing/control/isSelfGuarantee';
+    	var isSelf = false;
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'loanSecurityId': loanSecurityId, 'loanApplicationId': loanApplicationId}, 
+			     success : function(data){
+			     
+			     			isSelf = data.isSelfGuarantee;
+			               },
+			      error : function(errorData){
+			              alert("Some error occurred while determining loansecurity");
+			              }
+		});
+		
+		return isSelf;
+    }
    </script>
