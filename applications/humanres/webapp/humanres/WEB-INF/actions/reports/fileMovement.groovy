@@ -5,6 +5,7 @@ if (partyId) {
     context.employee = employee;
    }
    else {
+    partyId = partyId.toLong();
     employee = delegator.findOne("Member", [partyId : partyId], false);
     context.employee = employee;
    }
