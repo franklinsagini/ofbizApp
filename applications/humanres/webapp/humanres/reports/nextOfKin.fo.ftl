@@ -52,7 +52,7 @@ under the License.
                         <fo:block text-align="center">Relationship</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Id No.</fo:block>
+                        <fo:block text-align="right">ID No.</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="right">Phone No.</fo:block>
@@ -63,7 +63,6 @@ under the License.
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-
                   <#list kins as kin>
                     <#if kin.familyRelationsId?has_content>
                         <#assign familyRelations = delegator.findOne("FamilyRelations", {"familyRelationsId" : kin.familyRelationsId}, false)/>
@@ -90,7 +89,6 @@ under the License.
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
-
             </fo:table-body>
         </fo:table>
     </fo:block>

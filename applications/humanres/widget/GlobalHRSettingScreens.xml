@@ -142,7 +142,9 @@
                 <set field="headerItem" value="EmplPositionTypes"/>
                 <set field="tabButtonItem" value="EmplPositionTypes"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <set field="emplPositionTypeCtx" from-field="parameters"/>
+
             </actions>
             <widgets>
                 <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -172,6 +174,7 @@
                 <set field="headerItem" value="EmplPositionTypes"/>
                 <set field="tabButtonItem" value="EmplPositionTypes"/>
                 <set field="tabButtonItem2" value="EditEmplPositionType"/>
+                <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
                 <entity-one entity-name="EmplPositionType" value-field="emplPositionType"/>
             </actions>
@@ -373,7 +376,10 @@
                         <screenlet id="AddEmplLeaveTypePanel" title="${uiLabelMap.HumanResAddEmplLeaveType}" collapsible="true">
                             <include-form name="AddEmplLeaveType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
                         </screenlet>
-                        <include-form name="ListEmplLeaveTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        <screenlet title="Leave Types">
+                         <include-form name="ListEmplLeaveTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                       
                     </decorator-section>
                 </decorator-screen>
             </widgets>

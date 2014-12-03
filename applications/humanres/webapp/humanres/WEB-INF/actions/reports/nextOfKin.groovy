@@ -10,4 +10,4 @@ if (partyId) {
 
     context.kins = delegator.findByAnd("StaffNextOfKin", [partyId : parameters.partyId], null, false);
 }
-i
+

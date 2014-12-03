@@ -1,518 +1,654 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-        
-        <!-- screen name="PayslipGenerator">
-    	 <section>
-            <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-            </actions>
-            <widgets>
-                <screenlet title="Payslip Generator">
-                    <include-form name="PayslipGen" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
-                </screenlet>
-            </widgets>
-        </section>
-    </screen-->
-    
-    <screen name="PayslipGenerator">
-    <section>
-            <actions>
-                <set field="titleProperty" value="Payslip View"/>
-                <set field="headerItem" value="payslipView"/>
-                <set field="tabButtonItem" value="payslipView"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="payslipView"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-                <entity-one entity-name="PayslipView" value-field="payslipViewContext"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>
-                                <screenlet title="Payslip Generator">
-                    				<include-form name="PayslipGen" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
-                                </screenlet>
-                                
-                                <!-- screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"  text="Payroll Elements HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                               
-                                                </container>
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-                                			
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"  text="Payroll Elements PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                               
-                                                </container>
+	<!--
+		screen name="PayslipGenerator"> <section> <actions> <property-map
+		resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+		<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+		global="true"/> <property-map resource="OrderUiLabels"
+		map-name="uiLabelMap" global="true"/> </actions> <widgets> <screenlet
+		title="Payslip Generator"> <include-form name="PayslipGen"
+		location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
+		</screenlet> </widgets> </section> </screen
+	-->
 
-                                			
-                                		</widgets>
-                                	</section>
-                                </screenlet -->
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="PayslipGeneratorpdf">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Payslip View"/>                
-                <set field="payrollPeriodId" from-field="parameters.payrollPeriodId"/>
-                <set field="partyId" from-field="parameters.partyId"/>
-                <entity-condition entity-name="PayslipView" list="payslipViewList">
-                    <condition-list combine="and">
-                        <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId" ignore-if-empty="true"/>
-                        <condition-expr field-name="payrollPeriodId" operator="equals" from-field="parameters.payrollPeriodId" ignore-if-empty="true"/>
-                    </condition-list>
-                    <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
-                	<select-field field-name="partyId"/>
-                
-        
-                
-                </entity-condition>
-            </actions>
-            <widgets>
-                <platform-specific>
-                    <xsl-fo><html-template location="component://payroll/webapp/payroll/reports/payslip.fo.ftl"/></xsl-fo>
-                </platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="PayrollElementReport">
-    <section>
-            <actions>
-                <set field="titleProperty" value="Payroll Element Report"/>
-                <set field="headerItem" value="payrollElementsView"/>
-                <set field="tabButtonItem" value="payrollElementsView"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="payrollElementsView"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                    <include-menu name="PayrollNormalReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"  text="Payroll Elements HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                                 <link url-mode="inter-app" target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"  text="Payroll Elements PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                                <screenlet>
-                                	<include-form name="listPayrollElementsReport" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-       </screen>
-       <screen name="PayslipReport">
-       <section>
-            <actions>
-                <set field="titleProperty" value="Payslip Report"/>
-                <set field="headerItem" value="payslipReportView"/>
-                <set field="tabButtonItem" value="payslipReportView"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="payslipReportView"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                    <include-menu name="PayrollNormalReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"  text="Payslip HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                                 <link url-mode="inter-app" target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"  text="Payslip PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>       
-       </screen>
-       <screen name="PayPointsReport">
+	<screen name="PayslipGenerator">
 		<section>
-            <actions>
-                <set field="titleProperty" value="Payroll Paypoint Report"/>
-                <set field="headerItem" value="payPointsReport"/>
-                <set field="tabButtonItem" value="payPointsReport"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="payPointsReport"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                    <include-menu name="PayrollNormalReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:58658/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FpayPoints.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-2128315792"  text="Payroll Paypoints HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                                 <link url-mode="inter-app" target="http://127.0.0.1:58658/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FpayPoints.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-2128315792"  text="Payroll Paypoints PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                                <screenlet>
-                                	<include-form name="listPayPointsReport" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>       
-       </screen>
-       
-       <screen name="P9Report">
-       <section>
-            <actions>
-                <set field="titleProperty" value="P9 Report"/>
-                <set field="headerItem" value="P9ReportView"/>
-                <set field="tabButtonItem" value="P9ReportView"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="P9ReportView"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                    <include-menu name="PayrollStatutoryReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP9.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-1325766756"  text="P9 HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                                 <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP9.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-1325766756"  text="P9 PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>       
-       </screen>
-       
-       <screen name="P10Report">
-       <section>
-            <actions>
-                <set field="titleProperty" value="P10 Report"/>
-                <set field="headerItem" value="P10ReportView"/>
-                <set field="tabButtonItem" value="P10ReportView"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="P10ReportView"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                    <include-menu name="PayrollStatutoryReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;437900182"  text="P10 HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                                 <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;437900182"  text="P10 PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>       
-       </screen>
-       
-       <screen name="P10AReport">
-       <section>
-            <actions>
-                <set field="titleProperty" value="P10A Report"/>
-                <set field="headerItem" value="P10AReportView"/>
-                <set field="tabButtonItem" value="P10AReportView"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="P10AReportView"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                    <include-menu name="PayrollStatutoryReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10A.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-1816116"  text="P10A HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                                 <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10A.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-1816116"  text="P10A PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>       
-       </screen>
-       
-       <screen name="NSSFReport">
-       <section>
-            <actions>
-                <set field="titleProperty" value="NSSF Report"/>
-                <set field="headerItem" value="NSSFReportView"/>
-                <set field="tabButtonItem" value="NSSFReportView"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="NSSFReportView"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                    <include-menu name="PayrollStatutoryReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2Fnssf.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1757643535"  text="NSSF HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                                 <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2Fnssf.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1757643535"  text="NSSF PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>       
-       </screen>
-       
-       <screen name="NHIFReport">
-       <section>
-            <actions>
-                <set field="titleProperty" value="NHIF Report"/>
-                <set field="headerItem" value="NHIFReportView"/>
-                <set field="tabButtonItem" value="NHIFReportView"/>
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="NHIFReportView"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                
-                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    <include-menu name="PayrollReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                    <include-menu name="PayrollStatutoryReportsTabBar" location="component://payroll/widget/payroll/ExampleMenus.xml"/>
-                        <section>
-                            <condition>
-                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>                                
-                                <screenlet>
-                                	<section>
-                                		<widgets>
-    										<container style="button-bar">                                                   
-                                                <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2Fnhif.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;382315685"  text="NHIF HTML Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
-                                                   
-                                                </link>
-                                                 <link url-mode="inter-app" target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2Fnhif.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;382315685"  text="NHIF PDF Report" style="buttontext create">
-                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
-                                                </link>                                               
-                                                </container>
-                                		</widgets>
-                                	</section>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>       
-       </screen>
+			<actions>
+				<set field="titleProperty" value="Payslip View" />
+				<set field="headerItem" value="payslipView" />
+				<set field="tabButtonItem" value="payslipView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="payslipView" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<entity-one entity-name="PayslipView" value-field="payslipViewContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet title="Payslip Generator">
+									<include-form name="PayslipGen"
+										location="component://payroll/widget/payroll/PayrollReportForms.xml" />
+								</screenlet>
+
+								<!--
+									screenlet> <section> <widgets> <container style="button-bar">
+									<link url-mode="inter-app"
+									target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"
+									text="Payroll Elements HTML Report" style="buttontext create">
+									<image url-mode="raw" src="${iconsLocation}/add.png" /> </link>
+
+									</container> </widgets> </section> </screenlet> <screenlet>
+									<section> <widgets> <container style="button-bar"> <link
+									url-mode="inter-app"
+									target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"
+									text="Payroll Elements PDF Report" style="buttontext create">
+									<image url-mode="raw" src="${iconsLocation}/add.png" /> </link>
+
+									</container> </widgets> </section> </screenlet
+								-->
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="PayslipGeneratorpdf">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Payslip View" />
+				<set field="payrollPeriodId" from-field="parameters.payrollPeriodId" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<entity-condition entity-name="PayslipView" list="payslipViewList">
+					<condition-list combine="and">
+						<condition-expr field-name="partyId" operator="equals"
+							from-field="parameters.partyId" ignore-if-empty="true" />
+						<condition-expr field-name="payrollPeriodId"
+							operator="equals" from-field="parameters.payrollPeriodId"
+							ignore-if-empty="true" />
+					</condition-list>
+					<!--
+						note that we need to explicitly identify the fields to select,
+						otherwise the query will include fields that can't logically be
+						grouped
+					-->
+					<select-field field-name="partyId" />
+
+
+
+				</entity-condition>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template
+							location="component://payroll/webapp/payroll/reports/payslip.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="PayrollElementReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Payroll Element Report" />
+				<set field="headerItem" value="payrollElementsView" />
+				<set field="tabButtonItem" value="payrollElementsView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="payrollElementsView" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<include-menu name="PayrollNormalReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"
+													text="Payroll Elements HTML Report" style="buttontext create">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+
+												</link>
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"
+													text="Payroll Elements PDF Report" style="buttontext create">
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+								<screenlet>
+									<include-form name="listPayrollElementsReport"
+										location="component://payroll/widget/payroll/PayrollReportForms.xml" />
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PayslipReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Payslip Report" />
+				<set field="headerItem" value="payslipReportView" />
+				<set field="tabButtonItem" value="payslipReportView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="payslipReportView" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<include-menu name="PayrollNormalReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"
+													text="Payslip HTML Report" style="buttontext create">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+
+												</link>
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:65287/viewer/frameset?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwidget%2Fpayroll_elements.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1361636906"
+													text="Payslip PDF Report" style="buttontext create">
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PayPointsReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Payroll Paypoint Report" />
+				<set field="headerItem" value="payPointsReport" />
+				<set field="tabButtonItem" value="payPointsReport" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="payPointsReport" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<include-menu name="PayrollNormalReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:58658/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FpayPoints.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-2128315792"
+													text="Payroll Paypoints HTML Report" style="buttontext create">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+
+												</link>
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:58658/viewer/run?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FpayPoints.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Africa%2FNairobi&amp;__masterpage=true&amp;__rtl=false&amp;__maxrows=500&amp;__maxrowlevels=50&amp;__maxcolumnlevels=50&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-2128315792"
+													text="Payroll Paypoints PDF Report" style="buttontext create">
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+								<screenlet>
+									<include-form name="listPayPointsReport"
+										location="component://payroll/widget/payroll/PayrollReportForms.xml" />
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<!-- p9reportPdf -->
+	<screen name="p9reportPdf">
+		<section>
+			<actions>
+				<set field="titleProperty" value="P9 Report" />
+				<set field="headerItem" value="P9ReportView" />
+				<set field="tabButtonItem" value="P9ReportView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="p9reportPdf" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+				<set field="viewSize" value="99999" />
+				<script
+					location="component://payroll/webapp/payroll/WEB-INF/actions/reports/P9Report.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://payroll/webapp/reports/P9Report.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="P9Report">
+		<section>
+			<actions>
+				<set field="titleProperty" value="P9 Report" />
+				<set field="headerItem" value="P9ReportView" />
+				<set field="tabButtonItem" value="P9ReportView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="P9ReportView" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<include-menu name="PayrollStatutoryReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP9.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-1325766756"
+													text="P9 HTML Report" style="buttontext create">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+
+												</link>
+												<!--
+													link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP9.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-1325766756"
+													text="P9 PDF Report" style="buttontext create"> <image
+													url-mode="raw"
+													src="${iconsLocation}/page_white_acrobat.png" /> </link
+												-->
+												<link target="p9reportPdf?partyId=Developer2" text="Print P9 Report PDF"
+													style="buttontext">
+													<!-- parameter param-name="partyId" /-->
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="P10Report">
+		<section>
+			<actions>
+				<set field="titleProperty" value="P10 Report" />
+				<set field="headerItem" value="P10ReportView" />
+				<set field="tabButtonItem" value="P10ReportView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="P10ReportView" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<include-menu name="PayrollStatutoryReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;437900182"
+													text="P10 HTML Report" style="buttontext create">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+
+												</link>
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;437900182"
+													text="P10 PDF Report" style="buttontext create">
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="P10AReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="P10A Report" />
+				<set field="headerItem" value="P10AReportView" />
+				<set field="tabButtonItem" value="P10AReportView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="P10AReportView" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<include-menu name="PayrollStatutoryReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10A.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-1816116"
+													text="P10A HTML Report" style="buttontext create">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+
+												</link>
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10A.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;-1816116"
+													text="P10A PDF Report" style="buttontext create">
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="NSSFReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="NSSF Report" />
+				<set field="headerItem" value="NSSFReportView" />
+				<set field="tabButtonItem" value="NSSFReportView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="NSSFReportView" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<include-menu name="PayrollStatutoryReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2Fnssf.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1757643535"
+													text="NSSF HTML Report" style="buttontext create">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+
+												</link>
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2Fnssf.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1757643535"
+													text="NSSF PDF Report" style="buttontext create">
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="NHIFReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="NHIF Report" />
+				<set field="headerItem" value="NHIFReportView" />
+				<set field="tabButtonItem" value="NHIFReportView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="NHIFReportView" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="PayrollReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<include-menu name="PayrollStatutoryReportsTabBar"
+							location="component://payroll/widget/payroll/ExampleMenus.xml" />
+						<section>
+							<condition>
+								<if-has-permission permission="PARTYMGR"
+									action="_CREATE" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2Fnhif.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;382315685"
+													text="NHIF HTML Report" style="buttontext create">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+
+												</link>
+												<link url-mode="inter-app"
+													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2Fnhif.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;382315685"
+													text="NHIF PDF Report" style="buttontext create">
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 </screens>

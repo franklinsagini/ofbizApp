@@ -17,51 +17,320 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
+ <#if leaveType?if_exists == "A">
     <#if employee?has_content>
-
     <#-- REPORT TITLE -->
     <fo:block font-size="18pt" font-weight="bold" text-align="center">
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        EMPLOYEE LEAVE BALANCE REPORT
+        EMPLOYEE ANNUAL LEAVE BALANCE REPORT
     </fo:block>
     <fo:block><fo:leader/></fo:block>
     <#-- Employee Details -->
-    <fo:block font-size="10pt" text-align="left" font-weight="bold" space-after="0.04in">
+    <fo:block font-size="12pt" text-align="center" font-weight="bold" space-after="0.04in" text-decoration="underline">
         Payroll Number: ${employee.employeeNumber}
     </fo:block>
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
+    <fo:block font-size="12pt" text-align="center" font-weight="bold" text-decoration="underline" margin-bottom="0.2in">
         Employee Name: ${employee.firstName} ${employee.lastName}
     </fo:block>
-<
- <fo:block>
-    <fo:list-block provisional-distance-between-starts="1in" text-align="center">
+
+    <fo:block font-size="12pt" text-align="Left" space-after="0.04in" text-decoration="underline" margin-left="35%">
+        Anual Leave
+    </fo:block>
+
+    <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" margin-left="35%" margin-bottom="0.2in">
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">${uiLabelMap.CommonUsername}</fo:block>
+                <fo:block font-weight="bold">Balance Brought Forward</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block><#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+                <fo:block>${employee.annualCarriedOverDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">${uiLabelMap.CommonDate}</fo:block>
+                <fo:block font-weight="bold">Accrued Days</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${nowTimestamp?if_exists}</fo:block>
+                <fo:block>${employee.annualaccruedDays?if_exists}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Total Days Taken</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>${employee.annualUsedLeaveDays?if_exists}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Lost Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>${employee.annualLostLeaveDays?if_exists}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Balance</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>${employee.annualAvailableLeaveDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
     </fo:list-block>
- </fo:block>
+    </#if>
 
+    <#-- LISTING ALL LEAVE BALANCES -->
+    <#if leaveBalances?has_content>
+             <#-- REPORT TITLE -->
+        <fo:block font-size="18pt" font-weight="bold" text-align="center">
+            CHAI SACCO
+        </fo:block>
+        <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+            EMPLOYEE LIST ANNUAL LEAVE BALANCE REPORT
+        </fo:block>
+        <fo:block><fo:leader/></fo:block>
+
+        <fo:block space-after.optimum="10pt" font-size="10pt">
+            <fo:table table-layout="fixed" width="100%">
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="110pt"/>
+                <fo:table-column column-width="110pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-header>
+                    <fo:table-row font-weight="bold">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Employee</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Brough Forward</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Accrued</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Taken</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Lost</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Balance</fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                </fo:table-header>
+                <fo:table-body>
+                    <#list leaveBalances as employee>
+                        <fo:table-row>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.firstName?if_exists} ${employee.lastName?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.annualCarriedOverDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.annualaccruedDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.annualUsedLeaveDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.annualLostLeaveDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.annualAvailableLeaveDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                        </fo:table-row>
+                    </#list>
+                </fo:table-body>
+            </fo:table>
+        </fo:block>
+    </#if>
 
     <#else>
-        <fo:block text-align="center">No Employees Found With that ID</fo:block>
-    </#if>
-    <#if employee?has_content>
+        <#if employee?has_content>
+    <#-- REPORT TITLE -->
+    <fo:block font-size="18pt" font-weight="bold" text-align="center">
+        CHAI SACCO
+    </fo:block>
+    <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+        EMPLOYEE COMPASSIONATE LEAVE BALANCE REPORT
+    </fo:block>
+    <fo:block><fo:leader/></fo:block>
+    <#-- Employee Details -->
+    <fo:block font-size="12pt" text-align="center" font-weight="bold" space-after="0.04in" text-decoration="underline">
+        Payroll Number: ${employee.employeeNumber}
+    </fo:block>
+    <fo:block font-size="12pt" text-align="center" font-weight="bold" text-decoration="underline" margin-bottom="0.2in">
+        Employee Name: ${employee.firstName} ${employee.lastName}
+    </fo:block>
 
+    <fo:block font-size="12pt" text-align="Left" space-after="0.04in" text-decoration="underline" margin-left="35%">
+        Compassionate Leave
+    </fo:block>
+
+    <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" margin-left="35%" margin-bottom="0.2in">
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Balance Brought Forward</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Accrued Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>15</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Total Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Total Days Taken</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Lost Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Balance</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>30</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+    </fo:list-block>
+    <fo:block font-size="12pt" text-align="Left" space-after="0.04in" text-decoration="underline" margin-left="35%">
+        Compassionate Leave
+    </fo:block>
+
+    <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" margin-left="35%">
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Balance Brought Forward</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>${employee.compassionateCarryOverLeaveDays?if_exists}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Accrued Days</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>${employee.compassionateAllocatedLeaveDays?if_exists}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Total Days Taken</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>compassionateUsedLeaveDays</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Balance</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>${employee.compassionateAvailableLeaveDays?if_exists}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+    </fo:list-block>
+    </#if>
+
+    <#-- LISTING ALL LEAVE BALANCES -->
+    <#if leaveBalances?has_content>
+             <#-- REPORT TITLE -->
+        <fo:block font-size="18pt" font-weight="bold" text-align="center">
+            CHAI SACCO
+        </fo:block>
+        <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+            EMPLOYEE LIST COMPASSIONATE LEAVE BALANCE REPORT
+        </fo:block>
+
+
+        <fo:block font-size="8pt"  font-weight="bold">
+            **All figures in days**
+        </fo:block>
+        <fo:block><fo:leader/></fo:block>
+
+        <fo:block space-after.optimum="10pt" font-size="10pt">
+            <fo:table table-layout="fixed" width="100%">
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="110pt"/>
+                <fo:table-column column-width="110pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-header>
+                    <fo:table-row font-weight="bold">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Employee</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Brough Forward</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Accrued</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Taken</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Balance</fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                </fo:table-header>
+                <fo:table-body>
+                    <#list leaveBalances as employee>
+                        <fo:table-row>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.firstName?if_exists} ${employee.lastName?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.compassionateCarryOverLeaveDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.compassionateAllocatedLeaveDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.compassionateUsedLeaveDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.compassionateAvailableLeaveDays?if_exists}</fo:block>
+                            </fo:table-cell>
+                        </fo:table-row>
+                    </#list>
+                </fo:table-body>
+            </fo:table>
+        </fo:block>
+    </#if>
     </#if>
 </#escape>
 

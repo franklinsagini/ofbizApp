@@ -117,8 +117,17 @@
      			//alert(' ID No, Member Type, Member Number, Mobile No for '+memberId);
 				//alert(data.firstName);
 				 $('input[name="interestRatePM"]').val(data.interestRatePM);
+				 $('input[name="interestRatePMOrig"]').val(data.interestRatePM);
+				 
 				 $('input[name="maxRepaymentPeriod"]').val(data.maxRepaymentPeriod);
+				  $('input[name="maxRepaymentPeriodOrig"]').val(data.maxRepaymentPeriod);
+				  
+				 $('input[name="repaymentPeriod"]').val(data.maxRepaymentPeriod);
+				 
 				 $('input[name="maximumAmt"]').val(data.maximumAmt);
+				 
+				 
+				 
 				 $('input[name="multipleOfSavingsAmt"]').val(data.multipleOfSavingsAmt);
 				 
 				 
@@ -146,6 +155,9 @@
      success : function(data){
 				 $('input[name="maxLoanAmt"]').val(data.maxLoanAmt);
 				 $('input[name="existingLoans"]').val(data.existingLoans);
+				 
+				 $('input[name="maxLoanAmtOrig"]').val(data.maxLoanAmt);
+				 $('input[name="existingLoansOrig"]').val(data.existingLoans);
 				 
                },
       error : function(errorData){
@@ -281,5 +293,30 @@
     	
     	return isValid;
     
+    }
+    
+    function customerCareLoanValidation(partyId){
+    	var reqUrl = '/loans/control/hasSavingsAccount';
+    	var hasSavingsAccount = false;
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'partyId': partyId}, 
+			     success : function(data){
+			     			hasSavingsAccount = data.hasSavingsAccount;
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating loan application");
+			              }
+			
+			
+		});
+		if (!hasSavingsAccount){
+			alert(' The Member must have a Savings Account - this is the account to which the Loan Will be disbursed');
+		}
+    	return hasSavingsAccount;
     }
    </script>
