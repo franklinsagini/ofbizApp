@@ -47,6 +47,8 @@
 		<field name="firstName" type="name" ></field>
     	<field name="lastName" type="name"></field>
 		<field name="fileLocation" type="name"></field>
+		<field name="Reason" type="name"></field>
+		<field name="carriedBy" type="name"></field>
 		<field name="creationDate" type="date-time"></field>
 		<prim-key field="partyId" />
 		<relation type="one" fk-name="FILE_MEMBER" rel-entity-name="Member">
@@ -94,6 +96,7 @@
 		<field name="receiptStatus" type="name"></field>
 		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
+		<field name="Reason" type="name"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="logId" />
 		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
@@ -135,6 +138,15 @@
 		<field name="description" type="description" not-null="true"></field>
 		<prim-key field="locationId" />
 	</entity>
+	
+	<entity entity-name="RegistryFileVolume" package-name="org.ofbiz.registry"
+		title="Member Files">
+		<field name="volumeId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="volumeIdentifier" type="name"></field>
+		<prim-key field="volumeId" />
+	</entity>
+	
 	
 	
 	  <view-entity entity-name="fileMovementView" package-name="org.ofbiz.humanres">

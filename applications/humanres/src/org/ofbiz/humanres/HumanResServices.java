@@ -1192,10 +1192,11 @@ GenericValue employeeLeaveType = null;
 		int daysCount = 1;
 		LocalDate localDateStartDate = new LocalDate(startDate);
 		LocalDate localDateEndDate = new LocalDate(endDate);
-		
-		/*Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+		Date holidayDate;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		LocalDate holiday = null;
 		List<GenericValue> holidaysELI = null; 
+		int holiDate = 0, holiMonth = 0, statDate = 0, statMonth = 0;
 		try {
 			holidaysELI = delegator.findAll("PublicHolidays", true);
 				
@@ -1203,16 +1204,28 @@ GenericValue employeeLeaveType = null;
 			e.printStackTrace();
 		}
 		for (GenericValue genericValue : holidaysELI) {
-			holidayDate = new LocalDate(genericValue.getDate("holidayDate"));
+			holidayDate = genericValue.getDate("holidayDate");
 			
-			if ((localDate.getDayOfMonth() == holidayDate.getDayOfMonth()) && (localDate.getMonthOfYear() == holidayDate.getMonthOfYear())){
-				return true;
-			}
-		}*/
+			holiday = new LocalDate(holidayDate);
+
+			holiDate=holiday.getDayOfMonth();
+			holiMonth=holiday.getMonthOfYear();
+			statDate=localDateStartDate.getDayOfMonth();
+		    statMonth=localDateStartDate.getMonthOfYear();
+			
+			log.info("++++++++++++++holidays++++++++++++++++" +holiday);
+			log.info("++++++++++++++holiDate++++++++++++++++" +holiDate);
+			log.info("++++++++++++++holiMonth++++++++++++++++" +holiMonth);
+			log.info("++++++++++++++leavestart++++++++++++++++" +localDateStartDate);
+			log.info("++++++++++++++statDate++++++++++++++++" +statDate);
+			log.info("++++++++++++++endMonth++++++++++++++++" +statMonth);
+		}
 		
 		
 		while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
-			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY) && isHoliday(startDate)
+			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY) 
+					&& (localDateStartDate.getDayOfMonth() != holiday.getDayOfMonth())
+					&& (localDateStartDate.getMonthOfYear() != holiday.getMonthOfYear())
 					&& (localDateStartDate.getDayOfWeek() != DateTimeConstants.SUNDAY)) {
 				daysCount++;
 			}

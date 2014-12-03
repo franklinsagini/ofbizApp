@@ -17,7 +17,7 @@
 		<field name="DocumentTypeId" title="Document Type Id"><hidden /></field>
 		<field name="DocumentTypeId" title="Document Type Id" use-when="filetypeContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
 		<field name="DocumentType" title="Document Type"><text size="45"></text></field>
-		<field name="retentionPeriod" title="Document Retention Period" tooltip="(Leave blank if permanent)"><text /></field>
+		<field name="retentionPeriod" title="Document Retention Period" tooltip="(Give period in years:Leave blank if retention period is permanent)"><text /></field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}"	widget-style="smallSubmit"><submit button-type="button" /></field>
 		<!-- submitButton -->
 		<field use-when="filetypeContext==null" name="submitButton"	title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
@@ -77,8 +77,8 @@
 	
    
 	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
-		 <!-- <field name="partyId"><lookup target-form-name="lookupPartyName"/></field> -->
-		 <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+		 <!-- <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field> -->
+		 <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
 		  <!-- <field name="memberOrEmployee" title="Select File Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
                 <option key="Member" description="Member File"/>
@@ -110,12 +110,21 @@
 				<parameter param-name="folioNo" />
 			</hyperlink>
 		</field>
+		
+		 <field name="requstFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Add Volume" target="req">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+			</hyperlink>
+		</field>
 
 	</form>
 
 
 	<form name="EditDocumentForm" type="single" target="createDocument"	focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="documentContext">
 		<actions>
+		<set field="partyId" from-field="parameters.partyId"/>
+		
 			<entity-condition entity-name="RegistryDocuments" list="fileList">
 				<order-by field-name="documentId" />
 			</entity-condition>
@@ -133,13 +142,8 @@
 					description="${DocumentType}" />
 			</drop-down>
 		</field>
-		<field name="partyId" title="File ID" use-when="documentContext==null"	widget-style="required" required-field="true">
-			<drop-down>
-				<list-options key-name="partyId" list-name="filebksList"
-					description="${partyId} ->(For member ID-${firstName} ${lastName})" />
-			</drop-down>
-		</field>
-		<field name="partyId" use-when="FilesContext!=null"><display/></field>
+		<field name="partyId" title="File ID"><hidden/></field>
+		<!-- <field name="partyId" use-when="FilesContext!=null"><display/></field> -->
 		<field name="referenceNo" title="Reference Number"><text/></field>
 		<field name="documentValue" title="Document Value" widget-style="required" tooltip="In Kenyan Shillings (KES)"><text/></field>		
 		<field name="receiptDate" title="Recieved date"><date-time type="date" /></field>
@@ -161,8 +165,8 @@
 		<!-- <field name="DocumentTypeId" title="Document Type ID"><display /></field> -->
 		<field name="DocumentTypeId" title="Document Type"><display-entity entity-name="RegistryDocumentType" description="${DocumentType}"></display-entity></field>
 		<field name="referenceNo" title="Document Reference Number"><display /></field>
-		<field name="partyId" title="Party Id"><!-- <display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity> --><display /></field>
-		<field name="documentValue" title="Document Value"><display /></field>
+		<!-- <field name="partyId" title="Party Id"><display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity><display /></field> -->
+		<field name="documentValue" title="Document Value" tooltip="(Ksh.)"><display /></field>
 		<field name="receiptDate" title="Date Recieved"><display /></field>
 	</form>
 
@@ -254,7 +258,8 @@
 		<field name="actionBy"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+		<field name="Reason"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -282,24 +287,13 @@
          <field name="actionBy"><hidden/></field>
         <field name="creator"><hidden/></field>
         <field name="recieptStatus"><hidden/></field>
-        <field name="addDocument" title="Add Document" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Add Document" target="editfileURL">
-				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" />
-			</hyperlink>
-		</field>
-
+        <field name="Reason"><hidden/></field>
 		<field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-       <field name="requstFile" title="-" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Add Volume" target="req">
-				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
-			</hyperlink>
-		</field>
+      
 		 <!-- <field name="issueFile" title="-" widget-style="buttontext" use-when="${status=='REQUESTED'}">
 			<hyperlink also-hidden="false" description="Issue File" target="issuefiles">
 				<parameter param-name="partyId" />
@@ -333,7 +327,7 @@
 		<field name="actionBy"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -394,7 +388,8 @@
 		<field name="actionBy"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+		<field name="Reason"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -427,6 +422,7 @@
 		<field name="recieptStatus"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="status"><hidden/></field>
+		<field name="Reason"><hidden/></field>
        <field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="partyId" />
@@ -457,7 +453,8 @@
 		<field name="actionBy"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+		<field name="Reason"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -490,6 +487,7 @@
 		<field name="recieptStatus"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="status"><hidden/></field>
+		<field name="Reason"><hidden/></field>
 
 		<field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
@@ -502,6 +500,7 @@
 				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="actionBy" /> 
+				<parameter param-name="Reason" /> 
 			</hyperlink>
 		</field>
 		<field name="partyId" title="Member Name"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
@@ -515,7 +514,7 @@
         </actions>
         <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
 		<field name="status"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -569,7 +568,7 @@
         </actions>
         <auto-fields-entity entity-name="RegistryFilesInCirculation" default-field-type="find"/>
 		<field name="actionBy"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -620,7 +619,8 @@
 		<field name="actionBy"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+		<field name="Reason"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -658,6 +658,7 @@
 		<field name="recieptStatus"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="status"><hidden/></field>
+		<field name="Reason"><hidden/></field>
        <field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="partyId" />
@@ -682,7 +683,7 @@
         	<set field="status" value="AVAILABLE"/>
         </actions>
         <auto-fields-entity entity-name="RegistryFilesInCirculation" default-field-type="find"/>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/>if this isn't there then with all fields empty no query will be done</field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -735,7 +736,8 @@
 		<field name="actionBy"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+		<field name="Reason"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -772,6 +774,7 @@
 		<field name="recieptStatus"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="status"><hidden/></field>
+		<field name="Reason"><hidden/></field>
        <field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="partyId" />
@@ -802,7 +805,8 @@
 		<field name="actionBy"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="creationDate"><hidden/></field>
-        <field name="partyId" title="Member"><lookup target-form-name="lookupPartyName"/></field>
+		<field name="Reason"><hidden/></field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -835,6 +839,7 @@
 		<field name="recieptStatus"><hidden/></field>
 		<field name="fileLocation"><hidden/></field>
 		<field name="status"><hidden/></field>
+		<field name="Reason"><hidden/></field>
        <field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="partyId" />
@@ -919,6 +924,7 @@
 		 <actions>
 		 
 		  <set field="actionBy" value="${parameters.actionBy}"/>
+		  <set field="Reason" value="${parameters.Reason}"/>
 		
         </actions>
 		
@@ -926,8 +932,9 @@
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<field name="actionBy" title="File Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-		<field name="Reason" title="Reason for this request:"><display/></field>
-		<field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>
+		<field name="Reason" title="Reason for this request:"><display></display></field>
+		<!-- <field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>rrrr -->
+		<field name="carriedBy" title="File Carried By:"><lookup target-form-name="LookupEmployee"/></field>
 		
 		
 		 <field name="submitButton" title="Issue File" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -945,7 +952,8 @@
 		
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
-		<field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>
+		<!-- <field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>ggggg -->
+		<field name="carriedBy" title="File Carried By:"><lookup target-form-name="LookupEmployee"/></field>
 		
 		 <field name="submitButton" title="Recieve File" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
@@ -962,7 +970,8 @@
         </actions>
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
-		<field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>
+		<!-- <field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>ffffff -->
+		<field name="carriedBy" title="File Carried By:"><lookup target-form-name="LookupEmployee"/></field>
 		
 		 <field name="submitButton" title="Release File" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
@@ -980,7 +989,8 @@
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<field name="currentPossesser" title="Released By:"><display/></field>
-		<field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>
+		<!-- <field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>fffff -->
+		<field name="carriedBy" title="File Carried By:"><lookup target-form-name="LookupEmployee"/></field>
 		
 		 <field name="submitButton" title="Recieve File" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
