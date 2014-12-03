@@ -550,7 +550,7 @@ under the License.
       <field name="skillTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="name"></field>
       <prim-key field="skillTypeId"/>
       <prim-key field="description"/>
       <relation type="one" fk-name="PARNT_SKILL_TYPE" title="Parent" rel-entity-name="SkillType">
@@ -1448,9 +1448,13 @@ under the License.
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="emplPositionType" type="description"></field>
+      <field name="payGradeId" type="id-ne"></field>      
       <prim-key field="emplPositionTypeId"/>
       <relation type="one" fk-name="EMPL_POSI_TYP_PAR" title="Parent" rel-entity-name="EmplPositionType">
         <key-map field-name="parentTypeId" rel-field-name="emplPositionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="EMP_TYPE_PGRD" rel-entity-name="PayGrade">
+        <key-map field-name="payGradeId"/>
       </relation>
     </entity>
     <entity entity-name="EmplPositionTypeClass"
@@ -2010,6 +2014,13 @@ under the License.
        <field name="departmentName" type="name"></field>
        <field name="branchId" type="name"></field>
        <prim-key field="departmentId"/>
+    </entity>
+    
+     <entity entity-name="PublicHolidays" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="holidayId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="holidayName" type="name"></field>
+       <field name="holidayDate" type="date"></field>
+       <prim-key field="holidayId"/>
     </entity>
 
 

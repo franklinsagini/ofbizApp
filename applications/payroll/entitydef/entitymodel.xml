@@ -363,6 +363,59 @@ under the License.
 	</entity>
 
 
-
+	<view-entity entity-name="P9Report" package-name="org.ofbiz.payroll">
+		<member-entity entity-alias="SPE" entity-name="StaffPayrollElements"></member-entity>
+		<member-entity entity-alias="SP" entity-name="StaffPayroll"></member-entity>
+		<!--member-entity entity-alias="P" entity-name="Person"></member-entity>
+		<member-entity entity-alias="PE" entity-name="PayrollElement"></member-entity>
+		-->
+		
+		<member-entity entity-alias="P" entity-name="Person"></member-entity>
+		<member-entity entity-alias="PP" entity-name="PayrollPeriod"></member-entity>
+		
+		<alias entity-alias="P" name="firstName" group-by="true"></alias>
+		<alias entity-alias="P" name="middleName"  group-by="true"></alias>
+		<alias entity-alias="P" name="lastName"  group-by="true"></alias>
+		<alias entity-alias="P" name="employeeNumber"  group-by="true"></alias>
+		
+		<alias entity-alias="SP" name="partyId" group-by="true"></alias>
+		<alias entity-alias="SP" name="payrollPeriodId" group-by="true"></alias>
+		<alias entity-alias="PP" name="name" group-by="true"></alias>
+		<alias entity-alias="SPE" name="payrollElementId" group-by="true"></alias>
+		<alias entity-alias="SPE" name="amount" function="sum"></alias>
+		
+		 <view-link entity-alias="P" rel-entity-alias="SP"> 
+            <key-map field-name="partyId" rel-field-name="partyId"/> 
+            <entity-condition>
+            	<condition-expr entity-alias="SP" field-name="closed" operator="equals" value="Y"/>
+            </entity-condition>
+        </view-link>
+		
+		<view-link entity-alias="SP" rel-entity-alias="PP"> 
+            <key-map field-name="payrollPeriodId" rel-field-name="payrollPeriodId"/> 
+        </view-link>   
+       
+		
+		<view-link entity-alias="SP" rel-entity-alias="SPE"> 
+            <key-map field-name="staffPayrollId" rel-field-name="staffPayrollId"/> 
+            
+            <entity-condition>
+            	<condition-list combine="and">
+            		<condition-expr entity-alias="SPE" field-name="amount" operator="greater" value="0"/>
+            		<condition-list combine="or">
+            			<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="BASICPAY"/>
+            			<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="GROSSPAY"/>
+            			<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="PENSION"/>
+            			<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="NSSF"/>
+            			<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="TAXABLEINCOME"/>
+            			<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="MPR"/>
+            			<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="INSURANCERELIEF"/>
+            			<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="PAYE"/>            			
+            		</condition-list>
+            	
+            	</condition-list>
+            </entity-condition>
+        </view-link> 
+	</view-entity>
 
 </entitymodel>

@@ -45,7 +45,7 @@ under the License.
                 <fo:block font-weight="bold">Balance Brought Forward</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>${employee.annualCarriedOverDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -53,15 +53,7 @@ under the License.
                 <fo:block font-weight="bold">Accrued Days</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>15</fo:block>
-            </fo:list-item-body>
-        </fo:list-item>
-        <fo:list-item>
-            <fo:list-item-label>
-                <fo:block font-weight="bold">Total Days</fo:block>
-            </fo:list-item-label>
-            <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>${employee.annualaccruedDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -69,7 +61,7 @@ under the License.
                 <fo:block font-weight="bold">Total Days Taken</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>${employee.annualUsedLeaveDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -77,7 +69,7 @@ under the License.
                 <fo:block font-weight="bold">Lost Days</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>${employee.annualLostLeaveDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -85,7 +77,7 @@ under the License.
                 <fo:block font-weight="bold">Balance</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>${employee.annualAvailableLeaveDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
     </fo:list-block>
@@ -242,7 +234,7 @@ under the License.
                 <fo:block font-weight="bold">Balance Brought Forward</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>${employee.compassionateCarryOverLeaveDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -250,15 +242,7 @@ under the License.
                 <fo:block font-weight="bold">Accrued Days</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>15</fo:block>
-            </fo:list-item-body>
-        </fo:list-item>
-        <fo:list-item>
-            <fo:list-item-label>
-                <fo:block font-weight="bold">Total Days</fo:block>
-            </fo:list-item-label>
-            <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>${employee.compassionateAllocatedLeaveDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -266,15 +250,7 @@ under the License.
                 <fo:block font-weight="bold">Total Days Taken</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
-            </fo:list-item-body>
-        </fo:list-item>
-        <fo:list-item>
-            <fo:list-item-label>
-                <fo:block font-weight="bold">Lost Days</fo:block>
-            </fo:list-item-label>
-            <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>compassionateUsedLeaveDays</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -282,7 +258,7 @@ under the License.
                 <fo:block font-weight="bold">Balance</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>30</fo:block>
+                <fo:block>${employee.compassionateAvailableLeaveDays?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
     </fo:list-block>
@@ -300,7 +276,7 @@ under the License.
 
 
         <fo:block font-size="8pt"  font-weight="bold">
-            **All figures counted in days**
+            **All figures in days**
         </fo:block>
         <fo:block><fo:leader/></fo:block>
 
@@ -327,9 +303,6 @@ under the License.
                             <fo:block>Taken</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Lost</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Balance</fo:block>
                         </fo:table-cell>
                     </fo:table-row>
@@ -341,16 +314,13 @@ under the License.
                                 <fo:block>${employee.firstName?if_exists} ${employee.lastName?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.annualCarriedOverDays?if_exists}</fo:block>
+                                <fo:block>${employee.compassionateCarryOverLeaveDays?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.annualaccruedDays?if_exists}</fo:block>
+                                <fo:block>${employee.compassionateAllocatedLeaveDays?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${employee.compassionateUsedLeaveDays?if_exists}</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.annualLostLeaveDays?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${employee.compassionateAvailableLeaveDays?if_exists}</fo:block>
