@@ -111,8 +111,8 @@
 			</hyperlink>
 		</field>
 		
-		 <field name="requstFile" title="-" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Add Volume" target="req">
+		 <field name="files" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Add Volume" target="goAddVolume">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
 			</hyperlink>
@@ -134,6 +134,9 @@
 			<entity-condition entity-name="Member" list="filebksList">
 				<order-by field-name="partyId" />
 			</entity-condition>
+			<entity-condition entity-name="RegistryFileVolume" list="volumeList">
+				<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+			</entity-condition>
 		</actions>
 		<alt-target use-when="documentContext!=null" target="updateFile" />
 		<field name="DocumentTypeId" title="Document Type " widget-style="required"	required-field="true">
@@ -145,12 +148,22 @@
 		<field name="partyId" title="File ID"><hidden/></field>
 		<!-- <field name="partyId" use-when="FilesContext!=null"><display/></field> -->
 		<field name="referenceNo" title="Reference Number"><text/></field>
-		<field name="documentValue" title="Document Value" widget-style="required" tooltip="In Kenyan Shillings (KES)"><text/></field>		
+		<field name="documentValue" title="Document Value" widget-style="required" tooltip="In Kenyan Shillings (KES)"><text/></field>	
+		<field name="volumeIdentifier" title="Select File Volume" required-field="true" widget-style="required">
+		<drop-down allow-empty="true">
+          <!--  <list-options key-name="volumeIdentifier" list-name="volumeList"
+					description="${volumeIdentifier}" /> -->
+					
+				<entity-options description="${volumeIdentifier}"
+					key-field-name="volumeIdentifier" entity-name="RegistryFileVolume" />
+			
+       </drop-down>
+		</field>	
 		<field name="receiptDate" title="Recieved date"><date-time type="date" /></field>
 		<field name="submitButton" title="${uiLabelMap.CommonSave}"	widget-style="smallSubmit"><submit button-type="button" /></field>
 		<!-- submitButton -->
-		<field use-when="documentContext==null" name="submitButton"	title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
-		<field use-when="documentContext!=null" name="submitButton"	title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link" /></field>
+		<field use-when="documentContext==null" name="submitButton"	title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="button" /></field>
+		<field use-when="documentContext!=null" name="submitButton"	title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
 
 	<form name="documentListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFileds"
@@ -165,7 +178,7 @@
 		<!-- <field name="DocumentTypeId" title="Document Type ID"><display /></field> -->
 		<field name="DocumentTypeId" title="Document Type"><display-entity entity-name="RegistryDocumentType" description="${DocumentType}"></display-entity></field>
 		<field name="referenceNo" title="Document Reference Number"><display /></field>
-		<!-- <field name="partyId" title="Party Id"><display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity><display /></field> -->
+		<field name="volumeIdentifier"><display /></field>
 		<field name="documentValue" title="Document Value" tooltip="(Ksh.)"><display /></field>
 		<field name="receiptDate" title="Date Recieved"><display /></field>
 	</form>
@@ -860,13 +873,17 @@
 
     <!-- File Header Form -->
 	<form name="fileGeneralDetails" type="single"  header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
+	<actions>
+	<set field="number" value="${bsh:org.ofbiz.registry.FileServices.getFileVolumeCount(partyId);}"/>
+	</actions>
 		<field position="1" name="partyId" title="PartyID"><display /></field>
-		<field position="1" name="partyId" title="Person Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
-		<field position="1" name="folioNo" title="Folio Number"><display /></field>
-		<field position="1" name="status" title="File Status"><display /></field>
-		<field position="1" name="creator" title="File Created by"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-		<field position="1" name="fileLocation" title="Current File Location"><display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"></display-entity></field>
-		<field position="1" name="creationDate" title="Creation Date"><display /></field>
+		<field position="1" name="partyId" title="Person Name:"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+		<field position="1" name="folioNo" title="Folio Number:"><display /></field>
+		<field position="1" name="status" title="File Status:"><display /></field>
+		<field position="1" name="number" title="Number Of Volumes:"><display default-value="${bsh:org.ofbiz.registry.FileServices.getFileVolumeCount(partyId);} Volumes"/></field>
+		<field position="1" name="creator" title="File Created by:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+		<field position="1" name="fileLocation" title="Current File Location:"><display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"></display-entity></field>
+		<field position="1" name="creationDate" title="Creation Date:"><display /></field>
 	</form>
 
     <!-- File Documents List Form -->
@@ -879,7 +896,7 @@
             </entity-condition>
         </actions>
         <field name="documentId"><display/></field>
-      <field name="DocumentTypeId" title="Document Type"><display-entity entity-name="RegistryDocumentType" description="${fileType}"></display-entity></field>
+      <field name="DocumentTypeId" title="Document Type"><display-entity entity-name="RegistryDocumentType" description="${DocumentType}"></display-entity></field>
 	  <field name="documentValue"><display/></field>
         <field name="receiptDate" encode-output="false"><display/></field>
     </form>
@@ -993,6 +1010,34 @@
 		<field name="carriedBy" title="File Carried By:"><lookup target-form-name="LookupEmployee"/></field>
 		
 		 <field name="submitButton" title="Recieve File" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
+	 <!-- ================================================ ADD VOLUME TO A FILE ========================================================= -->
+    
+     <form name="addFileVolumeForm" type="single" target="createfileVolume"
+		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+		 <set field="partyId" value="${parameters.partyId}"/>
+		 <set field="folioNo" value="${parameters.folioNo}"/>
+		
+        </actions>
+		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="volumeIdentifier" title="File Volume Identifier:" tooltip="(For example: Volume One)"><text/></field>
+		
+		 <field name="submitButton" title="Save Volume" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
+	<form name="fileVolumeList" type="list" list-name="listIt"	use-row-submit="true" separate-columns="true" target="updatefileVolume"
+		paginate-target="addFileVolumeForm" odd-row-style="alternate-row"	header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="RegistryFileVolume"><condition-expr field-name="partyId" from-field="parameters.partyId"/></entity-condition>
+		</actions>
+		<auto-fields-entity entity-name="RegistryFileVolume" default-field-type="display"/>
+		<field name="volumeIdentifier"><text/></field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
 
 

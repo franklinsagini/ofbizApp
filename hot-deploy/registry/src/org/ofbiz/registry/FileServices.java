@@ -52,6 +52,7 @@ public class FileServices {
 			count++;
 		}
 		volumeCount= String.valueOf(count);
+		log.info("NUMBER OF FILE VOLUMES ################################ " + volumeCount + "########################################");
 				
 		return volumeCount;
 		
