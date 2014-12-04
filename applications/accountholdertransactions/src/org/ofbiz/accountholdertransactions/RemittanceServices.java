@@ -94,9 +94,12 @@ public class RemittanceServices {
 			e2.printStackTrace();
 		}
 
-		// Add shares
-		String shareCode = getShareCode();
+		// Add shares - Member Deposits
+		String shareCode = getMemberDepositsCode();
+				//getShareCode();
 		addExpectedShares(shareCode);
+		
+		
 
 		// Add Accounts Contributions
 		addAccountContributions();
@@ -267,10 +270,17 @@ public class RemittanceServices {
 
 		List<String> orderByList = new LinkedList<String>();
 		orderByList.add("accountProductId");
-
+		String accountProductId = getShareDepositAccountId("901");
+		accountProductId = accountProductId.replaceAll(",", "");
+		Long accountProductIdLong = Long.valueOf(accountProductId);
+		//And accountProductId not equal to memberDeposit, not equal to share capital and not equal to 
 		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"contributing", EntityOperator.EQUALS, "YES"),
+						
+						EntityCondition.makeCondition(
+								"accountProductId", EntityOperator.NOT_EQUAL, accountProductIdLong),
+						
 						EntityCondition.makeCondition("partyId",
 								EntityOperator.EQUALS,
 								member.getLong("partyId"))
@@ -359,7 +369,7 @@ public class RemittanceServices {
 	/***
 	 * Get shares code
 	 * */
-	private static String getShareCode() {
+	private static String getShareCodet() {
 		GenericValue codesSetup = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -370,6 +380,10 @@ public class RemittanceServices {
 			log.error("######## Cannot get CodesSetup  ");
 		}
 		return codesSetup.getString("code");
+	}
+	
+	private static String getMemberDepositsCode(){
+		return "901";
 	}
 
 	private static void addExpectedShares(String shareCode) {
@@ -436,8 +450,8 @@ public class RemittanceServices {
 						"payrollNo", member.getString("payrollNumber"),
 						"loanNo", "0", "employerNo", employerName, "amount",
 						bdShareAmount,
-						"remitanceDescription", "SHARES", "employeeName",
-						employeeNames, "expectationType", "SHARES",
+						"remitanceDescription", "Member deposits", "employeeName",
+						employeeNames, "expectationType", "MEMBERDEPOSITS",
 
 						"month", month));
 		try {
@@ -970,7 +984,7 @@ public class RemittanceServices {
 			 * 
 			 * */
 			if (expectedPaymentReceived.getString("expectationType").equals(
-					"SHARES")) {
+					"MEMBERDEPOSITS")) {
 				bdSharesTotal = bdSharesTotal.add(expectedPaymentReceived
 						.getBigDecimal("amount"));
 			} else if (expectedPaymentReceived.getString("expectationType")
