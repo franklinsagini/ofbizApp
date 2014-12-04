@@ -24,9 +24,17 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="RegistryDocumentType" field="DocumentTypeId" />
 		
-		<if-empty field="retentionPeriod">
-		<set field="retentionPeriod" value="PERMANENT"/>
-		</if-empty>
+		<!-- <if-empty field="parameters.retentionPeriod">
+		<set field="newEntity.retentionPeriod" value="PERMANENT"/>
+		</if-empty> -->
+		 
+		<if-not-empty field="parameters.retentionPeriod">
+		<set field="newEntity.retentionPeriod" from-field="parameters.retentionPeriod"/>
+		<else>
+		<set field="newEntity.retentionPeriod" value="PERMANENT"/>
+		</else>
+		</if-not-empty>
+		
 
 		<set from-field="DocumentTypeId" field="newEntity.DocumentTypeId" />
 		<create-value value-field="newEntity" />
@@ -112,6 +120,29 @@
 		<store-value value-field="lookedUpValue" />
 
 	</simple-method>
+	
+	<!-- ========================= FILE VOLUME ======================================== -->
+	
+	
+	<simple-method method-name="createfileVolume"
+		short-description="Create File Actions">
+		<make-value entity-name="RegistryFileVolume" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileVolume" field="volumeId" />
+		<set from-field="volumeId" field="newEntity.volumeId" />
+		<set field="partyId" from-field="parameters.partyId"/>
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<simple-method method-name="updatefileVolume"
+		short-description="Update an existing action">
+		<entity-one entity-name="RegistryFileVolume" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+
+	</simple-method>
 
 	<!-- ==========================FILE REQUEST================================== -->
 	
@@ -130,6 +161,7 @@
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="REQUESTED"/>
+		 <set field="registryFile.Reason" from-field="parameters.Reason"/>
 		<store-value value-field="registryFile" />
 	</simple-method>
 	
@@ -159,6 +191,7 @@
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.fileActionTypeId" value="Request"/>
 		<set field="newEntity.currentPossesser" value="REGISTRY" />
+		 <set field="newEntity.Reason" from-field="parameters.Reason"/>
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
@@ -209,6 +242,7 @@
 		 <set field="registryFile.status" value="ISSUED"/>
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
+		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile" />
 	</simple-method>
 	
@@ -234,6 +268,32 @@
 		
 		<create-value value-field="newEntity" />
 	</simple-method>
+	<!-- <simple-method method-name="saveIssueActionToLogs">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="File Issue"/>
+		<set field="newEntity.currentPossesser" from-field="parameters.actionBy" />
+		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		
+		<set field="newEntity.folioNo" from-field="reg.folioNo" />
+		<set field="newEntity.Reason" from-field="reg.Reason"/>
+		
+		<create-value value-field="newEntity" />
+	</simple-method> -->
+	
 	<simple-method method-name="saveIssueActionToLogs">
 		<now-timestamp field="nowTimestamp"/>
 		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
@@ -247,6 +307,7 @@
 		<set field="newEntity.fileActionTypeId" value="File Issue"/>
 		<set field="newEntity.currentPossesser" from-field="parameters.actionBy" />
 		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
@@ -254,6 +315,7 @@
 		
 		
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
+		<set field="newEntity.Reason" from-field="reg.Reason"/>
 		
 		
 		<create-value value-field="newEntity" />
@@ -346,6 +408,7 @@
 		
 		
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
+		<set field="newEntity.Reason" from-field="reg.Reason"/>
 		
 		
 		<create-value value-field="newEntity" />
@@ -408,6 +471,7 @@
 		
 		
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
+		<set field="newEntity.Reason" from-field="reg.Reason"/>
 		
 		
 		<create-value value-field="newEntity" />

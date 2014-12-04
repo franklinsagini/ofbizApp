@@ -89,15 +89,10 @@
     </request-map>
 
     
-    <!--  <request-map uri="LookupActiveMember"><security https="true" auth="true"/>
-     	<response name="success" type="view" value="LookupActiveMember"/>
-     </request-map> -->
+  <request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
      
 
 
-     <request-map uri="LookupActiveMember"><security https="true" auth="true"/>
-     	<response name="success" type="view" value="LookupActiveMember"/>
-     </request-map>
 
 
       <request-map uri="lookupPartyName"><security https="true" auth="true"/>
@@ -161,6 +156,11 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="returningFiles" />
 	</request-map>
+	
+	<request-map uri="goAddVolume">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addingFileVolume" />
+	</request-map>
 
 
 
@@ -217,6 +217,24 @@
 			value="editfiletypeURL"></response>
 		<response name="error" type="view" value="editfiletypeURL" />
 	</request-map>
+	
+	<!-- ==================== FILE VOLUMES ========================== -->
+	
+	<request-map uri="createfileVolume">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createfileVolume" />
+		<response name="success" type="view" value="addingFileVolume" />
+		<response name="error" type="view" value="addingFileVolume" />
+	</request-map>
+
+	<request-map uri="updatefileVolume">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatefileVolume" />
+		<response name="success" type="request-redirect" value="addingFileVolume">
+			<redirect-parameter name="volumeId" />
+		</response>
+		<response name="error" type="view" value="addingFileVolume" />
+	</request-map>
 
 	<!-- Files -->
 
@@ -243,7 +261,7 @@
 	<request-map uri="requestfiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="requestfiles" />
-		<response name="success" type="request-redirect-noparam" value="fileRquestScreen" />
+		<response name="success" type="view" value="fileRquestScreen" />
 		<response name="error" type="view" value="fileRquestScreen" />
 	</request-map>
 
@@ -279,11 +297,7 @@
 
 
 
-	<request-map uri="LookupActiveMember">
-	<security https="true" auth="true"/>
-	<response name="success" type="view" value="LookupActiveMember"/>
-	</request-map>
-
+	
 	<request-map uri="LookupEmployee">
 	<security https="true" auth="true"/>
 	<response name="success" type="view" value="LookupEmployee"/>
@@ -369,7 +383,7 @@
 	<view-map name="fileOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryFilesOverviewScreen"/>
 
 	<!-- Lookup Active Memeber Viewmap -->
-	<view-map name="LookupActiveMember" type="screen" page="component://purchases/widget/LookupScreens.xml#LookupActiveMember"/>
+	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
 	<view-map name="lookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
 	<view-map name="LookupEmployee" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployee"/>
 
@@ -386,6 +400,8 @@
 	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
 	<view-map name="issuingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#issuingFiles" />
 	<view-map name="returningFiles" type="screen"	page="component://registry/widget/FileScreens.xml#returningFiles" />
+	<view-map name="addingFileVolume" type="screen"	page="component://registry/widget/FileScreens.xml#addingFileVolume" />
+	
 	 <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
 
 

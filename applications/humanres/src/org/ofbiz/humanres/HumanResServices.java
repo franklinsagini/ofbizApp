@@ -1192,10 +1192,11 @@ GenericValue employeeLeaveType = null;
 		int daysCount = 1;
 		LocalDate localDateStartDate = new LocalDate(startDate);
 		LocalDate localDateEndDate = new LocalDate(endDate);
-		
-		/*Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+		Date holidayDate;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		LocalDate holiday = null;
 		List<GenericValue> holidaysELI = null; 
+		int holiDate = 0, holiMonth = 0, statDate = 0, statMonth = 0;
 		try {
 			holidaysELI = delegator.findAll("PublicHolidays", true);
 				
@@ -1203,16 +1204,28 @@ GenericValue employeeLeaveType = null;
 			e.printStackTrace();
 		}
 		for (GenericValue genericValue : holidaysELI) {
-			holidayDate = new LocalDate(genericValue.getDate("holidayDate"));
+			holidayDate = genericValue.getDate("holidayDate");
 			
-			if ((localDate.getDayOfMonth() == holidayDate.getDayOfMonth()) && (localDate.getMonthOfYear() == holidayDate.getMonthOfYear())){
-				return true;
-			}
-		}*/
+			holiday = new LocalDate(holidayDate);
+
+			holiDate=holiday.getDayOfMonth();
+			holiMonth=holiday.getMonthOfYear();
+			statDate=localDateStartDate.getDayOfMonth();
+		    statMonth=localDateStartDate.getMonthOfYear();
+			
+			log.info("++++++++++++++holidays++++++++++++++++" +holiday);
+			log.info("++++++++++++++holiDate++++++++++++++++" +holiDate);
+			log.info("++++++++++++++holiMonth++++++++++++++++" +holiMonth);
+			log.info("++++++++++++++leavestart++++++++++++++++" +localDateStartDate);
+			log.info("++++++++++++++statDate++++++++++++++++" +statDate);
+			log.info("++++++++++++++endMonth++++++++++++++++" +statMonth);
+		}
 		
 		
 		while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
-			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY) && isHoliday(startDate)
+			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY) 
+					&& (localDateStartDate.getDayOfMonth() != holiday.getDayOfMonth())
+					&& (localDateStartDate.getMonthOfYear() != holiday.getMonthOfYear())
 					&& (localDateStartDate.getDayOfWeek() != DateTimeConstants.SUNDAY)) {
 				daysCount++;
 			}
@@ -1221,6 +1234,66 @@ GenericValue employeeLeaveType = null;
 		}
 
 		return daysCount;
+	}
+	
+	
+	public static int calculateWorkingDaysBetweenDates2(Date startDate, Date endDate) {
+		int daysCount = 1;
+		int holi=0;
+		LocalDate localDateStartDate = new LocalDate(startDate);
+		LocalDate localDateEndDate = new LocalDate(endDate);
+		Date holidayDate;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		LocalDate holiday = null;
+		List<GenericValue> holidaysELI = null; 
+		int holiDate = 0, holiMonth = 0, statDate = 0, statMonth = 0;
+		
+		
+		
+		EntityConditionList<EntityExpr> dateConditions = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("holidayDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate),
+					EntityCondition.makeCondition("holidayDate",EntityOperator.LESS_THAN_EQUAL_TO, endDate)),
+						EntityOperator.AND);
+
+		
+		
+		try {
+			/*holidaysELI = delegator.findAll("PublicHolidays", true);sas*/
+			holidaysELI = delegator.findList("PublicHolidays",
+					dateConditions, null, null, null, false);
+				
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		for (GenericValue genericValue : holidaysELI) {
+			holi++;
+			
+			
+
+			holiDate=holiday.getDayOfMonth();
+			holiMonth=holiday.getMonthOfYear();
+			statDate=localDateStartDate.getDayOfMonth();
+		    statMonth=localDateStartDate.getMonthOfYear();
+			
+			log.info("++++++++++++++holidays++++++++++++++++" +holi);
+			log.info("++++++++++++++holiDate++++++++++++++++" +holiDate);
+			log.info("++++++++++++++holiMonth++++++++++++++++" +holiMonth);
+			log.info("++++++++++++++leavestart++++++++++++++++" +localDateStartDate);
+			log.info("++++++++++++++statDate++++++++++++++++" +statDate);
+			log.info("++++++++++++++endMonth++++++++++++++++" +statMonth);
+		}
+		
+		
+		while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
+			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY) 
+					&& (localDateStartDate.getDayOfWeek() != DateTimeConstants.SUNDAY)) {
+				daysCount++;
+			}
+
+			localDateStartDate = localDateStartDate.plusDays(1);
+		}
+
+		return (daysCount-holi);
 	}
 	
 	public static Boolean isHoliday(Date date) {

@@ -1551,10 +1551,10 @@
 		<event type="simple"
 			path="component://party/script/org/ofbiz/party/user/UserEvents.xml"
 			invoke="createSaccoMember"/>
-		
+
 		<response name="success" type="request-redirect-noparam"
 			value="listsaccomembers"></response>
-		
+
 		<response name="error" type="view" value="NewMember" />
 	</request-map -->
 		<request-map uri="createMember">
@@ -2534,29 +2534,29 @@
                 <response name="success" type="none">
         </response>
     </request-map>
-    
+
     <!-- MemberClass -->
     <request-map uri="MemberClass">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="MemberClass" />
 	</request-map>
-	
+
 	<request-map uri="MemberStatus">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="MemberStatus" />
 	</request-map>
-	
+
 	<request-map uri="Salutation">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="Salutation" />
 	</request-map>
-	
+
 	<request-map uri="MaritalStatus">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="MaritalStatus" />
 	</request-map>
-	
-	<!--  
+
+	<!--
 		RecruitingAgent
 		EmploymentType
 		Gender
@@ -2565,17 +2565,17 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="RecruitingAgent" />
 	</request-map>
-	
+
 	<request-map uri="EmploymentType">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="EmploymentType" />
 	</request-map>
-	
+
 	<request-map uri="Gender">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="Gender" />
 	</request-map>
-	
+
 	<!-- MemberClass -->
 	<request-map uri="createMemberClass">
 		<security https="true" auth="true" />
@@ -2600,7 +2600,7 @@
 			value="MemberClass"></response>
 		<response name="error" type="view" value="MemberClass" />
 	</request-map>
-	
+
 	<!-- MemberStatus -->
 		<request-map uri="createMemberStatus">
 		<security https="true" auth="true" />
@@ -2673,7 +2673,7 @@
 			value="MaritalStatus"></response>
 		<response name="error" type="view" value="MaritalStatus" />
 	</request-map>
-	
+
 	<request-map uri="createRecruitingAgent">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createRecruitingAgent" />
@@ -2697,7 +2697,7 @@
 			value="RecruitingAgent"></response>
 		<response name="error" type="view" value="RecruitingAgent" />
 	</request-map>
-	
+
 	<request-map uri="createEmploymentType">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createEmploymentType" />
@@ -2721,8 +2721,8 @@
 			value="EmploymentType"></response>
 		<response name="error" type="view" value="EmploymentType" />
 	</request-map>
-	
-	
+
+
 		<request-map uri="createGender">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createGender" />
@@ -2746,13 +2746,37 @@
 			value="Gender"></response>
 		<response name="error" type="view" value="Gender" />
 	</request-map>
-	
+
 	<!-- MemberType -->
-	
+
 	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
+
+	<!-- Memeber Reports -->
+  <request-map uri="MemberReports">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="MemberReports" save-home-view="true" />
+  </request-map>
+
+  <request-map uri="memberListingPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="memberListingPDF" save-home-view="true" />
+  </request-map>
+
+  <request-map uri="loanDetailsPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="loanDetailsPDF" save-home-view="true" />
+  </request-map>
+
+
 
 
 	<!-- View Mappings -->
+			<!-- Memeber Reports -->
+	<view-map name="MemberReports" type="screen" page="component://party/widget/partymgr/MemberReportScreens.xml#MemberReports"/>
+  <view-map name="memberListingPDF" type="screenfop" page="component://party/widget/partymgr/MemberReportScreens.xml#memberListingPDF" content-type="application/pdf" encoding="none"/>
+  <view-map name="loanDetailsPDF" type="screenfop" page="component://party/widget/partymgr/MemberReportScreens.xml#loanDetailsPDF" content-type="application/pdf" encoding="none"/>
+
+
 	<view-map name="main" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#findparty" />
 
@@ -3060,7 +3084,7 @@
 
 	<view-map name="openingBalance" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#openingBalance" />
-	
+
 	<view-map name="memberLoanBalance" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberLoanBalance" />
 
@@ -3086,11 +3110,11 @@
 
 		<view-map name="memberTypes" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#memberTypes" />
-                
+
         <!-- MemberClass -->
         		<view-map name="MemberClass" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#MemberClass" />
-                
+
 
         		<view-map name="MemberStatus" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#MemberStatus" />
@@ -3100,18 +3124,18 @@
 
         		<view-map name="MaritalStatus" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#MaritalStatus" />
-                
-                <!--  
+
+                <!--
 		RecruitingAgent
 		EmploymentType
 		Gender
 	-->
 	        		<view-map name="RecruitingAgent" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#RecruitingAgent" />
-                
+
                         		<view-map name="EmploymentType" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#EmploymentType" />
-                
+
                         		<view-map name="Gender" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#Gender" />
 	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
