@@ -120,6 +120,29 @@
 		<store-value value-field="lookedUpValue" />
 
 	</simple-method>
+	
+	<!-- ========================= FILE VOLUME ======================================== -->
+	
+	
+	<simple-method method-name="createfileVolume"
+		short-description="Create File Actions">
+		<make-value entity-name="RegistryFileVolume" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileVolume" field="volumeId" />
+		<set from-field="volumeId" field="newEntity.volumeId" />
+		<set field="partyId" from-field="parameters.partyId"/>
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<simple-method method-name="updatefileVolume"
+		short-description="Update an existing action">
+		<entity-one entity-name="RegistryFileVolume" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+
+	</simple-method>
 
 	<!-- ==========================FILE REQUEST================================== -->
 	
