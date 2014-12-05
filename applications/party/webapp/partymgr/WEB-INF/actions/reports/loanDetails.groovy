@@ -13,7 +13,7 @@ context.product_id = LloanProductId
 product = delegator.findOne("LoanProduct", [loanProductId : LloanProductId], false);
 context.product = product;
 
-//if i have loanStatusId && partyId
+//if i have lloanProductId && oanStatusId && partyId
 if (loanStatusId && partyId) {
   LloanStatusId = loanStatusId.toLong();
   LpartyId = partyId.toLong();
@@ -21,10 +21,17 @@ if (loanStatusId && partyId) {
   return
 }
 
-//if i have loanStatusId
+//if i have loanStatusId && loanProductId
 if (loanStatusId) {
   LloanStatusId = loanStatusId.toLong();
   context.loanDetailsList = delegator.findByAnd("LoanApplication", [loanStatusId : LloanStatusId, loanProductId : LloanProductId], null, false)
+  return
+}
+
+//if i have partyId && loanProductId
+if (partyId) {
+  LpartyId = partyId.toLong();
+  context.loanDetailsList = delegator.findByAnd("LoanApplication", [loanProductId : LloanProductId, partyId : LpartyId], null, false)
   return
 }
 
