@@ -26,39 +26,55 @@ under the License.
             LOAN DETAILS LISTING REPORT
         </fo:block>
         <fo:block><fo:leader/></fo:block>
-        <#-- Loan Details -->
-        <#if loanDetailsList.loanProductId?has_content>
-            <#assign product = delegator.findOne("LoanProduct", {"loanProductId" : loanDetailsList.loanProductId}, false)/>
-        </#if>
-        <#if LloanStatusId?has_content>
-            <#assign status = delegator.findOne("LoanStatus", {"loanStatusId" : LloanStatusId}, false)/>
-        </#if>
-        <fo:list-block provisional-distance-between-starts="1in">
+        <fo:block margin-left="0.4in" text-decoration="underline" font-size="10pt" text-align="left"  font-weight="bold" >
+            LOAN PRODUCT SUMMARY
+        </fo:block>
+
+
+        <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">Loan Type</fo:block>
+                    <fo:block font-weight="bold">Product:</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block><#if product?exists>${product.name?if_exists}</#if></fo:block>
+                    <fo:block>${product.name}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">Max Amount</fo:block>
+                    <fo:block font-weight="bold">Max Loan Amount:</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block><#if product?exists>${product.maximumAmt?if_exists}</#if></fo:block>
+                    <fo:block>${product.maximumAmt?if_exists}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">Deduction Type</fo:block>
+                    <fo:block font-weight="bold">Max Repayment Period::</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block><#if product?exists>${product.deductionType?if_exists}</#if></fo:block>
+                    <fo:block>${product.maxRepaymentPeriod?if_exists} Months</fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">Rate: </fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block>${product.interestRatePM?if_exists} % P.A</fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">Deduction Type: </fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block>${product.deductionType?if_exists}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
         </fo:list-block>
+        <fo:block><fo:leader/></fo:block>
+        <#-- Loan Details -->
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="140pt"/>
@@ -66,76 +82,57 @@ under the License.
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="110pt"/>
-                <fo:table-column column-width="100pt"/>
-                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="120pt"/>
+                <fo:table-column column-width="60pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Names</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Loan Type</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Period</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Loan Amt</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>App Amt</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Start Repay</fo:block>
+                            <fo:block>Awarded Amt</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Last Repay</fo:block>
+                            <fo:block>Repayment Period</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Total Repay</fo:block>
+                            <fo:block>Start Date</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Monthly Installment</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Oustanding Balance</fo:block>
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
-                    <#list loanDetailsList as member>
-                        <#if member.branchId?has_content>
-                            <#assign branch = delegator.findOne("PartyGroup", {"partyId" : member.branchId}, false)/>
-                        </#if>
-                        <#if member.actionBy?has_content>
-                            <#assign actionBy = delegator.findOne("Person", {"partyId" : member.actionBy}, false)/>
-                        </#if>
-                        <#if member.currentPossesser?has_content>
-                            <#assign currentPossesser = delegator.findOne("Person", {"partyId" : member.currentPossesser}, false)/>
-                        </#if>
+                    <#list loanDetailsList as loan>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
+                                <fo:block>${loan.firstName?if_exists} ${loan.lastName?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${member.idNumber?if_exists}</fo:block>
+                                <fo:block>${loan.appliedAmt?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${member.payrollNumber?if_exists}</fo:block>
+                                <fo:block>${loan.approvedAmt?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <#if branch?has_content>
-                                    <fo:block>${branch.groupName?if_exists}</fo:block>
-                                <#else>
-                                    <fo:block>Not Defined</fo:block>
-                                </#if>
+                                <fo:block>${loan.repaymentPeriod?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${member.mobileNumber?if_exists}</fo:block>
+                                <fo:block>${loan.loanStartDate?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${member.joinDate?if_exists}</fo:block>
+                                <fo:block>${loan.monthlyRepayment?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${member.joinDate?if_exists}</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${member.joinDate?if_exists}</fo:block>
+                                <fo:block>${loan.outstandingBalance?if_exists}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                     </#list>
