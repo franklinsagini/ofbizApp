@@ -380,7 +380,7 @@ GenericValue employeeLeaveType = null;
 		}
 		
 		if (daytype.equalsIgnoreCase("Work_days")) {
-			leaveDuration = calculateWorkingDaysBetweenDates(fromDate, thruDate);
+			leaveDuration = calculateWorkingNonHolidayDaysBetweenDates(fromDate, thruDate);
 			
 		} else if(daytype.equalsIgnoreCase("Calendar_days")){
 			leaveDuration = calculateCalenderDaysBetweenDates(fromDate, thruDate);
@@ -493,9 +493,9 @@ GenericValue employeeLeaveType = null;
 			
 
 		}else if (daytype.equalsIgnoreCase("Work_days")) {
-			endDate = calculateEndWorkingDay(fromDate, leaveDuration);
+			endDate = calculateEndWorkingNonHolidayDay(fromDate, leaveDuration);
 			int leaveTillResumption = leaveDuration+1;
-			resumeDate = calculateEndWorkingDay(fromDate, leaveTillResumption);
+			resumeDate = calculateEndWorkingNonHolidayDay(fromDate, leaveTillResumption);
 			
 		}
 		 
@@ -1188,6 +1188,115 @@ GenericValue employeeLeaveType = null;
 		return localDateEndDate.toDate();
 	}
 	
+	public static Date calculateEndWorkingNonHolidayDay(Date startDate, int noOfDays) {
+
+		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
+
+		// If this is happening on sunday or saturday push it to start on monday
+		if (localDateEndDate.getDayOfWeek()== DateTimeConstants.SATURDAY) {
+			localDateEndDate = localDateEndDate.plusDays(2);
+		}
+
+		if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+			localDateEndDate = localDateEndDate.plusDays(1);
+		}
+		// Calculate End Date
+		int count = 1;
+		//noOfDays = noOfDays - 1;
+		while (count < noOfDays) {
+			if (localDateEndDate.getDayOfWeek() == DateTimeConstants.FRIDAY) {
+				localDateEndDate = localDateEndDate.plusDays(3);
+			} else {
+				localDateEndDate = localDateEndDate.plusDays(1);
+			}
+			count++;
+		}
+		
+		int noOfHolidays = getNumberOfHolidays(startDate,noOfDays);
+		log.info("=============== NUMBER OF HOLIDAYS"+ noOfHolidays);
+		localDateEndDate = localDateEndDate.plusDays(noOfHolidays);
+		
+		if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SATURDAY){
+			localDateEndDate = localDateEndDate.plusDays(2);
+		} else if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SUNDAY){
+			localDateEndDate = localDateEndDate.plusDays(2);
+		}
+
+		return localDateEndDate.toDate();
+	}
+	
+	/*****
+	 * Calculate Holidays from start date given number of days
+	 * */
+	private static int getNumberOfHolidays(Date startDate, int noOfDays) {
+		int holidayCount = 0;
+		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
+		LocalDate localDateHoliday;
+		List<Date> listHolidays = getHolidayList();
+		int count;
+		for (Date date : listHolidays) {
+			count = 0;
+			localDateEndDate = new LocalDate(startDate.getTime());
+			localDateHoliday = new LocalDate(date.getTime());
+			while (count < noOfDays) {
+				
+				if ((localDateEndDate.getDayOfMonth() == localDateHoliday.getDayOfMonth()) && (localDateEndDate.getMonthOfYear() == localDateHoliday.getMonthOfYear()) && (localDateEndDate.getDayOfWeek() != DateTimeConstants.SATURDAY))
+				{
+					holidayCount++;
+				}
+				
+				localDateEndDate = localDateEndDate.plusDays(1);
+				count++;
+			}
+		}
+		
+		
+		return holidayCount;
+	}
+	
+	private static int getNumberOfHolidays(Date startDate, Date endDate) {
+		int holidayCount = 0;
+		LocalDate localDateStartDate = new LocalDate(startDate.getTime());
+		LocalDate localDateEndDate = new LocalDate(endDate.getTime());
+		LocalDate localDateHoliday;
+		List<Date> listHolidays = getHolidayList();
+		for (Date date : listHolidays) {
+			//localDateEndDate = new LocalDate(startDate.getTime());
+			localDateHoliday = new LocalDate(date.getTime());
+			while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
+				
+				if ((localDateStartDate.getDayOfMonth() == localDateHoliday.getDayOfMonth()) && (localDateStartDate.getMonthOfYear() == localDateHoliday.getMonthOfYear()) && (localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY))
+				{
+					holidayCount++;
+				}
+				
+				localDateStartDate = localDateStartDate.plusDays(1);
+			}
+		}
+		
+		
+		return holidayCount;
+	}
+	
+	private static List<Date> getHolidayList() {
+		// TODO Auto-generated method stub
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<Date> listHolidayList = new ArrayList<Date>();
+		List<GenericValue> holidaysELI = null; 
+		try {
+			holidaysELI = delegator.findAll("PublicHolidays", true);
+				
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : holidaysELI) {
+			listHolidayList.add(genericValue.getDate("holidayDate"));
+		}
+		
+		
+		return listHolidayList;
+	}
 	public static int calculateWorkingDaysBetweenDates(Date startDate, Date endDate) {
 		int daysCount = 1;
 		LocalDate localDateStartDate = new LocalDate(startDate);
@@ -1232,6 +1341,27 @@ GenericValue employeeLeaveType = null;
 
 			localDateStartDate = localDateStartDate.plusDays(1);
 		}
+
+		return daysCount;
+	}
+	
+	public static int calculateWorkingNonHolidayDaysBetweenDates(Date startDate, Date endDate) {
+		int daysCount = 0;
+		LocalDate localDateStartDate = new LocalDate(startDate);
+		LocalDate localDateEndDate = new LocalDate(endDate);
+		while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
+			if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY) 
+					
+					&& (localDateStartDate.getDayOfWeek() != DateTimeConstants.SUNDAY)) {
+				daysCount++;
+			}
+
+			localDateStartDate = localDateStartDate.plusDays(1);
+		}
+		
+		int noOfHolidays = getNumberOfHolidays(startDate, endDate);
+		
+		daysCount = daysCount - noOfHolidays;
 
 		return daysCount;
 	}
