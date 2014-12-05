@@ -6,8 +6,9 @@ import org.ofbiz.entity.util.EntityUtil;
 
 partyId = parameters.partyId
 loanStatusId = parameters.loanStatusId
-LloanStatusId = loanStatusId.toLong();
 loanProductId = parameters.loanProductId
+
+LloanStatusId = loanStatusId.toLong();
 LloanProductId = loanProductId.toLong();
 
 
