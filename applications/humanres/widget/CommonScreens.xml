@@ -140,7 +140,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="EmplPostionBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                                <!-- include-menu name="EmplPostionBar" location="component://humanres/widget/HumanresMenus.xml"/ -->
                             </widgets>
                         </section>
                     </decorator-section>
@@ -186,7 +186,7 @@ under the License.
                                         <not><if-empty field="parameters.partyIdFrom"/></not>
                                     </condition>
                                     <actions>
-                                        <entity-one entity-name="PartyNameView" value-field="emplName">
+                                        <entity-one entity-name="Person" value-field="emplName">
                                             <field-map field-name="partyId" from-field="parameters.partyIdTo"/>
                                         </entity-one>
                                         <entity-one entity-name="PartyNameView" value-field="orgName">
@@ -203,7 +203,7 @@ under the License.
                                                 <container style="button-bar">
                                                     <link target="EditEmployment" text="New Posting" style="buttontext"/>
                                                 </container>
-                                                <label style="h1" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}]"></label>
+                                                <label style="h1" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.employeeNumber}]"></label>
                                                 <!-- label style="h1" text="${orgName.groupName} [${orgName.partyId}]"></label -->
                                             </widgets>
                                         </section>

@@ -584,6 +584,8 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+	
+	
 
 	<!-- Employment Group -->
 	<simple-method method-name="createEmployment"
@@ -596,11 +598,12 @@
 			<set field="newEntity.fromDate" from-field="nowTimeStamp" />
 		</if-empty>
 		<create-value value-field="newEntity" />
-
+		
 		<set-service-fields service-name="createPayHistory"
 			map="newEntity" to-map="createPayHistoryMap" />
 		<call-service service-name="createPayHistory"
 			in-map-name="createPayHistoryMap" />
+		
 	</simple-method>
 
 	<simple-method method-name="updateEmployment"
@@ -617,6 +620,29 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+	
+	<!-- ============================================================================================================== -->
+	<simple-method method-name="postingUpdate" short-description="Posting Update ">
+		 <call-simple-method method-name="createEmployment" scope="inline"></call-simple-method>
+		 <!-- call-simple-method method-name="saveRequestedFile" scope="inline"></call-simple-method>
+		  <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method -->
+		 
+		<set field="partyIdTo" value="${partyIdTo}"/>
+		<log message=">>>>>>>>>>>>>>>>********************************>>>>>>>PARAMETERS1 ${parameters.partyIdTo}" level="info"/>
+		<log message=">>>>>>>>>>>>>>>>********************************>>>>>>>PARAMETERS2 ${parameters.branchId}" level="info"/>
+		<log message=">>>>>>>>>>>>>>>>********************************>>>>>>>PARAMETERS3 ${parameters.departmentId}" level="info"/>
+		 
+		 
+		 <entity-one entity-name="Person" value-field="pers">
+		 	<field-map field-name="partyId" from-field="parameters.partyIdTo"/>
+		 </entity-one>
+
+		 <!-- Get status -->
+		 <set field="pers.branchId" from-field="parameters.branchId" />
+		 <set field="pers.departmentId" from-field="parameters.departmentId" />
+		<store-value value-field="pers" />
+	</simple-method>
+	<!-- ============================================================================================================== -->
 	
 	<!-- ========================= DEPARTMENT DEFINITION =================================== -->
 	
@@ -930,18 +956,64 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+	
+	
+	<!-- ============================================================================================================== -->
+	<simple-method method-name="positionUpdate" short-description="Position Update ">
+		<call-simple-method method-name="createEmplPositionFulfillment" scope="inline"></call-simple-method>
+		 
+		 <!-- call-simple-method method-name="saveRequestedFile" scope="inline"></call-simple-method>
+		  <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method -->
+		 
+		<set field="partyId" value="${partyId}"/>
+		<log message=">>>>>>>>>>>>>>>>********************************>>>>>>>PARAMETERS ${parameters.partyId}" level="info"/>
+		<log message=">>>>>>>>>>>>>>>>********************************>>>>>>>PARAMETERS2 ${parameters.emplPositionTypeId}" level="info"/>
+		 
+		 
+		 <entity-one entity-name="Person" value-field="pers">
+		 	<field-map field-name="partyId" from-field="parameters.partyId"/>
+		 </entity-one>
+		 
+		  <entity-one entity-name="EmplPositionType" value-field="ept">
+		 	<field-map field-name="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+		 </entity-one>
+
+		 <!-- Get status -->
+		 <set field="pers.emplPositionTypeId" from-field="parameters.emplPositionTypeId" />
+		 <set field="pers.payGradeId" from-field="ept.payGradeId" />
+		<store-value value-field="pers" />
+	</simple-method>
+	
+	
 
 	<simple-method method-name="createEmplPositionFulfillment"
-		short-description="Create a Emplyoee Position Fulfillment">
-		<make-value entity-name="EmplPositionFulfillment"
-			value-field="newEntity" />
+		short-description="Create a Employee Position Fulfillment">
+		<log message="====PARAETERS+++++++++++++++ ${parameters}===" level="info"/>
+		<log message="====+++++++++++++++=================================================================" level="info"/>
+		
+		<make-value entity-name="EmplPositionFulfillment"	value-field="newEntity" />
+			<log message="====newEntity+++++++++++++++ ${newEntity}===" level="info"/>
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<if-empty field="newEntity.fromDate">
 			<now-timestamp field="nowTimeStamp" />
 			<set field="newEntity.fromDate" from-field="nowTimeStamp" />
 		</if-empty>
+		
 		<create-value value-field="newEntity" />
+		
+		
+	<!--	<entity-one entity-name="Person" value-field="personContext">
+		 	<field-map field-name="partyId" from-field="newEntity.partyId"/>
+		 </entity-one>
+		
+		 <set field="personContext.emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+		 <log message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>PARTYID+++++++++++++++ ${personContext.partyId}===" level="info"/>
+		 <set field="personContext.partyId" from-field="partyId"/>
+		 <call-service service-name="updatePerson" in-map-name="personContext"/>
+		--><!--<call-simple-method  method-name="positionUpdate" scope="inline">
+		</call-simple-method>-->
+		
 	</simple-method>
 
 	<simple-method method-name="updateEmplPositionFulfillment"
@@ -1747,6 +1819,7 @@
 		<first-from-list entry="rateAmount" list="rateAmounts" />
 		<field-to-result field="rateAmount" result-name="emplPositionRateAmount" />
 	</simple-method>
+	
 
 	<simple-method method-name="createJobRequisition"
 		short-description="Create Job Requisition">
