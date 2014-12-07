@@ -6,13 +6,40 @@ import org.ofbiz.entity.util.EntityUtil;
 
 partyId = parameters.partyId
 loanStatusId = parameters.loanStatusId
-LloanStatusId = loanStatusId.toLong();
 loanProductId = parameters.loanProductId
 LloanProductId = loanProductId.toLong();
 
+context.product_id = LloanProductId
+product = delegator.findOne("LoanProduct", [loanProductId : LloanProductId], false);
+context.product = product;
+
+//if i have lloanProductId && oanStatusId && partyId
+if (loanStatusId && partyId) {
+  LloanStatusId = loanStatusId.toLong();
+  LpartyId = partyId.toLong();
+  context.loanDetailsList = delegator.findByAnd("LoanApplication", [loanStatusId : LloanStatusId, loanProductId : LloanProductId, partyId : LpartyId], null, false)
+  return
+}
+
+//if i have loanStatusId && loanProductId
+if (loanStatusId) {
+  LloanStatusId = loanStatusId.toLong();
+  context.loanDetailsList = delegator.findByAnd("LoanApplication", [loanStatusId : LloanStatusId, loanProductId : LloanProductId], null, false)
+  return
+}
+
+//if i have partyId && loanProductId
+if (partyId) {
+  LpartyId = partyId.toLong();
+  context.loanDetailsList = delegator.findByAnd("LoanApplication", [loanProductId : LloanProductId, partyId : LpartyId], null, false)
+  return
+}
 
 
-context.loanDetailsList = delegator.findByAnd("LoanApplication", [loanStatusId : LloanStatusId, loanProductId : LloanProductId], null, false)
+//or else just query with the default passed loanProductId
+context.loanDetailsList = delegator.findByAnd("LoanApplication", [loanProductId : LloanProductId], null, false)
 
-context.LloanProductId = LloanStatusId
-context.LloanStatusId = LloanStatusId
+
+
+
+

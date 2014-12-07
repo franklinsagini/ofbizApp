@@ -610,14 +610,24 @@ under the License.
     </service>
     
     <!-- Employment Group -->
-    <service name="createEmployment" engine="simple" default-entity-name="Employment"
+    <!-- service name="createEmployment" engine="simple" default-entity-name="Employment"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createEmployment" auth="true">
         <description>Create Employment</description>
         <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override type="Timestamp" mode="IN" name="fromDate" optional="true"/>
+    </service -->
+    
+     <service name="postingUpdate" engine="simple" default-entity-name="Employment"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="postingUpdate" auth="true">
+        <description>Posting Synch</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    
+
 
     <service name="updateEmployment" engine="simple" default-entity-name="Employment"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmployment" auth="true">
@@ -947,6 +957,26 @@ under the License.
         <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+
+    
+     <service name="positionUpdate" engine="simple" default-entity-name="EmplPositionFulfillment"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="positionUpdate" auth="true">
+        <description>Position Synch</description>
+        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <!--<service name="positionUpdate" engine="simple" default-entity-name="EmplPositionFulfillment"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="positionUpdate" auth="true">
+        <description>Position Synch</description>
+        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override type="Timestamp" mode="IN" name="fromDate" optional="true"/>
+    </service>-->
+    
+
 
     <service name="createValidResponsibility" engine="simple" default-entity-name="ValidResponsibility"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createValidResponsibility" auth="true">
