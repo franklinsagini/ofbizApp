@@ -112,7 +112,7 @@
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember" show-description="true"/></field>
 
         <field name="mobilePhoneNumber" title="Mobile Phone No." widget-style="required" required-field="true"><text></text></field>
-       	<field name="cardStatusId" title="Card Status">
+       	<field name="cardStatusId" title="Status">
       		<drop-down>
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
       		</drop-down>
@@ -128,7 +128,8 @@
                 	<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
                 </entity-options>
             </drop-down>
-        </field>       
+        </field>
+               
          <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -149,6 +150,9 @@
         </field>
 
         <field name="mobilePhoneNumber" title="Mobile Phone No." widget-style="required" required-field="true"><text></text></field>
+       	
+       	<field name="formNumber" title="Form No." widget-style="required" required-field="true"><text></text></field>
+       	
        	<field name="cardStatusId" title="Status">
       		<drop-down>
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
@@ -215,7 +219,7 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
-      	<field name="cardStatusId" title="Card Status">
+      	<field name="cardStatusId" title="Status">
       		<drop-down allow-empty="true">
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
       		</drop-down>
@@ -238,6 +242,11 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            
+            <set field="statusName" value="APPROVED"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(statusName);}" type="Long"/> 
+            <set field="currentStatusId" value="${msaccoApplicationCtx.cardStatusId}" type="Long"/>
+            
         </actions>
         <field name="msaccoApplicationId"><hidden/></field>
         <field name="partyId" title="Member">
@@ -266,7 +275,7 @@
         
         <field name="maximumTransactionAmount" title="Maximum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
-        <field name="msaccoApproveAction" title="Action" widget-style="buttontext">
+        <field name="msaccoApproveAction" title="Action" use-when="cardStatusId != ${statusId}" widget-style="buttontext">
 			<hyperlink target="msaccoApproveAction" description="Approve"
 				also-hidden="false">
 				<parameter param-name="msaccoApplicationId" />
@@ -292,7 +301,7 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
-      	<field name="cardStatusId" title="Card Status">
+      	<field name="cardStatusId" title="Status">
       		<drop-down allow-empty="true">
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
       		</drop-down>
@@ -312,6 +321,11 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            
+            
+		    <set field="statusName" value="ACTIVE"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(statusName);}" type="Long"/> 
+            
         </actions>
         <field name="msaccoApplicationId"><hidden/></field>
         <field name="partyId" title="Member">
@@ -339,7 +353,7 @@
         </field>
         
         <field name="maximumTransactionAmount" title="Maximum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
-        <field name="msaccoActivateAction" title="Action" widget-style="buttontext">
+        <field name="msaccoActivateAction" title="Action" use-when="cardStatusId!=${statusId}" widget-style="buttontext">
 			<hyperlink target="msaccoActivateAction" description="Activate"
 				also-hidden="false">
 				<parameter param-name="msaccoApplicationId" />
@@ -366,7 +380,7 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
-      	<field name="cardStatusId" title="Card Status">
+      	<field name="cardStatusId" title="Status">
       		<drop-down allow-empty="true">
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
       		</drop-down>
@@ -386,6 +400,10 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            
+            		     <set field="statusName" value="DEACTIVATED"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(statusName);}" type="Long"/> 
+            
         </actions>
         <field name="msaccoApplicationId"><hidden/></field>
         <field name="partyId" title="Member">
@@ -413,7 +431,7 @@
         </field>
         
         
-        <field name="msaccoCancelAction" title="Action" widget-style="buttontext">
+        <field name="msaccoCancelAction" title="Action" use-when="cardStatusId!=${statusId}" widget-style="buttontext">
 			<hyperlink target="msaccoCancelAction" description="Cancel"
 				also-hidden="false">
 				<parameter param-name="msaccoApplicationId" />
@@ -432,12 +450,23 @@
     	<form name="ApproveMSaccoLog" type="single" target="approveMSaccoProcess"
 	focus-field-name="comment" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="msaccoLogContext">
+	
+	<actions>
+			<set field="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
+			<entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+				<field-map field-name="msaccoApplicationId" from-field="msaccoApplicationId"/>
+			</entity-one>
+		     <set field="statusName" value="APPROVED"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(statusName);}" type="Long"/> 
+            <set field="currentStatusId" value="${msaccoApplication.cardStatusId}" type="Long"/>
+		
+	</actions>
         
        <field name="msaccoLogId"><hidden/></field>
         <field name="msaccoApplicationId" parameter-name="msaccoApplicationId"><hidden/></field>
 		
 		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
-        <field name="submitButton" title="Approve" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Approve" use-when="${currentStatusId} != ${statusId}" widget-style="smallSubmit"><submit button-type="button"/></field>
       </form>
       
       <form name="listApproveMSaccoLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMSaccoLog" paginate-target="msaccoApproveAction"
@@ -468,12 +497,21 @@
 	    	<form name="ActivateMSaccoLog" type="single" target="activateMSaccoProcess"
 	focus-field-name="comment" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="msaccoLogContext">
-        
+        <actions>
+        	<set field="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
+        	<entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+				<field-map field-name="msaccoApplicationId" from-field="msaccoApplicationId"/>
+			</entity-one>
+		    <set field="statusName" value="ACTIVE"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(statusName);}" type="Long"/> 
+            <set field="currentStatusId" value="${msaccoApplication.cardStatusId}" type="Long"/>
+        	
+        </actions>
        <field name="msaccoLogId"><hidden/></field>
         <field name="msaccoApplicationId" parameter-name="msaccoApplicationId"><hidden/></field>
 		
 		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
-        <field name="submitButton" title="Activate" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Activate" use-when="${currentStatusId}!=${statusId}" widget-style="smallSubmit"><submit button-type="button"/></field>
       </form>
       
             <form name="listActivateMSaccoLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMSaccoLog" paginate-target="msaccoActivateAction"
@@ -503,12 +541,21 @@
 	<form name="CancelMSaccoLog" type="single" target="cancelMSaccoProcess"
 	focus-field-name="comment" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="msaccoLogContext">
-        
+        <actions>
+        	<set field="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
+			<entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
+				<field-map field-name="msaccoApplicationId" from-field="msaccoApplicationId"/>
+			</entity-one>
+		     <set field="statusName" value="DEACTIVATED"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(statusName);}" type="Long"/> 
+            <set field="currentStatusId" value="${msaccoApplication.cardStatusId}" type="Long"/>
+        	
+        </actions>
        <field name="msaccoLogId"><hidden/></field>
         <field name="msaccoApplicationId" parameter-name="msaccoApplicationId"><hidden/></field>
 		
 		<field name="comment" title="Comment"  widget-style="required" required-field="true"><textarea></textarea></field>
-        <field name="submitButton" title="Cancel/Deactivate" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Cancel/Deactivate" use-when="${statusId}!=${currentStatusId}" widget-style="smallSubmit"><submit button-type="button"/></field>
       </form>
       
             <form name="listCancelMSaccoLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMSaccoLog" paginate-target="msaccoCancelAction"
