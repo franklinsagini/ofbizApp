@@ -1459,5 +1459,68 @@ GenericValue employeeLeaveType = null;
 				return isHoliday;
 		
 	}
+	
+	public static String getBranchDepartments(HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String branchId = (String) request.getParameter("branchId");
+		List<GenericValue> departmentsELI = null;
+		
+		
+		try {
+			
+			departmentsELI = delegator.findList("department", EntityCondition.makeCondition("branchId", branchId), null, null, null, false);
+		
+		} catch (GenericEntityException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		
+		if (departmentsELI == null){
+			result.put("", "No departments");
+		}
+		
+		for (GenericValue genericValue : departmentsELI) {
+			result.put(genericValue.get("departmentId").toString(), genericValue.get("departmentName"));
+		}
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+	
 }
 

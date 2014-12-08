@@ -128,7 +128,42 @@
      }
 
         });
+        
+         jQuery('select[name="branchId"]').change(function(){
+         var branchId = this.value;
+         var reqUrl =  '/humanres/control/departmentslist';
+         branchDepartments(reqUrl, branchId);
         });
+        });
+        
+        
+         
+    
+     
+     
+     
+     
+     
+      function branchDepartments(reqUrl, branchId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'branchId': branchId}, 
+     success : function(data){
+				var options =  jQuery('select[name="departmentId"]');
+				options.empty();
+				options.append($("<option />").val('').text('Please select department ..'));
+				$.each(data, function(item, itemvalue) {
+				    options.append($("<option />").val(item).text(itemvalue));
+				});
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+    });
+    }
 		
 		 
 		 
@@ -593,6 +628,7 @@
     	var NoticePeriodState = '';
     	var durationState = '';
     	var onceAyearState = '';
+    	var getEmploymentStatusState = '';
 
     	 var reqUrl = '/humanres/control/leaveFormValidation';
 
@@ -608,6 +644,7 @@
 							NoticePeriodState =  data.NoticePeriodState;
 							durationState = data.durationState;
 							onceAyearState = data.onceAyearState;
+							getEmploymentStatusState = data.getEmploymentStatusState;
 			               },
 			      error : function(errorData){
 
@@ -638,6 +675,10 @@
     	}
     	if ((onceAyearState == 'PAST')){
     		message = message+" You can not start leave in the past!!";
+    		isValid = false;
+    	}
+    	if ((getEmploymentStatusState == 'INVALID')){
+    		message = message+" You are not allowed to apply for leave!!";
     		isValid = false;
     	}
     	if ((onceAyearState == 'VALID')){

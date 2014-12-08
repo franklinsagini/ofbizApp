@@ -208,14 +208,54 @@ public class PartyServices {
 						userLogin.get("userLoginId"));
 			}
 			
-			//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
+			
+			//====================================================NEW PARTY ROLE EMPLOYEE===================================================================
 			partyRoleEmployee = delegator.makeValue("PartyRole",
 					UtilMisc.toMap("partyId", partyId, "roleTypeId", "EMPLOYEE"));
+			
+			//===================================================NEW EMPLOYEE RECORD FOR FILING====================================================================
+			String memberPlusPersonId = (String) context.get("memberPlusPersonId");
+			
+			if (UtilValidate.isEmpty(memberPlusPersonId)) {
+				try {
+					memberPlusPersonId = delegator.getNextSeqId("memberPlusPerson");
+				} catch (IllegalArgumentException e) {
+					return ServiceUtil
+							.returnError(UtilProperties
+									.getMessage(
+											resourceError,
+											"partyservices.could_not_create_party_group_generation_failure",
+											locale));
+				}
+			} else {
+				// if specified partyId starts with a number, return an error
+				if (memberPlusPersonId.matches("\\d+")) {
+					return ServiceUtil
+							.returnError(UtilProperties
+									.getMessage(
+											resourceError,
+											"partyservices.could_not_create_party_ID_digit",
+											locale));
+				}
+			}
+			
+			
+			GenericValue fileEmployee = null;
+			fileEmployee = delegator.makeValue("memberPlusPerson",
+					UtilMisc.toMap("memberPlusPersonId", memberPlusPersonId,
+							"partyId", memberPlusPersonId,
+							"firstName", context.get("firstName"),  
+							"lastName", context.get("lastName"),  
+							"payrollNo", context.get("employeeNumber"), 
+							"idNumber", context.get("nationalIDNumber"),
+							"employmentStatus", context.get("employmentStatusEnumId"),
+							"fileType", "EMPLOYEE"));
 			
 			
 			party = delegator.makeValue("Party", newPartyMap);
 			toBeStored.add(party);
 			toBeStored.add(partyRoleEmployee);
+			toBeStored.add(fileEmployee);
 
 			// create the status history
 			GenericValue statusRec = delegator.makeValue("PartyStatus",
