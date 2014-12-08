@@ -27,9 +27,11 @@ import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -295,10 +297,88 @@ public class PartyServices {
 					resourceError, "person.create.db_error",
 					new Object[] { e.getMessage() }, locale));
 		}
+		
+
+		//===================================================UPDATE POSITION & POSTING DETAILS====================================================================
+ 
+		List<GenericValue> listUpdates = new ArrayList<GenericValue>();
+		//     String payGradeId = (String) context.get("payGradeId");
+		String emplPositionTypeId = (String) context.get("emplPositionTypeId");
+		String emplPositionId = getempPositionId(delegator, emplPositionTypeId);
+		
+		String branchId = (String) context.get("branchId");
+		String departmentId = (String) context.get("departmentId");
+//		String partyId_upd = (String) context.get("partyId");
+		Date applctnDte = (Date) context.get("appointmentdate");
+		Timestamp appDate = new Timestamp(applctnDte.getTime());
+
+		log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "+emplPositionTypeId);
+		log.info("######### emplPositionId here>>>>>>>>>>>>>>>>>>>>>   "+emplPositionId);
+		log.info("######### branchId here>>>>>>>>>>>>>>>>>>>>>   "+branchId);
+		log.info("######### departmentId here>>>>>>>>>>>>>>>>>>>>>   "+departmentId);
+		log.info("######### partyId_upd here>>>>>>>>>>>>>>>>>>>>>   "+partyId);
+		log.info("######### applctnDte here>>>>>>>>>>>>>>>>>>>>>   "+applctnDte);
+           
+        
+        GenericValue emplPosition = null;
+        emplPosition = delegator.makeValue("EmplPositionFulfillment",
+                UtilMisc.toMap("emplPositionId", emplPositionId,
+                        "partyId", partyId,
+                        "emplPositionTypeId", emplPositionTypeId,  
+                        "fromDate", appDate));
+        
+        listUpdates.add(emplPosition);
+        
+
+        GenericValue emplPosting = null;
+        emplPosting = delegator.makeValue("Employment",
+                UtilMisc.toMap("roleTypeIdFrom", "INTERNAL_ORGANIZATIO",
+		                "roleTypeIdTo", "EMPLOYEE",
+		                "partyIdFrom", "Company",
+		                "partyIdTo", partyId, 
+                        "fromDate", appDate,               		
+                		"branchId", branchId,
+                        "departmentId", departmentId));
+        
+        listUpdates.add(emplPosting);
+        
+        try {
+			delegator.storeAll(listUpdates);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+      
 
 		result.put("partyId", partyId);
 		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
 		return result;
+	}
+	
+
+	private static String getempPositionId(Delegator delegator,
+			String emplPositionTypeId) {
+		String emplPositionId=null;
+		List<GenericValue> epELI = null;
+		
+		try {
+			epELI = delegator.findList("EmplPosition", EntityCondition
+					.makeCondition("emplPositionTypeId", emplPositionTypeId), null,
+					null, null, false);
+		
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if(!(epELI.isEmpty()))
+		{
+			for (GenericValue genericValue : epELI) {
+				emplPositionId=genericValue.getString("emplPositionId");			
+			}
+		}		
+		
+		return emplPositionId;
 	}
 
 	/**

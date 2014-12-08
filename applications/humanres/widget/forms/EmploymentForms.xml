@@ -42,14 +42,20 @@
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
+        <field name="departmentId" title="Department" >
+            <drop-down allow-empty="true" >
+               <entity-options description="${departmentName}" entity-name="department" key-field-name="departmentId"></entity-options>
+            </drop-down>
+        </field>
+        
          <!-- field name="stationId" title="Station" required-field="true" widget-style="required">
             <drop-down allow-empty="true" >
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field -->
         <field name="partyIdTo" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
-        <field name="firstName"><text-find/></field>
-        <field name="lastName"><text-find/></field>
+        <field name="firstName"><hidden/></field>
+        <field name="lastName"><hidden/></field>
         <field name="fromDate"><date-find type="date"/></field>
         <field name="thruDate"><date-find type="date"/></field>
         <!-- field name="terminationTypeId" title="Termination Type">
@@ -63,12 +69,12 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListEmploymentsPerson" type="list" paginate-target="FindEmployments" default-entity-name="EmploymentAndPerson" list-name="listIt" separate-columns="true"
+    <form name="ListEmploymentsPerson" type="list" paginate-target="FindEmployments" default-entity-name="Employment" list-name="listIt" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="employmentCtx"/>
-                <field-map field-name="entityName" value="EmploymentAndPerson"/>
+                <field-map field-name="entityName" value="Employment"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -77,13 +83,17 @@
         <field name="branchId" title="Branch">
         	<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"> </display-entity>
         </field>
-        <field name="partyIdTo" title="Payroll Number" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${employeeNumber}" target="EmployeeProfile">
-                <parameter param-name="partyId" from-field="partyIdTo"/>
-            </hyperlink>
+        <field name="departmentId" title="Department">
+        	<display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"></display-entity>
         </field>
-        <field name="firstName"><display></display></field>
-        <field name="lastName"><display></display></field>
+        <field name="partyIdTo" title="Employee" widget-style="">
+        	<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})"/>
+            <!-- hyperlink also-hidden="false" description="${firstName} ${lastName} (${employeeNumber})" target="EmployeeProfile">
+                <parameter param-name="partyId" from-field="partyIdTo"/>
+            </hyperlink -->
+        </field>
+        <field name="firstName"><hidden/></field>
+        <field name="lastName"><hidden/></field>
        
         <!-- field name="stationId" title="Station">
 	       <display-entity entity-name="Station" key-field-name="stationId" description="${name}"></display-entity>
@@ -119,6 +129,7 @@
             </hyperlink>
         </field>
         <field name="branchId" title="Branch"><display/></field>
+        <field name="departmentId" title="Department"><display/></field>
         <!-- field name="stationId" title="Station">
 	       <display-entity entity-name="Station" key-field-name="stationId" description="${name}"></display-entity>
         </field -->
@@ -142,10 +153,9 @@
         <entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         </entity-condition>
-        <entity-condition entity-name="Station" list="stationList" ></entity-condition>
         </actions>
         
-        <alt-target use-when="employment==null" target="createEmployment"/>
+        <alt-target use-when="employment==null" target="postingUpdate"/>
         <!-- auto-fields-service service-name="createEmployment" default-field-type="hidden"/-->
         <field name="roleTypeIdFrom"><hidden value="INTERNAL_ORGANIZATIO"/></field>
         <field name="roleTypeIdTo"><hidden value="EMPLOYEE"/></field>
@@ -170,6 +180,16 @@
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
+        
+         <field name="departmentId" use-when="employment!=null" title="Department" required-field="true">
+        	<display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"> </display-entity>
+        </field>
+        <field name="departmentId"  use-when="employment==null" title="Department" required-field="true" 
+        	widget-style="required" tooltip="${uiLabelMap.CommonRequired}">
+            <drop-down allow-empty="true" >
+            	<entity-options entity-name="department" key-field-name="departmentId"  description="${departmentName}"></entity-options>
+            </drop-down>
+        </field>
         <!-- field name="stationId" use-when="employment!=null" title="Station">
 	       <display-entity entity-name="Station" key-field-name="stationId" description="${name}"></display-entity>
         </field>
@@ -178,7 +198,10 @@
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field -->
-        <field name="partyIdTo" use-when="employment==null" title="Employee" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployee"/></field>
+        <field name="partyIdTo" use-when="employment==null" title="Employee" tooltip="${uiLabelMap.CommonRequired}" 
+        	required-field="true" widget-style="required">
+        	<lookup target-form-name="LookupEmployee"/>
+        </field>
         <field name="partyIdTo" use-when="employment!=null" title="Employee" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
         
         
