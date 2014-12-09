@@ -145,6 +145,21 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="issuingFiles" />
 	</request-map>
+	
+	<request-map uri="addnonMemberOrPersonRecords">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addnonMemberOrPersonRecords" />
+	</request-map>
+	
+	<request-map uri="fileIssueAuthorization">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileIssueAuthorization" />
+	</request-map>
+	
+	<request-map uri="goAuthorizeFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="approvingFileIssuance" />
+	</request-map>
 
 	<request-map uri="goDispatchFile">
 		<security https="true" auth="true" />
@@ -165,6 +180,25 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="addingFileVolume" />
 	</request-map>
+	
+	<!-- ==================== NON-MEMBER/PERSON =========================== -->
+	
+	<request-map uri="createNonMemberOrPersonRecord">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createNonMemberOrPersonRecord" />
+		<response name="success" type="view" value="addnonMemberOrPersonRecords" />
+		<response name="error" type="view" value="addnonMemberOrPersonRecords" />
+	</request-map>
+
+	<request-map uri="updateNonMemberOrPersonRecord">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateNonMemberOrPersonRecord" />
+		<response name="success" type="request-redirect" value="addnonMemberOrPersonRecords">
+			<redirect-parameter name="entryNumber" />
+		</response>
+		<response name="error" type="view" value="addnonMemberOrPersonRecords" />
+	</request-map>
+	
 
 
 
@@ -274,6 +308,22 @@
 		<event type="service" path="" invoke="issuefiles" />
 		<response name="success" type="view" value="fileIssueScreen" />
 		<response name="error" type="view" value="fileIssueScreen" />
+	</request-map>
+	
+	<!-- ================ AUTHORIZATION ================= -->
+	
+	<request-map uri="approveFileIssuance">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="approveFileIssuance" />
+		<response name="success" type="view" value="fileIssueAuthorization" />
+		<response name="error" type="view" value="fileIssueAuthorization" />
+	</request-map>
+	
+	<request-map uri="disapproveFileIssuance">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="disapproveFileIssuance" />
+		<response name="success" type="view" value="fileIssueAuthorization" />
+		<response name="error" type="view" value="fileIssueAuthorization" />
 	</request-map>
 
 
@@ -401,6 +451,8 @@
 	<view-map name="fileDispatchScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileDispatch" />
 	<view-map name="fileReleaseScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileRelease" />
 	<view-map name="fileReturnScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileReturn" />
+	<view-map name="addnonMemberOrPersonRecords" type="screen"	page="component://registry/widget/FileScreens.xml#NonMemberOrPersonRecordScreen" />
+	<view-map name="fileIssueAuthorization" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileAuthorization" />
 
 	<view-map name="requestingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#requestingFiles" />
 	<view-map name="releasingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#releasingFiles" />
@@ -408,6 +460,7 @@
 	<view-map name="issuingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#issuingFiles" />
 	<view-map name="returningFiles" type="screen"	page="component://registry/widget/FileScreens.xml#returningFiles" />
 	<view-map name="addingFileVolume" type="screen"	page="component://registry/widget/FileScreens.xml#addingFileVolume" />
+	<view-map name="approvingFileIssuance" type="screen"	page="component://registry/widget/FileScreens.xml#approvingFileIssuance" />
 	
 	 <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
 
