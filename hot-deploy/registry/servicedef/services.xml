@@ -80,6 +80,25 @@
 		<auto-attributes mode="IN" include="pk" optional="false" />
 		<auto-attributes mode="IN" include="nonpk" optional="true" />
 	</service>
+	
+	<!-- ====================== FILE VOLUME =================================== -->
+	
+	<service name="createfileVolume" engine="simple" default-entity-name="RegistryFileVolume"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="createfileVolume" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+	<service name="updatefileVolume" engine="simple"	default-entity-name="RegistryFileVolume"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="updatefileVolume" auth="true">
+		<description>Update estate</description>
+		<auto-attributes mode="IN" include="pk" optional="false" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+	
 
 
 	<service name="createDocument" engine="simple"
@@ -90,6 +109,7 @@
 			mode="IN" optional="true" />
 		<auto-attributes entity-name="RegistryDocuments" include="nonpk"
 			mode="IN" optional="true" />
+		<attribute name="volumeIdentifier" mode="IN" type="String" optional="false" />
 	</service>
 
 	<!-- <service name="requestfiles" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
@@ -106,16 +126,18 @@
 		<override name="Reason" allow-html="any"></override>
 	</service>
 	
-	<service name="releasefiles" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="releasefiles" auth="true">
+	<service name="releasefiles" engine="simple" default-entity-name="RegistryFiles"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="releasefiles" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes entity-name="RegistryFileActions" include="pk" mode="IN" optional="true" />
-		<auto-attributes entity-name="RegistryFileActions" include="nonpk" mode="IN" optional="true" />
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
 	</service>
 	
-	<service name="issuefiles" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="issuefiles" auth="true">
+	<service name="issuefiles" engine="simple" default-entity-name="RegistryFiles"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="issuefiles" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes entity-name="RegistryFileActions" include="pk" mode="IN" optional="true" />
-		<auto-attributes entity-name="RegistryFileActions" include="nonpk" mode="IN" optional="true" />
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
 	</service>
 	
 	<service name="recieveFiles" engine="simple" default-entity-name="RegistryFiles"

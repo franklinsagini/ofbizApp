@@ -128,6 +128,10 @@
                 <set field="thruDate" from-field="workEffort.estimatedCompletionDate"/>
                 <set field="loginPartyId" from-field="parameters.userLogin.partyId"/>
                 <set field="approvalStatus" from-field="workEffort.status"/>
+                
+                <!-- set field="partyId" from-field="parameters.partyId"/>
+                <set field="trainingClassTypeId" from-field="parameters.trainingClassTypeId"/>
+                <set field="fromDate" from-field="parameters.fromDate"/ -->
             </actions>
             <widgets>
                 <section>
@@ -159,6 +163,9 @@
                                 </container>
                                 <container style="righthalf">
                                     <label style="h1" text="${uiLabelMap.WorkEffortParticipants}"/>
+                                    <link target="runpayroll?payrollPeriodId=${parameters.payrollPeriodId}"  text="Add All Staff" style="righthalf">
+                                    	<image url-mode="raw" src="${iconsLocation}/add.png"/>                                                                                                       
+                                    </link>
                                     <include-form name="ListTrainingParticipants" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
                                     <section>
                                         <condition>

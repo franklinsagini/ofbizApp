@@ -97,5 +97,25 @@ public class MSaccoManagementServices {
 		}
 		return msaccoApplication;
 	}
+	
+	public static Long getCardStatusId(String name) {
+		List<GenericValue> cardStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cardStatusELI = delegator.findList("CardStatus",
+					EntityCondition.makeCondition("name", name), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long cardStatusId = 0L;
+		for (GenericValue genericValue : cardStatusELI) {
+			cardStatusId = genericValue.getLong("cardStatusId");
+		}
+
+		
+		return cardStatusId;
+	}
 
 }

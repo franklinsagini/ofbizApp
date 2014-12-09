@@ -41,7 +41,6 @@
 				<field-map field-name="viewIndex" from-field="viewIndex" />
 				<field-map field-name="viewSize" from-field="viewSize" />
 			</service>
-			
 		</actions>
 		<field name="leaveId"><hidden /></field>
 		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
@@ -104,98 +103,6 @@
 			<hidden />
 		</field>
 	</form>
-	
-	
-	
-	
-    
-     <form name="ListActivelLdsssseaves" target="" title="" list-name="listIt" type="list" paginate-target="FindActiveLeaves"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-         
-        
-           <!--  <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="EmplLeave"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service> -->
-            
-            <service service-name="performFind" result-map="result"
-				result-map-list="EmplLeave">
-				<field-map field-name="inputFields" from-field="leaveCtx" />
-				<field-map field-name="entityName" value="EmplLeave" />
-				<field-map field-name="orderBy" from-field="parameters.leaveId" />
-				<field-map field-name="viewIndex" from-field="viewIndex" />
-				<field-map field-name="viewSize" from-field="viewSize" />
-			</service>
-          
-        </actions>
-       <field name="leaveId"><hidden /></field>
-		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
-			<display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
-				<sub-hyperlink target="/partymgr/control/viewprofile"
-					target-type="inter-app" description="${partyId}" link-style="buttontext">
-					<parameter param-name="partyId" from-field="partyId" />
-				</sub-hyperlink>
-			</display-entity>
-		</field>
-		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
-			<display-entity entity-name="EmplLeaveType" />
-		</field>
-		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
-			<display-entity entity-name="EmplLeaveReasonType" />
-		</field>
-		<field name="fromDate">
-			<display />
-		</field>
-		<field name="thruDate">
-			<display />
-		</field>
-		<field name="leaveDuration">
-			<display />
-		</field>
-		<field name="responsibleEmployee" title="Approver">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}"
-				key-field-name="partyId">
-
-			</display-entity>
-		</field>
-		<field name="handedOverTo" title="Handed Over To">
-			<display-entity entity-name="Person" description="${firstName} ${lastName}"
-				key-field-name="partyId">
-			</display-entity>
-		</field>
-		<field name="updateLeaved" title="" widget-style="buttontext" use-when="${leaveTypeId=='ANNUAL_LEAVE'}">
-			<hyperlink also-hidden="false" description="Employee Callback"
-				target="callBackEmployee">
-				<parameter param-name="thruDate" /> 
-				<parameter param-name="leaveId" /> 
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveDuration" />  
-				<parameter param-name="leaveTypeId" /> 
-			</hyperlink>
-		</field> 
-		<field name="updateLeave" title="" widget-style="buttontext" use-when="${leaveTypeId=='COMPASSIONATE_LEAVE'}">
-			<hyperlink also-hidden="false" description="Employee Callback"
-				target="callBackEmployee">
-				<parameter param-name="thruDate" /> 
-				<parameter param-name="leaveId" /> 
-				<parameter param-name="partyId" />
-				<parameter param-name="leaveDuration" /> 
-				<parameter param-name="leaveTypeId" /> 
-			</hyperlink>
-		</field> 
-				<field name="description">
-			<hidden />
-		</field>
-    </form>
-	
-	
-	
-	
-	
 	
 	
 	
@@ -617,7 +524,7 @@
 			</drop-down>
 		</field>
 		<field name="fromDate" tooltip="${uiLabelMap.CommonRequired}" required-field="true">
-			<date-time type="date" />
+			<date-time type="date"></date-time>
 		</field>
 		<field name="leaveDuration" tooltip="${uiLabelMap.CommonRequired}" required-field="true">
 			<text />
