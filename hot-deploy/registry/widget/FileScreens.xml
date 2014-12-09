@@ -145,33 +145,7 @@
 		</section>
 	</screen>
 
-	<screen name="FilesDecorator">
-		<section>
-			<actions>
-			<set field="headerItem" value="files" />
-			</actions>
-			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-						<section>
-							<widgets>
-								<section>
-									<widgets>
-										<container style="leftclear">
-											<label style="h1"
-												text="Member Files" />
-										</container>
-									</widgets>
-								</section>
-								<decorator-section-include name="body" />
-							</widgets>
-						</section>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
+	
 
 	<screen name="documentsDecorator">
 		<section>
@@ -445,6 +419,46 @@
 		</section>
 	</screen>
 	
+	<!-- ======================================================FILE AUTHORIZATION====================================================== -->
+	<screen name="registryFileAuthorization">
+		<section>
+			<actions>
+				<set field="headerItem" value="fileIssueAuthorization" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Authorize File Issuance" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForAuthorization" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForAuthorization" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
 	<!-- ======================================================FILE ISSUE====================================================== -->
 	<screen name="registryFileIssue">
 		<section>
@@ -634,32 +648,38 @@
 		</section>
 	</screen>
 	
-	<screen name="fileActionTypeScreen">
+	<!-- ============================================== NON-MEMBER/PERSON RECORDS =============================================== -->
+	
+	<screen name="NonMemberOrPersonRecordScreen">
 		<section>
 			<actions>
 				<set field="titleProperty" value="file type" />
-				<set field="headerItem" value="addfileactions" />
+				<set field="headerItem" value="addnonMemberOrPersonRecords" />
 				<set field="displayPassword" value="Y" />
-				<set field="target" value="createfileActionTypes" />
+				<set field="target" value="createNonMemberOrPersonRecord" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="RegistryFileActionTypes" value-field="fileActionTypesContext" />
+				<entity-one entity-name="NonmemberPlusPersonRecords" value-field="NonMemberOrPersonContext" />
 			</actions>
 			<widgets>
-				<decorator-screen name="fileActionsDecorator"
-					location="component://registry/widget/FileScreens.xml">
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
 							<widgets>
-								<screenlet title="Create File Actions">
-									<include-form name="EditFileActionTypesForm"
+							<container style="leftclear">
+											<label style="h1"
+												text="Create A Record To Be Used For Filing" />
+										</container>
+								<screenlet title="Create Record For Filing">
+									<include-form name="EditNonMemberOrPersonForm"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>
 						<section name="search-results">
 							<widgets>
-								<screenlet title="File Actions List">
-									<include-form name="FileActionTypesListForm"
+								<screenlet title="Record List">
+									<include-form name="NonMemberOrPersonListForm"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
@@ -706,7 +726,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="Files" />
-				<set field="headerItem" value="fileheader" />
+				<set field="headerItem" value="files" />
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="creatememberFiles" />
 				<set field="partyId" from-field="parameters.partyId" />
@@ -714,21 +734,18 @@
 				<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
 			</actions>
 			<widgets>
-				<decorator-screen name="FilesDecorator"
-					location="component://registry/widget/FileScreens.xml">
-					<decorator-section name="pre-body">
-						<section>
-							<widgets>
-								<include-menu name="FileSubTabBar"
-									location="component://registry/widget/RegistryMenus.xml" />
-							</widgets>
-						</section>
-					</decorator-section>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					
 
 					<decorator-section name="body">
 						<section>
 							<widgets>
-								<screenlet title="Create A File For A member">
+							<container style="leftclear">
+											<label style="h1"
+												text="Files Creation" />
+										</container>
+								<screenlet title="Create A File Here">
 									<include-form name="EditFilesForm"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
@@ -1139,6 +1156,49 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	 <!-- ==============================================AUTHORIZATION========================================================== -->
+    
+    <screen name="approvingFileIssuance">
+		<section>
+			<actions>
+				<set field="headerItem" value="fileIssueAuthorization" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Authorize File Issuance" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="authorizeFileForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+								
+								<link target="approveFileIssuance" text="APPROVE FILE ISSUANCE" style="buttontext create">
+						<parameter param-name="memberPlusPersonId" />
+						</link>
+						
+						<link target="disapproveFileIssuance" text="DISAPPROVE FILE ISSUANCE" style="buttontext create">
+						<parameter param-name="memberPlusPersonId" />
+						</link>
+							</widgets>
+							
+							
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	
 	  <!-- ==============================================ISSUES========================================================== -->
     

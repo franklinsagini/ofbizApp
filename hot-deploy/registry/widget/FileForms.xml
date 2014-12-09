@@ -79,12 +79,12 @@
 	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="memberPlusPersonId" header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
 		 <!-- <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field> -->
 		 <field name="memberPlusPersonId" title="Select Party"><lookup target-form-name="lookupFileParty"/></field>
-		  <!-- <field name="memberOrEmployee" title="Select File Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+		  <field name="isAuthorized" title="Require Authorization?" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
-                <option key="Member" description="Member File"/>
-                <option key="Employee" description="Employee File"/>
+                <option key="Y" description="Yes"/>
+                <option key="N" description="No"/>
             </drop-down>
-        </field> -->
+        </field>
 		<!-- submitButton -->
 	<!-- 	<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="button"><submit button-type="text-link" /></field> -->
 		 <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -321,7 +321,7 @@
 				<parameter param-name="status" /> 
 			</hyperlink>
 		</field> -->
-		<field name="memberPlusPersonId" title="Party Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="fileLocation"><display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
@@ -449,9 +449,84 @@
 			</hyperlink>
 		</field>
 		 
-		<field name="memberPlusPersonId" title="Member Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
+    
+     <!--  ============================================== FILE AUTHORIZATION ======================================================================= -->
+     
+	 <form name="FindMemberfilesForAuthorization" default-map-name="FindMemberfilesForIssueContext" target="regFileIssue" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<set field="status" value="REQUESTED"/> 
+        </actions>
+        <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/>
+		<field name="status"><hidden/></field>
+		<field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="creator"><hidden/></field>
+		<field name="actionBy"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="creationDate"><hidden/></field>
+		<field name="Reason"><hidden/></field>
+        <field name="memberPlusPersonId" title="Party"><lookup target-form-name="lookupFileParty"/></field>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+   
+
+    <form name="listMemberfilesForAuthorization" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForIssue"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <entity-condition entity-name="RegistryFiles" >
+         <condition-list>
+         <condition-expr field-name="status" operator="equals" value="REQUESTED"/>
+         <condition-expr field-name="isAuthorized" operator="equals" value="Y"/>
+          <condition-expr field-name="approvalStatus" operator="not-equals" value="Approved"/>
+         </condition-list>
+        </entity-condition>
+        
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+        </actions>
+         <auto-fields-entity entity-name="RegistryFiles" default-field-type="display"/>
+         <field name="memberOrEmployee"><hidden/></field>
+         <field name="firstName"><hidden/></field>
+         <field name="lastName"><hidden/></field>
+        <field name="creationDate"><hidden/></field>
+         <field name="actionBy"><hidden/></field>
+        <field name="creator"><hidden/></field>
+        <field name="currentPossesser"><hidden/></field>
+		<field name="recieptStatus"><hidden/></field>
+		<field name="fileLocation"><hidden/></field>
+		<field name="status"><hidden/></field>
+		<field name="Reason"><hidden/></field>
+
+		<field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="memberPlusPersonId" />
+			</hyperlink>
+		</field>
+		 <field name="fileAuthorize" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Authorize" target="goAuthorizeFile">
+				<parameter param-name="memberPlusPersonId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="actionBy" /> 
+				<parameter param-name="Reason" /> 
+			</hyperlink>
+		</field>
+		<field name="memberPlusPersonId" title="Object Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
+    
      <!--  ============================================== FILE ISSUE ======================================================================= -->
      
 	 <form name="FindMemberfilesForIssue" default-map-name="FindMemberfilesForIssueContext" target="regFileIssue" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
@@ -516,7 +591,7 @@
 				<parameter param-name="Reason" /> 
 			</hyperlink>
 		</field>
-		<field name="memberPlusPersonId" title="Party Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
@@ -685,7 +760,7 @@
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
-		<field name="memberPlusPersonId" title="Party Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
@@ -801,7 +876,7 @@
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
-		<field name="memberPlusPersonId" title="Party Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
@@ -866,7 +941,7 @@
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
-		<field name="memberPlusPersonId" title="Party Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Name"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
@@ -877,7 +952,7 @@
 	<set field="number" value="${bsh:org.ofbiz.registry.FileServices.getFileVolumeCount(memberPlusPersonId);}"/>
 	</actions>
 		<field position="1" name="memberPlusPersonId" title="PartyID"><display /></field>
-		<field position="1" name="memberPlusPersonId" title="Party Name:"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
+		<field position="1" name="memberPlusPersonId" title="Object Name:"><display-entity entity-name="memberPlusPerson" description="${firstName}  ${lastName}"></display-entity></field>
 		<field position="1" name="folioNo" title="Folio Number:"><display /></field>
 		<field position="1" name="status" title="File Status:"><display /></field>
 		<field position="1" name="number" title="Number Of Volumes:"><display default-value="${bsh:org.ofbiz.registry.FileServices.getFileVolumeCount(memberPlusPersonId);} Volumes"/></field>
@@ -926,11 +1001,30 @@
 				 <set field="folioNo" value="${parameters.folioNo}"/> 
 		
         </actions>
-		<field name="memberPlusPersonId" title="Party Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
 		<field name="Reason" title="Reason for this request:" required-field="true"><textarea/></field>
 		
 		 <field name="submitButton" title="Request" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
+	  <!-- ================================================FILE AUTHORIZATION========================================================= -->
+    
+     <form name="authorizeFileForm" type="single" target=""
+		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+				 <set field="memberPlusPersonId" value="${parameters.memberPlusPersonId}"/> 
+				 <set field="folioNo" value="${parameters.folioNo}"/> 
+				  <set field="actionBy" value="${parameters.actionBy}"/>
+		
+        </actions>
+		<field name="memberPlusPersonId" title="Object Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="folioNo" title="File Folio Number:"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
+		<field name="actionBy" title="File Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="Reason" title="Reason for this request:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${Reason}"></display-entity></field>
+		
+		
 	</form>
 	
 	 <!-- ================================================FILE ISSUE========================================================= -->
@@ -946,7 +1040,7 @@
         </actions>
 		
 		
-			<field name="memberPlusPersonId" title="Party Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
+			<field name="memberPlusPersonId" title="Object Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<field name="actionBy" title="File Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="Reason" title="Reason for this request:"><display></display></field>
@@ -967,7 +1061,7 @@
 		
         </actions>
 		
-		<field name="memberPlusPersonId" title="Party Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<!-- <field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>ggggg -->
 		<field name="carriedBy" title="File Carried By:"><lookup target-form-name="LookupEmployee"/></field>
@@ -985,7 +1079,7 @@
 		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration2();}" type="String"/> -->
 		
         </actions>
-		<field name="memberPlusPersonId" title="Party Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="memberPlusPersonId" title="Object Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<!-- <field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>ffffff -->
 		<field name="carriedBy" title="File Carried By:"><lookup target-form-name="LookupEmployee"/></field>
@@ -1003,7 +1097,7 @@
 		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration2();}" type="String"/> -->
 		
         </actions>
-			<field name="memberPlusPersonId" title="Party Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
+			<field name="memberPlusPersonId" title="Object Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<field name="currentPossesser" title="Released By:"><display/></field>
 		<!-- <field name="carriedBy" title="File Carried By:" required-field="true"><text/></field>fffff -->
@@ -1022,7 +1116,7 @@
 		 <set field="folioNo" value="${parameters.folioNo}"/>
 		
         </actions>
-			<field name="memberPlusPersonId" title="Party Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
+			<field name="memberPlusPersonId" title="Object Names:"><display-entity entity-name="memberPlusPerson" key-field-name="memberPlusPersonId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
 		<field name="volumeIdentifier" title="File Volume Identifier:" tooltip="(For example: Volume One)"><text/></field>
 		
@@ -1070,5 +1164,62 @@
         <field name="idNumber"  title="ID Number"><display/></field>
         <field name="fileType" title="File Type"><display/></field>
     </form>
+    
+    <!-- ==================================================== NON-MEMBER/PERSON RECORDS FOR FILING ============================================================== -->
+    
+    <form name="EditNonMemberOrPersonForm" type="single" target="createNonMemberOrPersonRecord"	focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="NonMemberOrPersonContext">
+		
+		<actions>
+			<entity-condition entity-name="NonmemberPlusPersonRecords" list="nonPtypeList">
+				<order-by field-name="entryNumber" />
+			</entity-condition>
+		</actions>
+		<alt-target use-when="NonMemberOrPersonContext!=null" target="updateNonMemberOrPersonRecord" />
+		<field name="entryNumber"><hidden /></field>
+		<field name="entryNumber" use-when="NonMemberOrPersonContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+		<field name="objectName"><text size="45"></text></field>
+		<field name="physicalDescription"><textarea/></field>
+		<field name="securityLevel">
+		<drop-down allow-empty="true">
+		<option key="General" description="General" />
+		<option key="Restricted," description="Restricted" />
+		<option key="Confidential," description="Confidential" />
+		<option key="Secret," description="Secret" />
+		<option key="Top Secret," description="Top Secret" />
+		</drop-down>
+        </field>
+		<field name="referenceSource"><text size="45"></text></field>
+		<field name="curatorDepartment"><text size="45"></text></field>
+		<field name="identifier"><text size="45"></text></field>
+		<field name="siteInformation"><text size="45"></text></field>
+		<field name="contentBrief"><text size="45"></text></field>
+		<field name="subjectInformation"><text size="45"></text></field>
+		<field name="relatedness"><text /></field>
+		<field name="contentBrief"><text size="45"></text></field>
+		<field name="isAuthorized" title="Does it Need Authorization" required-field="true">
+		<drop-down allow-empty="true">
+		<option key="Y" description="Yes" />
+		<option key="N" description="No" />
+		</drop-down>
+        </field>
+		<field name="acquistionDate"><date-time type="date"/></field>
+		<field name="recordDate"><date-time type="date"/></field>
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"	widget-style="smallSubmit"><submit button-type="button" /></field>
+		<!-- submitButton -->
+		<field use-when="NonMemberOrPersonContext==null" name="submitButton"	title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link" /></field>
+		<field use-when="NonMemberOrPersonContext!=null" name="submitButton"	title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link" /></field>
+	</form>
+
+
+	<form name="NonMemberOrPersonListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNonMemberOrPersonRecord"
+		paginate-target="EditNonMemberOrPersonForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="NonmemberPlusPersonRecords"></entity-condition>
+		</actions>
+		<auto-fields-entity entity-name="NonmemberPlusPersonRecords" default-field-type="display"/>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
+	</form>
 
 </forms>
