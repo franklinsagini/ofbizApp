@@ -94,15 +94,15 @@
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 
-		<entity-one value-field="member" entity-name="Member">
-			<field-map field-name="partyId" value="${newEntity.partyId}"/>
+		<entity-one value-field="member" entity-name="memberPlusPerson">
+			<field-map field-name="memberPlusPersonId" value="${newEntity.memberPlusPersonId}"/>
 		</entity-one>
 		
-		<set value="FNO-${newEntity.partyId}-${member.firstName}" field="newEntity.folioNo" />
+		<set value="FNO-${newEntity.memberPlusPersonId}-${member.firstName}" field="newEntity.folioNo" />
 		<set value="REGISTRY" field="newEntity.fileLocation" />
 		<set value="AVAILABLE" field="newEntity.status" />
 		
-		<set value="${member.payrollNumber}" field="newEntity.payrollNumber" />
+		<set value="${member.payrollNo}" field="newEntity.payrollNumber" />
 		<set value="${member.memberNumber}" field="newEntity.memberNumber" />
 		<set value="${member.firstName}" field="newEntity.firstName" />
 		<set value="${member.lastName}" field="newEntity.lastName" />
@@ -131,7 +131,7 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="RegistryFileVolume" field="volumeId" />
 		<set from-field="volumeId" field="newEntity.volumeId" />
-		<set field="partyId" from-field="parameters.partyId"/>
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId"/>
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
@@ -151,11 +151,11 @@
 		 <call-simple-method method-name="saveRequestedFile" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method>
 		 
-		 <set field="partyId" value="${newEntity.partyId}"/>
+		 <set field="memberPlusPersonId" value="${newEntity.memberPlusPersonId}"/>
 		 
 		 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 
 		 <!-- Get status -->
@@ -174,7 +174,7 @@
 		<set from-field="actionId" field="newEntity.actionId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="Request"/>
 		
 		<create-value value-field="newEntity" />
@@ -188,13 +188,13 @@
 		<set from-field="logId" field="newEntity.logId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="Request"/>
 		<set field="newEntity.currentPossesser" value="REGISTRY" />
 		 <set field="newEntity.Reason" from-field="parameters.Reason"/>
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 		
 		
@@ -210,12 +210,12 @@
 		<log message=">>>>>>>>>>>>>>>>>>>>>>>PARAMETERS ${parameters}" level="info"/>
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 		
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.creationDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
 		<set field="newEntity.Reason" from-field="parameters.Reason" />
 		
@@ -230,11 +230,11 @@
 		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="deletefileFromRequested" scope="inline"></call-simple-method>
 		 
-		 <set field="partyId" value="${newEntity.partyId}"/>
+		 <set field="memberPlusPersonId" value="${newEntity.memberPlusPersonId}"/>
 		 
 		 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 		 
 		 <!-- Get status -->
@@ -248,7 +248,7 @@
 	
 	<simple-method method-name="deletefileFromRequested"
 		short-description="Remove an file">
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<entity-one entity-name="RegistryRequestedFiles" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 	</simple-method>
@@ -262,7 +262,7 @@
 		<set from-field="actionId" field="newEntity.actionId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="File Issue"/>
 		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
@@ -303,14 +303,14 @@
 		<set from-field="logId" field="newEntity.logId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="File Issue"/>
 		<set field="newEntity.currentPossesser" from-field="parameters.actionBy" />
 		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
 		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 		
 		
@@ -353,10 +353,10 @@
 	<call-simple-method method-name="saveRecieveFileAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveRecieveActionToLogs" scope="inline"></call-simple-method>
 	
-	<set field="party" from-field="parameters.partyId"/>
+	<set field="party" from-field="parameters.memberPlusPersonId"/>
 		
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 		 
 		  <entity-one entity-name="Person" value-field="person">
@@ -378,7 +378,7 @@
 		<set from-field="actionId" field="newEntity.actionId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="Receive File"/>
 		
 		
@@ -396,14 +396,14 @@
 		<set from-field="logId" field="newEntity.logId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="Receive File"/>
 		<set field="newEntity.currentPossesser" value="${userLogin.partyId}" />
 		<set field="newEntity.receiptStatus" value="RECEIVED"/>
 		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 		
 		
@@ -422,11 +422,11 @@
 	<call-simple-method method-name="saveReleaseActionToLogs" scope="inline"></call-simple-method>
 	
 		 
-		 <set field="partyId" value="${newEntity.partyId}"/>
+		 <set field="memberPlusPersonId" value="${newEntity.memberPlusPersonId}"/>
 		 
 		 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 
 		 <!-- Get status -->
@@ -444,7 +444,7 @@
 		<set from-field="actionId" field="newEntity.actionId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="Release"/>
 		
 		<create-value value-field="newEntity" />
@@ -459,14 +459,14 @@
 		<set from-field="logId" field="newEntity.logId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="Release File"/>
 		<set field="newEntity.currentPossesser" value="REGISTRY" />
 		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
 		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 		
 		
@@ -483,11 +483,11 @@
 	<call-simple-method method-name="saveReturnAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveReturnActionToLogs" scope="inline"></call-simple-method>
 		 
-		 <set field="partyId" value="${newEntity.partyId}"/>
+		 <set field="memberPlusPersonId" value="${newEntity.memberPlusPersonId}"/>
 		 
 		 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 
 		 <!-- Get status -->
@@ -507,7 +507,7 @@
 		<set from-field="actionId" field="newEntity.actionId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="Return"/>
 		
 		<create-value value-field="newEntity" />
@@ -523,14 +523,14 @@
 		<set from-field="logId" field="newEntity.logId" />
 		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId" />
 		<set field="newEntity.fileActionTypeId" value="Returned File"/>
 		<set field="newEntity.currentPossesser" value="REGISTRY" />
 		<set field="newEntity.receiptStatus" value="RECEIVED"/>
 		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
-		 	<field-map field-name="partyId" from-field="partyId"/>
+		 	<field-map field-name="memberPlusPersonId" from-field="memberPlusPersonId"/>
 		 </entity-one>
 		
 		
