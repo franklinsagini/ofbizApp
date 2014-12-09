@@ -67,6 +67,7 @@ under the License.
                 <fo:table-column column-width="80pt"/>
                 <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="70pt"/>
                 <#-- fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
@@ -88,6 +89,9 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Credit</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Balance</fo:block>
                         </fo:table-cell>
                         <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Insurance Due</fo:block>
@@ -132,6 +136,16 @@ under the License.
                               
                                 <#if (expectation.isReceived = 'N') && (expectation.amount??)>
 								    Kshs.  ${expectation.amount?string(",##0.00")} 
+								</#if>
+								
+                               </fo:block>
+                            </fo:table-cell>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                              
+                                <#if (expectation.totalAmount??)>
+								    Kshs.  ${expectation.totalAmount?string(",##0.00")} 
 								</#if>
 								
                                </fo:block>
