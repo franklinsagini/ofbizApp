@@ -579,6 +579,13 @@
 		</response>
 		<response name="error" type="view" value="lastrepaymentdatemorethanthreemonthsago" />
 	</request-map>
+	
+	<request-map uri="printLoanAppraisal">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="printLoanAppraisal">
+			<redirect-parameter name="loanApplicationId"/>
+		</response>
+	</request-map>
 
 
 	<!-- View Mappings -->
@@ -646,4 +653,6 @@
 
 	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
+		
+	<view-map name="printLoanAppraisal" type="screenfop"	page="component://loansprocessing/widget/loansprocessingScreens.xml#printLoanAppraisal" content-type="application/pdf" encoding="none"  />
 </site-conf>
