@@ -664,9 +664,13 @@ under the License.
         <log message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>VALUE OF UPRESENTED CHEQUES TOTAL: ${unpresentedChequesTotal}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" type="info"/>
         <iterate list="accountTransactions" entry="singleTrans">
             <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL">
-                <set field="unpresentedChequesTotal" value="${unpresentedChequesTotal - singleTrans.amount}" type="BigDecimal"/>
+                <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
+                    <set field="unpresentedChequesTotal" value="${unpresentedChequesTotal + singleTrans.amount}" type="BigDecimal"/>
+                </if-compare>
             <else>
-                 <set field="uncreditedBankingsTotal" value="${uncreditedBankingsTotal + singleTrans.amount}" type="BigDecimal"/>
+                <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
+                    <set field="uncreditedBankingsTotal" value="${uncreditedBankingsTotal + singleTrans.amount}" type="BigDecimal"/>
+                </if-compare>
             </else>
             </if-compare>
         </iterate>
