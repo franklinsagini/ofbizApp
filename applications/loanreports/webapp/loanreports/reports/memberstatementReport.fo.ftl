@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if expectedPaymentSentList?has_content>
+    <#if combinedList?has_content>
         <#-- REPORT TITLE -->
         <fo:block font-size="18pt" font-weight="bold" text-align="center">
             CHAI SACCO
@@ -64,9 +64,9 @@ under the License.
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="140pt"/>
                 <fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="70pt"/>
                 <#-- fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
@@ -104,7 +104,7 @@ under the License.
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
-                    <#list expectedPaymentSentList as expectation>
+                    <#list combinedList as expectation>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${expectation.loanNo?if_exists}</fo:block>
@@ -118,8 +118,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
                                 	
-                                	<#if expectation.isReceived?if_exists  >
-								    ${expectation.amount?if_exists}
+                                	<#if (expectation.isReceived = 'Y') && (expectation.amount??)  >
+                                	
+                                		
+                                		 Kshs.  ${expectation.amount?string(",##0.00")}
+								  
 								</#if>
 								
                                 </fo:block>
@@ -127,8 +130,8 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
                               
-                                <#if (expectation.isReceived?if_exists )>
-								   ${expectation.amount?if_exists} 
+                                <#if (expectation.isReceived = 'N') && (expectation.amount??)>
+								    Kshs.  ${expectation.amount?string(",##0.00")} 
 								</#if>
 								
                                </fo:block>

@@ -9,7 +9,22 @@ context.member = member;
 expectedPaymentReceivedList = delegator.findByAnd("ExpectedPaymentReceived",  [payrollNo : payrollNo], null, false);
 expectedPaymentSentList = delegator.findByAnd("ExpectedPaymentSent",  [payrollNo : payrollNo], null, false);
 
-expectedPaymentSentList +=expectedPaymentSentList;
+def combinedList = [];
 
-context.expectedPaymentSentList = expectedPaymentSentList;
+expectedPaymentSentList.eachWithIndex { sentListValue, index ->
+	sentListValue.isReceived = 'N'
+	combinedList << sentListValue
+	
+	}
+
+expectedPaymentReceivedList.eachWithIndex { receivedListValue, index ->
+	receivedListValue.isReceived = 'Y'
+	combinedList << receivedListValue
+	
+	}
+
+
+//expectedPaymentSentList +=expectedPaymentSentList;
+
+context.combinedList = combinedList;
 
