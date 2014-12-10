@@ -49,6 +49,8 @@
 		<field name="fileLocation" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="carriedBy" type="name"></field>
+		 <field name="isAuthorized" type="name"></field>
+		<field name="approvalStatus" type="name"></field>
 		<field name="creationDate" type="date-time"></field>
 		<prim-key field="memberPlusPersonId" />
 		<relation type="one" fk-name="FILE_MEMBER" rel-entity-name="Member">
@@ -107,7 +109,7 @@
 	<entity entity-name="RegistryFileActions" package-name="org.ofbiz.registry"
 		title="Member File actions">
 		<field name="actionId" type="id-ne"></field>
-		<field name="fileActionTypeId" type="id-ne"></field>
+		<field name="fileActionTypeId" type="name"></field>
 		<field name="memberPlusPersonId" type="id"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="actionDate" type="date-time"></field>
@@ -174,7 +176,28 @@
        <field name="idNumber" type="name"></field>
        <field name="employmentStatus" type="name"></field>
        <field name="fileType" type="name"></field>
+        <field name="isAuthorized" type="name"></field>
+        <field name="securityLevel" type="name"></field>
        <prim-key field="memberPlusPersonId"/>
+    </entity>
+    
+    
+      <entity entity-name="NonmemberPlusPersonRecords" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="entryNumber" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="objectName" type="name"></field>
+       <field name="securityLevel" type="name"></field>
+       <field name="physicalDescription" type="description"></field>
+       <field name="referenceSource" type="name"></field>
+       <field name="curatorDepartment" type="name"></field>
+       <field name="identifier" type="name"></field>
+       <field name="siteInformation" type="name"></field>
+       <field name="contentBrief" type="name"></field>
+       <field name="subjectInformation" type="name"></field>
+       <field name="relatedness" type="name"></field>
+       <field name="isAuthorized" type="name"></field>
+       <field name="acquistionDate" type="name"></field>
+       <field name="recordDate" type="name"></field>
+       <prim-key field="entryNumber"/>
     </entity>
 	
 </entitymodel>
