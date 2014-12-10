@@ -658,7 +658,12 @@
 		</response>
 	</request-map>
 
-
+	<request-map uri="transactionPrintOut">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="transactionPrintOut">
+			<redirect-parameter name="accountTransactionParentId"/>
+		</response>
+	</request-map>
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
@@ -735,6 +740,9 @@
 	<view-map name="expectedPaymentBreakdowncsv" type="screencsv"
 		content-type="text/csv"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentBreakdowncsv" />
+
+	<view-map name="transactionPrintOut" type="screenfop"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#transactionPrintOut" content-type="application/pdf" encoding="none"  />
 
 	<!-- end of view mappings -->
 
