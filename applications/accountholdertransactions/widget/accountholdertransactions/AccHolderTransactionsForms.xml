@@ -79,7 +79,8 @@ under the License.
             	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
             
-
+			<set field="partyIdStringTemp" from-field="parameters.partyId" type="String"/>
+			<set field="partyIdString" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.removeCommas(partyId);}"/>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
 		
@@ -94,7 +95,7 @@ under the License.
         <field name="memberAccountId" title="Account">
         	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" >
         		<!-- sub-hyperlink target-type="inter-app" target="http://localhost:55555/viewer/frameset?__report=C%3A\\Users\\USER\\birtreports\\VergeSaccoReports\\memberministatement.rptdesign&amp;__format=pdf&amp;member_account_id=${memberAccountId}&amp;member_account_id2=${memberAccountId}&amp;member_account_id3=${memberAccountId}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=C%3A\\Users\\USER\\birtreports\\VergeSaccoReports&amp;__dpi=96&amp;__parameterpage=false&amp;232000292" description="Print  Statement"></sub-hyperlink -->
-        		<sub-hyperlink target-type="intra-app" target="printMiniStatement?partyId=${partyId}" description="Print  Statement"></sub-hyperlink>
+        		<sub-hyperlink target-type="intra-app" target="printMiniStatement?partyId=${partyIdString}" description="Print  Statement"></sub-hyperlink>
         	</display-entity>
         </field>
         
