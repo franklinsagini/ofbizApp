@@ -610,6 +610,44 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- ======================================================FILE ARCHIVES====================================================== -->
+	<screen name="registryFileArchive">
+		<section>
+			<actions>
+				<set field="headerItem" value="archives" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Archive Documents" />
+										</container>
+								<screenlet title="Search Document">
+									<include-form name="fileArchive" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Document List (Search Results)">
+									<include-form name="fileArchiveListForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 
 	<screen name="filetype">

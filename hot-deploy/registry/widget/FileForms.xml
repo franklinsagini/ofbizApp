@@ -177,10 +177,13 @@
 		<field name="documentId"><display /></field>
 		<!-- <field name="DocumentTypeId" title="Document Type ID"><display /></field> -->
 		<field name="DocumentTypeId" title="Document Type"><display-entity entity-name="RegistryDocumentType" description="${DocumentType}"></display-entity></field>
+		<field name="documentFolio" title="Document Folio Number"><display /></field>
 		<field name="referenceNo" title="Document Reference Number"><display /></field>
 		<field name="volumeIdentifier"><display /></field>
 		<field name="documentValue" title="Document Value" tooltip="(Ksh.)"><display /></field>
 		<field name="receiptDate" title="Date Recieved"><display /></field>
+		<field name="archiveDate"><display /></field>
+		<field name="archivestatus"><display /></field>
 	</form>
 
 
@@ -1212,7 +1215,7 @@
 	</form>
 
 
-	<form name="NonMemberOrPersonListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNonMemberOrPersonRecord"
+	<form name="NonMemberOrPersonListForm" type="single"  target="updateNonMemberOrPersonRecord"
 		paginate-target="EditNonMemberOrPersonForm" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="NonmemberPlusPersonRecords"></entity-condition>
@@ -1220,6 +1223,29 @@
 		<auto-fields-entity entity-name="NonmemberPlusPersonRecords" default-field-type="display"/>
 		
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
+	</form>
+	
+	<!-- =================================== FOR ARCHIVING ========================================= -->
+	
+	
+	  <form name="fileArchive" type="single" target=""	focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="NonMemberOrPersonContext">
+		<actions>
+			<entity-condition entity-name="RegistryDocuments"></entity-condition>
+		</actions>
+		<auto-fields-entity entity-name="RegistryDocuments" default-field-type="find"/>
+		
+		  <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
+	<form name="fileArchiveListForm" type="list" 
+		paginate-target="fileArchive" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="RegistryDocuments"></entity-condition>
+		</actions>
+		<auto-fields-entity entity-name="RegistryDocuments" default-field-type="display"/>
+		
 	</form>
 
 </forms>
