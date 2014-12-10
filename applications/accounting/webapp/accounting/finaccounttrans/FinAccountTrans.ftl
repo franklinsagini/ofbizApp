@@ -81,6 +81,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 
 <div class="screenlet screenlet-body">
   <#if finAccountTransList?has_content && parameters.noConditionFind?exists && parameters.noConditionFind == 'Y'>
+   <#if !grandTotal?exists>
     <h3>
     <table class="basic-table">
       <tr>
@@ -117,6 +118,7 @@ function getFinAccountTransRunningTotalAndBalances() {
       </tr>
     </table>
   </h3>
+   </#if>
     <#if !grandTotal?exists>
     <span class="label">${uiLabelMap.AccountingRunningTotal} :</span>
     <span class="label" id="showFinAccountTransRunningTotal"></span>
