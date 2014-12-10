@@ -46,6 +46,13 @@ under the License.
 		<response name="success" type="none">
     </response>
     </request-map>
+    
+     <request-map uri="departmentslist">
+    	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+    	<event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getBranchDepartments" />
+		<response name="success" type="none">
+    </response>
+    </request-map>
 
     <request-map uri="LeaveBalancesAdd">
 		<security https="true" auth="true" />
@@ -1109,6 +1116,20 @@ under the License.
         <event type="service" invoke="createEmployment"/>
         <response name="success" type="view" value="EditEmployment"/>
     </request-map>
+    
+    <request-map uri="postingUpdate">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="postingUpdate"></event>
+		<response name="success" type="view" value="EditEmployment"
+			save-home-view="true" >
+			<redirect-parameter name="branchId"/>
+        	<redirect-parameter name="departmentId"/>
+        	<redirect-parameter name="partyIdTo"/>	
+		</response>
+	</request-map>
+    
+    
+    
     <request-map uri="updateEmployment">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmployment"/>
@@ -1394,8 +1415,8 @@ under the License.
     <request-map uri="createEmplPosition">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmplPosition"/>
-        <response name="success" type="view" value="EditEmplPosition"/>
-        <response name="error" type="view" value="EditEmplPosition"/>
+        <response name="success" type="view" value="FindEmplPositions"/>
+        <response name="error" type="view" value="FindEmplPositions"/>
     </request-map>
     <request-map uri="updateEmplPosition">
         <security https="true" auth="true"/>
@@ -1410,13 +1431,13 @@ under the License.
     <request-map uri="EditEmplPositionFulfillments">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmplPositionFulfillments"/>
-    </request-map>
+    </request-map><!--
     <request-map uri="createEmplPositionFulfillment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmplPositionFulfillment"/>
         <response name="success" type="view" value="EditEmplPositionFulfillments"/>
     </request-map>
-    <request-map uri="updateEmplPositionFulfillment">
+    --><request-map uri="updateEmplPositionFulfillment">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplPositionFulfillment"/>
         <response name="success" type="view" value="EditEmplPositionFulfillments"/>
@@ -1760,12 +1781,15 @@ under the License.
     <request-map uri="createEmplPositionType">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmplPositionType"/>
-        <response name="success" type="request-redirect-noparam" value="EditEmplPositionTypes"/>
+        <response name="success" type="request-redirect" value="EditEmplPositionTypes"/>
     </request-map>
     <request-map uri="updateEmplPositionType">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplPositionType"/>
-        <response name="success" type="request-redirect-noparam" value="EditEmplPositionTypes"/>
+        <response name="success" type="request-redirect" value="EditEmplPositionTypes">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="payGradeId"/>
+        </response>
     </request-map>
     <request-map uri="deleteEmplPositionType">
         <security https="true" auth="true"/>
@@ -2099,7 +2123,11 @@ under the License.
      <request-map uri="createTrainingCosts">
         <security https="true" auth="true"/>
         <event type="service" invoke="createTrainingCosts"/>
-        <response name="success" type="request-redirect" value="trainingCosts"/>
+        <response name="success" type="request-redirect" value="trainingCosts">
+        	<redirect-parameter name="partyId"/>
+            <redirect-parameter name="trainingClassTypeId"/>
+            <redirect-parameter name="fromDate"/>
+        </response>        
         <response name="error" type="request-redirect" value="trainingCosts"/>
     </request-map>
     <request-map uri="updateTrainingCosts">
@@ -2111,7 +2139,11 @@ under the License.
     <request-map uri="deleteTrainingCosts">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteTrainingCosts"/>
-        <response name="success" type="request-redirect" value="trainingCosts"/>
+        <response name="success" type="request-redirect" value="trainingCosts">
+        	<redirect-parameter name="partyId"/>
+            <redirect-parameter name="trainingClassTypeId"/>
+            <redirect-parameter name="fromDate"/>
+        </response>
         <response name="error" type="request-redirect" value="trainingCosts"/>
     </request-map>
 
@@ -2716,6 +2748,12 @@ under the License.
     <security https="true" auth="true" />
     <response name="success" type="view" value="fileMovementPDF" save-home-view="true" />
   </request-map>
+  
+  
+	
+	  <request-map uri="lookupFileParty"><security https="true" auth="true"/>
+     	<response name="success" type="view" value="lookupFileParty"/>
+     </request-map>
 
 
 	<request-map uri="employeeDependantDetailscsv">
@@ -2776,6 +2814,16 @@ under the License.
 		<response name="success" type="view" value="positionDetailspdf"
 			save-home-view="true" />
 	</request-map>
+	
+	<request-map uri="positionUpdate">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="positionUpdate"></event>
+		<response name="success" type="view" value="EditEmplPositionFulfillments"
+			save-home-view="true" >
+				<redirect-parameter name="emplPositionId"/>
+				<redirect-parameter name="emplPositionTypeId"/>				
+			</response>
+	</request-map>
 
 	<!-- ========================Perf Reports========================== -->
 
@@ -2811,6 +2859,7 @@ under the License.
     <request-map uri="LookupEmploymentApp"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmploymentApp"/></request-map>
     <request-map uri="LookupAgreement"><security auth="true" https="true"/><response name="success" type="view" value="LookupAgreement"/></request-map>
     <request-map uri="LookupJobRequisition"><security auth="true" https="true"/><response name="success" type="view" value="LookupJobRequisition"/></request-map>
+    <view-map name="lookupFileParty" type="screen" page="component://registry/widget/FileScreens.xml#lookupFileParty"/>
 
 	<request-map uri="LookupEmployee"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployee"/></request-map>
 

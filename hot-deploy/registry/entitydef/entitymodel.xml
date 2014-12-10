@@ -35,7 +35,7 @@
 
 	<entity entity-name="RegistryFiles" package-name="org.ofbiz.registry"
 		title="Member File Book">
-		<field name="partyId" type="id"></field>
+		<field name="memberPlusPersonId" type="id"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="currentPossesser" type="id-ne"></field>
 		<field name="status" type="name" ></field>
@@ -49,8 +49,10 @@
 		<field name="fileLocation" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="carriedBy" type="name"></field>
+		 <field name="isAuthorized" type="name"></field>
+		<field name="approvalStatus" type="name"></field>
 		<field name="creationDate" type="date-time"></field>
-		<prim-key field="partyId" />
+		<prim-key field="memberPlusPersonId" />
 		<relation type="one" fk-name="FILE_MEMBER" rel-entity-name="Member">
 			<key-map field-name="partyId" />
 		</relation>
@@ -61,28 +63,28 @@
 	
      <entity entity-name="RegistryRequestedFiles" package-name="org.ofbiz.registry"
 		title="Member File Book">
-		<field name="partyId" type="id"></field>
+		<field name="memberPlusPersonId" type="id"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="creationDate" type="date-time"></field>
-		<prim-key field="partyId" />
+		<prim-key field="memberPlusPersonId" />
 		<relation type="one" fk-name="FILE_REQ" rel-entity-name="RegistryFiles">
-			<key-map field-name="partyId" />
+			<key-map field-name="memberPlusPersonId" />
 		</relation>
 	</entity>
 	
 	<entity entity-name="RegistryFilesInCirculation" package-name="org.ofbiz.registry"
 		title="Member File Book">
-		<field name="partyId" type="id"></field>
+		<field name="memberPlusPersonId" type="id"></field>
 		<field name="currentPossesser" type="id-ne"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="recieptStatus" type="name"></field>
 		<field name="creationDate" type="date-time"></field>
-		<prim-key field="partyId" />
+		<prim-key field="memberPlusPersonId" />
 		<relation type="one" fk-name="FILE_CIRC" rel-entity-name="RegistryFiles">
-			<key-map field-name="partyId" />
+			<key-map field-name="memberPlusPersonId" />
 		</relation>
 	</entity>
 	
@@ -94,26 +96,26 @@
 		<field name="carriedBy" type="name"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="receiptStatus" type="name"></field>
-		<field name="partyId" type="id"></field>
+		<field name="memberPlusPersonId" type="id"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="logId" />
 		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
-			<key-map field-name="partyId" />
+			<key-map field-name="memberPlusPersonId" />
 		</relation>
 	</entity>
 	
 	<entity entity-name="RegistryFileActions" package-name="org.ofbiz.registry"
 		title="Member File actions">
 		<field name="actionId" type="id-ne"></field>
-		<field name="fileActionTypeId" type="id-ne"></field>
-		<field name="partyId" type="id"></field>
+		<field name="fileActionTypeId" type="name"></field>
+		<field name="memberPlusPersonId" type="id"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="actionId" />
 		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
-			<key-map field-name="partyId" />
+			<key-map field-name="memberPlusPersonId" />
 		</relation>
 	</entity>
 
@@ -121,14 +123,17 @@
 		title="Member Documents">
 		<field name="documentId" type="id-ne"></field>
 		<field name="DocumentTypeId" type="id-ne"></field>
-		<field name="partyId" type="id-ne" ></field>
+		<field name="memberPlusPersonId" type="id-ne" ></field>
 		<field name="referenceNo" type="name" ></field>
+		<field name="documentFolio" type="name" ></field>
 		<field name="volumeIdentifier" type="name" ></field>
 		<field name="documentValue" type="currency-amount" ></field>
 		<field name="receiptDate" type="date-time"></field>
+		<field name="archiveDate" type="name"></field>
+		<field name="archivestatus" type="name" ></field>
 		<prim-key field="documentId" />
 		<relation type="one" fk-name="DOCUMENT_FILE" rel-entity-name="RegistryFiles">
-			<key-map field-name="partyId" />
+			<key-map field-name="memberPlusPersonId" />
 		</relation>
 	</entity>
 
@@ -143,7 +148,7 @@
 	<entity entity-name="RegistryFileVolume" package-name="org.ofbiz.registry"
 		title="Member Files">
 		<field name="volumeId" type="id-ne"></field>
-		<field name="partyId" type="id-ne"></field>
+		<field name="memberPlusPersonId" type="id-ne"></field>
 		<field name="volumeIdentifier" type="name"></field>
 		<prim-key field="volumeId" />
 	</entity>
@@ -159,11 +164,55 @@
 			<alias entity-alias="action" name="actionId" field="actionId"/>
 
 	    <view-link  entity-alias="log" rel-entity-alias="action">
-	    	<key-map field-name="partyId" rel-field-name="partyId"/>
+	    	<key-map field-name="memberPlusPersonId" rel-field-name="memberPlusPersonId"/>
 	    </view-link>
     </view-entity>
 
 	
+	  <entity entity-name="memberPlusPerson" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="memberPlusPersonId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="partyId" type="id-ne"></field>
+       <field name="firstName" type="name"></field>
+       <field name="lastName" type="name"></field>
+       <field name="payrollNo" type="name"></field>
+       <field name="memberNumber" type="name"></field>
+       <field name="idNumber" type="name"></field>
+       <field name="employmentStatus" type="name"></field>
+       <field name="fileType" type="name"></field>
+        <field name="isAuthorized" type="name"></field>
+        <field name="securityLevel" type="name"></field>
+       <prim-key field="memberPlusPersonId"/>
+    </entity>
+    
+    
+      <entity entity-name="NonmemberPlusPersonRecords" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="entryNumber" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="objectName" type="name"></field>
+       <field name="securityLevel" type="name"></field>
+       <field name="physicalDescription" type="description"></field>
+       <field name="referenceSource" type="name"></field>
+       <field name="curatorDepartment" type="name"></field>
+       <field name="identifier" type="name"></field>
+       <field name="siteInformation" type="name"></field>
+       <field name="contentBrief" type="name"></field>
+       <field name="subjectInformation" type="name"></field>
+       <field name="relatedness" type="name"></field>
+       <field name="isAuthorized" type="name"></field>
+       <field name="acquistionDate" type="name"></field>
+       <field name="recordDate" type="name"></field>
+       <prim-key field="entryNumber"/>
+    </entity>
+    
+    <entity entity-name="RegistryFileArchive" package-name="org.ofbiz.registry"
+		title="Member Files">
+		<field name="archiveId" type="id-ne"></field>
+		<field name="memberPlusPersonId" type="id-ne"></field>
+		<field name="volumeIdentifier" type="name"></field>
+		<field name="volumeIdentifier" type="name"></field>
+		<field name="volumeIdentifier" type="name"></field>
+		<field name="volumeIdentifier" type="name"></field>
+		<prim-key field="volumeId" />
+	</entity>
 	
 </entitymodel>
 

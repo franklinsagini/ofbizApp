@@ -144,9 +144,14 @@ under the License.
     <form name="FindEmplPositionTypes" type="single" header-row-style="header-row" default-table-style="basic-table">
        <!--  <auto-fields-entity entity-name="EmplPositionType" default-field-type="find"/> -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="emplPositionTypeId" title="Position Type">
+        <field name="emplPositionTypeId" title="Position">
             <drop-down allow-empty="true">
                 <entity-options entity-name="EmplPositionType" description="${emplPositionType}" key-field-name="emplPositionTypeId"/>
+            </drop-down>
+        </field>
+        <field name="payGradeId" title="Pay Grade">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PayGrade" description="${payGradeName}" key-field-name="payGradeId"/>
             </drop-down>
         </field>
        <!--  <field name="emplPositionType" title="Position Type"><text-find/></field> -->
@@ -166,10 +171,11 @@ under the License.
         <field name="payGradeId" title="Pay Grade">
         	<display-entity entity-name="PayGrade" key-field-name="payGradeId" description="${payGradeName}"></display-entity>
         </field>
-        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmplPositionType}"><hidden/></field>
-        <field name="emplPositionType" title="Position Type">
+        <field name="emplPositionTypeId" title="Position"><hidden/></field>
+        <field name="emplPositionType" title="Position">
         	<hyperlink also-hidden="false" description="${emplPositionType}" target="EditEmplPositionTypes">
                 <parameter param-name="emplPositionTypeId"/>
+                <parameter param-name="payGradeId"/>
             </hyperlink>
         </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
@@ -188,7 +194,7 @@ under the License.
         <!-- <field name="emplPositionTypeId" use-when="emplPositionType==null"><text/></field> -->
         <field name="payGradeId" use-when="payGradeId==null" title="Pay Grade" 
         	tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required">
-        	<drop-down allow-empty="false">
+        	<drop-down allow-empty="true">
         		<entity-options entity-name="PayGrade" key-field-name="payGradeId" description="${payGradeName}"></entity-options>
         	</drop-down>
         </field>
@@ -204,19 +210,21 @@ under the License.
      <form name="ListEmployeePositionTypes" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmplPositionType"
         paginate-target="EditEmplPositionTypes" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="EmplPositionType"></entity-condition>
+            <entity-condition entity-name="EmplPositionType">
+            	<condition-expr field-name="payGradeId" operator="equals" value="${parameters.payGradeId}"/>
+            </entity-condition>
         </actions>
        <field name="emplPositionTypeId"><hidden /></field>
        <field name="payGradeId" title="Pay Grade">
         	<display-entity entity-name="PayGrade" key-field-name="payGradeId" description="${payGradeName}"></display-entity>
        </field>
-       <field name="emplPositionType" title="Position Type"> <text/> </field>
-       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+       <field name="emplPositionType" title="Position"> <display/> </field>
+       <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
                 <hyperlink target="deleteEmplPositionType" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this?">
                     <parameter param-name="emplPositionTypeId"/>
                 </hyperlink>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
     
    <!-- <form name="ListEmplPositionTypeRates" type="list" title="" target="deleteEmplPositionTypeRate"
@@ -543,7 +551,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.CommonBy}">
             <display-entity entity-name="PartyNameView"  description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
         </field> -->
-        <auto-fields-entity entity-name="PublicHolidays" default-field-type="display"/>
+        <auto-fields-entity entity-name="PublicHolidays" default-field-type="edit"/>
         <field name="holidayId"><hidden/></field>
         <field name="updateButton" title="${uiLabelMap.CommonUpdate}"><submit/></field>
         <field name="removeHoliday" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">

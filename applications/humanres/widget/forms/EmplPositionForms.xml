@@ -37,13 +37,13 @@ under the License.
         <field name="statusId" title="Status"><hidden/></field>
         
         <field name="partyId" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}"><hidden/></field>
-        <field name="emplPositionTypeId" title="Job Title">
+        <field name="emplPositionTypeId" title="Job Position">
         	<drop-down allow-empty="true" >
         		<entity-options description="${emplPositionType}" entity-name="EmplPositionType" key-field-name="emplPositionTypeId"></entity-options>
         	</drop-down>
         </field>
-         <field name="actualFromDate" title="From"><date-find type="date"/> </field>
-        <field name="actualThruDate" title="To"><date-find type="date"/> </field>
+          <field name="actualFromDate" title="From"><hidden/> </field>
+        <field name="actualThruDate" title="To"><hidden/> </field>
 
         <!-- field name="salaryFlag">
             <drop-down allow-empty="false" current="selected">
@@ -99,18 +99,19 @@ under the License.
         <field name="estimatedThruDate"><hidden/> </field>
         
         	
-        <field name="emplPositionTypeId" title="Job Title ">
+        <field name="emplPositionTypeId" title="Job Position ">
         	<display-entity entity-name="EmplPositionType" key-field-name="emplPositionTypeId" description="${emplPositionType}">
 				<!--<sub-hyperlink target="emplPositionView" description="${emplPositionId}" link-style="smallSubmit" target-type="inter-app">
 					<parameter param-name="emplPositionId"/>
 				</sub-hyperlink>      -->  	
         	</display-entity>        	
         </field>
-        <field name="actualFromDate" title="From"><display type="date"/> </field>
-        <field name="actualThruDate" title="To"><display type="date"/> </field>
+        <field name="actualFromDate" title="From"><hidden/> </field>
+        <field name="actualThruDate" title="To"><hidden/> </field>
         <field name="addStaff" title="Assign Employee" widget-style="buttontext">
-            <hyperlink target="EditEmplPositionFulfillments" description="Add Staff" also-hidden="false">
+            <hyperlink target="EditEmplPositionFulfillments" description="Assign Employee" also-hidden="false">
                 <parameter param-name="emplPositionId"/>
+                <parameter param-name="emplPositionTypeId"/>
             </hyperlink>
         </field>
         
@@ -131,6 +132,7 @@ under the License.
                 <field-map field-name="employeePartyId" from-field="parameters.partyId"/>
             </entity-and>
         </actions>
+        <field name="addStaff"><hidden/></field>        
         <field name="fromDate"><display type="date"/></field>
         <field name="thruDate"><display type="date"/></field>
     </form>
@@ -176,13 +178,13 @@ under the License.
         
         
         
-        <field name="emplPositionTypeId" title="Job Title">
+        <field name="emplPositionTypeId" title="Job Position">
         	<drop-down allow-empty="true" >
         		<entity-options description="${emplPositionType}" entity-name="EmplPositionType" key-field-name="emplPositionTypeId"></entity-options>
         	</drop-down>
         </field>
-         <field name="actualFromDate" title="From"><date-time type="date"/> </field>
-        <field name="actualThruDate" title="To"><date-time type="date"/> </field>
+         <field name="actualFromDate" title="From"><hidden/> </field>
+        <field name="actualThruDate" title="To"><hidden/> </field>
 
         
         <field name="submitButton" use-when="emplPosition==null" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
@@ -204,6 +206,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
+        <field name="emplPositionTypeId"><hidden/></field>
         <field name="emplPositionId"><hidden/></field>
         <field name="fromDate"><display type="date"/></field>
         <field name="thruDate"><date-time type="date"/></field>
@@ -217,10 +220,11 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    <form name="AddEmplPositionFulfillment" type="single" target="createEmplPositionFulfillment" title=""
+    <form name="AddEmplPositionFulfillment" default-map-name="filedsContext" type="single" target="positionUpdate" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <!-- auto-fields-service service-name="createEmplPositionFulfillment"/ -->
         <field name="emplPositionId"><hidden /></field>
+        <field name="emplPositionTypeId"><hidden/></field>
         <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployee"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time type="date"/></field>

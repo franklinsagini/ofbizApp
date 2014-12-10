@@ -609,6 +609,7 @@ under the License.
       <field name="partyIdFrom" type="id-ne"></field>
       <field name="partyIdTo" type="id-ne"></field>
       <field name="branchId" type="id"></field>
+      <field name="departmentId" type="id"></field>
  	  <field name="stationId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -649,6 +650,9 @@ under the License.
       </relation>
  	  <relation type="one" fk-name="EMP_STATION" rel-entity-name="Station">
         <key-map field-name="stationId"/>
+      </relation>
+       <relation type="one" fk-name="EMP_DEPT" rel-entity-name="department">
+        <key-map field-name="departmentId"/>
       </relation>
     </entity>
     <view-entity entity-name="EmploymentAndPerson"
@@ -1322,8 +1326,12 @@ under the License.
       </relation>
       <relation type="one-nofk" fk-name="EMPL_POS_EPSTP" rel-entity-name="EmplPositionType">
         <key-map field-name="emplPositionTypeId"/>
-      </relation>
+      </relation>      
+      <index name="unique_Position" unique="true">
+        	<index-field name="emplPositionTypeId"/>
+        </index>
     </entity>
+    
     <entity entity-name="EmplPositionClassType"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Classification Type Entity">
@@ -1340,6 +1348,7 @@ under the License.
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Fulfillment Entity">
       <field name="emplPositionId" type="id-ne"></field>
+      <field name="emplPositionTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -1349,6 +1358,9 @@ under the License.
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="EMPL_PSFLMT_EMPS" rel-entity-name="EmplPosition">
         <key-map field-name="emplPositionId"/>
+      </relation>
+      <relation type="one" fk-name="EMPL_EMPS_TYPE" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId"/>
       </relation>
       <relation type="one" fk-name="EMPL_PSFLMT_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -2022,9 +2034,7 @@ under the License.
        <field name="holidayDate" type="date"></field>
        <prim-key field="holidayId"/>
     </entity>
-
-
-
-
-
+    
+    
+    
 </entitymodel>

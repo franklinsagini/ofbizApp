@@ -289,17 +289,19 @@ under the License.
        	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
        	 </drop-down>
         </field>
-         <field name="branchId" title=" Select Branch" required-field="true" widget-style="required">
+         <field use-when="personalInfo==null" name="branchId" title=" Select Branch" required-field="true" widget-style="required">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
+       <field use-when="personalInfo!=null" name="branchId" title="Branch"><display-entity key-field-name="partyId" description="${groupName}" entity-name="PartyGroup"></display-entity></field>
         
-        <field name="departmentId" title=" Select Department" required-field="true" widget-style="required">
-            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
-                <list-options list-name="departmentList" key-name="departmentId"  description="${departmentName}" />
+        <field use-when="personalInfo==null" name="departmentId" title=" Select Department" required-field="true" widget-style="required">
+            <drop-down allow-empty="true">
+              <!--   <list-options list-name="departmentList" key-name="departmentId"  description="${departmentName}" /> -->
             </drop-down>
         </field>
+         <field use-when="personalInfo!=null" name="departmentId" title="Department"><display-entity key-field-name="departmentId" description="${departmentName}" entity-name="department"></display-entity></field>
         
 
        
@@ -356,13 +358,14 @@ under the License.
         <field name="nhifNumber" title="NHIF Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
         <field name="passportNumber"><text size="40" maxlength="60"/></field>
 
-        <field name="emplPositionTypeId" title="Job Title">
+        <field name="emplPositionTypeId" title="Job Position">
             <drop-down allow-empty="true">
                 <entity-options key-field-name="emplPositionTypeId" description="${emplPositionType}" entity-name="EmplPositionType">
                     <entity-order-by field-name="emplPositionTypeId"/>
                 </entity-options>
             </drop-down>
         </field>
+         <field use-when="personalInfo!=null" name="emplPositionTypeId" title="Job Title"><display-entity key-field-name="emplPositionTypeId" description="${emplPositionType}" entity-name="EmplPositionType"></display-entity></field>
         <field name="payGradeId" title="Job Grade">
             <drop-down allow-empty="true">
                 <entity-options key-field-name="payGradeId" description="${payGradeName}" entity-name="PayGrade">
@@ -370,6 +373,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+         <field use-when="personalInfo!=null" name="payGradeId" title="Job Grade"><display-entity key-field-name="payGradeId" description="${payGradeName}" entity-name="PayGrade"></display-entity></field>
+         
         <field name="mobNo" title="Mobile Phone Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="homeTelNo" title="Home Telephone Number"><text size="40" maxlength="60"/></field>
         <field name="emailAddress"><text size="40" maxlength="60"/></field>

@@ -256,10 +256,11 @@
 		
 		<field name="addToClearList" title="Add To Clear List"
 			widget-style="buttontext" use-when="(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;(isAddedToClear==null))||(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;!isAddedToClear.equals(&quot;${yes}&quot;))" >
-			<hyperlink  target="addToClearList" description="Add To Clear List ${isAddedToClear} - ${addStatus}"
+			<hyperlink  target="addToClearList" description="Add To Clear List "
 				also-hidden="true" >
 				
 				<parameter param-name="loanApplicationId" />
+				<parameter param-name="partyId"/>
 			</hyperlink>
 		</field>
 		
@@ -308,7 +309,7 @@
     </form>
 	
 	<!-- listLoanClear -->
-	    <form name="listLoanClear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClearLimit" paginate-target="loanClearingLimit"
+	    <form name="listLoanClear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClear" paginate-target="loanClear"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="LoanClear">
@@ -325,6 +326,16 @@
         	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId">
         		
         	</display-entity>
+         </field>
+         
+         <field name="loanApplicationId" title="New Loan" widget-style="required" required-field="true">
+        	<!-- display-entity entity-name="LoanApplication" key-field-name="loanApplicationId" description="${loanNo} - ${loanAmt}"></display-entity -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${loanNo} - ${loanAmt}" entity-name="LoanApplication">
+        			<entity-constraint name="partyId" operator="equals" value="${partyId}"  />
+        			<entity-constraint name="loanStatusId" operator="equals" value="8"/>
+        		</entity-options>
+        	</drop-down>
          </field>
          
          <field name="loanTotalAmt">
@@ -345,6 +356,8 @@
                 <parameter param-name="loanClearId"/>
             </hyperlink>
         </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
     
