@@ -53,7 +53,7 @@ under the License.
                     <fo:block font-weight="bold">Payroll Number:</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block>${member.payrollNumber?if_exists} Months</fo:block>
+                    <fo:block>${member.payrollNumber?if_exists}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
             
@@ -67,7 +67,7 @@ under the License.
                 <fo:table-column column-width="80pt"/>
                 <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="70pt"/>
-                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="75pt"/>
                 <#-- fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
