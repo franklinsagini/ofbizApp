@@ -628,7 +628,7 @@
     	var NoticePeriodState = '';
     	var durationState = '';
     	var onceAyearState = '';
-    	var getEmploymentStatusState = '';
+    	
 
     	 var reqUrl = '/humanres/control/leaveFormValidation';
 
@@ -644,7 +644,7 @@
 							NoticePeriodState =  data.NoticePeriodState;
 							durationState = data.durationState;
 							onceAyearState = data.onceAyearState;
-							getEmploymentStatusState = data.getEmploymentStatusState;
+							
 			               },
 			      error : function(errorData){
 
@@ -655,6 +655,7 @@
 		});
 
     	var message = '';
+    	
     	if ((GenderState == 'INVALID')){
     		message = "Leave Not allowed for your Gender !!";
     		isValid = false;
@@ -677,10 +678,7 @@
     		message = message+" You can not start leave in the past!!";
     		isValid = false;
     	}
-    	if ((getEmploymentStatusState == 'INVALID')){
-    		message = message+" You are not allowed to apply for leave!!";
-    		isValid = false;
-    	}
+    	
     	if ((onceAyearState == 'VALID')){
     		isValid = true;
     	}

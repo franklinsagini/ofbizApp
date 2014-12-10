@@ -106,6 +106,7 @@
         <set field="partyEntity.memberPlusPersonId" from-field="memberPlusPersonId"/>
        <set field="partyEntity.partyId" from-field="memberPlusPersonId"/>
         <set field="partyEntity.firstName" from-field="parameters.objectName"/>
+        <set field="partyEntity.lastName" from-field="parameters.objectName"/>
         <set field="partyEntity.isAuthorized" from-field="parameters.isAuthorized"/>
         <set field="partyEntity.securityLevel" from-field="parameters.securityLevel"/>
         <set field="partyEntity.idNumber" from-field="parameters.idNumber"/>
@@ -657,17 +658,7 @@
   	<!-- update Budget Status -->
     <simple-method method-name="updateRegistryFileStatus" short-description="Update Registry File Status Status">
 
-      <!--       <entity-one value-field="registryFile" entity-name="RegistryFiles">
-                <field-map field-name="partyId" from-field="parameters.partyId"/>
-            </entity-one>
-            <if-not-empty field="registryFile">
-				<entity-one entity-name="RegistryFiles" value-field="lookedUpValue"/>
-				<set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-				<set-pk-fields value-field="lookedUpValue" map="parameters"/>
-				<store-value value-field="lookedUpValue"/>
-
-				<field-to-result field="parameters.partyId" result-name="partyId"/>
-            </if-not-empty> -->
+     
         <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
@@ -697,8 +688,18 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="RegistryDocuments" field="documentId" />
 		<set from-field="documentId" field="newEntity.documentId" />
+		<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId"/>
+		<set field="newEntity.documentFolio" value="FOLIO-${bsh:org.ofbiz.registry.FileServices.getFileDocCount(memberPlusPersonId);}"/>
+		
+		 <set field="DocumentTypeId" from-field="parameters.DocumentTypeId"/>
+		 <set field="receiptDate" from-field="parameters.receiptDate" type="Date"/>
+		
+		<set field="newEntity.archiveDate" value="${bsh:org.ofbiz.registry.FileServices.getArchingDateCount(DocumentTypeId,receiptDate);}"/>
+		
 		<create-value value-field="newEntity" />
 	</simple-method>
+	
+
 
 <!-- locations -->
 	<simple-method method-name="createfilelocation"
