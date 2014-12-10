@@ -10,15 +10,27 @@ expectedPaymentReceivedList = delegator.findByAnd("ExpectedPaymentReceived",  [p
 expectedPaymentSentList = delegator.findByAnd("ExpectedPaymentSent",  [payrollNo : payrollNo], null, false);
 
 def combinedList = [];
+def totalAmount = BigDecimal.ZERO;
 
 expectedPaymentSentList.eachWithIndex { sentListValue, index ->
 	sentListValue.isReceived = 'N'
+	
+	if (sentListValue.amount != null){
+		totalAmount = totalAmount + sentListValue.amount.toBigDecimal();
+	}
+	
+	sentListValue.totalAmount = totalAmount;
 	combinedList << sentListValue
 	
 	}
 
 expectedPaymentReceivedList.eachWithIndex { receivedListValue, index ->
 	receivedListValue.isReceived = 'Y'
+	
+	if (receivedListValue.amount != null){
+		totalAmount = totalAmount.subtract(receivedListValue.amount.toBigDecimal());
+	}
+	receivedListValue.totalAmount = totalAmount;
 	combinedList << receivedListValue
 	
 	}
