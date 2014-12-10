@@ -81,11 +81,46 @@ function getFinAccountTransRunningTotalAndBalances() {
 
 <div class="screenlet screenlet-body">
   <#if finAccountTransList?has_content && parameters.noConditionFind?exists && parameters.noConditionFind == 'Y'>
+    <h3>
+    <table class="basic-table">
+      <tr>
+        <td>Cash Book Balance</td>
+        <td id="showFinAccountTransRunningTotal"></td>
+        <td>Bank Statement Balance</td>
+        <td id="showBankStatementBalance"></td>
+      </tr>
+      <tr>
+        <td>Unidentified Debits</td>
+        <td></td>
+        <td>Uncredited Bankings</td>
+        <#if uncreditedBankingsTotal?has_content>
+         <td id="uncreditedBankings"><@ofbizCurrency amount=uncreditedBankingsTotal?if_exists/></td>
+         <#else>
+         <td>0</td>
+        </#if>
+      </tr>
+      <tr>
+        <td>Unreceipted Bankings</td>
+        <td></td>
+        <td>Unpresented Cheques</td>
+        <#if unpresentedChequesTotal?has_content>
+         <td id="unpresentedCheques"><@ofbizCurrency amount=unpresentedChequesTotal?if_exists/></td>
+         <#else>
+         <td>0</td>
+        </#if>
+      </tr>
+      <tr>
+        <td>Adjusted Cash Book Balance</td>
+        <td></td>
+        <td>Adjusted Bank Statement Balance</td>
+        <td></td>
+      </tr>
+    </table>
+  </h3>
     <#if !grandTotal?exists>
-      <div>
-        <span class="label">${uiLabelMap.AccountingRunningTotal} :</span>
-        <span class="label" id="showFinAccountTransRunningTotal"></span>
-      </div>
+    <span class="label">${uiLabelMap.AccountingRunningTotal} :</span>
+    <span class="label" id="showFinAccountTransRunningTotal"></span>
+
     </#if>
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal?exists>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>
@@ -328,8 +363,8 @@ function getFinAccountTransRunningTotalAndBalances() {
         </tr>
         <tr>
           <td>
-            <span id="finAccountTransRunningTotal"></span> /
-            <span id="numberOfFinAccountTransaction"></span>
+            <span id="finAccountTransRunningTotal">0</span> /
+            <span id="numberOfFinAccountTransaction">0</span>
           </td>
           <td><@ofbizCurrency amount=glReconciliation.openingBalance?default('0')/></td>
           <td><@ofbizCurrency amount=glReconciliation.reconciledBalance?default('0')/></td>
