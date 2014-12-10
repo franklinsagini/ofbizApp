@@ -36,13 +36,13 @@ public class FileServices {
 	
 	//================================ COUNTING FILE VOLUMES ====================================================
 	
-	public static String getFileVolumeCount(String partyId) {
+	public static String getFileVolumeCount(String memberPlusPersonId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String volumeCount = null;
 		int count=0;
 		List<GenericValue> volumELI = null;
 		try {
-			volumELI = delegator.findList("RegistryFileVolume", EntityCondition.makeCondition("partyId", partyId), null, null, null, false);
+			volumELI = delegator.findList("RegistryFileVolume", EntityCondition.makeCondition("memberPlusPersonId", memberPlusPersonId), null, null, null, false);
 		
 		} catch (GenericEntityException e2) {
 			// TODO Auto-generated catch block
