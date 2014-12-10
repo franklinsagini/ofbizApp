@@ -1,8 +1,10 @@
 package org.ofbiz.registry;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -36,13 +38,13 @@ public class FileServices {
 	
 	//================================ COUNTING FILE VOLUMES ====================================================
 	
-	public static String getFileVolumeCount(String partyId) {
+	public static String getFileVolumeCount(String memberPlusPersonId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String volumeCount = null;
 		int count=0;
 		List<GenericValue> volumELI = null;
 		try {
-			volumELI = delegator.findList("RegistryFileVolume", EntityCondition.makeCondition("partyId", partyId), null, null, null, false);
+			volumELI = delegator.findList("RegistryFileVolume", EntityCondition.makeCondition("memberPlusPersonId", memberPlusPersonId), null, null, null, false);
 		
 		} catch (GenericEntityException e2) {
 			// TODO Auto-generated catch block
@@ -57,5 +59,68 @@ public class FileServices {
 		return volumeCount;
 		
 	}
+	
+	
+	public static String getFileDocCount(String memberPlusPersonId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String nextDocFolioCount = null;
+		int count=0;
+		List<GenericValue> volumELI = null;
+		try {
+			volumELI = delegator.findList("RegistryDocuments", EntityCondition.makeCondition("memberPlusPersonId", memberPlusPersonId), null, null, null, false);
+		
+		} catch (GenericEntityException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		for (GenericValue genericValue : volumELI) {
+			count++;
+		}
+		nextDocFolioCount= String.valueOf(count+1);
+		log.info("NUMBER OF FILE VOLUMES ################################ " + nextDocFolioCount + "########################################");
+				
+		return nextDocFolioCount;
+		
+	}
+	
+	public static String getArchingDateCount(String docType, Date receiptDate) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String retentionPeriod = null;
+		GenericValue DocumentType = null;
+		String archiveDate= "NA";
+	      try {
+	    	  DocumentType = delegator.findOne("RegistryDocumentType", 
+	             	UtilMisc.toMap("DocumentTypeId", docType), false);
+	           	log.info("++++++++++++++carryOverLeaveGV++++++++++++++++" +DocumentType);
+	             }
+	       catch (GenericEntityException e) {
+	            e.printStackTrace();;
+	       }  
+		if (DocumentType != null) {
+			retentionPeriod=DocumentType.getString("retentionPeriod");
+			
+			
+			log.info("RETENTION PERIOD ################################ " + retentionPeriod + "########################################");
+			
+			if(retentionPeriod == "PERMANENT"){
+				 archiveDate= "NA";
+				
+			} 
+			else{
+				LocalDate reDate = new LocalDate(receiptDate);
+				LocalDate bodDate = reDate.plusYears(Integer.valueOf(retentionPeriod));
+				archiveDate= bodDate.toString();
+				log.info("ARCHIVING DATE ################################ " + bodDate + "########################################");
+			}
+		}
+		
+		
+		return archiveDate;
+		
+	}
+	
+	
+	
+	
 
 }
