@@ -2000,6 +2000,9 @@ public class AccHolderTransactionServices {
 	}
 
 
-
+	public static String removeCommas(Long partyId){
+		String id  = partyId.toString().replace(",", "");
+		return id;
+	}
 	
 }
