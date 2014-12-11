@@ -63,6 +63,8 @@ function getFinAccountTransRunningTotalAndBalances() {
                     jQuery('#finAccountTransRunningTotal').html(data.finAccountTransRunningTotal);
                     jQuery('#numberOfFinAccountTransaction').html(data.numberOfTransactions);
                     jQuery('#endingBalance').html(data.endingBalance);
+                    jQuery('#uncreditedBankings').html(data.uncreditedBankingsTotal);
+
                 }
             });
         }
@@ -167,9 +169,9 @@ function getFinAccountTransRunningTotalAndBalances() {
           <th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</th>
           <th>${uiLabelMap.CommonStatus}</th>
           <th>${uiLabelMap.CommonComments}</th>
-          <#if grandTotal?exists>
+   <#--        <#if grandTotal?exists>
             <th>Transactions Actions</th>
-          </#if>
+          </#if> -->
           <#if !grandTotal?exists>
             <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
               <th>${uiLabelMap.AccountingRemoveFromGlReconciliation}</th>
@@ -285,16 +287,25 @@ function getFinAccountTransRunningTotalAndBalances() {
             </td>
             <td><#if paymentType?has_content>${paymentType.description?if_exists}</#if></td>
             <td><#if paymentMethodType?has_content>${paymentMethodType.description?if_exists}</#if></td>
-            <td><#if status?has_content>${status.description?if_exists}</#if></td>
+            <td>
+<#--               <#if status?has_content>
+                ${status.description?if_exists}
+              </#if> -->
+              <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
+                NOT RECONCILED
+              <#else>
+                RECONCILED
+              </#if>
+            </td>
             <td>${finAccountTrans.comments?if_exists}</td>
-            <#if grandTotal?exists>
+<#--             <#if grandTotal?exists>
               <td>
                 <#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
                   <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">${uiLabelMap.CommonCancel}</a>
                   <a href="javascript:document.approveFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">Approve</a>
                 </#if>
               </td>
-            </#if>
+            </#if> -->
             <input name="finAccountTransId_o_${finAccountTrans_index}" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="organizationPartyId_o_${finAccountTrans_index}" type="hidden" value="${defaultOrganizationPartyId}"/>
             <#if glReconciliationId?has_content && glReconciliationId != "_NA_">
