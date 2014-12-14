@@ -5,17 +5,37 @@ import java.math.BigDecimal;
 public class ATMTransaction {
 	private String cardNumber;
 	private BigDecimal amount;
-	
 	private Long transactionId;
 	private BigDecimal availableBalance;
 	private BigDecimal bookBalance;
 	private BigDecimal chargeAmount;
 	private BigDecimal commissionAmount;
-	
 	private String status;
-	
 	private Long cardStatusId;
 	private String cardStatus;
+	private Long memberAccountId;
+	private String accountNo;
+	private String accountName;
+	
+	public Long getMemberAccountId() {
+		return memberAccountId;
+	}
+	public void setMemberAccountId(Long memberAccountId) {
+		this.memberAccountId = memberAccountId;
+	}
+	public String getAccountNo() {
+		return accountNo;
+	}
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+	public String getAccountName() {
+		return accountName;
+	}
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
 	
 	public Long getCardStatusId() {
 		return cardStatusId;
@@ -84,8 +104,10 @@ public class ATMTransaction {
 				+ ", availableBalance=" + availableBalance + ", bookBalance="
 				+ bookBalance + ", chargeAmount=" + chargeAmount
 				+ ", commissionAmount=" + commissionAmount + ", status="
-				+ status + "]";
+				+ status + ", cardStatusId=" + cardStatusId + ", cardStatus="
+				+ cardStatus + ", memberAccountId=" + memberAccountId
+				+ ", accountNo=" + accountNo + ", accountName=" + accountName
+				+ "]";
 	}
-	
 	
 }

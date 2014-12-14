@@ -1164,10 +1164,10 @@ public class AccHolderTransactionServices {
 		String createdBy = (String) userLogin.get("userLoginId");
 		String updatedBy = (String) userLogin.get("userLoginId");
 		String branchId = getEmployeeBranch((String) userLogin.get("partyId"));
-		
+
 		String partyId = getMemberPartyId(memberAccountId);
-		//		loanApplication.getString("partyId");
-		
+		// loanApplication.getString("partyId");
+
 		String increaseDecrease;
 
 		if (productChargeId == null) {
@@ -1179,8 +1179,10 @@ public class AccHolderTransactionServices {
 		// Check for withdrawal and deposit - overrides the earlier settings for
 		// product charges
 		if (productChargeId == null) {
-			if (((transactionType != null)
-					&& (transactionType.equals("CASHWITHDRAWAL"))) || ( (transactionType != null) && (transactionType.equals("ATMWITHDRAWAL")) )) {
+			if (((transactionType != null) && (transactionType
+					.equals("CASHWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("ATMWITHDRAWAL")))) {
 				increaseDecrease = "D";
 			}
 
@@ -1246,7 +1248,7 @@ public class AccHolderTransactionServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		String partyId = String.valueOf(memberAccount.getLong("partyId"));
 		partyId = partyId.replaceAll(",", "");
 		return partyId;
@@ -1747,33 +1749,64 @@ public class AccHolderTransactionServices {
 		Map<String, String> userLogin = new HashMap<String, String>();
 		userLogin.put("userLoginId", "admin");
 
-		String transactionId;
-
+		String transactionId = null;
 		// Check if enough amount - amount + charge + excercise duty < available
 		// - minimum balance
-		transactionId = cashWithdrawal(accountTransaction, userLogin,
-				withdrawalType);
-
-		transactionId = transactionId.replaceAll(",", "");
-
+		Boolean isEnough = isEnoughBalance(Long.valueOf(memberAccountId),
+				amount);
 		ATMTransaction transaction = new ATMTransaction();
-		transaction.setTransactionId(Long.valueOf(transactionId));
-		transaction.setStatus("SUCCESS");
-		transaction.setAmount(amount);
-		transaction.setAvailableBalance(AccHolderTransactionServices
+		BigDecimal dbAvailableBalance = null;
+
+		if (isEnough) {
+			transactionId = cashWithdrawal(accountTransaction, userLogin,
+					withdrawalType);
+
+			transactionId = transactionId.replaceAll(",", "");
+
+			transaction.setTransactionId(Long.valueOf(transactionId));
+			transaction.setStatus("SUCCESS");
+			transaction.setAmount(amount);
+
+			ChargeDutyItem chargeDutyItem = getChargeDuty(transactionId);
+
+			if (chargeDutyItem.getChargeAmount() != null)
+				transaction.setChargeAmount(chargeDutyItem.getChargeAmount());
+
+			if (chargeDutyItem.getDutyAmount() != null)
+				transaction.setCommissionAmount(chargeDutyItem.getDutyAmount());
+		} else {
+			transaction.setStatus("NOTENOUGHBALANCE");
+		}
+
+		dbAvailableBalance = AccHolderTransactionServices
 				.getAvailableBalanceVer2(memberAccountId, new Timestamp(
-						Calendar.getInstance().getTimeInMillis())));
+						Calendar.getInstance().getTimeInMillis()));
+		transaction.setAvailableBalance(dbAvailableBalance);
 		transaction.setBookBalance(AccHolderTransactionServices
 				.getBookBalanceVer2(memberAccountId, delegator));
 		// transaction.setCardNumber(cardNumber);
-		ChargeDutyItem chargeDutyItem = getChargeDuty(transactionId);
 
-		if (chargeDutyItem.getChargeAmount() != null)
-			transaction.setChargeAmount(chargeDutyItem.getChargeAmount());
-
-		if (chargeDutyItem.getDutyAmount() != null)
-			transaction.setCommissionAmount(chargeDutyItem.getDutyAmount());
 		return transaction;
+	}
+
+	private static Boolean isEnoughBalance(Long memberAccountId,
+			BigDecimal bdAmount) {
+
+		BigDecimal bdAVailableBalance = getAvailableBalanceVer2(
+				String.valueOf(memberAccountId), new Timestamp(Calendar
+						.getInstance().getTimeInMillis()));
+		BigDecimal bdMinimumBalance = getMinimumBalance(memberAccountId);
+		BigDecimal bdTotalCharges = getChargesTotal(memberAccountId, bdAmount,
+				"CASHWITHDRAWAL");
+
+		BigDecimal bdTotalDeducted = bdAmount.add(bdTotalCharges);
+		BigDecimal bdTotalRemaining = bdAVailableBalance
+				.subtract(bdTotalDeducted);
+
+		if (bdTotalRemaining.compareTo(bdMinimumBalance) == 1)
+			return true;
+
+		return false;
 	}
 
 	private static ChargeDutyItem getChargeDuty(String transactionId) {
@@ -2148,13 +2181,13 @@ public class AccHolderTransactionServices {
 	public static BigDecimal getMinimumBalance(Long memberAccountId) {
 		BigDecimal bdMinimumBalance = BigDecimal.ZERO;
 		String accountProductId = getAccountProduct(memberAccountId);
-
+		accountProductId = accountProductId.replaceAll(",", "");
 		GenericValue accountProduct = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			accountProduct = delegator
 					.findOne("AccountProduct", UtilMisc.toMap(
-							"accountProductId", accountProductId), false);
+							"accountProductId", Long.valueOf(accountProductId)), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -2172,6 +2205,20 @@ public class AccHolderTransactionServices {
 	public static String removeCommas(Long partyId) {
 		String id = partyId.toString().replace(",", "");
 		return id;
+	}
+
+	public static GenericValue getMemberAccount(Long memberAccountId) {
+		GenericValue memberAccount = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccount = delegator.findOne("MemberAccount",
+					UtilMisc.toMap("memberAccountId", memberAccountId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Could not get member account ");
+		}
+
+		return memberAccount;
 	}
 
 }
