@@ -169,6 +169,24 @@ public class ATMManagementServices {
 		return cardStatusId;
 	}
 	
+	public static String getCardStatusName(Long cardStatusId) {
+		List<GenericValue> cardStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cardStatusELI = delegator.findList("CardStatus",
+					EntityCondition.makeCondition("cardStatusId", cardStatusId), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String statusName = null;
+		for (GenericValue genericValue : cardStatusELI) {
+			statusName = genericValue.getString("name");
+		}
+		return statusName;
+	}
+	
 	/****
 	 * @author Japheth Odonya  @when Nov 5, 2014 8:39:57 PM
 	 * Check that Member Has Enough Money on account
@@ -332,6 +350,60 @@ public class ATMManagementServices {
 		
 		log.info(" MMMMMMMMMMMMMMMMMM Minimum Balance is "+bdMinimumBalance);
 		return bdMinimumBalance;
+	}
+	
+	public static ATMStatus getATMAccount(String cardNumber) {
+		String status = "";
+		
+		GenericValue cardApplication = getMemberATMApplication(cardNumber);
+		
+		Long cardStatusId = null;
+		cardStatusId = ATMManagementServices.getCardStatus("ACTIVE");
+		if (cardApplication == null){
+			status = "NOTREGISTERED";
+		} else if (cardApplication.getLong("cardStatusId").equals(cardStatusId)){
+			status = "SUCCESS";
+		} else{
+			status = "NOTACTIVE";
+		}
+	//	ATMManagementServices.get
+		ATMStatus atmStatus = new ATMStatus();
+		atmStatus.setStatus(status);
+		atmStatus.setCardStatusId(cardApplication.getLong("cardStatusId"));
+		atmStatus.setCardStatus(ATMManagementServices.getCardStatusName(cardStatusId));
+		atmStatus.setCardApplication(cardApplication);
+		
+		return atmStatus;
+	}
+
+	
+	/***
+	 * Get ATM Application given a Card Number
+	 * 
+	 * Either Returns an Card Application or Null if none exists
+	 * */
+	private static GenericValue getMemberATMApplication(String cardNumber) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> cardApplicationELI = null;
+		EntityConditionList<EntityExpr> cardApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("cardNumber",
+								EntityOperator.EQUALS, cardNumber)),
+						EntityOperator.AND);
+
+		try {
+			cardApplicationELI = delegator.findList("CardApplication",
+					cardApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		GenericValue cardApplication = null;
+
+		for (GenericValue genericValue : cardApplicationELI) {
+			cardApplication = genericValue;
+		}
+		return cardApplication;
 	}
 
 }
