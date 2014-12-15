@@ -63,6 +63,8 @@ function getFinAccountTransRunningTotalAndBalances() {
                     jQuery('#finAccountTransRunningTotal').html(data.finAccountTransRunningTotal);
                     jQuery('#numberOfFinAccountTransaction').html(data.numberOfTransactions);
                     jQuery('#endingBalance').html(data.endingBalance);
+                    jQuery('#uncreditedBankings').html(data.uncreditedBankingsTotal);
+
                 }
             });
         }
@@ -81,11 +83,48 @@ function getFinAccountTransRunningTotalAndBalances() {
 
 <div class="screenlet screenlet-body">
   <#if finAccountTransList?has_content && parameters.noConditionFind?exists && parameters.noConditionFind == 'Y'>
+   <#if !grandTotal?exists>
+    <h3>
+    <table class="basic-table">
+      <tr>
+        <td>Cash Book Balance</td>
+        <td id="showFinAccountTransRunningTotal"></td>
+        <td>Bank Statement Balance</td>
+        <td id="showBankStatementBalance"></td>
+      </tr>
+      <tr>
+        <td>Unidentified Debits</td>
+        <td></td>
+        <td>Uncredited Bankings</td>
+        <#if uncreditedBankingsTotal?has_content>
+         <td id="uncreditedBankings"><@ofbizCurrency amount=uncreditedBankingsTotal?if_exists/></td>
+         <#else>
+         <td>0</td>
+        </#if>
+      </tr>
+      <tr>
+        <td>Unreceipted Bankings</td>
+        <td></td>
+        <td>Unpresented Cheques</td>
+        <#if unpresentedChequesTotal?has_content>
+         <td id="unpresentedCheques"><@ofbizCurrency amount=unpresentedChequesTotal?if_exists/></td>
+         <#else>
+         <td>0</td>
+        </#if>
+      </tr>
+      <tr>
+        <td>Adjusted Cash Book Balance</td>
+        <td></td>
+        <td>Adjusted Bank Statement Balance</td>
+        <td></td>
+      </tr>
+    </table>
+  </h3>
+   </#if>
     <#if !grandTotal?exists>
-      <div>
-        <span class="label">${uiLabelMap.AccountingRunningTotal} :</span>
-        <span class="label" id="showFinAccountTransRunningTotal"></span>
-      </div>
+    <span class="label">${uiLabelMap.AccountingRunningTotal} :</span>
+    <span class="label" id="showFinAccountTransRunningTotal"></span>
+
     </#if>
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal?exists>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>
@@ -130,9 +169,9 @@ function getFinAccountTransRunningTotalAndBalances() {
           <th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</th>
           <th>${uiLabelMap.CommonStatus}</th>
           <th>${uiLabelMap.CommonComments}</th>
-          <#if grandTotal?exists>
+   <#--        <#if grandTotal?exists>
             <th>Transactions Actions</th>
-          </#if>
+          </#if> -->
           <#if !grandTotal?exists>
             <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
               <th>${uiLabelMap.AccountingRemoveFromGlReconciliation}</th>
@@ -248,16 +287,25 @@ function getFinAccountTransRunningTotalAndBalances() {
             </td>
             <td><#if paymentType?has_content>${paymentType.description?if_exists}</#if></td>
             <td><#if paymentMethodType?has_content>${paymentMethodType.description?if_exists}</#if></td>
-            <td><#if status?has_content>${status.description?if_exists}</#if></td>
+            <td>
+<#--               <#if status?has_content>
+                ${status.description?if_exists}
+              </#if> -->
+              <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
+                NOT RECONCILED
+              <#else>
+                RECONCILED
+              </#if>
+            </td>
             <td>${finAccountTrans.comments?if_exists}</td>
-            <#if grandTotal?exists>
+<#--             <#if grandTotal?exists>
               <td>
                 <#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
                   <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">${uiLabelMap.CommonCancel}</a>
                   <a href="javascript:document.approveFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">Approve</a>
                 </#if>
               </td>
-            </#if>
+            </#if> -->
             <input name="finAccountTransId_o_${finAccountTrans_index}" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="organizationPartyId_o_${finAccountTrans_index}" type="hidden" value="${defaultOrganizationPartyId}"/>
             <#if glReconciliationId?has_content && glReconciliationId != "_NA_">
@@ -328,8 +376,8 @@ function getFinAccountTransRunningTotalAndBalances() {
         </tr>
         <tr>
           <td>
-            <span id="finAccountTransRunningTotal"></span> /
-            <span id="numberOfFinAccountTransaction"></span>
+            <span id="finAccountTransRunningTotal">0</span> /
+            <span id="numberOfFinAccountTransaction">0</span>
           </td>
           <td><@ofbizCurrency amount=glReconciliation.openingBalance?default('0')/></td>
           <td><@ofbizCurrency amount=glReconciliation.reconciledBalance?default('0')/></td>
