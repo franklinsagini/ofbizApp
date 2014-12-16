@@ -77,9 +77,10 @@ under the License.
         <#-- Loan Details -->
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
-            	<fo:table-column column-width="60pt"/>
+            	<fo:table-column column-width="30pt"/>
                 <fo:table-column column-width="140pt"/>
-                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 
@@ -97,6 +98,10 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Names</fo:block>
+                        </fo:table-cell>
+                        
+                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Status</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>ID Number</fo:block>
@@ -142,6 +147,12 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${member.firstName?if_exists} ${member.middleName?if_exists} ${member.lastName?if_exists}</fo:block>
                             </fo:table-cell>
+                            
+                            <#assign status = delegator.findOne("MemberStatus", Static["org.ofbiz.base.util.UtilMisc"].toMap("memberStatusId", member.memberStatusId), true)/>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${status.name?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${member.idNumber?if_exists}</fo:block>
                             </fo:table-cell>

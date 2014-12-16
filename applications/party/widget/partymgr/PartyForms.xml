@@ -3236,6 +3236,25 @@ Gender
         	<!-- date-find default-option-thru="upThruDay"/ -->
         	<date-time type="date"/>
         </field>
+        
+         <field name="memberStatusId" title="Status">
+        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberStatus"></entity-options>
+        	</drop-down>
+        </field>
+        
+        
+        
+         <field name="branchId" title="Branch" position="2">
+        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+        			<entity-constraint name="isBranch" operator="equals" value="Y"/>
+        		</entity-options>
+        	</drop-down>
+        </field>       
+        
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>

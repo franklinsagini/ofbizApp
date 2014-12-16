@@ -46,6 +46,8 @@ import javolution.util.FastList;
 //context.loanDetailsList = delegator.findByAnd("LoanApplication", [loanProductId : LloanProductId], null, false)
 startDate = parameters.startDate
 endDate = parameters.endDate
+memberStatusId = parameters.memberStatusId
+branchId = parameters.branchId
 
 print " -------- Start Date"
 println startDate
@@ -67,14 +69,46 @@ java.sql.Date sqlEndDate = new java.sql.Date(dateEndDate.getTime());
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
- expr = exprBldr.AND() {
-		GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
-		LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+if (memberStatusId){
+
+	if (branchId){
+		expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(memberStatusId: memberStatusId.toLong())
+			EQUALS(branchId: branchId)
+		}
+	} else{
+
+		expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(memberStatusId: memberStatusId.toLong())
+
+		}
+
 	}
-	
-   EntityFindOptions findOptions = new EntityFindOptions();
-	findOptions.setMaxRows(100);
-	membersList = delegator.findList("Member", expr, null, ["joinDate ASC"], findOptions, false)
+} else{
+	if (branchId){
+		expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(branchId: branchId)
+		}
+
+	} else{
+		expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+		}
+	}
+
+
+}
+
+EntityFindOptions findOptions = new EntityFindOptions();
+findOptions.setMaxRows(100);
+membersList = delegator.findList("Member", expr, null, ["joinDate ASC"], findOptions, false)
 
 
 ////conditionList = FastList.newInstance()
