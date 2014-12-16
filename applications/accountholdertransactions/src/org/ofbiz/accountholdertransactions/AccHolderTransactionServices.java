@@ -1182,7 +1182,14 @@ public class AccHolderTransactionServices {
 			if (((transactionType != null) && (transactionType
 					.equals("CASHWITHDRAWAL")))
 					|| ((transactionType != null) && (transactionType
-							.equals("ATMWITHDRAWAL")))) {
+							.equals("ATMWITHDRAWAL")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAW")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("POSCASHPURCHASE")))
+					) {
 				increaseDecrease = "D";
 			}
 
