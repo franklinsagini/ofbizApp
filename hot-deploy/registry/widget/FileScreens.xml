@@ -64,32 +64,7 @@
 		</section>
 	</screen>
 
-	<screen name="locationsDecorator">
-		<section>
-			<actions>
-			</actions>
-			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-						<section>
-							<widgets>
-								<section>
-									<widgets>
-										<container style="leftclear">
-											<label style="h1"
-												text="File Locations" />
-										</container>
-									</widgets>
-								</section>
-								<decorator-section-include name="body" />
-							</widgets>
-						</section>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
+	
 
 	<screen name="ducumentTYpesDecorator">
 		<section>
@@ -611,6 +586,204 @@
 		</section>
 	</screen>
 	
+	<!-- ====================================================== INACTIVE FILES ====================================================== -->
+	<screen name="registryInactiveFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="inactiveFiles" />
+				<set field="tabButtonItem" value="inactiveFiles" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+				
+				<entity-condition entity-name="RegistryFiles" list="listIt"></entity-condition>
+				
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Inactive Files" />
+										</container>
+										<include-menu name="disposalMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+								<screenlet title="Search File">
+									<include-form name="FindInactiveMemberfiles" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listInactiveMemberfiles" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ====================================================== SEMI-ACTIVE FILES ====================================================== -->
+	<screen name="registrySemiActiveFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="semiActiveFiles" />
+				<set field="tabButtonItem" value="semiActiveFiles" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Semi-Active FIles" />
+										</container>
+										<include-menu name="disposalMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+								<screenlet title="Search File">
+									<include-form name="FindMemberSemiActivefiles" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberSemiActivefiles" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILES IN ARCHIVE====================================================== -->
+	<screen name="registryArchivedFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="archive" />
+				<set field="tabButtonItem" value="archive" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Files in Archive" />
+										</container>
+										<include-menu name="disposalMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+								<screenlet title="Search File">
+									<include-form name="FindMemberArchivedfiles" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberArchivedfiles" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!--======================================================FILE FOR DISPOSAL======================================================-->
+	<screen name="registryFilesForDisposal">
+		<section>
+			<actions>
+				<set field="headerItem" value="disposal" />
+				<set field="tabButtonItem" value="disposal" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Files Ready For Disposal" />
+										</container>
+										<include-menu name="disposalMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForDisposal" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForDisposal" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILES FOR DECEASED MEMBERS====================================================== -->
+	<screen name="registryFileForDeceasedMembers">
+		<section>
+			<actions>
+				<set field="headerItem" value="deceased" />
+				<set field="tabButtonItem" value="deceased" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Files For The Deceased Members" />
+										</container>
+										<include-menu name="disposalMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForDeceasedMembers" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForDeceasedMembers" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	<!-- ======================================================FILE ARCHIVES====================================================== -->
 	<screen name="registryFileArchive">
 		<section>
@@ -631,6 +804,9 @@
 											<label style="h1"
 												text="Archive Documents" />
 										</container>
+										
+									<include-menu name="disposalMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+								
 								<screenlet title="Search Document">
 									<include-form name="fileArchive" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
@@ -1024,34 +1200,38 @@
 	</screen>
 
 
-	<screen name="filelocation">
+	<screen name="fileActivity">
 		<section>
 			<actions>
-				<set field="titleProperty" value="files" />
-				<set field="headerItem" value="addlocations" />
+				<set field="titleProperty" value="editFileActivity" />
+				<set field="headerItem" value="editFileActivity" />
 				<set field="displayPassword" value="Y" />
-				<set field="target" value="createfilelocation" />
+				<set field="target" value="createfileActivity" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="RegistryFileLocations" value-field="filelocationContext" />
-				<set field="locationId" from-field="RegistryFileLocations.locationId"
-					default-value="${parameters.locationId}" />
+				<entity-one entity-name="RegistryFileActivity" value-field="fileActivityContext" />
+				<set field="activityId" from-field="RegistryFileActivity.activityId"
+					default-value="${parameters.activityId}" />
 			</actions>
 			<widgets>
-				<decorator-screen name="locationsDecorator"
-					location="component://registry/widget/FileScreens.xml">
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
 							<widgets>
-								<screenlet title="Create A File Location">
-									<include-form name="EditFilelocationForm"
+							<container style="leftclear">
+											<label style="h1"
+												text="File Activities" />
+										</container>
+								<screenlet title="Create A File Activity">
+									<include-form name="EditFileActivityForm"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>
 						<section name="search-results">
 							<widgets>
-								<screenlet title="Files Locations List">
-									<include-form name="FilelocationListForm"
+								<screenlet title="File Activity List">
+									<include-form name="FileActivityListForm"
 										location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
@@ -1132,7 +1312,7 @@
 	<screen name="RegistryFilesOverviewScreen">
         <section>
             <actions>
-                <set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="RegistryFiles" value-field="FilesContext" />
             </actions>
             <widgets>
@@ -1204,7 +1384,7 @@
 				<set field="tabButtonItem" value="find" />
 				<set field="titleProperty" value="PageTitleFindInvoice" />
 				<set field="findFileCtx" from-field="parameters" />
-				<set field="memberPlusPersonId" from-field="parameters.memberPlusPersonId"/>
+				<set field="partyId" from-field="parameters.partyId"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -1221,11 +1401,11 @@
 								</screenlet>
 								
 								<link target="approveFileIssuance" text="APPROVE FILE ISSUANCE" style="buttontext create">
-						<parameter param-name="memberPlusPersonId" />
+						<parameter param-name="partyId" />
 						</link>
 						
 						<link target="disapproveFileIssuance" text="DISAPPROVE FILE ISSUANCE" style="buttontext create">
-						<parameter param-name="memberPlusPersonId" />
+						<parameter param-name="partyId" />
 						</link>
 							</widgets>
 							
@@ -1325,6 +1505,38 @@
 										</container>
 								<screenlet title="Search File">
 									<include-form name="releaseFileForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	 <!-- ============================================== RELEASE TO ANOTHER PERSON ========================================================== -->
+    
+    <screen name="releaseFileToAnotherStaff">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesRelease" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Send File" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="releaseFileToAnotherStaffFileForm" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>

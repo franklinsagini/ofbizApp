@@ -141,7 +141,7 @@ under the License.
     </fo:block>
     <#else>
      <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">No Spouses For Employee: ${employee.firstName} ${employee.lastName}</fo:block>
+        <fo:block text-align="center" font-size="14pt">Nothing To ShowFor: ${employee.firstName} ${employee.lastName}</fo:block>
     </fo:block>
   </#if>
     <#else>
