@@ -5,9 +5,6 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import restcomponent.MemberStatement;
-import restcomponent.PingResource;
-
 public class PingApplication extends Application {
   @Override
   public Set<Class<?>> getClasses() {
@@ -15,6 +12,7 @@ public class PingApplication extends Application {
       classes.add(PingResource.class);
       classes.add(MemberStatement.class);
       classes.add(MSaccoServices.class);
+      classes.add(ATMServices.class);
       return classes;
   }
 }

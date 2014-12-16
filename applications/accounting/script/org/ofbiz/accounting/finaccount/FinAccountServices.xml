@@ -577,6 +577,8 @@ under the License.
         </entity-condition>
         <set field="grandTotal" type="BigDecimal" value="0"/>
         <set field="createdGrandTotal" type="BigDecimal" value="0"/>
+        <set field="uncreditedBankingsTotal" type="BigDecimal" value="0"/>
+        <set field="unpresentedChequesTotal" type="BigDecimal" value="0"/>
         <set field="totalCreatedTransactions" type="Long" value="0"/>
         <set field="approvedGrandTotal" type="BigDecimal" value="0"/>
         <set field="totalApprovedTransactions" type="Long" value="0"/>
@@ -655,12 +657,32 @@ under the License.
             </else>
             </if-compare>
         </iterate>
+        <entity-condition entity-name="FinAccountTrans" list="accountTransactions">
+            <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+            <use-iterator/>
+        </entity-condition>
+        <log message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>VALUE OF UPRESENTED CHEQUES TOTAL: ${unpresentedChequesTotal}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" type="info"/>
+        <iterate list="accountTransactions" entry="singleTrans">
+            <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL">
+                <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
+                    <set field="unpresentedChequesTotal" value="${unpresentedChequesTotal + singleTrans.amount}" type="BigDecimal"/>
+                </if-compare>
+            <else>
+                <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
+                    <set field="uncreditedBankingsTotal" value="${uncreditedBankingsTotal + singleTrans.amount}" type="BigDecimal"/>
+                </if-compare>
+            </else>
+            </if-compare>
+        </iterate>
+         <log message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>VALUE OF UPRESENTED CHEQUES TOTAL: ${unpresentedChequesTotal}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" type="info"/>
         <call-object-method obj-field="finAccountTransList" method-name="size" ret-field="searchedNumberOfRecords"/>
         <set field="totalCreatedApprovedTransactions" value="${totalCreatedTransactions + totalApprovedTransactions}" type="Long"/>
         <field-to-result field="finAccountTransList"/>
         <field-to-result field="searchedNumberOfRecords"/>
         <field-to-result field="grandTotal"/>
         <field-to-result field="createdGrandTotal"/>
+        <field-to-result field="uncreditedBankingsTotal"/>
+        <field-to-result field="unpresentedChequesTotal"/>
         <field-to-result field="totalCreatedTransactions"/>
         <field-to-result field="approvedGrandTotal"/>
         <field-to-result field="totalApprovedTransactions"/>
@@ -674,6 +696,23 @@ under the License.
 
     <simple-method method-name="getFinAccountTransRunningTotalAndBalances" short-description="Calculate running total and Balances of Financial Account Transactions">
         <set field="runningTotal" type="BigDecimal" from-field="parameters.runningTotal" default-value="0"/>
+        <set field="uncreditedBankingsTotal" type="BigDecimal" from-field="parameters.uncreditedBankingsTotal" default-value="0"/>
+        <set field="unpresentedChequesTotal" type="BigDecimal" from-field="parameters.unpresentedChequesTotal" default-value="0"/>
+
+
+
+        <entity-one entity-name="FinAccountTrans" value-field="singleTrans">
+          <field-map field-name="finAccountTransId" from-field="parameters.finAccountTransId"/>
+        </entity-one>
+
+        <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL">
+            <set field="unpresentedChequesTotal" value="${unpresentedChequesTotal - singleTrans.amount}" type="BigDecimal"/>
+        <else>
+             <set field="uncreditedBankingsTotal" value="${uncreditedBankingsTotal - singleTrans.amount}" type="BigDecimal"/>
+        </else>
+        </if-compare>
+        <field-to-result field="unpresentedChequesTotal"/>
+        <field-to-result field="uncreditedBankingsTotal"/>
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" auto-field-map="true"/>
         <if-compare field="finAccountTrans.finAccountTransTypeId"  operator="equals" value="WITHDRAWAL">
             <set field="runningTotal" value="${runningTotal - finAccountTrans.amount}" type="BigDecimal"/>
