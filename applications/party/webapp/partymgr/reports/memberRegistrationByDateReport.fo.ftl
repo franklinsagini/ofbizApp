@@ -84,6 +84,8 @@ under the License.
                 <fo:table-column column-width="60pt"/>
                 
                 <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
                 <#-- fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
@@ -105,9 +107,19 @@ under the License.
                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Join Date</fo:block>
                         </fo:table-cell>
+                        
+                                                
+                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Member Number</fo:block>
+                        </fo:table-cell>
+                        
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Station</fo:block>
                         </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Branch</fo:block>
+                        </fo:table-cell>
+
                         <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Insurance Paid</fo:block>
                         </fo:table-cell>
@@ -139,12 +151,24 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${member.joinDate?date}</fo:block>
                             </fo:table-cell>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${member.memberNumber?if_exists}</fo:block>
+                            </fo:table-cell>
                             <#assign stationId = member.stationId />
 
                              <#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationId.toString()), true)/>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${station.name?if_exists}</fo:block>
+                                <fo:block>${station.stationNumber?if_exists} - ${station.name?if_exists}</fo:block>
                             </fo:table-cell>
+                            
+                             <#assign branch = delegator.findOne("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", member.branchId), true)/>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${branch.groupName?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                           
+                            
                             <#-- fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${loanRepayment.totalInsuranceDue?if_exists}</fo:block>
                             </fo:table-cell>
