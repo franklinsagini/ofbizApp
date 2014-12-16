@@ -112,7 +112,7 @@
 		</field>
 		
 		 <field name="files" title="-" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Add Volume" target="goAddVolume">
+			<hyperlink also-hidden="false" description="File Volume Setup" target="goAddVolume">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
 			</hyperlink>
@@ -134,9 +134,14 @@
 			<entity-condition entity-name="Member" list="filebksList">
 				<order-by field-name="partyId" />
 			</entity-condition>
+			
 			<entity-condition entity-name="RegistryFileVolume" list="volumeList">
-				<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+			<condition-list>
+			<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+			<condition-expr field-name="volumeStatus" operator="equals" value="OPEN"/>
+			</condition-list>
 			</entity-condition>
+			
 		</actions>
 		<alt-target use-when="documentContext!=null" target="updateFile" />
 		<field name="DocumentTypeId" title="Document Type " widget-style="required"	required-field="true">
@@ -150,12 +155,11 @@
 		<field name="referenceNo" title="Reference Number"><text/></field>
 		<!-- <field name="documentValue" title="Document Value" widget-style="required" tooltip="In Kenyan Shillings (KES)"><text/></field> -->	
 		<field name="volumeIdentifier" title="Select File Volume" required-field="true" widget-style="required">
-		<drop-down allow-empty="true">
-          <!--  <list-options key-name="volumeIdentifier" list-name="volumeList"
-					description="${volumeIdentifier}" /> -->
+		<drop-down allow-empty="false">
+           <list-options key-name="volumeIdentifier" list-name="volumeList"
+					description="${volumeIdentifier}" /> 
 					
-				<entity-options description="${volumeIdentifier}"
-					key-field-name="volumeIdentifier" entity-name="RegistryFileVolume" />
+			
 			
        </drop-down>
 		</field>	
@@ -303,7 +307,9 @@
     <form name="listmembersfiles" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfiles"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-        <entity-condition entity-name="RegistryFiles" ></entity-condition>
+        <entity-condition entity-name="RegistryFiles" >
+       <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/> 
+        </entity-condition>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="RegistryFiles"/>
@@ -345,20 +351,20 @@
 			</hyperlink>
 		</field>
       
-		 <!-- <field name="issueFile" title="-" widget-style="buttontext" use-when="${status=='REQUESTED'}">
-			<hyperlink also-hidden="false" description="Issue File" target="issuefiles">
+		 <field name="deactivateFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Deactivate File" target="deactivateFile">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 			</hyperlink>
 		</field>
-		 <field name="releaseFile" title="-" widget-style="buttontext" use-when="${status=='ISSUED'}">
-			<hyperlink also-hidden="false" description="Return To Registry" target="releasefiles">
+		<field name="deceasedMember" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Set File Member Deceased" target="deceasedMember">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 			</hyperlink>
-		</field> -->
+		</field>  
 		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="fileLocation"><display-entity entity-name="department" key-field-name="departmentId" description="${departmentName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
@@ -468,7 +474,11 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
-        <condition-expr field-name="status" operator="equals" value="AVAILABLE"/>
+         <condition-list>
+         <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/> 
+          <condition-expr field-name="status" operator="equals" value="AVAILABLE"/>
+         </condition-list>
+       
         </entity-condition>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -572,6 +582,7 @@
          <condition-expr field-name="status" operator="equals" value="REQUESTED"/>
          <condition-expr field-name="isAuthorized" operator="equals" value="Y"/>
           <condition-expr field-name="approvalStatus" operator="not-equals" value="Approved"/>
+           <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/> 
          </condition-list>
         </entity-condition>
         
@@ -676,7 +687,11 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         <entity-condition entity-name="RegistryFiles" >
-         <condition-expr field-name="status" operator="equals" value="REQUESTED"/>
+        <condition-list>
+        <condition-expr field-name="status" operator="equals" value="REQUESTED"/>
+          <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
+        </condition-list>
+          
         </entity-condition>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -879,6 +894,7 @@
          <condition-list>
          <condition-expr field-name="recieptStatus" operator="equals" value="NOTRECEIVED"/>
          <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
+         <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
          </condition-list>
         
         </entity-condition>
@@ -1030,6 +1046,7 @@
           <condition-list>
          <condition-expr field-name="recieptStatus" operator="equals" value="RECEIVED"/>
          <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
+         <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
          </condition-list>
        
         </entity-condition>
@@ -1084,6 +1101,14 @@
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
+		 <field name="filesReleaseToOtherStaff" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Send To Another Staff" target="goReleaseFileToAnotherStaff">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+			</hyperlink>
+		</field>
 		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
@@ -1130,7 +1155,11 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
-        <condition-expr field-name="recieptStatus" operator="equals" value="RELEASED"/>
+         <condition-list>
+          <condition-expr field-name="recieptStatus" operator="equals" value="RELEASED"/>
+        <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
+         </condition-list>
+       
         </entity-condition>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -1275,7 +1304,15 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		 <field name="filesReturn" title="-" widget-style="buttontext" use-when="${moveStatus == 'MOVE'}">
+		 <field name="activateFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+			</hyperlink>
+		</field>
+		 <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Move To Semi-Active Status" target="moveToSemiActive">
 				<parameter param-name="partyId" />
 				<parameter param-name="folioNo" /> 
@@ -1372,6 +1409,14 @@
        <field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		 <field name="activateFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
 		 <field name="filesReturn" title="-" widget-style="buttontext">
@@ -1473,6 +1518,14 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
+		 <field name="activateFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+			</hyperlink>
+		</field>
 		 <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Move To Files For Disposal" target="moveToDisposal">
 				<parameter param-name="partyId" />
@@ -1572,6 +1625,14 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
+		 <field name="activateFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="folioNo" /> 
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+			</hyperlink>
+		</field>
 		 <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Dispose File" target="goReturnFile">
 				<parameter param-name="partyId" />
@@ -1626,7 +1687,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
-        <!-- <condition-expr field-name="recieptStatus" operator="equals" value="RELEASED"/> -->
+        <condition-expr field-name="stageStatus" operator="equals" value="DECEASED"/> 
         </entity-condition>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -1844,16 +1905,46 @@
 		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration();}" type="String"/> -->
 		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration2();}" type="String"/> -->
 		  <entity-condition entity-name="Person" list="fileCarrierList" >
-        		<condition-list combine="and">
-        			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        		
         			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>   
-        			<condition-expr field-name="employmentStatusEnumId" operator="not-equals" value="15"/>      		
-        		</condition-list>
+        			  		
+        		
         	</entity-condition>
 		
         </actions>
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="carriedBy" title="File Carried By:" required-field="true">
+		 <drop-down allow-empty="true">
+             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
+            </drop-down>
+		</field>
+		
+		 <field name="submitButton" title="Release File" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
+	 <!-- ================================================ FILE RELEASE TO ANOTHER STAFF ========================================================= -->
+    
+     <form name="releaseFileToAnotherStaffFileForm" type="single" target="releaseFileToAnotherStaff"
+		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration();}" type="String"/> -->
+		 <!-- <set field="newDuration" value="${bsh:org.ofbiz.humanres.Leave.getNewLeaveDuration2();}" type="String"/> -->
+		  <entity-condition entity-name="Person" list="fileCarrierList" >
+        		
+        			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>   
+        		
+        	</entity-condition>
+		
+        </actions>
+		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="currentPossesser" title="File Send To:" required-field="true">
+		 <drop-down allow-empty="true">
+             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
+            </drop-down>
+		</field>
 		<field name="carriedBy" title="File Carried By:" required-field="true">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
@@ -1917,6 +2008,12 @@
 		<auto-fields-entity entity-name="RegistryFileVolume" default-field-type="display"/>
 		<field name="volumeIdentifier"><text/></field>
 		
+		 <field name="closeFileVolume" title="-" widget-style="buttontext" use-when="${volumeStatus == 'OPEN'}">
+			<hyperlink also-hidden="false" description="Close File Volume" target="closeFileVolume">
+				<parameter param-name="volumeId" />
+			</hyperlink>
+		</field> 
+		
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
 	
@@ -1969,10 +2066,10 @@
 		<field name="securityLevel">
 		<drop-down allow-empty="true">
 		<option key="General" description="General" />
-		<option key="Restricted," description="Restricted" />
-		<option key="Confidential," description="Confidential" />
-		<option key="Secret," description="Secret" />
-		<option key="Top Secret," description="Top Secret" />
+		<option key="Restricted" description="Restricted" />
+		<option key="Confidential" description="Confidential" />
+		<option key="Secret" description="Secret" />
+		<option key="Top Secret" description="Top Secret" />
 		</drop-down>
         </field>
 		<field name="referenceSource"><text size="45"></text></field>

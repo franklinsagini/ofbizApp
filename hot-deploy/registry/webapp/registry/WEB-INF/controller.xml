@@ -229,6 +229,11 @@
 		<response name="success" type="view" value="releasingFiles" />
 	</request-map>
 	
+	<request-map uri="goReleaseFileToAnotherStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="releaseFileToAnotherStaff" />
+	</request-map>
+	
 	<request-map uri="goReturnFile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="returningFiles" />
@@ -400,6 +405,13 @@
 		<response name="error" type="view" value="fileReleaseScreen" />
 	</request-map>
 	
+	<request-map uri="releaseFileToAnotherStaff">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="releaseFileToAnotherStaff" />
+		<response name="success" type="view" value="fileReleaseScreen" />
+		<response name="error" type="view" value="fileReleaseScreen" />
+	</request-map>
+	
 	<request-map uri="returnfiles"> 
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="returnfiles" />
@@ -452,6 +464,12 @@
 
 
 	<!-- documents -->
+	 <!-- ================MOVE FILE TO INACTIVE STATUS ========================= -->
+     <request-map uri="deactivateFile">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deactivateFile"/>
+        <response name="success" type="view" value="main"/>  
+    </request-map>
 	
 	 <!-- ================MOVE FILE TO SEMI-ACTIVE========================= -->
      <request-map uri="moveToSemiActive">
@@ -472,6 +490,27 @@
         <security https="true" auth="true"/>
         <event type="service" invoke="moveToDisposal"/>
         <response name="success" type="view" value="archive"/>
+    </request-map>
+    
+      <!-- ================ ACTIVATE FILE ========================= -->
+     <request-map uri="activateFile">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="activateFile"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+    
+      <!-- ================ MOVE FILE TO DECEASED MEMBER FILES ========================= -->
+     <request-map uri="deceasedMember">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deceasedMember"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+    
+      <!-- ================ CLOSE A FILE VOLUME ========================= -->
+     <request-map uri="closeFileVolume">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="closeFileVolume"/>
+        <response name="success" type="view" value="addingFileVolume"/>
     </request-map>
     
       <!-- ================UPDATE MOVE STATUS========================= -->
@@ -563,6 +602,7 @@
 
 	<view-map name="requestingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#requestingFiles" />
 	<view-map name="releasingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#releasingFiles" />
+	<view-map name="releaseFileToAnotherStaff" type="screen"	page="component://registry/widget/FileScreens.xml#releaseFileToAnotherStaff" />
 	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
 	<view-map name="issuingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#issuingFiles" />
 	<view-map name="returningFiles" type="screen"	page="component://registry/widget/FileScreens.xml#returningFiles" />
