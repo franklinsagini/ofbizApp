@@ -180,6 +180,7 @@ function getFinAccountTransRunningTotalAndBalances() {
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal?exists>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>
       <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
+      <input name="uncreditedBankingsTotal" id="uncreditedBankingsTotal" type="hidden" value="60"/>
       <input name="statusId" type="hidden" value="${parameters.statusId?if_exists}"/>
       <#if !grandTotal?exists>
         <input name="reconciledBalance" type="hidden" value="${(glReconciliation.reconciledBalance)?if_exists}"/>

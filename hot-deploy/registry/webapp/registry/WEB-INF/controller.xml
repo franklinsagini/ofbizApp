@@ -20,9 +20,9 @@
 <response name="success" type="view" value="LookupPartyName"/></request-map>
 
 
-	<request-map uri="editlocation">
+	<request-map uri="editFileActivity">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="editlocation" />
+		<response name="success" type="view" value="editFileActivity" />
 	</request-map>
 
 	<request-map uri="updatelocationsURL">
@@ -89,8 +89,37 @@
     </request-map>
 
     
-  <request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
+  <request-map uri="LookupActiveMember">
+  <security https="true" auth="true"/>
+  <response name="success" type="view" value="LookupActiveMember"/>
+  </request-map>
      
+     <!-- ================== APPRAISAL AND DISPOSAL ========================================== -->
+     
+     <request-map uri="inactiveFiles">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="inactiveFiles" />
+	</request-map>
+	
+	<request-map uri="semiActiveFiles">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="semiActiveFiles" />
+	</request-map>
+	
+	<request-map uri="archive">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="archive" />
+	</request-map>
+	
+	<request-map uri="disposal">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="disposal" />
+	</request-map>
+	
+	<request-map uri="deceased">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deceased" />
+	</request-map>
 
 
 
@@ -135,7 +164,31 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="fileReturnScreen" />
 	</request-map>
+	
+	<!-- ========================= APPRAISAL AND DISPOSAL ============================== -->
 
+<request-map uri="findRegFileInactive">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="inactiveFiles" />
+	</request-map>
+	<request-map uri="findRegFileSemiActive">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="semiActiveFiles" />
+	</request-map>
+	<request-map uri="findRegFileArchive">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="archive" />
+	</request-map>
+	<request-map uri="findRegFileDisposal">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="disposal" />
+	</request-map>
+	<request-map uri="findRegFileDeceased">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deceased" />
+	</request-map>
+	
+	
 	<request-map uri="goRequestFile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="requestingFiles" />
@@ -176,6 +229,11 @@
 		<response name="success" type="view" value="releasingFiles" />
 	</request-map>
 	
+	<request-map uri="goReleaseFileToAnotherStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="releaseFileToAnotherStaff" />
+	</request-map>
+	
 	<request-map uri="goReturnFile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="returningFiles" />
@@ -209,28 +267,28 @@
 
 <!-- file location -->
 
-	<request-map uri="createfilelocation">
+	<request-map uri="createfileActivity">
 		<security https="true" auth="true" />
-		<event type="service" path="" invoke="createfilelocation" />
-		<response name="success" type="view" value="editlocation" />
-		<response name="error" type="view" value="editlocation" />
+		<event type="service" path="" invoke="createfileActivity" />
+		<response name="success" type="view" value="editFileActivity" />
+		<response name="error" type="view" value="editFileActivity" />
 	</request-map>
 
-	<request-map uri="updatefilelocation">
+	<request-map uri="updatefileActivity">
 		<security https="true" auth="true" />
-		<event type="service" invoke="updatefilelocation" />
-		<response name="success" type="request-redirect" value="editlocation">
-			<redirect-parameter name="locationId" />
+		<event type="service" invoke="updatefileActivity" />
+		<response name="success" type="request-redirect" value="editFileActivity">
+			<redirect-parameter name="activityId" />
 		</response>
-		<response name="error" type="view" value="editlocation" />
+		<response name="error" type="view" value="editFileActivity" />
 	</request-map>
 
-	<request-map uri="deletefilelocation">
+	<request-map uri="deletefileActivity">
 		<security https="true" auth="true" />
-		<event type="service" invoke="deletefilelocation" />
+		<event type="service" invoke="deletefileActivity" />
 		<response name="success" type="request-redirect-noparam"
-			value="editlocation"></response>
-		<response name="error" type="view" value="editlocation" />
+			value="editFileActivity"></response>
+		<response name="error" type="view" value="editFileActivity" />
 	</request-map>
 
 
@@ -347,6 +405,13 @@
 		<response name="error" type="view" value="fileReleaseScreen" />
 	</request-map>
 	
+	<request-map uri="releaseFileToAnotherStaff">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="releaseFileToAnotherStaff" />
+		<response name="success" type="view" value="fileReleaseScreen" />
+		<response name="error" type="view" value="fileReleaseScreen" />
+	</request-map>
+	
 	<request-map uri="returnfiles"> 
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="returnfiles" />
@@ -388,12 +453,79 @@
 
 
 
-
+<!-- <request-map uri="inactiveFiles">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.registry.FileServices" invoke="getMemberStatusAndUpdatedDate" />
+    <response name="success" type="view"  value="inactiveFiles"></response>
+    <response name="error" type="view" value="inactiveFiles" />
+    </request-map> -->
 
 
 
 
 	<!-- documents -->
+	 <!-- ================MOVE FILE TO INACTIVE STATUS ========================= -->
+     <request-map uri="deactivateFile">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deactivateFile"/>
+        <response name="success" type="view" value="main"/>  
+    </request-map>
+	
+	 <!-- ================MOVE FILE TO SEMI-ACTIVE========================= -->
+     <request-map uri="moveToSemiActive">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="moveToSemiActive"/>
+        <response name="success" type="view" value="inactiveFiles"/>  
+    </request-map>
+    
+     <!-- ================MOVE FILE TO ARCHIVE========================= -->
+     <request-map uri="moveToArchive">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="moveToArchive"/>
+        <response name="success" type="view" value="semiActiveFiles"/>
+    </request-map>
+    
+     <!-- ================MOVE FILE FOR DISPOSAL========================= -->
+     <request-map uri="moveToDisposal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="moveToDisposal"/>
+        <response name="success" type="view" value="archive"/>
+    </request-map>
+    
+      <!-- ================ ACTIVATE FILE ========================= -->
+     <request-map uri="activateFile">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="activateFile"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+    
+      <!-- ================ MOVE FILE TO DECEASED MEMBER FILES ========================= -->
+     <request-map uri="deceasedMember">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deceasedMember"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+    
+      <!-- ================ CLOSE A FILE VOLUME ========================= -->
+     <request-map uri="closeFileVolume">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="closeFileVolume"/>
+        <response name="success" type="view" value="addingFileVolume"/>
+    </request-map>
+    
+      <!-- ================UPDATE MOVE STATUS========================= -->
+   <!--   <request-map uri="inactiveFiles">dsdss
+        <security https="true" auth="true"/>
+        <event type="service" invoke="inactiveFiles"/>
+        <response name="success" type="view" value="inactiveFiles"/>
+    </request-map> -->
+    
+    <!--  <request-map uri="getIsReadyToMoveToSemiActiveState">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.registry.FileServices" invoke="getIsReadyToMoveToSemiActiveState" />
+    <response name="success" type="view"  value="inactiveFiles"></response>
+    <response name="error" type="view" value="inactiveFiles" />
+    </request-map> -->
 
 
 
@@ -434,7 +566,7 @@
 	<view-map name="reqfile" type="screen" page="component://registry/widget/FileScreens.xml#requestfile" />
 	<view-map name="FindMemberScreen" type="screen" page="component://registry/widget/FileScreens.xml#FindMemberScreen"/>
 	<view-map name="main" type="screen"	page="component://registry/widget/FileScreens.xml#main" />
-	<view-map name="editlocation" type="screen"	page="component://registry/widget/FileScreens.xml#filelocation" />
+	<view-map name="editFileActivity" type="screen"	page="component://registry/widget/FileScreens.xml#fileActivity" />
 	<view-map name="editFileAction" type="screen" page="component://registry/widget/FileScreens.xml#fileActionTypeScreen" />
 	<view-map name="afterAction" type="screen" page="component://registry/widget/FileScreens.xml#afterrequestfile" />
 
@@ -446,6 +578,14 @@
 	<view-map name="lookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
 	<view-map name="LookupEmployee" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployee"/>
 	<view-map name="lookupFileParty" type="screen" page="component://registry/widget/FileScreens.xml#lookupFileParty"/>
+	
+	<!-- ================================== DISPOSAL ====================================================================== -->
+	
+	<view-map name="inactiveFiles" type="screen" page="component://registry/widget/FileScreens.xml#registryInactiveFiles"/>
+	<view-map name="semiActiveFiles" type="screen" page="component://registry/widget/FileScreens.xml#registrySemiActiveFiles"/>
+	<view-map name="archive" type="screen" page="component://registry/widget/FileScreens.xml#registryArchivedFiles"/>
+	<view-map name="disposal" type="screen" page="component://registry/widget/FileScreens.xml#registryFilesForDisposal"/>
+	<view-map name="deceased" type="screen" page="component://registry/widget/FileScreens.xml#registryFileForDeceasedMembers"/>
 	
 	
 
@@ -462,6 +602,7 @@
 
 	<view-map name="requestingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#requestingFiles" />
 	<view-map name="releasingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#releasingFiles" />
+	<view-map name="releaseFileToAnotherStaff" type="screen"	page="component://registry/widget/FileScreens.xml#releaseFileToAnotherStaff" />
 	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
 	<view-map name="issuingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#issuingFiles" />
 	<view-map name="returningFiles" type="screen"	page="component://registry/widget/FileScreens.xml#returningFiles" />
