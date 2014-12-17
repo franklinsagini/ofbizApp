@@ -81,10 +81,25 @@ public class ATMServices {
 
 		System.out.println("ATM TRANSACTION ---- " + transaction.toString());
 
+		addServiceLog(cardNumber, "BALANCE");
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
 		return Response.ok(json).type("application/json").build();
+	}
+
+	private void addServiceLog(String cardNumber, String transactionType) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue atmTransactionsLog = null;
+		String atmransactionsLogId = delegator.getNextSeqId("ATMTransactionsLog");
+		atmTransactionsLog = delegator.makeValidValue("ATMTransactionsLog", UtilMisc
+				.toMap("atmransactionsLogId", atmransactionsLogId, "cardNumber",
+						cardNumber, "transactionType", transactionType));
+		try {
+			delegator.createOrStore(atmTransactionsLog);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@GET
@@ -127,6 +142,7 @@ public class ATMServices {
 
 		}
 
+		addServiceLog(cardNumber, "WITHDRAWAL");
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
@@ -179,6 +195,7 @@ public class ATMServices {
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		}
 
+		addServiceLog(cardNumber, "WITHDRAWAL");
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
@@ -311,7 +328,7 @@ public class ATMServices {
 		transaction.setStatus(atmStatus.getStatus());
 
 		System.out.println("ATM REVERSAL TRANSACTION ---- " + transaction.toString());
-
+		addServiceLog(cardNumber, "REVERSEATMWITHDRAWAL");
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
@@ -364,7 +381,7 @@ public class ATMServices {
 					String.valueOf(transaction.getTransactionId()), amount,
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		}
-
+		addServiceLog(cardNumber, "VISAWITHDRAWAL");
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
@@ -417,6 +434,7 @@ public class ATMServices {
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		}
 
+		addServiceLog(cardNumber, "BALANCE");
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
