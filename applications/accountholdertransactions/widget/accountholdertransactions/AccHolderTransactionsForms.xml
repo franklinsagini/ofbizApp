@@ -880,7 +880,30 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
-
+    
+    
+    
+    <form name="listATMTransactionsLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="atmServiceLogs" paginate-target="atmServiceLogs"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ATMTransactionsLog">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateATMTransactionsLog"/ -->
+		
+		
+        <field name="cardNumber" title="Card Number"><display></display></field>
+        <field name="transactionType" title="Transaction Type"><display></display></field>
+        <field name="createdStamp" title="Time"><display type="date-time"></display></field>
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeTypeId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
 	<form name="FindMember" type="single" target="main" default-entity-name="Member">
         <actions>
         	<!-- set field="statusName" value="ACTIVE"/>
