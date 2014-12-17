@@ -428,8 +428,10 @@ under the License.
                 <set field="approvedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.approvedGrandTotal"/>
                 <set field="totalApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalApprovedTransactions"/>
                 <set field="createdApprovedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdApprovedGrandTotal"/>
-                <set field="unpresentedChequesTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unpresentedChequesTotal"/>
-                <set field="uncreditedBankingsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.uncreditedBankingsTotal"/>
+                <set field="unpresentedChequesTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unpresentedChequesTotal" global="true"/>
+                <set field="uncreditedBankingsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.uncreditedBankingsTotal" global="true"/>
+                <set field="unreceiptedBankingsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unreceiptedBankingsTotal" global="true"/>
+                <set field="unidentifiedDebitsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unidentifiedDebitsTotal" global="true"/>
                 <set field="totalCreatedApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalCreatedApprovedTransactions"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
@@ -474,6 +476,7 @@ under the License.
                 <set field="titleProperty" value="AccountingBankReconciliation"/>
                 <set field="tabButtonItem" value="FinAccountTrans"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="glReconciliationId" from-field="parameters.glReconciliationId"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
@@ -496,8 +499,12 @@ under the License.
                                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
                                 <set field="createdApprovedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdApprovedGrandTotal"/>
                                 <set field="glReconciliationApprovedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.glReconciliationApprovedGrandTotal"/>
-                                <set field="unpresentedChequesTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unpresentedChequesTotal"/>
-                                <set field="uncreditedBankingsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.uncreditedBankingsTotal"/>
+                                <set field="unpresentedChequesTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unpresentedChequesTotal" global="true"/>
+                                <set field="uncreditedBankingsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.uncreditedBankingsTotal" global="true"/>
+                                <set field="unreceiptedBankingsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unreceiptedBankingsTotal" global="true"/>
+                                <set field="unidentifiedDebitsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unidentifiedDebitsTotal" global="true"/>
+                                <set field="cashBookTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.cashBookTotal" global="true"/>
+                                <set field="glReconciliationId" from-field="parameters.glReconciliationId"/>
                             </actions>
                             <widgets>
                                 <section>
