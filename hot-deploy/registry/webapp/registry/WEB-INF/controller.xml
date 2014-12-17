@@ -148,6 +148,11 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="fileIssueScreen" />
 	</request-map>
+	
+	<request-map uri="regFileDivert">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileDivertScreen" />
+	</request-map>
 
 	<request-map uri="regFileDispatch">
 		<security https="true" auth="true" />
@@ -198,6 +203,39 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="issuingFiles" />
 	</request-map>
+	
+	<request-map uri="goDivertFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="divertingFiles" />
+	</request-map>
+	
+	<!-- ======================= SAVE FILES IN BOXES ========================================= -->
+	
+	<request-map uri="goDeactivateFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deactivatingFiles" />
+	</request-map>
+	
+	<request-map uri="goSetFileMemberDeceased">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deceasedMemberFiles" />
+	</request-map>
+	
+	<request-map uri="goSaveSemiActiveFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="savingSemiActiveFiles" />
+	</request-map>
+	
+	<request-map uri="goSaveArchivedFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="archivingFiles" />
+	</request-map>
+	
+	<request-map uri="goSaveFileForDisposal">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="savingFilesForDisposal" />
+	</request-map>
+	
 	
 	<request-map uri="addnonMemberOrPersonRecords">
 		<security https="true" auth="true" />
@@ -365,12 +403,20 @@
 		<response name="success" type="view" value="fileRquestScreen" />
 		<response name="error" type="view" value="fileRquestScreen" />
 	</request-map>
+	
 
 	<request-map uri="issuefiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="issuefiles" />
 		<response name="success" type="view" value="fileIssueScreen" />
 		<response name="error" type="view" value="fileIssueScreen" />
+	</request-map>
+	
+	<request-map uri="divertfiles">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="divertfiles" />
+		<response name="success" type="view" value="fileDivertScreen" />
+		<response name="error" type="view" value="fileDivertScreen" />
 	</request-map>
 	
 	<!-- ================ AUTHORIZATION ================= -->
@@ -593,6 +639,7 @@
 
 	<view-map name="fileRquestScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileRequest" />
 	<view-map name="fileIssueScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileIssue" />
+	<view-map name="fileDivertScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileDivert" />
 	<view-map name="fileDispatchScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileDispatch" />
 	<view-map name="fileReleaseScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileRelease" />
 	<view-map name="fileReturnScreen" type="screen"	page="component://registry/widget/FileScreens.xml#registryFileReturn" />
@@ -605,11 +652,20 @@
 	<view-map name="releaseFileToAnotherStaff" type="screen"	page="component://registry/widget/FileScreens.xml#releaseFileToAnotherStaff" />
 	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
 	<view-map name="issuingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#issuingFiles" />
+	<view-map name="divertingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#divertingFiles" />
 	<view-map name="returningFiles" type="screen"	page="component://registry/widget/FileScreens.xml#returningFiles" />
 	<view-map name="addingFileVolume" type="screen"	page="component://registry/widget/FileScreens.xml#addingFileVolume" />
 	<view-map name="approvingFileIssuance" type="screen"	page="component://registry/widget/FileScreens.xml#approvingFileIssuance" />
 	
 	 <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+	 
+	 <!-- ========================================= SAVING FILES IN BOXES ========================================= -->
+	 
+	 <view-map name="deactivatingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#deactivatingFiles" />
+	<view-map name="deceasedMemberFiles" type="screen"	page="component://registry/widget/FileScreens.xml#deceasedMemberFiles" />
+	<view-map name="savingSemiActiveFiles" type="screen"	page="component://registry/widget/FileScreens.xml#savingSemiActiveFiles" />
+	<view-map name="archivingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#archivingFiles" />
+	<view-map name="savingFilesForDisposal" type="screen"	page="component://registry/widget/FileScreens.xml#savingFilesForDisposal" />
 
 
 
