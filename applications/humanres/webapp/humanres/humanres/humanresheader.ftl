@@ -660,9 +660,9 @@
     		message = "Leave Not allowed for your Gender !!";
     		isValid = false;
     	}
-
-		if ((NoticePeriodState == 'INVALID')){
-    		message = message+" Leave notice too short !!";
+    	
+    	if ((onceAyearState == 'PAST')){
+    		message = message+" You can not start leave in the past!!";
     		isValid = false;
     	}
     	
@@ -670,19 +670,12 @@
     		message = message+" Given Duration not allowed for this type of leave!!";
     		isValid = false;
     	}
-    	if ((onceAyearState == 'INVALID')){
-    		message = message+" Annual leave can be applied ONLY ONCE per year!!";
+    	
+    	if ((NoticePeriodState == 'INVALID')){
+    		message = message+" Leave notice too short !!";
     		isValid = false;
     	}
-    	if ((onceAyearState == 'PAST')){
-    		message = message+" You can not start leave in the past!!";
-    		isValid = false;
-    	}
-    	
-    	if ((onceAyearState == 'VALID')){
-    		isValid = true;
-    	}
-    	
+
     	
 
     	

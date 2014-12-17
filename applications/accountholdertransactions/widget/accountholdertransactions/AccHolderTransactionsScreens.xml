@@ -396,6 +396,38 @@ under the License.
         </section>
     </screen>
     
+    <!-- atmServiceLogs -->
+        <screen name="atmServiceLogs">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ATM Service Logs"/>
+                <set field="headerItem" value="atmServiceLogs"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createATMTransactionsLog"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="ATMTransactionsLog" value-field="atmtransactionsLogContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                	
+                    <decorator-section name="body">
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="ATM Service Log">
+                        			<include-form name="listATMTransactionsLog" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- New Cheque Setup (Cheque Clearing Duration) -->
     <!-- Start -->
     <screen name="NewChequeSetup">

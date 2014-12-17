@@ -1,12 +1,11 @@
-memberPlusPersonId = parameters.memberPlusPersonId
-if (memberPlusPersonId) {
-   employee = delegator.findOne("memberPlusPerson", [memberPlusPersonId : memberPlusPersonId], false);
+partyId = parameters.partyId
+LpartyId = partyId.toLong();
+if (partyId) {
+   employee = delegator.findOne("Member", [partyId : LpartyId], false);
    if(employee){
     context.employee = employee;
    }
-   else {
-    
-   }
-context.activities = delegator.findByAnd("RegistryFileLogs", [memberPlusPersonId : memberPlusPersonId], null, false);
-context.file = delegator.findOne("RegistryFiles", [memberPlusPersonId : memberPlusPersonId], false);
+
+context.activities = delegator.findByAnd("RegistryFileLogs", [partyId : partyId], null, false);
+context.file = delegator.findOne("RegistryFiles", [partyId : partyId], false);
 }

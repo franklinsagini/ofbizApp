@@ -35,7 +35,7 @@
 
 	<entity entity-name="RegistryFiles" package-name="org.ofbiz.registry"
 		title="Member File Book">
-		<field name="memberPlusPersonId" type="id"></field>
+		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="currentPossesser" type="id-ne"></field>
 		<field name="status" type="name" ></field>
@@ -47,12 +47,25 @@
 		<field name="firstName" type="name" ></field>
     	<field name="lastName" type="name"></field>
 		<field name="fileLocation" type="name"></field>
+		<field name="fileBox" type="name"></field>
+		<field name="fileBoxCode" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="carriedBy" type="name"></field>
 		 <field name="isAuthorized" type="name"></field>
 		<field name="approvalStatus" type="name"></field>
+		<field name="stageStatus" type="name"></field>
+		<field name="moveStatus" type="name"></field>
+		<field name="isMemberInactive" type="name" ></field>
+		<field name="isReadyForSemiActive" type="name" ></field>
+		<field name="isReadyForArchive" type="name" ></field>
+		<field name="isReadyForDisposal" type="name" ></field>
+		<field name="inactiveStartDate" type="date-time"></field>
+		<field name="SemiActiveStartDate" type="date-time"></field>
+		<field name="ArchiveStartDate" type="date-time"></field>
+		<field name="DisposalStartDate" type="date-time"></field>
+		<field name="deceasedStartDate" type="date-time"></field>
 		<field name="creationDate" type="date-time"></field>
-		<prim-key field="memberPlusPersonId" />
+		<prim-key field="partyId"/>
 		<relation type="one" fk-name="FILE_MEMBER" rel-entity-name="Member">
 			<key-map field-name="partyId" />
 		</relation>
@@ -63,28 +76,28 @@
 	
      <entity entity-name="RegistryRequestedFiles" package-name="org.ofbiz.registry"
 		title="Member File Book">
-		<field name="memberPlusPersonId" type="id"></field>
+		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="creationDate" type="date-time"></field>
-		<prim-key field="memberPlusPersonId" />
+		<prim-key field="partyId" />
 		<relation type="one" fk-name="FILE_REQ" rel-entity-name="RegistryFiles">
-			<key-map field-name="memberPlusPersonId" />
+			<key-map field-name="partyId" />
 		</relation>
 	</entity>
 	
 	<entity entity-name="RegistryFilesInCirculation" package-name="org.ofbiz.registry"
 		title="Member File Book">
-		<field name="memberPlusPersonId" type="id"></field>
+		<field name="partyId" type="id"></field>
 		<field name="currentPossesser" type="id-ne"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="recieptStatus" type="name"></field>
 		<field name="creationDate" type="date-time"></field>
-		<prim-key field="memberPlusPersonId" />
+		<prim-key field="partyId" />
 		<relation type="one" fk-name="FILE_CIRC" rel-entity-name="RegistryFiles">
-			<key-map field-name="memberPlusPersonId" />
+			<key-map field-name="partyId" />
 		</relation>
 	</entity>
 	
@@ -96,13 +109,13 @@
 		<field name="carriedBy" type="name"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="receiptStatus" type="name"></field>
-		<field name="memberPlusPersonId" type="id"></field>
+		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="Reason" type="name"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="logId" />
 		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
-			<key-map field-name="memberPlusPersonId" />
+			<key-map field-name="partyId" />
 		</relation>
 	</entity>
 	
@@ -110,12 +123,12 @@
 		title="Member File actions">
 		<field name="actionId" type="id-ne"></field>
 		<field name="fileActionTypeId" type="name"></field>
-		<field name="memberPlusPersonId" type="id"></field>
+		<field name="partyId" type="id"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="actionId" />
 		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
-			<key-map field-name="memberPlusPersonId" />
+			<key-map field-name="partyId" />
 		</relation>
 	</entity>
 
@@ -123,7 +136,7 @@
 		title="Member Documents">
 		<field name="documentId" type="id-ne"></field>
 		<field name="DocumentTypeId" type="id-ne"></field>
-		<field name="memberPlusPersonId" type="id-ne" ></field>
+		<field name="partyId" type="id-ne" ></field>
 		<field name="referenceNo" type="name" ></field>
 		<field name="documentFolio" type="name" ></field>
 		<field name="volumeIdentifier" type="name" ></field>
@@ -133,23 +146,24 @@
 		<field name="archivestatus" type="name" ></field>
 		<prim-key field="documentId" />
 		<relation type="one" fk-name="DOCUMENT_FILE" rel-entity-name="RegistryFiles">
-			<key-map field-name="memberPlusPersonId" />
+			<key-map field-name="partyId" />
 		</relation>
 	</entity>
 
-	<entity entity-name="RegistryFileLocations" package-name="org.ofbiz.registry"
+	<entity entity-name="RegistryFileActivity" package-name="org.ofbiz.registry"
 		title="Member Files">
-		<field name="locationId" type="id-ne"></field>
-		<field name="fileLocation" type="name" not-null="true"></field>
-		<field name="description" type="description" not-null="true"></field>
-		<prim-key field="locationId" />
+		<field name="activityId" type="id-ne"></field>
+		<field name="activity" type="name" not-null="true"></field>
+		<field name="activityDuration" type="name" not-null="true"></field>
+		<prim-key field="activityId" />
 	</entity>
 	
 	<entity entity-name="RegistryFileVolume" package-name="org.ofbiz.registry"
 		title="Member Files">
 		<field name="volumeId" type="id-ne"></field>
-		<field name="memberPlusPersonId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
 		<field name="volumeIdentifier" type="name"></field>
+		<field name="volumeStatus" type="name"></field>
 		<prim-key field="volumeId" />
 	</entity>
 	
@@ -164,13 +178,13 @@
 			<alias entity-alias="action" name="actionId" field="actionId"/>
 
 	    <view-link  entity-alias="log" rel-entity-alias="action">
-	    	<key-map field-name="memberPlusPersonId" rel-field-name="memberPlusPersonId"/>
+	    	<key-map field-name="partyId" rel-field-name="partyId"/>
 	    </view-link>
     </view-entity>
 
 	
 	  <entity entity-name="memberPlusPerson" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="memberPlusPersonId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="partyId" type="id-ne"><description>primary sequenced ID</description></field>
        <field name="partyId" type="id-ne"></field>
        <field name="firstName" type="name"></field>
        <field name="lastName" type="name"></field>
@@ -181,7 +195,7 @@
        <field name="fileType" type="name"></field>
         <field name="isAuthorized" type="name"></field>
         <field name="securityLevel" type="name"></field>
-       <prim-key field="memberPlusPersonId"/>
+       <prim-key field="partyId"/>
     </entity>
     
     
@@ -203,16 +217,16 @@
        <prim-key field="entryNumber"/>
     </entity>
     
-    <entity entity-name="RegistryFileArchive" package-name="org.ofbiz.registry"
+    <entity entity-name="RegistryFileSetting" package-name="org.ofbiz.registry"
 		title="Member Files">
-		<field name="archiveId" type="id-ne"></field>
-		<field name="memberPlusPersonId" type="id-ne"></field>
-		<field name="volumeIdentifier" type="name"></field>
-		<field name="volumeIdentifier" type="name"></field>
-		<field name="volumeIdentifier" type="name"></field>
-		<field name="volumeIdentifier" type="name"></field>
-		<prim-key field="volumeId" />
+		<field name="setupId" type="id-ne"></field>
+		<field name="inactiveState" type="name"></field>
+		<field name="semiActiveState" type="name"></field>
+		<field name="archiveState" type="name"></field>
+		<prim-key field="setupId" />
 	</entity>
+	
+	
 	
 </entitymodel>
 

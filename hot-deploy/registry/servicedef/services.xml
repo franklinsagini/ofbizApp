@@ -153,6 +153,13 @@
 		<auto-attributes  include="nonpk" mode="IN" optional="true" />
 	</service>
 	
+	<service name="releaseFileToAnotherStaff" engine="simple" default-entity-name="RegistryFiles"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="releaseFileToAnotherStaff" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+	</service>
+	
 	<!-- =================== AUTHORIZATION =========================== -->
 	<service name="approveFileIssuance" engine="simple" default-entity-name="RegistryFiles"
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="approveFileIssuance" auth="true">
@@ -171,6 +178,13 @@
 	
 	<service name="issuefiles" engine="simple" default-entity-name="RegistryFiles"
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="issuefiles" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	<service name="divertfiles" engine="simple" default-entity-name="RegistryFiles"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="divertfiles" auth="true">
 		<description>Create File Request header record</description>
 		<auto-attributes include="pk" mode="IN" optional="true" />
 		<auto-attributes  include="nonpk" mode="IN" optional="true" />
@@ -201,33 +215,100 @@
 
 	
 
-	<service name="createfilelocation" engine="simple"
+	<service name="createfileActivity" engine="simple" default-entity-name="RegistryFileActivity"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
-		invoke="createfilelocation" auth="true">
+		invoke="createfileActivity" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes entity-name="RegistryFileLocations" include="pk"
-			mode="IN" optional="true" />
-		<auto-attributes entity-name="RegistryFileLocations" include="nonpk"
-			mode="IN" optional="true" />
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
 	</service>
 
-	<service name="updatefilelocation" engine="simple"
-		default-entity-name="RegistryFileLocations"
+	<service name="updatefileActivity" engine="simple"	default-entity-name="RegistryFileActivity"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
-		invoke="updatefilelocation" auth="true">
+		invoke="updatefileActivity" auth="true">
 		<description>Update estate</description>
 		<auto-attributes mode="IN" include="pk" optional="false" />
 		<auto-attributes mode="IN" include="nonpk" optional="true" />
 	</service>
 
-	<service name="deletefilelocation" engine="simple"
-		default-entity-name="RegistryFileLocations"
+	<service name="deletefileActivity" engine="simple"	default-entity-name="RegistryFileActivity"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
-		invoke="deletefilelocation" auth="true">
+		invoke="deletefileActivity" auth="true">
 		<description>remove file type</description>
 		<auto-attributes mode="IN" include="pk" optional="true" />
 		<auto-attributes mode="IN" include="nonpk" optional="true" />
 	</service>
+	
+	 <!-- ============================ MOVE FILE TO INACTIVE STATE ======================================== -->
+    
+    <service name="deactivateFile" engine="simple" default-entity-name="RegistryFiles"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="deactivateFile" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	 <!-- ============================ MOVE FILE TO SEMI-ACTIVE ======================================== -->
+    
+    <service name="moveToSemiActive" engine="simple" default-entity-name="RegistryFiles"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="moveToSemiActive" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <!-- =============================MOVE FILE TO ARCHIVE ======================================== -->
+    
+    <service name="moveToArchive" engine="simple" default-entity-name="RegistryFiles"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="moveToArchive" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <!-- ============================ MOVE FILE FOR DISPOSAL ======================================== -->
+    
+    <service name="moveToDisposal" engine="simple" default-entity-name="RegistryFiles"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="moveToDisposal" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <!-- ============================ ACTIVATE FILE ======================================== -->
+    
+    <service name="activateFile" engine="simple" default-entity-name="RegistryFiles"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="activateFile" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+      <!-- ============================ MOVE FILE TO DECEASED MEMBER FILES ======================================== -->
+    
+    <service name="deceasedMember" engine="simple" default-entity-name="RegistryFiles"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="deceasedMember" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <!-- ============================ CLOSE A FILE VOLUME ======================================== -->
+    
+    <service name="closeFileVolume" engine="simple" default-entity-name="RegistryFileVolume"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="closeFileVolume" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+      <!-- ============================ UPDATE MOVE STATUS ======================================== -->
+    
+   <!--  <service name="inactiveFiles" engine="simple" default-entity-name="RegistryFiles"sdsds
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="inactiveFiles" auth="true">
+        <description>Forward Valid Employee Leave</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service> -->
 
 
 </services>
