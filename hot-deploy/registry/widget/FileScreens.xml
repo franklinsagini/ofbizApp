@@ -65,33 +65,6 @@
 	</screen>
 
 	
-
-	<screen name="ducumentTYpesDecorator">
-		<section>
-			<actions>
-			</actions>
-			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-						<section>
-							<widgets>
-								<section>
-									<widgets>
-										<container style="leftclear">
-										<label style="h1"
-												text="Document Types" />
-										</container>
-									</widgets>
-								</section>
-								<decorator-section-include name="body" />
-							</widgets>
-						</section>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
 	
 	<screen name="fileActionsDecorator">
 		<section>
@@ -869,17 +842,23 @@
 			<actions>
 				<set field="titleProperty" value="file type" />
 				<set field="headerItem" value="addfiletype" />
+				<set field="tabButtonItem" value="addfiletype" />
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createfiletype" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
 				<entity-one entity-name="RegistryDocumentType" value-field="filetypeContext" />
 			</actions>
 			<widgets>
-				<decorator-screen name="ducumentTYpesDecorator"
-					location="component://registry/widget/FileScreens.xml">
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
 							<widgets>
+							<include-menu name="registrySettingsMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+							<container style="leftclear">
+											<label style="h1"
+												text="Document Types" />
+										</container>
 								<screenlet title="Create Document Types">
 									<include-form name="EditFileTypeForm"
 										location="component://registry/widget/FileForms.xml" />
@@ -1241,8 +1220,9 @@
 	<screen name="fileActivity">
 		<section>
 			<actions>
-				<set field="titleProperty" value="editFileActivity" />
-				<set field="headerItem" value="editFileActivity" />
+				<set field="titleProperty" value="fileActivity" />
+				<set field="headerItem" value="fileActivity" />
+				<set field="tabButtonItem" value="fileActivity" />
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createfileActivity" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
@@ -1256,10 +1236,12 @@
 					<decorator-section name="body">
 						<section>
 							<widgets>
+							<include-menu name="registrySettingsMenuBar" location="component://registry/widget/RegistryMenus.xml" />
 							<container style="leftclear">
 											<label style="h1"
 												text="File Activities" />
 										</container>
+										
 								<screenlet title="Create A File Activity">
 									<include-form name="EditFileActivityForm"
 										location="component://registry/widget/FileForms.xml" />
@@ -1869,6 +1851,49 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- ====================================================== REGISTRY FILE SETTINGS ====================================================== -->
+	<screen name="registryFileSettings">
+		<section>
+			<actions>
+				<set field="headerItem" value="periodSetup" />
+				<set field="tabButtonItem" value="periodSetup" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<include-menu name="registrySettingsMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+							<container style="leftclear">
+											<label style="h1"
+												text="File Status Periods (ALL PERIODS TO BE GIVEN IN MONTHS)"/>
+										</container>
+										
+									
+								
+								<screenlet title="Edit File Status Periods">
+									<include-form name="editStatusPeriodForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<!-- <section name="search-results">
+							<widgets>
+								<screenlet title="Document List (Search Results)">
+									<include-form name="fileArchiveListForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section> -->
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+    
 
 
 </screens>

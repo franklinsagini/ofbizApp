@@ -160,6 +160,13 @@
 		<auto-attributes  include="nonpk" mode="IN" optional="true" />
 	</service>
 	
+	 <service name="updateStatusPeriods" engine="simple" default-entity-name="RegistryFileSetting"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="updateStatusPeriods" auth="true">
+        <description>Update Blood Group</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
 	<!-- =================== AUTHORIZATION =========================== -->
 	<service name="approveFileIssuance" engine="simple" default-entity-name="RegistryFiles"
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="approveFileIssuance" auth="true">
