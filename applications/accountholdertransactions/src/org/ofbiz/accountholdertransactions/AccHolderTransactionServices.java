@@ -541,7 +541,6 @@ public class AccHolderTransactionServices {
 				delegator, "I");
 		bdTotalDecrease = calculateTotalIncreaseDecrease(memberAccountId,
 				delegator, "D");
-
 		return bdTotalIncrease.subtract(bdTotalDecrease);
 	}
 
@@ -1634,6 +1633,10 @@ public class AccHolderTransactionServices {
 		bdTotalAvailable = bdTotalIncrease.subtract(bdTotalDecrease);
 		bdTotalAvailable = bdTotalAvailable.subtract(bdTotalChequeDeposit);
 		bdTotalAvailable = bdTotalAvailable.add(bdTotalChequeDepositCleared);
+		
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		Long lmemberAccountId = Long.valueOf(memberAccountId);
+		bdTotalAvailable = bdTotalAvailable.subtract(getMinimumBalance(lmemberAccountId));
 		log.info(" AAAAAAAAAAAAAAAAAAA Total Available is " + bdTotalAvailable);
 		// return
 		// bdTotalIncrease.add(bdTotalChequeDepositCleared).subtract(bdTotalDecrease).subtract(bdTotalChequeDeposit);
