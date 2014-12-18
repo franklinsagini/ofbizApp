@@ -240,9 +240,10 @@ public class AccHolderTransactionServices {
 					EntityCondition.makeCondition("memberAccountId",
 							Long.valueOf(memberAccountId)), null, null, null,
 					false);
-
+			log.info(" ######### This member has no Opening Balance #########");
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
+			log.info("BBBBBBBBBBBBBBBB BOOOOOOOM!!!!!!!!!!!");
 		}
 
 		if (openingBalanceELI == null) {
@@ -256,6 +257,7 @@ public class AccHolderTransactionServices {
 		for (GenericValue genericValue : openingBalanceELI) {
 			bdBalance = bdBalance.add(genericValue
 					.getBigDecimal("savingsOpeningBalance"));
+		
 		}
 		return bdBalance;
 	}
@@ -1561,6 +1563,26 @@ public class AccHolderTransactionServices {
 				.add(bdOpeningBalance));
 	}
 
+	public static BigDecimal getTotalBalanceNow(String memberAccountId) {
+		
+		log.info(" ##### Account " + memberAccountId);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+		// // Get Opening Balance
+		bdOpeningBalance = calculateOpeningBalance(memberAccountId, delegator);
+		// // Get Total Deposits
+		Timestamp balanceDate = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+
+		BigDecimal balance = getAvailableBalanceVer2(memberAccountId,
+				balanceDate).add(bdOpeningBalance);
+
+		log.info(" #####BBBBBBB  Balance " + balance);
+		return balance;
+	}
+	
+	
 	public static Map<String, Object> getTotalBalanceNow(DispatchContext ctx,
 			Map<String, ? extends Object> context) {
 		Map<String, Object> result = FastMap.newInstance();
