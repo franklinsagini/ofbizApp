@@ -191,8 +191,9 @@ public class AccHolderTransactionServices {
 		String memberAccountId = (String) request
 				.getParameter("memberAccountId");
 		log.info(" ######### The Member Account is #########" + memberAccountId);
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		result.put("availableAmount",
-				getTotalSavings(memberAccountId, delegator));
+				getTotalSavings(memberAccountId, delegator).subtract(getMinimumBalance(Long.valueOf(memberAccountId))));
 		result.put("bookBalanceAmount",
 				getBookBalance(memberAccountId, delegator));
 		Gson gson = new Gson();
