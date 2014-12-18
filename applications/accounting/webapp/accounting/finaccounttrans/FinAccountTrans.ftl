@@ -93,89 +93,99 @@ function getFinAccountTransRunningTotalAndBalances() {
     </#if>
     <#-- Custom Fields For Recon -->
     <#if !grandTotal?exists>
+    <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <ul>
+        <li><a href="javascript:document.reconValues.submit();">Refresh/Reload</a></li>
+        <li class="h3">Reconciliation Balancing Values</li>
+      </ul>
+      <br class="clear" />
+    </div>
+    <div class="screenlet-body">
     <h3>
-    <table width="1400">
+    <form method="post" name="reconValues" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
+    <table width="100%" border='0' cellspacing='0' cellpadding='0'>
       <tr>
-        <td>
-           <table>
-        <tr>
-          <td>Cash Book Balance</td>
-            <#if cashBookTotal?has_content>
-              <td id="showCashBookTotal">KES ${cashBookTotal?if_exists}</td>
-            <#else>
-              <td id="showCashBookTotal"></td>
-            </#if>
-        </tr>
-        <tr>
-          <td>Uncredited Bankings</td>
-            <#if uncreditedBankingsTotal?has_content>
-              <td id="showUncreditedBankingsTotal">KES ${uncreditedBankingsTotal?if_exists}</td>
-            <#else>
-              <td id="showUncreditedBankingsTotal"></td>
-            </#if>
-        </tr>
-        <tr>
-          <td>Unpresented Cheques</td>
-            <#if unpresentedChequesTotal?has_content>
-              <td id="showUnpresentedChequesTotal">KES ${unpresentedChequesTotal?if_exists}</td>
-            <#else>
-              <td id="showUnpresentedChequesTotal"></td>
-            </#if>
-        </tr>
-      </table>
-        </td>
         <td>
           <table>
             <tr>
-              <td>Bank Balance</td>
-                <#if uncreditedBankingsTotal?has_content>
-                  <td id="showCashBookTotal">KES ${100?if_exists}</td>
+              <td>Cash Book Balance</td>
+                <#if cashBookTotal?has_content>
+                  <td><input type='text' size='15' maxlength='100' name='bankBalance' id="showCashBookTotal" value="KES ${cashBookTotal?if_exists}" readonly="" /></td>
                 <#else>
-                  <td id="showUncreditedBankingsTotal"></td>
+                  <td id="showCashBookTotal"></td>
                 </#if>
             </tr>
             <tr>
-              <td>Unreceipted Bankings</td>
+              <td>Add Unreceipted Bankings</td>
                 <#if unreceiptedBankingsTotal?has_content>
-                  <td id="showUnreceiptedBankingsTotal">KES ${unreceiptedBankingsTotal?if_exists}</td>
+                  <#-- <td id="showUnreceiptedBankingsTotal">KES ${unreceiptedBankingsTotal?if_exists}</td> -->
+              <td>
+                <input type='text' size='15' maxlength='100' name='showUnreceiptedBankingsTotal' id="showUnreceiptedBankingsTotal" value="KES ${unreceiptedBankingsTotal?if_exists}" readonly="" />
+              </td>
                 <#else>
                   <td id="showUnreceiptedBankingsTotal"></td>
                 </#if>
             </tr>
             <tr>
-              <td>Unidentified Debits</td>
+              <td>Less Unidentified Debits</td>
                 <#if unidentifiedDebitsTotal?has_content>
-                  <td id="showUnidentifiedDebitsTotal">KES ${unidentifiedDebitsTotal?if_exists}</td>
+                  <#-- <td id="showUnidentifiedDebitsTotal">KES ${unidentifiedDebitsTotal?if_exists}</td> -->
+              <td>
+                <input type='text' size='15' maxlength='100' name='showUnidentifiedDebitsTotal' id="showUnidentifiedDebitsTotal" value="KES ${unidentifiedDebitsTotal?if_exists}" readonly="" />
+              </td>
                 <#else>
                   <td id="showUnidentifiedDebitsTotal"></td>
                 </#if>
+            </tr>
+            <tr><td colspan="4"><hr /></tr>
+            <tr>
+              <td>Adjusted Cash Book Balance</td>
+              <td id="showAdjustedCashBookBalance">
+                <#if adjustedCashBookBalance?has_content>
+                  KES ${adjustedCashBookBalance?if_exists}
+                </#if>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table>
+            <tr>
+              <td>Bank Balance</td>
+              <td><input type='text' size='15' maxlength='100' name='bankBalance' value=""/></td>
+            </tr>
+            <tr>
+              <td>Add Uncredited Bankings</td>
+              <#if uncreditedBankingsTotal?has_content>
+                <td><input type='text' size='15' maxlength='100' name='showUncreditedBankingsTotal' id="showUncreditedBankingsTotal" value="KES ${uncreditedBankingsTotal?if_exists}" readonly="" /></td>
+              <#else>
+              <td id="showUncreditedBankingsTotal"></td>
+              </#if>
+            </tr>
+            <tr>
+              <td>Less Unpresented Cheques</td>
+              <#if unpresentedChequesTotal?has_content>
+              <td>
+                <input type='text' size='15' maxlength='100' name='showUnpresentedChequesTotal' id="showUnpresentedChequesTotal" value="KES ${unpresentedChequesTotal?if_exists}" readonly="" />
+              </td>
+              <#else>
+              <td id="showUnpresentedChequesTotal"></td>
+              </#if>
+            </tr>
+            <tr><td colspan="4"><hr /></tr>
+            <tr>
+              <td>Adjusted Bank Statement Balance</td>
+              <td id="showAdjustedBankBalance">KES 500000</td>
             </tr>
           </table>
         </td>
       </tr>
     </table>
-      <hr/>
-      <table width="1400">
-        <tr>
-          <td>
-            <table>
-              <tr>
-                <td>Balance</td>
-                <td>KES 500000</td>
-              </tr>
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr>
-                <td>Balance</td>
-                <td>KES 500000</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+  </form>
     </h3>
+  </div>
+  </div>
     </#if>
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal?exists>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>

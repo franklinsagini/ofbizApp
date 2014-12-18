@@ -35,6 +35,11 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="editfiletypeURL" />
 	</request-map>
+	
+		<request-map uri="periodSetup">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="periodSetup" />
+	</request-map>
 
 
 
@@ -574,6 +579,13 @@
     <response name="success" type="view"  value="inactiveFiles"></response>
     <response name="error" type="view" value="inactiveFiles" />
     </request-map> -->
+    
+     <request-map uri="updateStatusPeriods">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateStatusPeriods"/>
+        <response name="success" type="view" value="periodSetup"/>
+        <response name="error" type="view-last"/>
+    </request-map>
 
 
 
@@ -600,14 +612,22 @@
     <security https="true" auth="true" />
     <response name="success" type="view" value="fileMovementPDF" save-home-view="true" />
   </request-map>
+   <request-map uri="singleActivityfileMovementPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="singleActivityfileMovementPDF" save-home-view="true" />
+  </request-map>
 
 
 
 	<view-map name="Reports" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReports" />
 		<view-map name="fileMovementPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileMovementPDF" content-type="application/pdf" encoding="none"/>
+		
+		
+		<view-map name="singleActivityfileMovementPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#singleActivityfileMovementPDF" content-type="application/pdf" encoding="none"/>
 
  		<!-- View Maps -->
 	<view-map name="editfiletypeURL" type="screen" page="component://registry/widget/FileScreens.xml#filetype" />
+	<view-map name="periodSetup" type="screen" page="component://registry/widget/FileScreens.xml#registryFileSettings" />
 	<view-map name="editfiles" type="screen" page="component://registry/widget/FileScreens.xml#files" />
 	<view-map name="editfile" type="screen" page="component://registry/widget/FileScreens.xml#documents" />
 	<view-map name="findfiles" type="screen" page="component://registry/widget/FileScreens.xml#FindFile" />

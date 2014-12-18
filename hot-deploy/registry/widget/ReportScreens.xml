@@ -41,6 +41,28 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+     <screen name="singleActivityfileMovementPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://registry/webapp/registry/reports/SingleActivityFileMovement.groovy"/>
+              
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/SingleActivityFileMovement.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="RegistryReports">
         <section>
@@ -50,11 +72,14 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="lefthalf">
-                            <screenlet title="File Movement Report">
+                            <screenlet title="All Activities File Movement Report">
                                 <include-form name="fileMovementForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="righthalf">
+                         <screenlet title="Single Activity File Movement Report">
+                                <include-form name="singleActivityfileMovementForm" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
 
                         </container>
                         <container style="clear"/>
