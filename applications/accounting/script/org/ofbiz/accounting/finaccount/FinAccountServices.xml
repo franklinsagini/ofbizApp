@@ -583,6 +583,9 @@ under the License.
         <set field="unreceiptedBankingsTotal" type="BigDecimal" value="0"/>
         <set field="unidentifiedDebitsTotal" type="BigDecimal" value="0"/>
         <set field="cashBookTotal" type="BigDecimal" value="0"/>
+        <set field="bankBalanceTotal" type="BigDecimal" value="0"/>
+        <set field="adjustedBankBalance" type="BigDecimal" value="0"/>
+        <set field="adjustedCashBookBalance" type="BigDecimal" value="0"/>
         <set field="grandTotal" type="BigDecimal" value="0"/>
         <set field="createdGrandTotal" type="BigDecimal" value="0"/>
         <set field="totalCreatedTransactions" type="Long" value="0"/>
@@ -590,6 +593,16 @@ under the License.
         <set field="totalApprovedTransactions" type="Long" value="0"/>
         <set field="createdApprovedGrandTotal" type="BigDecimal" value="0"/>
         <set field="glReconciliationApprovedGrandTotal" type="BigDecimal" value="0"/>
+
+        <!-- get Cash Book Balance -->
+        <entity-one entity-name="FinAccount" value-field="finAccount" auto-field-map="true">
+            <field-map field-name="finAccountId" from-field="parameters.finAccountId"/>
+        </entity-one>
+
+        <if-not-empty field="finAccount">
+            <set field="cashBookTotal" from-field="finAccount.actualBalance" />
+        </if-not-empty>
+
         <iterate list="finAccountTransactions" entry="finAccountTransaction">
             <if-compare field="finAccountTransaction.finAccountTransTypeId" operator="equals" value="WITHDRAWAL">
                 <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_CREATED">
@@ -733,7 +746,7 @@ under the License.
             </else-if>
             </if>
         </iterate>
-
+        <set field="adjustedCashBookBalance" value="${cashBookTotal} + unreceiptedBankingsTotal - unidentifiedDebitsTotal}" />
         <call-object-method obj-field="finAccountTransList" method-name="size" ret-field="searchedNumberOfRecords"/>
         <set field="totalCreatedApprovedTransactions" value="${totalCreatedTransactions + totalApprovedTransactions}" type="Long"/>
         <field-to-result field="finAccountTransList"/>
@@ -743,6 +756,7 @@ under the License.
         <field-to-result field="unidentifiedDebitsTotal"/>
         <field-to-result field="unreceiptedBankingsTotal"/>
         <field-to-result field="cashBookTotal"/>
+        <field-to-result field="adjustedCashBookBalance"/>
         <field-to-result field="grandTotal"/>
         <field-to-result field="createdGrandTotal"/>
         <field-to-result field="totalCreatedTransactions"/>
