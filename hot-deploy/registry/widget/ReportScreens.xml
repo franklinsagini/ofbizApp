@@ -63,10 +63,78 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+     <screen name="returnedFilePerUserPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://registry/webapp/registry/reports/returnedFilesPerUser.groovy"/>
+              
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/returnedFilesPerUser.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="returnedFilePerDatePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://registry/webapp/registry/reports/returnedFilesPerDate.groovy"/>
+              
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/returnedFilesPerDate.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="durationBeforeIssuancePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://registry/webapp/registry/reports/durationBtnRequestAndIssue.groovy"/>
+              
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/durationBtnRequestAndIssue.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="RegistryReports">
         <section>
             <actions>
+            <set field="headerItem" value="Reports" />
+            
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -80,7 +148,21 @@ under the License.
                          <screenlet title="Single Activity File Movement Report">
                                 <include-form name="singleActivityfileMovementForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
-
+                        </container>
+                         <container style="lefthalf">
+                            <screenlet title="Returned Files Per User Report">
+                                <include-form name="returnedFilesPerUserForm" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="righthalf">
+                         <screenlet title="Returned Files Per Date Report">
+                                <include-form name="returnedFilesPerDateForm" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             <container style="lefthalf">
+                            <screenlet title="Duration Between File Request and Issuance Report">
+                                <include-form name="durationBeforeIssuanceForm" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
                         </container>
                         <container style="clear"/>
                     </decorator-section>

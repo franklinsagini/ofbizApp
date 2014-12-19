@@ -220,7 +220,13 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-	
+	<service name="addSubDocument" engine="simple" default-entity-name="RegistryFileSubDocuments"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="addSubDocument" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
 
 	<service name="createfileActivity" engine="simple" default-entity-name="RegistryFileActivity"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
