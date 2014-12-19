@@ -43,23 +43,32 @@ public class ATMServices {
 		ATMTransaction transaction = new ATMTransaction();
 		transaction.setCardNumber(cardNumber);
 		if (atmStatus.getStatus().equals("SUCCESS")) {
-			bdBalance = AccHolderTransactionServices.getTotalBalance(String
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			bdBalance = AccHolderTransactionServices.getTotalSavings(String
 					.valueOf(atmStatus.getCardApplication().getLong(
-							"memberAccountId")), new Timestamp(Calendar
-					.getInstance().getTimeInMillis()));
+							"memberAccountId")), delegator);
+//			bdBalance = AccHolderTransactionServices.getTotalBalance(String
+//					.valueOf(atmStatus.getCardApplication().getLong(
+//							"memberAccountId")), new Timestamp(Calendar
+//					.getInstance().getTimeInMillis()));
 		}
 
 		if (bdBalance != null) {
 			// transaction.setAmount(bdBalance);
 			bdAvailableBalance = AccHolderTransactionServices
-					.getAvailableBalanceVer2(String.valueOf(atmStatus
-							.getCardApplication().getLong("memberAccountId")),
-							new Timestamp(Calendar.getInstance()
-									.getTimeInMillis()));
-			bdBookBalance = AccHolderTransactionServices.getBookBalanceVer2(
-					String.valueOf(atmStatus.getCardApplication().getLong(
-							"memberAccountId")),
-					DelegatorFactoryImpl.getDelegator(null));
+					.getTotalBalanceNow(String.valueOf(atmStatus
+							.getCardApplication().getLong("memberAccountId")));
+//			bdBookBalance = AccHolderTransactionServices.getBookBalanceVer2(
+//					String.valueOf(atmStatus.getCardApplication().getLong(
+//							"memberAccountId")),
+//					DelegatorFactoryImpl.getDelegator(null));
+
+			bdBookBalance = AccHolderTransactionServices.getBookBalance(
+			String.valueOf(atmStatus.getCardApplication().getLong(
+					"memberAccountId")),
+			DelegatorFactoryImpl.getDelegator(null));
+
+			//getBookBalance
 			transaction.setAvailableBalance(bdAvailableBalance);
 			transaction.setBookBalance(bdBookBalance);
 			transaction.setCardStatusId(atmStatus.getCardStatusId());

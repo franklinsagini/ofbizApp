@@ -191,8 +191,9 @@ public class AccHolderTransactionServices {
 		String memberAccountId = (String) request
 				.getParameter("memberAccountId");
 		log.info(" ######### The Member Account is #########" + memberAccountId);
+		memberAccountId = memberAccountId.replaceAll(",", "");
 		result.put("availableAmount",
-				getTotalSavings(memberAccountId, delegator));
+				getTotalSavings(memberAccountId, delegator).subtract(getMinimumBalance(Long.valueOf(memberAccountId))));
 		result.put("bookBalanceAmount",
 				getBookBalance(memberAccountId, delegator));
 		Gson gson = new Gson();
@@ -240,9 +241,10 @@ public class AccHolderTransactionServices {
 					EntityCondition.makeCondition("memberAccountId",
 							Long.valueOf(memberAccountId)), null, null, null,
 					false);
-
+			log.info(" ######### This member has no Opening Balance #########");
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
+			log.info("BBBBBBBBBBBBBBBB BOOOOOOOM!!!!!!!!!!!");
 		}
 
 		if (openingBalanceELI == null) {
@@ -256,6 +258,7 @@ public class AccHolderTransactionServices {
 		for (GenericValue genericValue : openingBalanceELI) {
 			bdBalance = bdBalance.add(genericValue
 					.getBigDecimal("savingsOpeningBalance"));
+		
 		}
 		return bdBalance;
 	}
@@ -539,7 +542,6 @@ public class AccHolderTransactionServices {
 				delegator, "I");
 		bdTotalDecrease = calculateTotalIncreaseDecrease(memberAccountId,
 				delegator, "D");
-
 		return bdTotalIncrease.subtract(bdTotalDecrease);
 	}
 
@@ -1561,6 +1563,26 @@ public class AccHolderTransactionServices {
 				.add(bdOpeningBalance));
 	}
 
+	public static BigDecimal getTotalBalanceNow(String memberAccountId) {
+		
+		log.info(" ##### Account " + memberAccountId);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+		// // Get Opening Balance
+		bdOpeningBalance = calculateOpeningBalance(memberAccountId, delegator);
+		// // Get Total Deposits
+		Timestamp balanceDate = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+
+		BigDecimal balance = getAvailableBalanceVer2(memberAccountId,
+				balanceDate).add(bdOpeningBalance);
+
+		log.info(" #####BBBBBBB  Balance " + balance);
+		return balance;
+	}
+	
+	
 	public static Map<String, Object> getTotalBalanceNow(DispatchContext ctx,
 			Map<String, ? extends Object> context) {
 		Map<String, Object> result = FastMap.newInstance();
@@ -1612,6 +1634,10 @@ public class AccHolderTransactionServices {
 		bdTotalAvailable = bdTotalIncrease.subtract(bdTotalDecrease);
 		bdTotalAvailable = bdTotalAvailable.subtract(bdTotalChequeDeposit);
 		bdTotalAvailable = bdTotalAvailable.add(bdTotalChequeDepositCleared);
+		
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		Long lmemberAccountId = Long.valueOf(memberAccountId);
+		bdTotalAvailable = bdTotalAvailable.subtract(getMinimumBalance(lmemberAccountId));
 		log.info(" AAAAAAAAAAAAAAAAAAA Total Available is " + bdTotalAvailable);
 		// return
 		// bdTotalIncrease.add(bdTotalChequeDepositCleared).subtract(bdTotalDecrease).subtract(bdTotalChequeDeposit);
