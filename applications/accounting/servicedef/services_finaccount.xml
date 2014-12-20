@@ -249,9 +249,24 @@ under the License.
         <attribute name="runningTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="uncreditedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="unpresentedChequesTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="unidentifiedDebitsTotal" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="numberOfTransactions" type="Long" mode="INOUT" optional="true"/>
         <attribute name="finAccountTransRunningTotal" type="String" mode="OUT" optional="true"/>
         <attribute name="endingBalance" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="updateFinaAccount" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinaAccount">
+        <description>Financial Account Running Total</description>
+        <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
+        <attribute name="toggle" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="calculateReconBalances" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="calculateReconBalances">
+        <description>Financial Account Running Total</description>
+        <attribute name="bankBalance" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUnreceiptedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUnidentifiedDebitsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showAdjustedCashBookBalance" type="BigDecimal" mode="INOUT" optional="true"/>
     </service>
     <service name="reconcileFinAccountTrans" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="reconcileFinAccountTrans">
