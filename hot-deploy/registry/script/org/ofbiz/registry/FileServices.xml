@@ -158,7 +158,7 @@
 		<set value="AVAILABLE" field="newEntity.status" />
 		<set value="ACTIVE" field="newEntity.stageStatus" />
 		
-		<set value="${member.payrollNo}" field="newEntity.payrollNumber" />
+		<set value="${member.payrollNumber}" field="newEntity.payrollNumber" />
 		<set value="${member.memberNumber}" field="newEntity.memberNumber" />
 		<set value="${member.firstName}" field="newEntity.firstName" />
 		<set value="${member.lastName}" field="newEntity.lastName" />
@@ -391,7 +391,6 @@
 	
 	<simple-method method-name="requestfiles" short-description="request File ">
 		 <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
-		 <call-simple-method method-name="saveRequestedFile" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
@@ -590,6 +589,8 @@
 		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
 		  <!-- <call-simple-method method-name="deletefileFromRequested" scope="inline"></call-simple-method> -->
+		  
+		  <now-timestamp field="nowTimestamp"/>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
@@ -598,9 +599,23 @@
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		 
+		 <entity-one entity-name="RegistryFileActivity" value-field="activity">
+		 	<field-map field-name="activityId" from-field="registryFile.Reason"/>
+		 </entity-one>
+		 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="ISSUED"/>
+		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
+		 
+		  <set field="start" from-field="nowTimestamp"/>
+		  <set field="duration" from-field="activity.activityDuration" />
+		 
+		 
+		 <set field="registryFile.activityDuration" from-field="activity.activityDuration" />
+		 <set field="registryFile.issuedReturnDate" value="${bsh:org.ofbiz.registry.FileServices.calculateEndWorkingDay(start, duration);}" type="Timestamp"/>
+		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
+		 
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
 		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
@@ -675,7 +690,6 @@
 		 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
-		 <set field="registryFile.status" value="DIVERTED"/>
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
 		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
@@ -872,10 +886,11 @@
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
-
+      <log message=">>>>>>>>>>>>>>>>>>>>>>> PARAMETERS > ${parameters}" level="info"/>
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
-		 <set field="registryFile.recieptStatus" value="SEND"/>
+		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
+		 <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		<store-value value-field="registryFile"/>
 	</simple-method>
 	
