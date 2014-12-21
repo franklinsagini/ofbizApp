@@ -2358,5 +2358,31 @@ public class LoanServices {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static GenericValue getLoan(String loanNo) {
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanNo", EntityOperator.EQUALS, loanNo)),
+						EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		GenericValue loan = null;
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			loan = genericValue;
+		}
+		
+		return loan;
+
+	}
 
 }

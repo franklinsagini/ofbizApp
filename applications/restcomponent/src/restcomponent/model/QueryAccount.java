@@ -47,5 +47,6 @@ public class QueryAccount {
 	public void setResult(Result result) {
 		this.result = result;
 	}
+	
 
 }

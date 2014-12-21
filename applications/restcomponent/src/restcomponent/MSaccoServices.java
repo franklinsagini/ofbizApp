@@ -6,18 +6,26 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import net.sf.json.JSONObject;
 
 import org.joda.time.DateTime;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.Transaction;
+import org.ofbiz.accountholdertransactions.model.ATMTransaction;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -39,6 +47,7 @@ import restcomponent.model.Loan;
 import restcomponent.model.MSaccoTransaction;
 import restcomponent.model.QueryAccount;
 import restcomponent.model.Result;
+import restcomponent.model.TransactionAccount;
 
 import com.google.gson.Gson;
 
@@ -344,22 +353,60 @@ public class MSaccoServices {
 
 	@GET
 	@Produces("application/json")
-	@Path("/withdrawal/{phoneNumber}/{amount}")
+	@Path("/withdrawal/{phoneNumber}/{amount}/{transactionId}/{reference}")
 	public Response withdrawal(@PathParam("phoneNumber") String phoneNumber,
-			@PathParam("amount") BigDecimal amount) {
+			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference ) {
 
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
-		MSaccoTransaction transaction = new MSaccoTransaction();
-		transaction.setPhoneNumber(phoneNumber);
-		transaction.setStatus(msaccoStatus.getStatus());
+		TransactionAccount transaction = new TransactionAccount();
+		ATMTransaction atmtransaction = new ATMTransaction();
+//		transaction.setPhoneNumber(phoneNumber);
+//		transaction.setStatus(msaccoStatus.getStatus());
+		transaction.setTelephoneNo(phoneNumber);
+		
 		
 		
 
 		if (msaccoStatus.getStatus().equals("SUCCESS")){
-			//Check if Member Has Enough Money - Limit, charges
-			transaction.setStatus("NOTENOUGHMONEY");
+			String memberAccountId = msaccoStatus.getMsaccoApplication().getLong("memberAccountId").toString();
+					
+					//.getCardApplication()
+					//.getLong("memberAccountId").toString();
+			memberAccountId = memberAccountId.replaceAll(",", "");
+			System.out.println("AAAAAAAAAAAAA Account ID " + memberAccountId);
+
+			// Check if Member Has Enough Money - Limit, charges
+			atmtransaction = AccHolderTransactionServices.cashWithdrawal(amount,
+					String.valueOf(memberAccountId), "MSACCOWITHDRAWAL");
+			// transaction.setStatus("NOTENOUGHMONEY");
+			// transaction.setStatus(atmStatus.getStatus());
+//			transaction.setCardNumber(cardNumber);
+//			transaction.setCardStatusId(atmStatus.getCardStatusId());
+//			transaction.setCardStatus(atmStatus.getCardStatus());
+//			transaction.setMemberAccountId(msaccoStatus.getMsaccoApplication()
+//					.getLong("memberAccountId"));
+			// getMemberAccount(atmStatus.getCardApplication().getLong("memberAccountId"));
+			GenericValue memberAccount = AccHolderTransactionServices
+					.getMemberAccount(msaccoStatus.getMsaccoApplication().getLong(
+							"memberAccountId"));
+//			transaction.setMemberAccountId(memberAccount
+//					.getLong("memberAccountId"));
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			transaction.setReference(reference);
+			transaction.setTransactionId(transactionId);
+			
+			Result result = new Result();
+			if (atmtransaction.getStatus().equals("SUCCESS")){
+				result.setResultCode("0");
+				result.setResultDescription("Success");
+			} else{
+				result.setResultCode("-1");
+				result.setResultDescription("Failure");
+			}
+			transaction.setResult(result);
+			transaction.setTransactionType("Withdrawal");
 		}
 
 		Gson gson = new Gson();
@@ -370,18 +417,43 @@ public class MSaccoServices {
 
 	@GET
 	@Produces("application/json")
-	@Path("/deposit/{phoneNumber}/{amount}")
+	@Path("/deposit/{phoneNumber}/{amount}/{transactionId}/{reference}")
 	public Response deposit(@PathParam("phoneNumber") String phoneNumber,
-			@PathParam("amount") BigDecimal amount) {
+			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference) {
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
-		MSaccoTransaction transaction = new MSaccoTransaction();
-		transaction.setPhoneNumber(phoneNumber);
-		transaction.setStatus(msaccoStatus.getStatus());
+		MSaccoTransaction msaccotransaction = new MSaccoTransaction();
+		msaccotransaction.setPhoneNumber(phoneNumber);
+		msaccotransaction.setStatus(msaccoStatus.getStatus());
+		
+		TransactionAccount transaction = new TransactionAccount();
+		transaction.setTelephoneNo(phoneNumber);
 
 		if (msaccoStatus.getStatus().equals("SUCCESS"))
-			transaction.setStatus("CANNOTDEPOSIT");
+		{
+			AccHolderTransactionServices.cashDeposit(amount, msaccoStatus.getMsaccoApplication().getLong("memberAccountId"), null, "MSACCODEPOSIT");
+		
+			GenericValue memberAccount = AccHolderTransactionServices
+					.getMemberAccount(msaccoStatus.getMsaccoApplication().getLong(
+							"memberAccountId"));
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			transaction.setReference(reference);
+			transaction.setTransactionId(transactionId);
+			
+			Result result = new Result();
+			if (msaccoStatus.getStatus().equals("SUCCESS")){
+				result.setResultCode("0");
+				result.setResultDescription("Success");
+			} else{
+				result.setResultCode("-1");
+				result.setResultDescription("Failure");
+			}
+			transaction.setResult(result);
+			transaction.setTransactionType("Deposit");
+		} else{
+			msaccotransaction.setStatus("CANNOTDEPOSIT");
+		}
 
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
@@ -391,17 +463,24 @@ public class MSaccoServices {
 
 	@GET
 	@Produces("application/json")
-	@Path("/loanrepayment/{phoneNumber}")
-	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber) {
+	@Path("/loanrepayment/{phoneNumber}/{transactionId}/{reference}")
+	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference ) {
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
 		MSaccoTransaction transaction = new MSaccoTransaction();
 		transaction.setPhoneNumber(phoneNumber);
 		transaction.setStatus(msaccoStatus.getStatus());
-
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		GenericValue loanRepayment = delegator.makeValue("LoanRepayment");
 		if (msaccoStatus.getStatus().equals("SUCCESS"))
+		{
+			//LoanRepayments
+			//loanRepayment.set("transactionAmount", value);
+		} else{
 			transaction.setStatus("NOLOANSTOREPAY");
+		}
+			
 
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
@@ -412,17 +491,54 @@ public class MSaccoServices {
 	
 	@GET
 	@Produces("application/json")
-	@Path("/loanrepayment/{phoneNumber}/{loanNumber}/{amount}")
-	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber, @PathParam("loanNumber") String loanNumber, @PathParam("amount") String amount) {
+	@Path("/loanrepayment/{phoneNumber}/{loanNumber}/{amount}/{transactionId}/{reference}")
+	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber, @PathParam("loanNumber") String loanNumber, @PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference) {
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
-		MSaccoTransaction transaction = new MSaccoTransaction();
-		transaction.setPhoneNumber(phoneNumber);
-		transaction.setStatus(msaccoStatus.getStatus());
+		TransactionAccount transaction = new TransactionAccount();
+		transaction.setTelephoneNo(phoneNumber);
 
+		
+		//LoansProcessingServices
+		MSaccoTransaction msaccotransaction = new MSaccoTransaction();
+		msaccotransaction.setPhoneNumber(phoneNumber);
+		msaccotransaction.setStatus(msaccoStatus.getStatus());
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		GenericValue loanRepayment = delegator.makeValue("LoanRepayment");
 		if (msaccoStatus.getStatus().equals("SUCCESS"))
-			transaction.setStatus("LOANNOTFOUND");
+		{
+			//LoanRepayments
+			String partyId = msaccoStatus.getMsaccoApplication().getLong("partyId").toString();
+			String loanApplicationId = LoanServices.getLoan(loanNumber).getLong("loanApplicationId").toString();
+			partyId = partyId.replaceAll(",", "");
+			loanApplicationId = loanApplicationId.replaceFirst(",", "");
+			loanRepayment.set("transactionAmount", amount);
+			loanRepayment.set("totalInterestDue", LoanRepayments.getTotalInterestDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalInterestPaid(partyId, loanApplicationId)));
+			loanRepayment.set("totalInsuranceDue",  LoanRepayments.getTotalInsuranceDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalInsurancePaid(partyId, loanApplicationId)));
+			loanRepayment.set("totalPrincipalDue", LoanRepayments.getTotalPrincipalDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalPrincipalPaid(partyId, loanApplicationId)));
+
+			Map<String, String> userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+			
+			LoanRepayments.repayLoan(loanRepayment, userLogin);
+			
+			transaction.setReference(reference);
+			transaction.setTransactionId(transactionId);
+			
+			Result result = new Result();
+			if (msaccoStatus.getStatus().equals("SUCCESS")){
+				result.setResultCode("0");
+				result.setResultDescription("Success");
+			} else{
+				result.setResultCode("-1");
+				result.setResultDescription("Failure");
+			}
+			transaction.setResult(result);
+			transaction.setTransactionType("LoanRepayment");
+		} else{
+			msaccotransaction.setStatus("NOLOANSTOREPAY");
+		}
 
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
