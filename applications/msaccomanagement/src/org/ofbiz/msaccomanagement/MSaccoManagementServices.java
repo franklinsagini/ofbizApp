@@ -117,5 +117,38 @@ public class MSaccoManagementServices {
 		
 		return cardStatusId;
 	}
+	
+	public static Long getMemberId(String phoneNumber) {
+		Long memberId = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long cardStatusId = ATMManagementServices.getCardStatus("ACTIVE");
+		List<GenericValue> msaccoApplicationELI = null;
+		EntityConditionList<EntityExpr> msaccoApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("mobilePhoneNumber",
+								EntityOperator.EQUALS, phoneNumber),
+						EntityCondition.makeCondition("cardStatusId",
+								EntityOperator.EQUALS, cardStatusId)),
+						EntityOperator.AND);
+
+		try {
+			msaccoApplicationELI = delegator.findList("MSaccoApplication",
+					msaccoApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		GenericValue msaccoApplication = null;
+
+		for (GenericValue genericValue : msaccoApplicationELI) {
+			msaccoApplication = genericValue;
+		}
+
+		if (msaccoApplication != null) {
+			memberId = msaccoApplication.getLong("partyId");
+		}
+		return memberId;
+	}
+	
 
 }

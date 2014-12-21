@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.ofbiz.accountholdertransactions.model.ATMTransaction;
-import org.ofbiz.atmmanagement.ATMStatus;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -40,7 +39,6 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.treasurymanagement.TreasuryUtility;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -2252,6 +2250,25 @@ public class AccHolderTransactionServices {
 		}
 
 		return memberAccount;
+	}
+	
+	
+	public static String getMemberNames(Long partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		// Get Member
+		GenericValue member = null;
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", partyId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		String memberNames = "";
+
+		memberNames = member.getString("firstName")+" "+member.getString("middleName")+" "+member.getString("lastName");
+		return memberNames;
 	}
 
 }
