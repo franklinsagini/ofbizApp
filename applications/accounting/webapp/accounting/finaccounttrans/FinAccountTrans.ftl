@@ -30,7 +30,21 @@ function togglefinAccountTransId(master) {
     getFinAccountTransRunningTotalAndBalances();
 }
 
-function getFinAccountTransRunningTotalAndBalances() {
+function getFinAccountTransRunningTotalAndBalances(indexValue, finAccountTransId) {
+
+    //alert ('my index ... '+indexValue);
+    var checkBoxId = '#finAccountTransId_'+indexValue
+    //alert(checkBoxId);
+    if (jQuery(checkBoxId).is(':checked'))
+    {
+      // alert('Save Y  for '+finAccountTransId);
+      //save
+      updateFinAccount('Y', finAccountTransId);
+    } else{
+      // alert('Save N for '+finAccountTransId);
+      updateFinAccount('N', finAccountTransId);
+    }
+
     var form = document.selectAllForm;
     var finAccountTransList = form.elements.length;
     var isSingle = true;
@@ -51,7 +65,6 @@ function getFinAccountTransRunningTotalAndBalances() {
         jQuery('#checkAllTransactions').attr('checked', false);
     }
     if (!isSingle) {
-      alert("Hello World Checked")
         jQuery('#submitButton').removeAttr('disabled');
         if (jQuery('#showFinAccountTransRunningTotal').length) {
             jQuery.ajax({
@@ -60,10 +73,6 @@ function getFinAccountTransRunningTotalAndBalances() {
                 type: 'POST',
                 data: jQuery('#listFinAccTra').serialize(),
                 success: function(data) {
-                    jQuery('#showUncreditedBankingsTotal').html(data.uncreditedBankingsTotal);
-                    jQuery('#showUnpresentedChequesTotal').html(data.unpresentedChequesTotal);
-                    jQuery('#showUnreceiptedBankingsTotal').html(data.unreceiptedBankingsTotal);
-                    jQuery('#showUnidentifiedDebitsTotal').html(data.unidentifiedDebitsTotal);
                     jQuery('#showFinAccountTransRunningTotal').html(data.finAccountTransRunningTotal);
                     jQuery('#finAccountTransRunningTotal').html(data.finAccountTransRunningTotal);
                     jQuery('#numberOfFinAccountTransaction').html(data.numberOfTransactions);
@@ -77,9 +86,35 @@ function getFinAccountTransRunningTotalAndBalances() {
             jQuery('#finAccountTransRunningTotal').html("");
             jQuery('#numberOfFinAccountTransaction').html("");
             jQuery('#endingBalance').html(jQuery('#endingBalanceInput').val());
+
         }
         jQuery('#submitButton').attr('disabled', true);
     }
+}
+
+function updateFinAccount(status, finAccountTransId){
+  var updateurl = '/accounting/control/updateFinAccount';
+    jQuery.ajax({
+      url: updateurl,
+      async: false,
+      type: 'GET',
+      data: {'finAccountTransId': finAccountTransId, 'toggle': status},
+      success: function(data) {
+
+      }
+  });
+}
+function calculateReconBalances() {
+    jQuery.ajax({
+      url: 'calculateReconBalances',
+      async: false,
+      type: 'POST',
+      data: jQuery('#reconValues').serialize(),
+      success: function(data) {
+          jQuery('#showAdjustedCashBookBalance').html(data.showAdjustedCashBookBalance);
+          jQuery('#showAdjustedBankBalance').html(data.unpresentedChequesTotal);
+      }
+  });
 }
 </script>
 
@@ -96,14 +131,14 @@ function getFinAccountTransRunningTotalAndBalances() {
     <div class="screenlet">
     <div class="screenlet-title-bar">
       <ul>
-        <li><a href="javascript:document.reconValues.submit();">Refresh/Reload</a></li>
+        <li><a href="javascript:calculateReconBalances();">Refresh/Reload</a></li>
         <li class="h3">Reconciliation Balancing Values</li>
       </ul>
       <br class="clear" />
     </div>
     <div class="screenlet-body">
     <h3>
-    <form method="post" name="reconValues" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
+    <form id="reconValues" method="post" name="reconValues" action="">
     <table width="100%" border='0' cellspacing='0' cellpadding='0'>
       <tr>
         <td>
@@ -119,7 +154,6 @@ function getFinAccountTransRunningTotalAndBalances() {
             <tr>
               <td>Add Unreceipted Bankings</td>
                 <#if unreceiptedBankingsTotal?has_content>
-                  <#-- <td id="showUnreceiptedBankingsTotal">KES ${unreceiptedBankingsTotal?if_exists}</td> -->
               <td>
                 <input type='text' size='15' maxlength='100' name='showUnreceiptedBankingsTotal' id="showUnreceiptedBankingsTotal" value="KES ${unreceiptedBankingsTotal?if_exists}" readonly="" />
               </td>
@@ -270,6 +304,7 @@ function getFinAccountTransRunningTotalAndBalances() {
           </#if>
           <#if finAccountTrans.glReconciliationId?has_content>
             <#assign glReconciliation = delegator.findOne("GlReconciliation", {"glReconciliationId" : finAccountTrans.glReconciliationId}, true)>
+
             <input name="openingBalance_o_${finAccountTrans_index}" type="hidden" value="${glReconciliation.openingBalance?if_exists}"/>
           </#if>
           <#if finAccountTrans.partyId?has_content>
@@ -351,6 +386,7 @@ function getFinAccountTransRunningTotalAndBalances() {
             <td><#if paymentMethodType?has_content>${paymentMethodType.description?if_exists}</#if></td>
             <td><#if status?has_content>${status.description?if_exists}</#if></td>
             <td>${finAccountTrans.comments?if_exists}</td>
+            <input name="toggle" type="hidden" value="${finAccountTrans.toggle?if_exists}"/>
             <#if grandTotal?exists>
               <td>
                 <#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
@@ -372,13 +408,14 @@ function getFinAccountTransRunningTotalAndBalances() {
             </#if>
             <#if ((glReconciliationId?has_content && glReconciliationId == "_NA_") && (glReconciliations?has_content && finAccountTransList?has_content)) || !grandTotal?exists>
               <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                <td><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances();"/></td>
+                <td><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances(${finAccountTrans_index}, ${finAccountTrans.finAccountTransId});"/></td>
               </#if>
             </#if>
           </tr>
           <#-- toggle the row color -->
           <#assign alt_row = !alt_row>
         </#list>
+        <#-- <input name="toggle" type="hidden" value="${finAccountTrans.toggle?if_exists}"> -->
       </table>
     </form>
     <#list finAccountTransList as finAccountTrans>

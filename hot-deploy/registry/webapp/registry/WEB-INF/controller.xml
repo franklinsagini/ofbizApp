@@ -199,6 +199,11 @@
 	</request-map>
 
 
+	<request-map uri="goCloseFileVolume">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="goCloseFileVolume" />
+	</request-map>
+	
 	<request-map uri="goRequestFile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="requestingFiles" />
@@ -213,6 +218,11 @@
 	<request-map uri="goDivertFile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="divertingFiles" />
+	</request-map>
+	
+	<request-map uri="goAddSubDocument">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addingSubDocuments" />
 	</request-map>
 	
 	<!-- ======================= SAVE FILES IN BOXES ========================================= -->
@@ -306,7 +316,12 @@
 		<response name="error" type="view" value="addnonMemberOrPersonRecords" />
 	</request-map>
 
-
+<request-map uri="addSubDocument">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="addSubDocument" />
+		<response name="success" type="view" value="addingSubDocuments" />
+		<response name="error" type="view" value="addingSubDocuments" />
+	</request-map>
 
 
 <!-- file location -->
@@ -563,7 +578,7 @@
      <request-map uri="closeFileVolume">
         <security https="true" auth="true"/>
         <event type="service" invoke="closeFileVolume"/>
-        <response name="success" type="view" value="addingFileVolume"/>
+        <response name="success" type="view" value="goCloseFileVolume"/>
     </request-map>
 
       <!-- ================UPDATE MOVE STATUS========================= -->
@@ -597,6 +612,12 @@
 	</request-map>
 
 	<!-- File Overview -->
+    <request-map uri="documentOverviewURL">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="documentOverviewViewMap"/>
+    </request-map>
+    
+    <!-- File Overview -->
     <request-map uri="fileoverviewURL">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="fileOverviewViewMap"/>
@@ -616,14 +637,38 @@
     <security https="true" auth="true" />
     <response name="success" type="view" value="singleActivityfileMovementPDF" save-home-view="true" />
   </request-map>
+  
+   <request-map uri="returnedFilePerUserPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="returnedFilePerUserPDF" save-home-view="true" />
+  </request-map>
+   <request-map uri="returnedFilePerDatePDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="returnedFilePerDatePDF" save-home-view="true" />
+  </request-map>
+  
+   <request-map uri="overStayedFilesPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="overStayedFilesPDF" save-home-view="true" />
+  </request-map>
+  
+   <request-map uri="durationBeforeIssuancePDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="durationBeforeIssuancePDF" save-home-view="true" />
+  </request-map>
 
 
 
 	<view-map name="Reports" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReports" />
 		<view-map name="fileMovementPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileMovementPDF" content-type="application/pdf" encoding="none"/>
-		
+		<view-map name="overStayedFilesPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#overStayedFilesPDF" content-type="application/pdf" encoding="none"/>
 		
 		<view-map name="singleActivityfileMovementPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#singleActivityfileMovementPDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="returnedFilePerUserPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#returnedFilePerUserPDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="returnedFilePerDatePDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#returnedFilePerDatePDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="durationBeforeIssuancePDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#durationBeforeIssuancePDF" content-type="application/pdf" encoding="none"/>
+		
+		
 
  		<!-- View Maps -->
 	<view-map name="editfiletypeURL" type="screen" page="component://registry/widget/FileScreens.xml#filetype" />
@@ -640,6 +685,7 @@
 
 	<!-- File Overview  -->
 	<view-map name="fileOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryFilesOverviewScreen"/>
+	<view-map name="documentOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryDocumentOverviewScreen"/>
 
 	<!-- Lookup Active Memeber Viewmap -->
 	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
@@ -678,8 +724,13 @@
 	<view-map name="returningFiles" type="screen"	page="component://registry/widget/FileScreens.xml#returningFiles" />
 	<view-map name="addingFileVolume" type="screen"	page="component://registry/widget/FileScreens.xml#addingFileVolume" />
 	<view-map name="approvingFileIssuance" type="screen"	page="component://registry/widget/FileScreens.xml#approvingFileIssuance" />
+	
+	<view-map name="goCloseFileVolume" type="screen"	page="component://registry/widget/FileScreens.xml#goCloseFileVolume" />
 
 	 <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+	 
+	 <!-- ==================================== ADD SUB DOCUMENTS =================================================== -->
+	 <view-map name="addingSubDocuments" type="screen"	page="component://registry/widget/FileScreens.xml#addingSubDocuments" />
 	 
 	 <!-- ========================================= SAVING FILES IN BOXES ========================================= -->
 	 

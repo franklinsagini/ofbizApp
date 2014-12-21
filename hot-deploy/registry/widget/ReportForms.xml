@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="fileMovementForm" type="single" target="fileMovementPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
-        <field name="partyId"   title="Choose Member">
+        <field name="partyId"   title="Select Member">
             <lookup target-form-name="LookupActiveMember"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
@@ -32,7 +32,7 @@ under the License.
     
      <form name="singleActivityfileMovementForm" type="single" target="singleActivityfileMovementPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
-        <field name="partyId"   title="Choose Member">
+        <field name="partyId"   title="Select Member">
             <lookup target-form-name="LookupActiveMember"/>
         </field>
         <field name="activityId" title="Select Activity">
@@ -40,6 +40,43 @@ under the License.
         <entity-options key-field-name="activityId" description="${activity}" entity-name="RegistryFileActivity"></entity-options>
         </drop-down>
         </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="returnedFilesPerUserForm" type="single" target="returnedFilePerUserPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Select User">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+      <form name="returnedFilesPerDateForm" type="single" target="returnedFilePerDatePDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="startDate"   title="Pick Date From"><date-time type="date"/></field>
+         <field name="endDate"   title="Pick Date to"><date-time type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="overStayedFiles" type="single" target="overStayedFilesPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="durationBeforeIssuanceForm" type="single" target="durationBeforeIssuancePDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="fileActionTypeId"   title="Duration From File Request To:">
+        <drop-down allow-empty="false">
+        <option key="File Issue" description="File Issue"/>
+        </drop-down></field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>

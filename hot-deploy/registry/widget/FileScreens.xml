@@ -1361,6 +1361,40 @@
         </section>
     </screen>
     
+    <screen name="RegistryDocumentOverviewScreen">cc
+        <section>
+            <actions>
+                <set field="documentId" from-field="parameters.documentId"/>
+                <entity-one entity-name="RegistryDocuments" value-field="documentContext" />
+            </actions>
+            <widgets>
+               <decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                            <container style="leftclear">
+											<label style="h1"
+												text="Document Overview" />
+										</container>
+	                                <screenlet title="Document General Details">
+	                                    <include-form name="documentGeneralDetails" location="component://registry/widget/FileForms.xml"/>
+	                                </screenlet>
+                              
+	                                <screenlet title="Sub Document List">
+	                                    <include-form name="ListSubDocuments" location="component://registry/widget/FileForms.xml"/>
+	                                </screenlet>
+                            	
+                                <container style="clear"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
     
     <!-- ==============================================REQUESTS========================================================== -->
     
@@ -1888,6 +1922,66 @@
 								</screenlet>
 							</widgets>
 						</section> -->
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	 <screen name="addingSubDocuments">
+		<section>
+			<actions>
+				<set field="headerItem" value="addSubDocument" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Add Sub-Documents" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="addSubDocumentForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="goCloseFileVolume">
+		<section>
+			<actions>
+				<set field="headerItem" value="closeFileVolume" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Close File Volume" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="saveClosedVolumeInBoxForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
 					</decorator-section>
 				</decorator-screen>
 			</widgets>

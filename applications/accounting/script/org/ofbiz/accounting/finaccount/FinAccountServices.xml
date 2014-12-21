@@ -679,7 +679,9 @@ under the License.
 
         <!-- Custom Recon Iteration  -->
         <entity-condition entity-name="FinAccountTrans" list="accountTransactions">
-            <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+            <condition-list combine="and">
+                <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+            </condition-list>
             <use-iterator/>
         </entity-condition>
 
@@ -746,7 +748,19 @@ under the License.
             </else-if>
             </if>
         </iterate>
-        <set field="adjustedCashBookBalance" value="${cashBookTotal} + unreceiptedBankingsTotal - unidentifiedDebitsTotal}" />
+        <calculate field="adjustedCashBookBalanceSubtract">
+            <calcop operator="add">
+               <calcop operator="get" field="cashBookTotal"/>
+               <calcop operator="get" field="unreceiptedBankingsTotal"/>
+            </calcop>
+        </calculate>
+        <calculate field="adjustedCashBookBalance">
+            <calcop operator="subtract">
+               <calcop operator="get" field="adjustedCashBookBalanceSubtract"/>
+               <calcop operator="get" field="unidentifiedDebitsTotal"/>
+            </calcop>
+        </calculate>
+        <set field="adjustedCashBookBalance" from-field="adjustedCashBookBalance" />
         <call-object-method obj-field="finAccountTransList" method-name="size" ret-field="searchedNumberOfRecords"/>
         <set field="totalCreatedApprovedTransactions" value="${totalCreatedTransactions + totalApprovedTransactions}" type="Long"/>
         <field-to-result field="finAccountTransList"/>
@@ -772,29 +786,47 @@ under the License.
 
     <simple-method method-name="getFinAccountTransRunningTotalAndBalances" short-description="Calculate running total and Balances of Financial Account Transactions">
 
+        <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" auto-field-map="true"/>
+        <entity-one entity-name="FinAccountTrans" value-field="updateToggle" auto-field-map="true">
+             <field-map field-name="finAccountTransId" from-field="finAccountTrans.finAccountTransId"/>
+        </entity-one>
+
         <set field="bankingsTotal" type="BigDecimal" default-value="0"/>
         <set field="chequesTotal" type="BigDecimal" default-value="0" />
         <set field="runningTotal" type="BigDecimal" from-field="parameters.runningTotal" default-value="0"/>
         <set field="uncreditedBankingsTotal" type="BigDecimal" value="0"/>
         <set field="unpresentedChequesTotal" type="BigDecimal" value="0"/>
-        <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" auto-field-map="true"/>
+        <set field="unidentifiedDebitsTotal" type="BigDecimal" value="0"/>
+        <set field="debitsTotal" type="BigDecimal" value="0"/>
 
-        <entity-one entity-name="FinAccountTrans" value-field="updateToggle" auto-field-map="true">
-             <field-map field-name="finAccountTransId" from-field="finAccountTrans.finAccountTransId"/>
-        </entity-one>
 
+<!--         <log message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>THE VALUE OF TOGGLE: ${updateToggle.toggle}" />
         <if-compare field="updateToggle.toggle" operator="equals" value="N">
             <log message="TTTTTTTTTTTTTTTTTTTTTTTT ***** THE VALUE OF toggle before update is ${updateToggle.toggle} ***********" />
             <set field="updateToggle.toggle" value="Y"/>
+            <store-value value-field="updateToggle"/>
+            <log message="SAVED YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY" />
+            <log message="THE ID IS: ${finAccountTrans.finAccountTransId} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" />
             <log message="TTTTTTTTTTTTTTTTTTTTTTTT ***** THE VALUE OF toggle after update is ${updateToggle.toggle} ***********" />
-        <else>
+        </if-compare>
+        <if-compare field="updateToggle.toggle" operator="equals" value="Y">
             <log message="TTTTTTTTTTTTTTTTTTTTTTTT ***** THE VALUE OF toggle before update is ${updateToggle.toggle} ***********" />
             <set field="updateToggle.toggle" value="N"/>
+            <store-value value-field="updateToggle"/>
+            <log message="SAVED NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN" />
             <log message="TTTTTTTTTTTTTTTTTTTTTTTT ***** THE VALUE OF toggle after update is ${updateToggle.toggle} ***********" />
-        </else>
         </if-compare>
+ -->
+            <!-- Unidentified Debits  -->
+        <entity-condition entity-name="FinAccountTrans" list="finAccountTransListUD">
+           <condition-list combine="and">
+                <condition-expr field-name="finAccountId" from-field="finAccountTrans.glReconciliationId"/>
+                <condition-expr field-name="finAccountTransTypeId" operator="equals" value="UD"/>
+                <condition-expr field-name="toggle" value="N"/>
+           </condition-list>
+            <use-iterator/>
+        </entity-condition>
 
-        <store-value value-field="updateToggle"/>
 
         <entity-condition entity-name="FinAccountTrans" list="finAccountTransListDeposit">
            <condition-list combine="and">
@@ -805,6 +837,8 @@ under the License.
             <use-iterator/>
         </entity-condition>
 
+
+
         <entity-condition entity-name="FinAccountTrans" list="finAccountTransListWith">
            <condition-list combine="and">
                 <condition-expr field-name="finAccountId" from-field="finAccountTrans.glReconciliationId"/>
@@ -814,8 +848,7 @@ under the License.
             <use-iterator/>
         </entity-condition>
 
-
-
+            <!-- Computing CHEQUES Total -->
         <iterate list="finAccountTransListWith" entry="singleTransWithdraw">
                 <if-compare field="singleTransWithdraw.statusId" operator="equals" value="FINACT_TRNS_CREATED">
                     <log message=">>>>>>>>>>>>>>>>CHEQUES TOTAL WITHDRAWAL: ABOUT TO ADD ${chequesTotal} + ${singleTransWithdraw.amount}>>>>>>>>>>>>>>>>>>>>>>>>>>" />
@@ -824,6 +857,7 @@ under the License.
                 </if-compare>
         </iterate>
 
+            <!-- Computing bankings Total -->
         <iterate list="finAccountTransListDeposit" entry="singleTrans">
                 <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
                     <log message=">>>>>>>>>>>>>>>>BANKINGS TOTAL DEPOSIT: ABOUT TO ADD ${bankingsTotal} + ${singleTrans.amount}>>>>>>>>>>>>>>>>>>>>>>>>>>" />
@@ -832,18 +866,30 @@ under the License.
                 </if-compare>
         </iterate>
 
+            <!-- Computing bankings Total -->
+        <iterate list="finAccountTransListUD" entry="singleTransUD">
+                <!-- <if-compare field="singleTransUD.statusId" operator="equals" value="FINACT_TRNS_CREATED"> -->
+                    <log message="##################### UNIDENTIFIED DEBITS TOTAL: ABOUT TO ADD ${debitsTotal} + ${singleTransUD.amount} ###########################################" />
+                    <set field="debitsTotal" value="${debitsTotal + singleTransUD.amount}" type="BigDecimal"/>
+                    <log message=">>>>>>>>>>>>>>>>THE RESULT IS ===== ${debitsTotal}>>>>>>>>>>>>>>>>>>>>>>>>>>" />
+                <!-- </if-compare> -->
+        </iterate>
+
         <log message=">>>>>>>>>>>>>>>>>>>>THE VALUE OF BANKINGS TOTAL: **** ${bankingsTotal} ****** >>>>>>>>>>>>>>>>>>>>>>" />
         <log message=">>>>>>>>>>>>>>>>>>>>THE VALUE OF CHEQUES TOTAL: **** ${chequesTotal} ****** >>>>>>>>>>>>>>>>>>>>>>" />
+
+              <!-- Computing Running Total -->
         <if-compare field="finAccountTrans.finAccountTransTypeId"  operator="equals" value="WITHDRAWAL">
             <set field="runningTotal" value="${runningTotal - finAccountTrans.amount}" type="BigDecimal"/>
-
         <else>
             <set field="runningTotal" value="${runningTotal + finAccountTrans.amount}" type="BigDecimal"/>
-
         </else>
         </if-compare>
+
+
         <set field="unpresentedChequesTotal" value="${chequesTotal}" type="BigDecimal"/>
         <set field="uncreditedBankingsTotal" value="${bankingsTotal}" type="BigDecimal"/>
+        <set field="unidentifiedDebitsTotal" value="${debitsTotal}" type="BigDecimal"/>
         <field-to-result field="runningTotal"/>
         <set field="numberOfTransactions" type="Long" from-field="parameters.numberOfTransactions" default-value="0"/>
         <set field="numberOfTransactions" type="Long" value="${numberOfTransactions + 1}"/>
@@ -855,7 +901,8 @@ under the License.
         <call-service service-name="getPartyAccountingPreferences" in-map-name="getPartyAccountingPreferencesMap">
             <result-to-field result-name="partyAccountingPreference"/>
         </call-service>
-        <set field="currencyUomId" from-field="partyAccountingPreference.baseCurrencyUomId"/>
+        <set field="currencyUomId" from-field="KES"/>
+        <!-- <set field="currencyUomId" from-field="partyAccountingPreference.baseCurrencyUomId"/> -->
         <if-empty field="currencyUomId">
             <property-to-field resource="general" property="currency.uom.id.default" field="currencyUomId"/>
         </if-empty>
@@ -865,6 +912,22 @@ under the License.
         <field-to-result field="endingBalance"/>
         <field-to-result field="unpresentedChequesTotal"/>
         <field-to-result field="uncreditedBankingsTotal"/>
+        <field-to-result field="unidentifiedDebitsTotal"/>
+    </simple-method>
+
+    <simple-method method-name="updateFinaAccount" short-description="Updates Toggle Field">
+        <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+        <set field="toggle" type="BigDecimal" from-field="parameters.toggle"/>
+        <log message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${finAccountTransId}>>>>>>>>>>>>>>>>>>>>>>>>>>>${toggle}" />
+    </simple-method>
+
+
+    <simple-method method-name="calculateReconBalances" short-description="Recalculate the Recon Balances">
+        <set field="bankBalance" type="BigDecimal" default-value="0"/>
+        <set field="showUnreceiptedBankingsTotal" type="BigDecimal" default-value="0" />
+        <set field="showUnidentifiedDebitsTotal" type="BigDecimal" default-value="0" />
+        <set field="showAdjustedCashBookBalance" type="BigDecimal" default-value="1000000" />
+        <field-to-result field="showAdjustedCashBookBalance"/>
     </simple-method>
 
     <simple-method method-name="reconcileFinAccountTrans" short-description="Reconcile Financial Accounting Transaction">
