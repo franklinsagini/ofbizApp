@@ -539,7 +539,7 @@
 							<widgets>
 							<container style="leftclear">
 											<label style="h1"
-												text="Release File Back to Registry" />
+												text="Release File" />
 										</container>
 								<screenlet title="Search File">
 									<include-form name="FindMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
@@ -1345,8 +1345,8 @@
 	                                </screenlet>
                                 </container>
                                 <container style="righthalf" >
-	                                <screenlet title="File Documents Details">
-	                                    <include-form name="ListFileDocuments" location="component://registry/widget/FileForms.xml"/>
+	                                <screenlet title="File Volume Details">
+	                                    <include-form name="ListFileVolumes" location="component://registry/widget/FileForms.xml"/>
 	                                </screenlet>
                             	</container> 
                             	<screenlet title="File Actions Details">
@@ -1361,7 +1361,41 @@
         </section>
     </screen>
     
-    <screen name="RegistryDocumentOverviewScreen">cc
+    <screen name="RegistryVolumeOverviewScreen">
+        <section>
+            <actions>
+                <set field="documentId" from-field="parameters.documentId"/>
+                <set field="memberNumber" from-field="parameters.memberNumber"/>
+                <entity-one entity-name="RegistryFileVolume" value-field="volumeContext" />
+            </actions>
+            <widgets>
+               <decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                            <container style="leftclear">
+											<label style="h1"
+												text="Volume Overview" />
+										</container>
+	                                <screenlet title="Volume General Details">
+	                                    <include-form name="volumeGeneralDetails" location="component://registry/widget/FileForms.xml"/>
+	                                </screenlet>
+                              
+	                                <screenlet title="Volume Document List">
+	                                    <include-form name="ListFileDocuments" location="component://registry/widget/FileForms.xml"/>
+	                                </screenlet>
+                            	
+                                <container style="clear"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="RegistryDocumentOverviewScreen">
         <section>
             <actions>
                 <set field="documentId" from-field="parameters.documentId"/>

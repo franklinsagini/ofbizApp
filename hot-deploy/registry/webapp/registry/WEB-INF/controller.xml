@@ -329,7 +329,7 @@
 	<request-map uri="createfileActivity">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createfileActivity" />
-		<response name="success" type="view" value="editFileActivity" />
+		<response name="success" type="request-redirect-noparam" value="editFileActivity" />
 		<response name="error" type="view" value="editFileActivity" />
 	</request-map>
 
@@ -357,7 +357,7 @@
 	<request-map uri="createfiletype">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createfiletype" />
-		<response name="success" type="view" value="editfiletypeURL" />
+		<response name="success" type="request-redirect-noparam" value="editfiletypeURL" />
 		<response name="error" type="view" value="editfiletypeURL" />
 	</request-map>
 
@@ -611,10 +611,16 @@
 		<response name="error" type="view" value="editfile" />
 	</request-map>
 
-	<!-- File Overview -->
+	<!-- Document Overview -->
     <request-map uri="documentOverviewURL">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="documentOverviewViewMap"/>
+    </request-map>
+    
+    <!-- Volume Overview -->
+    <request-map uri="volumeOverviewURL">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="volumeOverviewURL"/>
     </request-map>
     
     <!-- File Overview -->
@@ -686,6 +692,7 @@
 	<!-- File Overview  -->
 	<view-map name="fileOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryFilesOverviewScreen"/>
 	<view-map name="documentOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryDocumentOverviewScreen"/>
+	<view-map name="volumeOverviewURL" type="screen" page="component://registry/widget/FileScreens.xml#RegistryVolumeOverviewScreen"/>
 
 	<!-- Lookup Active Memeber Viewmap -->
 	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
