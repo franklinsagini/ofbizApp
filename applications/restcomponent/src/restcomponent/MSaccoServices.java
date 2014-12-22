@@ -117,7 +117,7 @@ public class MSaccoServices {
 	}
 	
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/query/{phoneNumber}/{type}")
 	public Response query(@PathParam("phoneNumber") String phoneNumber, @PathParam("type") String type) {
 		
