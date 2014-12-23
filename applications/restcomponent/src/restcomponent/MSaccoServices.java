@@ -141,6 +141,9 @@ public class MSaccoServices {
 		Results results = new Results();
 		results.setResultCode("0");
 		results.setResultDesc("Success");
+		
+		//queryAccount.
+		
 		queryAccount.setResults(results);
 		
 		Gson gson = new Gson();
