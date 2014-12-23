@@ -1,6 +1,6 @@
 package restcomponent.model;
 
-public class Result {
+public class Result2 {
 	private String resultCode;
 	private String resultDescription;
 	public String getResultCode() {
