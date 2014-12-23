@@ -43,9 +43,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "results")
 public class Results {
 
-    @XmlElement(name = "Result_Code", required = true)
+    //@XmlElement(name = "Result_Code", required = true)
+	 @XmlElement(name = "resultCode", required = true)
     protected String resultCode;
-    @XmlElement(name = "Result_Desc", required = true)
+   // @XmlElement(name = "Result_Desc", required = true)
+	 @XmlElement(name = "resultDesc", required = true)
     protected String resultDesc;
 
     /**

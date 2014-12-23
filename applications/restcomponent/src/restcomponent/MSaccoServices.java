@@ -398,7 +398,11 @@ public class MSaccoServices {
 			//transaction.set
 			//transaction.setReference(reference);
 			transaction.setTransactionId(transactionId);
-			
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			transaction.setAccountName(memberAccount.getString("accountName"));
+			transaction.setTransactionId(transactionId);
+			transaction.setReference(reference);
+
 			Results results = new Results();
 			if (atmtransaction.getStatus().equals("SUCCESS")){
 				results.setResultCode("0");
@@ -409,6 +413,7 @@ public class MSaccoServices {
 			}
 			//transaction.g
 		//	transaction.setResults(results);
+			transaction.setResults(results);
 			transaction.setTranstype("Withdrawal");
 		}
 
@@ -450,6 +455,9 @@ public class MSaccoServices {
 //			transaction.setAccountName(memberAccount.getString("accountName"));
 //			transaction.setReference(reference);
 			transaction.setTransactionId(transactionId);
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			transaction.setAccountName(memberAccount.getString("accountName"));
+			transaction.setReference(reference);
 			
 			Results results = new Results();
 			if (msaccoStatus.getStatus().equals("SUCCESS")){
@@ -459,7 +467,7 @@ public class MSaccoServices {
 				results.setResultCode("-1");
 				results.setResultDesc("Failure");
 			}
-			//transaction.setResults(results);
+			transaction.setResults(results);
 			transaction.setTranstype("Deposit");
 		} else{
 			msaccotransaction.setStatus("CANNOTDEPOSIT");
@@ -544,7 +552,7 @@ public class MSaccoServices {
 				results.setResultCode("-1");
 				results.setResultDesc("Failure");
 			}
-			//transaction.setResults(results);
+			transaction.setResults(results);
 			transaction.setTranstype("LoanRepayment");
 		} else{
 			msaccotransaction.setStatus("NOLOANSTOREPAY");
