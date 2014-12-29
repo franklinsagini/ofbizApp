@@ -7,7 +7,7 @@ public class BulkSMS {
 	private String status;
 	private Double balance;
 	
-	private Result result;
+	private Results results;
 
 	public String getEntryNo() {
 		return entryNo;
@@ -49,12 +49,12 @@ public class BulkSMS {
 		this.balance = balance;
 	}
 
-	public Result getResult() {
-		return result;
+	public Results getResults() {
+		return results;
 	}
 
-	public void setResult(Result result) {
-		this.result = result;
+	public void setResults(Results results) {
+		this.results = results;
 	}
 
 }
