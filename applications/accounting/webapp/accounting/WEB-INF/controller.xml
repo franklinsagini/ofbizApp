@@ -2202,11 +2202,24 @@ under the License.
     </request-map>
     <request-map uri="getFinAccountTransRunningTotalAndBalances">
         <event type="service-multi" invoke="getFinAccountTransRunningTotalAndBalances"/>
-        <response name="success" type="request" value="json">
-          <redirect-parameter name="uncreditedBankingsValue" />
-        </response>
+        <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="calculateReconBalances">
+        <event type="service-multi" invoke="calculateReconBalances"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateFinAccount">
+        <!-- event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+        <event type="java" path="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="updateFinAccount" />
+        <response name="success" type="none">
+        </response>
+    </request-map>
+<!--     <request-map uri="updateFinaAccount">
+        <event type="service-multi" invoke="updateFinaAccount"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map> -->
     <request-map uri="reconcileFinAccountTrans">
         <security https="true" auth="false"/>
         <event type="service-multi" invoke="reconcileFinAccountTrans"/>

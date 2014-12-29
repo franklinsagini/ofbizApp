@@ -24,10 +24,9 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-         RETURNED FILES BETWEEN ${parameters.startDate} AND ${parameters.endDate} 
+         REPORT ON FILES OVERSTAYED WITH USERS
     </fo:block>
     <fo:block><fo:leader/></fo:block>
-   
 
 <#if activities?has_content>
     <#-- REPORT BODY -->
@@ -39,90 +38,97 @@ under the License.
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="120pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Action</fo:block>
+                        <fo:block text-align="left">File Owner</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Action By</fo:block>
+                        <fo:block text-align="left">Issued For</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Current Posesser</fo:block>
+                        <fo:block text-align="left">Date Issued</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Carried By</fo:block>
+                        <fo:block text-align="left">Activity Duration</fo:block>
                     </fo:table-cell>
                     
                     
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Reason</fo:block>
+                        <fo:block text-align="left">Scheduled Return Date</fo:block>
                     </fo:table-cell>
                     
                     
                     
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Reciept Status</fo:block>
+                        <fo:block text-align="left">In Possession Of</fo:block>
                     </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Action Date</fo:block>
-                    </fo:table-cell>
+                  
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
 
                   <#list activities as activity>
-                    <#if activity.carriedBy?has_content>
-                        <#assign carriedBy = delegator.findOne("Person", {"partyId" : activity.carriedBy}, false)/>
+                    <#if activity.partyId?has_content>
+                    	<#assign memberPartyId = activity.partyId?number />
+                        <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
                     </#if>
-                    <#if activity.actionBy?has_content>
-                        <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
-                    </#if>
-                    <#if activity.currentPossesser?has_content>
+                     <#if activity.currentPossesser?has_content>
                         <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
                     </#if>
+                     <#if activity.Reason?has_content>
+                        <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : activity.Reason}, false)/>
+                    </#if>
                      <fo:table-row>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.fileActionTypeId?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if actionBy?has_content>
-                                <fo:block>${actionBy.firstName?if_exists} ${actionBy.lastName?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if activity.currentPossesser?if_exists == "REGISTRY">
-                                <fo:block>${activity.currentPossesser?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>${currentPossesser.firstName?if_exists} ${currentPossesser.lastName?if_exists}</fo:block>
-                            </#if>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if carriedBy?has_content>
-                                <fo:block>${carriedBy.firstName?if_exists} ${carriedBy.lastName?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
-                        </fo:table-cell>
-                        
-                        
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.Reason?if_exists}</fo:block>
+                            <#if member?has_content>
+                               <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined ${memberPartyId}</fo:block>
+                            </#if>
                         </fo:table-cell>
-                        
-                        
-                        
-                        
                         
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.receiptStatus?if_exists}</fo:block>
+                            <#if reason?has_content>
+                                <fo:block>${reason.activity?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.actionDate?if_exists}</fo:block>
+                            <#if activity.issueDate?has_content>
+                                <fo:block>${activity.issueDate?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
                         </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if activity.activityDuration?has_content>
+                                <fo:block>${activity.activityDuration?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                        
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if activity.issuedReturnDate?has_content>
+                                <fo:block>${activity.issuedReturnDate?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                         
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if currentPossesser?has_content>
+                                 <fo:block>${currentPossesser.firstName?if_exists} ${currentPossesser.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                        
+                        
+                        
+                        
                      </fo:table-row>
                   </#list>
 
@@ -135,7 +141,7 @@ under the License.
     </fo:block>
   </#if>
     <#else>
-        <fo:block text-align="center">No Employees Found With that ID</fo:block>
+        <fo:block text-align="center">Nothing</fo:block>
     </#if>
 </#escape>
 

@@ -24,14 +24,6 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="RegistryDocumentType" field="DocumentTypeId" />
 		
-		<if-not-empty field="parameters.retentionPeriod">
-		<set field="newEntity.retentionPeriod" from-field="parameters.retentionPeriod"/>
-		<else>
-		<set field="newEntity.retentionPeriod" value="PERMANENT"/>
-		</else>
-		</if-not-empty>
-		
-
 		<set from-field="DocumentTypeId" field="newEntity.DocumentTypeId" />
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
@@ -80,8 +72,6 @@
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
-		<property-to-field resource="HumanResUiLabels"
-			property="UpdateSuccess" field="successMessage" />
 
 	</simple-method>
 
@@ -103,8 +93,10 @@
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="NonmemberPlusPersonRecords" field="entryNumber" />
+		<now-timestamp field="nowTimestamp"/>
 
 		<set from-field="entryNumber" field="newEntity.entryNumber" />
+		<set from-field="nowTimestamp" field="newEntity.acquistionDate"/>
 		<create-value value-field="newEntity" />
 		
 		<call-simple-method method-name="saveRecordForFiling" scope="inline"></call-simple-method>
@@ -158,7 +150,7 @@
 		<set value="AVAILABLE" field="newEntity.status" />
 		<set value="ACTIVE" field="newEntity.stageStatus" />
 		
-		<set value="${member.payrollNo}" field="newEntity.payrollNumber" />
+		<set value="${member.payrollNumber}" field="newEntity.payrollNumber" />
 		<set value="${member.memberNumber}" field="newEntity.memberNumber" />
 		<set value="${member.firstName}" field="newEntity.firstName" />
 		<set value="${member.lastName}" field="newEntity.lastName" />
@@ -172,9 +164,27 @@
 		<set from-field="nowTimestamp" field="newEntity.creationDate"/>
 		<create-value value-field="newEntity" />
 		
+		<call-simple-method method-name="createfileFirstVolume" scope="inline"></call-simple-method>
+		
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
 	</simple-method>
+	
+	
+	<!-- ====================== CREATE FILE VOLUME ONE ========================= -->
+	
+	<simple-method method-name="createfileFirstVolume"	short-description="Create File Actions">
+		<make-value entity-name="RegistryFileVolume" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileVolume" field="volumeId" />
+		<set from-field="volumeId" field="newEntity.volumeId" />
+		<set field="newEntity.partyId" from-field="parameters.partyId"/>
+		<set field="newEntity.volumeStatus" value="OPEN"/>
+		<set field="newEntity.volumeIdentifier" value="Volume 1"/>
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 
 	<simple-method method-name="updateFiles"
 		short-description="Update an existing Budget">
@@ -391,7 +401,6 @@
 	
 	<simple-method method-name="requestfiles" short-description="request File ">
 		 <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
-		 <call-simple-method method-name="saveRequestedFile" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
@@ -590,6 +599,8 @@
 		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
 		  <!-- <call-simple-method method-name="deletefileFromRequested" scope="inline"></call-simple-method> -->
+		  
+		  <now-timestamp field="nowTimestamp"/>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
@@ -598,9 +609,23 @@
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		 
+		 <entity-one entity-name="RegistryFileActivity" value-field="activity">
+		 	<field-map field-name="activityId" from-field="registryFile.Reason"/>
+		 </entity-one>
+		 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="ISSUED"/>
+		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
+		 
+		  <set field="start" from-field="nowTimestamp"/>
+		  <set field="duration" from-field="activity.activityDuration" />
+		 
+		 
+		 <set field="registryFile.activityDuration" from-field="activity.activityDuration" />
+		 <set field="registryFile.issuedReturnDate" value="${bsh:org.ofbiz.registry.FileServices.calculateEndWorkingDay(start, duration);}" type="Timestamp"/>
+		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
+		 
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
 		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
@@ -675,7 +700,6 @@
 		 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
-		 <set field="registryFile.status" value="DIVERTED"/>
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
 		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
@@ -872,10 +896,11 @@
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
-
+      <log message=">>>>>>>>>>>>>>>>>>>>>>> PARAMETERS > ${parameters}" level="info"/>
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
-		 <set field="registryFile.recieptStatus" value="SEND"/>
+		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
+		 <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		<store-value value-field="registryFile"/>
 	</simple-method>
 	
@@ -1024,15 +1049,16 @@
 		<make-value entity-name="RegistryDocuments" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="nowTimestamp"/>
 		<sequenced-id sequence-name="RegistryDocuments" field="documentId" />
 		<set from-field="documentId" field="newEntity.documentId" />
 		<set field="partyId" from-field="parameters.partyId"/>
-		<set field="newEntity.documentFolio" value="FOLIO-${bsh:org.ofbiz.registry.FileServices.getFileDocCount(partyId);}"/>
-		
+		<set field="newEntity.documentFolio" value="${parameters.memberNumber}-${bsh:org.ofbiz.registry.FileServices.getFileDocCount(partyId);}"/>
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> PARAMETERS ${memberNumber}" level="info"/>
 		 <set field="DocumentTypeId" from-field="parameters.DocumentTypeId"/>
-		 <set field="receiptDate" from-field="parameters.receiptDate" type="Date"/>
+		 <set from-field="nowTimestamp" field="newEntity.receiptDate"/>
 		
-		<set field="newEntity.archiveDate" value="${bsh:org.ofbiz.registry.FileServices.getArchingDateCount(DocumentTypeId,receiptDate);}"/>
+		
 		
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
@@ -1061,8 +1087,8 @@
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
-		<property-to-field resource="HumanResUiLabels"
-			property="UpdateSuccess" field="successMessage" />
+		<!-- <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> -->
 
 	</simple-method>
 
@@ -1080,9 +1106,11 @@
 		<make-value entity-name="RegistryFileSubDocuments" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="nowTimestamp"/>
 		<sequenced-id sequence-name="RegistryFileSubDocuments" field="subDocumentId" />
 
 		<set from-field="subDocumentId" field="newEntity.subDocumentId" /> 
+		<set from-field="nowTimestamp" field="newEntity.creationDate"/>
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
