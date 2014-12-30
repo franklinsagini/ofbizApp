@@ -212,6 +212,149 @@
             </widgets>
         </section>
     </screen>
+
+   <!-- Perf Goal Definition -->    
+    <screen name="NewPerfGoalDef">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="perfGoalsDef"/>
+                <set field="tabButtonItem" value="perfGoalsDef"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PerfGoalsDef" value-field="perfGoalsDefContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Performance Goal Defintion">
+                                    <include-form name="PerfGoalDef" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Performance Goal Defintion List">
+                        			<include-form name="listNewPerfGoalDef" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Perf Goals -->    
+    <screen name="NewPerfGoal">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals"/>
+                <set field="headerItem" value="perfGoals"/>
+                <set field="tabButtonItem" value="perfGoals"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="perfGoalsDefId" from-field="parameters.perfGoalsDefId"/>
+                
+                <entity-one entity-name="PerfGoals" value-field="perfGoalsContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Performance Goal">
+                                    <include-form name="PerfGoal" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Performance Goal List">
+                        			<include-form name="listNewPerfGoal" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- Manage Perf Objectives -->    
+    <screen name="ManagePerfObjectives">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Manage Perf Objectives"/>
+                <set field="headerItem" value="ManagePerfObjectives"/>
+                <set field="tabButtonItem" value="ManagePerfObjectives"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                
+                <entity-one entity-name="PerfGoals" value-field="perfGoalsContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfObjBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Quantitative Goals">
+                        			<include-form name="listQNTGoals" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Qualitative Goals">
+                        			<include-form name="listQTTGoals" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
         <!-- KPI Definition -->    
     <screen name="NewKPIDefinition">
@@ -310,19 +453,19 @@
 
   
     <!-- KPI Global Targets -->    
-    <screen name="NewKPIGlobalTargets">
+    <screen name="NewKPIPositionObjectives">
     <section>
             <actions>
-                <set field="titleProperty" value="KPI Global Targets"/>
-                <set field="headerItem" value="kpiglobaltargets"/>
-                <set field="tabButtonItem" value="kpiglobaltargets"/>  
+                <set field="titleProperty" value="Position Objectives"/>
+                <set field="headerItem" value="kpipositionobjectives"/>
+                <set field="tabButtonItem" value="kpipositionobjectives"/>  
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createGlobalKPITarget"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 
-                <entity-one entity-name="KPITargets" value-field="kpiglobaltargetsContext"/>
+                <entity-one entity-name="KPITargets" value-field="kpipositionobjectivesContext"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -330,13 +473,14 @@
                     <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfObjBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="New KPI Global Target">
-                                    <include-form name="NewGlobalKPITarget" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                <screenlet title="Position Objectives">
+                                    <include-form name="NewPositionKPITarget" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -346,8 +490,8 @@
                         
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="KPI Global Target List">
-                        			<include-form name="listGlobalKPITarget" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		<screenlet title="Position Objectives List">
+                        			<include-form name="listPositionObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

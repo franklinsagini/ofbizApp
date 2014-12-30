@@ -144,11 +144,12 @@ under the License.
     <form name="FindEmplPositionTypes" type="single" header-row-style="header-row" default-table-style="basic-table">
        <!--  <auto-fields-entity entity-name="EmplPositionType" default-field-type="find"/> -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="emplPositionTypeId" title="Position">
+        <!-- field name="emplPositionTypeId" title="Position">
             <drop-down allow-empty="true">
                 <entity-options entity-name="EmplPositionType" description="${emplPositionType}" key-field-name="emplPositionTypeId"/>
             </drop-down>
-        </field>
+        </field -->
+        <field name="emplPositionType" title="Position"><text-find></text-find></field>
         <field name="payGradeId" title="Pay Grade">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PayGrade" description="${payGradeName}" key-field-name="payGradeId"/>
@@ -184,6 +185,37 @@ under the License.
             </hyperlink>
         </field>
     </form>
+    
+    <form name="FindPerfPositions" type="single" header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>        
+        <field name="emplPositionType" title="Position"><text-find></text-find></field>
+        <field name="payGradeId" title="Pay Grade">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PayGrade" description="${payGradeName}" key-field-name="payGradeId"/>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListPerfPositions" type="list" list-name="listIt" target="updateEmplPositionType"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="emplPositionTypeCtx"/>
+                <field-map field-name="entityName" value="EmplPositionType"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <auto-fields-service service-name="updateEmplPositionType" default-field-type="hidden"/>  
+        <field name="emplPositionTypeId" title="Position"><hidden/></field>
+        <field name="emplPositionType" title="Position"> <display/> </field>
+        <field name="objectives" title="Objectives">
+        	<hyperlink target="ManagePerfObjectives" description="Manage Objectives" also-hidden="false">
+            	<parameter param-name="emplPositionTypeId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
     <form name="EditEmplPositionTypes" type="single" target="createEmplPositionType" default-map-name="emplPositionType" 
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="emplPositionType!=null" target="updateEmplPositionType"/>
@@ -350,9 +382,10 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>            
     <form name="AddTrainingTypes" type="single" target="createTrainingTypes" header-row-style="header-row" default-table-style="basic-table">
-        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="trainingClassTypeId" title="Training Code" tooltip="Maximum 20 Characters" widget-style="required" required-field="true"
+        	><text/></field>
+        <field name="description" title="Training Class" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
         <field name="parentTypeId" title="Pre Requisite Training"><lookup target-form-name="LookupTraining"/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     

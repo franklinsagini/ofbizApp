@@ -59,7 +59,13 @@ under the License.
         	</drop-down>
         </field> 
         
-        <field name="relief"  title="Is Relief" >
+        <field name="relief"  title="Relief On Tax" >
+            <drop-down allow-empty="false">                
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        <field name="reliefotp"  title="Relief On Taxable Income" >
             <drop-down allow-empty="false">                
                 <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
@@ -245,7 +251,14 @@ under the License.
         	</drop-down>
         </field>       
         
-        <field name="relief"  title="Is Relief" >
+        <field name="relief"  title="Relief On Tax" >
+            <drop-down allow-empty="false">                
+                <option key="N" description="No"/>
+                <option key="Y" description="Yes"/>
+            </drop-down>
+        </field>
+        
+        <field name="reliefotp"  title="Relief On Taxable Income" >
             <drop-down allow-empty="false">                
                 <option key="N" description="No"/>
                 <option key="Y" description="Yes"/>
@@ -720,18 +733,24 @@ under the License.
         </actions>
         
         <field name="staffPayrollId"><hidden/></field>
-        <field name="partyId" title="Employee">
-            <drop-down allow-empty="true" no-current-selected-key="${firstName}  ${lastName}">
+        <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+        	<lookup target-form-name="LookupEmployee"/>
+        
+            <!-- drop-down allow-empty="true" no-current-selected-key="${firstName}  ${lastName}">
                 <entity-options  entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
                     <entity-constraint name="employeeNumber" operator="not-equals" value=""/>
                     <entity-order-by field-name="firstName"/>
                 </entity-options>
-            </drop-down>
+            </drop-down -->
         </field>
         <field name="payrollPeriodId" parameter-name="payrollPeriodId"><hidden/></field>
         <field name="closed"  title="Closed" > <hidden value="N"/></field>        
-        <field name="pensionpercentage" title="Pension Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="nssfVolAmount" title="NSSF Vol Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="pensionpercentage" title="Pension Percentage" tooltip="${uiLabelMap.CommonRequired}" 
+        	widget-style="required" required-field="true"><text size="30" maxlength="60" default-value="0"/>
+        </field>
+        <field name="nssfVolAmount" title="NSSF Vol Amount" tooltip="${uiLabelMap.CommonRequired}" 
+        	widget-style="required" required-field="true"><text size="30" maxlength="60" default-value="0"/>
+        </field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
@@ -840,13 +859,19 @@ under the License.
 
         <field name="staffPayrollElementsId"><hidden/></field>
         <field name="staffPayrollId" parameter-name="staffPayrollId"><hidden/></field>
-        <field name="payrollElementId" title="Payroll Element">        	
+        <field name="payrollElementId" title="Payroll Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">        	
        	 <drop-down allow-empty="true">
-       	 	<list-options list-name="payrollElementList" key-name="payrollElementId" description="${name}"/>
+       	 	<entity-options description="${name}" entity-name="PayrollElement" key-field-name="payrollElementId" >
+       	 		<entity-constraint name="elementType" operator="not-equals" value="System Element"/>
+       	 		<entity-order-by field-name="elementCode"/>
+       	 	</entity-options>
+       	 	<!-- list-options list-name="payrollElementList" key-name="payrollElementId" description="${name}"/ -->
        	 </drop-down>
        	 </field>                
-        <field name="amount" title="Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="balance" title="Balance" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="amount" title="Amount" tooltip="${uiLabelMap.CommonRequired}"
+        	widget-style="required" required-field="true"><text size="30" maxlength="60" default-value="0"/></field>
+        <field name="balance" title="Balance" tooltip="${uiLabelMap.CommonRequired}" 
+        	widget-style="required" required-field="true"><text size="30" maxlength="60" default-value="0"/></field>
         <field name="valueChanged" title="Balance Modified">
         	<drop-down allow-empty="false">
         		<option key="N" description="No"/>
@@ -871,7 +896,7 @@ under the License.
         
         <field name="staffPayrollId"> <hidden/> </field>
         <field name="payrollYearId"> <hidden/> </field>
-        <field name="payrollElementId" title="Payroll Element"> 
+        <field name="payrollElementId" title="Payroll Code"> 
         	<display-entity entity-name="PayrollElement" key-field-name="payrollElementId" description="${name}"/>
         </field>
         <field name="amount"> <text></text> </field>
