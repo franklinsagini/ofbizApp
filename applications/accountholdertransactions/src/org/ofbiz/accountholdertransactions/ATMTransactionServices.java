@@ -129,7 +129,7 @@ public class ATMTransactionServices {
 		
 		if (balance.compareTo(bdTotalTransactionAmount) != -1){
 			//withdraw cash
-			AccHolderTransactionServices.cashWithdrawal(amount, memberAccountId);
+			AccHolderTransactionServices.cashWithdrawal(amount, memberAccountId, "CASHWITHDRAWAL");
 			status = "SUCCESS";
 		} else{
 			//transaction cannot succeed

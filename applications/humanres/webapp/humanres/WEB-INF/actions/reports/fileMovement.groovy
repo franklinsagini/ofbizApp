@@ -1,14 +1,11 @@
 partyId = parameters.partyId
+LpartyId = partyId.toLong();
 if (partyId) {
-   employee = delegator.findOne("Person", [partyId : partyId], false);
+   employee = delegator.findOne("Member", [partyId : LpartyId], false);
    if(employee){
     context.employee = employee;
    }
-   else {
-    LpartyId = partyId.toLong();
-    employee = delegator.findOne("Member", [partyId : LpartyId], false);
-    context.employee = employee;
-   }
+
 context.activities = delegator.findByAnd("RegistryFileLogs", [partyId : partyId], null, false);
 context.file = delegator.findOne("RegistryFiles", [partyId : partyId], false);
 }

@@ -643,7 +643,7 @@
         
         </if-empty>
        
-        
+      <!--  <call-simple-method method-name="saveMemberForFiling" scope="inline"></call-simple-method> --> 
         
     </simple-method>
     
@@ -656,6 +656,22 @@
         <set field="partyEntity.statusId" from-field="PARTY_ENABLED"/>
         <create-value value-field="partyEntity"/>
     </simple-method>
+    
+    <!--   <simple-method method-name="saveMemberForFiling">
+    	<make-value entity-name="memberPlusPerson" value-field="partyEntity"/>
+        <set-pk-fields map="parameters" value-field="partyEntity"/>
+        <set-nonpk-fields map="parameters" value-field="partyEntity"/>
+        <sequenced-id sequence-name="memberPlusPerson" field="memberPlusPersonId"/>
+        <set field="partyEntity.memberPlusPersonId" from-field="memberPlusPersonId"/>
+       <set field="partyEntity.partyId" from-field="memberPlusPersonId"/>
+        <set field="partyEntity.firstName" from-field="parameters.firstName"/>
+        <set field="partyEntity.lastName" from-field="parameters.lastName"/>
+        <set field="partyEntity.payrollNo" from-field="parameters.payrollNumber"/>
+        <set field="partyEntity.memberNumber" from-field="parameters.memberNumber"/>
+        <set field="partyEntity.idNumber" from-field="parameters.idNumber"/>
+        <set field="partyEntity.fileType" value="MEMBER"/>
+        <create-value value-field="partyEntity"/>
+    </simple-method> -->
 
     <simple-method method-name="updateMember" short-description="Update Member">
         <entity-one entity-name="Member" value-field="lookedUpValue"/>

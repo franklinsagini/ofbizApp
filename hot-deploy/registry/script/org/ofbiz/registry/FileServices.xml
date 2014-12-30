@@ -24,20 +24,10 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="RegistryDocumentType" field="DocumentTypeId" />
 		
-		<!-- <if-empty field="parameters.retentionPeriod">
-		<set field="newEntity.retentionPeriod" value="PERMANENT"/>
-		</if-empty> -->
-		 
-		<if-not-empty field="parameters.retentionPeriod">
-		<set field="newEntity.retentionPeriod" from-field="parameters.retentionPeriod"/>
-		<else>
-		<set field="newEntity.retentionPeriod" value="PERMANENT"/>
-		</else>
-		</if-not-empty>
-		
-
 		<set from-field="DocumentTypeId" field="newEntity.DocumentTypeId" />
 		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
 	</simple-method>
 	
 	
@@ -50,6 +40,8 @@
 
 		<set from-field="fileActionTypeId" field="newEntity.fileActionTypeId" />
 		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
 	</simple-method>
 	
 	<simple-method method-name="deletefileActionTypes"
@@ -57,6 +49,8 @@
 		<set field="fileActionTypeId" from-field="parameters.fileActionTypeId" />
 		<entity-one entity-name="RegistryFileActionTypes" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 	<simple-method method-name="updatefileActionTypes"
@@ -65,6 +59,8 @@
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
 
 	</simple-method>
 	
@@ -84,6 +80,57 @@
 		<set field="DocumentTypeId" from-field="parameters.DocumentTypeId" />
 		<entity-one entity-name="RegistryDocumentType" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	
+	<!-- ========================================= NON-MEMBER/PERSON RECORDS ================================================= -->
+	
+	<simple-method method-name="createNonMemberOrPersonRecord"
+		short-description="Create File Actions">
+		<make-value entity-name="NonmemberPlusPersonRecords" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="NonmemberPlusPersonRecords" field="entryNumber" />
+		<now-timestamp field="nowTimestamp"/>
+
+		<set from-field="entryNumber" field="newEntity.entryNumber" />
+		<set from-field="nowTimestamp" field="newEntity.acquistionDate"/>
+		<create-value value-field="newEntity" />
+		
+		<call-simple-method method-name="saveRecordForFiling" scope="inline"></call-simple-method>
+		
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+	</simple-method>
+	
+	 <simple-method method-name="saveRecordForFiling">
+    	<make-value entity-name="memberPlusPerson" value-field="partyEntity"/>
+        <set-pk-fields map="parameters" value-field="partyEntity"/>
+        <set-nonpk-fields map="parameters" value-field="partyEntity"/>
+        <sequenced-id sequence-name="memberPlusPerson" field="memberPlusPersonId"/>
+        <set field="partyEntity.memberPlusPersonId" from-field="memberPlusPersonId"/>
+       <set field="partyEntity.partyId" from-field="memberPlusPersonId"/>
+        <set field="partyEntity.firstName" from-field="parameters.objectName"/>
+        <set field="partyEntity.lastName" from-field="parameters.objectName"/>
+        <set field="partyEntity.isAuthorized" from-field="parameters.isAuthorized"/>
+        <set field="partyEntity.securityLevel" from-field="parameters.securityLevel"/>
+        <set field="partyEntity.idNumber" from-field="parameters.idNumber"/>
+        <set field="partyEntity.fileType" value="OFFICIAL"/>
+        <create-value value-field="partyEntity"/>
+    </simple-method>
+	
+	
+	<simple-method method-name="updateNonMemberOrPersonRecord"
+		short-description="Update an existing action">
+		<entity-one entity-name="NonmemberPlusPersonRecords" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+
 	</simple-method>
 
 <!-- files -->
@@ -101,16 +148,43 @@
 		<set value="FNO-${newEntity.partyId}-${member.firstName}" field="newEntity.folioNo" />
 		<set value="REGISTRY" field="newEntity.fileLocation" />
 		<set value="AVAILABLE" field="newEntity.status" />
+		<set value="ACTIVE" field="newEntity.stageStatus" />
 		
 		<set value="${member.payrollNumber}" field="newEntity.payrollNumber" />
 		<set value="${member.memberNumber}" field="newEntity.memberNumber" />
 		<set value="${member.firstName}" field="newEntity.firstName" />
 		<set value="${member.lastName}" field="newEntity.lastName" />
 		
+		<set value="N" field="newEntity.isMemberInactive" />
+		<set value="N" field="newEntity.isReadyForSemiActive" />
+		<set value="N" field="newEntity.isReadyForArchive" />
+		<set value="N" field="newEntity.isReadyForDisposal" />
+		
 		<set value="${userLogin.partyId}" field="newEntity.creator" />
 		<set from-field="nowTimestamp" field="newEntity.creationDate"/>
 		<create-value value-field="newEntity" />
+		
+		<call-simple-method method-name="createfileFirstVolume" scope="inline"></call-simple-method>
+		
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
 	</simple-method>
+	
+	
+	<!-- ====================== CREATE FILE VOLUME ONE ========================= -->
+	
+	<simple-method method-name="createfileFirstVolume"	short-description="Create File Actions">
+		<make-value entity-name="RegistryFileVolume" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileVolume" field="volumeId" />
+		<set from-field="volumeId" field="newEntity.volumeId" />
+		<set field="newEntity.partyId" from-field="parameters.partyId"/>
+		<set field="newEntity.volumeStatus" value="OPEN"/>
+		<set field="newEntity.volumeIdentifier" value="Volume 1"/>
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 
 	<simple-method method-name="updateFiles"
 		short-description="Update an existing Budget">
@@ -118,9 +192,168 @@
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
 
 	</simple-method>
 	
+	 <!-- ============================== DEACTIVATE FILE ================================== -->
+     <simple-method method-name="deactivateFile"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        
+        <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.inactiveStartDate" />
+        
+        <set field="lookedUpValue.stageStatus" value="INACTIVE"/>
+        <set field="lookedUpValue.status" value="UNAVAILABLE"/>
+        <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
+        <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
+        
+        <call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+        <store-value value-field="lookedUpValue" />
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+        </simple-method>
+        
+       
+     <simple-method method-name="saveFileVolumeInAbox" short-description="Change staff confirmation date">
+       <!--  <entity-one entity-name="RegistryFileVolume" value-field="lookedUpValue" /> 
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" /> -->
+        
+
+		<entity-condition list="openVolList" entity-name="RegistryFileVolume">
+			<condition-list combine="and">
+				<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+				<condition-expr field-name="volumeStatus" value="OPEN"/>
+			</condition-list>
+		</entity-condition>
+		
+		
+		
+		<iterate entry="singleOpenVol" list="openVolList">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${singleOpenVol.volumeId}" level="info"/>
+		<entity-one value-field="openVol" entity-name="RegistryFileVolume">
+			<field-map field-name="volumeId" from-field="singleOpenVol.volumeId"/>
+		</entity-one>
+		
+		
+		  <set field="openVol.fileBoxCode" from-field="parameters.fileBoxCode"/>
+          <set field="openVol.fileBox" from-field="parameters.fileBox"/>
+		 <store-value value-field="openVol" />
+		</iterate>
+		
+        </simple-method>
+        
+	
+	  <!-- ==============================MOVE FILE TO SEMI-ACTIVE================================== -->
+     <simple-method method-name="moveToSemiActive"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        
+        <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.SemiActiveStartDate" />
+        
+        <set field="lookedUpValue.stageStatus" value="SEMIACTIVE"/>
+         <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
+        <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
+        <call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+        <store-value value-field="lookedUpValue" />
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+        </simple-method>
+        
+          <!-- ==============================MOVE FILE TO ARCHIVE================================== -->
+     <simple-method method-name="moveToArchive"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        
+         <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.ArchiveStartDate" />
+        
+         <set field="lookedUpValue.stageStatus" value="ARCHIVED"/>
+          <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
+        <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
+        <call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+        <store-value value-field="lookedUpValue" />
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+        </simple-method>
+          <!-- ==============================MOVE FILE FOR DISPOSAL================================== -->
+     <simple-method method-name="moveToDisposal"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        
+          <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.DisposalStartDate" />
+        
+        <set field="lookedUpValue.stageStatus" value="DISPOSAL"/>
+         <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
+        <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
+        <call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+        <store-value value-field="lookedUpValue" />
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+        </simple-method>
+        
+         <!-- ==============================MOVE FILE TO DECEASED================================== -->
+     <simple-method method-name="deceasedMember"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        
+          <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.deceasedStartDate" />
+        
+        <set field="lookedUpValue.stageStatus" value="DECEASED"/>
+         <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
+        <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
+        <call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+        <store-value value-field="lookedUpValue" />
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+        </simple-method>
+        
+          <!-- ============================== ACTIVATE FILE ================================== -->
+     <simple-method method-name="activateFile"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        
+        <!--   <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.deceasedStartDate" /> -->
+        
+        <set field="lookedUpValue.stageStatus" value="ACTIVE"/>
+        <set field="lookedUpValue.status" value="AVAILABLE"/>
+        <store-value value-field="lookedUpValue" />
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+        </simple-method>
+        
+        
+        <simple-method method-name="updateStatusPeriods" short-description="Update status periods">
+		<entity-one entity-name="RegistryFileSetting" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+	</simple-method>
+        
+        
+        
+         <!-- ==============================UPDATE MOVE STATUS================================== -->
+       <!--  <simple-method method-name="inactiveFiles"  short-description="Change staff confirmation date">sdsds
+        <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        <set field="inactiveStartDate" from-field="lookedUpValue.inactiveStartDate"/>
+        <set field="lookedUpValue.moveStatus" value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToSemiActiveState(inactiveStartDate);}"/>
+        <store-value value-field="lookedUpValue" />
+        </simple-method> -->
+        
 	<!-- ========================= FILE VOLUME ======================================== -->
 	
 	
@@ -132,7 +365,10 @@
 		<sequenced-id sequence-name="RegistryFileVolume" field="volumeId" />
 		<set from-field="volumeId" field="newEntity.volumeId" />
 		<set field="partyId" from-field="parameters.partyId"/>
+		<set field="newEntity.volumeStatus" value="OPEN"/>
 		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage"/>
 	</simple-method>
 	
 	<simple-method method-name="updatefileVolume"
@@ -141,14 +377,30 @@
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
 
 	</simple-method>
+	
+	 <!-- ============================== CLOSE A FILE VOLUME ================================== -->
+     <simple-method method-name="closeFileVolume"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="RegistryFileVolume" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        
+        <set field="lookedUpValue.volumeStatus" value="CLOSED"/>
+         <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
+          <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
+        <store-value value-field="lookedUpValue" />
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+        </simple-method>
+     
 
 	<!-- ==========================FILE REQUEST================================== -->
 	
 	<simple-method method-name="requestfiles" short-description="request File ">
 		 <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
-		 <call-simple-method method-name="saveRequestedFile" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
@@ -222,13 +474,133 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	<!-- ========================== APPROVE FILE ISSUANCE ================================== -->
+	
+	<simple-method method-name="approveFileIssuance" short-description="request File ">
+	<log message="=====================PLEASE SHOW ${parameters}" level="info"/>
+	<call-simple-method method-name="saveAuthorizationFileAction" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveAuthorizationActionToLogs" scope="inline"></call-simple-method>
+	
+	<set field="party" from-field="parameters.partyId"/>
+		
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy"/>
+		 <set field="registryFile.approvalStatus" value="Approved"/>
+		<store-value value-field="registryFile"/>
+	</simple-method>
+	
+	<simple-method method-name="saveAuthorizationFileAction">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActions" field="actionId" />
+		<set from-field="actionId" field="newEntity.actionId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Approved File Issuance"/>
+		
+		<create-value value-field="newEntity" />
+		
+	</simple-method>
+	
+	<simple-method method-name="saveAuthorizationActionToLogs">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Approved File Issuance"/>
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		
+		<set field="newEntity.folioNo" from-field="reg.folioNo" />
+		<set field="newEntity.Reason" from-field="reg.Reason"/>
+		
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<!-- ========================== DISAPPROVE FILE ISSUANCE ================================== -->
+	
+	<simple-method method-name="disapproveFileIssuance" short-description="request File ">
+	<log message="=====================PLEASE SHOW ${parameters}" level="info"/>
+	<call-simple-method method-name="saveAuthorizationFileAction2" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveAuthorizationActionToLogs2" scope="inline"></call-simple-method>
+	
+	<set field="party" from-field="parameters.partyId"/>
+		
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		 
+
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy"/>
+		 <set field="registryFile.approvalStatus" value="Disapproved"/>
+		 <set field="registryFile.status" value="AVAILABLE"/>
+		<store-value value-field="registryFile"/>
+	</simple-method>
+	
+	<simple-method method-name="saveAuthorizationFileAction2">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActions" field="actionId" />
+		<set from-field="actionId" field="newEntity.actionId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Disapproved File Issuance"/>
+		
+		<create-value value-field="newEntity" />
+		
+	</simple-method>
+	
+	<simple-method method-name="saveAuthorizationActionToLogs2">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Disapproved File Issuance"/>
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		
+		<set field="newEntity.folioNo" from-field="reg.folioNo" />
+		<set field="newEntity.Reason" from-field="reg.Reason"/>
+		
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	
 	<!-- ==========================FILE ISSUE================================== -->
 	
 	<simple-method method-name="issuefiles" short-description="request File ">
 		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
-		<!--  <call-simple-method method-name="saveIssuedFile" scope="inline"></call-simple-method> -->
 		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
-		  <call-simple-method method-name="deletefileFromRequested" scope="inline"></call-simple-method>
+		  <!-- <call-simple-method method-name="deletefileFromRequested" scope="inline"></call-simple-method> -->
+		  
+		  <now-timestamp field="nowTimestamp"/>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
@@ -237,9 +609,23 @@
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		 
+		 <entity-one entity-name="RegistryFileActivity" value-field="activity">
+		 	<field-map field-name="activityId" from-field="registryFile.Reason"/>
+		 </entity-one>
+		 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="ISSUED"/>
+		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
+		 
+		  <set field="start" from-field="nowTimestamp"/>
+		  <set field="duration" from-field="activity.activityDuration" />
+		 
+		 
+		 <set field="registryFile.activityDuration" from-field="activity.activityDuration" />
+		 <set field="registryFile.issuedReturnDate" value="${bsh:org.ofbiz.registry.FileServices.calculateEndWorkingDay(start, duration);}" type="Timestamp"/>
+		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
+		 
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
 		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
@@ -268,31 +654,7 @@
 		
 		<create-value value-field="newEntity" />
 	</simple-method>
-	<!-- <simple-method method-name="saveIssueActionToLogs">
-		<now-timestamp field="nowTimestamp"/>
-		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
-		<set-pk-fields map="parameters" value-field="newEntity" />
-		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="RegistryFileLogs" field="logId" />
-		<set from-field="logId" field="newEntity.logId" />
-		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
-		<set field="newEntity.actionDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId" />
-		<set field="newEntity.fileActionTypeId" value="File Issue"/>
-		<set field="newEntity.currentPossesser" from-field="parameters.actionBy" />
-		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
-		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
-		
-		<entity-one entity-name="RegistryFiles" value-field="reg">
-		 	<field-map field-name="partyId" from-field="partyId"/>
-		 </entity-one>
-		
-		
-		<set field="newEntity.folioNo" from-field="reg.folioNo" />
-		<set field="newEntity.Reason" from-field="reg.Reason"/>
-		
-		<create-value value-field="newEntity" />
-	</simple-method> -->
+	
 	
 	<simple-method method-name="saveIssueActionToLogs">
 		<now-timestamp field="nowTimestamp"/>
@@ -308,6 +670,8 @@
 		<set field="newEntity.currentPossesser" from-field="parameters.actionBy" />
 		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
 		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		<set field="newEntity.interActivityDuration" value="${${bsh:org.ofbiz.registry.FileServices.getDurationBtnRequestAndIssue(partyId);}}" type="String"/>
+		
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
@@ -321,29 +685,71 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
-	<!-- <simple-method method-name="saveIssuedFile">
+	<!-- ==========================FILE DIVERT================================== -->
+	
+	<simple-method method-name="divertfiles" short-description="request File ">
+		 <call-simple-method method-name="saveDivertAction" scope="inline"></call-simple-method>
+		  <call-simple-method method-name="saveDivertActionToLogs" scope="inline"></call-simple-method>
+		 
+		 <set field="partyId" value="${newEntity.partyId}"/>
+		 
+		 
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		 
+		 <!-- Get status -->
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
+		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
+		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
+		<store-value value-field="registryFile" />
+	</simple-method>
+	
+	
+	<simple-method method-name="saveDivertAction">
 		<now-timestamp field="nowTimestamp"/>
-		<make-value entity-name="RegistryFilesInCirculation" value-field="newEntity"/>
+		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActions" field="actionId" />
+		<set from-field="actionId" field="newEntity.actionId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="File Divert"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	
+	<simple-method method-name="saveDivertActionToLogs">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="File Divert"/>
+		<set field="newEntity.currentPossesser" from-field="parameters.currentPossesser" />
+		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
-		 
-		 <entity-one entity-name="RegistryRequestedFiles" value-field="reason">
-		 	<field-map field-name="partyId" from-field="partyId"/>
-		 </entity-one>
 		
-		<set from-field="parameters.actionBy"  field="newEntity.currentPossesser" />
-		<set value="NOT RECEIVED" field="newEntity.recieptStatus" />
-		<set field="newEntity.creationDate" from-field="nowTimestamp" />
-		<set field="partyId" from-field="parameters.partyId"/>
+		
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
-		<set field="newEntity.Reason" from-field="reason.Reason" />
+		<set field="newEntity.Reason" from-field="reg.Reason"/>
+		
 		
 		<create-value value-field="newEntity" />
-	</simple-method> -->
+	</simple-method>
 	
 
 <!-- ========================== RECEIVE FILE ================================== -->
@@ -477,6 +883,69 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	<!-- ========================== FILE RELEASE TO ANOTHER STAFF ================================== -->
+	
+	<simple-method method-name="releaseFileToAnotherStaff" short-description="request File ">
+	<call-simple-method method-name="savereleaseFileToAnotherStaffAction" scope="inline"></call-simple-method>
+	<call-simple-method method-name="savereleaseFileToAnotherStaffActionToLogs" scope="inline"></call-simple-method>
+	
+		 
+		 <set field="partyId" value="${newEntity.partyId}"/>
+		 
+		 
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+      <log message=">>>>>>>>>>>>>>>>>>>>>>> PARAMETERS > ${parameters}" level="info"/>
+		 <!-- Get status -->
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
+		 <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
+		<store-value value-field="registryFile"/>
+	</simple-method>
+	
+	<simple-method method-name="savereleaseFileToAnotherStaffAction">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileActions" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileActions" field="actionId" />
+		<set from-field="actionId" field="newEntity.actionId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Send File"/>
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<simple-method method-name="savereleaseFileToAnotherStaffActionToLogs">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" />
+		<set value="${userLogin.partyId}" field="newEntity.actionBy" />
+		<set field="newEntity.actionDate" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.fileActionTypeId" value="Send File"/>
+		<set field="newEntity.currentPossesser" from-field="parameters.currentPossesser" />
+		<set field="newEntity.receiptStatus" value="NOT RECEIVED"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		
+		<set field="newEntity.folioNo" from-field="reg.folioNo" />
+		<set field="newEntity.Reason" from-field="reg.Reason"/>
+		
+		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 	<!-- ==========================FILE RETURN================================== -->
 	
 	<simple-method method-name="returnfiles" short-description="request File ">
@@ -492,6 +961,7 @@
 
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
+		  <set field="registryFile.approvalStatus" value="na"/>
 		 <set field="registryFile.status" value="AVAILABLE"/>
 		  <set field="registryFile.fileLocation" from-field="REGISTRY"/>
 		 <set field="registryFile.recieptStatus" value="RELEASEDANDRECIEVED"/>
@@ -547,22 +1017,14 @@
   	<!-- update Budget Status -->
     <simple-method method-name="updateRegistryFileStatus" short-description="Update Registry File Status Status">
 
-      <!--       <entity-one value-field="registryFile" entity-name="RegistryFiles">
-                <field-map field-name="partyId" from-field="parameters.partyId"/>
-            </entity-one>
-            <if-not-empty field="registryFile">
-				<entity-one entity-name="RegistryFiles" value-field="lookedUpValue"/>
-				<set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-				<set-pk-fields value-field="lookedUpValue" map="parameters"/>
-				<store-value value-field="lookedUpValue"/>
-
-				<field-to-result field="parameters.partyId" result-name="partyId"/>
-            </if-not-empty> -->
+     
         <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
     </simple-method>
 
 
@@ -575,6 +1037,8 @@
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
     </simple-method>
 
 	
@@ -585,39 +1049,72 @@
 		<make-value entity-name="RegistryDocuments" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="nowTimestamp"/>
 		<sequenced-id sequence-name="RegistryDocuments" field="documentId" />
 		<set from-field="documentId" field="newEntity.documentId" />
+		<set field="partyId" from-field="parameters.partyId"/>
+		<set field="newEntity.documentFolio" value="${parameters.memberNumber}-${bsh:org.ofbiz.registry.FileServices.getFileDocCount(partyId);}"/>
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> PARAMETERS ${memberNumber}" level="info"/>
+		 <set field="DocumentTypeId" from-field="parameters.DocumentTypeId"/>
+		 <set from-field="nowTimestamp" field="newEntity.receiptDate"/>
+		
+		
+		
 		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
 	</simple-method>
+	
+
 
 <!-- locations -->
-	<simple-method method-name="createfilelocation"
+	<simple-method method-name="createfileActivity"
 		short-description="Create File location">
-		<make-value entity-name="RegistryFileLocations" value-field="newEntity" />
+		<make-value entity-name="RegistryFileActivity" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="RegistryFileLocations" field="locationId" />
+		<!-- <sequenced-id sequence-name="RegistryFileActivity" field="activityId" />
 
-		<set from-field="locationId" field="newEntity.locationId" />
+		<set from-field="activityId" field="newEntity.activityId" /> -->
 		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
 	</simple-method>
 
-	<simple-method method-name="updatefilelocation"
+	<simple-method method-name="updatefileActivity"
 		short-description="Update an existing Budget">
-		<entity-one entity-name="RegistryFileLocations" value-field="lookedUpValue" />
+		<entity-one entity-name="RegistryFileActivity" value-field="lookedUpValue" />
 		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
 		<set-pk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
+		<!-- <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> -->
 
 	</simple-method>
 
-	<simple-method method-name="deletefilelocation"
+	<simple-method method-name="deletefileActivity"
 		short-description="Remove an file type">
-		<set field="locationId" from-field="parameters.locationId" />
-		<entity-one entity-name="RegistryFileLocations" value-field="lookedUpValue" />
+		<set field="activityId" from-field="parameters.activityId" />
+		<entity-one entity-name="RegistryFileActivity" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 
+<simple-method method-name="addSubDocument"
+		short-description="Create File location">
+		<make-value entity-name="RegistryFileSubDocuments" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="nowTimestamp"/>
+		<sequenced-id sequence-name="RegistryFileSubDocuments" field="subDocumentId" />
+
+		<set from-field="subDocumentId" field="newEntity.subDocumentId" /> 
+		<set from-field="nowTimestamp" field="newEntity.creationDate"/>
+		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+	</simple-method>
 
 
 

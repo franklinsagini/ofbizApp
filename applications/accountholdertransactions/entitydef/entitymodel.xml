@@ -150,6 +150,27 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
      </entity>
+     
+     
+    <entity entity-name="ATMTransactions" table-name="t_ATMTransactions" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="ATMTransactions Entity">
+        <field name="AccountID" col-name="AccountID" type="id"><description>primary sequenced ID</description></field>
+		<field name="SystemTrace" col-name="SystemTrace" type="id"></field>
+		
+		<field name="transactionId" type="id"></field>
+        <field name="Amount" col-name="Amount" type="currency-amount"></field>
+        <field name="TransactionDate" col-name="TransactionDate" type="date-time"></field>
+        
+        <prim-key field="transactionId"/>
+     </entity>
+     
+     
+     <entity entity-name="ATMTransactionsLog" table-name="ATMTransactionsLog" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="ATMTransactions Entity">
+        <field name="atmransactionsLogId" col-name="AccountID" type="id"><description>primary sequenced ID</description></field>
+		<field name="cardNumber"  type="id"></field>
+		<field name="transactionType"  type="id"></field>
+        
+        <prim-key field="atmransactionsLogId"/>
+     </entity>
     
     <entity entity-name="CashWithdrawal" package-name="org.ofbiz.accountholdertransactions" title="CashWithdrawal Entity">
         <field name="cashWithdrawalId" type="id-vlong-int"><description>primary sequenced ID</description></field>
@@ -491,6 +512,7 @@ under the License.
     --> 
     <entity entity-name="ExpectedPaymentSent" package-name="org.ofbiz.accountholdertransactions" title="ExpectedPaymentSent Entity">
         <field name="isActive" type="indicator"></field>
+		<field name="isReceived" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		<field name="branchId" type="name"></field>
@@ -511,6 +533,7 @@ under the License.
         <field name="generatedDate" type="date-time"></field>
 
 		<field name="expectationType" type="name"></field> <!-- SHARES, LOAN, ACCOUNT -->
+		<field name="totalAmount" type="fixed-point"></field>
        
         <prim-key field="remitanceCode"/>
         <prim-key field="payrollNo"/>
@@ -521,6 +544,7 @@ under the License.
     <!-- Expectation Received -->
      <entity entity-name="ExpectedPaymentReceived"  package-name="org.ofbiz.accountholdertransactions" title="ExpectedPaymentReceived Entity">
         <field name="isActive" type="indicator"></field>
+        <field name="isReceived" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		<field name="branchId" type="name"></field>
@@ -542,7 +566,8 @@ under the License.
         
         <field name="processed" type="indicator"></field>
         <field name="dateProcessed" type="date-time"></field>
-
+		<field name="totalAmount" type="fixed-point"></field>
+		
        <field name="expectationType" type="name"></field> <!-- SHARES, LOAN, ACCOUNT -->
         <prim-key field="remitanceCode"/>
         <prim-key field="payrollNo"/>
@@ -554,12 +579,12 @@ under the License.
         <field name="isActive" type="indicator"></field>
         <field name="createdBy" type="id"></field>
         <field name="updatedBy" type="id"></field>
-        
         <field name="name" type="name"></field>
         <field name="code" type="name"></field>
-       
         <prim-key field="name"/>
         
     </entity>
+    
+    
     
 </entitymodel>

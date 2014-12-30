@@ -92,6 +92,13 @@
 			save-current-view="true" />
 	</request-map>
 
+	<request-map uri="atmServiceLogs">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="atmServiceLogs"
+			save-current-view="true" />
+	</request-map>	
+	
+
 	<request-map uri="chequeSetup">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="chequeSetup"
@@ -658,7 +665,20 @@
 		</response>
 	</request-map>
 
-
+	<request-map uri="transactionPrintOut">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="transactionPrintOut">
+			<redirect-parameter name="accountTransactionParentId"/>
+		</response>
+	</request-map>
+	
+	<request-map uri="printMiniStatement">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="printMiniStatement">
+			<redirect-parameter name="partyId"/>
+		</response>
+	</request-map>
+	
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
@@ -706,6 +726,10 @@
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewApplyStandingOrder" />
 	<view-map name="chequeType" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeType" />
+	
+	<view-map name="atmServiceLogs" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#atmServiceLogs" />
+	
 	<view-map name="chequeSetup" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeSetup" />
 	<view-map name="accountHolderTransactionSetup" type="screen"
@@ -735,6 +759,13 @@
 	<view-map name="expectedPaymentBreakdowncsv" type="screencsv"
 		content-type="text/csv"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentBreakdowncsv" />
+
+	<view-map name="transactionPrintOut" type="screenfop"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#transactionPrintOut" content-type="application/pdf" encoding="none"  />
+
+	<view-map name="printMiniStatement" type="screenfop"
+		page="component://loanreports/widget/LoanReportsScreens.xml#memberstatementreportPDF" content-type="application/pdf" encoding="none"  />
+
 
 	<!-- end of view mappings -->
 

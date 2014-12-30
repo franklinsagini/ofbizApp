@@ -47,10 +47,28 @@
 		<field name="firstName" type="name" ></field>
     	<field name="lastName" type="name"></field>
 		<field name="fileLocation" type="name"></field>
+		<field name="fileBox" type="name"></field>
+		<field name="fileBoxCode" type="name"></field>
 		<field name="Reason" type="name"></field>
+		<field name="activityDuration" type="name"></field>
 		<field name="carriedBy" type="name"></field>
+		 <field name="isAuthorized" type="name"></field>
+		<field name="approvalStatus" type="name"></field>
+		<field name="stageStatus" type="name"></field>
+		<field name="moveStatus" type="name"></field>
+		<field name="isMemberInactive" type="name" ></field>
+		<field name="isReadyForSemiActive" type="name" ></field>
+		<field name="isReadyForArchive" type="name" ></field>
+		<field name="isReadyForDisposal" type="name" ></field>
+		<field name="inactiveStartDate" type="date-time"></field>
+		<field name="issueDate" type="date-time"></field>
+		<field name="issuedReturnDate" type="date-time"></field>
+		<field name="SemiActiveStartDate" type="date-time"></field>
+		<field name="ArchiveStartDate" type="date-time"></field>
+		<field name="DisposalStartDate" type="date-time"></field>
+		<field name="deceasedStartDate" type="date-time"></field>
 		<field name="creationDate" type="date-time"></field>
-		<prim-key field="partyId" />
+		<prim-key field="partyId"/>
 		<relation type="one" fk-name="FILE_MEMBER" rel-entity-name="Member">
 			<key-map field-name="partyId" />
 		</relation>
@@ -97,6 +115,8 @@
 		<field name="partyId" type="id"></field>
 		<field name="folioNo" type="name"></field>
 		<field name="Reason" type="name"></field>
+		<field name="interActivityDuration" type="name"></field>
+		<field name="activityDuration" type="name"></field>
 		<field name="actionDate" type="date-time"></field>
 		<prim-key field="logId" />
 		<relation type="one" fk-name="FILEACTION_MEMBERFILE" rel-entity-name="RegistryFiles">
@@ -107,7 +127,7 @@
 	<entity entity-name="RegistryFileActions" package-name="org.ofbiz.registry"
 		title="Member File actions">
 		<field name="actionId" type="id-ne"></field>
-		<field name="fileActionTypeId" type="id-ne"></field>
+		<field name="fileActionTypeId" type="name"></field>
 		<field name="partyId" type="id"></field>
 		<field name="actionBy" type="id-ne"></field>
 		<field name="actionDate" type="date-time"></field>
@@ -123,21 +143,24 @@
 		<field name="DocumentTypeId" type="id-ne"></field>
 		<field name="partyId" type="id-ne" ></field>
 		<field name="referenceNo" type="name" ></field>
+		<field name="documentFolio" type="name" ></field>
 		<field name="volumeIdentifier" type="name" ></field>
 		<field name="documentValue" type="currency-amount" ></field>
 		<field name="receiptDate" type="date-time"></field>
+		<field name="archiveDate" type="name"></field>
+		<field name="archivestatus" type="name" ></field>
 		<prim-key field="documentId" />
 		<relation type="one" fk-name="DOCUMENT_FILE" rel-entity-name="RegistryFiles">
 			<key-map field-name="partyId" />
 		</relation>
 	</entity>
 
-	<entity entity-name="RegistryFileLocations" package-name="org.ofbiz.registry"
+	<entity entity-name="RegistryFileActivity" package-name="org.ofbiz.registry"
 		title="Member Files">
-		<field name="locationId" type="id-ne"></field>
-		<field name="fileLocation" type="name" not-null="true"></field>
-		<field name="description" type="description" not-null="true"></field>
-		<prim-key field="locationId" />
+		<field name="activityId" type="id-ne"></field>
+		<field name="activity" type="name" not-null="true"></field>
+		<field name="activityDuration" type="name" not-null="true"></field>
+		<prim-key field="activityId" />
 	</entity>
 	
 	<entity entity-name="RegistryFileVolume" package-name="org.ofbiz.registry"
@@ -145,6 +168,9 @@
 		<field name="volumeId" type="id-ne"></field>
 		<field name="partyId" type="id-ne"></field>
 		<field name="volumeIdentifier" type="name"></field>
+		<field name="volumeStatus" type="name"></field>
+		<field name="fileBox" type="name"></field>
+		<field name="fileBoxCode" type="name"></field>
 		<prim-key field="volumeId" />
 	</entity>
 	
@@ -163,6 +189,59 @@
 	    </view-link>
     </view-entity>
 
+	
+	  <entity entity-name="memberPlusPerson" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="partyId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="partyId" type="id-ne"></field>
+       <field name="firstName" type="name"></field>
+       <field name="lastName" type="name"></field>
+       <field name="payrollNo" type="name"></field>
+       <field name="memberNumber" type="name"></field>
+       <field name="idNumber" type="name"></field>
+       <field name="employmentStatus" type="name"></field>
+       <field name="fileType" type="name"></field>
+        <field name="isAuthorized" type="name"></field>
+        <field name="securityLevel" type="name"></field>
+       <prim-key field="partyId"/>
+    </entity>
+    
+    
+      <entity entity-name="NonmemberPlusPersonRecords" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="entryNumber" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="objectName" type="name"></field>
+       <field name="securityLevel" type="name"></field>
+       <field name="physicalDescription" type="description"></field>
+       <field name="referenceSource" type="name"></field>
+       <field name="curatorDepartment" type="name"></field>
+       <field name="identifier" type="name"></field>
+       <field name="siteInformation" type="name"></field>
+       <field name="contentBrief" type="name"></field>
+       <field name="subjectInformation" type="name"></field>
+       <field name="relatedness" type="name"></field>
+       <field name="isAuthorized" type="name"></field>
+       <field name="acquistionDate" type="name"></field>
+       <field name="recordDate" type="name"></field>
+       <prim-key field="entryNumber"/>
+    </entity>
+    
+    <entity entity-name="RegistryFileSetting" package-name="org.ofbiz.registry"
+		title="Member Files">
+		<field name="setupId" type="id-ne"></field>
+		<field name="inactiveState" type="name"></field>
+		<field name="semiActiveState" type="name"></field>
+		<field name="archiveState" type="name"></field>
+		<prim-key field="setupId" />
+	</entity>
+	
+	 <entity entity-name="RegistryFileSubDocuments" package-name="org.ofbiz.registry"
+		title="Member Files">
+		<field name="subDocumentId" type="id-ne"></field>
+		<field name="documentId" type="name"></field>
+		<field name="subDocument" type="name"></field>
+		<field name="creationDate" type="date-time"></field>
+		<prim-key field="subDocumentId" />
+	</entity>
+	
 	
 	
 </entitymodel>

@@ -30,7 +30,21 @@ function togglefinAccountTransId(master) {
     getFinAccountTransRunningTotalAndBalances();
 }
 
-function getFinAccountTransRunningTotalAndBalances() {
+function getFinAccountTransRunningTotalAndBalances(indexValue, finAccountTransId) {
+
+    //alert ('my index ... '+indexValue);
+    var checkBoxId = '#finAccountTransId_'+indexValue
+    //alert(checkBoxId);
+    if (jQuery(checkBoxId).is(':checked'))
+    {
+      // alert('Save Y  for '+finAccountTransId);
+      //save
+      updateFinAccount('Y', finAccountTransId);
+    } else{
+      // alert('Save N for '+finAccountTransId);
+      updateFinAccount('N', finAccountTransId);
+    }
+
     var form = document.selectAllForm;
     var finAccountTransList = form.elements.length;
     var isSingle = true;
@@ -77,6 +91,31 @@ function getFinAccountTransRunningTotalAndBalances() {
         jQuery('#submitButton').attr('disabled', true);
     }
 }
+
+function updateFinAccount(status, finAccountTransId){
+  var updateurl = '/accounting/control/updateFinAccount';
+    jQuery.ajax({
+      url: updateurl,
+      async: false,
+      type: 'GET',
+      data: {'finAccountTransId': finAccountTransId, 'toggle': status},
+      success: function(data) {
+
+      }
+  });
+}
+function calculateReconBalances() {
+    jQuery.ajax({
+      url: 'calculateReconBalances',
+      async: false,
+      type: 'POST',
+      data: jQuery('#reconValues').serialize(),
+      success: function(data) {
+          jQuery('#showAdjustedCashBookBalance').html(data.showAdjustedCashBookBalance);
+          jQuery('#showAdjustedBankBalance').html(data.unpresentedChequesTotal);
+      }
+  });
+}
 </script>
 
 <div class="screenlet screenlet-body">
@@ -87,9 +126,105 @@ function getFinAccountTransRunningTotalAndBalances() {
         <span class="label" id="showFinAccountTransRunningTotal"></span>
       </div>
     </#if>
+    <#-- Custom Fields For Recon -->
+    <#if !grandTotal?exists>
+    <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <ul>
+        <li><a href="javascript:calculateReconBalances();">Refresh/Reload</a></li>
+        <li class="h3">Reconciliation Balancing Values</li>
+      </ul>
+      <br class="clear" />
+    </div>
+    <div class="screenlet-body">
+    <h3>
+    <form id="reconValues" method="post" name="reconValues" action="">
+    <table width="100%" border='0' cellspacing='0' cellpadding='0'>
+      <tr>
+        <td>
+          <table>
+            <tr>
+              <td>Cash Book Balance</td>
+                <#if cashBookTotal?has_content>
+                  <td><input type='text' size='15' maxlength='100' name='bankBalance' id="showCashBookTotal" value="KES ${cashBookTotal?if_exists}" readonly="" /></td>
+                <#else>
+                  <td id="showCashBookTotal"></td>
+                </#if>
+            </tr>
+            <tr>
+              <td>Add Unreceipted Bankings</td>
+                <#if unreceiptedBankingsTotal?has_content>
+              <td>
+                <input type='text' size='15' maxlength='100' name='showUnreceiptedBankingsTotal' id="showUnreceiptedBankingsTotal" value="KES ${unreceiptedBankingsTotal?if_exists}" readonly="" />
+              </td>
+                <#else>
+                  <td id="showUnreceiptedBankingsTotal"></td>
+                </#if>
+            </tr>
+            <tr>
+              <td>Less Unidentified Debits</td>
+                <#if unidentifiedDebitsTotal?has_content>
+                  <#-- <td id="showUnidentifiedDebitsTotal">KES ${unidentifiedDebitsTotal?if_exists}</td> -->
+              <td>
+                <input type='text' size='15' maxlength='100' name='showUnidentifiedDebitsTotal' id="showUnidentifiedDebitsTotal" value="KES ${unidentifiedDebitsTotal?if_exists}" readonly="" />
+              </td>
+                <#else>
+                  <td id="showUnidentifiedDebitsTotal"></td>
+                </#if>
+            </tr>
+            <tr><td colspan="4"><hr /></tr>
+            <tr>
+              <td>Adjusted Cash Book Balance</td>
+              <td id="showAdjustedCashBookBalance">
+                <#if adjustedCashBookBalance?has_content>
+                  KES ${adjustedCashBookBalance?if_exists}
+                </#if>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table>
+            <tr>
+              <td>Bank Balance</td>
+              <td><input type='text' size='15' maxlength='100' name='bankBalance' value=""/></td>
+            </tr>
+            <tr>
+              <td>Add Uncredited Bankings</td>
+              <#if uncreditedBankingsTotal?has_content>
+                <td><input type='text' size='15' maxlength='100' name='showUncreditedBankingsTotal' id="showUncreditedBankingsTotal" value="KES ${uncreditedBankingsTotal?if_exists}" readonly="" /></td>
+              <#else>
+              <td id="showUncreditedBankingsTotal"></td>
+              </#if>
+            </tr>
+            <tr>
+              <td>Less Unpresented Cheques</td>
+              <#if unpresentedChequesTotal?has_content>
+              <td>
+                <input type='text' size='15' maxlength='100' name='showUnpresentedChequesTotal' id="showUnpresentedChequesTotal" value="KES ${unpresentedChequesTotal?if_exists}" readonly="" />
+              </td>
+              <#else>
+              <td id="showUnpresentedChequesTotal"></td>
+              </#if>
+            </tr>
+            <tr><td colspan="4"><hr /></tr>
+            <tr>
+              <td>Adjusted Bank Statement Balance</td>
+              <td id="showAdjustedBankBalance">KES 500000</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </form>
+    </h3>
+  </div>
+  </div>
+    </#if>
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal?exists>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>
       <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
+      <input name="uncreditedBankingsTotal" id="uncreditedBankingsTotal" type="hidden" value="60"/>
       <input name="statusId" type="hidden" value="${parameters.statusId?if_exists}"/>
       <#if !grandTotal?exists>
         <input name="reconciledBalance" type="hidden" value="${(glReconciliation.reconciledBalance)?if_exists}"/>
@@ -131,7 +266,7 @@ function getFinAccountTransRunningTotalAndBalances() {
           <th>${uiLabelMap.CommonStatus}</th>
           <th>${uiLabelMap.CommonComments}</th>
           <#if grandTotal?exists>
-            <th>Transactions Actions</th>
+            <th>${uiLabelMap.AccountingCancelTransactionStatus}</th>
           </#if>
           <#if !grandTotal?exists>
             <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
@@ -169,6 +304,7 @@ function getFinAccountTransRunningTotalAndBalances() {
           </#if>
           <#if finAccountTrans.glReconciliationId?has_content>
             <#assign glReconciliation = delegator.findOne("GlReconciliation", {"glReconciliationId" : finAccountTrans.glReconciliationId}, true)>
+
             <input name="openingBalance_o_${finAccountTrans_index}" type="hidden" value="${glReconciliation.openingBalance?if_exists}"/>
           </#if>
           <#if finAccountTrans.partyId?has_content>
@@ -250,11 +386,11 @@ function getFinAccountTransRunningTotalAndBalances() {
             <td><#if paymentMethodType?has_content>${paymentMethodType.description?if_exists}</#if></td>
             <td><#if status?has_content>${status.description?if_exists}</#if></td>
             <td>${finAccountTrans.comments?if_exists}</td>
+            <input name="toggle" type="hidden" value="${finAccountTrans.toggle?if_exists}"/>
             <#if grandTotal?exists>
               <td>
                 <#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
                   <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">${uiLabelMap.CommonCancel}</a>
-                  <a href="javascript:document.approveFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">Approve</a>
                 </#if>
               </td>
             </#if>
@@ -272,13 +408,14 @@ function getFinAccountTransRunningTotalAndBalances() {
             </#if>
             <#if ((glReconciliationId?has_content && glReconciliationId == "_NA_") && (glReconciliations?has_content && finAccountTransList?has_content)) || !grandTotal?exists>
               <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                <td><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances();"/></td>
+                <td><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances(${finAccountTrans_index}, ${finAccountTrans.finAccountTransId});"/></td>
               </#if>
             </#if>
           </tr>
           <#-- toggle the row color -->
           <#assign alt_row = !alt_row>
         </#list>
+        <#-- <input name="toggle" type="hidden" value="${finAccountTrans.toggle?if_exists}"> -->
       </table>
     </form>
     <#list finAccountTransList as finAccountTrans>
@@ -295,12 +432,6 @@ function getFinAccountTransRunningTotalAndBalances() {
             <input name="finAccountTransId" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="finAccountId" type="hidden" value="${finAccountTrans.finAccountId}"/>
             <input name="statusId" type="hidden" value="FINACT_TRNS_CANCELED"/>
-          </form>
-          <form name="approveFinAccountTrans_${finAccountTrans.finAccountTransId}" method="post" action="<@ofbizUrl>setFinAccountTransStatus</@ofbizUrl>">
-            <input name="noConditionFind" type="hidden" value="Y"/>
-            <input name="finAccountTransId" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
-            <input name="finAccountId" type="hidden" value="${finAccountTrans.finAccountId}"/>
-            <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
           </form>
         </#if>
       </#list>

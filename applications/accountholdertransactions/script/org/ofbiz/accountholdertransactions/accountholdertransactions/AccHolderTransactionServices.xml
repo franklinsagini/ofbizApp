@@ -388,8 +388,9 @@ under the License.
         <call-simple-method method-name="saveLoanRepayment" scope="inline"></call-simple-method>
         <!-- distribute repayment -->
         
+        
         <entity-one entity-name="LoanRepayment" value-field="loanRepayment">
-        	 <field-map field-name="loanRepaymentId" from-field="loanRepaymentId"/>
+        	 <field-map field-name="loanRepaymentId" value="${newEntity.loanRepaymentId}"/>
         </entity-one>
         
         <set field="repayLoan" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.repayLoan(loanRepayment, userLogin);}" type="String"/>
