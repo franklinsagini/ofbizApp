@@ -84,7 +84,7 @@ under the License.
                             <#if member?has_content>
                                <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined ${memberPartyId}</fo:block>
+                                <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
                         

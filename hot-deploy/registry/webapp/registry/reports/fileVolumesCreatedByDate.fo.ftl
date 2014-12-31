@@ -24,65 +24,42 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-         DURATION BETWEEN FILE REQUEST AND ISSUANCE REPORT
+         FILES VOLUMES CREATED BETWEEN ${parameters.startDate} AND ${parameters.endDate} 
     </fo:block>
     <fo:block><fo:leader/></fo:block>
+   
 
 <#if activities?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="120pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Owner</fo:block>
+                        <fo:block text-align="left">File Volume Owner</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Issued By</fo:block>
+                        <fo:block text-align="left">Volume Identifier</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Issued To</fo:block>
+                        <fo:block text-align="left">Volume Status</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Request Reason</fo:block>
+                        <fo:block text-align="left">Date Created</fo:block>
                     </fo:table-cell>
                     
-                    
-                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Date Issued</fo:block>
-                    </fo:table-cell>
-                    
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Duration From Request (Given In Days)</fo:block>
-                    </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
 
                   <#list activities as activity>
-                   <#if activity.carriedBy?has_content>
-                        <#assign carriedBy = delegator.findOne("Person", {"partyId" : activity.carriedBy}, false)/>
-                    </#if>
-                    
                      <#if activity.partyId?has_content>
                     	<#assign memberPartyId = activity.partyId?number />
                         <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
-                    </#if>
-                    
-                    <#if activity.actionBy?has_content>
-                        <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
-                    </#if>
-                    
-                  
-                    
-                    <#if activity.currentPossesser?has_content>
-                        <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
                     </#if>
                      <fo:table-row>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -93,32 +70,15 @@ under the License.
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if actionBy?has_content>
-                                <fo:block>${actionBy.firstName?if_exists} ${actionBy.lastName?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
+                            <fo:block>${activity.volumeIdentifier?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if activity.currentPossesser?if_exists == "REGISTRY">
-                                <fo:block>${activity.currentPossesser?if_exists}</fo:block>
-                            <#else>
-                                 <fo:block>${currentPossesser.firstName?if_exists} ${currentPossesser.lastName?if_exists}</fo:block>
-                            </#if>
+                            <fo:block>${activity.volumeStatus?if_exists}</fo:block>
                         </fo:table-cell>
-                        
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.Reason?if_exists}</fo:block>
-                        </fo:table-cell>
-                        
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.actionDate?if_exists}</fo:block>
-                        </fo:table-cell>
-                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.interActivityDuration?if_exists}</fo:block>
+                            <fo:block>${activity.createdStamp?if_exists}</fo:block>
                         </fo:table-cell>
-                        
+                       
                      </fo:table-row>
                   </#list>
 
