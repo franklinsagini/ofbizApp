@@ -917,7 +917,75 @@ under the License.
 
 
     <!--Additional Performance Management Views -->
-
+	
+	 <request-map uri="perfGoalsDef">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="perfGoalsDef"
+			save-home-view="true" />
+	</request-map>
+    <request-map uri="createPerfGoalsDef">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPerfGoalsDef"/>
+        <response name="success" type="request-redirect-noparam" value="perfGoalsDef"/>
+        <response name="error" type="view" value="perfGoalsDef" />
+    </request-map>
+    <request-map uri="updatePerfGoalsDef">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePerfGoalsDef"/>
+        <response name="success" type="request-redirect-noparam" value="perfGoalsDef"/>
+		<response name="error" type="view" value="perfGoalsDef" />
+    </request-map>
+    <request-map uri="deletePerfGoalsDef">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePerfGoalsDef"/>
+        <response name="success" type="request-redirect-noparam" value="perfGoalsDef"/>
+        <response name="error" type="view" value="perfGoalsDef" />
+    </request-map>
+    
+    <request-map uri="perfGoals">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="perfGoals"
+			save-home-view="true" />
+	</request-map>
+    <request-map uri="createPerfGoals">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPerfGoals"/>
+        <response name="success" type="request-redirect" value="perfGoals">
+        	<redirect-parameter name="goalDef"/>
+        	<redirect-parameter name="perfGoalsDefId"/>
+        </response>
+        <response name="error" type="view" value="perfGoals" />
+    </request-map>
+    <request-map uri="updatePerfGoals">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePerfGoals"/>
+        <response name="success" type="request-redirect" value="perfGoals">
+        	<redirect-parameter name="goalDef"/>
+        	<redirect-parameter name="perfGoalsDefId"/>
+        </response>
+		<response name="error" type="view" value="perfGoals" />
+    </request-map>
+    <request-map uri="deletePerfGoals">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePerfGoals"/>
+        <response name="success" type="request-redirect" value="perfGoals">
+        	<redirect-parameter name="goalDef"/>
+        	<redirect-parameter name="perfGoalsDefId"/>
+        </response>
+        <response name="error" type="view" value="perfGoals" />
+    </request-map>
+    
+    <request-map uri="FindPerfPositions">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="FindPerfPositions"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="ManagePerfObjectives">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="ManagePerfObjectives"
+			save-home-view="true" />
+	</request-map>
+	
     <request-map uri="kpidefinition">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="kpidefinition"
@@ -966,9 +1034,9 @@ under the License.
         <response name="error" type="view" value="kpiachievementstatus" />
     </request-map>
 
-    <request-map uri="kpiglobaltargets">
+    <request-map uri="kpipositionobjectives">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="kpiglobaltargets"
+		<response name="success" type="view" value="kpipositionobjectives"
 			save-home-view="true" />
 	</request-map>
 	<request-map uri="kpibranchtargets">
@@ -985,20 +1053,20 @@ under the License.
     <request-map uri="createGlobalKPITarget">
         <security https="true" auth="true"/>
         <event type="service" invoke="createGlobalKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpiglobaltargets"/>
-        <response name="error" type="view" value="kpiglobaltargets" />
+        <response name="success" type="request-redirect-noparam" value="kpipositionobjectives"/>
+        <response name="error" type="view" value="kpipositionobjectives" />
     </request-map>
     <request-map uri="updateGlobalKPITarget">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateGlobalKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpiglobaltargets"/>
-        <response name="error" type="view" value="kpiglobaltargets" />
+        <response name="success" type="request-redirect-noparam" value="kpipositionobjectives"/>
+        <response name="error" type="view" value="kpipositionobjectives" />
     </request-map>
     <request-map uri="deleteGlobalKPITarget">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteGlobalKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpiglobaltargets"/>
-        <response name="error" type="view" value="kpiglobaltargets" />
+        <response name="success" type="request-redirect-noparam" value="kpipositionobjectives"/>
+        <response name="error" type="view" value="kpipositionobjectives" />
     </request-map>
 
     <request-map uri="createBranchKPITarget">
@@ -1642,10 +1710,8 @@ under the License.
         <response name="success" type="view" value="EditEmployeeLeaves"/>
         <response name="error" type="view" value="EditEmployeeLeaves"/>
     </request-map>
-
-
-
-
+    
+    
    <!--  <request-map uri="updateEmplLeave">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplLeave"/>
@@ -2833,7 +2899,22 @@ under the License.
 
 	<!-- ========================Training Reports========================== -->
 	<request-map uri="trainingSummaryReport"><security https="true" auth="true"/><response name="success" type="view" value="trainingSummaryReport"/></request-map>
+
+	<request-map uri="addAllStaffToTraining">
+	 	<security https="true" auth="true" />
+        <event type="java" path="org.ofbiz.humanres.AddAllStaffToTraining" invoke="addAllStaff" ></event>
+        <response name="success" type="view" value="TrainingCalendar">
+				<redirect-parameter name="form"/>
+				<redirect-parameter name="parentTypeId"/>
+				<redirect-parameter name="period"/>
+				<redirect-parameter name="start"/>
+				<redirect-parameter name="workEffortId"/>
+		</response>
+		<response name="error" type="view" value="TrainingCalendar" />
+     </request-map>
+	
 	<request-map uri="LookupEmployee"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployee"/></request-map>
+
 
 
 
@@ -2951,9 +3032,13 @@ under the License.
     <view-map name="EditPerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviews"/>
     <view-map name="EditPerfReviewItems" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviewItems"/>
     <view-map name="PerfManagement" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfManagement"/>
+    <view-map name="perfGoalsDef" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoalDef"/>
+    <view-map name="perfGoals" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoal"/>
+    <view-map name="FindPerfPositions" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindPerformancePositions"/>
+    <view-map name="ManagePerfObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#ManagePerfObjectives"/>
     <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
     <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>
-    <view-map name="kpiglobaltargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIGlobalTargets"/>
+    <view-map name="kpipositionobjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIPositionObjectives"/>
     <view-map name="kpibranchtargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIBranchTargets"/>
     <view-map name="kpidepartmenttargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDepartmentTargets"/>
 

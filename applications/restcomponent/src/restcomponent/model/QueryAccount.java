@@ -10,7 +10,7 @@ public class QueryAccount {
 	private List<Account> listBalances;
 	private List<Transaction> listMinistatement;
 	private List<Loan> listLoans;
-	private Result result;
+	private Results results;
 	public String getTelephoneNo() {
 		return telephoneNo;
 	}
@@ -41,11 +41,11 @@ public class QueryAccount {
 	public void setListLoans(List<Loan> listLoans) {
 		this.listLoans = listLoans;
 	}
-	public Result getResult() {
-		return result;
+	public Results getResults() {
+		return results;
 	}
-	public void setResult(Result result) {
-		this.result = result;
+	public void setResults(Results results) {
+		this.results = results;
 	}
 	
 

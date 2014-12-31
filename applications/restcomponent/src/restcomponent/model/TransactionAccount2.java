@@ -1,6 +1,6 @@
 package restcomponent.model;
 
-public class TransactionAccount {
+public class TransactionAccount2 {
 	
 	private String transactionId;
 	private String telephoneNo;
@@ -8,13 +8,14 @@ public class TransactionAccount {
 	private Account account;
 	private Account account2;
 	private String accountNo;
+	private String accountName;
 	private String description;
 	private Double amount;
 	private String reference;
 	private Double charge;
 	private String transactionType;
 	private String loanNo;
-	private Result result;
+	private Results results;
 
 	
 	public String getReference() {
@@ -71,11 +72,12 @@ public class TransactionAccount {
 	public void setLoanNo(String loanNo) {
 		this.loanNo = loanNo;
 	}
-	public Result getResult() {
-		return result;
+	
+	public Results getResults() {
+		return results;
 	}
-	public void setResult(Result result) {
-		this.result = result;
+	public void setResults(Results results) {
+		this.results = results;
 	}
 	public Account getAccount() {
 		return account;
@@ -89,5 +91,13 @@ public class TransactionAccount {
 	public void setAccount2(Account account2) {
 		this.account2 = account2;
 	}
+	public String getAccountName() {
+		return accountName;
+	}
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+	
+	
 	
 }

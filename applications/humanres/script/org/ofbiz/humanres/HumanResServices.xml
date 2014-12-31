@@ -455,6 +455,59 @@
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
+	  <!-- Perf Goal Definition -->
+   <simple-method method-name="createPerfGoalsDef" short-description="create PerfGoalsDef">
+        <make-value entity-name="PerfGoalsDef" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PerfGoalsDef" field="perfGoalsDefId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="perfGoalsDefId" field="newEntity.perfGoalsDefId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePerfGoalsDef" short-description="Update PerfGoalsDef">
+        <entity-one entity-name="PerfGoalsDef" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePerfGoalsDef" short-description="Delete PerfGoalsDef">
+        <entity-one entity-name="PerfGoalsDef" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
+    
+     <!-- Perf Goals -->
+   <simple-method method-name="createPerfGoals" short-description="create PerfGoals">
+        <make-value entity-name="PerfGoals" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PerfGoals" field="perfGoalsId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="perfGoalsId" field="newEntity.perfGoalsId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePerfGoals" short-description="Update PerfGoals">
+        <entity-one entity-name="PerfGoals" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePerfGoals" short-description="Delete PerfGoals">
+        <entity-one entity-name="PerfGoals" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
+	
+	
 	<simple-method method-name="createKPIDefinition" short-description="create KPI Definition">
         <make-value entity-name="KeyPerformanceIndicators" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>

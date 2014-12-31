@@ -2,24 +2,18 @@ package restcomponent;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import net.sf.json.JSONObject;
 
 import org.joda.time.DateTime;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
@@ -39,15 +33,14 @@ import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.msaccomanagement.MSaccoManagementServices;
 import org.ofbiz.msaccomanagement.MSaccoStatus;
-import org.ofbiz.service.ServiceUtil;
 
 import restcomponent.model.Account;
 import restcomponent.model.Application;
 import restcomponent.model.Loan;
 import restcomponent.model.MSaccoTransaction;
 import restcomponent.model.QueryAccount;
-import restcomponent.model.Result;
-import restcomponent.model.TransactionAccount;
+import restcomponent.model.Results;
+import restcomponent.model.TransactionResult;
 
 import com.google.gson.Gson;
 
@@ -64,6 +57,10 @@ public class MSaccoServices {
 	public static String QUERY_TYPE_ACCOUNT_BALANCES = "ACCOUNT_BALANCES";
 	public static String QUERY_TYPE_LOANS = "LOANS";
 	public static String QUERY_TYPE_MINISTATEMENT = "MINISTATEMENT";
+	
+	public static String TRANSACTION_LOANREPAYMENT = "Loan_Repayment";
+	public static String TRANSACTION_WITHDRAWAL = "Withdrawal";
+	public static String TRANSACTION_DEPOSIT = "Deposit ";
 	/****
 	 * Gets the Members with new MSacco Applications - Not sent to Cortec
 	 * */
@@ -117,7 +114,7 @@ public class MSaccoServices {
 	}
 	
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/query/{phoneNumber}/{type}")
 	public Response query(@PathParam("phoneNumber") String phoneNumber, @PathParam("type") String type) {
 		
@@ -141,10 +138,13 @@ public class MSaccoServices {
 			queryAccount.setListMinistatement(addMinistatement(phoneNumber));
 		}
 		
-		Result result = new Result();
-		result.setResultCode("0");
-		result.setResultDescription("Success");
-		queryAccount.setResult(result);
+		Results results = new Results();
+		results.setResultCode("0");
+		results.setResultDesc("Success");
+		
+		//queryAccount.
+		
+		queryAccount.setResults(results);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(queryAccount);
@@ -360,7 +360,7 @@ public class MSaccoServices {
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
-		TransactionAccount transaction = new TransactionAccount();
+		TransactionResult transaction = new TransactionResult();
 		ATMTransaction atmtransaction = new ATMTransaction();
 //		transaction.setPhoneNumber(phoneNumber);
 //		transaction.setStatus(msaccoStatus.getStatus());
@@ -393,20 +393,31 @@ public class MSaccoServices {
 							"memberAccountId"));
 //			transaction.setMemberAccountId(memberAccount
 //					.getLong("memberAccountId"));
-			transaction.setAccountNo(memberAccount.getString("accountNo"));
-			transaction.setReference(reference);
+			Account account = new Account();
+			account.setAccountNo(memberAccount.getString("accountNo"));
+			account.setAccountName(memberAccount.getString("accountName"));
+		
+			//transaction.setAccount(account);
+			//transaction.set
+			//transaction.setReference(reference);
 			transaction.setTransactionId(transactionId);
-			
-			Result result = new Result();
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			transaction.setAccountName(memberAccount.getString("accountName"));
+			transaction.setTransactionId(transactionId);
+			transaction.setReference(reference);
+
+			Results results = new Results();
 			if (atmtransaction.getStatus().equals("SUCCESS")){
-				result.setResultCode("0");
-				result.setResultDescription("Success");
+				results.setResultCode("0");
+				results.setResultDesc("Success");
 			} else{
-				result.setResultCode("-1");
-				result.setResultDescription("Failure");
+				results.setResultCode("-1");
+				results.setResultDesc("Failure");
 			}
-			transaction.setResult(result);
-			transaction.setTransactionType("Withdrawal");
+			//transaction.g
+		//	transaction.setResults(results);
+			transaction.setResults(results);
+			transaction.setTranstype("Withdrawal");
 		}
 
 		Gson gson = new Gson();
@@ -427,7 +438,7 @@ public class MSaccoServices {
 		msaccotransaction.setPhoneNumber(phoneNumber);
 		msaccotransaction.setStatus(msaccoStatus.getStatus());
 		
-		TransactionAccount transaction = new TransactionAccount();
+		TransactionResult transaction = new TransactionResult();
 		transaction.setTelephoneNo(phoneNumber);
 
 		if (msaccoStatus.getStatus().equals("SUCCESS"))
@@ -437,20 +448,30 @@ public class MSaccoServices {
 			GenericValue memberAccount = AccHolderTransactionServices
 					.getMemberAccount(msaccoStatus.getMsaccoApplication().getLong(
 							"memberAccountId"));
-			transaction.setAccountNo(memberAccount.getString("accountNo"));
-			transaction.setReference(reference);
-			transaction.setTransactionId(transactionId);
 			
-			Result result = new Result();
+			Account account = new Account();
+			account.setAccountNo(memberAccount.getString("accountNo"));
+			account.setAccountName(memberAccount.getString("accountName"));
+			
+			//transaction.setAccount(account);
+//			transaction.setAccountNo(memberAccount.getString("accountNo"));
+//			transaction.setAccountName(memberAccount.getString("accountName"));
+//			transaction.setReference(reference);
+			transaction.setTransactionId(transactionId);
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			transaction.setAccountName(memberAccount.getString("accountName"));
+			transaction.setReference(reference);
+			
+			Results results = new Results();
 			if (msaccoStatus.getStatus().equals("SUCCESS")){
-				result.setResultCode("0");
-				result.setResultDescription("Success");
+				results.setResultCode("0");
+				results.setResultDesc("Success");
 			} else{
-				result.setResultCode("-1");
-				result.setResultDescription("Failure");
+				results.setResultCode("-1");
+				results.setResultDesc("Failure");
 			}
-			transaction.setResult(result);
-			transaction.setTransactionType("Deposit");
+			transaction.setResults(results);
+			transaction.setTranstype("Deposit");
 		} else{
 			msaccotransaction.setStatus("CANNOTDEPOSIT");
 		}
@@ -496,7 +517,7 @@ public class MSaccoServices {
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
-		TransactionAccount transaction = new TransactionAccount();
+		TransactionResult transaction = new TransactionResult();
 		transaction.setTelephoneNo(phoneNumber);
 
 		
@@ -523,19 +544,19 @@ public class MSaccoServices {
 			
 			LoanRepayments.repayLoan(loanRepayment, userLogin);
 			
-			transaction.setReference(reference);
+			//transaction.setReference(reference);
 			transaction.setTransactionId(transactionId);
 			
-			Result result = new Result();
+			Results results = new Results();
 			if (msaccoStatus.getStatus().equals("SUCCESS")){
-				result.setResultCode("0");
-				result.setResultDescription("Success");
+				results.setResultCode("0");
+				results.setResultDesc("Success");
 			} else{
-				result.setResultCode("-1");
-				result.setResultDescription("Failure");
+				results.setResultCode("-1");
+				results.setResultDesc("Failure");
 			}
-			transaction.setResult(result);
-			transaction.setTransactionType("LoanRepayment");
+			transaction.setResults(results);
+			transaction.setTranstype("LoanRepayment");
 		} else{
 			msaccotransaction.setStatus("NOLOANSTOREPAY");
 		}
