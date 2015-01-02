@@ -285,6 +285,50 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+     <screen name="fileRequestByActivityPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://registry/webapp/registry/reports/requestByActivity.groovy"/>
+              
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/requestByActivity.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="filesInCirculationPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://registry/webapp/registry/reports/filesInCirculation.groovy"/>
+              
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/filesInCirculation.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="RegistryReports">
         <section>
@@ -359,6 +403,18 @@ under the License.
                          <container style="righthalf">
                             <screenlet title="Report on Files Volumes Created">
                                 <include-form name="fileVolumesCreatedByDateForm" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
+                            <screenlet title="Report on Files Requests As Per Activity">
+                                <include-form name="fileRequestByActivityForm" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Report on Files In Circulation">
+                                <include-form name="filesInCirculationForm" location="component://registry/widget/ReportForms.xml"/>d
                             </screenlet>
                         </container>
                         <container style="clear"/>
