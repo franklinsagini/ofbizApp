@@ -980,6 +980,16 @@ under the License.
 		<response name="success" type="view" value="FindPerfPositions"
 			save-home-view="true" />
 	</request-map>
+	<request-map uri="PerfBranches">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="PerfBranches"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="PerfDepartments">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="PerfDepartments"
+			save-home-view="true" />
+	</request-map>
 	<request-map uri="ManagePerfObjectives">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="ManagePerfObjectives"
@@ -1034,77 +1044,135 @@ under the License.
         <response name="error" type="view" value="kpiachievementstatus" />
     </request-map>
 
-    <request-map uri="kpipositionobjectives">
+    <request-map uri="positionObjectives">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="kpipositionobjectives"
+		<response name="success" type="view" value="positionObjectives"
 			save-home-view="true" />
 	</request-map>
-	<request-map uri="kpibranchtargets">
+	
+    <request-map uri="createPositionObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPositionObjectives"/>
+        <response name="success" type="request-redirect" value="positionObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="positionObjectives" />
+    </request-map>
+    <request-map uri="updatePositionObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePositionObjectives"/>
+        <response name="success" type="request-redirect" value="positionObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="positionObjectives" />
+    </request-map>
+    <request-map uri="deletePositionObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePositionObjectives"/>
+        <response name="success" type="request-redirect" value="positionObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="positionObjectives" />
+    </request-map>
+    
+    
+    <request-map uri="branchObjectives">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="kpibranchtargets"
+		<response name="success" type="view" value="branchObjectives"
 			save-home-view="true" />
 	</request-map>
-	<request-map uri="kpidepartmenttargets">
+	
+
+    <request-map uri="createBranchObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBranchObjectives"/>
+        <response name="success" type="request-redirect" value="branchObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="branchObjectives" />
+    </request-map>
+    <request-map uri="updateBranchObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBranchObjectives"/>
+        <response name="success" type="request-redirect" value="branchObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="branchObjectives" />
+    </request-map>
+    <request-map uri="deleteBranchObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteBranchObjectives"/>
+        <response name="success" type="request-redirect" value="branchObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="branchObjectives" />
+    </request-map>
+    
+
+    <request-map uri="departmentObjectives">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="kpidepartmenttargets"
+		<response name="success" type="view" value="departmentObjectives"
 			save-home-view="true" />
 	</request-map>
-
-    <request-map uri="createGlobalKPITarget">
+    <request-map uri="createDepartmentObjectives">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createGlobalKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpipositionobjectives"/>
-        <response name="error" type="view" value="kpipositionobjectives" />
+        <event type="service" invoke="createDepartmentObjectives"/>
+        <response name="success" type="request-redirect" value="departmentObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="departmentObjectives" />
     </request-map>
-    <request-map uri="updateGlobalKPITarget">
+    <request-map uri="updateDepartmentObjectives">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateGlobalKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpipositionobjectives"/>
-        <response name="error" type="view" value="kpipositionobjectives" />
+        <event type="service" invoke="updateDepartmentObjectives"/>
+        <response name="success" type="request-redirect" value="departmentObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="departmentObjectives" />
     </request-map>
-    <request-map uri="deleteGlobalKPITarget">
+    <request-map uri="deleteDepartmentObjectives">
         <security https="true" auth="true"/>
-        <event type="service" invoke="deleteGlobalKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpipositionobjectives"/>
-        <response name="error" type="view" value="kpipositionobjectives" />
-    </request-map>
-
-    <request-map uri="createBranchKPITarget">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createBranchKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpibranchtargets"/>
-        <response name="error" type="view" value="kpibranchtargets" />
-    </request-map>
-    <request-map uri="updateBranchKPITarget">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateBranchKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpibranchtargets"/>
-        <response name="error" type="view" value="kpibranchtargets" />
-    </request-map>
-    <request-map uri="deleteBranchKPITarget">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deleteBranchKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpibranchtargets"/>
-        <response name="error" type="view" value="kpibranchtargets" />
-    </request-map>
-
-    <request-map uri="createDepartmentKPITarget">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createDepartmentKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpidepartmenttargets"/>
-        <response name="error" type="view" value="kpidepartmenttargets" />
-    </request-map>
-    <request-map uri="updateDepartmentKPITarget">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateDepartmentKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpidepartmenttargets"/>
-        <response name="error" type="view" value="kpidepartmenttargets" />
-    </request-map>
-    <request-map uri="deleteDepartmentKPITarget">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deleteDepartmentKPITarget"/>
-        <response name="success" type="request-redirect-noparam" value="kpidepartmenttargets"/>
-        <response name="error" type="view" value="kpidepartmenttargets" />
+        <event type="service" invoke="deleteDepartmentObjectives"/>
+        <response name="success" type="request-redirect" value="departmentObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="departmentObjectives" />
     </request-map>
 
     <request-map uri="perfRatingType">
@@ -3035,12 +3103,15 @@ under the License.
     <view-map name="perfGoalsDef" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoalDef"/>
     <view-map name="perfGoals" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoal"/>
     <view-map name="FindPerfPositions" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindPerformancePositions"/>
+    <view-map name="PerfBranches" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceBranches"/>
+    <view-map name="PerfDepartments" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceDepartments"/>
     <view-map name="ManagePerfObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#ManagePerfObjectives"/>
     <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
     <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>
-    <view-map name="kpipositionobjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIPositionObjectives"/>
-    <view-map name="kpibranchtargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIBranchTargets"/>
-    <view-map name="kpidepartmenttargets" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDepartmentTargets"/>
+    
+    <view-map name="positionObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPositionObjectives"/>
+    <view-map name="branchObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewBranchObjectives"/>
+    <view-map name="departmentObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewDepartmentObjectives"/>
 
     <view-map name="perfRatingType" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfRatingTypes"/>
 
