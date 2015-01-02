@@ -24,59 +24,85 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-         FILES VOLUMES CREATED BETWEEN [${parameters.startDate}] AND [${parameters.endDate}]
+        STAFF RESUMPTION SUMMARY REPORT
     </fo:block>
     <fo:block><fo:leader/></fo:block>
    
-
 <#if activities?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="100pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Volume Owner</fo:block>
+                        <fo:block text-align="left">Staff Payroll number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Volume Identifier</fo:block>
+                        <fo:block text-align="left">Staff Names</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Volume Status</fo:block>
+                        <fo:block text-align="left">Leave Type</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Date Created</fo:block>
+                        <fo:block text-align="left">Leave Duration</fo:block>
                     </fo:table-cell>
                     
+                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Leave End</fo:block>
+                    </fo:table-cell>
+                    
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Resumption Date</fo:block>
+                    </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
 
                   <#list activities as activity>
-                     <#if activity.partyId?has_content>
-                    	<#assign memberPartyId = activity.partyId?number />
-                        <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
+                    <#if activity.partyId?has_content>
+                        <#assign staff = delegator.findOne("Person", {"partyId" : activity.partyId}, false)/>
+                    </#if>
+                     <#if activity.leaveTypeId?has_content>
+                        <#assign leaveType = delegator.findOne("EmplLeaveType", {"leaveTypeId" : activity.leaveTypeId}, false)/>
                     </#if>
                      <fo:table-row>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if member?has_content>
-                                  <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
+                      <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if staff?has_content>
+                                <fo:block>${staff.employeeNumber?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if staff?has_content>
+                                <fo:block>${staff.firstName?if_exists} ${staff.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if leaveType?has_content>
+                                <fo:block>${leaveType.description?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.volumeIdentifier?if_exists}</fo:block>
+                            <fo:block>${activity.leaveDuration?if_exists}</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.volumeStatus?if_exists}</fo:block>
+                        
+                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.thruDate?if_exists}</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.createdStamp?if_exists}</fo:block>
+                        
+                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.resumptionDate?if_exists}</fo:block>
                         </fo:table-cell>
                        
                      </fo:table-row>

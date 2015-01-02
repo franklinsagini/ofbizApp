@@ -24,61 +24,60 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-         FILES VOLUMES CREATED BETWEEN [${parameters.startDate}] AND [${parameters.endDate}]
+      FILES IN CIRCULATION AND IN CUSTODY OF 
+         <#assign action_officer = delegator.findOne("Person", {"partyId" : partyId}, false)/>
+        [ ${action_officer.firstName} ${action_officer.lastName}]
     </fo:block>
     <fo:block><fo:leader/></fo:block>
-   
-
 <#if activities?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="120pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="120pt"/>
             <fo:table-column column-width="120pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Volume Owner</fo:block>
+                        <fo:block text-align="left">File Owner</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Volume Identifier</fo:block>
+                        <fo:block text-align="left">Member Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Volume Status</fo:block>
+                        <fo:block text-align="left">Member Payroll Number</fo:block>
                     </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Date Created</fo:block>
+                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Date File Issued</fo:block>
                     </fo:table-cell>
-                    
+                   
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
 
                   <#list activities as activity>
-                     <#if activity.partyId?has_content>
-                    	<#assign memberPartyId = activity.partyId?number />
-                        <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
-                    </#if>
                      <fo:table-row>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if member?has_content>
-                                  <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
+                      <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if activity?has_content>
+                                <fo:block>${activity.firstName?if_exists} ${activity.lastName?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.volumeIdentifier?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.volumeStatus?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.createdStamp?if_exists}</fo:block>
-                        </fo:table-cell>
                        
+                        
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.memberNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                         
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.payrollNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.issueDate?if_exists}</fo:block>
+                        </fo:table-cell>
+                        
                      </fo:table-row>
                   </#list>
 
@@ -91,7 +90,7 @@ under the License.
     </fo:block>
   </#if>
     <#else>
-        <fo:block text-align="center">No Employees Found With that ID</fo:block>
+        <fo:block text-align="center">Nothing Found</fo:block>
     </#if>
 </#escape>
 
