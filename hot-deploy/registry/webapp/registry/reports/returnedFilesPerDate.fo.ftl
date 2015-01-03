@@ -24,13 +24,10 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-         RETURNED FILE PER DATE REPORT
+         RETURNED FILES BETWEEN ${parameters.startDate} AND ${parameters.endDate} 
     </fo:block>
     <fo:block><fo:leader/></fo:block>
-    <#-- Employee Details -->
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Date: ${parameters.actionDate}
-    </fo:block>
+   
 
 <#if activities?has_content>
     <#-- REPORT BODY -->
@@ -134,7 +131,7 @@ under the License.
     </fo:block>
     <#else>
      <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">Nothing To Show For Date: ${parameters.actionDate} ${employee.lastName}</fo:block>
+        <fo:block text-align="center" font-size="14pt">Nothing To Show</fo:block>
     </fo:block>
   </#if>
     <#else>

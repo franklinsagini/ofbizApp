@@ -242,4 +242,53 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- printClearance -->
+         <screen name="printClearance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Clearance"/>
+                <set field="headerItem" value="printClearance"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="printClearance"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!--  property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+               <set field="loanClearId" from-field="parameters.loanClearId"/>
+               <entity-one value-field="LoanClear" entity-name="loanClear">
+               		<field-map field-name="loanClearId" from-field="parameters.loanClearId"/>
+               </entity-one>
+               
+               <set field="theLoanApplicationId" from-field="parameters.loanApplicationId" type="Long"/>
+               
+               <set field="loanProductId" value="${loanApplication.loanProductId}"/>
+               <entity-one value-field="loanProduct" entity-name="LoanProduct">
+               		<field-map field-name="loanProductId"  value="${loanApplication.loanProductId}"/>
+               </entity-one>
+               
+               <set field="memberId" value="${loanApplication.partyId}"/>
+                <set field="loanAmt" value="${loanApplication.loanAmt}" type="BigDecimal"/>
+                
+                <set field="currentContributionAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanCurrentContributionAmount(memberId, loanProductId);}" type="BigDecimal" global="true"/>
+                <set field="newMemberDepostContributionAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanNewContributionAmount(memberId, loanProductId, loanAmt);}" type="BigDecimal" global="true"/>
+               
+               	<set field="monthlyRepaymentAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getMonthlyLoanRepayment(loanApplicationId);}" type="BigDecimal"/>
+        		<set field="firstMonthInsuranceAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getInsuranceAmount(loanApplicationId);}" type="BigDecimal"/>
+        		<set field="loanDeductionAmt" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanRepayment(monthlyRepaymentAmt, firstMonthInsuranceAmt);}" type="BigDecimal"/>
+               
+                
+                <entity-one entity-name="LoanStatusLog" value-field="loanStatusLogContext"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://loanclearing/webapp/loanclearing/WEB-INF/actions/reports/loanClearing.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://loanclearing/webapp/loanclearing/reports/loanClearing.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

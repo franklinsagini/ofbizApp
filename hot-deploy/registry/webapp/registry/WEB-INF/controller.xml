@@ -329,7 +329,7 @@
 	<request-map uri="createfileActivity">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createfileActivity" />
-		<response name="success" type="view" value="editFileActivity" />
+		<response name="success" type="request-redirect-noparam" value="editFileActivity" />
 		<response name="error" type="view" value="editFileActivity" />
 	</request-map>
 
@@ -357,7 +357,7 @@
 	<request-map uri="createfiletype">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createfiletype" />
-		<response name="success" type="view" value="editfiletypeURL" />
+		<response name="success" type="request-redirect-noparam" value="editfiletypeURL" />
 		<response name="error" type="view" value="editfiletypeURL" />
 	</request-map>
 
@@ -611,10 +611,16 @@
 		<response name="error" type="view" value="editfile" />
 	</request-map>
 
-	<!-- File Overview -->
+	<!-- Document Overview -->
     <request-map uri="documentOverviewURL">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="documentOverviewViewMap"/>
+    </request-map>
+    
+    <!-- Volume Overview -->
+    <request-map uri="volumeOverviewURL">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="volumeOverviewURL"/>
     </request-map>
     
     <!-- File Overview -->
@@ -647,21 +653,75 @@
     <response name="success" type="view" value="returnedFilePerDatePDF" save-home-view="true" />
   </request-map>
   
+   <request-map uri="overStayedFilesPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="overStayedFilesPDF" save-home-view="true" />
+  </request-map>
+  
    <request-map uri="durationBeforeIssuancePDF">
     <security https="true" auth="true" />
     <response name="success" type="view" value="durationBeforeIssuancePDF" save-home-view="true" />
+  </request-map>
+  
+    <request-map uri="filesInDisposalPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="filesInDisposalPDF" save-home-view="true" />
+  </request-map>
+  
+   <request-map uri="inactiveFilesPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="inactiveFilesPDF" save-home-view="true" />
+  </request-map>
+  
+   <request-map uri="semiActiveFilesPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="semiActiveFilesPDF" save-home-view="true" />
+  </request-map>
+  
+   <request-map uri="filesInArchivePDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="filesInArchivePDF" save-home-view="true" />
+  </request-map>
+  
+   <request-map uri="deceasedMemberFilesPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="deceasedMemberFilesPDF" save-home-view="true" />
+  </request-map>
+  
+    <request-map uri="fileVolumesCreatedByDatePDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="fileVolumesCreatedByDatePDF" save-home-view="true" />
+  </request-map>
+  
+   <request-map uri="fileRequestByActivityPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="fileRequestByActivityPDF" save-home-view="true" />
+  </request-map>
+  
+   <request-map uri="filesInCirculationPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="filesInCirculationPDF" save-home-view="true" />
   </request-map>
 
 
 
 	<view-map name="Reports" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReports" />
 		<view-map name="fileMovementPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileMovementPDF" content-type="application/pdf" encoding="none"/>
-		
+		<view-map name="overStayedFilesPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#overStayedFilesPDF" content-type="application/pdf" encoding="none"/>
 		
 		<view-map name="singleActivityfileMovementPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#singleActivityfileMovementPDF" content-type="application/pdf" encoding="none"/>
 		<view-map name="returnedFilePerUserPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#returnedFilePerUserPDF" content-type="application/pdf" encoding="none"/>
 		<view-map name="returnedFilePerDatePDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#returnedFilePerDatePDF" content-type="application/pdf" encoding="none"/>
 		<view-map name="durationBeforeIssuancePDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#durationBeforeIssuancePDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="filesInDisposalPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#filesInDisposalPDF" content-type="application/pdf" encoding="none"/>
+		
+		<view-map name="inactiveFilesPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#inactiveFilesPDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="semiActiveFilesPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#semiActiveFilesPDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="filesInArchivePDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#filesInArchivePDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="deceasedMemberFilesPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#deceasedMemberFilesPDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="fileVolumesCreatedByDatePDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileVolumesCreatedByDatePDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="fileRequestByActivityPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileRequestByActivityPDF" content-type="application/pdf" encoding="none"/>
+		<view-map name="filesInCirculationPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#filesInCirculationPDF" content-type="application/pdf" encoding="none"/>
 		
 		
 
@@ -681,6 +741,7 @@
 	<!-- File Overview  -->
 	<view-map name="fileOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryFilesOverviewScreen"/>
 	<view-map name="documentOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryDocumentOverviewScreen"/>
+	<view-map name="volumeOverviewURL" type="screen" page="component://registry/widget/FileScreens.xml#RegistryVolumeOverviewScreen"/>
 
 	<!-- Lookup Active Memeber Viewmap -->
 	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>

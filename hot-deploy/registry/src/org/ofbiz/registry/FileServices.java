@@ -474,5 +474,35 @@ public class FileServices {
 
 		return daysCount;
 	}
+	
+	public static Date calculateEndWorkingDay(Date startDate, String noOfDays) {
+
+		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
+		int duration = Integer.valueOf(noOfDays);
+
+		// If this is happening on sunday or saturday push it to start on monday
+		if (localDateEndDate.getDayOfWeek()== DateTimeConstants.SATURDAY) {
+			localDateEndDate = localDateEndDate.plusDays(2);
+		}
+
+		if (localDateEndDate.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+			localDateEndDate = localDateEndDate.plusDays(1);
+		}
+		// Calculate End Date
+		int count = 1;
+		while (count < duration) {
+			if (localDateEndDate.getDayOfWeek() == DateTimeConstants.FRIDAY) {
+				localDateEndDate = localDateEndDate.plusDays(3);
+			} else {
+				localDateEndDate = localDateEndDate.plusDays(1);
+			}
+			count++;
+		}
+		log.info("UPDATE DATE ################################ " + localDateEndDate.toDate() + "########################################");
+
+		return localDateEndDate.toDate();
+		
+		
+	}
 
 }

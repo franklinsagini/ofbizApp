@@ -69,21 +69,25 @@ under the License.
                    <#if activity.carriedBy?has_content>
                         <#assign carriedBy = delegator.findOne("Person", {"partyId" : activity.carriedBy}, false)/>
                     </#if>
+                    
+                     <#if activity.partyId?has_content>
+                    	<#assign memberPartyId = activity.partyId?number />
+                        <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
+                    </#if>
+                    
                     <#if activity.actionBy?has_content>
                         <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
                     </#if>
                     
-                     <#if activity.partyId?has_content>
-                        <#assign owner = delegator.findOne("P", {"partyId" : activity.partyId}, false)/>
-                    </#if>
+                  
                     
                     <#if activity.currentPossesser?has_content>
                         <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
                     </#if>
                      <fo:table-row>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if owner?has_content>
-                                  <fo:block>${owner.firstName?if_exists} ${owner.lastName?if_exists}</fo:block>
+                            <#if member?has_content>
+                                  <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>

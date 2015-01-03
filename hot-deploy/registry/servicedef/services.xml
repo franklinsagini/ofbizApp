@@ -121,22 +121,16 @@
 	
 
 
-	<service name="createDocument" engine="simple"
+	<service name="createDocument" engine="simple" default-entity-name="RegistryDocuments"
 		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
 		invoke="createDocument" auth="true">
 		<description>Create File Request header record</description>
-		<auto-attributes entity-name="RegistryDocuments" include="pk"
-			mode="IN" optional="true" />
-		<auto-attributes entity-name="RegistryDocuments" include="nonpk"
-			mode="IN" optional="true" />
+		<auto-attributes include="pk"	mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+		<attribute name="memberNumber" mode="IN" type="String"></attribute>
 		<attribute name="volumeIdentifier" mode="IN" type="String" optional="false" />
 	</service>
 
-	<!-- <service name="requestfiles" engine="simple" location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
-		<description>Create File Request header record</description>
-		<auto-attributes entity-name="RegistryFilesRequest" include="pk" mode="IN" optional="true" />
-		<auto-attributes entity-name="RegistryFilesRequest" include="nonpk" mode="IN" optional="true" />
-	</service> -->
 	
 	<service name="requestfiles" engine="simple" default-entity-name="RegistryRequestedFiles"
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
