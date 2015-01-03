@@ -24,7 +24,7 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        STAFF RESUMPTION SUMMARY REPORT
+        STAFF SCHEDULED LEAVES REPORT
     </fo:block>
     <fo:block><fo:leader/></fo:block>
    
@@ -35,8 +35,8 @@ under the License.
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="130pt"/>
+            <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
@@ -50,15 +50,15 @@ under the License.
                         <fo:block text-align="left">Leave Type</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Leave Duration</fo:block>
+                        <fo:block text-align="left">Leave Start</fo:block>
                     </fo:table-cell>
                     
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Leave End</fo:block>
+                        <fo:block text-align="left">Leave Duration</fo:block>
                     </fo:table-cell>
                     
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Resumption Date</fo:block>
+                        <fo:block text-align="left">Leave End</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
@@ -94,15 +94,15 @@ under the License.
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.fromDate?if_exists}</fo:block>
+                        </fo:table-cell>
+                        
+                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.leaveDuration?if_exists}</fo:block>
                         </fo:table-cell>
                         
                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.thruDate?if_exists}</fo:block>
-                        </fo:table-cell>
-                        
-                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.resumptionDate?if_exists}</fo:block>
                         </fo:table-cell>
                        
                      </fo:table-row>

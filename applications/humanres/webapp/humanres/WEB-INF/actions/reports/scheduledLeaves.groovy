@@ -17,8 +17,7 @@ today = new java.sql.Date(noww.getTime());
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
 
 expr = exprBldr.AND() {
-			LESS_THAN(fromDate: today)
-			GREATER_THAN(thruDate: today)
+			GREATER_THAN(fromDate: today)
 			EQUALS(approvalStatus: "Approved")
 		}
 		

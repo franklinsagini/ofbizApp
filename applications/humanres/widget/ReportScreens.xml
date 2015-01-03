@@ -444,23 +444,11 @@ under the License.
                     		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Employee Spouse Details">
-                        			<include-form name="listEmployeeSpouseDetails" location="component://humanres/widget/ReportForms.xml"/>
-                        		</screenlet>
-
-                        		<screenlet>
-
-                			<container style="button-bar">
-                				<link target="employeeSpouseDetailscsv" text="Staff Spouse Details CSV" style="buttontext">
-                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
-                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
-                                            </link>
-                                <link target="employeeSpouseDetailspdf" text="Staff Spouse Details PDF" style="buttontext">
-                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
-                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
-                                            </link>
-                			</container>
-                		</screenlet>
+                        		 <container style="lefthalf">
+                            <screenlet title="Staff Employment History Report">
+                                <include-form name="employmentHistoryForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
 
                         	</widgets>
                         </section>
@@ -675,17 +663,27 @@ under the License.
                                 <include-form name="staffOnLeaveForm" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                             </container>
-                            <container style="lefthalf">
-                            <screenlet title="Leave Activity Report">
-                                <include-form name="leaveActivityForm" location="component://humanres/widget/ReportForms.xml"/>
-                            </screenlet>
-                        </container>
+                            
                         
                          <container style="righthalf">
                             <screenlet title="Staff Resumption Summary Report">
                                 <include-form name="resumptionSummaryForm" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                             </container>
+                            
+                            
+                        
+                        <container style="lefthalf">
+                            <screenlet title="Leave Activity Report">
+                                <include-form name="leaveActivityForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
+                            <screenlet title="Scheduled Leaves Report">
+                                <include-form name="scheduledLeavesForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
 
                         	</widgets>
                         </section>
@@ -1104,6 +1102,48 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+      <screen name="employmentHistoryPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employmentHistory.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/employmentHistory.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="dependentsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffDependent.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffDependent.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="leaveBalancePDF">
         <section>
@@ -1140,6 +1180,27 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific>
                             <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/resumptionSummary.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="scheduledLeavesPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/scheduledLeaves.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/scheduledLeaves.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

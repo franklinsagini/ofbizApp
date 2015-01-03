@@ -17,103 +17,84 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if activities?has_content>
+    <#if employee?has_content>
 
     <#-- REPORT TITLE -->
     <fo:block font-size="18pt" font-weight="bold" text-align="center">
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        STAFF RESUMPTION SUMMARY REPORT
+        STAFF DEPENDENTS REPORT
     </fo:block>
     <fo:block><fo:leader/></fo:block>
-   
-<#if activities?has_content>
+    <#-- Employee Details -->
+    <fo:block font-size="10pt" text-align="left" font-weight="bold">
+        Payroll Number: ${employee.employeeNumber}
+    </fo:block>
+    <fo:block font-size="10pt" text-align="left" font-weight="bold">
+        Employee Name: ${employee.firstName} ${employee.lastName}
+    </fo:block>
+<#if depend?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="130pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Staff Payroll number</fo:block>
+                        <fo:block>Dependent's Name</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Staff Names</fo:block>
+                        <fo:block text-align="center">Relationship</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Leave Type</fo:block>
+                        <fo:block text-align="right">ID No.</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Leave Duration</fo:block>
+                        <fo:block text-align="right">Gender</fo:block>
                     </fo:table-cell>
-                    
-                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Leave End</fo:block>
-                    </fo:table-cell>
-                    
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Resumption Date</fo:block>
+                        <fo:block text-align="right">Date Of Birth</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-
-                  <#list activities as activity>
-                    <#if activity.partyId?has_content>
-                        <#assign staff = delegator.findOne("Person", {"partyId" : activity.partyId}, false)/>
-                    </#if>
-                     <#if activity.leaveTypeId?has_content>
-                        <#assign leaveType = delegator.findOne("EmplLeaveType", {"leaveTypeId" : activity.leaveTypeId}, false)/>
+                  <#list depend as dep>
+                    <#if dep.familyRelationsId?has_content>
+                        <#assign familyRelations = delegator.findOne("FamilyRelations", {"familyRelationsId" : dep.familyRelationsId}, false)/>
                     </#if>
                      <fo:table-row>
-                      <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if staff?has_content>
-                                <fo:block>${staff.employeeNumber?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.fullname?if_exists}</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if staff?has_content>
-                                <fo:block>${staff.firstName?if_exists} ${staff.lastName?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
-                        </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if leaveType?has_content>
-                                <fo:block>${leaveType.description?if_exists}</fo:block>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if familyRelations?has_content >
+                                <fo:block>${familyRelations.relationship?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.leaveDuration?if_exists}</fo:block>
+                            <fo:block>${dep.idno?if_exists}</fo:block>
                         </fo:table-cell>
-                        
-                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.thruDate?if_exists}</fo:block>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.gender?if_exists}</fo:block>
                         </fo:table-cell>
-                        
-                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.resumptionDate?if_exists}</fo:block>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.dob?if_exists}</fo:block>
                         </fo:table-cell>
-                       
                      </fo:table-row>
                   </#list>
-
             </fo:table-body>
         </fo:table>
     </fo:block>
     <#else>
      <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">Nothing To Show</fo:block>
+        <fo:block text-align="center" font-size="14pt">No Dependant For Employee: ${employee.firstName} ${employee.lastName}</fo:block>
     </fo:block>
   </#if>
     <#else>
