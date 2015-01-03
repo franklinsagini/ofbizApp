@@ -239,6 +239,19 @@ under the License.
         <attribute name="totalCreatedApprovedTransactions" type="Long" mode="OUT" optional="true"/>
         <attribute name="glReconciliationApprovedGrandTotal" type="BigDecimal" mode="OUT" optional="true"/>
     </service>
+    <service name="populateReconFields" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="populateReconFields">
+        <description>Financial Account Transaction List and Totals</description>
+        <attribute name="finAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="uncreditedBankingsTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="unpresentedChequesTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="unreceiptedBankingsTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="unidentifiedDebitsTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="cashBookTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="bankBalanceTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="adjustedBankBalance" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="adjustedCashBookBalance" type="BigDecimal" mode="OUT" optional="true"/>
+    </service>
     <service name="getFinAccountTransRunningTotalAndBalances" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="getFinAccountTransRunningTotalAndBalances">
         <description>Financial Account Running Total</description>
@@ -263,7 +276,11 @@ under the License.
     <service name="calculateReconBalances" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="calculateReconBalances">
         <description>Financial Account Running Total</description>
-        <attribute name="bankBalance" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="bankBalanceTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUncreditedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUnpresentedChequesTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showAdjustedBankBalance" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="cashBookTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="showUnreceiptedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="showUnidentifiedDebitsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="showAdjustedCashBookBalance" type="BigDecimal" mode="INOUT" optional="true"/>
