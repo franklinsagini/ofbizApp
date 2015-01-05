@@ -87,6 +87,13 @@ under the License.
                                 <include-form name="staffListingForm" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
+                        
+                         <container style="righthalf">
+                           
+                            <screenlet title="Staff On Probation">
+                                <include-form name="staffOnProbationForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
                         	</widgets>
                         </section>
 	                    </decorator-section>
@@ -225,23 +232,11 @@ under the License.
                     		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Employee Qualifications">
-                        			<include-form name="listEmployeeQualifications" location="component://humanres/widget/ReportForms.xml"/>
-                        		</screenlet>
-
-                        		<screenlet>
-
-                			<container style="button-bar">
-                				<link target="employeeQualificationscsv" text="Staff Qualifications CSV" style="buttontext">
-                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
-                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
-                                            </link>
-                                <link target="employeeQualificationspdf" text="Staff Qualifications PDF" style="buttontext">
-                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
-                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
-                                            </link>
-                			</container>
-                		</screenlet>
+                        	 <container style="lefthalf">
+                            <screenlet title="Staff Qualification Report">
+                                <include-form name="staffQualificationsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
 
                         	</widgets>
                         </section>
@@ -335,23 +330,11 @@ under the License.
                     		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section name="search-results">
                         	<widgets>
-                        		<screenlet title="Employee Skills">
-                        			<include-form name="listEmployeeSkills" location="component://humanres/widget/ReportForms.xml"/>
-                        		</screenlet>
-
-                        		<screenlet>
-
-                			<container style="button-bar">
-                				<link target="employeeSkillscsv" text="Staff Skills CSV" style="buttontext">
-                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
-                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
-                                            </link>
-                                <link target="employeeSkillspdf" text="Staff Skills PDF" style="buttontext">
-                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
-                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
-                                            </link>
-                			</container>
-                		</screenlet>
+                        	 <container style="lefthalf">
+                            <screenlet title="Employee Skills Report">
+                                <include-form name="staffSkillsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
 
                         	</widgets>
                         </section>
@@ -1124,6 +1107,27 @@ under the License.
         </section>
     </screen>
     
+     <screen name="staffOnProbationPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnProbation.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffOnProbation.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
      <screen name="dependentsPDF">
         <section>
             <actions>
@@ -1165,6 +1169,49 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+     <screen name="staffQualificationsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffQualification.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffQualification.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffSkillsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffSkills.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffSkills.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
      <screen name="resumptionSummaryPDF">
         <section>

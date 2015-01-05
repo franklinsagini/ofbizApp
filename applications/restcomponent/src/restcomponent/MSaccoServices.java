@@ -283,6 +283,8 @@ public class MSaccoServices {
 		
 		List<Account> listAccount = new ArrayList<Account>();
 		Account account = new Account();
+		account.setTelephoneNo(phoneNumber);
+		account.setQuery_type("accounts");
 		account.setAccountNo(memberAccount.getString("accountNo"));
 		account.setAccountName(memberAccount.getString("accountName"));
 		
