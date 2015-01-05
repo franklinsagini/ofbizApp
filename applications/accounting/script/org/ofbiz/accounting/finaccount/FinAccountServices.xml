@@ -771,204 +771,6 @@ under the License.
         <field-to-result field="glReconciliationApprovedGrandTotal"/>
     </simple-method>
 
-    <simple-method method-name="populateReconFields" short-description="Retrieve Financial Account Transaction List and Totals">
-        <entity-condition entity-name="FinAccountTrans" list="finAccountTransactions">
-            <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
-            <use-iterator/>
-        </entity-condition>
-        <set field="uncreditedBankingsTotal" type="BigDecimal" value="0"/>
-        <set field="unpresentedChequesTotal" type="BigDecimal" value="0"/>
-        <set field="unreceiptedBankingsTotal" type="BigDecimal" value="0"/>
-        <set field="unidentifiedDebitsTotal" type="BigDecimal" value="0"/>
-        <set field="cashBookTotal" type="BigDecimal" value="0"/>
-        <set field="bankBalanceTotal" type="BigDecimal" value="0"/>
-        <set field="adjustedBankBalance" type="BigDecimal" value="0"/>
-        <set field="adjustedCashBookBalance" type="BigDecimal" value="0"/>
-        <set field="grandTotal" type="BigDecimal" value="0"/>
-        <set field="createdGrandTotal" type="BigDecimal" value="0"/>
-        <set field="totalCreatedTransactions" type="Long" value="0"/>
-        <set field="approvedGrandTotal" type="BigDecimal" value="0"/>
-        <set field="totalApprovedTransactions" type="Long" value="0"/>
-        <set field="createdApprovedGrandTotal" type="BigDecimal" value="0"/>
-        <set field="glReconciliationApprovedGrandTotal" type="BigDecimal" value="0"/>
-
-        <!-- get Cash Book Balance -->
-        <entity-one entity-name="FinAccount" value-field="finAccount" auto-field-map="true">
-            <field-map field-name="finAccountId" from-field="parameters.finAccountId"/>
-        </entity-one>
-
-        <if-not-empty field="finAccount">
-            <set field="cashBookTotal" from-field="finAccount.actualBalance" />
-        </if-not-empty>
-
-        <iterate list="finAccountTransactions" entry="finAccountTransaction">
-            <if-compare field="finAccountTransaction.finAccountTransTypeId" operator="equals" value="WITHDRAWAL">
-                <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_CREATED">
-                    <set field="totalCreatedTransactions" value="${totalCreatedTransactions + 1}" type="Long"/>
-                    <set field="createdGrandTotal" value="${createdGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
-                    <set field="createdApprovedGrandTotal" value="${createdApprovedGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
-                </if-compare>
-                <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_APPROVED">
-                    <set field="totalApprovedTransactions" value="${totalApprovedTransactions + 1}" type="Long"/>
-                    <set field="approvedGrandTotal" value="${approvedGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
-                    <set field="createdApprovedGrandTotal" value="${createdApprovedGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
-                    <if-compare-field field="parameters.glReconciliationId" operator="equals" to-field="finAccountTransaction.glReconciliationId">
-                        <set field="glReconciliationApprovedGrandTotal" value="${glReconciliationApprovedGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
-                    </if-compare-field>
-                </if-compare>
-            <else>
-                <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_CREATED">
-                    <set field="totalCreatedTransactions" value="${totalCreatedTransactions + 1}" type="Long"/>
-                    <set field="createdGrandTotal" value="${createdGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
-                    <set field="createdApprovedGrandTotal" value="${createdApprovedGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
-                </if-compare>
-                <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_APPROVED">
-                    <set field="totalApprovedTransactions" value="${totalApprovedTransactions + 1}" type="Long"/>
-                    <set field="approvedGrandTotal" value="${approvedGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
-                    <set field="createdApprovedGrandTotal" value="${createdApprovedGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
-                    <if-compare-field field="parameters.glReconciliationId" operator="equals" to-field="finAccountTransaction.glReconciliationId">
-                        <set field="glReconciliationApprovedGrandTotal" value="${glReconciliationApprovedGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
-                    </if-compare-field>
-                </if-compare>
-            </else>
-            </if-compare>
-        </iterate>
-        <if-compare field="parameters.glReconciliationId" operator="equals" value="_NA_">
-            <set field="isConditionalStatusId" value="${parameters.statusId == null @or parameters.statusId != 'FINACT_TRNS_CANCELED'}" type="Boolean"/>
-            <if-compare field="isConditionalStatusId" operator="equals" value="true" type="Boolean">
-                <set field="conditionalStatusId" value="FINACT_TRNS_CANCELED"/>
-            </if-compare>
-            <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">
-                <condition-list combine="and">
-                    <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
-                    <condition-expr field-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId" ignore-if-empty="true"/>
-                    <condition-expr field-name="statusId" operator="not-equals" from-field="conditionalStatusId" ignore-if-empty="true"/>
-                    <condition-expr field-name="statusId" operator="equals" from-field="parameters.statusId" ignore-if-empty="true"/>
-                    <condition-expr field-name="glReconciliationId" operator="equals" from-field="nullField"/>
-                    <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromTransactionDate" ignore-if-empty="true"/>
-                    <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruTransactionDate" ignore-if-empty="true"/>
-                    <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
-                    <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
-                </condition-list>
-            </entity-condition>
-        <else>
-            <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">
-                <condition-list combine="and">
-                    <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
-                    <condition-expr field-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId" ignore-if-empty="true"/>
-                    <condition-expr field-name="statusId" from-field="parameters.statusId" ignore-if-empty="true"/>
-                    <condition-expr field-name="glReconciliationId" from-field="parameters.glReconciliationId" ignore-if-empty="true"/>
-                    <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromTransactionDate" ignore-if-empty="true"/>
-                    <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruTransactionDate" ignore-if-empty="true"/>
-                    <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
-                    <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
-                </condition-list>
-            </entity-condition>
-        </else>
-        </if-compare>
-        <iterate list="finAccountTransList" entry="finAccountTrans">
-            <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL">
-                <set field="grandTotal" value="${grandTotal - finAccountTrans.amount}" type="BigDecimal"/>
-            <else>
-                <set field="grandTotal" value="${grandTotal + finAccountTrans.amount}" type="BigDecimal"/>
-            </else>
-            </if-compare>
-        </iterate>
-
-        <!-- Custom Recon Iteration  -->
-        <entity-condition entity-name="FinAccountTrans" list="accountTransactions">
-            <condition-list combine="and">
-                <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
-            </condition-list>
-            <use-iterator/>
-        </entity-condition>
-
-        <iterate list="accountTransactions" entry="singleTrans">
-            <if>
-                <condition>
-                    <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL" />
-                </condition>
-                <then>
-                    <log message="UNPRESENTED CHEQUES: ${unpresentedChequesTotal} + ${singleTrans.amount}"/>
-                    <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
-                        <set field="unpresentedChequesTotal" value="${unpresentedChequesTotal + singleTrans.amount}" type="BigDecimal"/>
-                    </if-compare>
-                    <log message="UNPRESENTED CHEQUES TOTAL: ${unpresentedChequesTotal}" />
-                </then>
-            <else-if>
-                <condition>
-                    <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="DEPOSIT" />
-                </condition>
-                <then>
-                    <log message="UNCREDITED BANKINGS: ${uncreditedBankingsTotal} + ${singleTrans.amount}" />
-                    <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
-                        <set field="uncreditedBankingsTotal" value="${uncreditedBankingsTotal + singleTrans.amount}" type="BigDecimal"/>
-                    </if-compare>
-                    <log message="UNCREDITED BANKINGS TOTAL: ${uncreditedBankingsTotal}" />
-                </then>
-            </else-if>
-            <else-if>
-                <condition>
-                    <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="UD" />
-                </condition>
-                <then>
-                    <log message="UNIDENTIFIED DEBITS: ${unidentifiedDebitsTotal} + ${singleTrans.amount}" />
-                    <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
-                        <set field="unidentifiedDebitsTotal" value="${unidentifiedDebitsTotal + singleTrans.amount}" type="BigDecimal"/>
-                    </if-compare>
-                    <log message="UNIDENTIFIED DEBITS TOTAL: ${unidentifiedDebitsTotal}" />
-                </then>
-            </else-if>
-            <else-if>
-                <condition>
-                    <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="UB" />
-                </condition>
-                <then>
-                    <log message="UNRECEIPTED BANKINGS: ${unreceiptedBankingsTotal} + ${singleTrans.amount}" />
-                    <if-compare field="singleTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED">
-                        <set field="unreceiptedBankingsTotal" value="${unreceiptedBankingsTotal + singleTrans.amount}" type="BigDecimal"/>
-                    </if-compare>
-                    <log message="UNRECEIPTED BANKINGS TOTAL: ${unreceiptedBankingsTotal}" />
-                </then>
-            </else-if>
-            </if>
-        </iterate>
-        <calculate field="adjustedCashBookBalanceSubtract">
-            <calcop operator="add">
-               <calcop operator="get" field="cashBookTotal"/>
-               <calcop operator="get" field="unreceiptedBankingsTotal"/>
-            </calcop>
-        </calculate>
-        <calculate field="adjustedCashBookBalance">
-            <calcop operator="subtract">
-               <calcop operator="get" field="adjustedCashBookBalanceSubtract"/>
-               <calcop operator="get" field="unidentifiedDebitsTotal"/>
-            </calcop>
-        </calculate>
-        <set field="adjustedCashBookBalance" from-field="adjustedCashBookBalance" />
-        <call-object-method obj-field="finAccountTransList" method-name="size" ret-field="searchedNumberOfRecords"/>
-        <set field="totalCreatedApprovedTransactions" value="${totalCreatedTransactions + totalApprovedTransactions}" type="Long"/>
-        <field-to-result field="finAccountTransList"/>
-        <field-to-result field="searchedNumberOfRecords"/>
-        <field-to-result field="uncreditedBankingsTotal"/>
-        <field-to-result field="unpresentedChequesTotal"/>
-        <field-to-result field="unidentifiedDebitsTotal"/>
-        <field-to-result field="unreceiptedBankingsTotal"/>
-        <field-to-result field="cashBookTotal"/>
-        <field-to-result field="adjustedCashBookBalance"/>
-        <field-to-result field="grandTotal"/>
-        <field-to-result field="createdGrandTotal"/>
-        <field-to-result field="totalCreatedTransactions"/>
-        <field-to-result field="approvedGrandTotal"/>
-        <field-to-result field="totalApprovedTransactions"/>
-        <field-to-result field="createdApprovedGrandTotal"/>
-        <field-to-result field="totalCreatedApprovedTransactions"/>
-        <if-not-empty field="parameters.openingBalance">
-            <set field="glReconciliationApprovedGrandTotal" type="BigDecimal" value="${glReconciliationApprovedGrandTotal + parameters.openingBalance}"/>
-        </if-not-empty>
-        <field-to-result field="glReconciliationApprovedGrandTotal"/>
-    </simple-method>
-
     <simple-method method-name="getFinAccountTransRunningTotalAndBalances" short-description="Calculate running total and Balances of Financial Account Transactions">
         <set field="runningTotal" type="BigDecimal" from-field="parameters.runningTotal" default-value="0"/>
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" auto-field-map="true"/>
@@ -999,6 +801,66 @@ under the License.
         <field-to-result field="endingBalance"/>
     </simple-method>
 
+    <simple-method method-name="populateReconFields" short-description="Retrieve Financial Account Transaction List and Totals">
+        <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" auto-field-map="true"/>
+        <log message="WWWWWWWWWWWWWWWWWWWWWWWWWWWW- ${finAccountTrans.amount}" level="info" />
+        <set field="cashBookTotal" type="BigDecimal" from-field="parameters.cashBookTotal"/>
+        <set field="bankBalanceTotal" type="BigDecimal" from-field="parameters.bankBalanceTotal"/>
+        <!-- UB - UNRECEIPTED BANKINGS -->
+        <set field="showUnreceiptedBankingsTotal" type="BigDecimal"  from-field="parameters.showUnreceiptedBankingsTotal"/>
+        <!-- UD UNIDENTIFIED DEPOSITS -->
+        <set field="showUnidentifiedDebitsTotal" type="BigDecimal"   from-field="parameters.showUnidentifiedDebitsTotal"/>
+         <!-- DEPOSIT -->
+        <set field="showUncreditedBankingsTotal" type="BigDecimal"   from-field="parameters.showUncreditedBankingsTotal"/>
+        <!-- WITHDRAWAL -->
+        <set field="showUnpresentedChequesTotal" type="BigDecimal"   from-field="parameters.showUnpresentedChequesTotal"/>
+
+        <if>
+            <condition>
+                <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL" />
+            </condition>
+                <then>
+                    <log message="UNPRESENTED CHEQUES BEFORE: ${showUnpresentedChequesTotal} - ${finAccountTrans.amount}"/>
+                    <set field="showUnpresentedChequesTotal" value="${showUnpresentedChequesTotal - finAccountTrans.amount}" type="BigDecimal"/>
+                    <log message="UNPRESENTED CHEQUES AFTER: ${showUnpresentedChequesTotal}" />
+                </then>
+            <else-if>
+                <condition>
+                    <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="DEPOSIT" />
+                </condition>
+                <then>
+                    <log message="UNCREDITED BANKINGS BEFORE: ${showUncreditedBankingsTotal} + ${finAccountTrans.amount}" />
+                    <set field="showUncreditedBankingsTotal" value="${showUncreditedBankingsTotal - finAccountTrans.amount}" type="BigDecimal"/>
+                    <log message="UNCREDITED BANKINGS AFTER: ${showUncreditedBankingsTotal}" />
+                </then>
+            </else-if>
+            <else-if>
+                <condition>
+                    <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="UD" />
+                </condition>
+                <then>
+                    <log message="UNIDENTIFIED DEBITS BEFORE: ${showUnidentifiedDebitsTotal} + ${finAccountTrans.amount}" />
+                    <set field="showUnidentifiedDebitsTotal" value="${showUnidentifiedDebitsTotal - finAccountTrans.amount}" type="BigDecimal"/>
+                    <log message="UNIDENTIFIED DEBITS AFTER: ${showUnidentifiedDebitsTotal}" />
+                </then>
+            </else-if>
+            <else-if>
+                <condition>
+                    <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="UB" />
+                </condition>
+                <then>
+                    <log message="UNRECEIPTED BANKINGS BEFORE: ${showUnreceiptedBankingsTotal} + ${singleTrans.amount}" />
+                    <set field="showUnreceiptedBankingsTotal" value="${showUnreceiptedBankingsTotal - singleTrans.amount}" type="BigDecimal"/>
+                    <log message="UNRECEIPTED BANKINGS AFTER: ${showUnreceiptedBankingsTotal}" />
+                </then>
+            </else-if>
+        </if>
+
+        <field-to-result field="showUnpresentedChequesTotal"/>
+        <field-to-result field="showUncreditedBankingsTotal"/>
+        <field-to-result field="showUnidentifiedDebitsTotal"/>
+        <field-to-result field="showUnreceiptedBankingsTotal"/>
+    </simple-method>
 
     <simple-method method-name="calculateReconBalances" short-description="Recalculate the Recon Balances">
         <set field="cashBookTotal" type="BigDecimal" value="0"/>
