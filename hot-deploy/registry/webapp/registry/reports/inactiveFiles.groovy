@@ -1,0 +1,1 @@
+context.activities = delegator.findByAnd("RegistryFiles", [stageStatus : "INACTIVE"], null, false);

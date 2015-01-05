@@ -706,6 +706,7 @@ public class PayrollProcess {
 		BigDecimal bdLowInterestBenefit = BigDecimal.ZERO;
 		BigDecimal bdDisabilityAllowance = BigDecimal.ZERO;
 		BigDecimal bdNonTaxableAmounts = BigDecimal.ZERO;
+		BigDecimal bdReliefOnTaxableIncome = BigDecimal.ZERO;
 
 		bdExcessPensionBenefit = calcExcessPensionBen(employee, delegator,
 				staffPayrollId);
@@ -713,11 +714,13 @@ public class PayrollProcess {
 		bdLOWINTERESTBENEFIT = bdLowInterestBenefit;
 		bdDisabilityAllowance = getDisabilityAllowance(employee, delegator);
 		bdNonTaxableAmounts = getNonTaxableAmounts(employee, staffPayrollId, delegator);
+		bdReliefOnTaxableIncome = getReliefOnTaxableIncome(employee, staffPayrollId, delegator);
+		
 
 		bdTaxableIncome = bdGrossPay.add(bdExcessPensionBenefit).add(
 				bdLowInterestBenefit).subtract(bdNSSFStatutory).subtract(
 				bdNSSFVoluntary).subtract(bdPensionAmt).subtract(
-				bdDisabilityAllowance).subtract(bdNonTaxableAmounts);
+				bdDisabilityAllowance).subtract(bdNonTaxableAmounts).subtract(bdReliefOnTaxableIncome);
 
 		if (bdTaxableIncome.compareTo(BigDecimal.ZERO) <= 0) {
 			bdTaxableIncome = BigDecimal.ZERO;
@@ -726,6 +729,34 @@ public class PayrollProcess {
 		return bdTaxableIncome;
 	}
 
+	private static BigDecimal getReliefOnTaxableIncome(GenericValue employee,
+			String staffPayrollId, Delegator delegator) {
+		List<GenericValue> payrollElementELI = null;
+		BigDecimal bdReliefOnTaxableIncome = BigDecimal.ZERO;
+
+/*		EntityConditionList<EntityExpr> reliefOnTaxableIncomeConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"reliefotp", EntityOperator.EQUALS, "Y"),
+						EntityCondition.makeCondition("taxable",
+								EntityOperator.EQUALS, "N")),
+						EntityOperator.AND);*/
+
+		try {
+			payrollElementELI = delegator.findList("PayrollElement",
+					EntityCondition.makeCondition("reliefotp","Y"), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue payrollElement : payrollElementELI) {
+			// Get the amount
+
+			bdReliefOnTaxableIncome = bdReliefOnTaxableIncome.add(getElementAmount(
+					payrollElement, staffPayrollId, delegator));
+		}
+
+		return bdReliefOnTaxableIncome;
+	}
 	private static BigDecimal getNonTaxableAmounts(GenericValue employee, String staffPayrollId,
 			Delegator delegator) {
 		List<GenericValue> payrollElementELI = null;

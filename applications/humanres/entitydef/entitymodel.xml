@@ -425,6 +425,35 @@ under the License.
       <field name="description" type="description"></field>
       <prim-key field="kpiAchievementStatusId"/>
     </entity>
+    
+      <entity entity-name="PerfGoalsDef"
+            package-name="org.ofbiz.humanres.ability"
+            title="Performance Goals Definition">
+      <field name="perfGoalsDefId" type="id-ne"></field>
+      <field name="goalDef" type="name"></field>
+      <field name="percentage" type="numeric"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="perfGoalsDefId"/>
+      <index name="UNIQUE_GOALS" unique="true">
+      	<index-field name="goalDef"/>
+      </index>
+    </entity>
+    
+     <entity entity-name="PerfGoals"
+            package-name="org.ofbiz.humanres.ability"
+            title="Performance Goals">
+      <field name="perfGoalsId" type="id-ne"></field>
+      <field name="perfGoalsDefId" type="id"></field>
+      <field name="goal" type="name"></field>
+      <field name="percentage" type="numeric"></field>
+      <prim-key field="perfGoalsId"/>
+       <relation type="one" fk-name="goal_category" title="Goal_CAT" rel-entity-name="PerfGoalsDef">
+        <key-map field-name="perfGoalsDefId" rel-field-name="perfGoalsDefId"/>
+      </relation>
+      <index name="UNIQUE_GOAL" unique="true">
+      	<index-field name="goal"/>
+      </index>
+    </entity>
 
 
     <entity entity-name="KPITargets"
@@ -437,6 +466,10 @@ under the License.
       <field name="targetOption" type="indicator"></field>
       <field name="branchId" type="id-ne"></field>
       <field name="deptId" type="id-ne"></field>
+      <field name="perfGoalsId" type="id-ne"></field>
+      <field name="emplPositionTypeId" type="id-ne"></field>
+      <field name="actionPlans" type="description"></field>
+      <field name="kpi" type="description"></field>
       <prim-key field="kpiTargetId"/>
        <relation type="one" fk-name="KPI_IND" title="KPI" rel-entity-name="KeyPerformanceIndicators">
         <key-map field-name="parentTypeId" rel-field-name="keyPerformanceIndicatorsId"/>
@@ -446,6 +479,12 @@ under the License.
       </relation>
       <relation type="one" fk-name="Department_IND" title="Department" rel-entity-name="Party">
         <key-map field-name="partyId" rel-field-name="deptId"/>
+      </relation>
+      <relation type="one" fk-name="PerfGoal_IND" title="PerfGoals" rel-entity-name="PerfGoals">
+        <key-map field-name="perfGoalsId" rel-field-name="perfGoalsId"/>
+      </relation>
+      <relation type="one" fk-name="EmplPositionType_IND" title="EmplPositionType" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId" rel-field-name="emplPositionTypeId"/>
       </relation>
     </entity>
 
@@ -475,6 +514,9 @@ under the License.
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
+    
+    <!-- =============================================================================================================== -->
+    
     <entity entity-name="PersonTraining"
             package-name="org.ofbiz.humanres.ability"
             title="Person Training Entity">

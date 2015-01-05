@@ -167,6 +167,38 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="FindPerformancePositions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindPositionTypes"/>
+                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem" value="FindPerfPositions"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="payGradeId" from-field="parameters.payGradeId"/>
+                <set field="emplPositionTypeCtx" from-field="parameters"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindPerfPositions" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPerfPositions" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
    <screen name="EditEmplPositionTypes">
         <section>
             <actions>

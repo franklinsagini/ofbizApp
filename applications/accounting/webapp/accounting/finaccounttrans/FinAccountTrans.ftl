@@ -32,17 +32,13 @@ function togglefinAccountTransId(master) {
 
 function getFinAccountTransRunningTotalAndBalances(indexValue, finAccountTransId) {
 
-    //alert ('my index ... '+indexValue);
     var checkBoxId = '#finAccountTransId_'+indexValue
-    //alert(checkBoxId);
-    if (jQuery(checkBoxId).is(':checked'))
-    {
-      // alert('Save Y  for '+finAccountTransId);
-      //save
+
+    if (jQuery(checkBoxId).is(':checked')){
       updateFinAccount('Y', finAccountTransId);
     } else{
-      // alert('Save N for '+finAccountTransId);
       updateFinAccount('N', finAccountTransId);
+
     }
 
     var form = document.selectAllForm;
@@ -103,7 +99,40 @@ function updateFinAccount(status, finAccountTransId){
 
       }
   });
+
+    populateFields(finAccountTransId);
 }
+
+// function populateFields(finAccountTransId){
+//     jQuery.ajax({
+//       url: 'populateReconFields',
+//       async: false,
+//       type: 'POST',
+//       data: {'finAccountTransId': finAccountTransId}
+//       success: function(data) {
+//           jQuery('#showUnreceiptedBankingsTotal').html(data.showUnreceiptedBankingsTotal);
+//           jQuery('#showUnidentifiedDebitsTotal').html(data.showUnidentifiedDebitsTotal);
+//           jQuery('#showAdjustedCashBookBalance').html(data.showAdjustedCashBookBalance);
+//           jQuery('#showUncreditedBankingsTotal').html(data.showUncreditedBankingsTotal);
+//           jQuery('#showUnpresentedChequesTotal').html(data.showUnpresentedChequesTotal);
+//           jQuery('#showAdjustedBankBalance').html(data.showAdjustedBankBalance);
+//       }
+//   });
+// }
+
+function populateFields(finAccountTransId) {
+    jQuery.ajax({
+      url: 'calculateReconBalances',
+      async: false,
+      type: 'POST',
+      data: jQuery('#reconValues').serialize(),
+      success: function(data) {
+          jQuery('#showAdjustedCashBookBalance').html(data.showAdjustedCashBookBalance);
+          jQuery('#showAdjustedBankBalance').html(data.showAdjustedBankBalance);
+      }
+  });
+}
+
 function calculateReconBalances() {
     jQuery.ajax({
       url: 'calculateReconBalances',
@@ -112,10 +141,11 @@ function calculateReconBalances() {
       data: jQuery('#reconValues').serialize(),
       success: function(data) {
           jQuery('#showAdjustedCashBookBalance').html(data.showAdjustedCashBookBalance);
-          jQuery('#showAdjustedBankBalance').html(data.unpresentedChequesTotal);
+          jQuery('#showAdjustedBankBalance').html(data.showAdjustedBankBalance);
       }
   });
 }
+
 </script>
 
 <div class="screenlet screenlet-body">
@@ -146,7 +176,7 @@ function calculateReconBalances() {
             <tr>
               <td>Cash Book Balance</td>
                 <#if cashBookTotal?has_content>
-                  <td><input type='text' size='15' maxlength='100' name='bankBalance' id="showCashBookTotal" value="KES ${cashBookTotal?if_exists}" readonly="" /></td>
+                  <td><input type='text' size='15' maxlength='100' name='cashBookTotal' id="showCashBookTotal" value="${cashBookTotal?if_exists}" readonly="" /></td>
                 <#else>
                   <td id="showCashBookTotal"></td>
                 </#if>
@@ -155,7 +185,7 @@ function calculateReconBalances() {
               <td>Add Unreceipted Bankings</td>
                 <#if unreceiptedBankingsTotal?has_content>
               <td>
-                <input type='text' size='15' maxlength='100' name='showUnreceiptedBankingsTotal' id="showUnreceiptedBankingsTotal" value="KES ${unreceiptedBankingsTotal?if_exists}" readonly="" />
+                <input type='text' size='15' maxlength='100' name='showUnreceiptedBankingsTotal' id="showUnreceiptedBankingsTotal" value="${unreceiptedBankingsTotal?if_exists}" readonly="" />
               </td>
                 <#else>
                   <td id="showUnreceiptedBankingsTotal"></td>
@@ -166,7 +196,7 @@ function calculateReconBalances() {
                 <#if unidentifiedDebitsTotal?has_content>
                   <#-- <td id="showUnidentifiedDebitsTotal">KES ${unidentifiedDebitsTotal?if_exists}</td> -->
               <td>
-                <input type='text' size='15' maxlength='100' name='showUnidentifiedDebitsTotal' id="showUnidentifiedDebitsTotal" value="KES ${unidentifiedDebitsTotal?if_exists}" readonly="" />
+                <input type='text' size='15' maxlength='100' name='showUnidentifiedDebitsTotal' id="showUnidentifiedDebitsTotal" value="${unidentifiedDebitsTotal?if_exists}" readonly="" />
               </td>
                 <#else>
                   <td id="showUnidentifiedDebitsTotal"></td>
@@ -177,7 +207,7 @@ function calculateReconBalances() {
               <td>Adjusted Cash Book Balance</td>
               <td id="showAdjustedCashBookBalance">
                 <#if adjustedCashBookBalance?has_content>
-                  KES ${adjustedCashBookBalance?if_exists}
+                  ${adjustedCashBookBalance?if_exists}
                 </#if>
               </td>
             </tr>
@@ -187,12 +217,12 @@ function calculateReconBalances() {
           <table>
             <tr>
               <td>Bank Balance</td>
-              <td><input type='text' size='15' maxlength='100' name='bankBalance' value=""/></td>
+              <td><input type='text' size='15' maxlength='100' name='bankBalanceTotal' id='bankBalanceTotal' value="0"/></td>
             </tr>
             <tr>
               <td>Add Uncredited Bankings</td>
               <#if uncreditedBankingsTotal?has_content>
-                <td><input type='text' size='15' maxlength='100' name='showUncreditedBankingsTotal' id="showUncreditedBankingsTotal" value="KES ${uncreditedBankingsTotal?if_exists}" readonly="" /></td>
+                <td><input type='text' size='15' maxlength='100' name='showUncreditedBankingsTotal' id="showUncreditedBankingsTotal" value="${uncreditedBankingsTotal?if_exists}" readonly="" /></td>
               <#else>
               <td id="showUncreditedBankingsTotal"></td>
               </#if>
@@ -201,7 +231,7 @@ function calculateReconBalances() {
               <td>Less Unpresented Cheques</td>
               <#if unpresentedChequesTotal?has_content>
               <td>
-                <input type='text' size='15' maxlength='100' name='showUnpresentedChequesTotal' id="showUnpresentedChequesTotal" value="KES ${unpresentedChequesTotal?if_exists}" readonly="" />
+                <input type='text' size='15' maxlength='100' name='showUnpresentedChequesTotal' id="showUnpresentedChequesTotal" value="${unpresentedChequesTotal?if_exists}" readonly="" />
               </td>
               <#else>
               <td id="showUnpresentedChequesTotal"></td>
@@ -210,7 +240,7 @@ function calculateReconBalances() {
             <tr><td colspan="4"><hr /></tr>
             <tr>
               <td>Adjusted Bank Statement Balance</td>
-              <td id="showAdjustedBankBalance">KES 500000</td>
+              <td id="showAdjustedBankBalance"></td>
             </tr>
           </table>
         </td>

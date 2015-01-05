@@ -455,6 +455,59 @@
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
+	  <!-- Perf Goal Definition -->
+   <simple-method method-name="createPerfGoalsDef" short-description="create PerfGoalsDef">
+        <make-value entity-name="PerfGoalsDef" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PerfGoalsDef" field="perfGoalsDefId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="perfGoalsDefId" field="newEntity.perfGoalsDefId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePerfGoalsDef" short-description="Update PerfGoalsDef">
+        <entity-one entity-name="PerfGoalsDef" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePerfGoalsDef" short-description="Delete PerfGoalsDef">
+        <entity-one entity-name="PerfGoalsDef" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
+    
+     <!-- Perf Goals -->
+   <simple-method method-name="createPerfGoals" short-description="create PerfGoals">
+        <make-value entity-name="PerfGoals" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PerfGoals" field="perfGoalsId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="perfGoalsId" field="newEntity.perfGoalsId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePerfGoals" short-description="Update PerfGoals">
+        <entity-one entity-name="PerfGoals" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePerfGoals" short-description="Delete PerfGoals">
+        <entity-one entity-name="PerfGoals" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
+	
+	
 	<simple-method method-name="createKPIDefinition" short-description="create KPI Definition">
         <make-value entity-name="KeyPerformanceIndicators" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -513,7 +566,7 @@
 			property="DeleteSuccess" field="successMessage" />
     </simple-method>
 	
-	<simple-method method-name="createGlobalKPITarget" short-description="create Global KPI Target">
+	<simple-method method-name="createPositionObjectives" short-description="create Position Objectives">
         <make-value entity-name="KPITargets" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -527,7 +580,7 @@
         <property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
     </simple-method>
-    <simple-method method-name="updateGlobalKPITarget" short-description="Update Global KPI Target">
+    <simple-method method-name="updatePositionObjectives" short-description="Update Position Objectives">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
@@ -535,14 +588,14 @@
 			property="UpdateSuccess" field="successMessage" />
     </simple-method>
     
-    <simple-method method-name="deleteGlobalKPITarget" short-description="Delete Global KPI Target">
+    <simple-method method-name="deletePositionObjectives" short-description="Delete Position Objectives">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
         <property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
-    <simple-method method-name="createBranchKPITarget" short-description="create Branch KPI Target">
+    <simple-method method-name="createBranchObjectives" short-description="create Branch Objectives">
         <make-value entity-name="KPITargets" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -556,7 +609,7 @@
         <property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
     </simple-method>
-    <simple-method method-name="updateBranchKPITarget" short-description="Update Branch KPI Target">
+    <simple-method method-name="updateBranchObjectives" short-description="Update Branch Objectives">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
@@ -564,14 +617,14 @@
 			property="UpdateSuccess" field="successMessage" />
     </simple-method>
     
-    <simple-method method-name="deleteBranchKPITarget" short-description="Delete Branch KPI Target">
+    <simple-method method-name="deleteBranchObjectives" short-description="Delete Branch Objectives">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
         <property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
-    <simple-method method-name="createDepartmentKPITarget" short-description="create Department KPI Target">
+    <simple-method method-name="createDepartmentObjectives" short-description="create Department Objectives">
         <make-value entity-name="KPITargets" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -585,7 +638,7 @@
         <property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
     </simple-method>
-    <simple-method method-name="updateDepartmentKPITarget" short-description="Update Department KPI Target">
+    <simple-method method-name="updateDepartmentObjectives" short-description="Update Department Objectives">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
@@ -593,7 +646,7 @@
 			property="UpdateSuccess" field="successMessage" />
     </simple-method>
     
-    <simple-method method-name="deleteDepartmentKPITarget" short-description="Delete Department KPI Target">
+    <simple-method method-name="deleteDepartmentObjectives" short-description="Delete Department Objectives">
         <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
         <property-to-field resource="HumanResUiLabels"
