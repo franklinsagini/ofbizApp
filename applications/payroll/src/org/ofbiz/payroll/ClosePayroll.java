@@ -1,5 +1,7 @@
 package org.ofbiz.payroll;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +12,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.webapp.event.EventHandlerException;
 
 public class ClosePayroll {
 	private static Logger log = Logger.getLogger(ClosePayroll.class);
@@ -49,9 +52,23 @@ public class ClosePayroll {
 				e.printStackTrace();
 			}
 		}
+		
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
 				
 		
-		return null;
+		return "";
 	}
 
 	private static void updatePayrollPeriod(Delegator delegator,

@@ -1051,6 +1051,7 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<now-timestamp field="nowTimestamp"/>
 		<sequenced-id sequence-name="RegistryDocuments" field="documentId" />
+		<log message="############################## PARAMS: ${parameters.memberNumber} ############" level="info"/>
 		<set from-field="documentId" field="newEntity.documentId" />
 		<set field="partyId" from-field="parameters.partyId"/>
 		<set field="newEntity.documentFolio" value="${parameters.memberNumber}-${bsh:org.ofbiz.registry.FileServices.getFileDocCount(partyId);}"/>
