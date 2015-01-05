@@ -60,7 +60,7 @@ loansList.eachWithIndex { loanItem, index ->
 	statementItem = delegator.makeValue("ExpectedPaymentSent",
 		null);
 	statementItem.loanNo = loanItem.loanNo;
-	statementItem.createdStamp = loanItem.createdStamp;
+	statementItem.createdStamp = loanItem.disbursementDate;
 	statementItem.remitanceDescription = "Loan Disbursement";
 	statementItem.amount = loanItem.loanAmt;
 	statementItem.isReceived = 'N';
