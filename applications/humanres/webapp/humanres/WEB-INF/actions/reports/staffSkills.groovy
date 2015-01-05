@@ -8,6 +8,6 @@ if (partyId) {
    employee = delegator.findOne("Person", [partyId : partyId], false);
    context.employee = employee;
 
-    context.qual = delegator.findByAnd("PartyQual", [partyId : parameters.partyId], null, false);
+    context.skill = delegator.findByAnd("PartySkill", [partyId : parameters.partyId], null, false);
 }
 

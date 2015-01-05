@@ -34,60 +34,65 @@ under the License.
     <fo:block font-size="10pt" text-align="left" font-weight="bold">
         Employee Name: ${employee.firstName} ${employee.lastName}
     </fo:block>
-<#if depend?has_content>
+<#if qual?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="130pt"/>
+            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="90pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="70pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Dependent's Name</fo:block>
+                        <fo:block>Qualification Name</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Relationship</fo:block>
+                        <fo:block text-align="center">Title</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">ID No.</fo:block>
+                        <fo:block text-align="right">Specialization</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Gender</fo:block>
+                        <fo:block text-align="right">Grade</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Date Of Birth</fo:block>
+                        <fo:block text-align="right">Institution</fo:block>
+                    </fo:table-cell>
+                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="right">Start Date</fo:block>
+                    </fo:table-cell>
+                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="right">Through Date</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-                  <#list depend as dep>
-                    <#if dep.familyRelationsId?has_content>
-                        <#assign familyRelations = delegator.findOne("FamilyRelations", {"familyRelationsId" : dep.familyRelationsId}, false)/>
-                    </#if>
+                  <#list qual as dep>
                      <fo:table-row>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.fullname?if_exists}</fo:block>
+                            <fo:block>${dep.partyQualTypeId?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if familyRelations?has_content >
-                                <fo:block>${familyRelations.relationship?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
+                            <fo:block>${dep.title?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.specialization?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.grade?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.idno?if_exists}</fo:block>
+                            <fo:block>${dep.institute?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.gender?if_exists}</fo:block>
+                            <fo:block>${dep.fromDate?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.dob?if_exists}</fo:block>
+                            <fo:block>${dep.thruDate?if_exists}</fo:block>
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
