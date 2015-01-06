@@ -29,6 +29,9 @@ if ((lloanProductId != null) && (loanProductId != "")){
 	myLoansList = delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: disburseLoanStatusId], null, false);
 }
 
+if ((stationId != null) && (stationId != "")){
+	myLoansList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: disburseLoanStatusId], null, false);
+}
 context.myLoansList = myLoansList
 context.partyId = partyId
 
