@@ -529,6 +529,7 @@ public class MSaccoServices {
 		msaccotransaction.setStatus(msaccoStatus.getStatus());
 		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
 		GenericValue loanRepayment = delegator.makeValue("LoanRepayment");
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
 		if (msaccoStatus.getStatus().equals("SUCCESS"))
 		{
 			//LoanRepayments
@@ -536,11 +537,20 @@ public class MSaccoServices {
 			String loanApplicationId = LoanServices.getLoan(loanNumber).getLong("loanApplicationId").toString();
 			partyId = partyId.replaceAll(",", "");
 			loanApplicationId = loanApplicationId.replaceFirst(",", "");
+			loanRepayment.set("loanRepaymentId", loanRepaymentId);
 			loanRepayment.set("transactionAmount", amount);
 			loanRepayment.set("totalInterestDue", LoanRepayments.getTotalInterestDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalInterestPaid(partyId, loanApplicationId)));
 			loanRepayment.set("totalInsuranceDue",  LoanRepayments.getTotalInsuranceDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalInsurancePaid(partyId, loanApplicationId)));
 			loanRepayment.set("totalPrincipalDue", LoanRepayments.getTotalPrincipalDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalPrincipalPaid(partyId, loanApplicationId)));
-
+			loanRepayment.set("partyId", Long.valueOf(partyId));
+			loanRepayment.set("loanApplicationId", Long.valueOf(loanApplicationId));
+			
+			
+			loanRepayment.set("isActive", "Y");
+			loanRepayment.set("createdBy", "dmin");
+			loanRepayment.set("loanNo", loanNumber);
+			
+			
 			Map<String, String> userLogin = new HashMap<String, String>();
 			userLogin.put("userLoginId", "admin");
 			

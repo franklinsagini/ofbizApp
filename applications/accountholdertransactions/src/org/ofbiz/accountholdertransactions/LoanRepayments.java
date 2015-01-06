@@ -1167,6 +1167,14 @@ public class LoanRepayments {
 		BigDecimal interestAmount = BigDecimal.ZERO;
 		BigDecimal principalAmount = BigDecimal.ZERO;
 		BigDecimal excessAmount = BigDecimal.ZERO;
+		
+		
+		//BigDecimal bdTotalLoanRepaid = BigDecimal.ZERO;
+		BigDecimal bdLoanBalance = BigDecimal.ZERO;
+		bdLoanBalance = LoanServices.getLoanRemainingBalance(loanRepayment.getLong("loanApplicationId"));
+		//BigDecimal bdLoanAmt = loanRepayment.getBigDecimal("loanAmt");
+		
+		
 
 		if (amountRemaining.compareTo(BigDecimal.ZERO) == 1) {
 			// Remove Insurance
@@ -1196,11 +1204,23 @@ public class LoanRepayments {
 			}
 
 			// Remove Principal
-			if (totalPrincipalDue.compareTo(BigDecimal.ZERO) == 1) {
-				if (amountRemaining.compareTo(totalPrincipalDue) >= 0) {
-					principalAmount = totalPrincipalDue;
+//			if (totalPrincipalDue.compareTo(BigDecimal.ZERO) == 1) {
+//				if (amountRemaining.compareTo(totalPrincipalDue) >= 0) {
+//					principalAmount = totalPrincipalDue;
+//					amountRemaining = amountRemaining
+//							.subtract(totalPrincipalDue);
+//				} else {
+//					principalAmount = amountRemaining;
+//					amountRemaining = BigDecimal.ZERO;
+//
+//				}
+//			}
+			
+			if (bdLoanBalance.compareTo(BigDecimal.ZERO) == 1) {
+				if (amountRemaining.compareTo(bdLoanBalance) >= 0) {
+					principalAmount = bdLoanBalance;
 					amountRemaining = amountRemaining
-							.subtract(totalPrincipalDue);
+							.subtract(bdLoanBalance);
 				} else {
 					principalAmount = amountRemaining;
 					amountRemaining = BigDecimal.ZERO;
@@ -1210,6 +1230,10 @@ public class LoanRepayments {
 
 			if (amountRemaining.compareTo(BigDecimal.ZERO) >= 0) {
 				excessAmount = amountRemaining;
+				
+				//Deposit Excess to Savings Account
+				
+				//TODO
 			}
 
 		}
@@ -1219,7 +1243,7 @@ public class LoanRepayments {
 		loanRepayment.set("interestAmount", interestAmount);
 		loanRepayment.set("insuranceAmount", insuranceAmount);
 		loanRepayment.set("principalAmount", principalAmount);
-		loanRepayment.set("excessAmount", excessAmount);
+		//loanRepayment.set("excessAmount", excessAmount);
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
