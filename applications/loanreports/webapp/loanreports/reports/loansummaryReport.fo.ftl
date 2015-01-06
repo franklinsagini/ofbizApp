@@ -144,7 +144,7 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
 								                           
                                 <fo:block> 
-                                <#assign loanBalance = Static["org.ofbiz.loans.LoanServices"].getLoansRepaidByLoanApplicationId(loan.loanApplicationId)>
+                                <#assign loanBalance = loan.loanAmt - Static["org.ofbiz.loans.LoanServices"].getLoansRepaidByLoanApplicationId(loan.loanApplicationId)>
                                 <#assign totalLoans = totalLoans+loanBalance>
                                 <#-- ${expectation.remitanceDescription?if_exists} --> 
                                 Kshs.  ${loanBalance?string(",##0.00")}
