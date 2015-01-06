@@ -25,8 +25,13 @@ disburseLoanStatusId = 6.toLong();
 if ((partyId != null) && (partyId != "")){
 	myLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: disburseLoanStatusId], null, false);
 }
-if ((lloanProductId != null) && (loanProductId != "")){
+
+if ((loanProductId != null) && (loanProductId != "")){
 	myLoansList = delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: disburseLoanStatusId], null, false);
+}
+
+if ((stationId != null) && (stationId != "")){
+	myLoansList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: disburseLoanStatusId], null, false);
 }
 
 context.myLoansList = myLoansList
