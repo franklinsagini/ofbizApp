@@ -355,9 +355,18 @@ public class MSaccoServices {
 
 	@GET
 	@Produces("application/json")
-	@Path("/withdrawal/{phoneNumber}/{amount}/{transactionId}/{reference}")
+	@Path("/withdrawal/{phoneNumber}/{amount}/{transactionId}/{reference}/{withdrawalStage}")
 	public Response withdrawal(@PathParam("phoneNumber") String phoneNumber,
-			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference ) {
+			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference, @PathParam("withdrawalStage") String withdrawalStage ) {
+		
+		
+		if (withdrawalStage.equals("Withdrawal_Confirm")){
+			AccHolderTransactionServices.WITHDRAWALOK = "OK";
+		} else{
+			AccHolderTransactionServices.WITHDRAWALOK = "FALSE";
+		}
+		
+		//withdrawalStage
 
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
@@ -406,6 +415,11 @@ public class MSaccoServices {
 			transaction.setAccountNo(memberAccount.getString("accountNo"));
 			transaction.setAccountName(memberAccount.getString("accountName"));
 			transaction.setTransactionId(transactionId);
+			
+			if (reference.equals("NOREFENCE"))
+			{
+				reference = "";
+			}
 			transaction.setReference(reference);
 
 			Results results = new Results();
@@ -424,7 +438,7 @@ public class MSaccoServices {
 
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
-
+		AccHolderTransactionServices.WITHDRAWALOK = "OK";
 		return Response.ok(json).type("application/json").build();
 	}
 
