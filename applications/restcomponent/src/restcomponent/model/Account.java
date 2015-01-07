@@ -1,12 +1,26 @@
 package restcomponent.model;
 
-import java.math.BigDecimal;
 
 public class Account {
-	
+    protected String telephoneNo;
+	protected String query_type;
 	private String accountNo;
 	private String accountName;
 	private Double accountBalance;
+	
+	
+	public String getTelephoneNo() {
+		return telephoneNo;
+	}
+	public void setTelephoneNo(String telephoneNo) {
+		this.telephoneNo = telephoneNo;
+	}
+	public String getQuery_type() {
+		return query_type;
+	}
+	public void setQuery_type(String query_type) {
+		this.query_type = query_type;
+	}
 	public String getAccountNo() {
 		return accountNo;
 	}

@@ -72,9 +72,9 @@ under the License.
                        <#assign memberAccId = activity.memberAccountId?number/>
                       <#assign acc = delegator.findOne("MemberAccount", {"memberAccountId" : memberAccId?long}, false)/>
                     </#if>
-                   
                     <#if member.stationId?has_content>
-                        <#assign station = delegator.findOne("Station", {"stationId" : member.stationId}, false)/>
+                    <#assign stationId = member.stationId>
+                        <#assign station = delegator.findOne("Station", {"stationId" : stationId.toString()}, false)/>
                     </#if>
 
                      <fo:table-row>
