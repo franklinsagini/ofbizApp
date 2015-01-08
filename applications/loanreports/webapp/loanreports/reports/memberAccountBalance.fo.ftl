@@ -47,15 +47,23 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="270pt"/>
-            <fo:table-column column-width="270pt"/>
+            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="150pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Member Account Number</fo:block>
+                        <fo:block text-align="left">Account Code</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Member Account Balance</fo:block>
+                        <fo:block text-align="left">Account Type</fo:block>
+                    </fo:table-cell>
+                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Account Number</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Account Balance</fo:block>
                     </fo:table-cell>
                   
                 </fo:table-row>
@@ -67,8 +75,26 @@ under the License.
                        <#assign memberAccId = activity.memberAccountId?number/>
                       <#assign acc = delegator.findOne("MemberAccount", {"memberAccountId" : memberAccId?long}, false)/>
                     </#if>
+                     <#if acc.accountProductId?has_content>
+                      <#assign accproduct = delegator.findOne("AccountProduct", {"accountProductId" : acc.accountProductId}, false)/>
+                    </#if>
 
                      <fo:table-row>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if acc?has_content>
+                                <fo:block>${accproduct.code?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if acc?has_content>
+                                <fo:block>${accproduct.name?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                        
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if acc?has_content>
                                 <fo:block>${acc.accountNo?if_exists}</fo:block>

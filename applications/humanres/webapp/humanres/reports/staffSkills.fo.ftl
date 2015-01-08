@@ -44,7 +44,7 @@ under the License.
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Skill Name</fo:block>
+                        <fo:block>Skill </fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="center">Years in Experience</fo:block>
@@ -55,27 +55,28 @@ under the License.
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-                  <#list skill as dep>
-                    <#if dep.skillTypeId?has_content>
-                        <#assign skillTyp = delegator.findOne("skillType", {"skillTypeId" : dep.skillTypeId}, false)/>
+                    <#list skill as skill>
+                    <#if skill.skillTypeId?has_content>
+                        <#assign skillTypeIds = skill.skillTypeId>
+                        <#assign partyskill = delegator.findOne("skillType", {"skillTypeId" : skillTypeIds.toString()}, false)/>
                     </#if>
                      <fo:table-row>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if skillTyp?has_content >
-                                <fo:block>${skillTyp.description? if_exists}</fo:block>
+                            <#if partyskill?has_content >
+                                <fo:block>${partyskill.description?if_exists}</fo:block>
                             <#else>
-                                <fo:block>${dep.skillTypeId}</fo:block>
+                                <fo:block>${skill.skillTypeId}</fo:block>
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.yearsExperience?if_exists}</fo:block>
+                            <fo:block>${skill.yearsExperience?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.skillLevel?if_exists}</fo:block>
+                            <fo:block>${skill.skillLevel?if_exists}</fo:block>
                         </fo:table-cell>
                          
                      </fo:table-row>
-                  </#list>
+         </#list>
             </fo:table-body>
         </fo:table>
     </fo:block>
