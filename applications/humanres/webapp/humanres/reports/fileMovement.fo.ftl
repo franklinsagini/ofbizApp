@@ -33,9 +33,6 @@ under the License.
     </fo:block>
 <#if file?has_content>
     <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Folio Number: ${file.folioNo?if_exists}
-    </fo:block>
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
         Current Status: ${file.status?if_exists}
     </fo:block>
 </#if>
@@ -44,9 +41,9 @@ under the License.
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
             <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="120pt"/>
@@ -92,6 +89,9 @@ under the License.
                     <#if activity.currentPossesser?has_content>
                         <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
                     </#if>
+                     <#if activity.Reason?has_content>
+                        <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : activity.Reason}, false)/>
+                    </#if>
                      <fo:table-row>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.fileActionTypeId?if_exists}</fo:block>
@@ -118,14 +118,13 @@ under the License.
                             </#if>
                         </fo:table-cell>
                         
-                        
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.Reason?if_exists}</fo:block>
+                            <#if reason?has_content>
+                                <fo:block>${reason.activity?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
                         </fo:table-cell>
-                        
-                        
-                        
-                        
                         
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.receiptStatus?if_exists}</fo:block>

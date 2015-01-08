@@ -24,7 +24,13 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        FILE MOVEMENT REPORT
+        
+         <#if file.Reason?has_content>
+            <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : file.Reason}, false)/>
+FILE MOVEMENT FOR  [${reason.activity}]  REPORT
+        </#if>
+        
+       
     </fo:block>
     <fo:block><fo:leader/></fo:block>
     <#-- Employee Details -->
@@ -32,12 +38,6 @@ under the License.
         File Owner: ${employee.firstName} ${employee.lastName}
     </fo:block>
 <#if file?has_content>
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Folio Number: ${file.folioNo?if_exists}
-    </fo:block>
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Activity: ${file.Reason?if_exists}
-    </fo:block>
     <fo:block font-size="10pt" text-align="left" font-weight="bold">
         Current Status: ${file.status?if_exists}
     </fo:block>
@@ -50,7 +50,6 @@ under the License.
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="120pt"/>
             <fo:table-header>
@@ -67,13 +66,6 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Carried By</fo:block>
                     </fo:table-cell>
-                    
-                    
-                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Reason</fo:block>
-                    </fo:table-cell>
-                    
-                    
                     
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Reciept Status</fo:block>
@@ -120,16 +112,6 @@ under the License.
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
-                        
-                        
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.Reason?if_exists}</fo:block>
-                        </fo:table-cell>
-                        
-                        
-                        
-                        
-                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.receiptStatus?if_exists}</fo:block>
                         </fo:table-cell>
