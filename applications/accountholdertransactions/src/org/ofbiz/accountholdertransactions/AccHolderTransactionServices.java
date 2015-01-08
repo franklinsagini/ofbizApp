@@ -2014,7 +2014,8 @@ public class AccHolderTransactionServices {
 						.getString("accountTransactionParentId"));
 		postCashWithdrawalTransaction(accountTransaction, userLogin);
 
-		return "success";
+		//return "success";
+		return accountTransactionParent.getString("accountTransactionParentId");
 	}
 
 	private static void postCashWithdrawalTransaction(
