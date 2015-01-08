@@ -47,11 +47,15 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="200pt"/>
-            <fo:table-column column-width="200pt"/>
-            <fo:table-column column-width="200pt"/>
+            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="150pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Account Code</fo:block>
+                    </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Account Type</fo:block>
                     </fo:table-cell>
@@ -76,6 +80,13 @@ under the License.
                     </#if>
 
                      <fo:table-row>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if acc?has_content>
+                                <fo:block>${accproduct.code?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if acc?has_content>
                                 <fo:block>${accproduct.name?if_exists}</fo:block>
