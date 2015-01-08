@@ -78,9 +78,10 @@ under the License.
                     <#if activity.actionBy?has_content>
                         <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
                     </#if>
-                    
+                    <#if activity.Reason?has_content>
+                        <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : activity.Reason}, false)/>
+                    </#if>
                   
-                    
                     <#if activity.currentPossesser?has_content>
                         <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
                     </#if>
@@ -107,8 +108,13 @@ under the License.
                             </#if>
                         </fo:table-cell>
                         
+                         
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.Reason?if_exists}</fo:block>
+                            <#if reason?has_content>
+                                <fo:block>${reason.activity?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
                         </fo:table-cell>
                         
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
