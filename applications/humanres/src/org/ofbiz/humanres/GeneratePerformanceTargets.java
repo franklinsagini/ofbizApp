@@ -25,6 +25,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
 public class GeneratePerformanceTargets {
 	
 	static ArrayList<String> perfTargets = new ArrayList<String>();
+	static ArrayList<String> perfQualGoals = new ArrayList<String>();
 
 private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 	
@@ -55,8 +56,9 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 		
 		for (GenericValue perfReview : perfReviewELI) 
 		{
+
 			log.info("######### Review ID " + perfReview.getString("perfReviewId"));
-			setExistingTargets(delegator, perfReview.getString("perfReviewId"));
+			getExistingTargets(delegator, perfReview.getString("perfReviewId"));
 			addTargets(delegator, perfReview);
 			/*try
 			{
@@ -83,7 +85,10 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 		return "";
 	}
 
-	private static void setExistingTargets(Delegator delegator, String perfReviewId) {
+	private static void getExistingTargets(Delegator delegator, String perfReviewId) {
+		perfTargets = new ArrayList<String>();
+		perfQualGoals = new ArrayList<String>();
+		
 		List<GenericValue> existingReviewsELI = null;
 		try {
 			perfTargets = new ArrayList<String>();
@@ -100,25 +105,48 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 		{
 			log.info("######### target " + existingReviews.getString("kpiTargetId"));
 			perfTargets.add(existingReviews.getString("kpiTargetId"));
+			perfQualGoals.add(existingReviews.getString("perfGoalsId"));
 		}
 		
 	}
 
 	private static void addTargets(Delegator delegator, GenericValue perfReview) {
 		String perfReviewId= perfReview.getString("perfReviewId");
-		String branchId=getBranch(delegator, perfReview.getString("employeePartyId"));
+		
 		List<GenericValue> targetELI = null;
 		
-		EntityConditionList<EntityExpr> targetConditions = EntityCondition
+		/*EntityConditionList<EntityExpr> targetConditions = EntityCondition
 		.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 				"branchId", EntityOperator.EQUALS, null),
 				EntityCondition.makeCondition("branchId",
 						EntityOperator.EQUALS, branchId)),
-				EntityOperator.OR);
+				EntityOperator.OR);*/
 		
 		try {
-			targetELI = delegator.findList("KPITargets",targetConditions, null,
-					null, null, false);
+			if(perfReview.getString("reviewType").equals("Branch"))
+			{
+				log.info("###################### ReviewType =  BRANCH ######################");
+				String branchId=getPersonDetails(delegator, perfReview.getString("employeePartyId"), "branchId");				
+				targetELI = delegator.findList("KPITargets", EntityCondition
+						.makeCondition("branchId", branchId), null,
+						null, null, false);
+			}
+			else if(perfReview.getString("reviewType").equals("Department"))
+			{
+				log.info("###################### ReviewType = DEPARTMENT ######################");
+				String deptId =getPersonDetails(delegator, perfReview.getString("employeePartyId"), "departmentId");
+				targetELI = delegator.findList("KPITargets", EntityCondition
+						.makeCondition("deptId", deptId), null,
+						null, null, false);
+			}
+			else
+			{
+				log.info("###################### ReviewType = POSITION ######################");
+				String empPosId = getPersonDetails(delegator, perfReview.getString("employeePartyId"), "emplPositionTypeId");
+				targetELI = delegator.findList("KPITargets", EntityCondition
+						.makeCondition("emplPositionTypeId", empPosId), null,
+						null, null, false);
+			}
 		
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -130,9 +158,28 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 		{
 			if(!(perfTargets.contains(target.getString("kpiTargetId"))))
 			{
-				listTargets.add(createTargetsToSave(delegator, perfReview.getString("employeePartyId"), perfReviewId, target.getString("kpiTargetId")));
+				listTargets.add(createTargetsToSave(delegator, perfReview.getString("employeePartyId"), perfReviewId, target));
 			}
 		}
+		
+
+		List<GenericValue> qualTargetELI = null;
+		try{
+			qualTargetELI = delegator.findList("PerfGoals", EntityCondition
+					.makeCondition("perfGoalsDefId", "QTT_GOALS"), null,
+					null, null, false);
+			
+		}catch (Exception e) {
+			e.printStackTrace();			
+		}
+		for (GenericValue qualTarget : qualTargetELI) 
+		{
+			if(!(perfQualGoals.contains(qualTarget.getString("perfGoalsId"))))
+			{
+				listTargets.add(createGoalToSave(delegator, perfReview.getString("employeePartyId"), perfReviewId, qualTarget));
+			}
+		}
+		
 		try {
 			delegator.storeAll(listTargets);
 		} catch (GenericEntityException e) {
@@ -142,12 +189,10 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 		
 	}
 
-	private static GenericValue createTargetsToSave(Delegator delegator,
-			String partyId, String perfReviewId, String kpitargetId) {
+	private static GenericValue createGoalToSave(Delegator delegator,
+			String partyId, String perfReviewId, GenericValue qualTarget) {
 		
-		String perfReviewItemSequenceId = delegator.getNextSeqId("PerfReviewItem");
-//		String perfReviewItemSequenceId = delegator.getNextSeqId("");
-		
+		String perfReviewItemSequenceId = delegator.getNextSeqId("PerfReviewItem");		
 
 		GenericValue perfReviewItem = delegator.makeValidValue(
 				"PerfReviewItem", UtilMisc.toMap(
@@ -155,7 +200,7 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 						"employeePartyId", partyId, 
 						"employeeRoleTypeId", "EMPLOYEE", 
 						"perfReviewId", perfReviewId, 
-						"kpiTargetId", kpitargetId,
+						"perfGoalsId", qualTarget.getString("perfGoalsId"),
 						"isSubmitted","N"));
 /*		try {
 			perfReviewItem = delegator.createSetNextSeqId(perfReviewItem);
@@ -165,12 +210,37 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 		return perfReviewItem;
 	}
 
-	private static String getBranch(Delegator delegator, String partyId) {
-		String branchId=null;
+	private static GenericValue createTargetsToSave(Delegator delegator,
+			String partyId, String perfReviewId, GenericValue target) {
+		
+		String perfReviewItemSequenceId = delegator.getNextSeqId("PerfReviewItem");
+		
+
+		GenericValue perfReviewItem = delegator.makeValidValue(
+				"PerfReviewItem", UtilMisc.toMap(
+						"perfReviewItemSeqId", perfReviewItemSequenceId, 
+						"employeePartyId", partyId, 
+						"employeeRoleTypeId", "EMPLOYEE", 
+						"perfReviewId", perfReviewId, 
+						"kpiTargetId", target.getString("kpiTargetId"),
+						"actionPlans", target.getString("actionPlans"),
+						"kpi", target.getString("kpi"),
+						"perfGoalsId", target.getString("perfGoalsId"),
+						"isSubmitted","N"));
+/*		try {
+			perfReviewItem = delegator.createSetNextSeqId(perfReviewItem);
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}*/
+		return perfReviewItem;
+	}
+
+	private static String getPersonDetails(Delegator delegator, String empPartyId, String columnName) {
+		String neededId=null;
 		List<GenericValue> personELI = null;
 		try {
 			personELI = delegator.findList("Person", EntityCondition
-					.makeCondition("partyId", partyId), null,
+					.makeCondition("partyId", empPartyId), null,
 					null, null, false);
 		
 		} catch (GenericEntityException e) {
@@ -180,10 +250,10 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 
 		for (GenericValue person : personELI) 
 		{
-			branchId= person.getString("branchId");
+			neededId= person.getString(columnName);
 		}
 		
-		return branchId;
+		return neededId;
 	}
 
 }
