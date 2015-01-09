@@ -17,112 +17,102 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if activities?has_content>
+    <#if Members?has_content>
 
     <#-- REPORT TITLE -->
     <fo:block font-size="18pt" font-weight="bold" text-align="center">
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-         DURATION BETWEEN FILE REQUEST AND ISSUANCE REPORT
+        ACCOUNTS BALANCE REPORT
     </fo:block>
     <fo:block><fo:leader/></fo:block>
 
-<#if activities?has_content>
+
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="100pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Owner</fo:block>
+                        <fo:block text-align="left">Member Name</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Issued By</fo:block>
+                        <fo:block text-align="left">Member Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Issued To</fo:block>
+                        <fo:block text-align="left">Account Number</fo:block>
                     </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Request Reason</fo:block>
-                    </fo:table-cell>
-                    
                     
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Date Issued</fo:block>
+                        <fo:block text-align="left">Balance</fo:block>
                     </fo:table-cell>
                     
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Duration From Request (Given In Days)</fo:block>
+                        <fo:block text-align="left">Station</fo:block>
                     </fo:table-cell>
+                  
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
 
-                  <#list activities as activity>
-                   <#if activity.carriedBy?has_content>
-                        <#assign carriedBy = delegator.findOne("Person", {"partyId" : activity.carriedBy}, false)/>
-                    </#if>
-                    
-                     <#if activity.partyId?has_content>
+                  <#list Members as activity>
+                    <#if activity.partyId?has_content>
                     	<#assign memberPartyId = activity.partyId?number />
                         <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
+                         </#if>
+                   
+                   
+                     <#if activity.memberAccountId?has_content>
+                       <#assign memberAccId = activity.memberAccountId?number/>
+                      <#assign acc = delegator.findOne("MemberAccount", {"memberAccountId" : memberAccId?long}, false)/>
                     </#if>
-                    
-                    <#if activity.actionBy?has_content>
-                        <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
+                    <#if member.stationId?has_content>
+                    <#assign stationId = member.stationId>
+                        <#assign station = delegator.findOne("Station", {"stationId" : stationId.toString()}, false)/>
                     </#if>
-                    <#if activity.Reason?has_content>
-                        <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : activity.Reason}, false)/>
-                    </#if>
-                  
-                    <#if activity.currentPossesser?has_content>
-                        <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
-                    </#if>
+
                      <fo:table-row>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if member?has_content>
+                               <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if member?has_content>
-                                  <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
+                                <fo:block>${member.memberNumber?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if actionBy?has_content>
-                                <fo:block>${actionBy.firstName?if_exists} ${actionBy.lastName?if_exists}</fo:block>
+                            <#if acc?has_content>
+                                <fo:block>${acc.accountNo?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if activity.currentPossesser?if_exists == "REGISTRY">
-                                <fo:block>${activity.currentPossesser?if_exists}</fo:block>
-                            <#else>
-                                 <fo:block>${currentPossesser.firstName?if_exists} ${currentPossesser.lastName?if_exists}</fo:block>
-                            </#if>
-                        </fo:table-cell>
-                        
-                         
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if reason?has_content>
-                                <fo:block>${reason.activity?if_exists}</fo:block>
+                            <#if activity?has_content>
+                                <fo:block>${activity.savingsOpeningBalance?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
-                        
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.actionDate?if_exists}</fo:block>
-                        </fo:table-cell>
-                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.interActivityDuration?if_exists}</fo:block>
+                            <#if station?has_content>
+                                 <fo:block>${station.stationNumber?if_exists}- ${station.name?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
                         </fo:table-cell>
                         
                      </fo:table-row>
@@ -131,13 +121,7 @@ under the License.
             </fo:table-body>
         </fo:table>
     </fo:block>
-    <#else>
-     <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">Nothing To Show</fo:block>
-    </fo:block>
-  </#if>
-    <#else>
-        <fo:block text-align="center">No Employees Found With that ID</fo:block>
-    </#if>
+</#if>
+
 </#escape>
 

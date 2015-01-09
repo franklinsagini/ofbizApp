@@ -28,8 +28,9 @@ under the License.
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 		<set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
-		<set field="withdrawalStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, userLogin);}" type="String"/>
-				
+		<!-- withdrawalStatus -->
+		<set field="accountTransactionParentId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, userLogin);}" type="String"/>
+		<field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId"/>
 		<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
         <!-- set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/ -->
     </simple-method>

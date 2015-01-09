@@ -53,7 +53,7 @@
                             		<section>
                                 		<widgets>
     										<container style="button-bar">                                                   
-                                                <link target="generateTargets?perfManagerId=${parameters.perfManagerId}"  text="Generate Targets" style="buttontext create">
+                                                <link target="generateTargets?perfManagerId=${parameters.perfManagerId}"  text="Generate Objectives" style="buttontext create">
                                                     <image url-mode="raw" src="${iconsLocation}/add.png"/>                                                                                                       
                                                 </link>
                                                 </container>
@@ -145,7 +145,26 @@
             <widgets>
                 <decorator-screen name="CommonPerfReviewDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-form name="ListPerfReviewItems" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                    	<screenlet>
+                    		<section>
+                    			<widgets>
+                    				<label style="h1" text="Quantitative Goals"></label>
+                    				<include-form name="ListQuantitativePerfReviewItems" location="component://humanres/widget/forms/PerfReviewForms.xml"/>	
+                    			</widgets>
+                    				
+                    		</section>
+                    	</screenlet>
+                    	<screenlet>
+                    		<section>
+                    			<widgets>
+                    				<label style="h1" text="Qualitative Goals"></label>
+                    				<include-form name="ListQualitativePerfReviewItems" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                    			</widgets>
+                    			
+                    		</section>
+                    	</screenlet>
+                        
+                        
                         <!-- screenlet id="AddPerfReviewItemPanel" title="Scores" collapsible="true">
                             <include-form name="AddPerfReviewItem" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
                         </screenlet -->                        

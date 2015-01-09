@@ -504,5 +504,43 @@ public class FileServices {
 		
 		
 	}
+	
+	public static Date getDateOfReceivedFile(String partyId, String releasedTo) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Date fileDate = null;
+         List<GenericValue> dateELI = null;
+		
+		
+		GenericValue lastDate = null;
+		
+		EntityConditionList<EntityExpr> dateConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
+				EntityCondition.makeCondition("releasedTo",EntityOperator.EQUALS, releasedTo)),
+					EntityOperator.AND);
+		
+		
+		
+		try {
+			List<String> orderByList = new ArrayList<String>();
+			orderByList.add("-timeOut");
+
+			dateELI = delegator.findList("RegistryFileMovement",dateConditions, null, orderByList, null, false);
+			
+			if (dateELI.size() > 0){
+				lastDate = dateELI.get(0); 
+			 fileDate=lastDate.getDate("timeOut");
+			
+			}
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+			}
+		
+		
+	
+		LocalDate localDateEndDate = new LocalDate(fileDate.getTime());
+		return localDateEndDate.toDate();
+		
+		
+	}
 
 }

@@ -24,17 +24,12 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        STAFF SKILLS REPORT
+        STAFF WITH 
+       
+        SKILLS REPORT
     </fo:block>
-    <fo:block><fo:leader/></fo:block>
-    <#-- Employee Details -->
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Payroll Number: ${employee.employeeNumber}
-    </fo:block>
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Employee Name: ${employee.firstName} ${employee.lastName}
-    </fo:block>
-<#if skill?has_content>
+    <fo:block><fo:leader/></fo:block> 
+<#if employee?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
@@ -44,7 +39,7 @@ under the License.
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Skill </fo:block>
+                        <fo:block>Staff Names</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="center">Years in Experience</fo:block>
@@ -55,34 +50,29 @@ under the License.
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-                    <#list skill as skill>
-                    <#if skill.skillTypeId?has_content>
-                        <#assign skillTypeIds = skill.skillTypeId>
-                        <#assign partyskill = delegator.findOne("skillType", {"skillTypeId" : skillTypeIds.toString()}, false)/>
+                  <#list employee as dep>
+                    <#if dep.partyId?has_content>
+                        <#assign staff = delegator.findOne("Person", {"partyId" : dep.partyId}, false)/>
                     </#if>
                      <fo:table-row>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if partyskill?has_content >
-                                <fo:block>${partyskill.description?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>${skill.skillTypeId}</fo:block>
-                            </#if>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${staff.firstName?if_exists} ${staff.firstName?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${skill.yearsExperience?if_exists}</fo:block>
+                            <fo:block>${dep.yearsExperience?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${skill.skillLevel?if_exists}</fo:block>
+                            <fo:block>${dep.skillLevel?if_exists}</fo:block>
                         </fo:table-cell>
                          
                      </fo:table-row>
-         </#list>
+                  </#list>
             </fo:table-body>
         </fo:table>
     </fo:block>
-    <#else>
+     <#else>
      <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">No Skills For Employee: ${employee.firstName} ${employee.lastName}</fo:block>
+        <fo:block text-align="center" font-size="14pt">No Employee Found </fo:block>
     </fo:block>
   </#if>
     <#else>

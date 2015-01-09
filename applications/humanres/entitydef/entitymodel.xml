@@ -240,14 +240,14 @@ under the License.
     <entity entity-name="PartySkill"
             package-name="org.ofbiz.humanres.ability"
             title="Party Skill Entity">
+      <field name="partySkillId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="skillTypeId" type="id-ne"></field>
       <field name="yearsExperience" type="numeric"></field>
       <field name="rating" type="numeric"></field>
       <field name="skillLevel" type="numeric"></field>
       <field name="startedUsingDate" type="date-time"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="skillTypeId"/>
+      <prim-key field="partySkillId"/>
       <relation type="one" fk-name="PARTY_SKLL_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
@@ -320,11 +320,13 @@ under the License.
       <field name="managerRoleTypeId" type="id"></field>
       <field name="paymentId" type="id"></field>
       <field name="emplPositionId" type="id"><description>Employee Position</description></field>
+      <field name="emplPositionTypeId" type="id"><description>Employee Position Type</description></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <field name="perfManagerId" type="id"></field>
       <field name="status" type="name"></field>
+      <field name="reviewType" type="name"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
@@ -348,6 +350,9 @@ under the License.
       <relation type="one-nofk" fk-name="PERF_REV_PSTN" rel-entity-name="EmplPosition">
         <key-map field-name="emplPositionId"/>
       </relation>
+       <relation type="one" fk-name="EmplPositionType_IND" title="EmplPositionType" rel-entity-name="EmplPositionType">
+        <key-map field-name="emplPositionTypeId" rel-field-name="emplPositionTypeId"/>
+      </relation>
       <relation type="one" fk-name="PERF_MAN" rel-entity-name="PerfManager">
         <key-map field-name="perfManagerId"/>
       </relation>
@@ -360,12 +365,15 @@ under the License.
       <field name="perfReviewId" type="id-ne"></field>
       <field name="perfReviewItemSeqId" type="id-ne"></field>
       <field name="kpiTargetId" type="id-ne"></field>
+      <field name="actionPlans" type="description"></field>      
+      <field name="kpi" type="description"></field>
       <field name="perfRatingTypeId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="kpiAchievementStatusId" type="id-ne"></field>
       <field name="achievementDate" type="date"></field>
       <field name="perfReviewItemTypeId" type="id"></field>
       <field name="isSubmitted" type="indicator"></field>
+      <field name="perfGoalsId" type="id-ne"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
@@ -387,6 +395,9 @@ under the License.
       </relation>
       <relation type="one-nofk" fk-name="PERF_RVITM_PRITTP" rel-entity-name="PerfReviewItemType">
         <key-map field-name="perfReviewItemTypeId"/>
+      </relation>
+       <relation type="one" fk-name="PerfGoal_IND" title="PerfGoals" rel-entity-name="PerfGoals">
+        <key-map field-name="perfGoalsId" rel-field-name="perfGoalsId"/>
       </relation>
     </entity>
     <entity entity-name="PerfReviewItemType"
@@ -592,9 +603,9 @@ under the License.
       <field name="skillTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
+      <field name="skill" type="name"></field>
       <field name="description" type="name"></field>
       <prim-key field="skillTypeId"/>
-      <prim-key field="description"/>
       <relation type="one" fk-name="PARNT_SKILL_TYPE" title="Parent" rel-entity-name="SkillType">
         <key-map field-name="parentTypeId" rel-field-name="skillTypeId"/>
       </relation>
@@ -2077,6 +2088,26 @@ under the License.
        <field name="holidayDate" type="date"></field>
        <prim-key field="holidayId"/>
     </entity>
+    
+    
+    <view-entity entity-name="PerformanceGoalsAndReviewItems" package-name="org.ofbiz.humanres.ability"
+    	title="Performance Goals And Review Items">
+        <member-entity entity-alias="PRI" entity-name="PerfReviewItem" />
+        <member-entity entity-alias="PGS" entity-name="PerfGoals" />
+        <member-entity entity-alias="PGD" entity-name="PerfGoalsDef" />
+        <alias-all entity-alias="PRI" />
+        <!--alias-all entity-alias="SSP" /-->
+        <alias entity-alias="PGS" name="goal" field="goal"/>
+        <alias entity-alias="PGS" name="goalPercentage" field="percentage"/>
+        <alias entity-alias="PGD" name="goalDef" field="goalDef"/>        
+        <alias entity-alias="PGD" name="goalDefPercentage" field="percentage"/>
+        <view-link entity-alias="PRI" rel-entity-alias="PGS">
+            <key-map field-name="perfGoalsId" />
+        </view-link>
+        <view-link entity-alias="PGS" rel-entity-alias="PGD">
+            <key-map field-name="perfGoalsDefId" />
+        </view-link>
+    </view-entity>
     
     
     

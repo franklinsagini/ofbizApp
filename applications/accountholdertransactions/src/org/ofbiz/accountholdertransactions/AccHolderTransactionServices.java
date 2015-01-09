@@ -44,6 +44,8 @@ import org.ofbiz.webapp.event.EventHandlerException;
 import com.google.gson.Gson;
 
 public class AccHolderTransactionServices {
+	
+	public static String WITHDRAWALOK = "OK";
 
 	private static Logger log = Logger
 			.getLogger(AccHolderTransactionServices.class);
@@ -1849,15 +1851,20 @@ public class AccHolderTransactionServices {
 		BigDecimal dbAvailableBalance = null;
 
 		if (isEnough) {
+			if (WITHDRAWALOK.equals("OK")){
 			transactionId = cashWithdrawal(accountTransaction, userLogin,
 					withdrawalType);
 
 			transactionId = transactionId.replaceAll(",", "");
+			
 
 			transaction.setTransactionId(Long.valueOf(transactionId));
+			
+			}
 			transaction.setStatus("SUCCESS");
 			transaction.setAmount(amount);
 
+			if (WITHDRAWALOK.equals("OK")){
 			ChargeDutyItem chargeDutyItem = getChargeDuty(transactionId);
 
 			if (chargeDutyItem.getChargeAmount() != null)
@@ -1865,6 +1872,7 @@ public class AccHolderTransactionServices {
 
 			if (chargeDutyItem.getDutyAmount() != null)
 				transaction.setCommissionAmount(chargeDutyItem.getDutyAmount());
+			}
 		} else {
 			transaction.setStatus("NOTENOUGHBALANCE");
 		}
@@ -2006,7 +2014,8 @@ public class AccHolderTransactionServices {
 						.getString("accountTransactionParentId"));
 		postCashWithdrawalTransaction(accountTransaction, userLogin);
 
-		return "success";
+		//return "success";
+		return accountTransactionParent.getString("accountTransactionParentId");
 	}
 
 	private static void postCashWithdrawalTransaction(
