@@ -868,12 +868,21 @@
 	
 	  <simple-method method-name="saveFileReceiveActionToFileMovement"
         short-description="File receive">
+        <now-timestamp field="nowTimestamp"/>
         <entity-one entity-name="RegistryFileMovement" value-field="lookedUpValue" />
         <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
-        <set field="lost" from-field="lookedUpValue.lostLeaveDays" type="String"/>
-        <set field="bal" from-field="lookedUpValue.availableLeaveDays" type="String"/>
-        <set field="lookedUpValue.availableLeaveDays" value="${bsh:org.ofbiz.humanres.Leave.getValuesForAnnualLeaveReset(bal,lost);}" />
-        <set field="lookedUpValue.receivedBy" value="0" type="Double"/>
+        <set field="partyId" from-field="parameters.partyId" type="String"/>
+        <set field="releasedTo" value="${userLogin.partyId}" type="String"/>
+        <set field="time" value="${bsh:org.ofbiz.registry.FileServices.getDateOfReceivedFile(partyId, releasedTo);}" />
+        <log message="=====================PLEASE SHOW TIME >> ${time}" level="info"/>
+        
+        <entity-one entity-name="RegistryFileMovement" value-field="reg">
+		 	<field-map field-name="timeOut" from-field="time"/>
+		 </entity-one>
+        
+        
+        <set field="reg.timeIn" from-field="nowTimestamp"/>
+         <set field="reg.receivedBy" value="${userLogin.partyId}"/>
         <store-value value-field="lookedUpValue" />
     </simple-method>
 	
