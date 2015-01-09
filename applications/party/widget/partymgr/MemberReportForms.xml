@@ -26,7 +26,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="loanDetailsForm" type="single" target="loanDetailsPDF" title="" header-row-style="header-row"
+    <form name="loanDetailsForm" type="single" target="loanDetails.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="loanProductId" title="Loan Type" widget-style="required" required-field="true">
             <drop-down allow-empty="false">
@@ -43,20 +43,47 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+        <field name="submitButton" title="Generate CSV" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="loanDetailsFormPDF" type="single" target="loanDetailsPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="loanProductId" title="Loan Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="LoanProduct" description="${name} - ${code}">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="loanStatusId" title="Loan Status">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="LoanStatus" description="${name}">
+                    <entity-order-by field-name="loanStatusId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="submitButton" title="Generate PDF" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
     <form name="loanDetailsFormCSV" list-name="listIt" target="" title="" type="list" view-size="99999"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate="false">
         <actions>
+            <set field="loanProductId" from-field="parameters.loanProductId" type="Long" />
             <entity-condition entity-name="LoanApplication">
                 <condition-expr field-name="loanProductId" from-field="loanProductId"/>
                 <order-by field-name="loanProductId"/>
             </entity-condition>
         </actions>
+        <field name="loanProductId" title="Loan Type"><display-entity entity-name="LoanProduct" key-field-name="loanProductId" description="${name}"/></field>
         <field name="firstName"><display description="${firstName}"/></field>
         <field name="lastName"><display description="${lastName}"/></field>
+        <field name="loanAmt" title="Loan Amount"><display description="${loanAmt}"/></field>
+        <field name="appliedAmt" title="Applied Amount"><display description="${appliedAmt}"/></field>
+        <field name="appraisedAmt" title="Approved Amount"><display description="${appraisedAmt}"/></field>
+        <field name="loanStatusId" title="Loan Status"><display-entity entity-name="LoanStatus" key-field-name="loanStatusId" description="${name}"/></field>
     </form>
     <form name="ListGlAccountOrgCsv" list-name="listIt" target="" title="" type="list" view-size="99999"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate="false">

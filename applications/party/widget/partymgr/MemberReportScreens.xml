@@ -63,7 +63,6 @@ under the License.
             <actions>
                 <set field="headerItem" value="MemberReports" />
                 <set field="tabButtonItem" value="generalReports" />
-                <set field="loanProductId" value="10020" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -73,14 +72,17 @@ under the License.
                             <screenlet title="Member Listing Report">
                                 <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
                             </screenlet>
-                        </container>
-                        <container style="righthalf">
                             <screenlet title="Loan Details Report">
                                 <include-form name="loanDetailsForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
                             </screenlet>
-                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="button" target="loanDetails.csv">
-                                <parameter param-name="loanProductId"/>
-                            </link>
+                        </container>
+                        <container style="righthalf">
+                            <screenlet title="Loan Details Report">
+                                <include-form name="loanDetailsFormPDF" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+<!--                             <link text="${uiLabelMap.AccountingExportAsCsv}" style="button" target="loanDetails.csv">
+                                <parameter param-name="loanProductId" />
+                            </link> -->
                         </container>
                         <container style="clear"/>
                     </decorator-section>
@@ -92,7 +94,7 @@ under the License.
         <section>
             <actions>
                 <set field="viewSize" value="99999"/>
-                <set field="loanProductId" from-field="parameters.loanProductId" />
+                <set field="loanProductId" from-field="parameters.loanProductId" type="Long"/>
                 <set field="headerItem" value="MemberReports" />
                 <set field="tabButtonItem" value="generalReports" />
             </actions>
