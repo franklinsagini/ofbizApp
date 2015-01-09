@@ -598,7 +598,7 @@
 	<simple-method method-name="issuefiles" short-description="request File ">
 		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
-		  <!-- <call-simple-method method-name="deletefileFromRequested" scope="inline"></call-simple-method> -->
+		  <call-simple-method method-name="saveIssueActionToFileMovement" scope="inline"></call-simple-method>
 		  
 		  <now-timestamp field="nowTimestamp"/>
 		 
@@ -713,6 +713,7 @@
 	<simple-method method-name="divertfiles" short-description="request File ">
 		 <call-simple-method method-name="saveDivertAction" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveDivertActionToLogs" scope="inline"></call-simple-method>
+		   <call-simple-method method-name="saveDivertActionToFileMovement" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
@@ -804,6 +805,7 @@
 	<log message="=====================PLEASE SHOW ${parameters}" level="info"/>
 	<call-simple-method method-name="saveRecieveFileAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveRecieveActionToLogs" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveFileReceiveActionToFileMovement" scope="inline"></call-simple-method>
 	
 	<set field="party" from-field="parameters.partyId"/>
 		
@@ -869,21 +871,28 @@
 	  <simple-method method-name="saveFileReceiveActionToFileMovement"
         short-description="File receive">
         <now-timestamp field="nowTimestamp"/>
-        <entity-one entity-name="RegistryFileMovement" value-field="lookedUpValue" />
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
-        <set field="partyId" from-field="parameters.partyId" type="String"/>
-        <set field="releasedTo" value="${userLogin.partyId}" type="String"/>
-        <set field="time" value="${bsh:org.ofbiz.registry.FileServices.getDateOfReceivedFile(partyId, releasedTo);}" />
-        <log message="=====================PLEASE SHOW TIME >> ${time}" level="info"/>
+       
+        <set field="partyId" from-field="parameters.partyId"/>
+        <set field="releasedTo" value="${userLogin.partyId}"/>
+        <set field="time" value="${bsh:org.ofbiz.registry.FileServices.getDateOfReceivedFile(partyId, releasedTo);}" type="Timestamp"/>
+        <log message="=====================PLEASE SHOW TIME >> ${time} Party>${partyId} releasedto > ${releasedTo}" level="info"/>
+        
+        
+        <entity-condition list="dateList" entity-name="RegistryFileMovement">
+				<condition-expr field-name="timeOut" from-field="time"/>
+		</entity-condition>
+		
+		<iterate entry="singleOpenVol" list="dateList">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> TIME-OUT >> ${singleOpenVol.movementId}" level="info"/>
         
         <entity-one entity-name="RegistryFileMovement" value-field="reg">
-		 	<field-map field-name="timeOut" from-field="time"/>
+		 	<field-map field-name="movementId" value="${singleOpenVol.movementId}"/>
 		 </entity-one>
-        
         
         <set field="reg.timeIn" from-field="nowTimestamp"/>
          <set field="reg.receivedBy" value="${userLogin.partyId}"/>
-        <store-value value-field="lookedUpValue" />
+        <store-value value-field="reg" />
+        </iterate>
     </simple-method>
 	
 	
@@ -892,6 +901,7 @@
 	<simple-method method-name="releasefiles" short-description="request File ">
 	<call-simple-method method-name="saveReleaseAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveReleaseActionToLogs" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveReleaseToRegistryActionToFileMovement" scope="inline"></call-simple-method>
 	
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
@@ -977,6 +987,7 @@
 	<simple-method method-name="releaseFileToAnotherStaff" short-description="request File ">
 	<call-simple-method method-name="savereleaseFileToAnotherStaffAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="savereleaseFileToAnotherStaffActionToLogs" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveReleaseToStaffActionToFileMovement" scope="inline"></call-simple-method>
 	
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
@@ -1063,6 +1074,7 @@
 	<simple-method method-name="returnfiles" short-description="request File ">
 	<call-simple-method method-name="saveReturnAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveReturnActionToLogs" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveFileReturnActionToFileMovement" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
@@ -1115,12 +1127,37 @@
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		
-		
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
-		
-		
 		<create-value value-field="newEntity" />
 	</simple-method>
+	
+	
+	 <simple-method method-name="saveFileReturnActionToFileMovement"
+        short-description="File receive">
+        <now-timestamp field="nowTimestamp"/>
+       
+        <set field="partyId" from-field="parameters.partyId"/>
+        <set field="releasedTo" value="REGISTRY"/>
+        <set field="time" value="${bsh:org.ofbiz.registry.FileServices.getDateOfReceivedFile(partyId, releasedTo);}" type="Timestamp"/>
+        <log message="=====================PLEASE SHOW TIME >> ${time} Party>${partyId} releasedto > ${releasedTo}" level="info"/>
+        
+        
+        <entity-condition list="dateList" entity-name="RegistryFileMovement">
+				<condition-expr field-name="timeOut" from-field="time"/>
+		</entity-condition>
+		
+		<iterate entry="singleOpenVol" list="dateList">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> TIME-OUT >> ${singleOpenVol.movementId}" level="info"/>
+        
+        <entity-one entity-name="RegistryFileMovement" value-field="reg">
+		 	<field-map field-name="movementId" value="${singleOpenVol.movementId}"/>
+		 </entity-one>
+        
+        <set field="reg.timeIn" from-field="nowTimestamp"/>
+         <set field="reg.receivedBy" value="${userLogin.partyId}"/>
+        <store-value value-field="reg" />
+        </iterate>
+    </simple-method>
 	
 	
 	 

@@ -42,6 +42,29 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+     <screen name="msaccoApplicationCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://msaccomanagement/webapp/msaccomanagement/reports/msaccoApplicationExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h2" text="MSACCO APPLICATIONS"/>
+                </container>
+                <include-form name="msaccoApplicationExport" location="component://msaccomanagement/widget/msaccoReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="msaccoReports">
         <section>
@@ -53,8 +76,13 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="lefthalf">
-                            <screenlet title="Msacco Application Statement">
+                            <screenlet title="Msacco Application Statement(pdf)">
                                 <include-form name="msaccoApplication" location="component://msaccomanagement/widget/msaccoReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <container style="righthalf">
+                            <screenlet title="Msacco Application Statement(Excel)">
+                                <include-form name="msaccoApplicationExcel" location="component://msaccomanagement/widget/msaccoReportForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="clear"/>
