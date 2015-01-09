@@ -47,4 +47,34 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="loanDetailsFormCSV" list-name="listIt" target="" title="" type="list" view-size="99999"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate="false">
+        <actions>
+            <entity-condition entity-name="LoanApplication">
+                <condition-expr field-name="loanProductId" from-field="loanProductId"/>
+                <order-by field-name="loanProductId"/>
+            </entity-condition>
+        </actions>
+        <field name="firstName"><display description="${firstName}"/></field>
+        <field name="lastName"><display description="${lastName}"/></field>
+    </form>
+    <form name="ListGlAccountOrgCsv" list-name="listIt" target="" title="" type="list" view-size="99999"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate="false">
+        <actions>
+            <entity-condition entity-name="GlAccountOrganizationAndClass">
+                <condition-expr field-name="organizationPartyId" from-field="organizationPartyId"/>
+                <order-by field-name="glAccountId"/>
+            </entity-condition>
+        </actions>
+        <field name="glAccountId"><display description="${glAccountId}"/></field>
+        <field name="glAccountTypeId"><display-entity entity-name="GlAccountType"/></field>
+        <field name="glAccountClassId"><display-entity entity-name="GlAccountClass" key-field-name="glAccountClassId"/></field>
+        <field name="glResourceTypeId"><display-entity entity-name="GlResourceType" key-field-name="glResourceTypeId"/></field>
+        <field name="glXbrlClassId"><display-entity entity-name="GlXbrlClass" key-field-name="glXbrlClassId"/></field>
+        <field name="parentGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${parentGlAccountId}"/></field>
+        <field name="accountCode" ><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode}"/></field>
+        <field name="accountName" ><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountName}"/></field>
+        <field name="description"><display description="${description}"/></field>
+        <field name="productId"><display description="${productId}"/></field>
+    </form>
 </forms>

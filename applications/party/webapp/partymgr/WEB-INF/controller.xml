@@ -2767,17 +2767,22 @@
     <response name="success" type="view" value="loanDetailsPDF" save-home-view="true" />
   </request-map>
 
+  <request-map uri="loanDetails.csv">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="loanDetailsCSV"/>
+  </request-map>
+
   <request-map uri="memberRegistrationByDate">
     <security https="true" auth="true" />
     <response name="success" type="view" value="memberRegistrationByDate" save-home-view="true" />
   </request-map>
-  
+
   <request-map uri="memberRegistrationByDatePDF">
     <security https="true" auth="true" />
     <response name="success" type="view" value="memberRegistrationByDatePDF" save-home-view="true" />
   </request-map>
-  
-  
+
+
 
 
 	<!-- View Mappings -->
@@ -2785,6 +2790,7 @@
 	<view-map name="MemberReports" type="screen" page="component://party/widget/partymgr/MemberReportScreens.xml#MemberReports"/>
   <view-map name="memberListingPDF" type="screenfop" page="component://party/widget/partymgr/MemberReportScreens.xml#memberListingPDF" content-type="application/pdf" encoding="none"/>
   <view-map name="loanDetailsPDF" type="screenfop" page="component://party/widget/partymgr/MemberReportScreens.xml#loanDetailsPDF" content-type="application/pdf" encoding="none"/>
+ 	<view-map name="loanDetailsCSV" type="screencsv" page="component://party/widget/partymgr/MemberReportScreens.xml#loanDetailsCSV" content-type="text/csv" encoding="none"/>
 
 
 	<view-map name="main" type="screen"
@@ -3149,7 +3155,7 @@
                         		<view-map name="Gender" type="screen"
                 page="component://party/widget/partymgr/PartyScreens.xml#Gender" />
 	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
-	
+
 	<view-map name="memberRegistrationByDate" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDate"/>
 	<view-map name="memberRegistrationByDatePDF" type="screenfop" page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDatePDF" content-type="application/pdf" encoding="none"/>
 	<!-- end of view mappings -->
