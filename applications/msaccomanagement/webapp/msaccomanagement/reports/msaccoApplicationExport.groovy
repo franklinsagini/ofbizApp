@@ -17,54 +17,16 @@
  * under the License.
  */
 
-import org.ofbiz.entity.*
-import org.ofbiz.entity.condition.*
-import org.ofbiz.entity.transaction.*
 
 action = request.getParameter("action");
 
 inventoryItemTotals = [];
-boolean beganTransaction = false;
 if (action) {
-    conditions = [EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INV_DELIVERED")];
-    conditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, null));
-    conditionList = EntityCondition.makeCondition(conditions, EntityOperator.OR);
-    try {
-        beganTransaction = TransactionUtil.begin();
-        invItemListItr = delegator.find("MSaccoApplication", null, null, null, null, null);
-        while ((msacco = invItemListItr.next()) != null) {
-            memberAccountId = msacco.memberAccountId;
-            partyId = msacco.partyId;
-            AccNo = delegator.findOne("MemberAccount", [memberAccountId : memberAccountId], false);
-            Member = delegator.findOne("Member", [partyId : partyId], false);
-            if (Member) {
-                FName = Member.getString("firstName");
-                LName = Member.getString("lastName");
-                phoneNo = msacco.getString("mobilePhoneNumber");
-                Id = Member.getString("idNumber");
-                
-
-                resultMap = [FName : "memberAccountId", LName : "memberAccountId", phoneNo : "memberAccountId",
-                             Id : "memberAccountId", AccountNo : "memberAccountId"];
-                inventoryItemTotals.add(resultMap);
+   msacco = delegator.findList("MSaccoApplication", null, null, null, null, false);
+                inventoryItemTotals.add([memberAccountId : "memberAccountId", LName : "memberAccountId", phoneNo : "memberAccountId",
+                             Id : "memberAccountId", AccountNo : "memberAccountId"]);
             }
-        }
-        invItemListItr.close();
-    } catch (GenericEntityException e) {
-        errMsg = "Failure in operation, rolling back transaction";
-        Debug.logError(e, errMsg, "findInventoryItemsByLabels");
-        try {
-            // only rollback the transaction if we started one...
-            TransactionUtil.rollback(beganTransaction, errMsg, e);
-        } catch (GenericEntityException e2) {
-            Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), "findInventoryItemsByLabels");
-        }
-        // after rolling back, rethrow the exception
-        throw e;
-    } finally {
-        // only commit the transaction if we started one... this will throw an exception if it fails
-        TransactionUtil.commit(beganTransaction);
-    }
+       
+ 
 
-}
 context.inventoryItemTotals = inventoryItemTotals;
