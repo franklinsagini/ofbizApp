@@ -24,8 +24,7 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        STAFF WITH 
-       
+        STAFF WITH      
         SKILLS REPORT
     </fo:block>
     <fo:block><fo:leader/></fo:block> 
