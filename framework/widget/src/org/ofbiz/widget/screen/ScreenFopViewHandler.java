@@ -42,6 +42,9 @@ import org.ofbiz.widget.form.FormStringRenderer;
 import org.ofbiz.widget.form.MacroFormRenderer;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 
+import com.lowagie.text.pdf.ByteBuffer;
+import com.sun.pdfview.PDFFile;
+
 /**
  * Uses XSL-FO formatted templates to generate PDF, PCL, POSTSCRIPT etc.  views
  * This handler will use JPublish to generate the XSL-FO
@@ -108,13 +111,29 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
         response.setContentType(contentType);
         response.setContentLength(out.size());
 
-        // write to the browser
-        try {
-            out.writeTo(response.getOutputStream());
-            response.getOutputStream().flush();
-        } catch (IOException e) {
-            renderError("Unable to write to OutputStream", e, screenOutString, request, response);
+        System.out.println("NNNNNNNNNNNNNNNNNNNNNNN - "+name);
+        System.out.println("PPPPPPPPPPPPPPPPPPPPPPP - "+page);
+        System.out.println("IIIIIIIIIIIIIIIIIIIIIII - "+info);
+        
+        if (name.equals("transactionPrintOut")){
+        	
+        	System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSS Sending this to the Printer !!!!!!!!");
+        	//ByteBuffer bb = new ByteB
+        	//PDFFile pdfFile = new PDFFile(out);
+        	
+        } else{
+        	
+        	 // write to the browser
+        	System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWW Writing to the browser !!!!!!!!");
+            try {
+                out.writeTo(response.getOutputStream());
+                response.getOutputStream().flush();
+            } catch (IOException e) {
+                renderError("Unable to write to OutputStream", e, screenOutString, request, response);
+            }
+        	
         }
+       
     }
 
     protected void renderError(String msg, Exception e, String screenOutString, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
