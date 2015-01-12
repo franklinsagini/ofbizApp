@@ -3,7 +3,7 @@
 action = request.getParameter("action");
 
 cardApplications = [];
- card = delegator.find("CardApplication", null, null, null, ['cardApplicationId'], null);delegator.findList("CardApplication", null, null, null,null, false);
+ card = delegator.findList("CardApplication", null, null, null,null, false);
  
  card.eachWithIndex { cardItem, index ->
  
