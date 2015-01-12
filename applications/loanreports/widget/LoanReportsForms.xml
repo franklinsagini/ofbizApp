@@ -19,6 +19,8 @@
             <submit button-type="button"/>
         </field>
     </form>
+	
+	
     
 
      <form name="memberAccountDetailsReportForm" type="single" target="memberAccountDetailsPDF" title="" header-row-style="header-row"
@@ -28,6 +30,36 @@
           <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+    </form>
+	
+	 <form name="memberAccountDetailsExport" type="single" target="memberAccountDetailsCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+          <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	<form name="memberAccountDetailsExportDataHeader" list-name="memAccountDetalisHeader" target="" title="" 
+         type="single" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="fname" title="First Name"><display/></field>
+        <field name="lname" title="Last Name"><display/></field>
+        <field name="memberNo" title="Member Number"><display/></field>
+        <field name="memberStationNo" title="Station Number"><display/></field>
+		<field name="memberStation" title="Station Name"><display/></field>
+        
+    </form>
+	
+	<form name="memberAccountDetailsExportData" list-name="memAccountDetalis" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="AccountCode" title="Account Code"><display/></field>
+        <field name="AccountType" title="Account Type"><display/></field>
+        <field name="AccountNo" title="Account Number"><display/></field>
+        <field name="AccountBalance" title="Account Balance"><display/></field>
+        
     </form>
 
     <!-- loansummaryReportForm -->

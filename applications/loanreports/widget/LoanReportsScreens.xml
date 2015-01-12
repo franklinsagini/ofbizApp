@@ -155,9 +155,15 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                            <screenlet title="Member Accounts Details">
+                        <container style="lefthalf">
+                            <screenlet title="Member Accounts Details(PDF)">
                                 <include-form name="memberAccountDetailsReportForm" location="component://loanreports/widget/LoanReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+						
+						 <container style="righthalf">
+                            <screenlet title="Member Accounts Details(CSV)">
+                                <include-form name="memberAccountDetailsExport" location="component://loanreports/widget/LoanReportsForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="clear"/>
@@ -188,6 +194,40 @@
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="memberAccountDetailsCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+				<entity-one value-field="member" entity-name="Member">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+			   <set field="stationId" from-field = "member.stationId" type="String"/>
+			   <entity-one value-field="st" entity-name="Station">
+				<field-map field-name="stationId" from-field="stationId"/>
+		       </entity-one>
+                <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/memberAccountBalanceExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="MEMBER ACCOUNTS DETAILS"/>
+					<label style="h3" text="Member Name: ${member.firstName} ${member.lastName}"/>
+					<label style="h3" text="Member Number: ${member.memberNumber}"/>
+					<label style="h3" text="Member Station: ${st.stationNumber}-${st.name}"/>
+                </container>
+                
+				<include-form name="memberAccountDetailsExportData" location="component://loanreports/widget/LoanReportsForms.xml"/>
             </widgets>
         </section>
     </screen>
