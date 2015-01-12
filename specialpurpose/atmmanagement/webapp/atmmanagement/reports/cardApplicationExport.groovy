@@ -3,8 +3,10 @@
 action = request.getParameter("action");
 
 cardApplications = [];
- card = delegator.find("CardApplication", null, null, null, ['cardApplicationId'], null);
- while ((cardItem = card.next()) != null) {
+ card = delegator.find("CardApplication", null, null, null, ['cardApplicationId'], null);delegator.findList("CardApplication", null, null, null,null, false);
+ 
+ card.eachWithIndex { cardItem, index ->
+ 
  formNo = cardItem.getString("formNumber");
  cardNo = cardItem.getString("cardNumber");
  idNo = cardItem.getString("idNumber");
@@ -16,12 +18,11 @@ cardApplications = [];
  status = cardStatus.getString("name");
  
  accId = cardItem.getString("memberAccountId");
- LongaccId = accId.toLong();
- acc = delegator.findOne("MemberAccount", [memberAccountId : LongaccId], false);
+ acc = delegator.findOne("MemberAccount", [memberAccountId : accId.toLong()], false);
  accNo = acc.getString("accountNo");
+ 
+ cardApplications.add([fname :fname, lname :lname, IdNo : idNo, accNo : accNo, formNumber : formNo, cardNo : cardNo, cardStatus : status]);
  }
  
  
-cardApplications.add([fname :fname, lname :lname, IdNo : idNo, accNo : accNo, formNumber : formNo, cardNo : cardNo, cardStatus : status]);
-            
 context.cardApplications = cardApplications;

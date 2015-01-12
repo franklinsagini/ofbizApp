@@ -3,23 +3,26 @@
 action = request.getParameter("action");
 
 msaccoApplications = [];
- msacco = delegator.find("MsaccoApplicationView", null, null, null, ['memberAccountId'], null);
- while ((msaccoItem = msacco.next()) != null) {
- no = msaccoItem.getString("mobilePhoneNumber");
- idNo = msaccoItem.getString("idNumber");
- party = msaccoItem.getString("partyId");
- LongParty = party.toLong();
- name = delegator.findOne("Member", [partyId : LongParty], false);
+ msacco = delegator.findList("MSaccoApplication", null, null, null,null, false);
+ 
+ msacco.eachWithIndex { msaccoItem, index ->
+	no = msaccoItem.mobilePhoneNumber;
+
+ 
+ party = msaccoItem.partyId;
+ name = delegator.findOne("Member", [partyId : party], false);
  fname = name.getString("firstName");
  lname = name.getString("lastName");
+ idNo = name.getString("idNumber");
  
- accId = msaccoItem.getString("memberAccountId");
- LongaccId = accId.toLong();
- acc = delegator.findOne("MemberAccount", [memberAccountId : LongaccId], false);
+ accId = msaccoItem.memberAccountId;
+ acc = delegator.findOne("MemberAccount", [memberAccountId : accId], false);
  accNo = acc.getString("accountNo");
+
+ msaccoApplications.add([fname :fname, lname :lname, phone : no, IdNo : idNo, accNo : accNo]);
  }
  
  
-msaccoApplications.add([fname :fname, lname :lname, phone : no, IdNo : idNo, accNo : accNo]);
+
             
 context.msaccoApplications = msaccoApplications;
