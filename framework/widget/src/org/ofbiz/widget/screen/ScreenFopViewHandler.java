@@ -42,9 +42,6 @@ import org.ofbiz.widget.form.FormStringRenderer;
 import org.ofbiz.widget.form.MacroFormRenderer;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 
-import com.lowagie.text.pdf.ByteBuffer;
-import com.sun.pdfview.PDFFile;
-
 /**
  * Uses XSL-FO formatted templates to generate PDF, PCL, POSTSCRIPT etc.  views
  * This handler will use JPublish to generate the XSL-FO

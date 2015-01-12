@@ -44,7 +44,7 @@ public class GeronimoTransactionFactory implements TransactionFactoryInterface {
 
     public static final String module = GeronimoTransactionFactory.class.getName();
 
-    private static int defaultTransactionTimeoutSeconds = 60;
+    private static int defaultTransactionTimeoutSeconds = 6000;
     private static TransactionLog transactionLog;
     private static GeronimoTransactionManager geronimoTransactionManager;
 
