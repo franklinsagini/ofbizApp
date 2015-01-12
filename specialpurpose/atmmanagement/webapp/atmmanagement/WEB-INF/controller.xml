@@ -22,6 +22,7 @@
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="report"><security https="true" auth="true"/><response name="success" type="view" value="report"/></request-map>
     
 	
 	<request-map uri="createCardApplication">
@@ -406,6 +407,11 @@
                 <response name="error" type="view" value="cardApplicationReceived" />
     </request-map>
     
+    <!-- =============================== REPORTS ================================================================= -->
+     <request-map uri="cardApplicationPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="cardApplicationPDF" save-home-view="true" />
+  </request-map>
 	
 	
 	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
@@ -420,6 +426,7 @@
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#main"/ -->
     <view-map name="main" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#FindMember"/>
+    <view-map name="report" type="screen" page="component://atmmanagement/widget/ATMReportScreens.xml#AtmReports"/>
   
     <view-map name="cardApplication" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#cardApplication"/>
     <view-map name="cardApplicationReceived" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#cardApplicationReceived"/>
@@ -437,7 +444,9 @@
     <view-map name="atmCardActions" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#atmCardActions"/>
     <view-map name="receiveCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#receiveCardAction"/>
     <view-map name="issueCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#issueCardAction"/>
-    
+    <!-- application/ms-excel -->
+     <view-map name="cardApplicationPDF" type="screencsv" page="component://atmmanagement/widget/ATMReportScreens.xml#cardApplicationPDF" content-type="text/csv" encoding="none"/>
+  
     <!-- activateCardAction -->
      <!-- renewCardAction -->
       <!-- deactivateCardAction -->

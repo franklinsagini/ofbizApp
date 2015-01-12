@@ -21,7 +21,7 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-   <screen name="fileMovementPDF">
+  <!--  <screen name="fileMovementPDF">
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -35,6 +35,27 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific>
                             <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/fileMovement.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    
+    <screen name="fileMovementPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://registry/webapp/registry/reports/fileMovementStatement.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/fileMovementStatement.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

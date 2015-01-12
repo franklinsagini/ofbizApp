@@ -833,7 +833,9 @@ under the License.
 
     <request-map uri="FindPerfReviews">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindPerfReviews"/>
+        <response name="success" type="view" value="FindPerfReviews">
+        	<redirect-parameter name="perfManagerId"/>
+        </response>
     </request-map>
     <request-map uri="MyPerfReviews">
         <security https="true" auth="true"/>
@@ -849,7 +851,9 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="createPerfReview"/>
         <response name="error" type="view" value="EditPerfReviews"/>
-        <response name="success" type="request-redirect" value="EditPerfReview"/>
+        <response name="success" type="request-redirect" value="EditPerfReview">
+        	<redirect-parameter name="perfManagerId"/>
+        </response>
     </request-map>
     <request-map uri="updatePerfReview">
         <security https="true" auth="true"/>
@@ -874,7 +878,12 @@ under the License.
     <request-map uri="updatePerfReviewItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePerfReviewItem"/>
-        <response name="success" type="view" value="EditPerfReviewItems"/>
+        <response name="success" type="request-redirect" value="EditPerfReviewItems">
+        	<redirect-parameter name="perfReviewId"/>
+        	<redirect-parameter name="employeePartyId"/>
+        	<redirect-parameter name="employeeRoleTypeId"/>
+        	<redirect-parameter name="perfManagerId"/>
+        </response>
     </request-map>
     <request-map uri="deletePerfReviewItem">
         <security https="true" auth="true"/>
@@ -2295,7 +2304,6 @@ under the License.
        <security https="true" auth="true"/>
         <event type="service-multi" invoke="updateEmplLeaveReasonType"/>
         <response name="success" type="view" value="EditEmplLeaveReasonTypes"/>
-        <response name="error" type="view" value="EditEmplLeaveReasonTypes"/>
     </request-map>
     <request-map uri="deleteEmplLeaveReasonType">
         <security https="true" auth="true"/>
@@ -2877,9 +2885,19 @@ under the License.
 		<response name="success" type="view" value="staffQualificationsPDF" save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="staffWithThisQualificationsPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="staffWithThisQualificationsPDF" save-home-view="true" />
+	</request-map>
+	
 	<request-map uri="staffSkillsPDF">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="staffSkillsPDF" save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="staffWithThisSkillsPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="staffWithThisSkillsPDF" save-home-view="true" />
 	</request-map>
 	 
   <request-map uri="nextOfKinPDF">
@@ -3272,7 +3290,9 @@ under the License.
   <view-map name="nextOfKinPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#nextOfKinPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="dependentsPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#dependentsPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="staffQualificationsPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staffQualificationsPDF" content-type="application/pdf" encoding="none"/>
+      <view-map name="staffWithThisQualificationsPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staffWithThisQualificationsPDF" content-type="application/pdf" encoding="none"/>
       <view-map name="staffSkillsPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staffSkillsPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="staffWithThisSkillsPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staffWithThisSkillsPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="staffOnProbationPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#staffOnProbationPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="employmentHistoryPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#employmentHistoryPDF" content-type="application/pdf" encoding="none"/>
   <view-map name="leaveBalancePDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveBalancePDF" content-type="application/pdf" encoding="none"/>

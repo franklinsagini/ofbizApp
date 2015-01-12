@@ -160,8 +160,11 @@
 	<request-map uri="createCashWithdrawal">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createCashWithdrawal" />
-		<response name="success" type="request-redirect" value="cashWithdrawal">
+		<!-- response name="success" type="request-redirect" value="cashWithdrawal">
 			<redirect-parameter name="partyId" />
+		</response -->
+		<response name="success" type="request-redirect" value="transactionPrintOut">
+			<redirect-parameter name="accountTransactionParentId" />
 		</response>
 		<response name="error" type="view" value="cashWithdrawal" />
 	</request-map>
@@ -679,6 +682,15 @@
 		</response>
 	</request-map>
 	
+	<request-map uri="generatedTransactionPrintout">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="generatedTransactionPrintout"
+			save-current-view="true">
+		</response>
+	</request-map>
+	
+	
+	
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
@@ -767,6 +779,9 @@
 		page="component://loanreports/widget/LoanReportsScreens.xml#memberstatementreportPDF" content-type="application/pdf" encoding="none"  />
 
 
+	<!-- for printing  generatedTransactionPrintout -->
+	<view-map name="generatedTransactionPrintout" type="screenfop" page="component://loanreports/widget/LoanReportsScreens.xml#loansummaryreportPDF" content-type="application/pdf" encoding="none"/>
+	
 	<!-- end of view mappings -->
 
 </site-conf>

@@ -598,7 +598,7 @@
 	<simple-method method-name="issuefiles" short-description="request File ">
 		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
-		  <!-- <call-simple-method method-name="deletefileFromRequested" scope="inline"></call-simple-method> -->
+		  <call-simple-method method-name="saveIssueActionToFileMovement" scope="inline"></call-simple-method>
 		  
 		  <now-timestamp field="nowTimestamp"/>
 		 
@@ -685,11 +685,35 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	<simple-method method-name="saveIssueActionToFileMovement">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileMovement" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileMovement" field="movementId" />
+		<set from-field="movementId" field="newEntity.movementId" />
+		<set value="${userLogin.partyId}" field="newEntity.releasedBy" />
+		<set field="newEntity.timeOut" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.releasedTo" from-field="parameters.actionBy"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		 <set field="newEntity.activityCode" from-field="parameters.Reason"/>
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		
+		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 	<!-- ==========================FILE DIVERT================================== -->
 	
 	<simple-method method-name="divertfiles" short-description="request File ">
 		 <call-simple-method method-name="saveDivertAction" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveDivertActionToLogs" scope="inline"></call-simple-method>
+		   <call-simple-method method-name="saveDivertActionToFileMovement" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
@@ -751,6 +775,29 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	<simple-method method-name="saveDivertActionToFileMovement">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileMovement" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileMovement" field="movementId" />
+		<set from-field="movementId" field="newEntity.movementId" />
+		<set value="${userLogin.partyId}" field="newEntity.releasedBy" />
+		<set field="newEntity.timeOut" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.releasedTo" from-field="parameters.currentPossesser"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		 
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		<set field="newEntity.activityCode" from-field="reg.Reason"/>
+		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 
 <!-- ========================== RECEIVE FILE ================================== -->
 	
@@ -758,6 +805,7 @@
 	<log message="=====================PLEASE SHOW ${parameters}" level="info"/>
 	<call-simple-method method-name="saveRecieveFileAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveRecieveActionToLogs" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveFileReceiveActionToFileMovement" scope="inline"></call-simple-method>
 	
 	<set field="party" from-field="parameters.partyId"/>
 		
@@ -820,12 +868,40 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	  <simple-method method-name="saveFileReceiveActionToFileMovement"
+        short-description="File receive">
+        <now-timestamp field="nowTimestamp"/>
+       
+        <set field="partyId" from-field="parameters.partyId"/>
+        <set field="releasedTo" value="${userLogin.partyId}"/>
+        <set field="time" value="${bsh:org.ofbiz.registry.FileServices.getDateOfReceivedFile(partyId, releasedTo);}" type="Timestamp"/>
+        <log message="=====================PLEASE SHOW TIME >> ${time} Party>${partyId} releasedto > ${releasedTo}" level="info"/>
+        
+        
+        <entity-condition list="dateList" entity-name="RegistryFileMovement">
+				<condition-expr field-name="timeOut" from-field="time"/>
+		</entity-condition>
+		
+		<iterate entry="singleOpenVol" list="dateList">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> TIME-OUT >> ${singleOpenVol.movementId}" level="info"/>
+        
+        <entity-one entity-name="RegistryFileMovement" value-field="reg">
+		 	<field-map field-name="movementId" value="${singleOpenVol.movementId}"/>
+		 </entity-one>
+        
+        <set field="reg.timeIn" from-field="nowTimestamp"/>
+         <set field="reg.receivedBy" value="${userLogin.partyId}"/>
+        <store-value value-field="reg" />
+        </iterate>
+    </simple-method>
+	
 	
 	<!-- ==========================FILE RELEASE================================== -->
 	
 	<simple-method method-name="releasefiles" short-description="request File ">
 	<call-simple-method method-name="saveReleaseAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveReleaseActionToLogs" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveReleaseToRegistryActionToFileMovement" scope="inline"></call-simple-method>
 	
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
@@ -883,11 +959,35 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	<simple-method method-name="saveReleaseToRegistryActionToFileMovement">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileMovement" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileMovement" field="movementId" />
+		<set from-field="movementId" field="newEntity.movementId" />
+		<set value="${userLogin.partyId}" field="newEntity.releasedBy" />
+		<set field="newEntity.timeOut" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.releasedTo" value="REGISTRY"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		 
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		<set field="newEntity.activityCode" from-field="reg.Reason"/>
+		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 	<!-- ========================== FILE RELEASE TO ANOTHER STAFF ================================== -->
 	
 	<simple-method method-name="releaseFileToAnotherStaff" short-description="request File ">
 	<call-simple-method method-name="savereleaseFileToAnotherStaffAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="savereleaseFileToAnotherStaffActionToLogs" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveReleaseToStaffActionToFileMovement" scope="inline"></call-simple-method>
 	
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
@@ -946,11 +1046,35 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	<simple-method method-name="saveReleaseToStaffActionToFileMovement">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileMovement" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileMovement" field="movementId" />
+		<set from-field="movementId" field="newEntity.movementId" />
+		<set value="${userLogin.partyId}" field="newEntity.releasedBy" />
+		<set field="newEntity.timeOut" from-field="nowTimestamp" />
+		<set field="partyId" from-field="parameters.partyId" />
+		<set field="newEntity.releasedTo" from-field="parameters.currentPossesser"/>
+		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		 
+		
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		<set field="newEntity.activityCode" from-field="reg.Reason"/>
+		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 	<!-- ==========================FILE RETURN================================== -->
 	
 	<simple-method method-name="returnfiles" short-description="request File ">
 	<call-simple-method method-name="saveReturnAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveReturnActionToLogs" scope="inline"></call-simple-method>
+	<call-simple-method method-name="saveFileReturnActionToFileMovement" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
@@ -1003,12 +1127,37 @@
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		
-		
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
-		
-		
 		<create-value value-field="newEntity" />
 	</simple-method>
+	
+	
+	 <simple-method method-name="saveFileReturnActionToFileMovement"
+        short-description="File receive">
+        <now-timestamp field="nowTimestamp"/>
+       
+        <set field="partyId" from-field="parameters.partyId"/>
+        <set field="releasedTo" value="REGISTRY"/>
+        <set field="time" value="${bsh:org.ofbiz.registry.FileServices.getDateOfReceivedFile(partyId, releasedTo);}" type="Timestamp"/>
+        <log message="=====================PLEASE SHOW TIME >> ${time} Party>${partyId} releasedto > ${releasedTo}" level="info"/>
+        
+        
+        <entity-condition list="dateList" entity-name="RegistryFileMovement">
+				<condition-expr field-name="timeOut" from-field="time"/>
+		</entity-condition>
+		
+		<iterate entry="singleOpenVol" list="dateList">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> TIME-OUT >> ${singleOpenVol.movementId}" level="info"/>
+        
+        <entity-one entity-name="RegistryFileMovement" value-field="reg">
+		 	<field-map field-name="movementId" value="${singleOpenVol.movementId}"/>
+		 </entity-one>
+        
+        <set field="reg.timeIn" from-field="nowTimestamp"/>
+         <set field="reg.receivedBy" value="${userLogin.partyId}"/>
+        <store-value value-field="reg" />
+        </iterate>
+    </simple-method>
 	
 	
 	 
@@ -1017,7 +1166,6 @@
   	<!-- update Budget Status -->
     <simple-method method-name="updateRegistryFileStatus" short-description="Update Registry File Status Status">
 
-     
         <make-value value-field="lookupPKMap" entity-name="RegistryFiles"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>

@@ -316,6 +316,8 @@
 		<make-value entity-name="PartySkill" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="PartySkill" field="newEntity.partySkillId" />
+		<set field="newEntity.partySkillId" from-field="partySkillId"/>
 		<entity-one entity-name="PartySkill" value-field="partySkill"
 			auto-field-map="true" />
 		<if>
@@ -1331,6 +1333,7 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 			<sequenced-id sequence-name="SkillType" field="skillTypeId" />
 		<set field="newEntity.skillTypeId" from-field="skillTypeId"/>
+		<set field="newEntity.skill" from-field="newEntity.description"/>
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />

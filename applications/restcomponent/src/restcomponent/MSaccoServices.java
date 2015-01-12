@@ -355,9 +355,18 @@ public class MSaccoServices {
 
 	@GET
 	@Produces("application/json")
-	@Path("/withdrawal/{phoneNumber}/{amount}/{transactionId}/{reference}")
+	@Path("/withdrawal/{phoneNumber}/{amount}/{transactionId}/{reference}/{withdrawalStage}")
 	public Response withdrawal(@PathParam("phoneNumber") String phoneNumber,
-			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference ) {
+			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference, @PathParam("withdrawalStage") String withdrawalStage ) {
+		
+		
+		if (withdrawalStage.equals("Withdrawal_Confirm")){
+			AccHolderTransactionServices.WITHDRAWALOK = "OK";
+		} else{
+			AccHolderTransactionServices.WITHDRAWALOK = "FALSE";
+		}
+		
+		//withdrawalStage
 
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
@@ -406,6 +415,11 @@ public class MSaccoServices {
 			transaction.setAccountNo(memberAccount.getString("accountNo"));
 			transaction.setAccountName(memberAccount.getString("accountName"));
 			transaction.setTransactionId(transactionId);
+			
+			if (reference.equals("NOREFENCE"))
+			{
+				reference = "";
+			}
 			transaction.setReference(reference);
 
 			Results results = new Results();
@@ -424,7 +438,7 @@ public class MSaccoServices {
 
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
-
+		AccHolderTransactionServices.WITHDRAWALOK = "OK";
 		return Response.ok(json).type("application/json").build();
 	}
 
@@ -529,6 +543,7 @@ public class MSaccoServices {
 		msaccotransaction.setStatus(msaccoStatus.getStatus());
 		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
 		GenericValue loanRepayment = delegator.makeValue("LoanRepayment");
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
 		if (msaccoStatus.getStatus().equals("SUCCESS"))
 		{
 			//LoanRepayments
@@ -536,11 +551,20 @@ public class MSaccoServices {
 			String loanApplicationId = LoanServices.getLoan(loanNumber).getLong("loanApplicationId").toString();
 			partyId = partyId.replaceAll(",", "");
 			loanApplicationId = loanApplicationId.replaceFirst(",", "");
+			loanRepayment.set("loanRepaymentId", loanRepaymentId);
 			loanRepayment.set("transactionAmount", amount);
 			loanRepayment.set("totalInterestDue", LoanRepayments.getTotalInterestDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalInterestPaid(partyId, loanApplicationId)));
 			loanRepayment.set("totalInsuranceDue",  LoanRepayments.getTotalInsuranceDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalInsurancePaid(partyId, loanApplicationId)));
 			loanRepayment.set("totalPrincipalDue", LoanRepayments.getTotalPrincipalDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalPrincipalPaid(partyId, loanApplicationId)));
-
+			loanRepayment.set("partyId", Long.valueOf(partyId));
+			loanRepayment.set("loanApplicationId", Long.valueOf(loanApplicationId));
+			
+			
+			loanRepayment.set("isActive", "Y");
+			loanRepayment.set("createdBy", "dmin");
+			loanRepayment.set("loanNo", loanNumber);
+			
+			
 			Map<String, String> userLogin = new HashMap<String, String>();
 			userLogin.put("userLoginId", "admin");
 			

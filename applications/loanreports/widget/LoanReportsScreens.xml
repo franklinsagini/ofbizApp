@@ -115,7 +115,9 @@
         </section>
     </screen>
     
+
     <!-- loansummaryreport -->
+    
             <screen name="loansummaryreport">
         <section>
             <actions>
@@ -144,17 +146,63 @@
         </section>
     </screen>
     
+     <screen name="accDetailsreport">
+        <section>
+            <actions>
+                <set field="headerItem" value="accountDetailsreport" />
+                <set field="tabButtonItem" value="accountDetailsreport" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Member Accounts Details">
+                                <include-form name="memberAccountDetailsReportForm" location="component://loanreports/widget/LoanReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
     <!-- loansummaryreportPDF -->
-    <screen name="loansummaryreportPDF">
+    <screen name="memberAccountDetailsPDF">
         <section>
             <actions>
                 <set field="viewSize" value="99999"/>
                 <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
-                <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/loansummaryReport.groovy"/>
+
+                <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/memberAccountBalance.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                        <platform-specific>
+                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
+
+                            <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/memberAccountBalance.fo.ftl"/></xsl-fo>
+
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- loansummaryreportPDF -->
+    <screen name="loansummaryreportPDF">
+        <section>
+           <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/loansummaryReport.groovy"/>
+           </actions>
+           <widgets>
+               <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                   <decorator-section name="body">
                         <platform-specific>
                             <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
                             <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/loansummaryReport.fo.ftl"/></xsl-fo>

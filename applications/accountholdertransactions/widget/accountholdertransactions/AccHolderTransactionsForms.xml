@@ -90,6 +90,8 @@ under the License.
         	 <hyperlink target-type="intra-app" target="transactionPrintOut?accountTransactionParentId=${accountTransactionParentId}" description="Print # ${accountTransactionParentId}">
         	</hyperlink>
         </field>	
+        
+        
         <field name="memberAccountId" title="Account">
         	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" >
         		<!-- sub-hyperlink target-type="inter-app" target="http://localhost:55555/viewer/frameset?__report=C%3A\\Users\\USER\\birtreports\\VergeSaccoReports\\memberministatement.rptdesign&amp;__format=pdf&amp;member_account_id=${memberAccountId}&amp;member_account_id2=${memberAccountId}&amp;member_account_id3=${memberAccountId}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=C%3A\\Users\\USER\\birtreports\\VergeSaccoReports&amp;__dpi=96&amp;__parameterpage=false&amp;232000292" description="Print  Statement"></sub-hyperlink -->
@@ -98,16 +100,18 @@ under the License.
         </field>
         
         
-        <field name="transactionType" title="Transaction Type"><display also-hidden="false"></display></field>
-        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
-        <field name="transactionAmount" title="Amount"><display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display></field>
-        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteCashWithdrawal" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="accountTransactionId"/>
-            </hyperlink>
+        <field name="transactionType" title="Transaction Type">
+        <!-- display also-hidden="false"></display -->
+        	<hyperlink target-type="intra-app" target="generatedTransactionPrintout?accountTransactionParentId=${accountTransactionParentId}" description="Print ${transactionType}">
+        	</hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
-        <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>
+        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <field name="transactionAmount" title="Amount">
+        <display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display>
+        	
+        </field>
+        <field name="createdBy" title="Served By">
+        <display also-hidden="false"></display></field>
         <field name="createdStamp" title="Transaction Date"><display also-hidden="false" type="date-time"></display></field>
         <field name="clearDate" title="Clear By"><display also-hidden="false" type="date-time"></display></field>
 
@@ -966,7 +970,7 @@ under the License.
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
         	<entity-condition entity-name="MemberStatus" list="memberStatusList">
             </entity-condition>
-            <entity-one entity-name="MemberStatus"></entity-one>
+            <entity-one entity-name="MemberStatus" value-field="memberStatus"></entity-one>
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
