@@ -8,4 +8,5 @@ if (partyId) {
 
 context.activities = delegator.findByAnd("RegistryFileMovement", [partyId : partyId], null, false);
 context.file = delegator.findOne("RegistryFiles", [partyId : partyId], false);
+
 }

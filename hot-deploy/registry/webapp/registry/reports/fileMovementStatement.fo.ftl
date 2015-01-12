@@ -38,6 +38,9 @@ under the License.
 </#if>
 <#if activities?has_content>
     <#-- REPORT BODY -->
+    <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+        Main Loan
+    </fo:block>
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
             <fo:table-column column-width="80pt"/>
@@ -151,6 +154,8 @@ under the License.
             </fo:table-body>
         </fo:table>
     </fo:block>
+    
+   
     <#else>
      <fo:block space-after.optimum="10pt" >
         <fo:block text-align="center" font-size="14pt">Nothing To ShowFor: ${employee.firstName} ${employee.lastName}</fo:block>
