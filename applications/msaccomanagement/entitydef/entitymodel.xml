@@ -114,6 +114,7 @@
 
 	 <view-entity entity-name="MsaccoApplicationView" package-name="org.ofbiz.humanres">
 	    <member-entity entity-alias="msacco" entity-name="MSaccoApplication"></member-entity>
+	    <member-entity entity-alias="memAcc" entity-name="MemberAccount"></member-entity>
 	    <member-entity entity-alias="mem" entity-name="Member"></member-entity>
 	    
 	    <alias-all entity-alias="msacco"></alias-all>
@@ -121,7 +122,11 @@
 			<alias entity-alias="mem" name="idNumber" field="idNumber"/>
 			<alias entity-alias="mem" name="firstName" field="firstName"/>
 			<alias entity-alias="mem" name="lastName" field="lastName"/>
+			<alias entity-alias="memAcc" name="accountNo" field="accountNo"/>
 
+	    <view-link  entity-alias="msacco" rel-entity-alias="memAcc">
+	    	<key-map field-name="memberAccountId" rel-field-name="memberAccountId"/>
+	    </view-link>
 	    <view-link  entity-alias="msacco" rel-entity-alias="mem">
 	    	<key-map field-name="partyId" rel-field-name="partyId"/>
 	    </view-link>

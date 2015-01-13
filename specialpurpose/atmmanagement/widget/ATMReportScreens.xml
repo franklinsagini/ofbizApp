@@ -34,12 +34,35 @@ under the License.
             <widgets>
             	
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
-                    <decorator-section name="body" -->
+                    <decorator-section name="body">
                         <platform-specific>
                             <xsl-fo><html-template location="component://atmmanagement/webapp/atmmanagement/reports/cardApplication.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="cardApplicationCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://atmmanagement/webapp/atmmanagement/reports/cardApplicationExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h2" text="CARD APPLICATIONS"/>
+                </container>
+                <include-form name="cardApplicationExport" location="component://atmmanagement/widget/ATMReportForms.xml"/>
             </widgets>
         </section>
     </screen>
@@ -54,8 +77,13 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="lefthalf">
-                            <screenlet title="Card Application Report">
+                            <screenlet title="Card Applications(pdf)">
                                 <include-form name="cardApplication" location="component://atmmanagement/widget/ATMReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="lefthalf">
+                            <screenlet title="Card Applications(csv)">
+                                <include-form name="cardApplicationCsv" location="component://atmmanagement/widget/ATMReportForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="clear"/>

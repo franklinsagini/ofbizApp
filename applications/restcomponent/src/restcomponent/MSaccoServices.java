@@ -68,7 +68,7 @@ public class MSaccoServices {
 	@Produces("application/json")
 	@Path("/registration")
 	public Response getRegistration() {
-
+		addServiceLog("", "Query Registration", null);
 
 		//Get the MSaccoApplications that are active and have not been sent to provider (Coretech) - sent is N
 		List<GenericValue> listMsaccoApplicationELI = null;
@@ -125,15 +125,19 @@ public class MSaccoServices {
 		if (type.equalsIgnoreCase(QUERY_TYPE_NONE)){
 			//Process for NONE
 		} else if (type.equalsIgnoreCase(QUERY_TYPE_ACCOUNTS)){
+			addServiceLog(phoneNumber, "Query Accounts", null);
 			//process for ACCOUNTS
 			queryAccount.setListBalances(addAccountBalances(phoneNumber));
 		} else if (type.equalsIgnoreCase(QUERY_TYPE_ACCOUNT_BALANCES)){
+			addServiceLog(phoneNumber, "Query Balances", null);
 			//process for BALANCES
 			queryAccount.setListBalances(addAccountBalances(phoneNumber));
 		} else if (type.equalsIgnoreCase(QUERY_TYPE_LOANS)){
+			addServiceLog(phoneNumber, "Query Loans", null);
 			//process for loans
 			queryAccount.setListLoans(addLoans(phoneNumber));
 		} else if (type.equalsIgnoreCase(QUERY_TYPE_MINISTATEMENT)){
+			addServiceLog(phoneNumber, "Query Ministatement", null);
 			//process for MINISTATEMENT
 			queryAccount.setListMinistatement(addMinistatement(phoneNumber));
 		}
@@ -326,7 +330,7 @@ public class MSaccoServices {
 	@Produces("application/json")
 	@Path("/balance/{phoneNumber}")
 	public Response getBalance(@PathParam("phoneNumber") String phoneNumber) {
-
+		addServiceLog(phoneNumber, "Query Balance", null);
 		BigDecimal bdBalance = null;
 		// Long memberAccountId =
 		// MSaccoManagementServices.getMemberAccountId(phoneNumber);
@@ -359,6 +363,7 @@ public class MSaccoServices {
 	public Response withdrawal(@PathParam("phoneNumber") String phoneNumber,
 			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference, @PathParam("withdrawalStage") String withdrawalStage ) {
 		
+		addServiceLog(phoneNumber, withdrawalStage, amount);
 		
 		if (withdrawalStage.equals("Withdrawal_Confirm")){
 			AccHolderTransactionServices.WITHDRAWALOK = "OK";
@@ -447,6 +452,7 @@ public class MSaccoServices {
 	@Path("/deposit/{phoneNumber}/{amount}/{transactionId}/{reference}")
 	public Response deposit(@PathParam("phoneNumber") String phoneNumber,
 			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference) {
+		addServiceLog(phoneNumber, "MSacco Deposir", amount);
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
@@ -502,6 +508,7 @@ public class MSaccoServices {
 	@Produces("application/json")
 	@Path("/loanrepayment/{phoneNumber}/{transactionId}/{reference}")
 	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference ) {
+		addServiceLog(phoneNumber, "Loans Query", null);
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
@@ -530,6 +537,7 @@ public class MSaccoServices {
 	@Produces("application/json")
 	@Path("/loanrepayment/{phoneNumber}/{loanNumber}/{amount}/{transactionId}/{reference}")
 	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber, @PathParam("loanNumber") String loanNumber, @PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference) {
+		addServiceLog(phoneNumber, "Loan Repayment", amount);
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
@@ -591,6 +599,20 @@ public class MSaccoServices {
 		String json = gson.toJson(transaction);
 
 		return Response.ok(json).type("application/json").build();
+	}
+	
+	private void addServiceLog(String phoneNo, String transactionType, BigDecimal transactionAmount) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue msaccoTransactionsLog = null;
+		String msaccoTransactionsLogId = delegator.getNextSeqId("MsaccoTransactionsLog");
+		msaccoTransactionsLog = delegator.makeValidValue("MsaccoTransactionsLog", UtilMisc
+				.toMap("msaccoTransactionsLogId", msaccoTransactionsLogId, "phoneNo",
+						phoneNo, "transactionType", transactionType, "transactionAmount", transactionAmount));
+		try {
+			delegator.createOrStore(msaccoTransactionsLog);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
