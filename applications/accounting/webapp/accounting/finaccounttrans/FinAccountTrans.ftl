@@ -100,14 +100,15 @@ function updateFinAccount(status, finAccountTransId){
       }
   });
 
-    populateFields(finAccountTransId);
+    populateFields(finAccountTransId, status);
 }
 
-function populateFields(finAccountTransId) {
+function populateFields(finAccountTransId, status) {
 
 
   someData = jQuery('#reconValues').serializeArray();
   someData.push({ name: "finAccountTransId", value: finAccountTransId });
+  someData.push({ name: "toggle", value: status });
 
     jQuery.ajax({
       url: 'populateReconFields',
@@ -115,9 +116,11 @@ function populateFields(finAccountTransId) {
       type: 'POST',
       data: someData,
       success: function(data) {
-          jQuery('#displayUnpresentedChequesTotal').html(data.showUnpresentedChequesTotal);
-          jQuery('#showAdjustedCashBookBalance').html(data.showAdjustedCashBookBalance);
-          jQuery('#showAdjustedBankBalance').html(data.showAdjustedBankBalance);
+          $('input[name=showUnpresentedChequesTotal]').val(data.showUnpresentedChequesTotal);
+          // jQuery('#displayUnpresentedChequesTotal').html(data.showUnpresentedChequesTotal);
+          // jQuery('#showAdjustedCashBookBalance').html(data.showAdjustedCashBookBalance);
+          // jQuery('#showAdjustedBankBalance').html(data.showAdjustedBankBalance);
+          calculateReconBalances()
       }
   });
 }
@@ -209,7 +212,7 @@ function calculateReconBalances() {
               <td><input type='text' size='15' maxlength='100' name='bankBalanceTotal' id='bankBalanceTotal' value="0"/></td>
             </tr>
             <tr>
-              <td>Add Uncredited Bankings</td>
+              <td>Add Uncredited Bankings (Deposits)</td>
               <#if uncreditedBankingsTotal?has_content>
                 <td><input type='text' size='15' maxlength='100' name='showUncreditedBankingsTotal' id="showUncreditedBankingsTotal" value="${uncreditedBankingsTotal?if_exists}" readonly="" /></td>
               <#else>
@@ -217,7 +220,7 @@ function calculateReconBalances() {
               </#if>
             </tr>
             <tr>
-              <td>Less Unpresented Cheques</td>
+              <td>Less Unpresented Cheques (Withdrawals)</td>
               <#if unpresentedChequesTotal?has_content>
               <td>
                 <input type='text' size='15' maxlength='100' name='showUnpresentedChequesTotal' id="displayUnpresentedChequesTotal" value="${unpresentedChequesTotal?if_exists}" readonly="" />
