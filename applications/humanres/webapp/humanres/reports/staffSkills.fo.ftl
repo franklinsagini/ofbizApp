@@ -58,7 +58,7 @@ under the License.
                     <#list skill as skill>
                     <#if skill.skillTypeId?has_content>
                         <#assign skillTypeIds = skill.skillTypeId>
-                        <#assign partyskill = delegator.findOne("skillType", {"skillTypeId" : skillTypeIds.toString()}, false)/>
+                        <#assign partyskill = delegator.findOne("SkillType", {"skillTypeId" : skillTypeIds.toString()}, false)/>
                     </#if>
                      <fo:table-row>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">

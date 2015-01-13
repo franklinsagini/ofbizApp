@@ -24,8 +24,10 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        STAFF WITH      
-        SKILLS REPORT
+        STAFF WITH 
+         <#assign partyskill = delegator.findOne("SkillType", {"skillTypeId" : skillTypeId}, false)/>   
+          [${partyskill.description}]
+        SKILLS 
     </fo:block>
     <fo:block><fo:leader/></fo:block> 
 <#if employee?has_content>

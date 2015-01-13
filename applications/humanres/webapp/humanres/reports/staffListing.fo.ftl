@@ -41,14 +41,15 @@ under the License.
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Payroll No</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>ID No</fo:block>
-                        </fo:table-cell>
+                        
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>First Name</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Last Name</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>ID No</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Gender</fo:block>
@@ -64,14 +65,15 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${employee.employeeNumber?if_exists}</fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.nationalIDNumber?if_exists}</fo:block>
-                            </fo:table-cell>
+                            
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${employee.firstName?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${employee.lastName?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.nationalIDNumber?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${employee.gender?if_exists}</fo:block>
