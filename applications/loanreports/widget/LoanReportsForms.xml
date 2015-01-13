@@ -85,4 +85,40 @@
         </field>
     </form>
     
+   <!--  loanlistingreportForm -->
+      <form name="loanlistingreportForm" type="single" target="loanlistingreportexcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="loanProductId" title="Loan Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+    
+    <form name="loanReportsExport" list-name="combinedList" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="loanNo" title="Loan No."><display/></field>
+        <field name="names" title="Member"><display/></field>
+        <field name="disbursementDate" title="Date Disbursed"><display/></field>
+        <field name="loanBalance" title="Loan Balance"><display/></field>
+        <field name="productname" title="Product Name"><display/></field>
+        <field name="loanAmt" title="Station Name"><display/></field>
+        <field name="stationName" title="Station"><display/></field>
+        
+    </form>
+    
 </forms>

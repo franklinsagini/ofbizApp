@@ -118,7 +118,7 @@
 
     <!-- loansummaryreport -->
     
-            <screen name="loansummaryreport">
+    <screen name="loansummaryreport">
         <section>
             <actions>
                 <set field="headerItem" value="loansummaryreport" />
@@ -252,5 +252,56 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- loanlistingreport -->
+    <screen name="loanlistingreport">
+        <section>
+            <actions>
+                <set field="headerItem" value="loanlistingreport" />
+                <set field="tabButtonItem" value="loanlistingreport" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Loans Listing">
+                                <include-form name="loanlistingreportForm" location="component://loanreports/widget/LoanReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="loanlistingreportexcel">
+        <section>
+           <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/loanlistingReport.groovy"/>
+           </actions>
+           <widgets>
+               <!-- decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                   <decorator-section name="body">
+                        <platform-specific>
+                            
+                            <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/loansummaryReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen -->
+                <include-form name="loanReportsExport" location="component://loanreports/widget/LoanReportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
 
 </screens>
