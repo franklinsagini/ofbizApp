@@ -55,21 +55,46 @@ println startDate
 print " -------- End Date"
 println endDate
 
+java.sql.Date sqlEndDate = null;
+java.sql.Date sqlStartDate = null;
 
 //dateStartDate = Date.parse("yyyy-MM-dd hh:mm:ss", startDate).format("dd/MM/yyyy")
-dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
-dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
+
+if ((startDate?.trim())){
+	dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
+	
+	sqlStartDate = new java.sql.Date(dateStartDate.getTime());
+}
+//(endDate != null) || 
+if ((endDate?.trim())){
+	dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
+	sqlEndDate = new java.sql.Date(dateEndDate.getTime());
+}
 
 print "formatted Date"
-println dateStartDate
-println dateEndDate
+//println dateStartDate
+//println dateEndDate
 
-java.sql.Date sqlStartDate = new java.sql.Date(dateStartDate.getTime());
-java.sql.Date sqlEndDate = new java.sql.Date(dateEndDate.getTime());
+
+println "RRRRRRRRRRRRRR EAL DATES !!!!!!!!!!!!!"
+println startDate
+println endDate
+
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
-
-if (memberStatusId){
+//(startDate == null) || (endDate == null) || 
+if (!(sqlEndDate)){
+	expr = null;
+} 
+// if (memberStatusId)
+else if ((!memberStatusId) && (!branchId)){
+	expr = exprBldr.AND() {
+		GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+		LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+	}
+}
+else if (memberStatusId)
+{
 
 	if (branchId){
 		expr = exprBldr.AND() {
@@ -83,6 +108,8 @@ if (memberStatusId){
 		expr = exprBldr.AND() {
 			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
 			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			
+			
 			EQUALS(memberStatusId: memberStatusId.toLong())
 
 		}
@@ -107,7 +134,7 @@ if (memberStatusId){
 }
 
 EntityFindOptions findOptions = new EntityFindOptions();
-findOptions.setMaxRows(100);
+//findOptions.setMaxRows(100);
 membersList = delegator.findList("Member", expr, null, ["joinDate ASC"], findOptions, false)
 
 

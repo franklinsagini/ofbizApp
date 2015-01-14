@@ -51,6 +51,10 @@ myLoansList.eachWithIndex { loan, index ->
 	member = delegator.findOne("Member", [partyId : loan.partyId], false);
 	loanItem.names = member.firstName+" "+member.middleName+" "+member.lastName;
 	
+	loanItem.payrollNumber = member.payrollNumber.trim();
+	loanItem.memberNumber = member.memberNumber.trim();
+	loanItem.idNumber = member.idNumber.trim();
+	
 	loanItem.disbursementDate = loan.disbursementDate;
 	
 	loanBalance = loan.loanAmt - org.ofbiz.loans.LoanServices.getLoansRepaidByLoanApplicationId(loan.loanApplicationId);
