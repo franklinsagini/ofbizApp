@@ -49,16 +49,16 @@ under the License.
                         <fo:block>Kin's Name</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Relationship</fo:block>
+                        <fo:block>Relationship</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">ID No.</fo:block>
+                        <fo:block>ID No.</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Phone No.</fo:block>
+                        <fo:block>Phone No.</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Postal Address</fo:block>
+                        <fo:block>Postal Address</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
