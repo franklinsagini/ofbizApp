@@ -368,16 +368,43 @@ under the License.
                 <option key="C" description="Compasionate Leave"/>
             </drop-down>
         </field>
-        <field name="partyId"   title="Employee">
+        <field name="partyId"   title="Employee" tooltip="(Leave Blank if viewing ALL Staff)">
             <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
+    
+     <form name="leaveBalanceFormCSV" type="single" target="leaveBalanceCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="leaveType" title="Leave Type">
+            <drop-down allow-empty="false">
+                <option key="ANNUAL" description="Annual Leave"/>
+                <option key="COMPASSIONATE" description="Compasionate Leave"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="leaveBalanceExport" list-name="leaveBalancelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="Payroll" title="Payroll Number"><display/></field>
+        <field name="fname" title="First Name"><display/></field>
+        <field name="lname" title="Last Name"><display/></field>
+        <field name="broughtForward" title="Days Brought Forward"><display/></field>
+        <field name="acrued" title="Days Accrued/Allocated"><display/></field>
+        <field name="taken" title="Days Taken"><display/></field>
+        <field name="lost" title="Days Lost"><display/></field>
+        <field name="balance" title="Leave Balances"><display/></field>
+    </form>
+    
     <form name="staffOnLeaveForm" type="single" target="staffOnLeavePDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
-        <field name="partyId"   title="Employee">
+        <field name="partyId"   title="Employee" tooltip="(Leave Blank if viewing ALL Staff)">
             <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
