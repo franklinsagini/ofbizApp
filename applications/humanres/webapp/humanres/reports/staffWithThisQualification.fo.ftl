@@ -46,16 +46,16 @@ under the License.
                         <fo:block>Staff Names</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Specialization</fo:block>
+                        <fo:block>Specialization</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Institution</fo:block>
+                        <fo:block>Institution</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Institution Location</fo:block>
+                        <fo:block>Institution Location</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Grade</fo:block>
+                        <fo:block>Grade</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
