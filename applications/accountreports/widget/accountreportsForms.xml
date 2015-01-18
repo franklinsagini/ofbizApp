@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<!-- memberAccountsReportForm -->
+    <form name="memberAccountsReportForm" type="single" target="memberAccountListPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="accountProductId" title="Account Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <!-- memberAccountListingDownloadForm -->
+    
+    <form name="memberAccountListingDownloadForm" type="single" target="memberAccountListDownloadexcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="accountProductId" title="Account Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+    
+       <form name="memberAccountBalanceExport" list-name="myAccountsList" default-map-name="accountBalance" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false" > 
+         <!-- actions>
+         	<set field="balance" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getTotalBalanceNow(accountBalance.memberAccountId);}"/>
+         </actions -->
+        
+        <field name="firstName" title="First Name"><display/></field>
+        <field name="middleName" title="Middle Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+        
+         <field name="payrollNumber" title="Payroll Number"><display/></field>
+         <field name="memberNumber" title="Member No"><display/></field>
+         <field name="idNumber" title="ID No"><display/></field>
+        
+        <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"></display-entity></field>
+        
+        <field name="accountNo" title="Account No"><display/></field>
+        <field name="accountName" title="Account Name"><display/></field>
+        
+        <field name="code" title="Product Code"><display/></field>
+        <field name="name" title="Product Name"><display/></field>
+        
+         <field name="memberAccountId" title="Member Account"><display/></field>
+        <field name="minSavingsAmt" title="Balance"><display/></field>
+        
+        
+    </form>
+</forms>
