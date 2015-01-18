@@ -628,6 +628,16 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="fileOverviewViewMap"/>
     </request-map>
+	
+	<request-map uri="pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Reports"/>
+    </request-map>
+	
+	<request-map uri="csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportCSV"/>
+    </request-map>
 
 
 <!-- REPORT SCREENS -->
@@ -702,10 +712,24 @@
     <security https="true" auth="true" />
     <response name="success" type="view" value="filesInCirculationPDF" save-home-view="true" />
   </request-map>
+  
+  <request-map uri="LookupFileActionOfficer"><security auth="true" https="true"/><response name="success" type="view" value="LookupFileActionOfficer"/></request-map>
+  
+  <!--================================ CSV REPORTS ================================================== -->
+  
+  <request-map uri="fileMovementCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="fileMovementCSV"/>
+    </request-map>
+    
+    
+    
+     <view-map name="fileMovementCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#fileMovementCSV" content-type="text/csv" encoding="none"/>
 
 
 
-	<view-map name="Reports" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReports" />
+	     <view-map name="Reports" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReports" />
+		 <view-map name="ReportCSV" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReportsCSV" />
 		<view-map name="fileMovementPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileMovementPDF" content-type="application/pdf" encoding="none"/>
 		<view-map name="overStayedFilesPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#overStayedFilesPDF" content-type="application/pdf" encoding="none"/>
 		
@@ -723,7 +747,7 @@
 		<view-map name="fileRequestByActivityPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileRequestByActivityPDF" content-type="application/pdf" encoding="none"/>
 		<view-map name="filesInCirculationPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#filesInCirculationPDF" content-type="application/pdf" encoding="none"/>
 		
-		
+		 <view-map name="LookupFileActionOfficer"  type="screen" page="component://registry/widget/LookupScreens.xml#LookupFileActionOfficer"/>
 
  		<!-- View Maps -->
 	<view-map name="editfiletypeURL" type="screen" page="component://registry/widget/FileScreens.xml#filetype" />
