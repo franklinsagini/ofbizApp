@@ -21,8 +21,6 @@ if ((stationId != null) && (stationId != "")){
 	lloanProductId = loanProductId.toLong();
 }
 
-
-
 //Loans - by member or by station or by product
 disburseLoanStatusId = 6.toLong();
 if ((partyId != null) && (partyId != "")){
@@ -54,18 +52,12 @@ myLoansList.eachWithIndex { loan, index ->
 	loanItem.payrollNumber = member.payrollNumber.trim();
 	loanItem.memberNumber = member.memberNumber.trim();
 	loanItem.idNumber = member.idNumber.trim();
-	
 	loanItem.disbursementDate = loan.disbursementDate;
-	
 	loanBalance = loan.loanAmt - org.ofbiz.loans.LoanServices.getLoansRepaidByLoanApplicationId(loan.loanApplicationId);
 	loanItem.loanBalance = loanBalance;
-	
 	loanProduct = delegator.findOne("LoanProduct", [loanProductId : loan.loanProductId], false);
-	
 	loanItem.productname = loanProduct.name;
-	
 	loanItem.loanAmt = loan.loanAmt;
-	
 	
 	
 	/*** statementItem.remitanceDescription = "Loan Disbursement";
