@@ -117,11 +117,56 @@
 		<response name="error" type="view" value="repaymentDeadline" />
 	</request-map>
 	
+	<!-- sendMessage -->
+	<request-map uri="sendMessage">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="sendMessage">
+		</response>
+	</request-map>
+	
+	   <request-map uri="createMsaccoMessage">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMsaccoMessage" />
+		<response name="success" type="request-redirect"
+			value="sendMessage">
+			</response>
+		<response name="error" type="view" value="repaymentDeadline" />
+	</request-map>
+	
+	<request-map uri="updateMsaccoMessage">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMsaccoMessage" />
+		<response name="success" type="request-redirect-noparam"
+			value="sendMessage"></response>
+		<response name="error" type="view" value="sendMessage" />
+	</request-map>
+	
+	<request-map uri="deleteMsaccoMessage">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMsaccoMessage" />
+		<response name="success" type="request-redirect-noparam"
+			value="sendMessage"></response>
+		<response name="error" type="view" value="sendMessage" />
+	</request-map>
+	
+	<request-map uri="sendTheMessage">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.membernotification.MemberNotificationServices.sendTheMessage"
+			invoke="sendTheMessage" />
+		<response name="success" type="view" value="sendMessage">
+			<redirect-parameter name="msaccoMessageId" />
+		</response>
+		<response name="error" type="view" value="disburseLoan" />
+	</request-map>
+	
 	<request-map uri="defaulterMessages">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="defaulterMessages">
 		</response>
 	</request-map>
+	
+	
+	
 	
 	<request-map uri="addDefaulterMessages">
                 <security auth="true" https="true"/>
@@ -132,7 +177,8 @@
                 <response name="error" type="view" value="defaulterMessages" />
     </request-map>
     
-
+	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
+	
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://membernotification/widget/MemberNotificationScreens.xml#main"/>
 	<view-map name="membermessage" type="screen" page="component://membernotification/widget/MemberNotificationScreens.xml#membermessage"/>
@@ -142,5 +188,10 @@
 	<view-map name="repaymentDeadline" type="screen" page="component://membernotification/widget/MemberNotificationScreens.xml#repaymentDeadline"/>
 	<view-map name="defaulterMessages" type="screen"
 		page="component://membernotification/widget/MemberNotificationScreens.xml#defaulterMessages" />
+	
+	<view-map name="sendMessage" type="screen"
+		page="component://membernotification/widget/MemberNotificationScreens.xml#sendMessage" />
+		
+	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
 	
 </site-conf>

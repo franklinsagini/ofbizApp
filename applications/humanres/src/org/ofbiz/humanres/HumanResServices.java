@@ -75,8 +75,7 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 	      /* double carryOverLeaveDays = carryOverLeaveGV.getDouble("carryOverLeaveDays");*/
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
 						EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, financialYear),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),

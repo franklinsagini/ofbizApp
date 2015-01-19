@@ -175,5 +175,74 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
+    <!-- Send Message -->
+    <form name="sendMessage" type="single" target="createMsaccoMessage"
+	focus-field-name="transactionAmount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="msaccoMessageContext">
+        
+        <actions>
+        	
+        	<!-- entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition -->
+        </actions>
+        <field name="msaccoMessageId"><hidden/></field>
+        <field name="phoneNo"><text></text></field>
+        <field name="message"><textarea/></field>
+        
+        <field name="status"><text default-value="pending"></text></field>
+        <field name="balance"><text default-value="0"></text></field>
+        <field name="resultCode"><text default-value="0"></text></field>
+        <field name="resultDescription"><text default-value="success"></text></field>
+
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listSendMessage" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMsaccoMessage" paginate-target="sendMessage"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MsaccoMessage">
+            	<order-by field-name="-msaccoMessageId"></order-by>
+            </entity-condition>
+            
+        	<!-- entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        	<entity-one entity-name="PartyGroup" value-field="branch">
+        		<field-map field-name="partyId" from-field="userLogin.partyId"/>
+        	</entity-one>
+        	
+        	<entity-condition entity-name="Station" list="stationList"></entity-condition -->
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateMsaccoMessage"/>
+ 		
+ 		       <field name="msaccoMessageId"><hidden/></field>
+        <field name="phoneNo"><display></display></field>
+        <field name="message"><display></display></field>
+        
+        <field name="status"><display></display></field>
+        <field name="balance"><display></display></field>
+        <field name="resultCode"><display></display></field>
+        <field name="resultDescription"><display></display></field>
+
+       
+        
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" ></display-entity>
+        </field>
+        
+        <field name="Send" title="Send the Message">
+        	<hyperlink target="sendTheMessage"  description="Send the Message" image-location="${iconsLocation}/add.png" >
+        		
+        	</hyperlink>
+        </field>
+     </form>
 
 </forms>

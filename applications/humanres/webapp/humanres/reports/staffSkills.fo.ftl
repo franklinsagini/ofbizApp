@@ -47,10 +47,10 @@ under the License.
                         <fo:block>Skill </fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Years in Experience</fo:block>
+                        <fo:block>Years in Experience</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Skill Level</fo:block>
+                        <fo:block>Skill Level</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>

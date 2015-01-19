@@ -45,22 +45,22 @@ under the License.
                         <fo:block>Payroll Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Staff Name</fo:block>
+                        <fo:block>Staff Name</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Gender</fo:block>
+                        <fo:block>Gender</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Branch</fo:block>
+                        <fo:block>Branch</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Department</fo:block>
+                        <fo:block>Department</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Appointment Date</fo:block>
+                        <fo:block>Appointment Date</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Confirmation Date</fo:block>
+                        <fo:block>Confirmation Date</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>

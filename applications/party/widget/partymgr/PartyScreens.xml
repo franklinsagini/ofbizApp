@@ -3589,5 +3589,48 @@
             </widgets>
         </section>
         </screen>
+        
+        <screen name="memberRegistrationByDateExcelForm">
+        <section>
+            <actions>
+                <set field="headerItem" value="memberRegistrationByDateExcelForm" />
+                <set field="tabButtonItem" value="memberRegistrationByDateExcelForm" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Member Registartion By Date">
+                                <include-form name="memberRegistrationByDateExcelForm" location="component://party/widget/partymgr/PartyForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- memberRegistrationByDateExcel -->
+    <screen name="memberRegistrationByDateExcel">
+        <section>
+           <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <script location="component://party/webapp/partymgr/WEB-INF/actions/reports/memberRegistrationByDateReport.groovy"/>
+           </actions>
+           <widgets>
+
+                <include-form name="listMembersByDate" location="component://party/widget/partymgr/PartyForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>

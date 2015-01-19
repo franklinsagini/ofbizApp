@@ -49,16 +49,16 @@ under the License.
                         <fo:block>Employer</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Position Held</fo:block>
+                        <fo:block>Position Held</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Start Date</fo:block>
+                        <fo:block>Start Date</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">End Date</fo:block>
+                        <fo:block>End Date</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Separation Reason</fo:block>
+                        <fo:block>Separation Reason</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
