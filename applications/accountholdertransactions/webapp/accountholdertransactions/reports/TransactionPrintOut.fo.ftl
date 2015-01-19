@@ -20,9 +20,9 @@ under the License.
  <#if accountTransactionList?has_content>
     <#if accountTransactionList?has_content>
     <#-- REPORT TITLE -->
-    <fo:block font-size="18pt" font-weight="bold" text-align="center">
+    <#-- fo:block font-size="18pt" font-weight="bold" text-align="center">
         CHAI SACCO
-    </fo:block>
+    </fo:block -->
     <fo:block font-size="12pt" text-align="center" text-decoration="underline" font-weight="bold" >
         Transaction Receipt
     </fo:block>
@@ -93,6 +93,11 @@ under the License.
     
     <fo:block font-size="12pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
       ID No. ------------------------${member.idNumber}------------------------------------
+    </fo:block>
+    
+    
+    <fo:block font-size="12pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
+      Served By. ------------------------Admin------------------------------------
     </fo:block>
     </#if>
 	 </#if>
