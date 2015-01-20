@@ -685,7 +685,7 @@ under the License.
                             
                              <container style="righthalf">
                             <screenlet title="Staff On Leave (CSV)">
-                                <include-form name="staffOnLeaveForm" location="component://humanres/widget/ReportForms.xml"/>
+                                <include-form name="staffOnLeaveFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                             </container>
                         <screenlet></screenlet>
@@ -697,7 +697,7 @@ under the License.
                             
                              <container style="righthalf">
                             <screenlet title="Staff Resumption Summary (CSV)">
-                                <include-form name="resumptionSummaryForm" location="component://humanres/widget/ReportForms.xml"/>
+                                <include-form name="resumptionSummaryFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                             </container>
                             
@@ -723,7 +723,7 @@ under the License.
                         
                           <container style="righthalf">
                             <screenlet title="Scheduled Leaves (CSV)">
-                                <include-form name="scheduledLeavesForm" location="component://humanres/widget/ReportForms.xml"/>
+                                <include-form name="scheduledLeavesFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         <screenlet></screenlet>
@@ -1729,6 +1729,78 @@ under the License.
                     <label style="h1" text="STAFF ${parameters.leaveType} LEAVE BALANCE"/>
                 </container>
                 <include-form name="leaveBalanceExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="resumptionSummaryCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/resumptionSummaryExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF RESUMPTION FROM LEAVE SUMMARY"/>
+                </container>
+                <include-form name="resumptionSummaryExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="staffOnLeaveCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnLeaveExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF ON LEAVE LISTING"/>
+                </container>
+                <include-form name="staffOnLeaveFormExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="scheduledLeavesCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/scheduledLeavesExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF SCHEDULED LEAVES LISTING"/>
+                </container>
+                <include-form name="scheduledLeavesExport" location="component://humanres/widget/ReportForms.xml"/>
             </widgets>
         </section>
     </screen>
