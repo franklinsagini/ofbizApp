@@ -177,7 +177,7 @@ public class ModelForm extends ModelWidget {
 
     /** Pagination settings and defaults. */
     public static int DEFAULT_PAGE_SIZE = 10;
-    public static int MAX_PAGE_SIZE = 10000;
+    public static int MAX_PAGE_SIZE = 1000000;
     protected int defaultViewSize = DEFAULT_PAGE_SIZE;
     public static String DEFAULT_PAG_INDEX_FIELD = "viewIndex";
     public static String DEFAULT_PAG_SIZE_FIELD = "viewSize";
