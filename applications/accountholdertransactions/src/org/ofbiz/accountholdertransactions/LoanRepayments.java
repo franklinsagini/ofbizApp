@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
+import org.joda.time.Months;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -107,8 +108,20 @@ public class LoanRepayments {
 		log.info("######### Generating Schedule ######### "+count);
 		//Get the repaymentStartDate
 		Timestamp disbursementDate = loanApplication.getTimestamp("disbursementDate");
+		
+		Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		LocalDate localCurrentDate = new LocalDate(currentDate);
+		
+		//if loan disbursement date is in this month then do
+		// A
+		
 		LocalDate localDisbursementDate  = new LocalDate(disbursementDate.getTime());
 		LocalDate localRepaymentStartDate;
+		
+		int repaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
+		
+		if ((localDisbursementDate.getMonthOfYear() == localCurrentDate.getMonthOfYear()) && (localDisbursementDate.getYear() == localCurrentDate.getYear()))
+		{
 		if (localDisbursementDate.getDayOfMonth() < 15){
 			//repaymentStartDate = new Timestamp(localDisbursementDate.)
 			 localRepaymentStartDate = localDisbursementDate.plusMonths(1).withDayOfMonth(1);
@@ -116,7 +129,29 @@ public class LoanRepayments {
 			localRepaymentStartDate = localDisbursementDate.plusMonths(2).withDayOfMonth(1);
 		}
 		
+		
+		} else
+		//else repayment start date is first of next month
+		{
+			localRepaymentStartDate = localCurrentDate.plusMonths(1).withDayOfMonth(1);
+			
+			int repaidPeriods;
+			//= localCurrentDate.m
+			//localDisbursementDate.
+			repaidPeriods = Months.monthsBetween(localDisbursementDate, localCurrentDate).getMonths();
+			
+			if (localDisbursementDate.getDayOfMonth() < 15){
+				//repaymentStartDate = new Timestamp(localDisbursementDate.)
+				repaidPeriods = repaidPeriods - 1;
+			} else{
+				repaidPeriods = repaidPeriods - 2;
+			}
+			
+			repaymentPeriod = repaymentPeriod - repaidPeriods;
+		}
+		
 		loanApplication.set("repaymentStartDate", new Timestamp(localRepaymentStartDate.toDate().getTime()));
+		loanApplication.set("repaymentPeriod", new Long(repaymentPeriod));
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		
 		try {
