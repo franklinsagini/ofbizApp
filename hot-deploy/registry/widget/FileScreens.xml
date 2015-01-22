@@ -103,6 +103,11 @@
 					<set field="folioNo" from-field="RegistryFiles.folioNo"
 					default-value="${parameters.folioNo}" />
 					<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
+					
+					 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+					
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -119,7 +124,7 @@
 									<widgets>
 										<container style="leftclear">
 												<label style="h1"
-												text="Add Document(s) To File:- ${partyId} (Folio Number:- ${folioNo})" />
+												text="Add Document(s) To File:- ${registryFile.firstName} ${registryFile.lastName}" />
 										</container>
 									</widgets>
 								</section>
@@ -140,6 +145,11 @@
 					<set field="folioNo" from-field="RegistryFiles.folioNo"
 					default-value="${parameters.folioNo}" />
 					<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
+					
+					<entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+					
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -156,7 +166,7 @@
 									<widgets>
 										<container style="leftclear">
 												<label style="h1"
-												text="File Details For File:- ${partyId} (Folio Number:- ${FilesContext.folioNo})" />
+												text="File Details For File:-${registryFile.firstName} ${registryFile.lastName}" />
 										</container>
 									</widgets>
 								</section>
@@ -181,6 +191,12 @@
 				<set field="partyId" from-field="RegistryFiles.partyId"
 					default-value="${parameters.partyId}" />
 				<entity-one entity-name="RegistryFiles" value-field="FilesContext" />
+				
+				<entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+				
+				
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -199,7 +215,7 @@
 											<include-menu name="FileUpdateTabBar"
 												location="component://registry/widget/RegistryMenus.xml" />
 											<label style="h1"
-												text="Update File:- ${partyId} (Folio Number:- ${FilesContext.folioNo})" />
+												text="Update File:- ${registryFile.firstName} ${registryFile.lastName}" />
 										</container>
 									</widgets>
 								</section>

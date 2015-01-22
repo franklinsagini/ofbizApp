@@ -95,7 +95,7 @@
 		</actions>
 		<!-- <field name="memberOrEmployee" title="File Type"><display /></field> -->
 		<field name="partyId" title="Name"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-		<field name="folioNo" title="Folio Number"><display /></field>
+		<field name="folioNo" title="Folio Number"><hidden /></field>
 		<field name="memberNumber"><display /></field>
 		<field name="status" title="File Status"><display /></field>
 		<field name="creator" title="File Created by"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
@@ -222,7 +222,7 @@
 		</actions>
 		<field name="actionId"><display /></field>
     	<field name="fileActionTypeId" title="Action Type"><display/></field>
-		<field name="partyId" title="File Folio Number"><display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity></field>
+		<!--<field name="partyId" title="File Folio Number"><display-entity entity-name="RegistryFiles" description="${folioNo}"></display-entity></field>-->
 		<field name="actionBy"><display-entity entity-name="Person" key-field-name="partyId" description="${first_name} ${last_name}"></display-entity></field>
 		<field name="actionDate"><display /></field>
 	</form>
@@ -313,7 +313,6 @@
 		 <field name="deactivateFile" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Deactivate File" target="goDeactivateFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="stageStatus" /> 
 			</hyperlink>
@@ -321,7 +320,6 @@
 		<field name="deceasedMember" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Set File Member Deceased" target="goSetFileMemberDeceased">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="stageStatus" /> 
 			</hyperlink>
@@ -1389,7 +1387,7 @@
 	</actions>
 		<field position="1" name="partyId" title="PartyID"><display /></field>
 		<field position="1" name="partyId" title="Member Name:"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
-		<field position="1" name="folioNo" title="Folio Number:"><display /></field>
+		<field position="1" name="folioNo" title="Folio Number:"><hidden /></field>
 		<field position="1" name="status" title="File Status:"><display /></field>
 		<field position="1" name="stageStatus" title="Member Status:"><display /></field>
 		<field position="1" name="number" title="Number Of Volumes:"><display default-value="${bsh:org.ofbiz.registry.FileServices.getFileVolumeCount(partyId);} Volumes"/></field>
@@ -1546,7 +1544,6 @@
 		
         </actions>
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
 		<field name="actionBy" title="File Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="Reason" title="Reason for this request:"><display-entity entity-name="Member" key-field-name="partyId" description="${Reason}"></display-entity></field>
 		
@@ -1574,7 +1571,7 @@
 		
 		
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="actionBy" title="File Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="Reason" title="Reason for this request:"><display></display></field>
 		<field name="carriedBy" title="File Carried By:" required-field="true">
@@ -1609,7 +1606,7 @@
 		
 		
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="actionBy" title="Currently Possesser"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="Reason" title="Reason for this request:"><display></display></field>
 		<field name="currentPossesser" title="Divert File To:" required-field="true">
@@ -1645,7 +1642,7 @@
         </actions>
 		
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="carriedBy" title="File Carried By:" required-field="true">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
@@ -1672,7 +1669,7 @@
 		
         </actions>
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="carriedBy" title="File Carried By:" required-field="true">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
@@ -1698,7 +1695,7 @@
 		
         </actions>
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="currentPossesser" title="File Send To:" required-field="true">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
@@ -1730,7 +1727,7 @@
 		
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="currentPossesser" title="Released By:"><display/></field>
 		<field name="carriedBy" title="File Carried By:" required-field="true">
 		 <drop-down allow-empty="true">
@@ -1752,7 +1749,7 @@
 		
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="volumeIdentifier" title="File Volume Identifier:" tooltip="(For example: Volume One)"><text/></field>
 		
 		 <field name="submitButton" title="Save Volume" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -1896,7 +1893,7 @@
 		 
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
 		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
@@ -1914,7 +1911,7 @@
 		 
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
 		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
@@ -1931,7 +1928,7 @@
 		 
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
 		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
@@ -1948,7 +1945,7 @@
 		 
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
 		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
@@ -1965,7 +1962,7 @@
 		 
         </actions>
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="folioNo" title="File Folio Number:"><display/></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
 		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
