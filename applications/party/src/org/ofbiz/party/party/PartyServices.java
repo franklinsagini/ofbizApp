@@ -299,7 +299,7 @@ public class PartyServices {
 		
 
 		//===================================================UPDATE POSITION & POSTING DETAILS====================================================================
- /*
+ 
 		List<GenericValue> listUpdates = new ArrayList<GenericValue>();
 		//     String payGradeId = (String) context.get("payGradeId");
 		String emplPositionTypeId = (String) context.get("emplPositionTypeId");
@@ -349,7 +349,7 @@ public class PartyServices {
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 
       
 
