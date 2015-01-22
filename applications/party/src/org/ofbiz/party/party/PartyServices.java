@@ -244,8 +244,7 @@ public class PartyServices {
 			
 			GenericValue fileEmployee = null;
 			fileEmployee = delegator.makeValue("memberPlusPerson",
-					UtilMisc.toMap("memberPlusPersonId", memberPlusPersonId,
-							"partyId", memberPlusPersonId,
+					UtilMisc.toMap(	"partyId", partyId,
 							"firstName", context.get("firstName"),  
 							"lastName", context.get("lastName"),  
 							"payrollNo", context.get("employeeNumber"), 
@@ -311,6 +310,9 @@ public class PartyServices {
 //		String partyId_upd = (String) context.get("partyId");
 		Date applctnDte = (Date) context.get("appointmentdate");
 		Timestamp appDate = new Timestamp(applctnDte.getTime());
+		
+		
+		
 
 		log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "+emplPositionTypeId);
 		log.info("######### emplPositionId here>>>>>>>>>>>>>>>>>>>>>   "+emplPositionId);
