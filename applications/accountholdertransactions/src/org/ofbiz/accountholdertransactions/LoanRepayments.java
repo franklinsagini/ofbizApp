@@ -118,7 +118,7 @@ public class LoanRepayments {
 		LocalDate localDisbursementDate  = new LocalDate(disbursementDate.getTime());
 		LocalDate localRepaymentStartDate;
 		
-		int repaymentPeriod = loanApplication.getInteger("repaymentPeriod");
+		int repaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
 		
 		if ((localDisbursementDate.getMonthOfYear() == localCurrentDate.getMonthOfYear()) && (localDisbursementDate.getYear() == localCurrentDate.getYear()))
 		{
@@ -151,7 +151,7 @@ public class LoanRepayments {
 		}
 		
 		loanApplication.set("repaymentStartDate", new Timestamp(localRepaymentStartDate.toDate().getTime()));
-		loanApplication.set("repaymentPeriod", repaymentPeriod);
+		loanApplication.set("repaymentPeriod", new Long(repaymentPeriod));
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		
 		try {
