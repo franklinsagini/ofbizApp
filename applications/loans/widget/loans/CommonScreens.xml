@@ -307,6 +307,8 @@ under the License.
                 <set field="partyId" from-field="loanApplication.partyId"/>
                 <entity-one entity-name="LoanProduct" value-field="loanProduct"/>
                 <entity-one entity-name="Member" value-field="member"/>
+                
+                <set field="currentLoanBalance" value="${bsh:org.ofbiz.loans.LoanServices.getLoanBalanceAmount(loanApplicationId);}" type="BigDecimal" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -346,12 +348,17 @@ under the License.
                                                     </or>
                                                 </condition>
                                                 <widgets>
+                                                	
 													<screenlet>
                                                    		<label text="Loan Application :  ${loanProduct.name} - ${loanProduct.code} for ${member.firstName} ${member.lastName}"></label>
                                                    	</screenlet>
                                                     
                                                    	<screenlet>
-                                                   		<label text="Loan No :  ${loanApplication.loanNo} Loan Amount : KES. ${loanApplication.loanAmt}"></label>
+                                                   		<label text="Loan No :  ${loanApplication.loanNo} Loan Disbursed : KES. ${loanApplication.loanAmt}"></label>
+                                                   	</screenlet>
+                                                   	
+                                                   	<screenlet>
+                                                   		<label text="Loan Balance : KES. ${currentLoanBalance}"></label>
                                                    	</screenlet>                                                </widgets>
                                                 <fail-widgets>
                                                     <label text="Sacco Member"/>

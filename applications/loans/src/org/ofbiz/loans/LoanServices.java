@@ -2412,5 +2412,21 @@ public class LoanServices {
 		return loan;
 
 	}
+	
+	public static BigDecimal getLoanBalanceAmount(String loanApplicationId){
+		BigDecimal bdLoanBalance = BigDecimal.ZERO;
+		
+		BigDecimal bdLoanAmt = getLoanAmount(DelegatorFactoryImpl.getDelegator(null), loanApplicationId);
+		
+		String loanApplicationIdStr = loanApplicationId.replaceAll(",", "");
+		Long loanApplicationIdLong = Long.valueOf(loanApplicationIdStr.trim());
+		
+		BigDecimal bdLoanRepaidAmt = getLoansRepaidByLoanApplicationId(loanApplicationIdLong);
+		
+		bdLoanBalance = bdLoanAmt.subtract(bdLoanRepaidAmt);
+		return bdLoanBalance;
+		
+		
+	}
 
 }
