@@ -427,7 +427,16 @@ under the License.
         <field name="resumeDate" title="Resumption Date"><display/></field>
     </form>
 	
-    <form name="leaveActivityForm" type="single" target="nextOfKinPDF" title="" header-row-style="header-row"
+    <form name="leaveActivityForm" type="single" target="leaveActivityPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	 <form name="leaveActivityFormCSV" type="single" target="leaveActivityCSV.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="partyId"   title="Employee">
             <lookup target-form-name="LookupPartyName"/>
