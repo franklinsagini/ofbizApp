@@ -216,7 +216,7 @@ public class PartyServices {
 					UtilMisc.toMap("partyId", partyId, "roleTypeId", "EMPLOYEE"));
 			
 			//===================================================NEW EMPLOYEE RECORD FOR FILING====================================================================
-			String memberPlusPersonId = (String) context.get("memberPlusPersonId");
+			/*String memberPlusPersonId = (String) context.get("memberPlusPersonId");
 			
 			if (UtilValidate.isEmpty(memberPlusPersonId)) {
 				try {
@@ -250,13 +250,13 @@ public class PartyServices {
 							"payrollNo", context.get("employeeNumber"), 
 							"idNumber", context.get("nationalIDNumber"),
 							"employmentStatus", context.get("employmentStatusEnumId"),
-							"fileType", "EMPLOYEE"));
+							"fileType", "EMPLOYEE"));*/
 			
 			
 			party = delegator.makeValue("Party", newPartyMap);
 			toBeStored.add(party);
 			toBeStored.add(partyRoleEmployee);
-			toBeStored.add(fileEmployee);
+			/*toBeStored.add(fileEmployee);*/
 
 			// create the status history
 			GenericValue statusRec = delegator.makeValue("PartyStatus",
@@ -303,6 +303,8 @@ public class PartyServices {
 		List<GenericValue> listUpdates = new ArrayList<GenericValue>();
 		//     String payGradeId = (String) context.get("payGradeId");
 		String emplPositionTypeId = (String) context.get("emplPositionTypeId");
+		
+		log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "+emplPositionTypeId);
 		String emplPositionId = getempPositionId(delegator, emplPositionTypeId);
 		
 		String branchId = (String) context.get("branchId");
