@@ -36,10 +36,14 @@ under the License.
         Current Status: ${file.status?if_exists}
     </fo:block>
 </#if>
+
+
 <#if activities?has_content>
+
+
     <#-- REPORT BODY -->
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        Main Loan
+	
     </fo:block>
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
@@ -67,7 +71,6 @@ under the License.
                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Activity</fo:block>
                     </fo:table-cell>
-                    
                     
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Received By</fo:block>
@@ -154,15 +157,17 @@ under the License.
             </fo:table-body>
         </fo:table>
     </fo:block>
-    
+ 
    
-    <#else>
+  <#else>
      <fo:block space-after.optimum="10pt" >
         <fo:block text-align="center" font-size="14pt">Nothing To ShowFor: ${employee.firstName} ${employee.lastName}</fo:block>
     </fo:block>
   </#if>
+  
     <#else>
         <fo:block text-align="center">No Employees Found With that ID</fo:block>
     </#if>
+	
 </#escape>
 

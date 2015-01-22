@@ -3,8 +3,10 @@ package org.ofbiz.membernotification;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -322,6 +324,48 @@ public class MemberNotificationServices {
 		}
 
 		return messageStatusId;
+	}
+	
+	public static String sendTheMessage(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String msaccoMessageId = null;
+		
+		msaccoMessageId = (String) request
+				.getParameter("msaccoMessageId");
+		Long lmsaccoMessageId;
+		if (msaccoMessageId == null)
+			lmsaccoMessageId = Long.valueOf(msaccoMessageId);
+		
+		log.info("RRRRRRR The real msaccoMessageId is "+msaccoMessageId);
+		GenericValue msaccoMessage = null;
+	//	loanApplicationId = loanApplicationId.replaceAll(",", "");
+		try {
+			msaccoMessage = delegator.findOne("MsaccoMessage",
+					UtilMisc.toMap("msaccoMessageId", msaccoMessageId),
+					false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		System.out.println(" ###############MMMMMM "+msaccoMessage.getString("message"));
+
+				Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return "";
 	}
 
 }

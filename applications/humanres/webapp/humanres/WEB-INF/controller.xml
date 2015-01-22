@@ -2300,11 +2300,13 @@ under the License.
         <response name="success" type="view" value="EditEmplLeaveReasonTypes"/>
         <response name="error" type="view" value="EditEmplLeaveReasonTypes"/>
     </request-map>
-    <request-map uri="updateEmplLeaveReasonType">
-       <security https="true" auth="true"/>
+	
+	<request-map uri="updateEmplLeaveReasonType">
+        <security https="true" auth="true"/>
         <event type="service-multi" invoke="updateEmplLeaveReasonType"/>
         <response name="success" type="view" value="EditEmplLeaveReasonTypes"/>
     </request-map>
+	
     <request-map uri="deleteEmplLeaveReasonType">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteEmplLeaveReasonType"/>
@@ -2840,9 +2842,9 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 
-	<request-map uri="employeeSpouseDetails">
+	<request-map uri="StaffEmploymentHistoryDetails">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="employeeSpouseDetails"
+		<response name="success" type="view" value="StaffEmploymentHistoryDetails"
 			save-home-view="true" />
 	</request-map>
 	<request-map uri="employeeSpouseDetailscsv">
@@ -2856,9 +2858,9 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 
-  <request-map uri="employeeDependantDetails">
+  <request-map uri="employeeRelationDetails">
     <security https="true" auth="true" />
-    <response name="success" type="view" value="employeeDependantDetails" save-home-view="true" />
+    <response name="success" type="view" value="employeeRelationDetails" save-home-view="true" />
   </request-map>
 
   <request-map uri="employeeSpouseDetailsFTL">
@@ -2956,9 +2958,9 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 
-	<request-map uri="employeeNOKDetails">
+	<request-map uri="employeeLeaveReports">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="employeeNOKDetails"
+		<response name="success" type="view" value="employeeLeaveReports"
 			save-home-view="true" />
 	</request-map>
 	<request-map uri="employeeNOKDetailscsv">
@@ -3046,7 +3048,94 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PayrollHistory"/>
     </request-map>
-
+    
+    <!-- =============== csv reports ============================ -->
+     <request-map uri="staffListingCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffListingCSV"/>
+    </request-map>
+    
+      <request-map uri="staffOnProbationCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffOnProbationCSV"/>
+    </request-map>
+    
+     <request-map uri="staffQualificationsCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffQualificationsCSV"/>
+    </request-map>
+    
+     <request-map uri="staffWithThisQualificationsCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffWithThisQualificationsCSV"/>
+    </request-map>
+    
+    <request-map uri="staffSkillsCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffSkillsCSV"/>
+    </request-map>
+    
+    <request-map uri="staffWithThisSkillsCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffWithThisSkillsCSV"/>
+    </request-map>
+    
+     <request-map uri="employmentHistoryCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="employmentHistoryCSV"/>
+    </request-map>
+    
+     <request-map uri="employeeSpouseDetailCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="employeeSpouseDetailCSV"/>
+    </request-map>
+    
+    <request-map uri="nextOfKinCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="nextOfKinCSV"/>
+    </request-map>
+    
+     <request-map uri="dependentsCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="dependentsCSV"/>
+    </request-map>
+	
+	<request-map uri="leaveBalanceCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="leaveBalanceCSV"/>
+    </request-map>
+	
+	<request-map uri="resumptionSummaryCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="resumptionSummaryCSV"/>
+    </request-map>
+	
+	<request-map uri="staffOnLeaveCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffOnLeaveCSV"/>
+    </request-map>
+	
+	<request-map uri="scheduledLeavesCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="scheduledLeavesCSV"/>
+    </request-map>
+    
+    
+    
+     <view-map name="staffListingCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffListingCSV" content-type="text/csv" encoding="none"/>
+     <view-map name="staffOnProbationCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffOnProbationCSV" content-type="text/csv" encoding="none"/>
+     <view-map name="staffQualificationsCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffQualificationsCSV" content-type="text/csv" encoding="none"/>
+     <view-map name="staffWithThisQualificationsCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffWithThisQualificationsCSV" content-type="text/csv" encoding="none"/>
+     <view-map name="staffSkillsCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffSkillsCSV" content-type="text/csv" encoding="none"/>
+     <view-map name="staffWithThisSkillsCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffWithThisSkillsCSV" content-type="text/csv" encoding="none"/>
+     <view-map name="employmentHistoryCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#employmentHistoryCSV" content-type="text/csv" encoding="none"/>
+     <view-map name="employeeSpouseDetailCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#employeeSpouseDetailCSV" content-type="text/csv" encoding="none"/>
+    <view-map name="nextOfKinCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#nextOfKinCSV" content-type="text/csv" encoding="none"/>
+    <view-map name="dependentsCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#dependentsCSV" content-type="text/csv" encoding="none"/>
+	<view-map name="leaveBalanceCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#leaveBalanceCSV" content-type="text/csv" encoding="none"/>
+	<view-map name="resumptionSummaryCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#resumptionSummaryCSV" content-type="text/csv" encoding="none"/>
+	<view-map name="staffOnLeaveCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffOnLeaveCSV" content-type="text/csv" encoding="none"/>
+	<view-map name="scheduledLeavesCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#scheduledLeavesCSV" content-type="text/csv" encoding="none"/>
     <!-- ===================Lookup Request===================== -->
     <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
@@ -3278,13 +3367,13 @@ under the License.
     <view-map name="employeeSkillspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#EmployeeSkillspdf"
 		content-type="application/pdf" encoding="none" />
 
-	<view-map name="employeeSpouseDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#EmployeeSpouseDetails"/>
+	<view-map name="StaffEmploymentHistoryDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#StaffEmploymentHistoryDetails"/>
     <view-map name="employeeSpouseDetailscsv" type="screencsv" content-type="text/csv"
                page="component://humanres/widget/ReportScreens.xml#EmployeeSpouseDetailscsv" />
   <view-map name="employeeSpouseDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#EmployeeSpouseDetailspdf"
 		content-type="application/pdf" encoding="none" />
 
-  <view-map name="employeeDependantDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#EmployeeDependantDetails"/>
+  <view-map name="employeeRelationDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#employeeRelationDetails"/>
   <view-map name="employeeSpouseDetailsFTL" type="screen" page="component://humanres/widget/ReportScreens.xml#employeeSpouseDetailsFTL"/>
   <view-map name="employeeSpouseDetailsFTLPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#employeeSpouseDetailsFTLPDF" content-type="application/pdf" encoding="none"/>
   <view-map name="nextOfKinPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#nextOfKinPDF" content-type="application/pdf" encoding="none"/>
@@ -3310,7 +3399,7 @@ under the License.
 
 	<view-map name="partyContentTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewPartyContent"/>
 
-	<view-map name="employeeNOKDetails" type="screen" page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetails"/>
+	<view-map name="employeeLeaveReports" type="screen" page="component://humanres/widget/ReportScreens.xml#employeeLeaveReports"/>
     <view-map name="employeeNOKDetailscsv" type="screencsv" content-type="text/csv"
                page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetailscsv" />
     <view-map name="employeeNOKDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#EmployeeNOKDetailspdf"

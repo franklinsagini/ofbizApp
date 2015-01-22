@@ -74,7 +74,11 @@ public class AmortizationServices {
 		 * Monthly Payment (Straight Line)
 		 * 
 		 * **/
-		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		Long loanApplicationIdLog = Long.valueOf(loanApplicationId);
+		
+		BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationIdLog);
+		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt").subtract(bdTotalRepaidLoan);
 		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
 				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
 		int iRepaymentPeriod = loanApplication.getLong("repaymentPeriod")

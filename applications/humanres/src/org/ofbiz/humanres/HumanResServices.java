@@ -75,8 +75,7 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 	      /* double carryOverLeaveDays = carryOverLeaveGV.getDouble("carryOverLeaveDays");*/
 		EntityConditionList<EntityExpr> leaveConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
 						EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, financialYear),
 					EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS, "ANNUAL_LEAVE"),
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
@@ -279,17 +278,39 @@ GenericValue employeeLeaveType = null;
 		System.out.println("######## Days not found #### ");
 	}
 	
+	 GenericValue getCompassionateLeaveBalanceELI = null ;
+	 
+
+		double carryOverLeaveDays = 0, leaveBalances = 0;
 	
-	double leaveBalances =  days-approvedLeaveSum; 
+	try {
+		 
+		getCompassionateLeaveBalanceELI = delegator.findOne("CompassionateLeaveBalances", 
+				            UtilMisc.toMap("partyId",partyId), false);
+		 
+	} catch (GenericEntityException e2) {
+		e2.printStackTrace();
+		
+	}
+	
+	if (getCompassionateLeaveBalanceELI!=null) {
+		leaveBalances=getCompassionateLeaveBalanceELI.getDouble("availableLeaveDays");
+		carryOverLeaveDays=getCompassionateLeaveBalanceELI.getDouble("carriedOverDays");
+		
+		
+	}
 	
 	
-	String leaveBalance = Double.toString(leaveBalances);
+	
+	
+	
+	//String leaveBalance = Double.toString(leaveBalances);
 
 	//return leaveBalance;
 	result.put("approvedLeaveSumed",approvedLeaveSum );
 	result.put("accruedLeaveDays", days);
-	result.put("leaveBalance" , leaveBalance);
-	result.put("carryOverLeaveDays" , 0.000);
+	result.put("leaveBalance" , leaveBalances);
+	result.put("carryOverLeaveDays" , carryOverLeaveDays);
 
 	Gson gson = new Gson();
 	String json = gson.toJson(result);

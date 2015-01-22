@@ -113,4 +113,34 @@ under the License.
         <set field="repaymentDeadline.updatedBy" from-field="userLogin.userLoginId"/>
         <store-value value-field="repaymentDeadline"/>
     </simple-method>
+    
+            <simple-method method-name="createMsaccoMessage" short-description="Create MsaccoMessage">
+      	<if-empty field="parameters.msaccoMessageId">
+	      		<make-value entity-name="MsaccoMessage" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <set field="entityName" value="MsaccoMessage"></set>
+        		<set field="newEntity.msaccoMessageId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateMsaccoMessage"></call-simple-method>
+      		</else>
+      	</if-empty>
+    </simple-method>
+    
+    <simple-method method-name="updateMsaccoMessage" short-description="Update MsaccoMessage">
+        <entity-one entity-name="MsaccoMessage" value-field="msaccoMessage"/>
+        <set-nonpk-fields value-field="msaccoMessage" map="parameters"/>
+        <set field="msaccoMessage.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="msaccoMessage"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteMsaccoMessage" short-description="Delete MsaccoMessage">
+        <entity-one entity-name="MsaccoMessage" value-field="msaccoMessage"/>
+        <set field="msaccoMessage.isActive" value="N"/>
+        <set field="msaccoMessage.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="msaccoMessage"/>
+    </simple-method>
 </simple-methods>

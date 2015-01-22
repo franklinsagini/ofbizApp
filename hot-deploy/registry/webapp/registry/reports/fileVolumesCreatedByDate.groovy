@@ -35,6 +35,6 @@ context.activities = delegator.findList("RegistryFileVolume", expr, null, ["crea
 	
   
 
-//context.activities = delegator.findByAnd("RegistryFileLogs", expr, null, false);
+
 
 

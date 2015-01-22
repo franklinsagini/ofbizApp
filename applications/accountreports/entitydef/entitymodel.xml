@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of accountreports Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+      <view-entity entity-name="MemberAccountBalance" package-name="org.ofbiz.accountreports">
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="MA" entity-name="MemberAccount"></member-entity>
+    	
+    	<member-entity entity-alias="AP" entity-name="AccountProduct"></member-entity>
+    	<!-- member-entity entity-alias="S" entity-name="Station"></member-entity -->
+    	
+    	<alias entity-alias="M" name="partyId"></alias>
+    	<alias entity-alias="M" name="firstName"></alias>
+    	<alias entity-alias="M" name="middleName"></alias>
+    	<alias entity-alias="M" name="lastName"></alias>
+    	
+    	<alias entity-alias="M" name="payrollNumber"></alias>
+    	<alias entity-alias="M" name="memberNumber"></alias>
+    	<alias entity-alias="M" name="idNumber"></alias>
+    	
+    	
+    	<alias entity-alias="M" name="stationId"></alias>
+    	
+    	<!-- alias entity-alias="S" name="stationNumber"></alias>
+    	<alias entity-alias="S" name="name" col-alias="stationName"></alias -->
+    	
+    	
+    	<alias entity-alias="MA" name="memberAccountId"/> 
+    	<alias entity-alias="MA" name="accountProductId"/> 
+    	<alias entity-alias="MA" name="accountNo" />
+    	<alias entity-alias="MA" name="accountName"/>
+    	
+    	<alias entity-alias="AP" name="code"/>
+    	<alias entity-alias="AP" name="name"/> 
+    	
+    	<alias entity-alias="AP" name="minSavingsAmt" col-alias="accountBalanceAmt"></alias>
+    	
+    	<view-link entity-alias="M" rel-entity-alias="MA"> 
+            <key-map field-name="partyId" rel-field-name="partyId"/> 
+        </view-link>
+        
+        <view-link entity-alias="MA" rel-entity-alias="AP"> 
+            <key-map field-name="accountProductId" rel-field-name="accountProductId"/> 
+        </view-link>
+        
+        <!-- view-link entity-alias="M" rel-entity-alias="S"> 
+            <key-map field-name="stationId" rel-field-name="stationId"/> 
+        </view-link --> 
+    </view-entity>
+
+</entitymodel>

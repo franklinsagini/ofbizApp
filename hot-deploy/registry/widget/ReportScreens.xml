@@ -354,87 +354,90 @@ under the License.
     <screen name="RegistryReports">
         <section>
             <actions>
-            <set field="headerItem" value="Reports" />
+            <set field="headerItem" value="pdf" />
+			<set field="tabButtonItem" value="pdf" />
             
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+					<include-menu name="ReportsTabBar"
+												location="component://registry/widget/RegistryMenus.xml" />
                         <container style="lefthalf">
-                            <screenlet title="All Activities File Movement Report">
+                            <screenlet title="All Activities File Movement (PDF)">
                                 <include-form name="fileMovementForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="righthalf">
-                         <screenlet title="Single Activity File Movement Report">
+                         <screenlet title="Single Activity File Movement (PDF)">
                                 <include-form name="singleActivityfileMovementForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                          <container style="lefthalf">
-                            <screenlet title="Returned Files Per User Report">
+                            <screenlet title="Returned Files Per User (PDF)">
                                 <include-form name="returnedFilesPerUserForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="righthalf">
-                         <screenlet title="Returned Files Per Date Report">
+                         <screenlet title="Returned Files Per Date (PDF)">
                                 <include-form name="returnedFilesPerDateForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                              </container>
                              <container style="lefthalf">
-                            <screenlet title="Duration Between File Request and Issuance Report">
+                            <screenlet title="Duration Between File Request and Issuance (PDF)">
                                 <include-form name="durationBeforeIssuanceForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                          <container style="righthalf">
-                         <screenlet title="Overstayed Files Report">
+                         <screenlet title="Overstayed Files (PDF)">
                                 <include-form name="overStayedFiles" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                              </container>
                              
                               <container style="lefthalf">
-                            <screenlet title="Report on Inactive Files">
+                            <screenlet title="Inactive Files (PDF">
                                 <include-form name="inactiveFiles" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="righthalf">
-                         <screenlet title="Report on Semi-Active Files">
+                         <screenlet title="Semi-Active Files (PDF)">
                                 <include-form name="semiActiveFiles" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                              </container>
                              
                               <container style="lefthalf">
-                            <screenlet title="Report on Files in Archive">
+                            <screenlet title="Files in Archive (PDF)">
                                 <include-form name="filesInArchive" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                               <container style="righthalf">
-                            <screenlet title="Report on Files in Disposal">
+                            <screenlet title="Files in Disposal ()PDF">
                                 <include-form name="filesInDisposal" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="lefthalf">
-                            <screenlet title="Report on Deceased Member Files">
+                            <screenlet title="Deceased Member Files (PDF)">
                                 <include-form name="deceasedMemberFiles" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="righthalf">
-                            <screenlet title="Report on Files Volumes Created">
+                            <screenlet title="Files Volumes Created (PDF)">
                                 <include-form name="fileVolumesCreatedByDateForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="lefthalf">
-                            <screenlet title="Report on Files Requests As Per Activity">
+                            <screenlet title="Files Requests As Per Activity (PDF)">
                                 <include-form name="fileRequestByActivityForm" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="righthalf">
-                            <screenlet title="Report on Files In Circulation">
+                            <screenlet title="Files In Circulation (PDF)">
                                 <include-form name="filesInCirculationForm" location="component://registry/widget/ReportForms.xml"/>d
                             </screenlet>
                         </container>
@@ -444,5 +447,460 @@ under the License.
             </widgets>
         </section>
     </screen>
+	
+	 <screen name="RegistryReportsCSV">
+        <section>
+            <actions>
+            <set field="headerItem" value="csv" />
+			<set field="tabButtonItem" value="csv" />
+            
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+					<include-menu name="ReportsTabBar"
+												location="component://registry/widget/RegistryMenus.xml" />
+                        <container style="lefthalf">
+                            <screenlet title="All Activities File Movement (CSV)">
+                                <include-form name="fileMovementFormCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="righthalf">
+                         <screenlet title="Single Activity File Movement (CSV)">
+                                <include-form name="singleActivityfileMovementFormCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <container style="lefthalf">
+                            <screenlet title="Returned Files Per User (CSV)">
+                                <include-form name="returnedFilesPerUserFormCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="righthalf">
+                         <screenlet title="Returned Files Per Date (CSV)">
+                                <include-form name="returnedFilesPerDateFormCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             <container style="lefthalf">
+                            <screenlet title="Duration Between File Request and Issuance (CSV)">
+                                <include-form name="durationBeforeIssuanceFormCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <container style="righthalf">
+                         <screenlet title="Overstayed Files (CSV)">
+                                <include-form name="overStayedFilesCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             
+                              <container style="lefthalf">
+                            <screenlet title="Inactive Files (CSV)">
+                                <include-form name="inactiveFilesCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                         <screenlet title="Semi-Active Files (CSV)">
+                                <include-form name="semiActiveFilesCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             
+                              <container style="lefthalf">
+                            <screenlet title="Files in Archive (CSV)">
+                                <include-form name="filesInArchiveCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                              <container style="righthalf">
+                            <screenlet title="Files in Disposal (CSV)">
+                                <include-form name="filesInDisposalCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
+                            <screenlet title="Deceased Member Files (CSV)">
+                                <include-form name="deceasedMemberFilesCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Files Volumes Created (CSV)">
+                                <include-form name="fileVolumesCreatedByDateFormCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
+                            <screenlet title="Files Requests As Per Activity (CSV)">
+                                <include-form name="fileRequestByActivityFormCSV" location="component://registry/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Files In Circulation (CSV)">
+                                <include-form name="filesInCirculationFormCSV" location="component://registry/widget/ReportForms.xml"/>d
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="fileMovementCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="member" entity-name="Member">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/fileMovementStatementExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="MEMBER FILE MOVEMENT"/>
+                    <label style="h3" text="Payroll Number: ${member.payrollNumber}"/>
+                    <label style="h3" text="Member Name: ${member.firstName} ${member.lastName}"/>
+                </container>
+                <include-form name="fileMovementExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="singleActivityfileMovementCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="member" entity-name="Member">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+			   <entity-one value-field="act" entity-name="RegistryFileActivity">
+			   <field-map field-name="activityId" value="${parameters.activityId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/singleActivityFileMovementExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="MEMBER FILE MOVEMENT FOR [${act.activity}]"/>
+                    <label style="h3" text="Payroll Number: ${member.payrollNumber}"/>
+                    <label style="h3" text="Member Name: ${member.firstName} ${member.lastName}"/>
+                </container>
+                <include-form name="singleActivityfileMovementExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="returnedFilePerUserCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/returnedFilesPerUserExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="FILES RETURNED BY  [${staff.firstName} ${staff.lastName}]"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                </container>
+                <include-form name="returnedFilesPerUserExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="returnedFilePerDateCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/returnedFilesPerDateExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="FILES RETURNED BETWEEN  [${parameters.startDate}] AND [${parameters.endDate}]"/>
+                </container>
+                <include-form name="returnedFilesPerDateExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="durationBeforeIssuanceCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/durationBtnRequestAndIssueExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="DURATION BETWEEN FILE REQUEST AND ISSUANCE"/>
+                </container>
+                <include-form name="durationBeforeIssuanceExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="overStayedFilesCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/overStayedFilesExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="FILES OVERSTAYED WITH ACTION OFFICERS"/>
+                </container>
+                <include-form name="overStayedFilesExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="filesInDisposalCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/filesInDisposalExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="FILES IN DISPOSAL"/>
+                </container>
+                <include-form name="filesInDisposalExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="inactiveFilesCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/inactiveFilesExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="INACTIVE FILES"/>
+                </container>
+                <include-form name="inactiveFilesExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="semiActiveFilesCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/semiActiveFilesExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="SEMI-ACTIVE FILES"/>
+                </container>
+                <include-form name="semiActiveFilesExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="filesInArchiveCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/filesInArchiveExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="FILES IN ARCHIVE"/>
+                </container>
+                <include-form name="filesInArchiveExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="deceasedMemberFilesCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/deceasedMemberFilesExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="DECEASED MEMBERS FILES"/>
+                </container>
+                <include-form name="deceasedMemberFilesExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="fileRequestByActivityCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+				 <entity-one value-field="act" entity-name="RegistryFileActivity">
+			   <field-map field-name="activityId" value="${parameters.activityId}"/>
+		       </entity-one>
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/requestByActivityExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="FILE REQUESTS FOR [${act.activity}] BETWEEN [${parameters.startDate}] AND [${parameters.endDate}]"/>
+                </container>
+                <include-form name="fileRequestByActivityExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="fileVolumesCreatedByDateCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+              
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/fileVolumesCreatedByDateExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="FILE VOLUMES CREATED BETWEEN [${parameters.startDate}] AND [${parameters.endDate}]"/>
+                </container>
+                <include-form name="fileVolumesCreatedByDateExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+<screen name="filesInCirculationCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+				
+              <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+             
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://registry/webapp/registry/reports/filesInCirculationExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="FILES IN CIRCULATION AND IN CUSTODY OF [${staff.firstName} ${staff.lastName}]"/>
+                </container>
+                <include-form name="filesInCirculationExport" location="component://registry/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
 </screens>

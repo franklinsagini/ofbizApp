@@ -628,6 +628,16 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="fileOverviewViewMap"/>
     </request-map>
+	
+	<request-map uri="pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Reports"/>
+    </request-map>
+	
+	<request-map uri="csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportCSV"/>
+    </request-map>
 
 
 <!-- REPORT SCREENS -->
@@ -702,10 +712,97 @@
     <security https="true" auth="true" />
     <response name="success" type="view" value="filesInCirculationPDF" save-home-view="true" />
   </request-map>
+  
+  <request-map uri="LookupFileActionOfficer"><security auth="true" https="true"/><response name="success" type="view" value="LookupFileActionOfficer"/></request-map>
+  
+  <!--================================ CSV REPORTS ================================================== -->
+  
+  <request-map uri="fileMovementCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="fileMovementCSV"/>
+    </request-map>
+	
+	 <request-map uri="singleActivityfileMovementCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="singleActivityfileMovementCSV"/>
+    </request-map>
+	
+	 <request-map uri="returnedFilePerUserCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="returnedFilePerUserCSV"/>
+    </request-map>
+	
+	 <request-map uri="returnedFilePerDateCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="returnedFilePerDateCSV"/>
+    </request-map>
+	
+	<request-map uri="durationBeforeIssuanceCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="durationBeforeIssuanceCSV"/>
+    </request-map>
+	
+	<request-map uri="overStayedFilesCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="overStayedFilesCSV"/>
+    </request-map>
+	
+	<request-map uri="filesInDisposalCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="filesInDisposalCSV"/>
+    </request-map>
+	<request-map uri="inactiveFilesCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="inactiveFilesCSV"/>
+    </request-map>
+	<request-map uri="semiActiveFilesCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="semiActiveFilesCSV"/>
+    </request-map>
+	<request-map uri="filesInArchiveCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="filesInArchiveCSV"/>
+    </request-map>
+	<request-map uri="deceasedMemberFilesCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="deceasedMemberFilesCSV"/>
+    </request-map>
+	
+	<request-map uri="fileRequestByActivityCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="fileRequestByActivityCSV"/>
+    </request-map>
+   
+   <request-map uri="fileVolumesCreatedByDateCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="fileVolumesCreatedByDateCSV"/>
+    </request-map>
+   
+	<request-map uri="filesInCirculationCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="filesInCirculationCSV"/>
+    </request-map>
+    
+     <view-map name="fileMovementCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#fileMovementCSV" content-type="text/csv" encoding="none"/>
+	 <view-map name="singleActivityfileMovementCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#singleActivityfileMovementCSV" content-type="text/csv" encoding="none"/>
+	 <view-map name="returnedFilePerUserCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#returnedFilePerUserCSV" content-type="text/csv" encoding="none"/>
+	 <view-map name="returnedFilePerDateCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#returnedFilePerDateCSV" content-type="text/csv" encoding="none"/>
+	  <view-map name="durationBeforeIssuanceCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#durationBeforeIssuanceCSV" content-type="text/csv" encoding="none"/>
+	  <view-map name="overStayedFilesCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#overStayedFilesCSV" content-type="text/csv" encoding="none"/>
+	  
+	   <view-map name="filesInDisposalCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#filesInDisposalCSV" content-type="text/csv" encoding="none"/>
+	 <view-map name="inactiveFilesCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#inactiveFilesCSV" content-type="text/csv" encoding="none"/>
+	 <view-map name="semiActiveFilesCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#semiActiveFilesCSV" content-type="text/csv" encoding="none"/>
+	  <view-map name="filesInArchiveCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#filesInArchiveCSV" content-type="text/csv" encoding="none"/>
+	  <view-map name="deceasedMemberFilesCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#deceasedMemberFilesCSV" content-type="text/csv" encoding="none"/>
+	  <view-map name="fileRequestByActivityCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#fileRequestByActivityCSV" content-type="text/csv" encoding="none"/>
+	   <view-map name="fileVolumesCreatedByDateCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#fileVolumesCreatedByDateCSV" content-type="text/csv" encoding="none"/>
+	    <view-map name="filesInCirculationCSV" type="screencsv" page="component://registry/widget/ReportScreens.xml#filesInCirculationCSV" content-type="text/csv" encoding="none"/>
 
 
 
-	<view-map name="Reports" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReports" />
+	     <view-map name="Reports" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReports" />
+		 <view-map name="ReportCSV" type="screen" page="component://registry/widget/ReportScreens.xml#RegistryReportsCSV" />
 		<view-map name="fileMovementPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileMovementPDF" content-type="application/pdf" encoding="none"/>
 		<view-map name="overStayedFilesPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#overStayedFilesPDF" content-type="application/pdf" encoding="none"/>
 		
@@ -723,7 +820,7 @@
 		<view-map name="fileRequestByActivityPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#fileRequestByActivityPDF" content-type="application/pdf" encoding="none"/>
 		<view-map name="filesInCirculationPDF" type="screenfop" page="component://registry/widget/ReportScreens.xml#filesInCirculationPDF" content-type="application/pdf" encoding="none"/>
 		
-		
+		 <view-map name="LookupFileActionOfficer"  type="screen" page="component://registry/widget/LookupScreens.xml#LookupFileActionOfficer"/>
 
  		<!-- View Maps -->
 	<view-map name="editfiletypeURL" type="screen" page="component://registry/widget/FileScreens.xml#filetype" />
