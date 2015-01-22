@@ -1697,9 +1697,17 @@ public class LoanServices {
 		}
 		BigDecimal bdTotalRepayments = BigDecimal.ZERO;
 		for (GenericValue genericValue : loanApplicationELI) {
-			if (genericValue.getBigDecimal("totalRepayment") != null) {
-				bdTotalRepayments = bdTotalRepayments.add(genericValue
-						.getBigDecimal("totalRepayment"));
+//			if (genericValue.getBigDecimal("totalRepayment") != null) {
+//				
+//				
+//				bdTotalRepayments = bdTotalRepayments.add(genericValue
+//						.getBigDecimal("totalRepayment"));
+//			}
+			
+			if (genericValue.getBigDecimal("outstandingBalance") != null){
+				if (genericValue.getBigDecimal("outstandingBalance").compareTo(BigDecimal.ZERO) != -1){
+					bdTotalRepayments = bdTotalRepayments.add(genericValue.getBigDecimal("loanAmt").subtract(genericValue.getBigDecimal("outstandingBalance")));
+				}
 			}
 		}
 		return bdTotalRepayments;
