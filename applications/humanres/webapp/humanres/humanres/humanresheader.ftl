@@ -205,7 +205,7 @@
 	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
 					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
 					 $('input[name="leaveBalance"]').val(data.leaveBalance);
-					 $('input[name="carryOverLeaveDays"]').val('NOT APPLICABLE');
+					 $('input[name="carryOverLeaveDays"]').val(data.carryOverLeaveDays);
 					 
 	               },
 	      error : function(errorData){

@@ -404,13 +404,29 @@ under the License.
     
     <form name="staffOnLeaveForm" type="single" target="staffOnLeavePDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
-        <field name="partyId"   title="Employee" tooltip="(Leave Blank if viewing ALL Staff)">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
+	
+	 <form name="staffOnLeaveFormCSV" type="single" target="staffOnLeaveCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	 <form name="staffOnLeaveFormExport" list-name="staffOnLeavelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="Payroll" title="Payroll Number"><display/></field>
+        <field name="name" title="Name"><display/></field>
+        <field name="leaveType" title="Leave Type"><display/></field>
+        <field name="applicationDate" title="Application Date"><display/></field>
+        <field name="duration" title="Leave Duration"><display/></field>
+        <field name="resumeDate" title="Resumption Date"><display/></field>
+    </form>
+	
     <form name="leaveActivityForm" type="single" target="nextOfKinPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="partyId"   title="Employee">
@@ -427,12 +443,48 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+	
+	<form name="resumptionSummaryFormCSV" type="single" target="resumptionSummaryCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	<form name="resumptionSummaryExport" list-name="resumptionSummarylist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveType" title="Leave Type"><display/></field>
+        <field name="leaveDuration" title="Leave Duration"><display/></field>
+         <field name="leaveEnd" title="Leave End"><display/></field>
+         <field name="resumptionDate" title="Resumption Date"><display/></field>
+    </form>
     
     <form name="scheduledLeavesForm" type="single" target="scheduledLeavesPDF" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+    </form>
+	
+	<form name="scheduledLeavesFormCSV" type="single" target="scheduledLeavesCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	<form name="scheduledLeavesExport" list-name="scheduledLeaveslist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveType" title="Leave Type"><display/></field>
+        <field name="start" title="Leave Start"><display/></field>
+         <field name="duration" title="Leave Duration"><display/></field>
+         <field name="end" title="Leave End"><display/></field>
     </form>
     
      <form name="staffOnProbationForm" type="single" target="staffOnProbationPDF" title=""
