@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 
 action = request.getParameter("action");
 
-staffOnLeavelist = [];
+scheduledLeaveslist = [];
 now = Calendar.getInstance().getTime().toString();
 noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(now);
 today = new java.sql.Date(noww.getTime());
@@ -18,35 +18,30 @@ today = new java.sql.Date(noww.getTime());
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
 
 expr = exprBldr.AND() {
-			LESS_THAN(fromDate: today)
-			GREATER_THAN(thruDate: today)
+			GREATER_THAN(fromDate: today)
 			EQUALS(applicationStatus: "Approved")
 		}
 EntityFindOptions findOptions = new EntityFindOptions();
 findOptions.setMaxRows(1000);
 
-staffOnLeave = delegator.findList("EmployeeLeavesView", expr, null, ["fromDate ASC"], findOptions, false);
+scheduledLeaves = delegator.findList("EmployeeLeavesView", expr, null, ["fromDate ASC"], findOptions, false);
 
-staffOnLeave.eachWithIndex { staffOnLeaveItem, index ->
- staff = delegator.findOne("Person", [partyId : staffOnLeaveItem.partyId], false);
- leaveType = delegator.findOne("EmplLeaveType", [leaveTypeId : staffOnLeaveItem.leaveTypeId], false);
+scheduledLeaves.eachWithIndex { scheduledLeavesItem, index ->
+ staff = delegator.findOne("Person", [partyId : scheduledLeavesItem.partyId], false);
+ leaveType = delegator.findOne("EmplLeaveType", [leaveTypeId : scheduledLeavesItem.leaveTypeId], false);
  
- Payroll = staff.employeeNumber;
+ payrollNo = staff.employeeNumber;
  name = "${staff.firstName} ${staff.lastName}";
  leaveType = leaveType.description;
  
- timein = staffOnLeaveItem.createdDate;
- dateStringin = timein.format("yyyy-MMM-dd HH:mm:ss a")
+ start = scheduledLeavesItem.fromDate;
+ duration = scheduledLeavesItem.leaveDuration;
+ end = scheduledLeavesItem.thruDate;
  
  
- applicationDate = dateStringin;
- duration = staffOnLeaveItem.leaveDuration;
- resumeDate = staffOnLeaveItem.resumptionDate;
- 
- 
- staffOnLeavelist.add([Payroll :Payroll, name :name, leaveType : leaveType, applicationDate : applicationDate,
- duration : duration, resumeDate : resumeDate]);
+ scheduledLeaveslist.add([payrollNo :payrollNo, name :name, leaveType : leaveType, start : start,
+ duration : duration, end : end]);
  }
  
  
-context.staffOnLeavelist = staffOnLeavelist;
+context.scheduledLeaveslist = scheduledLeaveslist;

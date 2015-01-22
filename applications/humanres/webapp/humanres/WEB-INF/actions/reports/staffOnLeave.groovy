@@ -5,31 +5,25 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
+import java.text.SimpleDateFormat; 
 
 
-exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
+
 
 
 now = Calendar.getInstance().getTime().toString();
-//noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(now);
-today = new java.sql.Timestamp(now.getTime());
+noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(now);
+today = new java.sql.Date(noww.getTime());
 
-xpr = exprBldr.AND() {
+exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
+
+expr = exprBldr.AND() {
 			LESS_THAN(fromDate: today)
 			GREATER_THAN(thruDate: today)
 			EQUALS(applicationStatus: "Approved")
 		}
 EntityFindOptions findOptions = new EntityFindOptions();
-findOptions.setMaxRows(100);
+findOptions.setMaxRows(1000);
 
-
-partyId = parameters.partyId
-
-if (partyId) {
-
-  context.employees = delegator.findByAnd("EmployeeLeavesView", [partyId : parameters.partyId], null, false);
-  return
-}
-//employees = delegator.findList("EmployeeLeavesView", null, null, null, null, false);
 employees = delegator.findList("EmployeeLeavesView", expr, null, ["fromDate ASC"], findOptions, false);
 context.employees = employees

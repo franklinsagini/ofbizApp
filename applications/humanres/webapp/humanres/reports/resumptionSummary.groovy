@@ -24,6 +24,6 @@ expr = exprBldr.AND() {
 		
 		
 EntityFindOptions findOptions = new EntityFindOptions();
-findOptions.setMaxRows(100);
+findOptions.setMaxRows(1000);
 context.activities = delegator.findList("EmplLeave", expr, null, ["thruDate ASC"], findOptions, false);
 

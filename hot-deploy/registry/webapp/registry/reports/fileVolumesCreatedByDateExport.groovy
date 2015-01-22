@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 
 startDate = parameters.startDate
 endDate = parameters.endDate
-
+fileVolumesCreatedByDatelist = [];
 dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
 dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
 
@@ -31,9 +31,30 @@ exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 		}
 EntityFindOptions findOptions = new EntityFindOptions();
 findOptions.setMaxRows(100);
-context.activities = delegator.findList("RegistryFileVolume", expr, null, ["createdStamp ASC"], findOptions, false)
+fileVolumesCreatedByDate = delegator.findList("RegistryFileVolume", expr, null, ["createdStamp ASC"], findOptions, false)
 	
   
+ fileVolumesCreatedByDate.eachWithIndex { fileVolumesCreatedByDateItem, index ->
+ party = fileVolumesCreatedByDateItem.partyId;
+ partylong = party.toLong();
+ member = delegator.findOne("Member", [partyId : partylong], false);
+ 
+ fileOwner = "${member.firstName}${member.lastName}";
+ identifier = fileVolumesCreatedByDateItem.volumeIdentifier;
+ status = fileVolumesCreatedByDateItem.volumeStatus;
+ 
+  timein  = fileVolumesCreatedByDateItem.createdStamp;
+ dateStringin = timein.format("yyyy-MMM-dd HH:mm:ss a")
+ dateCreated = dateStringin;
+ 
+ 
+ 
+ 
+ fileVolumesCreatedByDatelist.add([fileOwner :fileOwner, identifier :identifier, status : status, dateCreated : dateCreated]);
+ }
+ 
+ 
+context.fileVolumesCreatedByDatelist = fileVolumesCreatedByDatelist;
 
 
 
