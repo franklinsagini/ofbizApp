@@ -147,7 +147,7 @@ under the License.
                                 <#assign loanBalance = loan.loanAmt - Static["org.ofbiz.loans.LoanServices"].getLoansRepaidByLoanApplicationId(loan.loanApplicationId)>
                                 <#assign totalLoans = totalLoans+loanBalance>
                                 <#-- ${expectation.remitanceDescription?if_exists} --> 
-                                Kshs.  ${loanBalance?string(",##0.00")}
+                                Kshs.  ${loanBalance?string(",##0.0000")}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -157,7 +157,7 @@ under the License.
                                 	<#-- if (expectation.isReceived = 'Y') && (expectation.amount??)  >
                                 	
                                 		
-                                		 Kshs.  ${expectation.amount?string(",##0.00")}
+                                		 Kshs.  ${expectation.amount?string(",##0.0000")}
 								  ${loanProduct.code} 
 								</#if -->
 								${loanProduct.name}
@@ -168,11 +168,11 @@ under the License.
                                 <fo:block>
                               
                                 <#-- if (expectation.isReceived = 'N') && (expectation.amount??)>
-								    Kshs.  ${expectation.amount?string(",##0.00")} 
+								    Kshs.  ${expectation.amount?string(",##0.0000")} 
 								    ${loan.loanAmt}
 								</#if -->
 								
-								Kshs.  ${loan.loanAmt?string(",##0.00")}
+								Kshs.  ${loan.loanAmt?string(",##0.0000")}
 								<#assign totalDisbursed = totalDisbursed + loan.loanAmt>
                                </fo:block>
                             </fo:table-cell>
@@ -183,7 +183,7 @@ under the License.
                               <#assign stationIdString = stationId.toString() />
                               <#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationIdString), true)/>
                                 <#-- if (expectation.totalAmount??)>
-								    Kshs.  ${expectation.totalAmount?string(",##0.00")} 
+								    Kshs.  ${expectation.totalAmount?string(",##0.0000")} 
 								    ${station.stationNumber} 
 								</#if -->
 								${station.name}
@@ -224,7 +224,7 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
-                                Kshs.  ${totalLoans?string(",##0.00")}
+                                Kshs.  ${totalLoans?string(",##0.0000")}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -234,7 +234,7 @@ under the License.
                             </fo:table-cell>
                     <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
-                                Kshs.  ${totalDisbursed?string(",##0.00")}	
+                                Kshs.  ${totalDisbursed?string(",##0.0000")}	
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
