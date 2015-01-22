@@ -28,3 +28,4 @@ context.memberAccount = memberAccount
 
 branch = delegator.findOne("PartyGroup", [partyId : member.branchId], false);
 context.branch =  branch
+context.createdBy = accountTransactionParent.createdBy
