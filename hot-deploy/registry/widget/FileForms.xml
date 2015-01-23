@@ -88,12 +88,37 @@
 		 <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	
+	 <form name="FindMemberfilesToAddVolumeAndDoc" default-map-name="FilesContext" target="editfiles" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<!-- <set field="status" value="AVAILABLE"/> -->
+        	
+    
+        </actions>
+       <!--  <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/> -->
+		<field name="payrollNumber"><text-find/></field>
+		<field name="memberNumber"><text-find/></field>
+		<field name="firstName"><text-find/></field>
+		<field name="lastName"><text-find/></field>
+		
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+	
 	<form name="FilesListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFiles"
-		paginate-target="EditFilesForm" odd-row-style="alternate-row" default-map-name="FilesContext" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-		<actions>
-		<entity-condition entity-name="RegistryFiles"/>
-		</actions>
-		<!-- <field name="memberOrEmployee" title="File Type"><display /></field> -->
+		paginate-target="FindMemberfilesToAddVolumeAndDoc" odd-row-style="alternate-row" default-map-name="FilesContext" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		 <actions>
+        <entity-condition entity-name="RegistryFiles" >
+       <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/> 
+        </entity-condition>
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+        </actions>
 		<field name="partyId" title="Name"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
 		<field name="folioNo" title="Folio Number"><hidden /></field>
 		<field name="memberNumber"><display /></field>
@@ -106,7 +131,6 @@
 		<field name="addDocument" title=" " widget-style="buttontext">
 			<hyperlink also-hidden="false"  description="Add Document To File" target="editfileURL">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" />
 				<parameter param-name="memberNumber" />
 			</hyperlink>
 		</field>
@@ -114,7 +138,6 @@
 		 <field name="files" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Volume Setup" target="goAddVolume">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 			</hyperlink>
 		</field>
 
@@ -405,7 +428,6 @@
         <field name="filesRequest" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Request File" target="goRequestFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 			</hyperlink>
 		</field>
@@ -492,7 +514,6 @@
 		 <field name="fileAuthorize" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Authorize" target="goAuthorizeFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="actionBy" /> 
 				<parameter param-name="Reason" /> 
@@ -579,7 +600,6 @@
 		 <field name="filesIssue" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Issue File" target="goIssueFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="actionBy" /> 
 				<parameter param-name="Reason" /> 
@@ -668,7 +688,6 @@
 		 <field name="filesIssue" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Divert File" target="goDivertFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="actionBy" /> 
 				<parameter param-name="Reason" /> 
@@ -759,7 +778,6 @@
 		 <field name="recieveFile" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Recieve File" target="goDispatchFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -846,7 +864,6 @@
 		 <field name="filesRelease" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Return To Registry" target="goReleaseFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -854,7 +871,6 @@
 		 <field name="filesReleaseToOtherStaff" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Send To Another Staff" target="goReleaseFileToAnotherStaff">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -936,8 +952,7 @@
 		</field>
 		 <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Recieve File At Registry" target="goReturnFile">
-				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
+				<parameter param-name="partyId" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -1017,7 +1032,6 @@
 		 <field name="activateFile" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -1025,7 +1039,6 @@
 		 <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Move To Semi-Active Status" target="goSaveSemiActiveFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 				<parameter param-name="stageStatus" /> 
@@ -1104,8 +1117,7 @@
 		</field>
 		 <field name="activateFile" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
-				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
+				<parameter param-name="partyId" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -1113,7 +1125,6 @@
 		 <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Move File To Archive" target="goSaveArchivedFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 				<parameter param-name="stageStatus" /> 
@@ -1193,7 +1204,6 @@
 		 <field name="activateFile" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -1201,7 +1211,6 @@
 		 <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Move To Files For Disposal" target="goSaveFileForDisposal">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 				<parameter param-name="stageStatus" /> 
@@ -1281,7 +1290,6 @@
 		 <field name="activateFile" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -1289,7 +1297,6 @@
 		 <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Dispose File" target="goReturnFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -1368,7 +1375,6 @@
 		<!--  <field name="filesReturn" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Recieve File At Registry" target="goReturnFile">
 				<parameter param-name="partyId" />
-				<parameter param-name="folioNo" /> 
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
@@ -1518,7 +1524,6 @@
 		default-table-style="basic-table">
 		 <actions>
 				 <set field="partyId" value="${parameters.partyId}"/> 
-				 <set field="folioNo" value="${parameters.folioNo}"/> 
 		
         </actions>
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
@@ -1539,7 +1544,6 @@
 		default-table-style="basic-table">
 		 <actions>
 				 <set field="partyId" value="${parameters.partyId}"/> 
-				 <set field="folioNo" value="${parameters.folioNo}"/> 
 				  <set field="actionBy" value="${parameters.actionBy}"/>
 		
         </actions>
@@ -1745,7 +1749,6 @@
 		default-table-style="basic-table">
 		 <actions>
 		 <set field="partyId" value="${parameters.partyId}"/>
-		 <set field="folioNo" value="${parameters.folioNo}"/>
 		
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>

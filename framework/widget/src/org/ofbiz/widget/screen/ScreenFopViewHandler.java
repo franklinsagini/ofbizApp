@@ -147,11 +147,11 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 
 			// System.out.println("TTTTTTTTTTTTT "+src);
 			// System.out.println("TTTTTTTTTTTTT "+src.getInputStream());
-			
-			//System.out.println("OOOOOOOOOOOOO " + out.size());
-			//System.out.println("BBBBBBBBBBBBBB" + " String :: " + out);
-			//System.out.println(" Bytes :: " + out.toByteArray());
-			
+
+			// System.out.println("OOOOOOOOOOOOO " + out.size());
+			// System.out.println("BBBBBBBBBBBBBB" + " String :: " + out);
+			// System.out.println(" Bytes :: " + out.toByteArray());
+
 			// System.out.println(" FOOOOOOOOOOP "+fop.getResults().toString());
 		} catch (Exception e) {
 			renderError("Unable to transform FO file", e, screenOutString,
@@ -190,8 +190,8 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 				outputStream.close();
 				outputStream.flush();
 
-				//out.close();
-				//out.flush();
+				// out.close();
+				// out.flush();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -236,7 +236,7 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 			PrintService printingDevice = null;
 			for (PrintService s : services) {
 				// Microsoft XPS Document Writer
-				//EPSON LX-300+ /II
+				// EPSON LX-300+ /II
 				if (s.getName().equals("EPSON LX-300+ /II")) {
 					printingDevice = s;
 				}
@@ -247,13 +247,14 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 			SimpleDoc doc = new SimpleDoc(pdfBook,
 					DocFlavor.SERVICE_FORMATTED.PAGEABLE, null);
 
-			DocPrintJob printJob = printingDevice.createPrintJob();
-
-			try {
-				printJob.print(doc, attributeSet);
-			} catch (PrintException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (printingDevice != null) {
+				DocPrintJob printJob = printingDevice.createPrintJob();
+				try {
+					printJob.print(doc, attributeSet);
+				} catch (PrintException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			// PdfBook pdfBook = new PdfBook(response.getOutputStream(),
@@ -335,16 +336,16 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 			// }
 
 			// PDFDecoder decodePdf = new PdfDec
-			
+
 			/***
 			 * Print this
 			 * **/
-			System.out.println("############### name "+name);
-			System.out.println("############### page "+page);
-			System.out.println("############### info "+info);
-			System.out.println("############### contentType "+contentType);
-			System.out.println("############### encoding "+encoding);
-			
+			System.out.println("############### name " + name);
+			System.out.println("############### page " + page);
+			System.out.println("############### info " + info);
+			System.out.println("############### contentType " + contentType);
+			System.out.println("############### encoding " + encoding);
+
 			// page =
 			// "component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashWithdrawal";
 			// name = "cashWithdrawal";
@@ -352,11 +353,9 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 			//
 			// render(name, page, info, contentType, encoding, request,
 			// response);
-			
-			
-			
-			//ByteArrayOutputStream baOut = new ByteArrayOutputStream();
-		
+
+			// ByteArrayOutputStream baOut = new ByteArrayOutputStream();
+
 			try {
 				out.writeTo(response.getOutputStream());
 				out.close();
@@ -365,7 +364,7 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		} else {
 
 			// write to the browser
