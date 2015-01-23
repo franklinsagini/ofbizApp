@@ -295,10 +295,10 @@ public class MSaccoServices {
 		
 		List<Long> listMemberAccountId = new ArrayList<Long>();
 		//AccHolderTransactionServices.
-		listMemberAccountId = AccHolderTransactionServices.getMemberAccountIds(AccHolderTransactionServices
-					.getMemberAccount(memberAccountId).getLong("partyId"));
 
 		if (memberAccountId != null) {
+			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIds(AccHolderTransactionServices
+					.getMemberAccount(memberAccountId).getLong("partyId"));
 			
 			for (Long currentMemberAccountId : listMemberAccountId) {
 				
