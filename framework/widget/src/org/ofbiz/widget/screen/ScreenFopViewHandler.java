@@ -231,7 +231,7 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 			PrintService[] services = PrintServiceLookup.lookupPrintServices(
 					null, attributeSet);
 			for (PrintService s : services) {
-				System.out.println(s.getName());
+				System.out.println("  PPPP ::::: " + s.getName());
 			}
 			PrintService printingDevice = null;
 			for (PrintService s : services) {
@@ -242,12 +242,14 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 				}
 			}
 
-			PdfBook pdfBook = new PdfBook(decodePdf, printingDevice,
-					attributeSet);
-			SimpleDoc doc = new SimpleDoc(pdfBook,
-					DocFlavor.SERVICE_FORMATTED.PAGEABLE, null);
-
 			if (printingDevice != null) {
+
+				PdfBook pdfBook = new PdfBook(decodePdf, printingDevice,
+						attributeSet);
+				SimpleDoc doc = new SimpleDoc(pdfBook,
+						DocFlavor.SERVICE_FORMATTED.PAGEABLE, null);
+
+				System.out.println("GGGGGGGGG GOING TO PRINT NOW!!!");
 				DocPrintJob printJob = printingDevice.createPrintJob();
 				try {
 					printJob.print(doc, attributeSet);
