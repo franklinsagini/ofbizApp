@@ -2540,4 +2540,94 @@ public class AccHolderTransactionServices {
 
 		return transactionParent;
 	}
+	
+	
+	/****
+	 * Reverse Transaction
+	 * */
+	public static String reverseTransaction(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		
+		String accountTransactionParentId = (String) request.getParameter("accountTransactionParentId");
+		String partyId = (String) request.getParameter("partyId");
+		
+		System.out.println(" TTTTTTTTTTTTTTTTTTTT PPPPPPPParent "+accountTransactionParentId);
+		System.out.println(" PPPPPPPPPPPPPPPPPPPP PartyId "+partyId);
+		
+		//Get all the account transactions under parent and set their increase/decrease to R
+		
+		
+		// GenericValue userLogin = (GenericValue) request
+		// .getAttribute("userLogin");
+
+		// Get all the Cheque Deposit Transactions that are Unposted and Cleared
+		// then Post each one of them
+		List<GenericValue> accountTransactionELI = null;
+
+//		String chequeDepostTransaction = "CHEQUEDEPOSIT";
+//		Timestamp currentDate = new Timestamp(Calendar.getInstance()
+//				.getTimeInMillis());
+		
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"accountTransactionParentId", EntityOperator.EQUALS,
+								accountTransactionParentId)		
+								),
+						EntityOperator.AND);
+
+		try {
+			accountTransactionELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		log.info(" ######### Will try to POST Cheques #########");
+		if (accountTransactionELI == null) {
+			log.info(" ######### No Deposits to Process #########");
+		} else{
+			log.info(" ######### The Size  #########"+accountTransactionELI.size());
+		}
+		
+		for (GenericValue accountTransaction : accountTransactionELI) {
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		accountTransaction.setString("increaseDecrease", "R");
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		
+		
+		//Now post the reversal in the GL
+	}
+
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return "";
+	}
 }

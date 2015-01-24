@@ -229,7 +229,7 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 			// PDFDecoder decodePdf = new PdfDecoder();
 			// DocFlavor.SERVICE_FORMATTED.PAGEABLE
 			PrintService[] services = PrintServiceLookup.lookupPrintServices(
-					null, attributeSet);
+					null, null);
 			for (PrintService s : services) {
 				System.out.println("  PPPP ::::: " + s.getName());
 			}
