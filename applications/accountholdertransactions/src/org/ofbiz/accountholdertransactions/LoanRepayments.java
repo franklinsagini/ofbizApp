@@ -163,7 +163,8 @@ public class LoanRepayments {
 		if (repaymentPeriod > 0) {
 			loanApplication.set("repaymentStartDate", new Timestamp(
 					localRepaymentStartDate.toDate().getTime()));
-			loanApplication.set("repaymentPeriod", new Long(repaymentPeriod));
+			//loanApplication.set("repaymentPeriod", new Long(repaymentPeriod));
+			loanApplication.set("openingRepaymentPeriod", new Long(repaymentPeriod));
 			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
 			try {
@@ -228,15 +229,22 @@ public class LoanRepayments {
 		List<GenericValue> loanAmortizationELI = null;
 		Map<String, String> userLogin = (Map<String, String>) request
 				.getAttribute("userLogin");
+		
+		LocalDate today = new LocalDate();
+		LocalDate lastdayOfNextMonth = (today.plusMonths(2).withDayOfMonth(1));
+		lastdayOfNextMonth = lastdayOfNextMonth.minusDays(1);
 
-		Timestamp currentDate = new Timestamp(Calendar.getInstance()
-				.getTimeInMillis());
+		//Timestamp currentDate = new Timestamp(Calendar.getInstance()
+		//		.getTimeInMillis());
+		Timestamp lastDateOfExpectation = new Timestamp(lastdayOfNextMonth.toDate().getTime());
+		
+		
 
 		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"isAccrued", EntityOperator.EQUALS, "N"),
 						EntityCondition.makeCondition("expectedPaymentDate",
-								EntityOperator.LESS_THAN_EQUAL_TO, currentDate)
+								EntityOperator.LESS_THAN_EQUAL_TO, lastDateOfExpectation)
 
 				), EntityOperator.AND);
 
