@@ -258,7 +258,6 @@ public class LoanServices {
 			}
 
 			// Get Existing Loans
-
 			// if this is a loan based on Multiples of Account Product then
 			if (loanProduct.getString("multipleOfSavings").equals("Yes")) {
 				bdExistingLoans = calculateExistingLoansTotal(memberId,
@@ -563,6 +562,10 @@ public class LoanServices {
 		} else {
 			accountProductId = getShareDepositAccountId("901");
 		}
+		
+//		EntityCondition.makeCondition(
+//				"accountProductId", EntityOperator.EQUALS,
+//				Long.valueOf(accountProductId)),
 
 		memberId = memberId.replaceAll(",", "");
 		Long loanStatusId = getLoanStatusId("DISBURSED");
@@ -571,9 +574,7 @@ public class LoanServices {
 		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS,
-						Long.valueOf(memberId)), EntityCondition.makeCondition(
-						"accountProductId", EntityOperator.EQUALS,
-						Long.valueOf(accountProductId)),
+						Long.valueOf(memberId)), 
 
 				EntityCondition.makeCondition("loanStatusId",
 						EntityOperator.EQUALS, loanStatusId)
@@ -593,8 +594,10 @@ public class LoanServices {
 		if (loanApplicationELI != null)
 			for (GenericValue genericValue : loanApplicationELI) {
 				// toDeleteList.add(genericValue);
-				existingLoansTotal = existingLoansTotal.add(genericValue
-						.getBigDecimal("loanAmt"));
+				
+				BigDecimal bdLoanRepaid = getLoansRepaidByLoanApplicationId(genericValue.getLong("loanApplicationId"));
+				BigDecimal bdLoanBalance = genericValue.getBigDecimal("loanAmt").subtract(bdLoanRepaid);
+				existingLoansTotal = existingLoansTotal.add(bdLoanBalance);
 			}
 		log.info("##########MMMMMMMMMMM Member #######" + memberId);
 		log.info("##########AAAAAAAAAAA Account #######" + accountProductId);
@@ -638,14 +641,16 @@ public class LoanServices {
 
 		// The Multiplier account id
 		// String accountProductId = loanProduct.getString("accountProductId");
+		
+		//EntityCondition.makeCondition(
+		//"accountProductId", EntityOperator.EQUALS, null),
 		Long loanStatusId = getLoanStatusId("DISBURSED");
 		List<GenericValue> loanApplicationELI = null; // =
 		memberId = memberId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS,
-						Long.valueOf(memberId)), EntityCondition.makeCondition(
-						"accountProductId", EntityOperator.EQUALS, null),
+						Long.valueOf(memberId)), 
 						EntityCondition.makeCondition("loanStatusId",
 								EntityOperator.EQUALS, loanStatusId)),
 						EntityOperator.AND);
