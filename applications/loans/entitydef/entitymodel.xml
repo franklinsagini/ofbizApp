@@ -347,6 +347,7 @@ under the License.
 		<field name="maxRepaymentPeriod" type="numeric" enable-audit-log="true"></field>
 		
 		<field name="repaymentPeriod" type="numeric" enable-audit-log="true"></field>
+		<field name="openingRepaymentPeriod" type="numeric" enable-audit-log="true"></field>
 		
 		<field name="maxLoanAmt" type="fixed-point" enable-audit-log="true"></field>
 		
@@ -976,6 +977,17 @@ under the License.
         	<key-map field-name="loanApplicationId"/>
       	</relation>
 	</entity>
+	
+	
+	<view-entity entity-name="DisbursedLoansView"
+            package-name="org.ofbiz.loans"
+            title="LoanApplication and  View Entity">
+      <member-entity entity-alias="LA" entity-name="LoanApplication"/>
+      <alias entity-alias="LA" name="loanApplicationId"/>
+      <entity-condition>
+      	<condition-expr field-name="loanStatusId" operator="equals" value="6"/>
+      </entity-condition>
+    </view-entity>
 	
 	
 	

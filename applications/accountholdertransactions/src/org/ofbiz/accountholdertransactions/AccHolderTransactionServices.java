@@ -559,6 +559,11 @@ public class AccHolderTransactionServices {
 		return (getBookBalanceVer2(memberAccountId, delegator)
 				.add(bdOpeningBalance));
 	}
+	
+	public static BigDecimal getBookBalanceNow(String memberAccountId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		return getBookBalanceVer3(memberAccountId, delegator);
+	}
 
 	public static BigDecimal getBookBalanceVer3(String memberAccountId,
 			Delegator delegator) {

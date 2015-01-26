@@ -7,7 +7,6 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
-import org.joda.time.Months;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -31,8 +29,6 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.AmortizationServices;
 import org.ofbiz.loans.LoanServices;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 /***
@@ -125,10 +121,10 @@ public class LoanRepayments {
 		int repaymentPeriod = loanApplication.getLong("repaymentPeriod")
 				.intValue();
 
-		if ((localDisbursementDate.getMonthOfYear() == localCurrentDate
-				.getMonthOfYear())
-				&& (localDisbursementDate.getYear() == localCurrentDate
-						.getYear())) {
+//		if ((localDisbursementDate.getMonthOfYear() == localCurrentDate
+//				.getMonthOfYear())
+//				&& (localDisbursementDate.getYear() == localCurrentDate
+//						.getYear())) {
 			if (localDisbursementDate.getDayOfMonth() < 15) {
 				// repaymentStartDate = new Timestamp(localDisbursementDate.)
 				localRepaymentStartDate = localDisbursementDate.plusMonths(1)
@@ -138,32 +134,33 @@ public class LoanRepayments {
 						.withDayOfMonth(1);
 			}
 
-		} else
-		// else repayment start date is first of next month
-		{
-			localRepaymentStartDate = localCurrentDate.plusMonths(1)
-					.withDayOfMonth(1);
-
-			int repaidPeriods;
-			// = localCurrentDate.m
-			// localDisbursementDate.
-			repaidPeriods = Months.monthsBetween(localDisbursementDate,
-					localCurrentDate).getMonths();
-
-			if (localDisbursementDate.getDayOfMonth() < 15) {
-				// repaymentStartDate = new Timestamp(localDisbursementDate.)
-				repaidPeriods = repaidPeriods - 1;
-			} else {
-				repaidPeriods = repaidPeriods - 2;
-			}
-
-			repaymentPeriod = repaymentPeriod - repaidPeriods;
-		}
+//		} else
+//		// else repayment start date is first of next month
+//		{
+//			localRepaymentStartDate = localCurrentDate.plusMonths(1)
+//					.withDayOfMonth(1);
+//
+//			int repaidPeriods;
+//			// = localCurrentDate.m
+//			// localDisbursementDate.
+//			repaidPeriods = Months.monthsBetween(localDisbursementDate,
+//					localCurrentDate).getMonths();
+//
+//			if (localDisbursementDate.getDayOfMonth() < 15) {
+//				// repaymentStartDate = new Timestamp(localDisbursementDate.)
+//				repaidPeriods = repaidPeriods - 1;
+//			} else {
+//				repaidPeriods = repaidPeriods - 2;
+//			}
+//
+//			repaymentPeriod = repaymentPeriod - repaidPeriods;
+//		}
 
 		if (repaymentPeriod > 0) {
 			loanApplication.set("repaymentStartDate", new Timestamp(
 					localRepaymentStartDate.toDate().getTime()));
-			loanApplication.set("repaymentPeriod", new Long(repaymentPeriod));
+			//loanApplication.set("repaymentPeriod", new Long(repaymentPeriod));
+			//loanApplication.set("openingRepaymentPeriod", new Long(repaymentPeriod));
 			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
 			try {
@@ -225,61 +222,74 @@ public class LoanRepayments {
 
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
-		List<GenericValue> loanAmortizationELI = null;
+		List<GenericValue> disbursedLoansViewELI = null;
 		Map<String, String> userLogin = (Map<String, String>) request
 				.getAttribute("userLogin");
+		
+		LocalDate today = new LocalDate();
+		LocalDate lastdayOfNextMonth = (today.plusMonths(2).withDayOfMonth(1));
+		lastdayOfNextMonth = lastdayOfNextMonth.minusDays(1);
+		
+		//Timestamp currentDate = new Timestamp(Calendar.getInstance()
+		//		.getTimeInMillis());
+		Timestamp lastDateOfExpectation = new Timestamp(lastdayOfNextMonth.toDate().getTime());
+		
+		if (expectationAlreadyGenerated())
+			return "";
 
-		Timestamp currentDate = new Timestamp(Calendar.getInstance()
-				.getTimeInMillis());
+//		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+//				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+//						"isAccrued", EntityOperator.EQUALS, "N"),
+//						EntityCondition.makeCondition("expectedPaymentDate",
+//								EntityOperator.LESS_THAN_EQUAL_TO, lastDateOfExpectation)
+//
+//				), EntityOperator.AND);
+//
+//		try {
+//			loanAmortizationELI = delegator.findList("LoanAmortization",
+//					loanRepaymentConditions, null, null, null, false);
+//
+//		} catch (GenericEntityException e2) {
+//			e2.printStackTrace();
+//		}
+//		log.info(" ######### Looking for Amortizations that are due #########");
+//		if (loanAmortizationELI == null) {
+//			log.info(" ######### No Amortizations Due #########");
+//		} else {
+//			log.info(" ######### Total Number of Amortizations Due is   #########"
+//					+ loanAmortizationELI.size());
+//		}
 
-		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+		
+		//Get all the ids for disbursed loans
+		EntityConditionList<EntityExpr> disbursedLoanIdsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"isAccrued", EntityOperator.EQUALS, "N"),
-						EntityCondition.makeCondition("expectedPaymentDate",
-								EntityOperator.LESS_THAN_EQUAL_TO, currentDate)
+						"loanStatusId", EntityOperator.EQUALS, 1)
 
 				), EntityOperator.AND);
 
 		try {
-			loanAmortizationELI = delegator.findList("LoanAmortization",
-					loanRepaymentConditions, null, null, null, false);
+			disbursedLoansViewELI = delegator.findList("DisbursedLoansView",
+					disbursedLoanIdsConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		log.info(" ######### Looking for Amortizations that are due #########");
-		if (loanAmortizationELI == null) {
-			log.info(" ######### No Amortizations Due #########");
+		log.info(" ######### Looking for disbursed Loans #########");
+		if (disbursedLoansViewELI == null) {
+			log.info(" ######### No Disbursed Loans #########");
 		} else {
-			log.info(" ######### Total Number of Amortizations Due is   #########"
-					+ loanAmortizationELI.size());
+			log.info(" ######### Total Number of Disbursed Loans is   #########"
+					+ disbursedLoansViewELI.size());
 		}
 
-		// String acctgTransType = "MEMBER_DEPOSIT";
-		// int count = 0;
-		// for (GenericValue accountTransaction : accountTransactionELI) {
-		// log.info("CCCCCC  Counting "+count);
-		// try {
-		// TransactionUtil.begin();
-		// } catch (GenericTransactionException e) {
-		// e.printStackTrace();
-		// }
-		// postChequeDeposit(accountTransaction, delegator, acctgTransType);
-		// log.info("#####PPPPPPPPPPPPPP Posted ####  "+accountTransaction.getBigDecimal("transactionAmount"));
-		// // Update Account Transaction to read Posted and when it was Posted
-		// updateAccountTransaction(accountTransaction, delegator);
-		// try {
-		// TransactionUtil.commit();
-		// } catch (GenericTransactionException e) {
-		// e.printStackTrace();
-		// }
-		// }
+		
 
 		// for each amortization create an expection (LoanExpectation)
-		for (GenericValue loanAmortization : loanAmortizationELI) {
+		for (GenericValue disbursedLoanView : disbursedLoansViewELI) {
 
 			// Remember to Update Amortization as isAccrued and with dateAccrued
-			createLoanExpectation(loanAmortization, delegator);
+			createLoanExpectation(disbursedLoanView, delegator);
 		}
 
 		// Get Expectations
@@ -293,7 +303,6 @@ public class LoanRepayments {
 		try {
 			loanExpectationELI = delegator.findList("LoanExpectation",
 					loanExpectationConditions, null, null, null, false);
-
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -324,6 +333,43 @@ public class LoanRepayments {
 			}
 		}
 		return "";
+	}
+
+	private static boolean expectationAlreadyGenerated() {
+		// TODO Auto-generated method stub
+		
+		LocalDate thisMonthDay = new LocalDate();
+		LocalDate firstDayOfThisMonth = (thisMonthDay.withDayOfMonth(1));
+
+		
+		LocalDate today = new LocalDate();
+		LocalDate lastdayOfthisMonth = (today.plusMonths(1).withDayOfMonth(1));
+		//lastdayOfNextMonth = lastdayOfNextMonth.minusDays(1);
+		
+					EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(
+							
+							EntityCondition.makeCondition("dateAccrued",
+									EntityOperator.GREATER_THAN_EQUAL_TO, firstDayOfThisMonth),
+							EntityCondition.makeCondition("dateAccrued",
+									EntityOperator.LESS_THAN_EQUAL_TO, lastdayOfthisMonth)
+			
+					), EntityOperator.AND);
+		   List<GenericValue> loanExpectationELI = null;
+		   Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			try {
+				loanExpectationELI = delegator.findList("LoanExpectation",
+						loanExpectationConditions, null, null, null, false);
+			
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+			}
+			if ((loanExpectationELI == null) || loanExpectationELI.size() <= 0) {
+				return false;
+			} 
+		
+		
+		return true;
 	}
 
 	/***
@@ -554,13 +600,13 @@ public class LoanRepayments {
 	 * Set dateAccrued/Charged to today/currentDate
 	 * 
 	 * */
-	private static void createLoanExpectation(GenericValue loanAmortization,
+	private static void createLoanExpectation(GenericValue disbursedLoanView,
 			Delegator delegator) {
 
 		GenericValue loanExpectation = null;
 		Long loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
 				1L);
-		Long loanApplicationId = loanAmortization.getLong("loanApplicationId");
+		Long loanApplicationId = disbursedLoanView.getLong("loanApplicationId");
 		String employeeNo = getEmployeeNumber(
 				String.valueOf(loanApplicationId), delegator);
 
@@ -601,9 +647,11 @@ public class LoanRepayments {
 				.calculateReducingBalancePaymentAmount(bdLoanAmt,
 						bdInterestRatePM, repaymentPeriod.intValue());
 
-		BigDecimal bdLoanBalance = calculateLoanBalance(
-				loanApplication.getString("partyId"),
-				loanApplication.getString("loanApplicationId"), bdLoanAmt);
+		BigDecimal bdLoanBalance = bdLoanAmt.subtract(LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationId));
+		
+//		calculateLoanBalance(
+//				loanApplication.getString("partyId"),
+//				loanApplication.getString("loanApplicationId"), bdLoanAmt);
 
 		if (bdLoanBalance.compareTo(BigDecimal.ZERO) == 1) {
 
@@ -618,6 +666,10 @@ public class LoanRepayments {
 			// .getBigDecimal("principalAmount");
 			BigDecimal bdPrincipalAccrued = BigDecimal.ZERO;
 			bdPrincipalAccrued = monthlyPayable.subtract(bdInterestAccrued);
+			
+			//Return the total unpaid or monthly expected based on interest rate and period whichever is
+			//greater of the two values
+			bdPrincipalAccrued = getUnpaidPrincipalTotal(bdPrincipalAccrued, loanApplicationId);
 
 			// INSURANCE
 			// BigDecimal bdInsuranceAccrued = loanAmortization
@@ -676,9 +728,9 @@ public class LoanRepayments {
 			listTobeStored.add(loanExpectation);
 
 			// Update Amortization
-			loanAmortization.set("isAccrued", "Y");
-			loanAmortization.set("dateAccrued", new Timestamp(Calendar
-					.getInstance().getTimeInMillis()));
+//			loanAmortization.set("isAccrued", "Y");
+//			loanAmortization.set("dateAccrued", new Timestamp(Calendar
+//					.getInstance().getTimeInMillis()));
 
 			try {
 				TransactionUtil.begin();
@@ -687,7 +739,7 @@ public class LoanRepayments {
 			}
 			try {
 				delegator.storeAll(listTobeStored);
-				delegator.createOrStore(loanAmortization);
+			//	delegator.createOrStore(loanAmortization);
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
@@ -698,6 +750,31 @@ public class LoanRepayments {
 			}
 		}
 
+	}
+
+	private static BigDecimal getUnpaidPrincipalTotal(
+			BigDecimal bdPrincipalAccrued, Long loanApplicationId) {
+
+		//Get the total principal due based on armotization
+		BigDecimal dbTotalDueFromSchedule = BigDecimal.ZERO;
+		dbTotalDueFromSchedule = getTotalPrincipalDueFromAmortization(loanApplicationId);
+		// Get the total repaid based on repayment
+		BigDecimal bdTotalRepaidBasedOnRepayment = BigDecimal.ZERO;
+		bdTotalRepaidBasedOnRepayment =	LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationId);
+		
+		//Get the difference between total due and total repaid
+		BigDecimal bdTotalDifference = BigDecimal.ZERO;
+				
+		bdTotalDifference =	dbTotalDueFromSchedule.subtract(bdTotalRepaidBasedOnRepayment);
+		
+		//if the difference is greater than bdPrincipalAccrued then 
+		//return the difference if it is less then return the bdPrincipalAccrued 
+		// as the expected principal
+		if (bdTotalDifference.compareTo(bdPrincipalAccrued) == 1){
+			return bdTotalDifference;
+		} else{
+			return bdPrincipalAccrued;
+		}
 	}
 
 	/****
@@ -1839,6 +1916,54 @@ public class LoanRepayments {
 		}
 
 		return totalPrincipalPaid;
+	}
+
+	
+	
+	/***
+	 * Get total principal due from 
+	 * LoanArmotization
+	 * */
+	public static BigDecimal getTotalPrincipalDueFromAmortization(Long loanApplicationId) {
+		BigDecimal totalPrincipalDue = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanAmortizationELI = new ArrayList<GenericValue>();
+		
+		
+		LocalDate today = new LocalDate();
+		LocalDate lastdayOfNextMonth = (today.plusMonths(2).withDayOfMonth(1));
+		lastdayOfNextMonth = lastdayOfNextMonth.minusDays(1);
+
+		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		EntityConditionList<EntityExpr> loanAmortizationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("loanApplicationId",
+								EntityOperator.EQUALS,
+								loanApplicationId)
+								,
+						EntityCondition.makeCondition("expectedPaymentDate",
+							EntityOperator.LESS_THAN_EQUAL_TO, lastdayOfNextMonth)
+				), EntityOperator.AND);
+
+		try {
+			loanAmortizationELI = delegator.findList("LoanAmortization",
+					loanAmortizationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanAmortization : loanAmortizationELI) {
+
+			if (loanAmortization.getBigDecimal("principalAmount") != null) {
+
+				totalPrincipalDue = totalPrincipalDue.add(loanAmortization
+						.getBigDecimal("principalAmount"));
+			}
+		}
+
+		return totalPrincipalDue;
 	}
 
 	// public static BigDecimal getTotalLoanPaid
