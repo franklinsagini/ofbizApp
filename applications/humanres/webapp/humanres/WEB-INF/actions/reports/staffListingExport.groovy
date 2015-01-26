@@ -13,10 +13,12 @@ stafflist = [];
  IdNo = staffItem.getString("nationalIDNumber");
  gender = staffItem.getString("gender");
  appointmentDate = staffItem.getString("appointmentdate");
+ pin = staffItem.getString("pinNumber");
+ nhif = staffItem.getString("nhifNumber");
+ nssf = staffItem.getString("socialSecurityNumber");
  
- 
- 
- stafflist.add([payrollNo :payrollNo, fname :fname, lname : lname, IdNo : IdNo, gender : gender, appointmentDate : appointmentDate]);
+ stafflist.add([payrollNo :payrollNo, fname :fname, lname : lname, IdNo : IdNo, gender : gender,
+ pin : pin, nhif : nhif, nssf : nssf, appointmentDate : appointmentDate]);
  }
  
  
