@@ -292,19 +292,35 @@ public class MSaccoServices {
 		Account account = new Account();
 		account.setTelephoneNo(phoneNumber);
 		account.setQuery_type("accounts");
+		
+		List<Long> listMemberAccountId = new ArrayList<Long>();
+		//AccHolderTransactionServices.
 
 		if (memberAccountId != null) {
-			GenericValue memberAccount = AccHolderTransactionServices
-					.getMemberAccount(memberAccountId);
+			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIds(AccHolderTransactionServices
+					.getMemberAccount(memberAccountId).getLong("partyId"));
+			
+			for (Long currentMemberAccountId : listMemberAccountId) {
+				
+				
+				account = new Account();
+				account.setTelephoneNo(phoneNumber);
+				account.setQuery_type("accounts");
+				
+				GenericValue memberAccount = AccHolderTransactionServices
+						.getMemberAccount(currentMemberAccountId);
 
-			account.setAccountNo(memberAccount.getString("accountNo"));
-			account.setAccountName(memberAccount.getString("accountName"));
-
-			String memberAccountIdString = memberAccountId.toString();
-			memberAccountIdString = memberAccountIdString.replaceFirst(",", "");
-			account.setAccountBalance(AccHolderTransactionServices
-					.getTotalBalanceNow(memberAccountIdString).doubleValue());
-			listAccount.add(account);
+				account.setAccountNo(memberAccount.getString("accountNo"));
+				account.setAccountName(memberAccount.getString("accountName"));
+				account.setAccountType(AccHolderTransactionServices.getAccountProductName(currentMemberAccountId));
+				String memberAccountIdString = currentMemberAccountId.toString();
+				memberAccountIdString = memberAccountIdString.replaceFirst(",", "");
+				account.setAccountBalance(AccHolderTransactionServices
+						.getTotalBalanceNow(memberAccountIdString).doubleValue());
+				listAccount.add(account);
+				
+			}
+			
 		}
 
 		

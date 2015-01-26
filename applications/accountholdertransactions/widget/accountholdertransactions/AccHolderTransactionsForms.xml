@@ -43,11 +43,8 @@ under the License.
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down>
-            
-            
         </field>
-           	<field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text default-value="${slipNumber}"></text></field>
-    	
+        <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text default-value="${slipNumber}"></text></field>
      </form>
 	
 		<!-- NewCashWithdrawal -->
@@ -73,6 +70,7 @@ under the License.
             		<condition-expr field-name="isActive" value="Y"/>
             		<condition-expr field-name="partyId"  value="${partyId}"/>
             		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            		<condition-expr field-name="increaseDecrease" operator="not-equals" value="R"/>
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
@@ -103,6 +101,12 @@ under the License.
         <field name="transactionType" title="Transaction Type">
         <!-- display also-hidden="false"></display -->
         	<hyperlink target-type="intra-app" target="generatedTransactionPrintout?accountTransactionParentId=${accountTransactionParentId}" description="Print ${transactionType}">
+        	</hyperlink>
+        </field>
+        
+        <field name="test" title="Reverse">
+        <!-- display also-hidden="false"></display -->
+        	<hyperlink target-type="intra-app" target="reverseTransaction?accountTransactionParentId=${accountTransactionParentId}&amp;partyId=${partyId}" description="Reverse ${transactionType}">
         	</hyperlink>
         </field>
         <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
@@ -171,6 +175,7 @@ under the License.
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             		<!-- condition-expr field-name="memberAccountId" from-field="parameters.memberAccountId}"/ -->
             		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            		<condition-expr field-name="increaseDecrease" operator="not-equals" value="R"/>
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>

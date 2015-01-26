@@ -200,7 +200,7 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             	<#assign memberAccountId = accountBalance.memberAccountId>
                             	<#assign memberAccountIdStr = memberAccountId.toString()>
-                            	<#assign accountBalanceAmt = Static["org.ofbiz.accountholdertransactions.AccHolderTransactionServices"].getTotalBalanceNow(memberAccountIdStr)/>
+                            	<#assign accountBalanceAmt = Static["org.ofbiz.accountholdertransactions.AccHolderTransactionServices"].getBookBalanceNow(memberAccountIdStr)/>
                                 <fo:block>
                                 Kshs.  ${accountBalanceAmt?string(",##0.00")}
                                 
