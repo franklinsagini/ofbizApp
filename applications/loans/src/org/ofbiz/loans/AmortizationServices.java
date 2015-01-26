@@ -78,7 +78,8 @@ public class AmortizationServices {
 		Long loanApplicationIdLog = Long.valueOf(loanApplicationId);
 		
 		BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationIdLog);
-		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt").subtract(bdTotalRepaidLoan);
+		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
+				//.subtract(bdTotalRepaidLoan);
 		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
 				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
 		//openingRepaymentPeriod
