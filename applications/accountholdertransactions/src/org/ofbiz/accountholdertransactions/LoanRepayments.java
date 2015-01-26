@@ -229,12 +229,13 @@ public class LoanRepayments {
 		LocalDate today = new LocalDate();
 		LocalDate lastdayOfNextMonth = (today.plusMonths(2).withDayOfMonth(1));
 		lastdayOfNextMonth = lastdayOfNextMonth.minusDays(1);
-
+		
 		//Timestamp currentDate = new Timestamp(Calendar.getInstance()
 		//		.getTimeInMillis());
 		Timestamp lastDateOfExpectation = new Timestamp(lastdayOfNextMonth.toDate().getTime());
 		
-		
+		if (expectationAlreadyGenerated())
+			return "";
 
 //		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
 //				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -332,6 +333,43 @@ public class LoanRepayments {
 			}
 		}
 		return "";
+	}
+
+	private static boolean expectationAlreadyGenerated() {
+		// TODO Auto-generated method stub
+		
+		LocalDate thisMonthDay = new LocalDate();
+		LocalDate firstDayOfThisMonth = (thisMonthDay.withDayOfMonth(1));
+
+		
+		LocalDate today = new LocalDate();
+		LocalDate lastdayOfthisMonth = (today.plusMonths(1).withDayOfMonth(1));
+		//lastdayOfNextMonth = lastdayOfNextMonth.minusDays(1);
+		
+					EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(
+							
+							EntityCondition.makeCondition("dateAccrued",
+									EntityOperator.GREATER_THAN_EQUAL_TO, firstDayOfThisMonth),
+							EntityCondition.makeCondition("dateAccrued",
+									EntityOperator.LESS_THAN_EQUAL_TO, lastdayOfthisMonth)
+			
+					), EntityOperator.AND);
+		   List<GenericValue> loanExpectationELI = null;
+		   Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			try {
+				loanExpectationELI = delegator.findList("LoanExpectation",
+						loanExpectationConditions, null, null, null, false);
+			
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+			}
+			if ((loanExpectationELI == null) || loanExpectationELI.size() <= 0) {
+				return false;
+			} 
+		
+		
+		return true;
 	}
 
 	/***

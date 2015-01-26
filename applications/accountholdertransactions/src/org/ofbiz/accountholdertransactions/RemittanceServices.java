@@ -373,7 +373,7 @@ public class RemittanceServices {
 						bdContributingAmt,
 						"remitanceDescription",
 						accountProduct.getString("name"), "employeeName",
-						employeeNames, "expectationType", "ACCOUNT", "month",
+						employeeNames, "expectationType", accountProduct.getString("code"), "month",
 						month));
 		try {
 			delegator.createOrStore(expectedPaymentSent);
@@ -997,6 +997,13 @@ public class RemittanceServices {
 		String branchId = "";
 		log.info(" SSSSSSSSSSSSSS Number of Records is "+expectedPaymentReceivedELI.size());
 		for (GenericValue expectedPaymentReceived : expectedPaymentReceivedELI) {
+			
+			/***
+			 * Can either be an account,
+			 * an INTEREST
+			 * 	  INSURANCE
+			 *    PRINCIPAL
+			 * */
 
 			if (branchId.equals("")) {
 				branchId = getMemberByPayrollNo(
