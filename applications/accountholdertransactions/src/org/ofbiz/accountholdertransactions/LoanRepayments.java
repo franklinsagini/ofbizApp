@@ -260,11 +260,12 @@ public class LoanRepayments {
 //					+ loanAmortizationELI.size());
 //		}
 
+		Long loanStatusDisbursedId = new Long(6);
 		
 		//Get all the ids for disbursed loans
 		EntityConditionList<EntityExpr> disbursedLoanIdsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"loanStatusId", EntityOperator.EQUALS, 1)
+						"loanStatusId", EntityOperator.EQUALS, loanStatusDisbursedId)
 
 				), EntityOperator.AND);
 
@@ -350,9 +351,9 @@ public class LoanRepayments {
 					.makeCondition(UtilMisc.toList(
 							
 							EntityCondition.makeCondition("dateAccrued",
-									EntityOperator.GREATER_THAN_EQUAL_TO, firstDayOfThisMonth),
+									EntityOperator.GREATER_THAN_EQUAL_TO, new Timestamp(firstDayOfThisMonth.toDate().getTime())),
 							EntityCondition.makeCondition("dateAccrued",
-									EntityOperator.LESS_THAN_EQUAL_TO, lastdayOfthisMonth)
+									EntityOperator.LESS_THAN_EQUAL_TO, new Timestamp(lastdayOfthisMonth.toDate().getTime()))
 			
 					), EntityOperator.AND);
 		   List<GenericValue> loanExpectationELI = null;
@@ -670,6 +671,7 @@ public class LoanRepayments {
 			//Return the total unpaid or monthly expected based on interest rate and period whichever is
 			//greater of the two values
 			bdPrincipalAccrued = getUnpaidPrincipalTotal(bdPrincipalAccrued, loanApplicationId);
+			bdPrincipalAccrued = bdPrincipalAccrued.setScale(4, RoundingMode.HALF_UP);
 
 			// INSURANCE
 			// BigDecimal bdInsuranceAccrued = loanAmortization
@@ -701,6 +703,7 @@ public class LoanRepayments {
 			// Add Interest
 			loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
 					1L);
+			bdInterestAccrued = bdInterestAccrued.setScale(4, RoundingMode.HALF_UP);
 			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
 					.toMap("loanExpectationId", loanExpectationId, "loanNo",
 							loanNo, "loanApplicationId", loanApplicationId,
@@ -715,6 +718,7 @@ public class LoanRepayments {
 
 			loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
 					1L);
+			bdInsuranceAccrued = bdInsuranceAccrued.setScale(4, RoundingMode.HALF_UP);
 			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
 					.toMap("loanExpectationId", loanExpectationId, "loanNo",
 							loanNo, "loanApplicationId", loanApplicationId,
@@ -1943,7 +1947,7 @@ public class LoanRepayments {
 								loanApplicationId)
 								,
 						EntityCondition.makeCondition("expectedPaymentDate",
-							EntityOperator.LESS_THAN_EQUAL_TO, lastdayOfNextMonth)
+							EntityOperator.LESS_THAN_EQUAL_TO, new Timestamp(lastdayOfNextMonth.toDate().getTime()))
 				), EntityOperator.AND);
 
 		try {
