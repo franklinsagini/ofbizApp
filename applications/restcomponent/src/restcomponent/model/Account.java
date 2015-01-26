@@ -4,6 +4,7 @@ package restcomponent.model;
 public class Account {
     protected String telephoneNo;
 	protected String query_type;
+	protected String accountType;
 	private String accountNo;
 	private String accountName;
 	private Double accountBalance;
@@ -20,6 +21,13 @@ public class Account {
 	}
 	public void setQuery_type(String query_type) {
 		this.query_type = query_type;
+	}
+	
+	public String getAccountType() {
+		return accountType;
+	}
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
 	}
 	public String getAccountNo() {
 		return accountNo;

@@ -369,7 +369,7 @@ under the License.
 
         <!-- Okay, now just store the results -->
         <entity-one entity-name="FinAccount" value-field="finAccount"/>
-        <log level="verbose" message="In updateFinAccountBalancesFromTrans/Auth updating FinAccount with ID [${finAccountId}] with actualBalance: ${finAccount.actualBalance} -> ${actualBalanceSum}, and availableBalance: ${finAccount.availableBalance} -> ${availableBalanceSum}"/>
+        <log level="verbose" message="In updateFinAccountBalancesFromTrans/Auth updating FinAccount with ID [${finAccountId}] with actualBalance: ${finAccount.actualBalance} -> ${actualBalanceSum}, and availableBalance: ${finAccount.availableBalance} -> ${availableBalanceSum}"></log>
         <set field="finAccount.actualBalance" from-field="actualBalanceSum"/>
         <set field="finAccount.availableBalance" from-field="availableBalanceSum"/>
         <store-value value-field="finAccount"/>
@@ -815,9 +815,11 @@ under the License.
         <!-- WITHDRAWAL -->
         <set field="showUnpresentedChequesTotal" type="BigDecimal"   from-field="parameters.showUnpresentedChequesTotal"/>
 
-        <if>
+        <if-compare field="finAccountTrans.toggle" operator="equals" value="Y">
+            <if>
             <condition>
                 <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL" />
+                <!-- <if-compare field="finAccountTrans.toggle" operator="equals" value="N" /> -->
             </condition>
                 <then>
                     <log message="UNPRESENTED CHEQUES BEFORE: ${showUnpresentedChequesTotal} - ${finAccountTrans.amount}"/>
@@ -846,15 +848,60 @@ under the License.
             </else-if>
             <else-if>
                 <condition>
-                    <if-compare field="singleTrans.finAccountTransTypeId" operator="equals" value="UB" />
+                    <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="UB" />
                 </condition>
                 <then>
-                    <log message="UNRECEIPTED BANKINGS BEFORE: ${showUnreceiptedBankingsTotal} + ${singleTrans.amount}" />
-                    <set field="showUnreceiptedBankingsTotal" value="${showUnreceiptedBankingsTotal - singleTrans.amount}" type="BigDecimal"/>
+                    <log message="UNRECEIPTED BANKINGS BEFORE: ${showUnreceiptedBankingsTotal} + ${finAccountTrans.amount}" />
+                    <set field="showUnreceiptedBankingsTotal" value="${showUnreceiptedBankingsTotal - finAccountTrans.amount}" type="BigDecimal"/>
                     <log message="UNRECEIPTED BANKINGS AFTER: ${showUnreceiptedBankingsTotal}" />
                 </then>
             </else-if>
         </if>
+    </if-compare>
+
+    <if-compare field="finAccountTrans.toggle" operator="equals" value="N">
+        <if>
+        <condition>
+            <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL" />
+            <!-- <if-compare field="finAccountTrans.toggle" operator="equals" value="N" /> -->
+        </condition>
+            <then>
+                <log message="UNPRESENTED CHEQUES BEFORE: ${showUnpresentedChequesTotal} + ${finAccountTrans.amount}"/>
+                <set field="showUnpresentedChequesTotal" value="${showUnpresentedChequesTotal + finAccountTrans.amount}" type="BigDecimal"/>
+                <log message="UNPRESENTED CHEQUES AFTER: ${showUnpresentedChequesTotal}" />
+            </then>
+        <else-if>
+            <condition>
+                <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="DEPOSIT" />
+            </condition>
+            <then>
+                <log message="UNCREDITED BANKINGS BEFORE: ${showUncreditedBankingsTotal} + ${finAccountTrans.amount}" />
+                <set field="showUncreditedBankingsTotal" value="${showUncreditedBankingsTotal + finAccountTrans.amount}" type="BigDecimal"/>
+                <log message="UNCREDITED BANKINGS AFTER: ${showUncreditedBankingsTotal}" />
+            </then>
+        </else-if>
+        <else-if>
+            <condition>
+                <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="UD" />
+            </condition>
+            <then>
+                <log message="UNIDENTIFIED DEBITS BEFORE: ${showUnidentifiedDebitsTotal} + ${finAccountTrans.amount}" />
+                <set field="showUnidentifiedDebitsTotal" value="${showUnidentifiedDebitsTotal + finAccountTrans.amount}" type="BigDecimal"/>
+                <log message="UNIDENTIFIED DEBITS AFTER: ${showUnidentifiedDebitsTotal}" />
+            </then>
+        </else-if>
+        <else-if>
+            <condition>
+                <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="UB" />
+            </condition>
+            <then>
+                <log message="UNRECEIPTED BANKINGS BEFORE: ${showUnreceiptedBankingsTotal} + ${finAccountTrans.amount}" />
+                <set field="showUnreceiptedBankingsTotal" value="${showUnreceiptedBankingsTotal + finAccountTrans.amount}" type="BigDecimal"/>
+                <log message="UNRECEIPTED BANKINGS AFTER: ${showUnreceiptedBankingsTotal}" />
+            </then>
+        </else-if>
+    </if>
+</if-compare>
 
         <field-to-result field="showUnpresentedChequesTotal"/>
         <field-to-result field="showUncreditedBankingsTotal"/>

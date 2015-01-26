@@ -347,6 +347,7 @@ under the License.
 		<field name="maxRepaymentPeriod" type="numeric" enable-audit-log="true"></field>
 		
 		<field name="repaymentPeriod" type="numeric" enable-audit-log="true"></field>
+		<field name="openingRepaymentPeriod" type="numeric" enable-audit-log="true"></field>
 		
 		<field name="maxLoanAmt" type="fixed-point" enable-audit-log="true"></field>
 		
@@ -789,7 +790,7 @@ under the License.
 	<!-- Loan Expectation -->
 	<entity entity-name="LoanExpectation" package-name="org.ofbiz.loans"
 		title="Loan Expectation">
-		<field name="loanExpectationId" type="id-int"></field>
+		<field name="loanExpectationId" type="id-vlong-int"></field>
 		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="partyId" type="id-vlong-int"></field>
 		
@@ -976,6 +977,15 @@ under the License.
         	<key-map field-name="loanApplicationId"/>
       	</relation>
 	</entity>
+	
+	
+	<view-entity entity-name="DisbursedLoansView"
+            package-name="org.ofbiz.loans"
+            title="LoanApplication and  View Entity">
+      <member-entity entity-alias="LA" entity-name="LoanApplication"/>
+      <alias entity-alias="LA" name="loanApplicationId"/>
+      <alias entity-alias="LA" name="loanStatusId"/>
+    </view-entity>
 	
 	
 	

@@ -51,16 +51,17 @@ import com.google.gson.Gson;
  * */
 @Path("/msacco")
 public class MSaccoServices {
-	
+
 	public static String QUERY_TYPE_NONE = "none";
 	public static String QUERY_TYPE_ACCOUNTS = "ACCOUNTS";
 	public static String QUERY_TYPE_ACCOUNT_BALANCES = "ACCOUNT_BALANCES";
 	public static String QUERY_TYPE_LOANS = "LOANS";
 	public static String QUERY_TYPE_MINISTATEMENT = "MINISTATEMENT";
-	
+
 	public static String TRANSACTION_LOANREPAYMENT = "Loan_Repayment";
 	public static String TRANSACTION_WITHDRAWAL = "Withdrawal";
 	public static String TRANSACTION_DEPOSIT = "Deposit ";
+
 	/****
 	 * Gets the Members with new MSacco Applications - Not sent to Cortec
 	 * */
@@ -70,20 +71,19 @@ public class MSaccoServices {
 	public Response getRegistration() {
 		addServiceLog("", "Query Registration", null);
 
-		//Get the MSaccoApplications that are active and have not been sent to provider (Coretech) - sent is N
+		// Get the MSaccoApplications that are active and have not been sent to
+		// provider (Coretech) - sent is N
 		List<GenericValue> listMsaccoApplicationELI = null;
-		Long activeStatusId = MSaccoManagementServices.getCardStatusId("ACTIVE");
-		
+		Long activeStatusId = MSaccoManagementServices
+				.getCardStatusId("ACTIVE");
+
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> msaccoApplicationELI = null;
 		EntityConditionList<EntityExpr> msaccoApplicationConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("cardStatusId",
-								EntityOperator.EQUALS, activeStatusId),
-								EntityCondition
-								.makeCondition("sent",
-										EntityOperator.EQUALS, "N")		
-						),
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"cardStatusId", EntityOperator.EQUALS, activeStatusId),
+						EntityCondition.makeCondition("sent",
+								EntityOperator.EQUALS, "N")),
 						EntityOperator.AND);
 
 		try {
@@ -93,17 +93,20 @@ public class MSaccoServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
-		//GenericValue msaccoApplication = null;
+
+		// GenericValue msaccoApplication = null;
 		Application application = null;
 		List<Application> listApplication = new ArrayList<Application>();
 		for (GenericValue genericValue : msaccoApplicationELI) {
-			
+
 			application = new Application();
-			application.setTelephone(genericValue.getString("mobilePhoneNumber"));
+			application.setTelephone(genericValue
+					.getString("mobilePhoneNumber"));
 			application.setType("New_Application");
-			application.setApplicantName(AccHolderTransactionServices.getMemberNames(genericValue.getLong("partyId")));
-			application.setAccounts(getMemberAccounts(genericValue.getLong("partyId")));
+			application.setApplicantName(AccHolderTransactionServices
+					.getMemberNames(genericValue.getLong("partyId")));
+			application.setAccounts(getMemberAccounts(genericValue
+					.getLong("partyId")));
 			listApplication.add(application);
 		}
 
@@ -112,59 +115,59 @@ public class MSaccoServices {
 
 		return Response.ok(json).type("application/json").build();
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/query/{phoneNumber}/{type}")
-	public Response query(@PathParam("phoneNumber") String phoneNumber, @PathParam("type") String type) {
-		
+	public Response query(@PathParam("phoneNumber") String phoneNumber,
+			@PathParam("type") String type) {
+
 		QueryAccount queryAccount = new QueryAccount();
 		queryAccount.setTelephoneNo(phoneNumber);
 		queryAccount.setQueryType(type);
-		
-		if (type.equalsIgnoreCase(QUERY_TYPE_NONE)){
-			//Process for NONE
-		} else if (type.equalsIgnoreCase(QUERY_TYPE_ACCOUNTS)){
+
+		if (type.equalsIgnoreCase(QUERY_TYPE_NONE)) {
+			// Process for NONE
+		} else if (type.equalsIgnoreCase(QUERY_TYPE_ACCOUNTS)) {
 			addServiceLog(phoneNumber, "Query Accounts", null);
-			//process for ACCOUNTS
+			// process for ACCOUNTS
 			queryAccount.setListBalances(addAccountBalances(phoneNumber));
-		} else if (type.equalsIgnoreCase(QUERY_TYPE_ACCOUNT_BALANCES)){
+		} else if (type.equalsIgnoreCase(QUERY_TYPE_ACCOUNT_BALANCES)) {
 			addServiceLog(phoneNumber, "Query Balances", null);
-			//process for BALANCES
+			// process for BALANCES
 			queryAccount.setListBalances(addAccountBalances(phoneNumber));
-		} else if (type.equalsIgnoreCase(QUERY_TYPE_LOANS)){
+		} else if (type.equalsIgnoreCase(QUERY_TYPE_LOANS)) {
 			addServiceLog(phoneNumber, "Query Loans", null);
-			//process for loans
+			// process for loans
 			queryAccount.setListLoans(addLoans(phoneNumber));
-		} else if (type.equalsIgnoreCase(QUERY_TYPE_MINISTATEMENT)){
+		} else if (type.equalsIgnoreCase(QUERY_TYPE_MINISTATEMENT)) {
 			addServiceLog(phoneNumber, "Query Ministatement", null);
-			//process for MINISTATEMENT
+			// process for MINISTATEMENT
 			queryAccount.setListMinistatement(addMinistatement(phoneNumber));
 		}
-		
+
 		Results results = new Results();
 		results.setResultCode("0");
 		results.setResultDesc("Success");
-		
-		//queryAccount.
-		
+
+		// queryAccount.
+
 		queryAccount.setResults(results);
-		
+
 		Gson gson = new Gson();
 		String json = gson.toJson(queryAccount);
 
 		return Response.ok(json).type("application/json").build();
 	}
-	
 
 	private List<Transaction> addMinistatement(String phoneNumber) {
-		
+
 		Long memberId = MSaccoManagementServices.getMemberId(phoneNumber);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, Long.valueOf(memberId))),
-						EntityOperator.AND);
+						"partyId", EntityOperator.EQUALS,
+						Long.valueOf(memberId))), EntityOperator.AND);
 		List<GenericValue> accountTransactionELI = null;
 		List<String> orderByList = new ArrayList<String>();
 		orderByList.add("createdStamp DESC");
@@ -197,17 +200,17 @@ public class MSaccoServices {
 					.getString("transactionType"));
 			transaction.setTransactionAmount(genericValue
 					.getBigDecimal("transactionAmount"));
-			
-			//genericValue.getT
-			dateCreated = new Timestamp(genericValue.getTimestamp("createdStamp").getTime());
+
+			// genericValue.getT
+			dateCreated = new Timestamp(genericValue.getTimestamp(
+					"createdStamp").getTime());
 			DateTime dateTimeCreated = new DateTime(dateCreated.getTime());
 			transaction.setCreatedStamp(dateTimeCreated.toString("dd/MM/yyyy"));
 			try {
-				memberAccount = delegator.findOne(
-						"MemberAccount",
-						UtilMisc.toMap("memberAccountId",
-								genericValue.getLong("memberAccountId")),
-						false);
+				memberAccount = delegator
+						.findOne("MemberAccount", UtilMisc.toMap(
+								"memberAccountId",
+								genericValue.getLong("memberAccountId")), false);
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
@@ -215,17 +218,17 @@ public class MSaccoServices {
 			transaction.setAccountNo(memberAccount.getString("accountNo"));
 			listTransactions.add(transaction);
 		}
-		
+
 		return listTransactions;
 	}
 
 	private List<Loan> addLoans(String phoneNumber) {
 		// TODO Auto-generated method stub
-		//LoanServices.getLoansRepaid(memberId)
-		//Get loans in disbursement given a memberId
+		// LoanServices.getLoansRepaid(memberId)
+		// Get loans in disbursement given a memberId
 		Long memberId = MSaccoManagementServices.getMemberId(phoneNumber);
-		
-		//Get Loan Applications for the memberId with Status DISBURSED
+
+		// Get Loan Applications for the memberId with Status DISBURSED
 		List<GenericValue> listLoanApplicationELI = getDisbursedLoans(memberId);
 		List<Loan> listLoan = new ArrayList<Loan>();
 		Loan loan = null;
@@ -234,21 +237,24 @@ public class MSaccoServices {
 			loan.setLoanNo(genericValue.getString("loanNo"));
 			loan.setLoanAmt(genericValue.getString("loanAmt"));
 			loan.setLoanType(getLoanType(genericValue.getLong("loanProductId")));
-			loan.setLoanBalance(LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(genericValue.getLong("loanApplicationId")).doubleValue());
+			loan.setLoanBalance(LoansProcessingServices
+					.getTotalLoanBalancesByLoanApplicationId(
+							genericValue.getLong("loanApplicationId"))
+					.doubleValue());
 			listLoan.add(loan);
 		}
 		return listLoan;
 	}
 
 	private String getLoanType(Long loanProductId) {
-			GenericValue loanProduct = null;
-			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-			try {
-				loanProduct = delegator.findOne("LoanProduct",
-						UtilMisc.toMap("loanProductId", loanProductId), false);
-			} catch (GenericEntityException e) {
-				e.printStackTrace();
-			}
+		GenericValue loanProduct = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", loanProductId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
 
 		return loanProduct.getString("name");
 	}
@@ -258,13 +264,10 @@ public class MSaccoServices {
 		List<GenericValue> listLoanApplicationELI = null;
 		Long disbursedStatusId = LoanServices.getLoanStatusId("DISBURSED");
 		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("loanStatusId",
-								EntityOperator.EQUALS, disbursedStatusId),
-								EntityCondition
-								.makeCondition("partyId",
-										EntityOperator.EQUALS, memberId)		
-						),
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						disbursedStatusId), EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId)),
 						EntityOperator.AND);
 
 		try {
@@ -278,36 +281,60 @@ public class MSaccoServices {
 	}
 
 	private List<Account> addAccountBalances(String phoneNumber) {
-		//String partyId
-		//MSaccoManagementServices.getMSaccoAccount(phoneNumber)
-		//MSaccoManagementServices.getMemberAccountId(phoneNumber)
-		//AccHolderTransactionServices.getM
-		Long memberAccountId = MSaccoManagementServices.getMemberAccountId(phoneNumber);
-		GenericValue memberAccount = AccHolderTransactionServices.getMemberAccount(memberAccountId);
-		
+		// String partyId
+		// MSaccoManagementServices.getMSaccoAccount(phoneNumber)
+		// MSaccoManagementServices.getMemberAccountId(phoneNumber)
+		// AccHolderTransactionServices.getM
+		Long memberAccountId = null;
+		memberAccountId = MSaccoManagementServices
+				.getMemberAccountId(phoneNumber);
 		List<Account> listAccount = new ArrayList<Account>();
 		Account account = new Account();
 		account.setTelephoneNo(phoneNumber);
 		account.setQuery_type("accounts");
-		account.setAccountNo(memberAccount.getString("accountNo"));
-		account.setAccountName(memberAccount.getString("accountName"));
 		
-		String memberAccountIdString = memberAccountId.toString();
-		memberAccountIdString = memberAccountIdString.replaceFirst(",", "");
-		account.setAccountBalance(AccHolderTransactionServices.getTotalBalanceNow(memberAccountIdString).doubleValue());
+		List<Long> listMemberAccountId = new ArrayList<Long>();
+		//AccHolderTransactionServices.
+
+		if (memberAccountId != null) {
+			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIds(AccHolderTransactionServices
+					.getMemberAccount(memberAccountId).getLong("partyId"));
+			
+			for (Long currentMemberAccountId : listMemberAccountId) {
+				
+				
+				account = new Account();
+				account.setTelephoneNo(phoneNumber);
+				account.setQuery_type("accounts");
+				
+				GenericValue memberAccount = AccHolderTransactionServices
+						.getMemberAccount(currentMemberAccountId);
+
+				account.setAccountNo(memberAccount.getString("accountNo"));
+				account.setAccountName(memberAccount.getString("accountName"));
+				account.setAccountType(AccHolderTransactionServices.getAccountProductName(currentMemberAccountId));
+				String memberAccountIdString = currentMemberAccountId.toString();
+				memberAccountIdString = memberAccountIdString.replaceFirst(",", "");
+				account.setAccountBalance(AccHolderTransactionServices
+						.getTotalBalanceNow(memberAccountIdString).doubleValue());
+				listAccount.add(account);
+				
+			}
+			
+		}
+
 		
-		listAccount.add(account);
 		return listAccount;
+
 	}
 
 	private List<Account> getMemberAccounts(Long partyId) {
 		List<GenericValue> memberAccountELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			memberAccountELI = delegator.findList(
-					"MemberAccount",
-					EntityCondition.makeCondition("partyId",
-							partyId), null, null, null, false);
+			memberAccountELI = delegator.findList("MemberAccount",
+					EntityCondition.makeCondition("partyId", partyId), null,
+					null, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -319,12 +346,11 @@ public class MSaccoServices {
 			account = new Account();
 			account.setAccountNo(genericValue.get("accountNo").toString());
 			account.setAccountName(genericValue.get("accountName").toString());
-			
+
 			listAccount.add(account);
 		}
 		return listAccount;
 	}
-
 
 	@GET
 	@Produces("application/json")
@@ -361,82 +387,83 @@ public class MSaccoServices {
 	@Produces("application/json")
 	@Path("/withdrawal/{phoneNumber}/{amount}/{transactionId}/{reference}/{withdrawalStage}")
 	public Response withdrawal(@PathParam("phoneNumber") String phoneNumber,
-			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference, @PathParam("withdrawalStage") String withdrawalStage ) {
-		
+			@PathParam("amount") BigDecimal amount,
+			@PathParam("transactionId") String transactionId,
+			@PathParam("reference") String reference,
+			@PathParam("withdrawalStage") String withdrawalStage) {
+
 		addServiceLog(phoneNumber, withdrawalStage, amount);
-		
-		if (withdrawalStage.equals("Withdrawal_Confirm")){
+
+		if (withdrawalStage.equals("Withdrawal_Confirm")) {
 			AccHolderTransactionServices.WITHDRAWALOK = "OK";
-		} else{
+		} else {
 			AccHolderTransactionServices.WITHDRAWALOK = "FALSE";
 		}
-		
-		//withdrawalStage
+
+		// withdrawalStage
 
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
 
 		TransactionResult transaction = new TransactionResult();
 		ATMTransaction atmtransaction = new ATMTransaction();
-//		transaction.setPhoneNumber(phoneNumber);
-//		transaction.setStatus(msaccoStatus.getStatus());
+		// transaction.setPhoneNumber(phoneNumber);
+		// transaction.setStatus(msaccoStatus.getStatus());
 		transaction.setTelephoneNo(phoneNumber);
-		
-		
-		
 
-		if (msaccoStatus.getStatus().equals("SUCCESS")){
-			String memberAccountId = msaccoStatus.getMsaccoApplication().getLong("memberAccountId").toString();
-					
-					//.getCardApplication()
-					//.getLong("memberAccountId").toString();
+		if (msaccoStatus.getStatus().equals("SUCCESS")) {
+			String memberAccountId = msaccoStatus.getMsaccoApplication()
+					.getLong("memberAccountId").toString();
+
+			// .getCardApplication()
+			// .getLong("memberAccountId").toString();
 			memberAccountId = memberAccountId.replaceAll(",", "");
 			System.out.println("AAAAAAAAAAAAA Account ID " + memberAccountId);
 
 			// Check if Member Has Enough Money - Limit, charges
-			atmtransaction = AccHolderTransactionServices.cashWithdrawal(amount,
-					String.valueOf(memberAccountId), "MSACCOWITHDRAWAL");
+			atmtransaction = AccHolderTransactionServices
+					.cashWithdrawal(amount, String.valueOf(memberAccountId),
+							"MSACCOWITHDRAWAL");
 			// transaction.setStatus("NOTENOUGHMONEY");
 			// transaction.setStatus(atmStatus.getStatus());
-//			transaction.setCardNumber(cardNumber);
-//			transaction.setCardStatusId(atmStatus.getCardStatusId());
-//			transaction.setCardStatus(atmStatus.getCardStatus());
-//			transaction.setMemberAccountId(msaccoStatus.getMsaccoApplication()
-//					.getLong("memberAccountId"));
+			// transaction.setCardNumber(cardNumber);
+			// transaction.setCardStatusId(atmStatus.getCardStatusId());
+			// transaction.setCardStatus(atmStatus.getCardStatus());
+			// transaction.setMemberAccountId(msaccoStatus.getMsaccoApplication()
+			// .getLong("memberAccountId"));
 			// getMemberAccount(atmStatus.getCardApplication().getLong("memberAccountId"));
 			GenericValue memberAccount = AccHolderTransactionServices
-					.getMemberAccount(msaccoStatus.getMsaccoApplication().getLong(
-							"memberAccountId"));
-//			transaction.setMemberAccountId(memberAccount
-//					.getLong("memberAccountId"));
+					.getMemberAccount(msaccoStatus.getMsaccoApplication()
+							.getLong("memberAccountId"));
+			// transaction.setMemberAccountId(memberAccount
+			// .getLong("memberAccountId"));
 			Account account = new Account();
 			account.setAccountNo(memberAccount.getString("accountNo"));
 			account.setAccountName(memberAccount.getString("accountName"));
-		
-			//transaction.setAccount(account);
-			//transaction.set
-			//transaction.setReference(reference);
+
+			// transaction.setAccount(account);
+			// transaction.set
+			// transaction.setReference(reference);
 			transaction.setTransactionId(transactionId);
 			transaction.setAccountNo(memberAccount.getString("accountNo"));
 			transaction.setAccountName(memberAccount.getString("accountName"));
 			transaction.setTransactionId(transactionId);
-			
-			if (reference.equals("NOREFENCE"))
-			{
+
+			if (reference.equals("NOREFENCE")) {
 				reference = "";
 			}
 			transaction.setReference(reference);
 
 			Results results = new Results();
-			if (atmtransaction.getStatus().equals("SUCCESS")){
+			if (atmtransaction.getStatus().equals("SUCCESS")) {
 				results.setResultCode("0");
 				results.setResultDesc("Success");
-			} else{
+			} else {
 				results.setResultCode("-1");
 				results.setResultDesc("Failure");
 			}
-			//transaction.g
-		//	transaction.setResults(results);
+			// transaction.g
+			// transaction.setResults(results);
 			transaction.setResults(results);
 			transaction.setTranstype("Withdrawal");
 		}
@@ -451,7 +478,9 @@ public class MSaccoServices {
 	@Produces("application/json")
 	@Path("/deposit/{phoneNumber}/{amount}/{transactionId}/{reference}")
 	public Response deposit(@PathParam("phoneNumber") String phoneNumber,
-			@PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference) {
+			@PathParam("amount") BigDecimal amount,
+			@PathParam("transactionId") String transactionId,
+			@PathParam("reference") String reference) {
 		addServiceLog(phoneNumber, "MSacco Deposir", amount);
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
@@ -459,42 +488,43 @@ public class MSaccoServices {
 		MSaccoTransaction msaccotransaction = new MSaccoTransaction();
 		msaccotransaction.setPhoneNumber(phoneNumber);
 		msaccotransaction.setStatus(msaccoStatus.getStatus());
-		
+
 		TransactionResult transaction = new TransactionResult();
 		transaction.setTelephoneNo(phoneNumber);
 
-		if (msaccoStatus.getStatus().equals("SUCCESS"))
-		{
-			AccHolderTransactionServices.cashDeposit(amount, msaccoStatus.getMsaccoApplication().getLong("memberAccountId"), null, "MSACCODEPOSIT");
-		
+		if (msaccoStatus.getStatus().equals("SUCCESS")) {
+			AccHolderTransactionServices.cashDeposit(amount, msaccoStatus
+					.getMsaccoApplication().getLong("memberAccountId"), null,
+					"MSACCODEPOSIT");
+
 			GenericValue memberAccount = AccHolderTransactionServices
-					.getMemberAccount(msaccoStatus.getMsaccoApplication().getLong(
-							"memberAccountId"));
-			
+					.getMemberAccount(msaccoStatus.getMsaccoApplication()
+							.getLong("memberAccountId"));
+
 			Account account = new Account();
 			account.setAccountNo(memberAccount.getString("accountNo"));
 			account.setAccountName(memberAccount.getString("accountName"));
-			
-			//transaction.setAccount(account);
-//			transaction.setAccountNo(memberAccount.getString("accountNo"));
-//			transaction.setAccountName(memberAccount.getString("accountName"));
-//			transaction.setReference(reference);
+
+			// transaction.setAccount(account);
+			// transaction.setAccountNo(memberAccount.getString("accountNo"));
+			// transaction.setAccountName(memberAccount.getString("accountName"));
+			// transaction.setReference(reference);
 			transaction.setTransactionId(transactionId);
 			transaction.setAccountNo(memberAccount.getString("accountNo"));
 			transaction.setAccountName(memberAccount.getString("accountName"));
 			transaction.setReference(reference);
-			
+
 			Results results = new Results();
-			if (msaccoStatus.getStatus().equals("SUCCESS")){
+			if (msaccoStatus.getStatus().equals("SUCCESS")) {
 				results.setResultCode("0");
 				results.setResultDesc("Success");
-			} else{
+			} else {
 				results.setResultCode("-1");
 				results.setResultDesc("Failure");
 			}
 			transaction.setResults(results);
 			transaction.setTranstype("Deposit");
-		} else{
+		} else {
 			msaccotransaction.setStatus("CANNOTDEPOSIT");
 		}
 
@@ -507,7 +537,9 @@ public class MSaccoServices {
 	@GET
 	@Produces("application/json")
 	@Path("/loanrepayment/{phoneNumber}/{transactionId}/{reference}")
-	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference ) {
+	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber,
+			@PathParam("transactionId") String transactionId,
+			@PathParam("reference") String reference) {
 		addServiceLog(phoneNumber, "Loans Query", null);
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
@@ -515,28 +547,29 @@ public class MSaccoServices {
 		MSaccoTransaction transaction = new MSaccoTransaction();
 		transaction.setPhoneNumber(phoneNumber);
 		transaction.setStatus(msaccoStatus.getStatus());
-		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue loanRepayment = delegator.makeValue("LoanRepayment");
-		if (msaccoStatus.getStatus().equals("SUCCESS"))
-		{
-			//LoanRepayments
-			//loanRepayment.set("transactionAmount", value);
-		} else{
+		if (msaccoStatus.getStatus().equals("SUCCESS")) {
+			// LoanRepayments
+			// loanRepayment.set("transactionAmount", value);
+		} else {
 			transaction.setStatus("NOLOANSTOREPAY");
 		}
-			
 
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
 		return Response.ok(json).type("application/json").build();
 	}
-	
-	
+
 	@GET
 	@Produces("application/json")
 	@Path("/loanrepayment/{phoneNumber}/{loanNumber}/{amount}/{transactionId}/{reference}")
-	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber, @PathParam("loanNumber") String loanNumber, @PathParam("amount") BigDecimal amount, @PathParam("transactionId") String transactionId, @PathParam("reference") String reference) {
+	public Response loanrepayment(@PathParam("phoneNumber") String phoneNumber,
+			@PathParam("loanNumber") String loanNumber,
+			@PathParam("amount") BigDecimal amount,
+			@PathParam("transactionId") String transactionId,
+			@PathParam("reference") String reference) {
 		addServiceLog(phoneNumber, "Loan Repayment", amount);
 		MSaccoStatus msaccoStatus = MSaccoManagementServices
 				.getMSaccoAccount(phoneNumber);
@@ -544,54 +577,68 @@ public class MSaccoServices {
 		TransactionResult transaction = new TransactionResult();
 		transaction.setTelephoneNo(phoneNumber);
 
-		
-		//LoansProcessingServices
+		// LoansProcessingServices
 		MSaccoTransaction msaccotransaction = new MSaccoTransaction();
 		msaccotransaction.setPhoneNumber(phoneNumber);
 		msaccotransaction.setStatus(msaccoStatus.getStatus());
-		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue loanRepayment = delegator.makeValue("LoanRepayment");
 		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
-		if (msaccoStatus.getStatus().equals("SUCCESS"))
-		{
-			//LoanRepayments
-			String partyId = msaccoStatus.getMsaccoApplication().getLong("partyId").toString();
-			String loanApplicationId = LoanServices.getLoan(loanNumber).getLong("loanApplicationId").toString();
+		if (msaccoStatus.getStatus().equals("SUCCESS")) {
+			// LoanRepayments
+			String partyId = msaccoStatus.getMsaccoApplication()
+					.getLong("partyId").toString();
+			String loanApplicationId = LoanServices.getLoan(loanNumber)
+					.getLong("loanApplicationId").toString();
 			partyId = partyId.replaceAll(",", "");
 			loanApplicationId = loanApplicationId.replaceFirst(",", "");
 			loanRepayment.set("loanRepaymentId", loanRepaymentId);
 			loanRepayment.set("transactionAmount", amount);
-			loanRepayment.set("totalInterestDue", LoanRepayments.getTotalInterestDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalInterestPaid(partyId, loanApplicationId)));
-			loanRepayment.set("totalInsuranceDue",  LoanRepayments.getTotalInsuranceDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalInsurancePaid(partyId, loanApplicationId)));
-			loanRepayment.set("totalPrincipalDue", LoanRepayments.getTotalPrincipalDue(partyId, loanApplicationId).subtract(LoanRepayments.getTotalPrincipalPaid(partyId, loanApplicationId)));
+			loanRepayment.set(
+					"totalInterestDue",
+					LoanRepayments.getTotalInterestDue(partyId,
+							loanApplicationId).subtract(
+							LoanRepayments.getTotalInterestPaid(partyId,
+									loanApplicationId)));
+			loanRepayment.set(
+					"totalInsuranceDue",
+					LoanRepayments.getTotalInsuranceDue(partyId,
+							loanApplicationId).subtract(
+							LoanRepayments.getTotalInsurancePaid(partyId,
+									loanApplicationId)));
+			loanRepayment.set(
+					"totalPrincipalDue",
+					LoanRepayments.getTotalPrincipalDue(partyId,
+							loanApplicationId).subtract(
+							LoanRepayments.getTotalPrincipalPaid(partyId,
+									loanApplicationId)));
 			loanRepayment.set("partyId", Long.valueOf(partyId));
-			loanRepayment.set("loanApplicationId", Long.valueOf(loanApplicationId));
-			
-			
+			loanRepayment.set("loanApplicationId",
+					Long.valueOf(loanApplicationId));
+
 			loanRepayment.set("isActive", "Y");
 			loanRepayment.set("createdBy", "dmin");
 			loanRepayment.set("loanNo", loanNumber);
-			
-			
+
 			Map<String, String> userLogin = new HashMap<String, String>();
 			userLogin.put("userLoginId", "admin");
-			
+
 			LoanRepayments.repayLoan(loanRepayment, userLogin);
-			
-			//transaction.setReference(reference);
+
+			// transaction.setReference(reference);
 			transaction.setTransactionId(transactionId);
-			
+
 			Results results = new Results();
-			if (msaccoStatus.getStatus().equals("SUCCESS")){
+			if (msaccoStatus.getStatus().equals("SUCCESS")) {
 				results.setResultCode("0");
 				results.setResultDesc("Success");
-			} else{
+			} else {
 				results.setResultCode("-1");
 				results.setResultDesc("Failure");
 			}
 			transaction.setResults(results);
 			transaction.setTranstype("LoanRepayment");
-		} else{
+		} else {
 			msaccotransaction.setStatus("NOLOANSTOREPAY");
 		}
 
@@ -600,14 +647,18 @@ public class MSaccoServices {
 
 		return Response.ok(json).type("application/json").build();
 	}
-	
-	private void addServiceLog(String phoneNo, String transactionType, BigDecimal transactionAmount) {
+
+	private void addServiceLog(String phoneNo, String transactionType,
+			BigDecimal transactionAmount) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue msaccoTransactionsLog = null;
-		String msaccoTransactionsLogId = delegator.getNextSeqId("MsaccoTransactionsLog");
-		msaccoTransactionsLog = delegator.makeValidValue("MsaccoTransactionsLog", UtilMisc
-				.toMap("msaccoTransactionsLogId", msaccoTransactionsLogId, "phoneNo",
-						phoneNo, "transactionType", transactionType, "transactionAmount", transactionAmount));
+		String msaccoTransactionsLogId = delegator
+				.getNextSeqId("MsaccoTransactionsLog");
+		msaccoTransactionsLog = delegator.makeValidValue(
+				"MsaccoTransactionsLog", UtilMisc.toMap(
+						"msaccoTransactionsLogId", msaccoTransactionsLogId,
+						"phoneNo", phoneNo, "transactionType", transactionType,
+						"transactionAmount", transactionAmount));
 		try {
 			delegator.createOrStore(msaccoTransactionsLog);
 		} catch (GenericEntityException e) {
