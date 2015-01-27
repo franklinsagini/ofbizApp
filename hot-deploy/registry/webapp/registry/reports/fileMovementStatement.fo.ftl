@@ -111,21 +111,23 @@ under the License.
                             <#if releasedBy?has_content>
                                 <fo:block>${releasedBy.firstName?if_exists} ${releasedBy.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined</fo:block>
+                                <fo:block>${activity.releasedBy}</fo:block>
                             </#if>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if activity.releasedTo?if_exists == "REGISTRY">
-                                <fo:block>${activity.releasedTo?if_exists}</fo:block>
-                            <#else>
+						
+						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if activity.releasedTo?has_content>
                                 <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>${activity.releasedTo?if_exists}</fo:block>
                             </#if>
                         </fo:table-cell>
+						
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if carriedBy?has_content>
                                 <fo:block>${carriedBy.firstName?if_exists} ${carriedBy.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined</fo:block>
+                                <fo:block>${activity.carriedBy}</fo:block>
                             </#if>
                         </fo:table-cell>
                        
@@ -137,7 +139,7 @@ under the License.
                             <#if reason?has_content>
                                 <fo:block>${reason.activity?if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined</fo:block>
+                                <fo:block>${activity.activityCode}</fo:block>
                             </#if>
                         </fo:table-cell>
                         
@@ -145,7 +147,7 @@ under the License.
                             <#if receivedBy?has_content>
                                 <fo:block>${receivedBy.firstName?if_exists} ${receivedBy.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined</fo:block>
+                                <fo:block>${activity.receivedBy}</fo:block>
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
