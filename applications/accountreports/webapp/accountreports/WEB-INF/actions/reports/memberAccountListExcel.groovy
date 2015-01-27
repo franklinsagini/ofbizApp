@@ -44,8 +44,12 @@ if ((stationId != "") && (accountProductId != "") ){
 
 myAccountsList.eachWithIndex { myAccount, index ->
 	memberAccountIdStr = myAccount.memberAccountId.toString();
-	myAccount.minSavingsAmt = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getTotalBalanceNow(memberAccountIdStr);
-		
+	//Book Balance
+	myAccount.minSavingsAmt = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getBookBalanceNow(memberAccountIdStr);
+	//Available Balance
+	myAccount.interestPerAnum = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getTotalBalanceNow(memberAccountIdStr);
+	
+	
 	//combinedList << loanItem
 }
 

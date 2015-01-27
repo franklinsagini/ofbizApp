@@ -289,6 +289,13 @@ public class AccHolderTransactionServices {
 		}
 		return bdBalance;
 	}
+	
+	
+	public static BigDecimal calculateOpeningBalance(Long memberAccountId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		return calculateOpeningBalance(memberAccountId.toString(), delegator);
+	}
+
 
 	private static BigDecimal calculateTotalCashDeposits(
 			String memberAccountId, Delegator delegator) {
