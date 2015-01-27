@@ -68,11 +68,11 @@ under the License.
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="40pt"/>
                 <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="70pt"/>
-                <fo:table-column column-width="70pt"/>
-                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
                 <#-- fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/ -->
                 <fo:table-header>
@@ -102,12 +102,12 @@ under the License.
                             <fo:block>Product</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Balance</fo:block>
-                        </fo:table-cell>
-                        <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Insurance Paid</fo:block>
+                            <fo:block>Book Balance</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Available Balance</fo:block>
+                        </fo:table-cell>
+                        <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Principal Due</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -118,6 +118,7 @@ under the License.
                 <fo:table-body>
                 	<#assign count=0>
                 	<#assign totalBalance=0>
+                	<#assign totalBalanceAvailable=0>
                 	<#-- assign totalDisbursed=0 -->
                 	
                     <#list myAccountsList as accountBalance>
@@ -201,16 +202,18 @@ under the License.
                             	<#assign memberAccountId = accountBalance.memberAccountId>
                             	<#assign memberAccountIdStr = memberAccountId.toString()>
                             	<#assign accountBalanceAmt = Static["org.ofbiz.accountholdertransactions.AccHolderTransactionServices"].getBookBalanceNow(memberAccountIdStr)/>
+                            	<#assign accountAvailableBalanceAmt = Static["org.ofbiz.accountholdertransactions.AccHolderTransactionServices"].getTotalBalanceNow(memberAccountIdStr)/>
                                 <fo:block>
                                 Kshs.  ${accountBalanceAmt?string(",##0.00")}
                                 
                                 <#assign totalBalance = totalBalance + accountBalanceAmt>
+                                <#assign totalBalanceAvailable = totalBalanceAvailable + accountAvailableBalanceAmt>
                                 </fo:block>
                             </fo:table-cell>
-                            <#-- fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${loanRepayment.insuranceAmount?if_exists}</fo:block>
-                            </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>Kshs. ${accountAvailableBalanceAmt?string(",##0.00")}</fo:block>
+                            </fo:table-cell>
+                            <#-- fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${loanRepayment.totalPrincipalDue?if_exists}</fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -261,6 +264,12 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
                                 Kshs.  ${totalBalance?string(",##0.00")}	
+                                </fo:block>
+                            </fo:table-cell>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                Kshs.  ${totalBalanceAvailable?string(",##0.00")}	
                                 </fo:block>
                             </fo:table-cell>
                     </fo:table-row>
