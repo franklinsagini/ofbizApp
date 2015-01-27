@@ -35,14 +35,18 @@
     <form name="employeesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="findEmployees" paginate-target="findEmployees"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">        
         <actions>
+		<entity-condition entity-name="PersonActiveAndPartyGroup">
+                <order-by field-name="firstName"/>
+            </entity-condition>
         	<set field="inputFields" from-field="parameters"/>
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="employeeCtx"/>
                 <field-map field-name="entityName" value="PersonActiveAndPartyGroup"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+				<field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+			 
             
         </actions>
         <!-- auto-fields-entity entity-name="PersonActiveAndPartyGroup" default-field-type="hidden"/ -->
