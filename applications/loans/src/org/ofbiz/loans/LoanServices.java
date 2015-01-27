@@ -1617,8 +1617,11 @@ public class LoanServices {
 		}
 		BigDecimal bdTotalRepayment = BigDecimal.ZERO;
 		for (GenericValue genericValue : loanRepaymentELI) {
-			bdTotalRepayment = bdTotalRepayment.add(genericValue
+			
+			if (genericValue.getBigDecimal("principalAmount") != null){
+				bdTotalRepayment = bdTotalRepayment.add(genericValue
 					.getBigDecimal("principalAmount"));
+			}
 		}
 
 		return bdTotalRepayment;
