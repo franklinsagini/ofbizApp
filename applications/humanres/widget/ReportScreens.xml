@@ -664,6 +664,19 @@ under the License.
                     		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section name="search-results">
                         	<widgets>
+							 <container style="lefthalf">
+                            <screenlet title="Employee Leave Plan (PDF)">
+                                <include-form name="leaveCalendarForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="righthalf">
+                            <screenlet title="Employee Leave Plan (CSV)">
+                                <include-form name="leaveCalendarFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+							</container>
+                            <screenlet></screenlet>
+							
                         		 <container style="lefthalf">
                             <screenlet title="Employee Leave Balance (PDF)">
                                 <include-form name="leaveBalanceForm" location="component://humanres/widget/ReportForms.xml"/>
@@ -675,7 +688,8 @@ under the License.
                                 <include-form name="leaveBalanceFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                             <screenlet></screenlet>
-                            
+                            <screenlet></screenlet>
+							
                             </container>
                             <container style="lefthalf">
                             <screenlet title="Staff On Leave (PDF)">
@@ -1139,6 +1153,27 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific>
                             <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/nextOfKin.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="leaveCalendarPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffLeavePlan.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffLeavePlan.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -1801,6 +1836,30 @@ under the License.
                     <label style="h1" text="STAFF SCHEDULED LEAVES LISTING"/>
                 </container>
                 <include-form name="scheduledLeavesExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="leaveCalendarCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffLeavePlanExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF LEAVE PLAN"/>
+                </container>
+                <include-form name="leaveCalendarExport" location="component://humanres/widget/ReportForms.xml"/>
             </widgets>
         </section>
     </screen>
