@@ -937,8 +937,8 @@ under the License.
         <field-to-result field="endingBalance" result-name="endingBalance"/>
         <field-to-result field="totalDebitsInTimePeriod" result-name="postedDebits"/>
         <field-to-result field="totalCreditsInTimePeriod" result-name="postedCredits"/>
-        <!-- <field-to-result field="endingBalanceCredit" result-name="endingBalanceCredit"/> -->
-        <!-- <field-to-result field="endingBalanceDebit" result-name="endingBalanceDebit"/> -->
+        <field-to-result field="endingBalanceCredit" result-name="endingBalanceCredit"/>
+        <field-to-result field="endingBalanceDebit" result-name="endingBalanceDebit"/>
     </simple-method>
 
     <simple-method method-name="computeAndStoreGlAccountHistoryBalance" short-description="Compute and store the total debits, total credits, opening, ending balances of an account in a financial period">
@@ -949,12 +949,16 @@ under the License.
         <call-service service-name="computeGlAccountBalanceForTimePeriod" in-map-name="inMap">
             <result-to-field result-name="openingBalance"/>
             <result-to-field result-name="endingBalance"/>
+            <result-to-field result-name="endingBalanceCredit"/>
+            <result-to-field result-name="endingBalanceDebit"/>
             <result-to-field result-name="postedDebits"/>
             <result-to-field result-name="postedCredits"/>
         </call-service>
         <!-- persist the balances -->
         <set field="glAccountHistory.openingBalance" from-field="openingBalance"/>
         <set field="glAccountHistory.endingBalance" from-field="endingBalance"/>
+        <set field="glAccountHistory.endingBalanceCredit" from-field="endingBalanceCredit"/>
+        <set field="glAccountHistory.endingBalanceDebit" from-field="endingBalanceDebit"/>
         <set field="glAccountHistory.postedDebits" from-field="postedDebits"/>
         <set field="glAccountHistory.postedCredits" from-field="postedCredits"/>
         <store-value value-field="glAccountHistory"/>

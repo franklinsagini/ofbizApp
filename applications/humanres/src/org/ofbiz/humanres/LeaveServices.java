@@ -654,6 +654,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			GenericValue documentApproval = null; GenericValue leavelog = null;
 			documentApproval =  WorkflowServices.doFoward(delegator, organizationUnitId,	workflowDocumentTypeId, documentApprovalId);
 		log.info("=====================" +documentApproval);
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WORKFLOW-DOC: " + workflowDocumentTypeId);
 
 		if (documentApproval == null) {
 			// Leave Approved

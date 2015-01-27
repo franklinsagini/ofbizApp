@@ -57,7 +57,7 @@
 			<display-entity entity-name="EmplLeaveType" />
 		</field>
 		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
-			<display-entity entity-name="EmplLeaveReasonType" />
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
 		</field>
 		<field name="fromDate">
 			<display />
@@ -186,10 +186,7 @@
      <form name="ListAllLeaveBalances" target="" title="" list-name="listIt" type="list" paginate-target="FindLeaveBalances"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-        
-       <entity-condition entity-name="LeavesBalanceView">
-				<condition-expr field-name="employmentStatusEnumId" operator="not-equals" value="15" />
-			</entity-condition> 
+       
         
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -296,7 +293,7 @@
 			<display-entity entity-name="EmplLeaveType" />
 		</field>
 		<field name="emplLeaveReasonTypeId" title=" Leave Reason Type">
-			<display-entity entity-name="EmplLeaveReasonType" />
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
 		</field>
 		<field name="fromDate" title="Start Date">
 			<display />
@@ -358,10 +355,10 @@
 					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
 			</drop-down>
 		</field>
-		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
+		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}"><display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
 			<drop-down allow-empty="true">
 				<entity-options description="${reason}"
-					key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType" />
+					key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"  />
 			</drop-down>
 		</field>
 		<field name="applicationStatus"><text-find/></field>
@@ -406,7 +403,7 @@
 			<display-entity entity-name="EmplLeaveType" />
 		</field>
 		<field name="emplLeaveReasonTypeId">
-			<display-entity entity-name="EmplLeaveReasonType" />
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
 		</field>
 		<field name="fromDate">
 			<display />
@@ -499,7 +496,7 @@
             </entity-one>
         </actions>
         
-       <alt-target use-when="leaveApp!=null" target="updateEmplLeaveExt" />
+       <alt-target use-when="leaveApp!=null" target="updateEmplLeave" />
 		
 		<field name="leaveId"><hidden/></field>
 		<field name="leaveId" use-when="leaveApp!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -635,7 +632,7 @@
 			<display-entity entity-name="EmplLeaveType" />
 		</field>
 		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
-			<display-entity entity-name="EmplLeaveReasonType" />
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
 		</field>
 		<field name="approvalStatus" title="Approval Status">
 			<display />
@@ -699,7 +696,7 @@
 			<display />
 		</field>
 		<field name="emplLeaveReasonTypeId" position="2">
-			<display />
+			<display-entity entity-name="EmplLeaveReasonType" key-field-name="emplLeaveReasonTypeId" description="${reason}" />
 		</field>
 		<field name="fromDate" position="1">
 			<display />
@@ -747,7 +744,7 @@
 			<display />
 		</field>
 		<field name="emplLeaveReasonTypeId" position="2" title="${uiLabelMap.HumanResLeaveReasonType}">
-			<display />
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
 		</field>
 		<field name="fromDate" position="1">
 			<display />
@@ -787,7 +784,7 @@
 			<display-entity entity-name="EmplLeaveType" />
 		</field>
 		<field name="emplLeaveReasonTypeId">
-			<display-entity entity-name="EmplLeaveReasonType" />
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
 		</field>
 		<field name="fromDate">
 			<display />
@@ -884,7 +881,7 @@
 			<display-entity entity-name="EmplLeaveType" />
 		</field>
 		<field name="emplLeaveReasonTypeId">
-			<display-entity entity-name="EmplLeaveReasonType" />
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
 		</field>
 		<field name="fromDate">
 			<display />
@@ -1115,7 +1112,6 @@
 		 <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
                 <!-- submitButton -->
         <field use-when="EmplLeaveCalenderContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field use-when="EmplLeaveCalenderContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
 	</form>
 	
 	<form name="EditEmplLeaveCalenderListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLeaveCalender"
@@ -1132,10 +1128,7 @@
 		<field name="leaveTypeId" title="Leave Type"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
 		<field name="fromDate"><display/></field>
 		<field name="leaveDuration"><display /></field>
-		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
-		<hyperlink target="deleteLeaveCalender" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this record?">
-		<parameter param-name="leaveCalenderId" /></hyperlink></field>
-		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
+		
 	</form>
 	
 	<!-- ======================================FOR HR ADMIN=========================================== -->
@@ -1151,10 +1144,6 @@
 		<field name="leaveTypeId" title="Leave Type"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
 		<field name="fromDate"><display/></field>
 		<field name="leaveDuration"><display /></field>
-		<field name="thruDate" title=" To Date"><display/></field>
-		<!-- <field name="deleteLink" title="${uiLabelMap.CommonDelete}"	widget-style="buttontext">
-		<hyperlink target="deleteLeaveCalender" description="${uiLabelMap.CommonDelete}"	also-hidden="false"><parameter param-name="leaveCalenderId" /></hyperlink></field>
-		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field> -->
 	</form>
 
 	
