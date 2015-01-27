@@ -3119,8 +3119,17 @@ under the License.
         <response name="success" type="view" value="scheduledLeavesCSV"/>
     </request-map>
     
+	<request-map uri="leaveCalendarCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="leaveCalendarCSV"/>
+    </request-map>
+	
+	<request-map uri="leaveCalendarPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="leaveCalendarPDF"/>
+    </request-map>
     
-    
+     <view-map name="leaveCalendarPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveCalendarPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="staffListingCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffListingCSV" content-type="text/csv" encoding="none"/>
      <view-map name="staffOnProbationCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffOnProbationCSV" content-type="text/csv" encoding="none"/>
      <view-map name="staffQualificationsCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffQualificationsCSV" content-type="text/csv" encoding="none"/>
@@ -3135,6 +3144,7 @@ under the License.
 	<view-map name="resumptionSummaryCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#resumptionSummaryCSV" content-type="text/csv" encoding="none"/>
 	<view-map name="staffOnLeaveCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffOnLeaveCSV" content-type="text/csv" encoding="none"/>
 	<view-map name="scheduledLeavesCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#scheduledLeavesCSV" content-type="text/csv" encoding="none"/>
+	<view-map name="leaveCalendarCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#leaveCalendarCSV" content-type="text/csv" encoding="none"/>
     <!-- ===================Lookup Request===================== -->
     <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
