@@ -116,10 +116,10 @@ under the License.
                         </fo:table-cell>
 						
 						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if activity.releasedTo?has_content>
+                            <#if releasedTo?has_content>
                                 <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>${activity.releasedTo?if_exists}</fo:block>
+                                <fo:block>${activity.releasedTo}</fo:block>
                             </#if>
                         </fo:table-cell>
 						
@@ -137,7 +137,7 @@ under the License.
                         
                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if reason?has_content>
-                                <fo:block>${reason.activity?if_exists}</fo:block>
+                                <fo:block>${reason.activity}</fo:block>
                             <#else>
                                 <fo:block>${activity.activityCode}</fo:block>
                             </#if>
