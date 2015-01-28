@@ -1241,7 +1241,11 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("VISAWITHDRAW")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("MSACCOWITHDRAWAL")))
 
+							
 					|| ((transactionType != null) && (transactionType
 							.equals("POSCASHPURCHASE")))) {
 				increaseDecrease = "D";
