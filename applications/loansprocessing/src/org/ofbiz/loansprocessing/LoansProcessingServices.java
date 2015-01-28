@@ -190,16 +190,23 @@ public class LoansProcessingServices {
 	public static BigDecimal getTotalLoansRunning(Long memberId,
 			Long loanProductId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		BigDecimal bdTotalLoansWithoutAccountAmount = LoanServices
-				.calculateExistingAccountLessLoansTotal(
-						String.valueOf(memberId),
-						String.valueOf(loanProductId), delegator);
+//		BigDecimal bdTotalLoansWithoutAccountAmount = LoanServices
+//				.calculateExistingAccountLessLoansTotal(
+//						String.valueOf(memberId),
+//						String.valueOf(loanProductId), delegator);
 		BigDecimal bdTotalLoansWithAccountAmount = LoanServices
 				.calculateExistingLoansTotal(String.valueOf(memberId),
 						String.valueOf(loanProductId), delegator);
 
-		return bdTotalLoansWithoutAccountAmount
-				.add(bdTotalLoansWithAccountAmount);
+		return bdTotalLoansWithAccountAmount;
+	}
+	
+	
+	public static BigDecimal getTotalLoansRunning(Long memberId) {
+		BigDecimal bdTotalLoansWithAccountAmount = LoanServices
+				.calculateExistingLoansTotal(memberId);
+
+		return bdTotalLoansWithAccountAmount;
 	}
 
 	public static BigDecimal getGruaduatedScaleContribution(BigDecimal bdAmount) {
@@ -248,6 +255,12 @@ public class LoansProcessingServices {
 			Long loanProductId) {
 		BigDecimal bdTotalBalances = getTotalLoanBalances(memberId,
 				loanProductId);
+		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalBalances);
+		return bdContributionAmount;
+	}
+	
+	public static BigDecimal getLoanCurrentContributionAmount(Long memberId) {
+		BigDecimal bdTotalBalances = getTotalLoansRunning(memberId);
 		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalBalances);
 		return bdContributionAmount;
 	}

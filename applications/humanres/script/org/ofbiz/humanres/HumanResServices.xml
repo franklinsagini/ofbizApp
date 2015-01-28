@@ -1682,7 +1682,7 @@
         <sequenced-id sequence-name="LeaveStatusLog" field="leaveStsLogId" />
         <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
         <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
-        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.rejectedBy" value="${userLogin.partyId}"  />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
         <set field="newEntity.approvalStatus" value="Called Back" />
         <create-value value-field="newEntity" />
@@ -1732,7 +1732,7 @@
         <sequenced-id sequence-name="LeaveStatusLog" field="leaveStsLogId" />
         <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
         <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
-        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.rejectedBy" value="${userLogin.partyId}"  />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
         <set field="newEntity.approvalStatus" value="Rejected" />
         <create-value value-field="newEntity" />
@@ -1757,7 +1757,7 @@
         <sequenced-id sequence-name="LeaveStatusLog" field="leaveStsLogId" />
         <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
         <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
-        <set field="newEntity.rejectedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.rejectedBy" value="${userLogin.partyId}" />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
         <set field="newEntity.approvalStatus" value="Send Back" />
         <create-value value-field="newEntity" />
@@ -1865,7 +1865,7 @@
 		<set field="newEntity.leaveStatus" value="DRAFT"/>
 		<set field="newEntity.createdDate" from-field="createdDate"/>
         <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.createdBy" value="${userLogin.partyId}" />
 		<sequenced-id sequence-name="EmplLeave" field="leaveId" />
 		<set field="newEntity.leaveId" from-field="leaveId" />
 		<create-value value-field="newEntity"/>
@@ -1876,7 +1876,7 @@
 		<sequenced-id sequence-name="LeaveStatusLog" stagger-max="1" field="leaveStsLogId" />
 		<set field="newStatusLog.leaveStsLogId" from-field="leaveStsLogId" />
 		<set field="newStatusLog.leaveId" from="newEntity.leaveId" />
-		<set field="newStatusLog.partyId" from="userLogin.userLoginId" />
+		<set field="newStatusLog.partyId" value="${userLogin.partyId}"  />
 		<set field="newStatusLog.approvalStatus" value="NEW" />
 		<create-value value-field="newStatusLog" />
 		

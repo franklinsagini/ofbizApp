@@ -764,6 +764,7 @@ under the License.
                </entity-one>
                
                <set field="theLoanApplicationId" from-field="parameters.loanApplicationId" type="Long"/>
+               <set field="currentLoanBalance" value="${bsh:org.ofbiz.loans.LoanServices.getLoanBalanceAmount(loanApplicationId);}" type="BigDecimal" />
                
                <set field="loanProductId" value="${loanApplication.loanProductId}"/>
                <entity-one value-field="loanProduct" entity-name="LoanProduct">
@@ -786,7 +787,8 @@ under the License.
                                 			<container>
                                 				<label style="h3">Member    : ${loanApplication.firstName} ${loanApplication.lastName}</label>
                                 				<label style="h3">Product(Loan Type) : ${loanProduct.name} -  ${loanProduct.code}</label>
-                                				<label style="h3">Amount    : KES ${loanApplication.loanAmt}</label>
+                                				<label style="h3">Amount Disbursed    : KES ${loanApplication.loanAmt}</label>
+                                				<label style="h3">Loan Balance    : KES ${currentLoanBalance}</label>
                                 				<label style="h3">Interest(P.M.)  : ${loanApplication.interestRatePM}</label>
                                 				<label style="h3">Repayment(Months) : ${loanApplication.repaymentPeriod}</label>
                                 				<label style="h3">Deduction Method : ${loanProduct.deductionType}</label>

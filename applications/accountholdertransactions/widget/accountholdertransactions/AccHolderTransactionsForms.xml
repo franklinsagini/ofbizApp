@@ -43,11 +43,8 @@ under the License.
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
             </drop-down>
-            
-            
         </field>
-           	<field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text default-value="${slipNumber}"></text></field>
-    	
+        <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text default-value="${slipNumber}"></text></field>
      </form>
 	
 		<!-- NewCashWithdrawal -->
@@ -73,6 +70,7 @@ under the License.
             		<condition-expr field-name="isActive" value="Y"/>
             		<condition-expr field-name="partyId"  value="${partyId}"/>
             		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            		<condition-expr field-name="increaseDecrease" operator="not-equals" value="R"/>
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
@@ -103,6 +101,12 @@ under the License.
         <field name="transactionType" title="Transaction Type">
         <!-- display also-hidden="false"></display -->
         	<hyperlink target-type="intra-app" target="generatedTransactionPrintout?accountTransactionParentId=${accountTransactionParentId}" description="Print ${transactionType}">
+        	</hyperlink>
+        </field>
+        
+        <field name="test" title="Reverse">
+        <!-- display also-hidden="false"></display -->
+        	<hyperlink target-type="intra-app" target="reverseTransaction?accountTransactionParentId=${accountTransactionParentId}&amp;partyId=${partyId}" description="Reverse ${transactionType}">
         	</hyperlink>
         </field>
         <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
@@ -171,6 +175,7 @@ under the License.
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             		<!-- condition-expr field-name="memberAccountId" from-field="parameters.memberAccountId}"/ -->
             		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
+            		<condition-expr field-name="increaseDecrease" operator="not-equals" value="R"/>
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
@@ -910,7 +915,7 @@ under the License.
     </form>
     
     <!-- listMsaccoTransactionsLog -->
-    <form name="listMsaccoTransactionsLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="atmServiceLogs" paginate-target="atmServiceLogs"
+    <form name="listMsaccoTransactionsLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="msaccoTransactionLogs" paginate-target="msaccoTransactionLogs"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="MsaccoTransactionsLog">
@@ -1505,7 +1510,9 @@ under the License.
         		<field-map field-name="partyId" from-field="userLogin.partyId"/>
         	</entity-one -->
         	
-        	<entity-condition entity-name="Station" list="stationList"></entity-condition>
+        	<entity-condition entity-name="Station" list="stationList">
+        		<order-by field-name="name"/>
+        	</entity-condition>
         </actions>
         <field name="stationAccountTransactionId"><hidden/></field>
         <field name="partyId"><hidden/></field>
@@ -1522,7 +1529,7 @@ under the License.
         
         <field name="stationId" title="Station"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
-                <list-options list-name="stationList" key-name="stationId" description="${name} " />
+                <list-options list-name="stationList" key-name="stationId" description="${name} - ${stationNumber} " />
             </drop-down>
         </field>
         <field name="monthyear" title="Month of the Year (MonthYear)"  widget-style="required" required-field="true"><text></text></field>
@@ -1555,7 +1562,7 @@ under the License.
         </field>
         
         <field name="stationId" title="Station">
-            <display-entity entity-name="Station" key-field-name="stationId" description="${name}" ></display-entity>
+            <display-entity entity-name="Station" key-field-name="stationId" description="${name} - ${stationNumber}" ></display-entity>
         </field>
         <field name="monthyear" title="Month of the Year (MonthYear)" ><display></display></field>
         <field name="chequeNumber" title="Cheque No"><display></display></field>
@@ -1571,6 +1578,16 @@ under the License.
             	<order-by field-name="-month"></order-by>
             	<order-by field-name="stationName"></order-by>
             </entity-condition>
+            
+            
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="stationExpectationCtx"/>
+                <field-map field-name="entityName" value="StationExpectation"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
             
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStationExpectation"/>
@@ -1879,5 +1896,30 @@ under the License.
             </hyperlink>
         </field -->
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    
+    <!-- Find Station -->
+    	<form name="FindStation" type="single" target="expectedPaymentStations" default-entity-name="StationExpectation">
+        <actions>
+        
+        	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+        </actions>
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+        <field name="month" title="Month">
+        	<drop-down allow-empty="false">
+        		<entity-options description="${month}"  entity-name="MonthStationCount"></entity-options>
+        	</drop-down>
+        </field>
+
+        <field name="stationNumber" title="Station No/Code" position="2"><text-find/></field>
+
+        <field name="stationName" title="Station Name"><text-find/></field>
+
+        
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
 </forms>

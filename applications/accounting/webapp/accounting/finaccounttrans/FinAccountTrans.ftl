@@ -117,6 +117,9 @@ function populateFields(finAccountTransId, status) {
       data: someData,
       success: function(data) {
           $('input[name=showUnpresentedChequesTotal]').val(data.showUnpresentedChequesTotal);
+          $('input[name=showUnreceiptedBankingsTotal]').val(data.showUnreceiptedBankingsTotal);
+          $('input[name=showUncreditedBankingsTotal]').val(data.showUncreditedBankingsTotal);
+          $('input[name=showUnidentifiedDebitsTotal]').val(data.showUnidentifiedDebitsTotal);
           // jQuery('#displayUnpresentedChequesTotal').html(data.showUnpresentedChequesTotal);
           // jQuery('#showAdjustedCashBookBalance').html(data.showAdjustedCashBookBalance);
           // jQuery('#showAdjustedBankBalance').html(data.showAdjustedBankBalance);
@@ -124,7 +127,7 @@ function populateFields(finAccountTransId, status) {
       }
   });
 }
-
+// showUnreceiptedBankingsTotal=5000
 function calculateReconBalances() {
     jQuery.ajax({
       url: 'calculateReconBalances',

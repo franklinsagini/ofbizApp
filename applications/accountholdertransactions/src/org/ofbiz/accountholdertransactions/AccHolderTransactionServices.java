@@ -44,7 +44,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
 import com.google.gson.Gson;
 
 public class AccHolderTransactionServices {
-	
+
 	public static String WITHDRAWALOK = "OK";
 
 	private static Logger log = Logger
@@ -180,6 +180,31 @@ public class AccHolderTransactionServices {
 		return json;
 	}
 
+	public static List<Long> getMemberAccountIds(Long partyId) {
+		List<Long> listMemberAccountId = new ArrayList<Long>();
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> memberAccountELI = null;
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					EntityCondition.makeCondition("partyId", partyId), null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if (memberAccountELI == null) {
+			return listMemberAccountId;
+		}
+		// String accountDetails;
+		for (GenericValue genericValue : memberAccountELI) {
+			listMemberAccountId.add(genericValue.getLong("memberAccountId"));
+		}
+
+		return listMemberAccountId;
+	}
+
 	/****
 	 * Get Account Total Balance Total Opening Account + Total Deposits - Total
 	 * Withdrawals
@@ -192,8 +217,10 @@ public class AccHolderTransactionServices {
 				.getParameter("memberAccountId");
 		log.info(" ######### The Member Account is #########" + memberAccountId);
 		memberAccountId = memberAccountId.replaceAll(",", "");
-		result.put("availableAmount",
-				getTotalSavings(memberAccountId, delegator).subtract(getMinimumBalance(Long.valueOf(memberAccountId))));
+		result.put(
+				"availableAmount",
+				getTotalSavings(memberAccountId, delegator).subtract(
+						getMinimumBalance(Long.valueOf(memberAccountId))));
 		result.put("bookBalanceAmount",
 				getBookBalance(memberAccountId, delegator));
 		Gson gson = new Gson();
@@ -258,10 +285,17 @@ public class AccHolderTransactionServices {
 		for (GenericValue genericValue : openingBalanceELI) {
 			bdBalance = bdBalance.add(genericValue
 					.getBigDecimal("savingsOpeningBalance"));
-		
+
 		}
 		return bdBalance;
 	}
+	
+	
+	public static BigDecimal calculateOpeningBalance(Long memberAccountId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		return calculateOpeningBalance(memberAccountId.toString(), delegator);
+	}
+
 
 	private static BigDecimal calculateTotalCashDeposits(
 			String memberAccountId, Delegator delegator) {
@@ -532,6 +566,11 @@ public class AccHolderTransactionServices {
 		return (getBookBalanceVer2(memberAccountId, delegator)
 				.add(bdOpeningBalance));
 	}
+	
+	public static BigDecimal getBookBalanceNow(String memberAccountId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		return getBookBalanceVer3(memberAccountId, delegator);
+	}
 
 	public static BigDecimal getBookBalanceVer3(String memberAccountId,
 			Delegator delegator) {
@@ -542,10 +581,11 @@ public class AccHolderTransactionServices {
 				delegator, "I");
 		bdTotalDecrease = calculateTotalIncreaseDecrease(memberAccountId,
 				delegator, "D");
-		return bdTotalIncrease.subtract(bdTotalDecrease).add(calculateOpeningBalance(memberAccountId, DelegatorFactoryImpl.getDelegator(null)));
+		return bdTotalIncrease.subtract(bdTotalDecrease).add(
+				calculateOpeningBalance(memberAccountId,
+						DelegatorFactoryImpl.getDelegator(null)));
 	}
 
-	
 	public static BigDecimal getBookBalanceVer2(String memberAccountId,
 			Delegator delegator) {
 		BigDecimal bdTotalIncrease = BigDecimal.ZERO;
@@ -1172,7 +1212,7 @@ public class AccHolderTransactionServices {
 			String transactionType, Map<String, String> userLogin,
 			String memberAccountId, BigDecimal transactionAmount,
 			String productChargeId, String accountTransactionParentId) {
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);//loanApplication.getDelegator();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);// loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
 				.getNextSeqId("AccountTransaction");
@@ -1198,19 +1238,18 @@ public class AccHolderTransactionServices {
 					.equals("CASHWITHDRAWAL")))
 					|| ((transactionType != null) && (transactionType
 							.equals("ATMWITHDRAWAL")))
-							
+
 					|| ((transactionType != null) && (transactionType
 							.equals("VISAWITHDRAW")))
-							
+
 					|| ((transactionType != null) && (transactionType
-							.equals("POSCASHPURCHASE")))
-					) {
+							.equals("POSCASHPURCHASE")))) {
 				increaseDecrease = "D";
 			}
 
 			if ((transactionType != null)
 					&& (transactionType.equals("CASHDEPOSIT"))
-					
+
 					|| (transactionType != null)
 					&& (transactionType.equals("MSACCODEPOSIT"))) {
 				increaseDecrease = "I";
@@ -1236,10 +1275,10 @@ public class AccHolderTransactionServices {
 		}
 
 		// "partyId", Long.valueOf(partyId),
-		
+
 		String treasuryId = null;
-		
-		if (loanApplication  != null)
+
+		if (loanApplication != null)
 			treasuryId = loanApplication.getString("treasuryId");
 
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
@@ -1251,8 +1290,7 @@ public class AccHolderTransactionServices {
 						"productChargeId", productChargeIdLong,
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType, "treasuryId",
-						treasuryId,
-						"accountTransactionParentId",
+						treasuryId, "accountTransactionParentId",
 						accountTransactionParentId));
 		try {
 			delegator.createOrStore(accountTransaction);
@@ -1585,7 +1623,7 @@ public class AccHolderTransactionServices {
 	}
 
 	public static BigDecimal getTotalBalanceNow(String memberAccountId) {
-		
+
 		log.info(" ##### Account " + memberAccountId);
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -1602,8 +1640,7 @@ public class AccHolderTransactionServices {
 		log.info(" #####BBBBBBB  Balance " + balance);
 		return balance;
 	}
-	
-	
+
 	public static Map<String, Object> getTotalBalanceNow(DispatchContext ctx,
 			Map<String, ? extends Object> context) {
 		Map<String, Object> result = FastMap.newInstance();
@@ -1655,17 +1692,17 @@ public class AccHolderTransactionServices {
 		bdTotalAvailable = bdTotalIncrease.subtract(bdTotalDecrease);
 		bdTotalAvailable = bdTotalAvailable.subtract(bdTotalChequeDeposit);
 		bdTotalAvailable = bdTotalAvailable.add(bdTotalChequeDepositCleared);
-		
+
 		memberAccountId = memberAccountId.replaceAll(",", "");
 		Long lmemberAccountId = Long.valueOf(memberAccountId);
-		bdTotalAvailable = bdTotalAvailable.subtract(getMinimumBalance(lmemberAccountId));
+		bdTotalAvailable = bdTotalAvailable
+				.subtract(getMinimumBalance(lmemberAccountId));
 		log.info(" AAAAAAAAAAAAAAAAAAA Total Available is " + bdTotalAvailable);
 		// return
 		// bdTotalIncrease.add(bdTotalChequeDepositCleared).subtract(bdTotalDecrease).subtract(bdTotalChequeDeposit);
 		return bdTotalAvailable;
 	}
-	
-	
+
 	public static BigDecimal getAvailableBalanceVer3(String memberAccountId,
 			Timestamp balanceDate) {
 		BigDecimal bdTotalIncrease = BigDecimal.ZERO;
@@ -1693,16 +1730,17 @@ public class AccHolderTransactionServices {
 		bdTotalAvailable = bdTotalIncrease.subtract(bdTotalDecrease);
 		bdTotalAvailable = bdTotalAvailable.subtract(bdTotalChequeDeposit);
 		bdTotalAvailable = bdTotalAvailable.add(bdTotalChequeDepositCleared);
-		
+
 		memberAccountId = memberAccountId.replaceAll(",", "");
 		Long lmemberAccountId = Long.valueOf(memberAccountId);
-		bdTotalAvailable = bdTotalAvailable.subtract(getMinimumBalance(lmemberAccountId));
+		bdTotalAvailable = bdTotalAvailable
+				.subtract(getMinimumBalance(lmemberAccountId));
 		log.info(" AAAAAAAAAAAAAAAAAAA Total Available is " + bdTotalAvailable);
 		// return
 		// bdTotalIncrease.add(bdTotalChequeDepositCleared).subtract(bdTotalDecrease).subtract(bdTotalChequeDeposit);
-		return bdTotalAvailable.add(calculateOpeningBalance(memberAccountId, DelegatorFactoryImpl.getDelegator(null)));
+		return bdTotalAvailable.add(calculateOpeningBalance(memberAccountId,
+				DelegatorFactoryImpl.getDelegator(null)));
 	}
-
 
 	private static BigDecimal calculateTotalIncreaseDecrease(
 			String memberAccountId, Timestamp balanceDate,
@@ -1851,27 +1889,28 @@ public class AccHolderTransactionServices {
 		BigDecimal dbAvailableBalance = null;
 
 		if (isEnough) {
-			if (WITHDRAWALOK.equals("OK")){
-			transactionId = cashWithdrawal(accountTransaction, userLogin,
-					withdrawalType);
+			if (WITHDRAWALOK.equals("OK")) {
+				transactionId = cashWithdrawal(accountTransaction, userLogin,
+						withdrawalType);
 
-			transactionId = transactionId.replaceAll(",", "");
-			
+				transactionId = transactionId.replaceAll(",", "");
 
-			transaction.setTransactionId(Long.valueOf(transactionId));
-			
+				transaction.setTransactionId(Long.valueOf(transactionId));
+
 			}
 			transaction.setStatus("SUCCESS");
 			transaction.setAmount(amount);
 
-			if (WITHDRAWALOK.equals("OK")){
-			ChargeDutyItem chargeDutyItem = getChargeDuty(transactionId);
+			if (WITHDRAWALOK.equals("OK")) {
+				ChargeDutyItem chargeDutyItem = getChargeDuty(transactionId);
 
-			if (chargeDutyItem.getChargeAmount() != null)
-				transaction.setChargeAmount(chargeDutyItem.getChargeAmount());
+				if (chargeDutyItem.getChargeAmount() != null)
+					transaction.setChargeAmount(chargeDutyItem
+							.getChargeAmount());
 
-			if (chargeDutyItem.getDutyAmount() != null)
-				transaction.setCommissionAmount(chargeDutyItem.getDutyAmount());
+				if (chargeDutyItem.getDutyAmount() != null)
+					transaction.setCommissionAmount(chargeDutyItem
+							.getDutyAmount());
 			}
 		} else {
 			transaction.setStatus("NOTENOUGHBALANCE");
@@ -1907,8 +1946,7 @@ public class AccHolderTransactionServices {
 
 		return false;
 	}
-	
-	
+
 	private static Boolean isEnoughBalance(Long memberAccountId,
 			BigDecimal bdAmount, String transactionType) {
 
@@ -2014,7 +2052,7 @@ public class AccHolderTransactionServices {
 						.getString("accountTransactionParentId"));
 		postCashWithdrawalTransaction(accountTransaction, userLogin);
 
-		//return "success";
+		// return "success";
 		return accountTransactionParent.getString("accountTransactionParentId");
 	}
 
@@ -2083,27 +2121,25 @@ public class AccHolderTransactionServices {
 		}
 
 	}
-	
-	
-	private static void createMemberDepositEntry(
-			BigDecimal amount, String acctgTransId, String postingType) {
+
+	private static void createMemberDepositEntry(BigDecimal amount,
+			String acctgTransId, String postingType) {
 		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
-				.toMap("acctgTransId", acctgTransId,
+		acctgTransEntry = delegator
+				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
+						"acctgTransId", acctgTransId,
 
-				"acctgTransEntrySeqId", "1", "partyId", "Company",
+						"acctgTransEntrySeqId", "1", "partyId", "Company",
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
 						accountHolderTransactionSetup
 								.getString("memberDepositAccId"),
-						"organizationPartyId", "Company", "amount",
-						amount,
-						"currencyUomId", "KES", "origAmount",
-						amount,
-						"origCurrencyUomId", "KES", "debitCreditFlag", postingType,
-						"reconcileStatusId", "AES_NOT_RECONCILED"));
+						"organizationPartyId", "Company", "amount", amount,
+						"currencyUomId", "KES", "origAmount", amount,
+						"origCurrencyUomId", "KES", "debitCreditFlag",
+						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
 		try {
 			delegator.createOrStore(acctgTransEntry);
 		} catch (GenericEntityException e) {
@@ -2112,7 +2148,7 @@ public class AccHolderTransactionServices {
 		}
 
 	}
-	
+
 	private static void createMemberCashEntry(BigDecimal amount,
 			String acctgTransId, String postingType) {
 
@@ -2120,19 +2156,18 @@ public class AccHolderTransactionServices {
 
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
-				.toMap("acctgTransId", acctgTransId,
+		acctgTransEntry = delegator
+				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
+						"acctgTransId", acctgTransId,
 
-				"acctgTransEntrySeqId", "2", "partyId", "Company",
+						"acctgTransEntrySeqId", "2", "partyId", "Company",
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
 						accountHolderTransactionSetup
 								.getString("cashAccountId"),
-						"organizationPartyId", "Company", "amount",
-						amount,
-						"currencyUomId", "KES", "origAmount",
-						amount,
-						"origCurrencyUomId", "KES", "debitCreditFlag", postingType,
-						"reconcileStatusId", "AES_NOT_RECONCILED"));
+						"organizationPartyId", "Company", "amount", amount,
+						"currencyUomId", "KES", "origAmount", amount,
+						"origCurrencyUomId", "KES", "debitCreditFlag",
+						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
 		try {
 			delegator.createOrStore(acctgTransEntry);
 		} catch (GenericEntityException e) {
@@ -2363,9 +2398,10 @@ public class AccHolderTransactionServices {
 		GenericValue accountProduct = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			accountProduct = delegator
-					.findOne("AccountProduct", UtilMisc.toMap(
-							"accountProductId", Long.valueOf(accountProductId)), false);
+			accountProduct = delegator.findOne(
+					"AccountProduct",
+					UtilMisc.toMap("accountProductId",
+							Long.valueOf(accountProductId)), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -2378,6 +2414,30 @@ public class AccHolderTransactionServices {
 		}
 
 		return bdMinimumBalance;
+	}
+
+	public static String getAccountProductName(Long memberAccountId) {
+		String accountProductId = getAccountProduct(memberAccountId);
+		accountProductId = accountProductId.replaceAll(",", "");
+		GenericValue accountProduct = null;
+		String accountProductName = "";
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProduct = delegator.findOne(
+					"AccountProduct",
+					UtilMisc.toMap("accountProductId",
+							Long.valueOf(accountProductId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if (accountProduct != null) {
+			if (accountProduct.getString("name") != null) {
+				accountProductName = accountProduct.getString("name");
+			}
+		}
+
+		return accountProductName;
 	}
 
 	public static String removeCommas(Long partyId) {
@@ -2398,8 +2458,7 @@ public class AccHolderTransactionServices {
 
 		return memberAccount;
 	}
-	
-	
+
 	public static String getMemberNames(Long partyId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
@@ -2411,57 +2470,58 @@ public class AccHolderTransactionServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		String memberNames = "";
 
-		memberNames = member.getString("firstName")+" "+member.getString("middleName")+" "+member.getString("lastName");
+		memberNames = member.getString("firstName") + " "
+				+ member.getString("middleName") + " "
+				+ member.getString("lastName");
 		return memberNames;
 	}
-	
-	
-	public static String cashDeposit(BigDecimal transactionAmount, Long memberAccountId,
-			Map<String, String> userLogin, String withdrawalType) {
 
-		//log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
-		log.info(" Transaction Amount ---- "
-				+ transactionAmount);
-		if (userLogin == null){
+	public static String cashDeposit(BigDecimal transactionAmount,
+			Long memberAccountId, Map<String, String> userLogin,
+			String withdrawalType) {
+
+		// log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		if (userLogin == null) {
 			userLogin = new HashMap<String, String>();
 			userLogin.put("userLoginId", "admin");
 		}
-		
+
 		// Save Parent
 		GenericValue accountTransactionParent = createAccountTransactionParent(
 				memberAccountId, userLogin);
 		String transactionType = withdrawalType;
-		
-		
+
 		// Set the the Treasury ID
 		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
 		// accountTransaction.set("treasuryId", treasuryId);
-		//addChargesToTransaction(accountTransaction, userLogin, transactionType);
+		// addChargesToTransaction(accountTransaction, userLogin,
+		// transactionType);
 		// increaseDecrease
-	
+
 		GenericValue accountTransaction = null;
 		createTransaction(accountTransaction, transactionType, userLogin,
 				memberAccountId.toString(), transactionAmount, null,
 				accountTransactionParent
 						.getString("accountTransactionParentId"));
 		postCashDeposit(memberAccountId, userLogin, transactionAmount);
-		//postCashWithdrawalTransaction(accountTransaction, userLogin);
+		// postCashWithdrawalTransaction(accountTransaction, userLogin);
 
 		return accountTransactionParent.getString("accountTransactionParentId");
 	}
-	
+
 	private static void postCashDeposit(Long memberAccountId,
 			Map<String, String> userLogin, BigDecimal amount) {
-		//..
+		// ..
 		GenericValue accountTransaction = null;
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
 				userLogin);
 		createMemberDepositEntry(amount, acctgTransId, "C");
 		createMemberCashEntry(amount, acctgTransId, "D");
-		
+
 	}
 
 	private static GenericValue createAccountTransactionParent(
@@ -2476,14 +2536,13 @@ public class AccHolderTransactionServices {
 		// userLogin.get("partyId"));
 		// String partyId = loanApplication.getString("partyId");
 
-		transactionParent = delegator
-				.makeValidValue("AccountTransactionParent", UtilMisc.toMap(
+		transactionParent = delegator.makeValidValue(
+				"AccountTransactionParent", UtilMisc.toMap(
 						"accountTransactionParentId",
 						accountTransactionParentId, "isActive", "Y",
 						"createdBy", createdBy, "updatedBy", updatedBy,
-						"memberAccountId",
-						memberAccountId,
-						"approved", "NO", "rejected", "NO", "posted", "posted"));
+						"memberAccountId", memberAccountId, "approved", "NO",
+						"rejected", "NO", "posted", "posted"));
 		try {
 			delegator.createOrStore(transactionParent);
 		} catch (GenericEntityException e) {
@@ -2492,5 +2551,95 @@ public class AccHolderTransactionServices {
 		}
 
 		return transactionParent;
+	}
+	
+	
+	/****
+	 * Reverse Transaction
+	 * */
+	public static String reverseTransaction(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		
+		String accountTransactionParentId = (String) request.getParameter("accountTransactionParentId");
+		String partyId = (String) request.getParameter("partyId");
+		
+		System.out.println(" TTTTTTTTTTTTTTTTTTTT PPPPPPPParent "+accountTransactionParentId);
+		System.out.println(" PPPPPPPPPPPPPPPPPPPP PartyId "+partyId);
+		
+		//Get all the account transactions under parent and set their increase/decrease to R
+		
+		
+		// GenericValue userLogin = (GenericValue) request
+		// .getAttribute("userLogin");
+
+		// Get all the Cheque Deposit Transactions that are Unposted and Cleared
+		// then Post each one of them
+		List<GenericValue> accountTransactionELI = null;
+
+//		String chequeDepostTransaction = "CHEQUEDEPOSIT";
+//		Timestamp currentDate = new Timestamp(Calendar.getInstance()
+//				.getTimeInMillis());
+		
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"accountTransactionParentId", EntityOperator.EQUALS,
+								accountTransactionParentId)		
+								),
+						EntityOperator.AND);
+
+		try {
+			accountTransactionELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		log.info(" ######### Will try to POST Cheques #########");
+		if (accountTransactionELI == null) {
+			log.info(" ######### No Deposits to Process #########");
+		} else{
+			log.info(" ######### The Size  #########"+accountTransactionELI.size());
+		}
+		
+		for (GenericValue accountTransaction : accountTransactionELI) {
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		accountTransaction.setString("increaseDecrease", "R");
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		
+		
+		//Now post the reversal in the GL
+	}
+
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return "";
 	}
 }

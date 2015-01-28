@@ -140,7 +140,16 @@
 		</response>
 		<response name="error" type="view" value="chequedepositposting" />
 	</request-map>
-
+	
+	
+	<request-map uri="reverseTransaction">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" invoke="reverseTransaction" />
+		<response name="success" type="view" value="cashWithdrawal">
+		</response>
+		<response name="error" type="view" value="cashWithdrawal" />
+	</request-map>
 
 	<!-- Generate AMortization Schedules Mostly for imported Loan Applications -->
 	<request-map uri="generateLoansAmortizationSchedules">
@@ -197,8 +206,11 @@
 	<request-map uri="createCashDeposit">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createCashDeposit" />
-		<response name="success" type="request-redirect" value="cashDeposit">
+		<!-- response name="success" type="request-redirect" value="cashDeposit">
 			<redirect-parameter name="partyId" />
+		</response -->
+		<response name="success" type="request-redirect" value="transactionPrintOut">
+			<redirect-parameter name="accountTransactionParentId" />
 		</response>
 		<response name="error" type="view" value="cashDeposit" />
 	</request-map>

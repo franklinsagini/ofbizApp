@@ -55,7 +55,7 @@ under the License.
                             <fo:block>Gender</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Appointment Date</fo:block>
+                            <fo:block>Employment Date</fo:block>
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
