@@ -18,13 +18,14 @@
         jQuery('input[name="payslipDeductionAmt"]').change(function(){
 
          	var payslipDeductionAmt = this.value;
-         	var currentContributionAmt = jQuery('input[name="currentContributionAmt"]').val();
+         	//var currentContributionAmt = jQuery('input[name="currentContributionAmt"]').val();
          	var varMonthlyRepaymentAmt = jQuery('input[name="monthlyRepaymentAmt"]').val();
          	var firstMonthInsuranceAmt = jQuery('input[name="firstMonthInsuranceAmt"]').val();
          	var varNewMemberDepostContributionAmt = jQuery('input[name="newMemberDepostContributionAmt"]').val();
          	
          	var varTotalDeductionAmt = 0.0;
-         	varTotalDeductionAmt = (parseFloat(payslipDeductionAmt.replace(/,/g, '')) - parseFloat(currentContributionAmt.replace(/,/g, '')) +  parseFloat(varMonthlyRepaymentAmt.replace(/,/g, '')) + parseFloat(firstMonthInsuranceAmt.replace(/,/g, '')));
+         	//parseFloat(currentContributionAmt.replace(/,/g, '')) - 
+         	varTotalDeductionAmt = (parseFloat(payslipDeductionAmt.replace(/,/g, '')) +  parseFloat(varMonthlyRepaymentAmt.replace(/,/g, '')) + parseFloat(firstMonthInsuranceAmt.replace(/,/g, '')));
          	
             $('input[name="totalDeductionAmt"]').val(varTotalDeductionAmt); 
             
