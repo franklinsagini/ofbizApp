@@ -63,7 +63,7 @@ public static String closeFinacialYear(HttpServletRequest request,
 	
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
-			appointmentdate = genericValue.getString("confirmationdate");
+			appointmentdate = genericValue.getString("appointmentdate");
 
 			if (appointmentdate !=null && appointmentdate !="") {
 						log.info("-----++++++-----partyId-----------------" +appointmentdate);
@@ -357,7 +357,7 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		String partyId ="", appointmentdate = ""; 
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
-			appointmentdate = genericValue.getString("confirmationdate");
+			appointmentdate = genericValue.getString("appointmentdate");
 			//log.info("===================="+partyId);
 			//log.info("++++++++++++++++++++"+appointmentdate);
 			calculateLeaveBalanceSave(partyId, appointmentdate, thisYear);
@@ -798,7 +798,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		}
 
 		for (GenericValue genericValue : getLeaveappointmentdateELI) {
-			appointmentdate = genericValue.getString("confirmationdate");
+			appointmentdate = genericValue.getString("appointmentdate");
 		}
 
 		return appointmentdate;
