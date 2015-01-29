@@ -45,12 +45,12 @@ under the License.
                     <fo:table-row text-align="center" height="0.5cm" text-decoration="underline">
                         <fo:table-cell>
                             <fo:block>
-                                CASH BOOK - Amounts in KES
+                                CASH BOOK
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
                             <fo:block>
-                                BANK STATEMENT - Amounts in KES
+                                BANK STATEMENT
                             </fo:block>
                         </fo:table-cell>
                     </fo:table-row>
@@ -70,7 +70,9 @@ under the License.
                                         <fo:block font-weight="bold">Less Unidentified Debits</fo:block>
                                     </fo:list-item-label>
                                     <fo:list-item-body start-indent="body-start()">
-                                        <fo:block>1,493,372.76</fo:block>
+                                        <fo:block text-decoration="underline">
+                                            <#if udTotal?exists><@ofbizCurrency amount=udTotal /></#if>
+                                        </fo:block>
                                     </fo:list-item-body>
                                 </fo:list-item>
                                 <fo:list-item height="1.5cm">
@@ -78,7 +80,9 @@ under the License.
                                         <fo:block font-weight="bold">Add Ureceipted Bankings</fo:block>
                                     </fo:list-item-label>
                                     <fo:list-item-body start-indent="body-start()">
-                                        <fo:block text-decoration="underline">11,033,027.55</fo:block>
+                                        <fo:block text-decoration="underline">
+                                            <#if ubTotal?exists><@ofbizCurrency amount=ubTotal /></#if>
+                                        </fo:block>
                                     </fo:list-item-body>
                                 </fo:list-item>
                                 <fo:list-item>
@@ -114,7 +118,7 @@ under the License.
                                         <fo:block font-weight="bold">Add Uncredited Bankings</fo:block>
                                     </fo:list-item-label>
                                     <fo:list-item-body start-indent="body-start()">
-                                        <fo:block>1,493,372.76</fo:block>
+                                        <fo:block text-decoration="underline"><#if depositTotal?exists><@ofbizCurrency amount=depositTotal /></#if></fo:block>
                                     </fo:list-item-body>
                                 </fo:list-item>
                                 <fo:list-item>
@@ -122,7 +126,7 @@ under the License.
                                         <fo:block font-weight="bold">Less Unpresented Cheques</fo:block>
                                     </fo:list-item-label>
                                     <fo:list-item-body start-indent="body-start()">
-                                        <fo:block text-decoration="underline">11,033,027.55</fo:block>
+                                        <fo:block text-decoration="underline"><#if withdrawalTotal?exists><@ofbizCurrency amount=withdrawalTotal /></#if></fo:block>
                                     </fo:list-item-body>
                                 </fo:list-item>
                                 <fo:list-item>

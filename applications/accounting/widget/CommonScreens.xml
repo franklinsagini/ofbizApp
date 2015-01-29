@@ -250,6 +250,27 @@ under the License.
         </section>
     </screen>
 
+    <screen name="CommonOrganizationSASRAAccountingReportsDecorator">
+        <section>
+            <actions>
+                <set field="tabButtonItemTop" value="PartyAccounts"/>
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.partyDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="OrganizationAccountingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-menu name="SASRAOrganizationAccountingReportsTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="CommonAdminChecksDecorator">
         <section>
             <actions>
