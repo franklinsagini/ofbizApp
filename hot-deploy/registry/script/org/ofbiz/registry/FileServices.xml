@@ -814,7 +814,7 @@
 		 </entity-one>
 		 
 		  <entity-one entity-name="Person" value-field="person">
-		 	<field-map field-name="partyId" from-field="parameters.actionBy"/>
+		 	<field-map field-name="partyId" from-field="userLogin.partyId"/>
 		 </entity-one>
 
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy"/>
@@ -1087,7 +1087,8 @@
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		  <set field="registryFile.approvalStatus" value="na"/>
 		 <set field="registryFile.status" value="AVAILABLE"/>
-		  <set field="registryFile.fileLocation" from-field="REGISTRY"/>
+		  <set field="registryFile.fileLocation" value="REGISTRY"/>
+		  <set field="registryFile.currentPossesser" value="REGISTRY"/>
 		 <set field="registryFile.recieptStatus" value="RELEASEDANDRECIEVED"/>
 		<store-value value-field="registryFile"/>
 	</simple-method>

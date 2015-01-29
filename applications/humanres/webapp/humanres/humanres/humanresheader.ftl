@@ -9,7 +9,7 @@
          var leaveTypeId = this.value;
          //console.log(leaveTypeId);
          if (leaveTypeId =="ANNUAL_LEAVE"){
-          var appointmentdate =  jQuery('input[name="confirmationdate"]').val();
+          var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
          var partyId =  jQuery('input[name="partyId"]').val();
          
          var reqUrl = '/humanres/control/emplleavebalance';
@@ -176,7 +176,7 @@
 	
 	     url    : reqUrl,
 	     type   : 'GET',
-	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId ,"confirmationdate" :appointmentdate}, //here you can pass the parameters to  
+	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId ,'appointmentdate' :appointmentdate}, //here you can pass the parameters to  
 	                                                   //the request if any.
 	     success : function(data){
 	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
