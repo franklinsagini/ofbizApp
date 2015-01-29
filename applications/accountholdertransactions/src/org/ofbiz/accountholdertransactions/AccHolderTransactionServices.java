@@ -1779,7 +1779,7 @@ public class AccHolderTransactionServices {
 			return bdRetainedSavingsAmt;
 		
 
-		BigDecimal multipleOfSavingsAmt = getMultipleOfSavingsAmount("999");
+		BigDecimal multipleOfSavingsAmt = getMultipleOfSavingsAmount("D318");
 		
 		bdRetainedSavingsAmt = getTotalFosaSavingsBasedLoans(
 				accountProduct.getLong("accountProductId"),
@@ -1852,7 +1852,7 @@ public class AccHolderTransactionServices {
 				// bdTotal = bdTotal.add(bdLoanBalance);
 				// if ()
 				BigDecimal dbWithheldBalance = bdLoanBalance.divide(
-						new BigDecimal(4), 4, RoundingMode.HALF_UP);
+						bdMultipleOfSavingsAmt, 4, RoundingMode.HALF_UP);
 
 				bdTotalWithheldAmt = bdTotalWithheldAmt.add(dbWithheldBalance);
 			}
