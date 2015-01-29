@@ -413,7 +413,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		String partyId ="", appointmentdate = ""; 
 		for (GenericValue genericValue : personsELI) {
 			partyId = genericValue.getString("partyId");
-			appointmentdate = genericValue.getString("confirmationdate");
+			appointmentdate = genericValue.getString("appointmentdate");
 			//log.info("===================="+partyId);
 			//log.info("++++++++++++++++++++"+appointmentdate);
 			calculateAnnualLeaveBalanceWithOpeningBalancesSave(partyId, appointmentdate, thisYear);
