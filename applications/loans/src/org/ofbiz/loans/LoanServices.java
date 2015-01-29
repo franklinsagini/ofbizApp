@@ -236,8 +236,6 @@ public class LoanServices {
 		String memberId = (String) request.getParameter("memberId");
 		GenericValue loanProduct = null;
 		loanProductId = loanProductId.replaceAll(",", "");
-		
-		
 
 		// Get Total Savings for the Member (Get total for each of their savings
 		// account)
@@ -276,12 +274,14 @@ public class LoanServices {
 				// (bdTotalSavings.multiply(savingsMultiplier))
 				// .subtract(bdExistingLoans);
 				Long accountProductId = loanProduct.getLong("accountProductId");
-				bdMaximumLoanAmt = calculateMaximumAmount(partyId, accountProductId, savingsMultiplier, bdTotalSavings);
+				bdMaximumLoanAmt = calculateMaximumAmount(partyId,
+						accountProductId, savingsMultiplier, bdTotalSavings);
 			} else {
 
-				//bdExistingLoans = calculateExistingAccountLessLoansTotal(
-				//		memberId, loanProductId, delegator);
-				BigDecimal bdTotalLoanBalanceThisProduct = getTotalLoansOfThisType(partyId, loanProductId);
+				// bdExistingLoans = calculateExistingAccountLessLoansTotal(
+				// memberId, loanProductId, delegator);
+				BigDecimal bdTotalLoanBalanceThisProduct = getTotalLoansOfThisType(
+						partyId, loanProductId);
 				bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt")
 						.subtract(bdTotalLoanBalanceThisProduct);
 			}
@@ -363,23 +363,22 @@ public class LoanServices {
 	/***
 	 * Calculate total balance for Loans of this type
 	 * */
-	
+
 	private static BigDecimal getTotalLoansOfThisType(Long partyId,
 			String loanProductId) {
-		
+
 		BigDecimal bdTotal = BigDecimal.ZERO;
 		Long loanStatusId = getLoanStatusId("DISBURSED");
 		List<GenericValue> loanApplicationELI = null; // =
 		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS,
-						partyId),
+						"partyId", EntityOperator.EQUALS, partyId),
 
 				EntityCondition.makeCondition("loanStatusId",
 						EntityOperator.EQUALS, loanStatusId),
-						
-						EntityCondition.makeCondition("loanProductId",
-								EntityOperator.EQUALS, Long.valueOf(loanProductId))
+
+				EntityCondition.makeCondition("loanProductId",
+						EntityOperator.EQUALS, Long.valueOf(loanProductId))
 
 				), EntityOperator.AND);
 
@@ -393,16 +392,16 @@ public class LoanServices {
 		}
 
 		// List<GenericValue> loansList = new LinkedList<GenericValue>();
-			for (GenericValue genericValue : loanApplicationELI) {
-				// toDeleteList.add(genericValue);
+		for (GenericValue genericValue : loanApplicationELI) {
+			// toDeleteList.add(genericValue);
 
-				BigDecimal bdLoanRepaid = getLoansRepaidByLoanApplicationId(genericValue
-						.getLong("loanApplicationId"));
-				BigDecimal bdLoanBalance = genericValue
-						.getBigDecimal("loanAmt").subtract(bdLoanRepaid);
-				bdTotal = bdTotal.add(bdLoanBalance);
-			}
-			
+			BigDecimal bdLoanRepaid = getLoansRepaidByLoanApplicationId(genericValue
+					.getLong("loanApplicationId"));
+			BigDecimal bdLoanBalance = genericValue.getBigDecimal("loanAmt")
+					.subtract(bdLoanRepaid);
+			bdTotal = bdTotal.add(bdLoanBalance);
+		}
+
 		return bdTotal;
 	}
 
@@ -410,25 +409,25 @@ public class LoanServices {
 			Long accountProductId, BigDecimal savingsMultiplier,
 			BigDecimal bdTotalSavings) {
 		// TODO Auto-generated method stub
-		
+
 		BigDecimal bdMaxAmount = BigDecimal.ZERO;
-		
+
 		BigDecimal bdHeldDepositsTotalAmount = BigDecimal.ZERO;
-		//Get all the loans
-		
+		// Get all the loans
+
 		Long loanStatusId = getLoanStatusId("DISBURSED");
 		List<GenericValue> loanApplicationELI = null; // =
 		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS,
-						Long.valueOf(partyId)),
+				.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("partyId",
+								EntityOperator.EQUALS, Long.valueOf(partyId)),
 
-				EntityCondition.makeCondition("loanStatusId",
-						EntityOperator.EQUALS, loanStatusId)
+						EntityCondition.makeCondition("loanStatusId",
+								EntityOperator.EQUALS, loanStatusId)
 
 				), EntityOperator.AND);
 
-		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
 					loanApplicationsConditions, null, null, null, false);
@@ -437,35 +436,47 @@ public class LoanServices {
 		}
 
 		// List<GenericValue> loansList = new LinkedList<GenericValue>();
-		//if (loanApplicationELI != null)
-			for (GenericValue genericValue : loanApplicationELI) {
-				// toDeleteList.add(genericValue);
-				GenericValue localLoanProduct = getLoanProduct(genericValue.getLong("loanProductId"));
-				
-				//if (genericValue.get)
-				if ((localLoanProduct != null) && (localLoanProduct.getLong("accountProductId") != null) && (localLoanProduct.getLong("accountProductId").equals(accountProductId))){
-					
-					//GenericValue localAccountProduct = getAccountProduct(localLoanProduct.getLong("accountProductId"));
-					
-					if ((localLoanProduct.getBigDecimal("multipleOfSavingsAmt") != null) && (localLoanProduct.getBigDecimal("multipleOfSavingsAmt").compareTo(BigDecimal.ZERO) == 1)){
-						BigDecimal bdLoanRepaid = getLoansRepaidByLoanApplicationId(genericValue
-								.getLong("loanApplicationId"));
-						BigDecimal bdLoanBalance = genericValue
-								.getBigDecimal("loanAmt").subtract(bdLoanRepaid);
-						BigDecimal bdHeldAmount = BigDecimal.ZERO;
-						bdHeldAmount = bdLoanBalance.divide(localLoanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.HALF_UP);
-						bdHeldDepositsTotalAmount = bdHeldDepositsTotalAmount.add(bdHeldAmount);
-					}
+		// if (loanApplicationELI != null)
+		for (GenericValue genericValue : loanApplicationELI) {
+			// toDeleteList.add(genericValue);
+			GenericValue localLoanProduct = getLoanProduct(genericValue
+					.getLong("loanProductId"));
+
+			// if (genericValue.get)
+			if ((localLoanProduct != null)
+					&& (localLoanProduct.getLong("accountProductId") != null)
+					&& (localLoanProduct.getLong("accountProductId")
+							.equals(accountProductId))) {
+
+				// GenericValue localAccountProduct =
+				// getAccountProduct(localLoanProduct.getLong("accountProductId"));
+
+				if ((localLoanProduct.getBigDecimal("multipleOfSavingsAmt") != null)
+						&& (localLoanProduct.getBigDecimal(
+								"multipleOfSavingsAmt").compareTo(
+								BigDecimal.ZERO) == 1)) {
+					BigDecimal bdLoanRepaid = getLoansRepaidByLoanApplicationId(genericValue
+							.getLong("loanApplicationId"));
+					BigDecimal bdLoanBalance = genericValue.getBigDecimal(
+							"loanAmt").subtract(bdLoanRepaid);
+					BigDecimal bdHeldAmount = BigDecimal.ZERO;
+					bdHeldAmount = bdLoanBalance.divide(localLoanProduct
+							.getBigDecimal("multipleOfSavingsAmt"), 4,
+							RoundingMode.HALF_UP);
+					bdHeldDepositsTotalAmount = bdHeldDepositsTotalAmount
+							.add(bdHeldAmount);
 				}
-				
-				//existingLoansTotal = existingLoansTotal.add(bdLoanBalance);
 			}
-		
-			BigDecimal bdFreeDepositsTotalAmt = bdTotalSavings.subtract(bdHeldDepositsTotalAmount);
-			bdMaxAmount = bdFreeDepositsTotalAmt.multiply(savingsMultiplier);
-			
-			bdMaxAmount = bdMaxAmount.setScale(4, RoundingMode.HALF_UP);
-		
+
+			// existingLoansTotal = existingLoansTotal.add(bdLoanBalance);
+		}
+
+		BigDecimal bdFreeDepositsTotalAmt = bdTotalSavings
+				.subtract(bdHeldDepositsTotalAmount);
+		bdMaxAmount = bdFreeDepositsTotalAmt.multiply(savingsMultiplier);
+
+		bdMaxAmount = bdMaxAmount.setScale(4, RoundingMode.HALF_UP);
+
 		return bdMaxAmount;
 	}
 
@@ -473,8 +484,9 @@ public class LoanServices {
 		GenericValue accountProduct = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			accountProduct = delegator.findOne("AccountProduct", UtilMisc.toMap(
-					"accountProductId", accountProductId), false);
+			accountProduct = delegator
+					.findOne("AccountProduct", UtilMisc.toMap(
+							"accountProductId", accountProductId), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -485,20 +497,21 @@ public class LoanServices {
 		GenericValue loanProduct = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			loanProduct = delegator.findOne("LoanProduct", UtilMisc.toMap(
-					"loanProductId", loanProductId), false);
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", loanProductId), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 		return loanProduct;
 	}
-	
+
 	private static GenericValue getLoanApplication(Long loanApplicationId) {
 		GenericValue loanApplication = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			loanApplication = delegator.findOne("LoanApplication", UtilMisc.toMap(
-					"loanApplicationId", loanApplicationId), false);
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -808,6 +821,37 @@ public class LoanServices {
 		log.info("########## Counting Existing Loans #######"
 				+ loanApplicationELI.size());
 		return existingLoansTotal;
+	}
+
+	public static BigDecimal getTotalDisbursedLoans(Long partyId) {
+		BigDecimal bdDisbursedLoansTotal = BigDecimal.ZERO;
+
+		Long loanStatusId = getLoanStatusId("DISBURSED");
+		List<GenericValue> loanApplicationELI = null; // =
+		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+
+				EntityCondition.makeCondition("loanStatusId",
+						EntityOperator.EQUALS, loanStatusId)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : loanApplicationELI) {
+
+			bdDisbursedLoansTotal = bdDisbursedLoansTotal.add(genericValue
+					.getBigDecimal("loanAmt"));
+		}
+
+		return bdDisbursedLoansTotal;
 	}
 
 	public static String getShareDepositAccountId(String code) {
@@ -2200,8 +2244,8 @@ public class LoanServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
-		if (loanClear.getLong("loanApplicationId") == null){
+
+		if (loanClear.getLong("loanApplicationId") == null) {
 			return "error";
 		}
 
@@ -2275,26 +2319,32 @@ public class LoanServices {
 		AccHolderTransactionServices.postTransactionEntry(delegator,
 				bdClearAmount, partyId, loanReceivablesAccountId, postingType,
 				acctgTransId, acctgTransType, entrySequenceId);
-		
-		//Update loan applied, set its amount eligible
-		//loanApplicationId
-		
+
+		// Update loan applied, set its amount eligible
+		// loanApplicationId
+
 		Long loanAppliedForId = loanClear.getLong("loanApplicationId");
-		//Get Maximum amount for this loan application
+		// Get Maximum amount for this loan application
 		GenericValue loanApplication = getLoanApplication(loanAppliedForId);
-		BigDecimal bdTotalSavings = totalSavings(loanApplication.getLong("partyId").toString(), loanApplication.getLong("loanProductId").toString(),
-				delegator);
+		BigDecimal bdTotalSavings = totalSavings(
+				loanApplication.getLong("partyId").toString(), loanApplication
+						.getLong("loanProductId").toString(), delegator);
 		// bdMaximumLoanAmt =
 		// (bdTotalSavings.multiply(savingsMultiplier))
 		// .subtract(bdExistingLoans);
-		GenericValue loanProduct = getLoanProduct(loanApplication.getLong("loanProductId"));
+		GenericValue loanProduct = getLoanProduct(loanApplication
+				.getLong("loanProductId"));
 		Long accountProductId = loanProduct.getLong("accountProductId");
-		BigDecimal bdMaximumLoanAmt = calculateMaximumAmount(loanApplication.getLong("partyId"), accountProductId, loanProduct.getBigDecimal("multipleOfSavingsAmt"), bdTotalSavings);
+		BigDecimal bdMaximumLoanAmt = calculateMaximumAmount(
+				loanApplication.getLong("partyId"), accountProductId,
+				loanProduct.getBigDecimal("multipleOfSavingsAmt"),
+				bdTotalSavings);
 
-		BigDecimal bdExistingLoans = calculateExistingLoansTotal(loanApplication.getLong("partyId"));
+		BigDecimal bdExistingLoans = calculateExistingLoansTotal(loanApplication
+				.getLong("partyId"));
 		loanApplication.set("maxLoanAmt", bdMaximumLoanAmt);
 		loanApplication.set("existingLoans", bdExistingLoans);
-		
+
 		try {
 			delegator.createOrStore(loanApplication);
 		} catch (GenericEntityException e) {
