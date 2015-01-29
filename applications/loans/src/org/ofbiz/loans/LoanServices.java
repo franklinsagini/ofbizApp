@@ -236,6 +236,8 @@ public class LoanServices {
 		String memberId = (String) request.getParameter("memberId");
 		GenericValue loanProduct = null;
 		loanProductId = loanProductId.replaceAll(",", "");
+		
+		
 
 		// Get Total Savings for the Member (Get total for each of their savings
 		// account)
@@ -377,7 +379,7 @@ public class LoanServices {
 						EntityOperator.EQUALS, loanStatusId),
 						
 						EntityCondition.makeCondition("loanProductId",
-								EntityOperator.EQUALS, loanProductId)
+								EntityOperator.EQUALS, Long.valueOf(loanProductId))
 
 				), EntityOperator.AND);
 
