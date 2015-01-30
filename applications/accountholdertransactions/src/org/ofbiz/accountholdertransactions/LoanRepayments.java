@@ -670,7 +670,8 @@ public class LoanRepayments {
 			
 			//Return the total unpaid or monthly expected based on interest rate and period whichever is
 			//greater of the two values
-			bdPrincipalAccrued = getUnpaidPrincipalTotal(bdPrincipalAccrued, loanApplicationId);
+			
+			//bdPrincipalAccrued = getUnpaidPrincipalTotal(bdPrincipalAccrued, loanApplicationId);
 			bdPrincipalAccrued = bdPrincipalAccrued.setScale(4, RoundingMode.HALF_UP);
 
 			// INSURANCE

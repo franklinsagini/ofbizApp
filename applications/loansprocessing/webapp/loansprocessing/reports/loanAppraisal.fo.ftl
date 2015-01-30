@@ -80,16 +80,19 @@ under the License.
                 <fo:block font-weight="bold">Share(Savings) Value</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> </fo:block>
+                <fo:block> 
+                	<#assign sharesAmount = Static["org.ofbiz.accountholdertransactions.AccHolderTransactionServices"].getShareSavingsValue(loanApplication.loanApplicationId)>
+                	KES ${sharesAmount?string(",##0.00")}
+                </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">Last Share Contribution Amount</fo:block>
+                <fo:block font-weight="bold">Last Share Contribution Amt</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> </fo:block>
+                <fo:block> NO PROVIDED </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -98,7 +101,7 @@ under the License.
                 <fo:block font-weight="bold">Last Share Payment Date</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> </fo:block>
+                <fo:block> NOT PROVIDED </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -107,7 +110,25 @@ under the License.
                 <fo:block font-weight="bold">Applied Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> ${loanApplication.loanAmt}  </fo:block>
+                <fo:block> KES ${loanApplication.loanAmt?string(",##0.00")} </fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        
+         <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Defaultor</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block> No Defaultor Loan </fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Defaultor Comment</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block> No Comment </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -125,7 +146,15 @@ under the License.
                 <fo:block font-weight="bold">Outstanding Loan Balance</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> </fo:block>
+                <fo:block>
+
+                	
+                	<#assign outstandingLoanBalance = Static["org.ofbiz.loans.LoanServices"].calculateExistingLoansTotal(loanApplication.partyId)>
+                	
+                	KES ${outstandingLoanBalance?string(",##0.00")}
+                	
+                	
+                 </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -134,7 +163,7 @@ under the License.
                 <fo:block font-weight="bold">Loan Entitlement</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${loanApplication.maxLoanAmt}</fo:block>
+                <fo:block>KES ${loanApplication.maxLoanAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -150,7 +179,7 @@ under the License.
                 <fo:block font-weight="bold">Gross Salary</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> ${deductionEvaluation.grossSalaryAmt} </fo:block>
+                <fo:block>KES ${deductionEvaluation.grossSalaryAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -158,7 +187,7 @@ under the License.
                 <fo:block font-weight="bold">Payslip Deduction</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${deductionEvaluation.payslipDeductionAmt}</fo:block>
+                <fo:block>KES ${deductionEvaluation.payslipDeductionAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -177,7 +206,7 @@ under the License.
                 <fo:block font-weight="bold">Loan Repayment</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${deductionEvaluation.monthlyRepaymentAmt?if_exists}</fo:block>
+                <fo:block>KES ${deductionEvaluation.monthlyRepaymentAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -186,7 +215,7 @@ under the License.
                 <fo:block font-weight="bold">Insurance Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${deductionEvaluation.firstMonthInsuranceAmt?if_exists}</fo:block>
+                <fo:block>KES ${deductionEvaluation.firstMonthInsuranceAmt?string(",##0.00")}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -195,7 +224,16 @@ under the License.
                 <fo:block font-weight="bold">Total Repayment</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${deductionEvaluation.totalDeductionAmt?if_exists}</fo:block>
+                <fo:block>KES ${deductionEvaluation.totalDeductionAmt?string(",##0.00")} </fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        
+         <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">New Contribution Amount</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>KES ${deductionEvaluation.newMemberDepostContributionAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -204,7 +242,7 @@ under the License.
                 <fo:block font-weight="bold">Total Deduction</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${deductionEvaluation.totalDeductionAfterLoanAddedAmt?if_exists}</fo:block>
+                <fo:block>KES ${deductionEvaluation.totalDeductionAfterLoanAddedAmt?string(",##0.00")}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
         

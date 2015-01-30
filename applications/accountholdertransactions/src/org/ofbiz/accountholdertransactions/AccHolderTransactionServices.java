@@ -39,12 +39,14 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
 
 public class AccHolderTransactionServices {
+	public static String MEMBER_DEPOSIT_CODE = "901";
 
 	public static String WITHDRAWALOK = "OK";
 
@@ -624,14 +626,13 @@ public class AccHolderTransactionServices {
 		bdTotalAvailable = bdTotalIncrease.subtract(bdTotalDecrease);
 		bdTotalAvailable = bdTotalAvailable.subtract(bdTotalChequeDeposit);
 		bdTotalAvailable = bdTotalAvailable.add(bdTotalChequeDepositCleared);
-		
+
 		memberAccountId = memberAccountId.replaceAll(",", "");
 		Long lmemberAccountId = Long.valueOf(memberAccountId);
 		BigDecimal bdRetailedSavings = BigDecimal.ZERO;
 		bdRetailedSavings = getRetainedSavings(lmemberAccountId);
 		bdTotalAvailable = bdTotalAvailable.subtract(bdRetailedSavings);
-		
-		
+
 		log.info(" AAAAAAAAAAAAAAAAAAA Total Available is " + bdTotalAvailable);
 		// return
 		// bdTotalIncrease.add(bdTotalChequeDepositCleared).subtract(bdTotalDecrease).subtract(bdTotalChequeDeposit);
@@ -1705,10 +1706,10 @@ public class AccHolderTransactionServices {
 
 		memberAccountId = memberAccountId.replaceAll(",", "");
 		Long lmemberAccountId = Long.valueOf(memberAccountId);
-		
+
 		BigDecimal bdRetailedSavings = BigDecimal.ZERO;
 		bdRetailedSavings = getRetainedSavings(lmemberAccountId);
-		
+
 		bdTotalAvailable = bdTotalAvailable.subtract(bdRetailedSavings);
 		bdTotalAvailable = bdTotalAvailable
 				.subtract(getMinimumBalance(lmemberAccountId));
@@ -1716,6 +1717,103 @@ public class AccHolderTransactionServices {
 		// return
 		// bdTotalIncrease.add(bdTotalChequeDepositCleared).subtract(bdTotalDecrease).subtract(bdTotalChequeDeposit);
 		return bdTotalAvailable;
+	}
+
+	// Give loanApplicationId - get the account balance - Member Deposits if
+	// loan product
+	// has no multiplier account otherwise use multiplier account specified
+	public static BigDecimal getShareSavingsValue(Long loanApplicationId) {
+		BigDecimal bdTotalAmount = BigDecimal.ZERO;
+
+		GenericValue loanApplication = getLoanApplicationEntity(loanApplicationId);
+		GenericValue loanProduct = getLoanProductEntity(loanApplication
+				.getLong("loanProductId"));
+
+		if (loanProduct.getLong("accountProductId") != null) {
+			bdTotalAmount = getAccountTotalBalance(
+					loanProduct.getLong("accountProductId"),
+					loanApplication.getLong("partyId"));
+		} else {
+			Long accountProductId = getMemberDepositsAccountId(MEMBER_DEPOSIT_CODE);
+			bdTotalAmount = getAccountTotalBalance(accountProductId,
+					loanApplication.getLong("partyId"));
+		}
+
+		return bdTotalAmount;
+	}
+
+	private static BigDecimal getAccountTotalBalance(Long accountProductId, Long partyId) {
+		// TODO Auto-generated method stub
+		List<GenericValue> memberAccountELI = null; // =
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+
+				EntityCondition.makeCondition("accountProductId",
+						EntityOperator.EQUALS, accountProductId)
+
+				), EntityOperator.AND);
+
+		// EntityOperator._emptyMap
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long memberAccountId = null;
+		// List<GenericValue> loansList = new LinkedList<GenericValue>();
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccountId = genericValue.getLong("memberAccountId");
+		}
+		
+		BigDecimal bdTotalAmount = getAvailableBalanceVer3(memberAccountId.toString(), new Timestamp(Calendar.getInstance().getTimeInMillis()));
+		return bdTotalAmount;
+	}
+
+	private static Long getMemberDepositsAccountId(String code) {
+		List<GenericValue> accountProductELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					EntityCondition.makeCondition("code", code), null, null,
+					null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Long accountProductId = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProductId = genericValue.getLong("accountProductId");
+		}
+		return accountProductId;
+	}
+
+	public static GenericValue getLoanProductEntity(Long loanProductId) {
+		GenericValue loanProduct = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", loanProductId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return loanProduct;
+	}
+
+	public static GenericValue getLoanApplicationEntity(Long loanApplicationId) {
+		GenericValue loanApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return loanApplication;
 	}
 
 	public static BigDecimal getAvailableBalanceVer3(String memberAccountId,
@@ -1777,14 +1875,12 @@ public class AccHolderTransactionServices {
 
 		if (!accountProduct.getString("code").equals("999"))
 			return bdRetainedSavingsAmt;
-		
 
 		BigDecimal multipleOfSavingsAmt = getMultipleOfSavingsAmount("D318");
-		
+
 		bdRetainedSavingsAmt = getTotalFosaSavingsBasedLoans(
 				accountProduct.getLong("accountProductId"),
-				memberAccount.getLong("partyId"),
-				multipleOfSavingsAmt);
+				memberAccount.getLong("partyId"), multipleOfSavingsAmt);
 
 		return bdRetainedSavingsAmt;
 	}
@@ -1793,8 +1889,8 @@ public class AccHolderTransactionServices {
 		List<GenericValue> loanProductELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			loanProductELI = delegator.findList("LoanProduct", EntityCondition
-					.makeCondition("code", code), null, null,
+			loanProductELI = delegator.findList("LoanProduct",
+					EntityCondition.makeCondition("code", code), null, null,
 					null, false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -1802,7 +1898,8 @@ public class AccHolderTransactionServices {
 
 		BigDecimal multipleOfSavingsAmt = null;
 		for (GenericValue genericValue : loanProductELI) {
-			multipleOfSavingsAmt = genericValue.getBigDecimal("multipleOfSavingsAmt");
+			multipleOfSavingsAmt = genericValue
+					.getBigDecimal("multipleOfSavingsAmt");
 		}
 		return multipleOfSavingsAmt;
 	}
@@ -1811,7 +1908,7 @@ public class AccHolderTransactionServices {
 			Long accountProductId, Long partyId,
 			BigDecimal bdMultipleOfSavingsAmt) {
 		// TODO Auto-generated method stub
-		//BigDecimal bdTotal = BigDecimal.ZERO;
+		// BigDecimal bdTotal = BigDecimal.ZERO;
 		Long loanStatusId = LoanServices.getLoanStatusId("DISBURSED");
 		List<GenericValue> loanApplicationELI = null; // =
 		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
