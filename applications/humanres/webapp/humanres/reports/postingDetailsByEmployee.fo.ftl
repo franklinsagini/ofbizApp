@@ -1,5 +1,5 @@
 <#escape x as x?xml>
-    <#if postingList?has_content>
+    <#if postings?has_content>
         <#-- REPORT TITLE -->
         <fo:block font-size="18pt" font-weight="bold" text-align="center">
             CHAI SACCO
@@ -33,29 +33,31 @@
                 </fo:table-header>
                 <fo:table-body>
                     <#assign rowColor = "white">
-                    <#list postingList as postingList>
+                    <#list postings as postings>
+                    	<#assign branch = delegator.findOne("PartyGroup", {"partyId" : postings.branchId}, false)/>
+                    	<#assign dept = delegator.findOne("department", {"departmentId" : postings.departmentId}, false)/>
                         <fo:table-row>
                         
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${postingList.employeeNumber?if_exists}</fo:block>
+                                    <fo:block>${employee.employeeNumber?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${postingList.firstName?if_exists}</fo:block>
+                                    <fo:block>${employee.firstName?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${postingList.lastName?if_exists}</fo:block>
+                                    <fo:block>${employee.lastName?if_exists}</fo:block>
                                 </fo:table-cell>
                                  <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${postingList.BranchName?if_exists}</fo:block>
+                                    <fo:block>${branch.groupName?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${postingList.departmentName?if_exists}</fo:block>
+                                    <fo:block>${dept.departmentName?if_exists}</fo:block>
                                 </fo:table-cell>
                                  <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${postingList.fromDate?if_exists}</fo:block>
+                                    <fo:block>${postings.fromDate?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${postingList.thruDate?if_exists}</fo:block>
+                                    <fo:block>${postings.thruDate?if_exists}</fo:block>
                                 </fo:table-cell>
                          </fo:table-row>
                         <#-- toggle the row color -->

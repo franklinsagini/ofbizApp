@@ -176,7 +176,6 @@ under the License.
 
 
 
-
     <screen name="EmployeeQualifications">
 	    <section>
             <actions>
@@ -809,6 +808,8 @@ under the License.
         </section>
     </screen>
 
+
+
     <screen name="PostingDetails">
 	    <section>
             <actions>
@@ -828,7 +829,50 @@ under the License.
                 			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     		<decorator-section name="body">
                     		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <section name="search-results">
+                    		
+                    	<section name="search-results">
+                        	<widgets>
+                        	 <container style="lefthalf">
+                            <screenlet title="Staff Postings Report (PDF)">
+                                <include-form name="staffPostingsList" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff Postings Report (CSV)">
+                                <include-form name="staffPostingsListCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
+                            <screenlet title="Staff Postings By Employee (PDF)">
+                                <include-form name="staffPostingsByEmployee" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff Postings By Employee  (CSV)">
+                                <include-form name="staffPostingsByEmployeeCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
+                            <screenlet title="Staff Postings By Branch (PDF)">
+                                <include-form name="staffQualificationsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff Postings By Branch  (CSV)">
+                                <include-form name="staffQualificationsFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+
+                        	</widgets>
+                        </section>
+                    		
+                    		
+                        <!--<section name="search-results">
                         	<widgets>
                         		<screenlet title="Employee Posting Details">
                         			<include-form name="listPostingDetails" location="component://humanres/widget/ReportForms.xml"/>
@@ -838,18 +882,18 @@ under the License.
 
                 			<container style="button-bar">
                 				<link target="postingDetailscsv" text="Staff Posting Details CSV" style="buttontext">
-                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                 image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ 
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link>
                                 <link target="postingDetailspdf" text="Staff Posting Details PDF" style="buttontext">
-                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                 image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ 
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
                 			</container>
                 		</screenlet>
 
                         	</widgets>
-                        </section>
+                        </section> -->
                     </decorator-section>
                 </decorator-screen>
                 		</screenlet>
@@ -893,6 +937,8 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+  
     <!-- Employee Posting Details PDF -->
     <screen name="PostingDetailspdf">
 	    <section>
@@ -906,14 +952,81 @@ under the License.
                 <entity-condition entity-name="EmploymentAndPerson" list="postingList">
                 	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
                 </entity-condition>
+                
            </actions>
             <widgets>
-                <platform-specific>
-                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/postingDetailsList.fo.ftl"/></xsl-fo>
-                </platform-specific>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component://humanres/webapp/humanres/reports/postingDetailsList.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
             </widgets>
         </section>
     </screen>
+    
+    
+    
+    <!-- Employee Posting By Employee -->
+    
+    asff
+    <screen name="PostingByEmployeecsv">
+	    <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/nextOfKinExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF NEXT_OF_KIN(S)"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                    <label style="h3" text="Staff Name: ${staff.firstName} ${staff.lastName}"/>
+                </container>
+                <include-form name="nextOfKinFormExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    <screen name="PostingByEmployeepdf">
+	    <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePostingDetailsFTL.groovy"/>                
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component://humanres/webapp/humanres/reports/postingDetailsByEmployee.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+    
+  
 
     <screen name="PositionDetails">
 	    <section>
@@ -1706,6 +1819,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     
      <screen name="nextOfKinCSV">
         <section>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 4.4.0.v201405191524 Build &lt;4.4.0.v20140606-1451></property>
     <property name="units">in</property>
     <list-property name="propertyBindings">
@@ -112,15 +112,6 @@
                     <text-property name="heading">bank_name</text-property>
                 </structure>
                 <structure>
-<<<<<<< HEAD
-                    <property name="columnName">branch_name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">branch_name</text-property>
-                    <text-property name="heading">branch_name</text-property>
-                </structure>
-                <structure>
-=======
->>>>>>> b15bf25583706588c0183b91c4edc9c71634188c
                     <property name="columnName">account_number</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">account_number</text-property>
@@ -464,7 +455,7 @@ when payroll_element_id like 'TOTDEDUCTIONS' then 3
 when payroll_element_id like 'PAYE' then 3
 when payroll_element_id like 'NHIF' then 3
 when payroll_element_id like 'NSSF' then 3
-when payroll_element_id like 'NSSFVOL' then 3 
+when payroll_element_id like 'NSSFVOL' then 3
 when payroll_element_id like 'PENSION' then 3
 else groupdisplayorder
 end as groupdisplayorder,
@@ -475,51 +466,51 @@ when payroll_element_id like 'PAYE' then 'DEDUCTIONS'
 when payroll_element_id like 'NHIF' then 'DEDUCTIONS'
 when payroll_element_id like 'NSSF' then 'DEDUCTIONS'
 when payroll_element_id like 'NSSFVOL' then 'DEDUCTIONS'
-when payroll_element_id like 'PENSION' then 'DEDUCTIONS' 
+when payroll_element_id like 'PENSION' then 'DEDUCTIONS'
 else paymenttype
 end as paymenttype  from (
 
-SELECT a.party_id,name,period,employee_number,pin, br.branch,bank_name, account_number,position,amount , 
+SELECT a.party_id,name,period,employee_number,pin, br.branch,bank_name, account_number,position,amount ,
 payroll_element_id, msg.payslip_message,
        COALESCE(balance,0) as balance,parametername, isbold,paymenttype,element_code,groupdisplayorder FROM
 
 <<<<<<< HEAD
-(SELECT sp.party_id, c.employee_number, c.first_name+' '+c.last_name as name, pp.name as period, '' as branch, 
+(SELECT sp.party_id, c.employee_number, c.first_name+' '+c.last_name as name, pp.name as period, '' as branch,
 c.pin_number as pin, sp.payroll_period_id, pm.description as payslip_message
   FROM payslip_message pm, staff_payroll sp
   LEFT JOIN person c ON c.party_id=sp.party_id
-  LEFT JOIN payroll_period pp ON pp.payroll_period_id=sp.payroll_period_id 
-  WHERE pm.description IS NOT NULL  AND 
-    sp.payroll_period_id IN 
+  LEFT JOIN payroll_period pp ON pp.payroll_period_id=sp.payroll_period_id
+  WHERE pm.description IS NOT NULL  AND
+    sp.payroll_period_id IN
 =======
-(SELECT sp.party_id, c.employee_number, c.first_name||' '||c.last_name as name, pp.name as period, '' as branch, 
+(SELECT sp.party_id, c.employee_number, c.first_name||' '||c.last_name as name, pp.name as period, '' as branch,
 c.pin_number as pin, sp.payroll_period_id
   FROM staff_payroll sp
   LEFT JOIN person c ON c.party_id=sp.party_id
-  LEFT JOIN payroll_period pp ON pp.payroll_period_id=sp.payroll_period_id 
-  WHERE sp.payroll_period_id IN 
+  LEFT JOIN payroll_period pp ON pp.payroll_period_id=sp.payroll_period_id
+  WHERE sp.payroll_period_id IN
 >>>>>>> b15bf25583706588c0183b91c4edc9c71634188c
   (SELECT payroll_period_id FROM payroll_period WHERE status != 'Inactive' AND name=?)
   AND c.employee_number =(select employee_number from Person pp WHERE (pp.party_id = ?))
    )a
    LEFT JOIN
-   
-   (SELECT pm.description as payslip_message, pm.payslip_message_id FROM payslip_message pm 
+
+   (SELECT pm.description as payslip_message, pm.payslip_message_id FROM payslip_message pm
    WHERE pm.description IS NOT NULL AND pm.display='Y'
    )msg ON a.employee_number!=msg.payslip_message_id
 
 LEFT JOIN
 
 (SELECT  epf.party_id,ep.position_name as position
-  FROM  empl_position_fulfillment epf, empl_position ep 
+  FROM  empl_position_fulfillment epf, empl_position ep
   WHERE ep.empl_position_id=epf.empl_position_id AND epf.thru_date is null
-   )b ON a.party_id=b.party_id 
+   )b ON a.party_id=b.party_id
 
  LEFT JOIN
 
 (SELECT pt.party_id, bd.bank_name+' '+bb.branch_name as bank_name, account_number
-  FROM pay_point pt, bank_details bd, bank_branch bb 
-  where bb.bank_details_id=bd.bank_details_id and pt.bank_branch_id=bb.bank_branch_id 
+  FROM pay_point pt, bank_details bd, bank_branch bb
+  where bb.bank_details_id=bd.bank_details_id and pt.bank_branch_id=bb.bank_branch_id
   ) bk
   ON a.party_id=bk.party_id
 
@@ -528,7 +519,7 @@ LEFT JOIN
 <<<<<<< HEAD
 (SELECT top 1 pg.group_name as branch,e.party_id_to
   FROM party_group pg
-  LEFT JOIN employment e ON e.branch_id=pg.party_id 
+  LEFT JOIN employment e ON e.branch_id=pg.party_id
   WHERE pg.is_branch='Y' AND e.thru_date is null
   ) br ON a.party_id=br.party_id_to
 
@@ -537,8 +528,8 @@ LEFT JOIN
 =======
 (SELECT pg.group_name as branch,p.party_id
   FROM party_group pg
-  LEFT JOIN person p ON p.branch_id=pg.party_id 
-  WHERE pg.is_branch='Y' 
+  LEFT JOIN person p ON p.branch_id=pg.party_id
+  WHERE pg.is_branch='Y'
   ) br ON a.party_id=br.party_id
 >>>>>>> b15bf25583706588c0183b91c4edc9c71634188c
 
@@ -546,36 +537,36 @@ LEFT JOIN
 (
 SELECT * FROM (
 SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,sp.payroll_period_id,
-       cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,  
+       cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,
        pe.isbold,pe.element_code,'EARNINGS' as paymenttype,1 as groupdisplayorder
   FROM staff_payroll_elements spe
-LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id 
-  LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id 
-  WHERE pe.payslipdisplay ='Yes' AND 
-  spe.amount >0 and pe.element_type='Payment' 
+LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id
+  LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id
+  WHERE pe.payslipdisplay ='Yes' AND
+  spe.amount >0 and pe.element_type='Payment'
   --AND sp.party_id IN (SELECT party_id FROM person WHERE employee_number='1236')
 
 UNION
 
 SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,sp.payroll_period_id,
-       cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,  
+       cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,
        pe.isbold,pe.element_code, null as paymenttype,2 as groupdisplayorder
   FROM staff_payroll_elements spe
-LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id 
-  LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id 
-  WHERE pe.payslipdisplay ='Yes' AND 
-  spe.amount >0 and pe.element_type='System Element' 
+LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id
+  LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id
+  WHERE pe.payslipdisplay ='Yes' AND
+  spe.amount >0 and pe.element_type='System Element'
   --AND sp.party_id IN (SELECT party_id FROM person WHERE employee_number=)
   UNION
 
 SELECT cast(spe.amount as numeric(10,2)) as amount , pe.payroll_element_id, spe.staff_payroll_id,sp.payroll_period_id,
-       cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,  
+       cast(spe.balance as numeric(10,2)) as balance , sp.party_id,pe.name as parametername,
        pe.isbold,pe.element_code,'DEDUCTIONS' as paymenttype,3 as groupdisplayorder
   FROM staff_payroll_elements spe
-LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id 
-  LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id 
-  WHERE pe.payslipdisplay ='Yes' AND 
-  spe.amount >0 and pe.element_type='Deduction' 
+LEFT JOIN staff_payroll sp ON sp.staff_payroll_id=spe.staff_payroll_id
+  LEFT JOIN payroll_element pe ON pe.payroll_element_id=spe.payroll_element_id
+  WHERE pe.payslipdisplay ='Yes' AND
+  spe.amount >0 and pe.element_type='Deduction'
   --AND sp.party_id IN (SELECT party_id FROM person WHERE employee_number=)
 	) AS X) as y ON y.party_id=a.party_id AND y.payroll_period_id=a.payroll_period_id
 	) as v

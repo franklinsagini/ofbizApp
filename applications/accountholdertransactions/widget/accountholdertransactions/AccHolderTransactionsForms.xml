@@ -556,7 +556,10 @@ under the License.
             	</condition-list>
             </entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList">
-        		<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+        		<condition-list>
+        			<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+        			<condition-expr field-name="loanStatusId" operator="equals" from-field="6"/>
+        		</condition-list>
         	</entity-condition>
         	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
         	
@@ -577,7 +580,7 @@ under the License.
 		</field>        
         <field name="loanApplicationId" title="Loan"  >
         	<drop-down allow-empty="true">
-        		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
+        		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="Loan No : ${loanNo} - Amount : ${loanAmt}"/>
         	</drop-down>
         </field>
         
