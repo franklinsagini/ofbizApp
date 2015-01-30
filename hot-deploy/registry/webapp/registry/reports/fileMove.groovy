@@ -14,6 +14,7 @@ context.member = member;
 
 class MovementActivity{
 	def activityCode
+	def partyId
 	def activityDuration
 	def total
 	def listMovements = []
@@ -29,7 +30,8 @@ class FileMovement{
 	def timeOut
 }
 
-activityList = delegator.findList("fileMovementActivityView", null, null, null, null, false);
+//activityList = delegator.findList("fileMovementActivityView", null, null, null, null, false);
+activityList = delegator.findByAnd("fileMovementActivityView", [partyId : partyId], null, false);
  
  activityList.eachWithIndex { activityItem, index ->
  activities = delegator.findByAnd("RegistryFileMovement", [partyId : partyId, activityCode : activityItem.activityCode], null, false);
