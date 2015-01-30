@@ -253,24 +253,27 @@ public class LoansProcessingServices {
 
 	public static BigDecimal getLoanCurrentContributionAmount(Long memberId,
 			Long loanProductId) {
-		BigDecimal bdTotalBalances = getTotalLoanBalances(memberId,
-				loanProductId);
-		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalBalances);
+		BigDecimal bdTotalDisbursed = LoanServices.getTotalDisbursedLoans(memberId);
+				//getTotalLoanBalances(memberId,
+				//loanProductId);
+		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursed);
 		return bdContributionAmount;
 	}
 	
 	public static BigDecimal getLoanCurrentContributionAmount(Long memberId) {
-		BigDecimal bdTotalBalances = getTotalLoansRunning(memberId);
-		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalBalances);
+		BigDecimal bdTotalDisbursedLoans = LoanServices.getTotalDisbursedLoans(memberId);
+				//getTotalLoansRunning(memberId);
+		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursedLoans);
 		return bdContributionAmount;
 	}
 
 	public static BigDecimal getLoanNewContributionAmount(Long memberId,
 			Long loanProductId, BigDecimal loanAmt) {
-		BigDecimal bdTotalBalances = getTotalLoanBalances(memberId,
-				loanProductId);
+		BigDecimal bdTotalDisbursedLoans = LoanServices.getTotalDisbursedLoans(memberId);
+				//getTotalLoanBalances(memberId,
+				//loanProductId);
 
-		BigDecimal newLoansTotal = bdTotalBalances.add(loanAmt);
+		BigDecimal newLoansTotal = bdTotalDisbursedLoans.add(loanAmt);
 
 		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(newLoansTotal);
 		return bdContributionAmount;
