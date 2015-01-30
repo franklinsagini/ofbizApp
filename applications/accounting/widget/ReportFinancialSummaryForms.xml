@@ -132,7 +132,43 @@ under the License.
     </form>
 
     <!-- SASARA REPORTS -->
-    <form name="CapitalAdequacy" type="list" list-name="capitalAdequacyList"
+    <form name="CapitalAdequacy" type="list" list-name="capitalAdequacyComponentsList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="code">
+            <hyperlink target="FindAcctgTransEntries" description="${code}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="CapitalComponents" title-area-style="tableheadwide"><display description="${name}"/></field>
+        <field name="amount" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
+
+    <form name="onBalanceSheetAssets" type="list" list-name="capitalAdequacyOnBalanceList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="code">
+            <hyperlink target="FindAcctgTransEntries" description="${code}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="CapitalComponents" title-area-style="tableheadwide"><display description="${name}"/></field>
+        <field name="amount" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
+
+    <form name="offBalanceSheetAssets" type="list" list-name="capitalAdequacyOffBalanceList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="code">
+            <hyperlink target="FindAcctgTransEntries" description="${code}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="CapitalComponents" title-area-style="tableheadwide"><display description="${name}"/></field>
+        <field name="amount" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
+
+    <form name="CapitalRatioCalc" type="list" list-name="capitalRatioCalcList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="code">
             <hyperlink target="FindAcctgTransEntries" description="${code}">
