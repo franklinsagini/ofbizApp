@@ -130,6 +130,32 @@ under the License.
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <field name="balance" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+
+    <!-- SASARA REPORTS -->
+    <form name="CapitalAdequacy" type="list" list-name="capitalAdequacyList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="code">
+            <hyperlink target="FindAcctgTransEntries" description="${code}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="CapitalComponents" title-area-style="tableheadwide"><display description="${name}"/></field>
+        <field name="amount" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
+
+    <form name="LiquidityStatement" type="list" list-name="incomeAccountBalanceList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="code">
+            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="CapitalComponents" title-area-style="tableheadwide"><display description="${accountName}"/></field>
+        <field name="Amount" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
+    <!-- END OF SASRA REPORTS -->
     <form name="ComparativeIncomeStatementParameters" type="single" target="ComparativeIncomeStatement" header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
         <field name="period1FromDate" title="${uiLabelMap.FormFieldTitle_period1FromDate}" required-field="true" position="1"><date-time type="timestamp"/></field>
