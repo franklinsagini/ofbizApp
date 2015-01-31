@@ -159,6 +159,8 @@ under the License.
         <field name="idno" title="Number"> <display/> </field>
         <field name="phoneNo" title="Phone No."> <display/> </field>
     </form>
+    
+    
     <form name="listPostingDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="postingDetails" paginate-target="postingDetails"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -171,14 +173,70 @@ under the License.
         <field name="firstName" title="First Name"> <display/> </field>
 
         <field name="lastName" title="Surname"> <display/> </field>
-        <field name="branchId" title="Branch">
-        	<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
-        </field>
-        <!-- field name="station" title="Station"> <display/> </field -->
+        <field name="BranchName" title="Branch"> <display/> </field>
+        <field name="departmentName" title="Department"> <display/> </field>
         <field name="fromDate"> <display type="date"/> </field>
         <field name="thruDate"> <display type="date"/> </field>
-
     </form>
+    
+     <form name="staffPostingsList" type="single" target="postingDetailspdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+       
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="staffPostingsListCSV" type="single" target="postingDetailscsv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+     
+     <form name="staffPostingsByEmployee" type="single" target="postingByEmployeepdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+    
+     <form name="staffPostingsByEmployeeCSV" type="single" target="postingByEmployeecsv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+    
+    <form name="staffPostingsByEmployeeExport" list-name="nextOfKinlist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="name" title="Kin's Name"><display/></field>
+        <field name="relationship" title="Relationship"><display/></field>
+        <field name="idNo" title="Id Number"><display/></field>
+        <field name="phone" title="Phone Number"><display/></field>
+        <field name="address" title="Postal Address"><display/></field>
+        
+    </form>
+    
+    
+    
+    
+    
+    
     <form name="listPositionDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="positionDetails" paginate-target="positionDetails"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -571,7 +629,7 @@ under the License.
         
     </form>
     
-     <form name="staffQualificationsForm" type="single" target="staffQualificationsPDF" title="" header-row-style="header-row"
+    <form name="staffQualificationsForm" type="single" target="staffQualificationsPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="partyId"   title="Employee">
             <lookup target-form-name="LookupPartyName"/>

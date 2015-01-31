@@ -711,21 +711,35 @@ under the License.
     <view-entity entity-name="EmploymentAndPerson"
             package-name="org.ofbiz.humanres.employment"
             title="Employment and Person Entity">
+        
+        <member-entity entity-alias="PRTYGRP" entity-name="PartyGroup"/>
         <member-entity entity-alias="EMPLMNT" entity-name="Employment"/>
+        <member-entity entity-alias="DEPT" entity-name="department"/>
         <member-entity entity-alias="PERS" entity-name="Person"/>
-        <!-- member-entity entity-alias="STA" entity-name="Station" / -->
+        
         <alias-all entity-alias="EMPLMNT">
+        </alias-all>
+         <alias-all entity-alias="DEPT">
         </alias-all>
         <alias-all entity-alias="PERS">
         </alias-all>
-        <!-- alias entity-alias="STA" name="station" field="name"/ -->
-
-        <view-link entity-alias="EMPLMNT" rel-entity-alias="PERS">
+        <alias entity-alias="PRTYGRP" name="BranchName" field="groupName"/>     
+        
+        
+        
+        
+        <view-link entity-alias="PRTYGRP" rel-entity-alias="EMPLMNT">  
+		 	<key-map field-name="partyId" rel-field-name="branchId"/>
+        </view-link>
+        
+         <view-link entity-alias="EMPLMNT" rel-entity-alias="DEPT">        	
+            <key-map field-name="departmentId" rel-field-name="departmentId"/>
+        </view-link>
+        
+        <view-link entity-alias="EMPLMNT" rel-entity-alias="PERS">        	
             <key-map field-name="partyIdTo" rel-field-name="partyId"/>
         </view-link>
-        <!-- view-link entity-alias="EMPLMNT" rel-entity-alias="STA">
-            <key-map field-name="stationId"/>
-        </view-link -->
+        
     </view-entity>
 
     <entity entity-name="EmploymentApp"
