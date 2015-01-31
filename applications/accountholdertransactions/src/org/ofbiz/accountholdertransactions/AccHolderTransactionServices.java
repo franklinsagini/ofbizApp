@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.ofbiz.accountholdertransactions.model.ATMTransaction;
+import org.ofbiz.accountholdertransactions.model.DeductionItem;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -2902,5 +2903,70 @@ public class AccHolderTransactionServices {
 			}
 		}
 		return "";
+	}
+	
+	public static  List<DeductionItem> getDeductions(String payrollNo){
+		List<DeductionItem> listDeducionItems = new ArrayList<DeductionItem>();
+		DeductionItem deductionItem = null;
+		String code;
+		
+		//Get partyId
+		Long partyId = LoanUtilities.getMemberId(payrollNo);
+		
+		//Get Loan Application IDs
+		List<Long> listLoanApplicationIds = LoanUtilities.getLoanApplicationIds(partyId);
+		
+		GenericValue loanApplication = null;
+		for (Long loanApplicationId : listLoanApplicationIds) {
+			//Create Deduction Item List
+			loanApplication = LoanUtilities.getLoanApplicationEntity(loanApplicationId);
+			
+			//Add Principal
+			deductionItem = new DeductionItem();
+			code  = LoanUtilities.getLoanProductCode(loanApplication.getLong("loanProductId"));
+			
+			deductionItem.setCode(code+"A");
+			
+			BigDecimal bdAmount = LoanRepayments.getTotalPrincipalDue(partyId.toString(), loanApplicationId.toString()); 
+			deductionItem.setBdAmount(bdAmount);
+			
+			BigDecimal bdBalance = loanApplication.getBigDecimal("loanAmt").subtract(LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationId));
+			bdBalance = bdBalance.subtract(bdAmount);
+			
+			deductionItem.setBdBalance(bdBalance);
+			
+			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			
+			listDeducionItems.add(deductionItem);
+			
+			//Add Interest
+			deductionItem.setCode(code+"B");
+			
+			bdAmount = LoanRepayments.getTotalInterestDue(partyId.toString(), loanApplicationId.toString()); 
+			deductionItem.setBdAmount(bdAmount);
+			
+			
+			deductionItem.setBdBalance(BigDecimal.ZERO);
+			
+			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			
+			listDeducionItems.add(deductionItem);
+			
+			//Add Insurance
+			deductionItem.setCode(code+"C");
+			
+			bdAmount = LoanRepayments.getTotalInsuranceDue(partyId.toString(), loanApplicationId.toString()); 
+			deductionItem.setBdAmount(bdAmount);
+			
+			
+			deductionItem.setBdBalance(BigDecimal.ZERO);
+			
+			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			
+			listDeducionItems.add(deductionItem);
+			
+		}
+		
+		return listDeducionItems;
 	}
 }
