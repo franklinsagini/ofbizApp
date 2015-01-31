@@ -53,7 +53,7 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 		String financialYear=LeaveServices.getCurrentYear(now);
 		Date appointmentdate = null;
 		try {
-			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("confirmationdate")));
+			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
 		} catch (ParseException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();

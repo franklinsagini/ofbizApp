@@ -46,12 +46,12 @@ http://www.apache.org/licenses/LICENSE-2.0
         <!-- <menu-item name="reports" title="Reports"><link target="FinanceReports"/></menu-item> -->
     </menu>
 
-    <menu name="MemberReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+<!--     <menu name="MemberReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="generalReports">
         <menu-item name="generalReports" title="General Reports">
             <link target="generalReports"/>
         </menu-item>
-    </menu>
+    </menu> -->
 
         <!-- IMPREST TAB BAR MENUS -->
 
@@ -995,8 +995,51 @@ http://www.apache.org/licenses/LICENSE-2.0
                 <parameter param-name="organizationPartyId"/>
             </link>
         </menu-item>
-        <menu-item name="ChecksTabButton" title="${uiLabelMap.AccountingChecks}">
+        <menu-item name="SASRAOrganizationAccountingReports" title="${uiLabelMap.SASRAAccountingReports}">
+            <link target="CapitalAdequacy">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+<!--         <menu-item name="ChecksTabButton" title="${uiLabelMap.AccountingChecks}">
             <link target="listChecksToPrint">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item> -->
+    </menu>
+    <menu name="SASRAOrganizationAccountingReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="CapitalAdequacy">
+        <menu-item name="CapitalAdequacy" title="Capital Adequacy Report">
+            <link target="CapitalAdequacy">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="LiquidityStatement" title="Liquidity Statement ">
+            <link target="LiquidityStatement">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="StatementDepositReturns" title="Statement Of Deposit Returns">
+            <link target="StatementDepositReturns">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="RiskClassificationAssetProv" title="Risk Classification Of Asset and Provisioning">
+            <link target="RiskClassificationAssetProv">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="InvestmentReturn" title="Investment Return">
+            <link target="InvestmentReturn">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="StatementFinancialPosition" title="Statement of Financial Position">
+            <link target="StatementFinancialPosition">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="StatementComprehensiveIncome" title="Statement of Comprehensive Income">
+            <link target="StatementComprehensiveIncome">
                 <parameter param-name="organizationPartyId"/>
             </link>
         </menu-item>

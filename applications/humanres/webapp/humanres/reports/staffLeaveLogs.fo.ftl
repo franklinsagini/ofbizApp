@@ -17,115 +17,115 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if employee?has_content>
+    <#if staff?has_content>
 
     <#-- REPORT TITLE -->
     <fo:block font-size="18pt" font-weight="bold" text-align="center">
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        FILE MOVEMENT REPORT
+        STAFF LEAVE LOGS
     </fo:block>
     <fo:block><fo:leader/></fo:block>
     <#-- Employee Details -->
     <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        File Owner: ${employee.firstName} ${employee.lastName}
+        Employee Name: ${staff.firstName} ${staff.lastName}
     </fo:block>
-<#if file?has_content>
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        Current Status: ${file.status?if_exists}
+	<fo:block font-size="10pt" text-align="left" font-weight="bold">
+        Employee Payroll Number: ${staff.employeeNumber}
     </fo:block>
-</#if>
-<#if activities?has_content>
+<#if logs?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="70pt"/>
+			<fo:table-column column-width="100pt"/>
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="90pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Action</fo:block>
+                        <fo:block text-align="left">Leave Type</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Action By</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Current Posesser</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Carried By</fo:block>
+                        <fo:block text-align="left">Approved By</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Reason</fo:block>
+                        <fo:block text-align="left">Next Approver</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Reciept Status</fo:block>
+                        <fo:block text-align="left">Rejected By</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Action Date</fo:block>
+                        <fo:block text-align="left">Rejection Reason</fo:block>
+                    </fo:table-cell>
+					<fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Approval Status</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Date</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
 
-                  <#list activities as activity>
-                    <#if activity.carriedBy?has_content>
-                        <#assign carriedBy = delegator.findOne("Person", {"partyId" : activity.carriedBy}, false)/>
+                  <#list logs as activity>
+                    <#if activity.leaveId?has_content>
+                        <#assign leave = delegator.findOne("EmplLeave", {"leaveId" : activity.leaveId}, false)/>
                     </#if>
-                    <#if activity.actionBy?has_content>
-                        <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
+                    <#if leave.leaveTypeId?has_content>
+                        <#assign leaveTyp = delegator.findOne("EmplLeaveType", {"leaveTypeId" : leave.leaveTypeId}, false)/>
                     </#if>
-                    <#if activity.currentPossesser?has_content>
-                        <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
+                     <#if activity.approvedBy?has_content>
+                        <#assign apprvdBy = delegator.findOne("Person", {"partyId" : activity.approvedBy}, false)/>
                     </#if>
-                     <#if activity.Reason?has_content>
-                        <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : activity.Reason}, false)/>
+					<#if activity.nextApprover?has_content>
+                        <#assign nextApprvd = delegator.findOne("Person", {"partyId" : activity.nextApprover}, false)/>
                     </#if>
-                     <fo:table-row>
+					<#if activity.rejectedBy?has_content>
+                        <#assign rejectBy = delegator.findOne("Person", {"partyId" : activity.rejectedBy}, false)/>
+                    </#if>
+                     <fo:table-row>						
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.fileActionTypeId?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if actionBy?has_content>
-                                <fo:block>${actionBy.firstName?if_exists} ${actionBy.lastName?if_exists}</fo:block>
+                            <#if leaveTyp?has_content>
+                                <fo:block>${leaveTyp.description}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if activity.currentPossesser?if_exists == "REGISTRY">
-                                <fo:block>${activity.currentPossesser?if_exists}</fo:block>
+                            <#if apprvdBy?has_content>
+                                <fo:block>${apprvdBy.firstName?if_exists} ${apprvdBy.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>${currentPossesser.firstName?if_exists} ${currentPossesser.lastName?if_exists}</fo:block>
+                                <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if carriedBy?has_content>
-                                <fo:block>${carriedBy.firstName?if_exists} ${carriedBy.lastName?if_exists}</fo:block>
+						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if nextApprvd?has_content>
+                                <fo:block>${nextApprvd.firstName?if_exists} ${nextApprvd.lastName?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if rejectBy?has_content>
+                                <fo:block>${rejectBy.firstName?if_exists} ${rejectBy.lastName?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
                         
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if reason?has_content>
-                                <fo:block>${reason.activity?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
-                        </fo:table-cell>
-                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.receiptStatus?if_exists}</fo:block>
+                            <fo:block>${activity.rejectReason?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.actionDate?if_exists}</fo:block>
+                            <fo:block>${activity.approvalStatus?if_exists}</fo:block>
+                        </fo:table-cell>
+						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.createdStamp?if_exists}</fo:block>
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
@@ -135,11 +135,11 @@ under the License.
     </fo:block>
     <#else>
      <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">Nothing To Show For: ${employee.firstName} ${employee.lastName}</fo:block>
+        <fo:block text-align="center" font-size="14pt">Nothing To Show For: ${staff.firstName} ${staff.lastName}</fo:block>
     </fo:block>
   </#if>
     <#else>
-        <fo:block text-align="center">Nothing to Show</fo:block>
+        <fo:block text-align="center">No Employees Found With that ID</fo:block>
     </#if>
 </#escape>
 

@@ -29,6 +29,8 @@ public class MemberStatement {
 	@Produces("application/json")
 	@Path("{user}")
 	public Response getStatement(@PathParam("user") String user) {
+		
+		System.out.println(" Testing for this user ########### "+user);
 
 		String username = null;
 		String password = null;

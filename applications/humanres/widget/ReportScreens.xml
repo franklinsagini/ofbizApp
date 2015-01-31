@@ -716,7 +716,7 @@ under the License.
                             
                             <screenlet></screenlet>
                         
-                       <!-- <container style="lefthalf">
+                       <container style="lefthalf">
                             <screenlet title="Leave Activity (PDF)">
                                 <include-form name="leaveActivityForm" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
@@ -726,7 +726,7 @@ under the License.
                             <screenlet title="Leave Activity (CSV)">
                                 <include-form name="leaveActivityFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
-                        </container> -->
+                        </container> 
                         <screenlet></screenlet>
                          <container style="lefthalf">
                             <screenlet title="Scheduled Leaves (PDF)" >
@@ -1287,6 +1287,27 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific>
                             <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffLeavePlan.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="leaveActivityPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffLeaveLogs.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffLeaveLogs.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
