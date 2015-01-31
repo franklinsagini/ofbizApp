@@ -88,6 +88,7 @@
 		<field name="releasedTo" type="name"></field>
 		<field name="receivedBy" type="name"></field>
 		<field name="activityCode" type="name"></field>
+		<field name="total" type="name"></field>
 		<field name="timeIn" type="date-time"></field>
 		<field name="timeOut" type="date-time"></field>
 		<prim-key field="movementId" />
@@ -271,6 +272,15 @@
 		<field name="creationDate" type="date-time"></field>
 		<prim-key field="subDocumentId" />
 	</entity>
+	
+	
+	 <view-entity entity-name="fileMovementActivityView" package-name="org.ofbiz.humanres">
+	    <member-entity entity-alias="FM" entity-name="RegistryFileMovement"></member-entity>
+    	
+		
+    	<alias entity-alias="FM" name="activityCode" group-by="true" />
+    	<alias entity-alias="FM" name="total" function="count"/> 
+    </view-entity>
 	
 	
 	
