@@ -61,14 +61,9 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Carried By</fo:block>
                     </fo:table-cell>
-                    
-                    
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Reason</fo:block>
                     </fo:table-cell>
-                    
-                    
-                    
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Reciept Status</fo:block>
                     </fo:table-cell>
@@ -140,11 +135,11 @@ under the License.
     </fo:block>
     <#else>
      <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">Nothing To ShowFor: ${employee.firstName} ${employee.lastName}</fo:block>
+        <fo:block text-align="center" font-size="14pt">Nothing To Show For: ${employee.firstName} ${employee.lastName}</fo:block>
     </fo:block>
   </#if>
     <#else>
-        <fo:block text-align="center">No Employees Found With that ID</fo:block>
+        <fo:block text-align="center">Nothing to Show</fo:block>
     </#if>
 </#escape>
 
