@@ -215,7 +215,21 @@
 									action="_CREATE" />
 							</condition>
 							<widgets>
-								<screenlet>
+                        	 <container style="lefthalf">
+                            <screenlet title="Individual Payslip (PDF)">
+                                <include-form name="IndividualPayslip" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <!-- container style="righthalf">
+                            <screenlet title="Staff Postings Report (CSV)">
+                                <include-form name="staffPostingsListCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                       
+							
+							
+								<!-- screenlet>
 									<section>
 										<widgets>
 											<container style="button-bar">
@@ -234,7 +248,7 @@
 											</container>
 										</widgets>
 									</section>
-								</screenlet>
+								</screenlet -->
 							</widgets>
 							<fail-widgets>
 								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
@@ -246,6 +260,34 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	<screen name="IndividualPayslipPdf">
+	    <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://payroll/webapp/payroll/WEB-INF/actions/reports/payslip.groovy"/>                
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component:///payroll/webapp/reports/IndividualPayslip.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+	
+	
+	
+	
 	<screen name="PayPointsReport">
 		<section>
 			<actions>
