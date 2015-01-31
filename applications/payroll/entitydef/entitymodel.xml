@@ -281,13 +281,16 @@ under the License.
 
         <view-entity entity-name="PayrollElementAndStaffPayrollElement" package-name="org.ofbiz.payroll"
     	title="Staff Payroll Elements">
-        <member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+        <member-entity entity-alias="SPE" entity-name="StaffPayrollElements" /> 
     	<member-entity entity-alias="PE" entity-name="PayrollElement" />
         <alias-all entity-alias="SPE"/>
         <alias-all entity-alias="PE" />
         <view-link entity-alias="SPE" rel-entity-alias="PE">
             <key-map field-name="payrollElementId" />
         </view-link>
+        <entity-condition>
+        	<condition-expr entity-alias="SPE" field-name="amount" operator="greater" value="0"/>
+        </entity-condition>
 
     </view-entity>
 

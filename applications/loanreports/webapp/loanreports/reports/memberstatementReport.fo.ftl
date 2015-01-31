@@ -126,7 +126,12 @@ under the License.
 						</#if>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${transaction.transactionDate?date}</fo:block>
+                                <fo:block>
+                                <#if transaction.transactionDate?? >
+                                ${transaction.transactionDate?date}
+                                </#if>
+                                
+                                </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${transaction.transactionDescription?if_exists}</fo:block>
