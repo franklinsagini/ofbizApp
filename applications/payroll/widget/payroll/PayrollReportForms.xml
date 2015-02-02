@@ -94,4 +94,26 @@ under the License.
         <field name="accountNumber" title="Account No."><display/></field>
         <field name="payMode"  title="Pay Mode" > <display/></field>
     </form>
+    
+     <form name="IndividualPayslip" type="single" target="individualPayslippdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="payrollPeriodId" title="Payroll Period" required-field="true">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="PayrollPeriod" key-field-name="payrollPeriodId">
+        			<entity-constraint name="status" operator="not-equals" value="Inactive" />
+        			<entity-order-by field-name="payrollPeriodId"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="partyId"   title="Employee" required-field="true">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+    
+    
 </forms>
