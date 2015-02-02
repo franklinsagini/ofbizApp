@@ -52,7 +52,7 @@ under the License.
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="80pt"/>
+             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="90pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
