@@ -1629,7 +1629,8 @@ public class PayrollProcess {
 	}
 
 	/***
-	 * @author charles Get the StaffPayrolElement given the payrollElementId and
+	 * @author charles 
+	 * Get the StaffPayrolElement given the payrollElementId and
 	 *         staffPayrollId
 	 * */
 	private static GenericValue getStaffPayrolElement(String payrollElementId,

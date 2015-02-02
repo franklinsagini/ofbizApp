@@ -17,7 +17,7 @@
 <#if positionList?has_content>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-            <fo:block font-size="14pt">STAFF SKILLS REPORT</fo:block>
+            <fo:block font-size="14pt">STAFF POSITIONS REPORT</fo:block>
             <#if !showSupplier>
                 <#-- <fo:block font-size="10pt">Payslip For: ${parameters.partyId} - ${payslipViewList.get(0).name?if_exists}</fo:block> -->
             </#if>
