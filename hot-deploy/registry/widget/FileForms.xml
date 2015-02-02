@@ -357,7 +357,6 @@
 <form name="FindMemberfilesForRequest" default-map-name="FindMemberfilesForRequestContext" target="regFileRequest" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
         <actions>
         	<set field="status" value="AVAILABLE"/>
-        	<set field="stageStatus" value="ACTIVE"/>
         </actions>
        <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
@@ -373,10 +372,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
-         <condition-list>
-         <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/> 
           <condition-expr field-name="status" operator="equals" value="AVAILABLE"/>
-         </condition-list>
        
         </entity-condition>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
