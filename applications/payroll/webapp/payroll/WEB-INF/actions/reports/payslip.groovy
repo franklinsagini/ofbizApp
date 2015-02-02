@@ -22,10 +22,12 @@ staffPayrollList.eachWithIndex { staffPayrollItem, index ->
 	staffPayrollId = staffPayrollItem.staffPayrollId
 }
 
-println "############### Staff Payrol ID "+staffPayrollId 
+println "############### Staff Payroll ID "+staffPayrollId 
 println "############### Party  ID "+partyId 
-println "############### Pyaroll Period  ID "+payrollPeriodId 
+println "############### Payroll Period  ID "+payrollPeriodId 
 
 staffPayrollELementList = delegator.findByAnd("StaffPayrollElements",  [staffPayrollId : staffPayrollId], null, false);
 
-context.staffPayrollELementList = staffPayrollELementList;
+	context.staffPayrollELementList = staffPayrollELementList;
+
+
