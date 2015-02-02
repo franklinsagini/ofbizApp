@@ -95,10 +95,10 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 	private static void calculateRatedScores(Delegator delegator,
 			String perfGoalsId, String perfRatingTypeId) {
 		
-		for(int i=0; i<perfGoalsMap.size(); i++)
-		{
-			if(perfGoalsId=perfGoalsMap.)
-		}
+//		for(int i=0; i<perfGoalsMap.size(); i++)
+//		{
+//			if(perfGoalsId=perfGoalsMap.)
+//		}
 		BigDecimal score = perfRatingTypeMap.get(perfRatingTypeId);
 //		totPercentage
 		
