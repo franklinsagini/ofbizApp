@@ -71,7 +71,6 @@ under the License.
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="90pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
@@ -86,9 +85,6 @@ under the License.
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Time Released</fo:block>
-                    </fo:table-cell>
-                   <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Activity</fo:block>
                     </fo:table-cell>
                     
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -181,7 +177,7 @@ under the License.
   </#if>
   
     <#else>
-        <fo:block text-align="center">No Employees Found With that ID</fo:block>
+        <fo:block text-align="center">No Member Found With that ID</fo:block>
     </#if>
 	
 </#escape>
