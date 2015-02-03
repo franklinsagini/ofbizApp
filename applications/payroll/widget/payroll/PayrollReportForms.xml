@@ -52,9 +52,13 @@ under the License.
         <field name="submitButton" title="Run" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-         <form name="listPayrollElementsReport" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="payrollElementsView"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
+        <form name="listPayrollElementsReport" type="single" target="" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+       
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <!--<actions>
             <entity-condition entity-name="PayrollElement">
             	<order-by field-name="elementCode"/>
             </entity-condition>
@@ -68,7 +72,24 @@ under the License.
         <field name="name"> <display also-hidden="false"/> </field>
         <field name="elementType"> <display also-hidden="false"/> </field>
         <field name="payslipdisplay" title="Payslip Display"> <display also-hidden="false"/> </field>   
+    -->
     </form>
+    
+    
+    <form name="listPayrollElementsByType" type="single" target="" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="elementType"   title="Code Type">
+            <drop-down>
+            	<option key="Payment" description="Earning"/>
+            	<option key="Deduction" description="Deduction"/>
+            	<option key="System Element" description="System Element"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
     <form name="listPayPointsReport" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="payPointsReport"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>        
