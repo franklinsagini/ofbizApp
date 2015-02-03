@@ -17,7 +17,7 @@
         <field name="userId" use-when="usersContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
         <field name="firstName" title="First Name"> <text size="45"></text> </field>
         <field name="lastName" title="Last Name"> <text size="45"></text> </field>
-        <field name="dob" title="DOB"><date-time/></field>
+        <field name="dob" title="DOB"><date-time type="date"/></field>
         <field name="description" title="Bio"><textarea/> </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
                 <!-- submitButton -->
@@ -41,6 +41,22 @@
                 </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+
+     <form name="CheckTrialListForm" type="multi" title="" target="deleteCheckTrial"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+        <actions>
+            <entity-condition entity-name="UsersHW"></entity-condition>
+        </actions>
+       <field name="userId"><display /></field>
+       <field name="firstName" title="First Name"> <display/> </field>
+       <field name="lastName" title="Last Name"> <display/> </field>
+       <field name="dob" title="DOB"><display/></field>
+       <field name="deleteChecked"><check/></field>
+
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
+        <field name="submitButton" title="delete selected" widget-style="smallSubmit"><submit/></field>
     </form>
     
     
