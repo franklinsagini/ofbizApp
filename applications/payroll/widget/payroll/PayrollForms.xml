@@ -798,24 +798,22 @@ under the License.
                 <parameter param-name="staffPayrollId"/>
             </hyperlink>
         </field>
-        <field name="Print Payslip" title="Print" >
+        <!-- field name="Print Payslip" title="Print"  -->
         	<!-- display-entity entity-name="Person"  key-field-name="partyId" description=" Print " >
         		
         		<sub-hyperlink description="Print" target-type="inter-app" target="http://127.0.0.1:55555/viewer/frameset?__report=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll%5CemployeePayslip.rptdesign&amp;__format=html&amp;name=${payrollperiod.name}&amp;employee_number=${employeeNumber}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll&amp;__dpi=96&amp;__parameterpage=true&amp;909056612"></sub-hyperlink>
         	</display-entity -->
-        	<hyperlink description="Print PDF" target-type="inter-app" target="http://127.0.0.1:55555/viewer/frameset?__report=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll%5CemployeePayslip.rptdesign&amp;__format=pdf&amp;name=${payrollperiod.name}&amp;employee_number=${partyId}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll&amp;__dpi=96&amp;__parameterpage=false&amp;909056612">
-        		
+        	<!-- hyperlink description="Print PDF" target-type="inter-app" target="/individualPayslippdf?payrollPeriodId=">
         	</hyperlink>
-        </field>
+        	
         
-               <field name="Print Payslip HTML" title="Print" >
-        	<!-- display-entity entity-name="Person"  key-field-name="partyId" description=" Print " >
-        		
-        		<sub-hyperlink description="Print" target-type="inter-app" target="http://127.0.0.1:55555/viewer/frameset?__report=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll%5CemployeePayslip.rptdesign&amp;__format=html&amp;name=${payrollperiod.name}&amp;employee_number=${employeeNumber}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll&amp;__dpi=96&amp;__parameterpage=true&amp;909056612"></sub-hyperlink>
-        	</display-entity -->
-        	<hyperlink description="Print HTML" target-type="inter-app" target="http://127.0.0.1:55555/viewer/frameset?__report=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll%5CemployeePayslip.rptdesign&amp;__format=html&amp;name=${payrollperiod.name}&amp;employee_number=${partyId}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A%5Cprojects%5Cvergeofbiz%5Cvergesacco%5Capplications%5Cpayroll%5Cwidget%5Cpayroll&amp;__dpi=96&amp;__parameterpage=false&amp;909056612">
-        		
-        	</hyperlink>
+        </field -->
+        
+        <field name="Print Payslip" title="Print" widget-style="buttontext">
+            <hyperlink target="individualPayslippdf" description="Print Payslip" also-hidden="false">
+                <parameter param-name="payrollPeriodId"/>
+                <parameter param-name="partyId"/>
+            </hyperlink>
         </field>
  
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
@@ -840,6 +838,12 @@ under the License.
         <field name="addpayrollelements" title="View Payroll Codes" widget-style="buttontext">
             <hyperlink target="closedstaffpayrollelements" description="View Codes" also-hidden="false">
                 <parameter param-name="staffPayrollId"/>
+            </hyperlink>
+        </field>
+        <field name="Print Payslip" title="Print" widget-style="buttontext">
+            <hyperlink target="individualPayslippdf" description="Print Payslip" also-hidden="false">
+                <parameter param-name="payrollPeriodId"/>
+                <parameter param-name="partyId"/>
             </hyperlink>
         </field>
     </form>

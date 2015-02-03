@@ -18,6 +18,8 @@ if (componentList) {
     totalDeductions = BigDecimal.ZERO
     coreCapitalSubtotal = BigDecimal.ZERO
     coreCapitalSubtotal = BigDecimal.ZERO
+    coreCapitalTotal = BigDecimal.ZERO
+    institutionalCapital = BigDecimal.ZERO
     componentMap = [];
     totalDeductionsMap = [];
     coreCapitalMap = [];
@@ -111,11 +113,53 @@ totalAssests = onBalanceSheetTotal + offBalanceSheetTotal
 totalAssestsMap = [code:"4.0.3", name:"Total Asset (4.0.1 + 4.0.2)", amount:totalAssests]
 totalDepositLiabilities = 1269705398.00 //MAKES SURE THIS VALUE IS FETCHED FROM THE BALANCE SHEET
 totalDepositLiabilitiesMap = [code:"4.0.4", name:"Total Deposits Liabilities (As per Balance Sheet)", amount:totalDepositLiabilities]
+//core capital to asset ratio
+if (coreCapitalTotal > 0) {
+  coreCapitalAssetRatio = (coreCapitalTotal/totalAssests)*100
+}
+coreCapitalAssetRatioMap = [code:"4.0.5", name:"Core Capital to Assest Ratio (1.2.2 /  4.0.3)", amount:coreCapitalAssetRatio]
+minimunCoreAssetRatio = 8 //WHERE IS THIS FROM
+minCoreCapitalAssetRatioMap = [code:"4.0.6", name:"Minimum Core Capital to Assest Ratio Requirement", amount:minimunCoreAssetRatio]
+excessDeficiencyCoreCapital = coreCapitalAssetRatio - minimunCoreAssetRatio
+excessDeficiencyCoreCapitalMap = [code:"4.0.7", name:"Excess/Deficiency (4.0.5 less 4.6)", amount:excessDeficiencyCoreCapital]
+//institutional capital to asset ratio
+if (institutionalCapital > 0) {
+  instCapitalAssetRatio = (institutionalCapital/totalAssests)*100
+}
+instCapitalAssetRatioMap = [code:"4.0.8", name:"Institutional Capital to Assests Ratio", amount:instCapitalAssetRatio]
+
+minimunInstAssetRatio = 10 //WHERE IS THIS FROM
+minimunInstAssetRatioMap = [code:"4.0.9", name:"Minimum Institutional Capital to Assest Ratio Requirement", amount:minimunInstAssetRatio]
+
+excessDeficiencyInstCapital = instCapitalAssetRatio - minimunInstAssetRatio
+excessDeficiencyInstMap = [code:"4.1.1", name:"Excess/Deficiency (4.0.8 less 4.0.9)", amount:excessDeficiencyInstCapital]
+
+
+//Core capital to deposit ratio
+if (coreCapitalTotal > 0) {
+  coreCapitalDepositRatio = (coreCapitalTotal/totalDepositLiabilities)*100
+}
+coreCapitalDepositRatioMap = [code:"4.1.2", name:"Core Capital to Deposit Ratio", amount:coreCapitalDepositRatio]
+
+minimunCoreDepositRatio = 8 //WHERE IS THIS FROM
+minimunCoreDepositRatioMap = [code:"4.1.3", name:"Minimum Core Capital to Deposit Ratio Requirement", amount:minimunCoreDepositRatio]
+
+excessDeficiencyCoreCapitalDeposit = coreCapitalDepositRatio - minimunCoreDepositRatio
+excessDeficiencyCoreCapitalDepositMap = [code:"4.1.4", name:"Excess/Deficiency (4.1.2 less 4.1.3)", amount:excessDeficiencyCoreCapitalDeposit]
 
 capitalRatioCalcList.add(onBalanceSheetMap)
 capitalRatioCalcList.add(offBalanceSheetMap)
 capitalRatioCalcList.add(totalAssestsMap)
 capitalRatioCalcList.add(totalDepositLiabilitiesMap)
+capitalRatioCalcList.add(coreCapitalAssetRatioMap)
+capitalRatioCalcList.add(minCoreCapitalAssetRatioMap)
+capitalRatioCalcList.add(excessDeficiencyCoreCapitalMap)
+capitalRatioCalcList.add(instCapitalAssetRatioMap)
+capitalRatioCalcList.add(minimunInstAssetRatioMap)
+capitalRatioCalcList.add(excessDeficiencyInstMap)
+capitalRatioCalcList.add(coreCapitalDepositRatioMap)
+capitalRatioCalcList.add(minimunCoreDepositRatioMap)
+capitalRatioCalcList.add(excessDeficiencyCoreCapitalDepositMap)
 context.capitalRatioCalcList = capitalRatioCalcList
 
 
