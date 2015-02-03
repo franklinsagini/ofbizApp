@@ -88,9 +88,9 @@ under the License.
         <#-- Loan Details -->
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="100pt"/>
                 <fo:table-column column-width="100pt"/>
                 <#-- fo:table-column column-width="75pt"/>
@@ -134,15 +134,24 @@ under the License.
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
-                                <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>Kshs.  ${element.amount?string(",##0.00")}</fo:block>
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>
-								<#if element.balance?has_content >
-								Kshs.  ${element.balance?string(",##0.00")}
+                                <fo:block text-align="right">
+                                <#if element.balance?has_content >
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -178,12 +187,12 @@ under the License.
                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>Kshs.  ${element.amount?string(",##0.00")}</fo:block>
+                                <fo:block>${element.amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
 								<#if element.balance?has_content >
-								Kshs.  ${element.balance?string(",##0.00")}
+								${element.balance?string(",##0.00")}
 								</#if>
 								
                                 </fo:block>
@@ -197,9 +206,9 @@ under the License.
             
             <#-- Table 2 -->
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="100pt"/>
                 <fo:table-column column-width="100pt"/>
                 <#-- fo:table-column column-width="75pt"/>
@@ -226,21 +235,35 @@ under the License.
                     <#-- CALCULATED -->
                     
                      <#list calculatedList as element>
+                     		<#if element.payrollElementId != "PAYE">
+                     		<#if element.payrollElementId != "NHIF">
+                     		<#if element.payrollElementId != "NSSF">
+                     		<#if element.payrollElementId != "NSSFVOL">
+                     		<#if element.payrollElementId != "PENSION">
                      		<#if element.payrollElementId != "TOTDEDUCTIONS">
                      		<#if element.payrollElementId != "NETPAY">
                                <fo:table-row>
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
-                                <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>Kshs.  ${element.amount?string(",##0.00")}</fo:block>
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>
+                                <fo:block text-align="right">
 								<#if element.balance?has_content >
-								Kshs.  ${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -249,15 +272,20 @@ under the License.
                         </fo:table-row>
                          </#if>
                         </#if>
+                        </#if>
+                        </#if>
+                        </#if>
+                        </#if>
+                        </#if>
                     </#list>
                 </fo:table-body>
             </fo:table>
             
              <#-- Deductions Table-->
          <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="100pt"/>
                 <fo:table-column column-width="100pt"/>
                 <#-- fo:table-column column-width="75pt"/>
@@ -280,21 +308,181 @@ under the License.
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
+                	
+                	<#list payeList as element>
+                               <fo:table-row>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+								<#if element.balance?has_content >
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
+								</#if>
+								
+                                </fo:block>
+                            </fo:table-cell>
+                            
+                        </fo:table-row>
+                    </#list>
+                    <#list nhifList as element>
+                               <fo:table-row>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+								<#if element.balance?has_content >
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
+								</#if>
+								
+                                </fo:block>
+                            </fo:table-cell>
+                            
+                        </fo:table-row>
+                    </#list>
+                    <#list nssfList as element>
+                               <fo:table-row>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+								<#if element.balance?has_content >
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
+								</#if>
+								
+                                </fo:block>
+                            </fo:table-cell>
+                            
+                        </fo:table-row>
+                    </#list>
+                    <#list nssfVolList as element>
+                               <fo:table-row>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+								<#if element.balance?has_content >
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
+								</#if>
+								
+                                </fo:block>
+                            </fo:table-cell>
+                            
+                        </fo:table-row>
+                    </#list>
+                    <#list pensionList as element>
+                               <fo:table-row>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+								<#if element.balance?has_content >
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
+								</#if>
+								
+                                </fo:block>
+                            </fo:table-cell>
+                            
+                        </fo:table-row>
+                    </#list>
       
                      <#list deductionsList as element>
                                <fo:table-row>
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
-                                <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>Kshs.  ${element.amount?string(",##0.00")}</fo:block>
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>
+                                <fo:block text-align="right">
 								<#if element.balance?has_content >
-								Kshs.  ${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -307,15 +495,24 @@ under the License.
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
-                                <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>Kshs.  ${element.amount?string(",##0.00")}</fo:block>
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>
+                                <fo:block text-align="right">
 								<#if element.balance?has_content >
-								Kshs.  ${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -328,9 +525,9 @@ under the License.
             
             <#-- NET PAY-->
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="100pt"/>
                 <fo:table-column column-width="100pt"/>
                 <#-- fo:table-column column-width="75pt"/>
@@ -359,15 +556,25 @@ under the License.
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             	<#assign payrollElement = delegator.findOne("PayrollElement", Static["org.ofbiz.base.util.UtilMisc"].toMap("payrollElementId", element.payrollElementId), true)/>
-                                <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                
+                                <#if element.isbold=='Y'>
+                                <fo:block font-weight = "bold">${payrollElement.name?if_exists}                                
+                                </fo:block>
+                                <#else>
+                                 <fo:block>${payrollElement.name?if_exists}</fo:block>
+                                </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>Kshs.  ${element.amount?string(",##0.00")}</fo:block>
+                                <fo:block text-align="right">${element.amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>
+                                <fo:block text-align="right">
 								<#if element.balance?has_content >
-								Kshs.  ${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>

@@ -191,5 +191,15 @@
         <create-value value-field="newEntity"/>
     </simple-method>
 
+    <simple-method method-name="deleteCheckTrial" short-description="Remove an estate">
+        <set field="userId" from-field="parameters.userId"/>
+        <entity-one entity-name="UsersHW" value-field="lookedUpValue"/>
+
+<if-compare field="parameters.deleteChecked" value="Y" operator="equals"> 
+
+<remove-value value-field="lookedUpValue"/>
+       </if-compare> 
+    </simple-method>
+
 
 </simple-methods>

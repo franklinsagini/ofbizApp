@@ -51,6 +51,32 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="CheckTrialScreen">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Hello World Users"/>
+                 <set field="headerItem" value="tryCheck"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createUser"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="UsersHW" value-field="usersContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="hElloCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Hello World: Check Box Trial">
+                                    <include-form name="CheckTrialListForm" location="component://hello/widget/hElloForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     
     
