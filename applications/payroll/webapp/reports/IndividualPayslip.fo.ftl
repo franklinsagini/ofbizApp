@@ -146,8 +146,12 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
-								<#if element.balance?has_content >
+                                <#if element.balance?has_content >
+								<#if element.balance == 0 >				
+													
+								<#else>
 									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -255,7 +259,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -319,7 +327,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -345,7 +357,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -371,7 +387,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -397,7 +417,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -423,7 +447,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -450,7 +478,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -476,7 +508,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
@@ -534,7 +570,11 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								<#if element.balance?has_content >
-								${element.balance?string(",##0.00")}
+								<#if element.balance == 0 >				
+													
+								<#else>
+									${element.balance?string(",##0.00")}
+								</#if>
 								</#if>
 								
                                 </fo:block>
