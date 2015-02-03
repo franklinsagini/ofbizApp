@@ -10,6 +10,14 @@ public class StatementAccountTransaction {
 	private BigDecimal amount;
 	private String accountNo;
 	private String accountName;
+	private BigDecimal bdBalanceAmount;
+	private String debitCredit;
+	public String getDebitCredit() {
+		return debitCredit;
+	}
+	public void setDebitCredit(String debitCredit) {
+		this.debitCredit = debitCredit;
+	}
 	public Long getMemberAccountId() {
 		return memberAccountId;
 	}
@@ -45,5 +53,11 @@ public class StatementAccountTransaction {
 	}
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
+	}
+	public BigDecimal getBdBalanceAmount() {
+		return bdBalanceAmount;
+	}
+	public void setBdBalanceAmount(BigDecimal bdBalanceAmount) {
+		this.bdBalanceAmount = bdBalanceAmount;
 	}
 }
