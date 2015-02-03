@@ -53,7 +53,31 @@ earningsList = delegator.findByAnd("PayrollElementAndStaffPayrollElement",  [sta
 	calculatedList = delegator.findByAnd("PayrollElementAndStaffPayrollElement",  [staffPayrollId : staffPayrollId, elementType : 'System Element'], ['elementCode'], false);
 	
 		context.calculatedList = calculatedList;
+
+//PAYE
+		payeList = delegator.findByAnd("PayrollElementAndStaffPayrollElement",  [staffPayrollId : staffPayrollId, payrollElementId : 'PAYE'], ['elementCode'], false);
 	
+		context.payeList = payeList;
+
+//NHIF
+		nhifList = delegator.findByAnd("PayrollElementAndStaffPayrollElement",  [staffPayrollId : staffPayrollId, payrollElementId : 'NHIF'], ['elementCode'], false);
+	
+		context.nhifList = nhifList;
+		
+//NSSF
+		nssfList = delegator.findByAnd("PayrollElementAndStaffPayrollElement",  [staffPayrollId : staffPayrollId, payrollElementId : 'NSSF'], ['elementCode'], false);
+	
+		context.nssfList = nssfList;
+		
+//NSSF VOL
+		nssfVolList = delegator.findByAnd("PayrollElementAndStaffPayrollElement",  [staffPayrollId : staffPayrollId, payrollElementId : 'NSSFVOL'], ['elementCode'], false);
+	
+		context.nssfVolList = nssfVolList;
+		
+//PENSION
+		pensionList = delegator.findByAnd("PayrollElementAndStaffPayrollElement",  [staffPayrollId : staffPayrollId, payrollElementId : 'PENSION'], ['elementCode'], false);
+	
+		context.pensionList = pensionList;
 
 //Deductions
 		deductionsList = delegator.findByAnd("PayrollElementAndStaffPayrollElement",  [staffPayrollId : staffPayrollId, elementType : 'Deduction'], ['elementCode'], false);
