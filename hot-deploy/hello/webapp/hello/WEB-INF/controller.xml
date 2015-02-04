@@ -32,6 +32,11 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="usersView"/>
     </request-map>
+
+    <request-map uri="tryCheck">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="tryCheck"/>
+    </request-map>
     
     <request-map uri="estatesURL">
     	<security https="true" auth="true"/>
@@ -111,6 +116,17 @@
         <response name="success" type="view" value="userestate"></response>
         <response name="error" type="view" value="userestate" />
     </request-map>
+
+
+
+
+    <request-map uri="deleteCheckTrial">
+        <security https="true" auth="true" />
+        <event type="service-multi" invoke="deleteCheckTrial" />
+        <response name="success" type="view" value="tryCheck"></response>
+    </request-map>
+
+
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://hello/widget/hElloScreens.xml#main"/>
     
@@ -137,4 +153,5 @@
       <view-map name="estate" type="screen" page="component://hello/widget/hElloScreens.xml#estate"/>
       <view-map name="userestate" type="screen" page="component://hello/widget/hElloScreens.xml#userestate"/>
       <view-map name="finduserestates" type="screen" page="component://hello/widget/hElloScreens.xml#finduserestates"/>
+      <view-map name="tryCheck" type="screen" page="component://hello/widget/hElloScreens.xml#CheckTrialScreen"/>
 </site-conf>

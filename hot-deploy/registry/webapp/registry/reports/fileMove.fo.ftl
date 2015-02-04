@@ -24,13 +24,10 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        FILE MOVEMENT REPORT
+        FILE MOVEMENT REPORT FOR [${member.firstName} ${member.lastName}'s] FILE
     </fo:block>
     <fo:block><fo:leader/></fo:block>
-    <#-- Employee Details -->
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
-        File Owner: ${member.firstName} ${member.lastName}
-    </fo:block>
+   
 
 
 <#if movementActivityList?has_content>
@@ -43,7 +40,7 @@ under the License.
 	 <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">${activity.activityCode}</fo:block>
+                    <fo:block font-weight="bold">Activity : ${activity.activityCode}</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
                     <fo:block></fo:block>
@@ -51,7 +48,7 @@ under the License.
             </fo:list-item>
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">${activity.activityDuration}</fo:block>
+                    <fo:block font-weight="bold">Activity Duration (In Days) : ${activity.activityDuration}</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
                     <fo:block></fo:block>
@@ -105,25 +102,43 @@ under the License.
 
                     <#if movement.releasedBy?has_content>
                         <#-- assign releasedBy = delegator.findOne("Person", {"partyId" : movement.releasedBy}, false)/ -->
-                        <#assign releasedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedBy), true)/>
+                        <#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedBy), true))>
+                        	<#assign releasedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedBy), true) />
+                        </#if>
                     </#if>
 					
                     <#if movement.carriedBy?has_content>
                         <#-- assign carriedBy = delegator.findOne("Person", {"partyId" : movement.carriedBy}, false)/ -->
-                        <#assign carriedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.carriedBy), true)/>
+                        
+                    	 <#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.carriedBy), true))>
+                        	<#assign carriedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.carriedBy), true)/>
+                        </#if>
                     </#if>
                     <#if movement.releasedTo?has_content>
                         <#-- assign releasedTo = delegator.findOne("Person", {"partyId" : movement.releasedTo}, false)/ -->
-                        <#assign releasedTo = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedTo), true)/>
-                    </#if>
+                        
+                   
+                  		<#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedTo), true))>
+                        	<#assign releasedTo = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedTo), true)/>
+                        </#if>
+                   </#if>
                      <#if movement.receivedBy?has_content>
                         <#-- assign receivedBy = delegator.findOne("Person", {"partyId" : movement.receivedBy}, false)/ -->
-                        <#assign receivedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.receivedBy), true)/>
+                        
+                        
+                        
+                        <#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.receivedBy), true))>
+                        	<#assign receivedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.receivedBy), true)/>
+                        </#if>
                     </#if>
                      <#if movement.activityCode?has_content>
                         <#-- assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : movement.activityCode}, false)/ -->
-                        <#assign reason = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.activityCode), true)/>
-                       </#if>
+                        
+                      
+                     	 <#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.activityCode), true))>
+                        	<#assign reason = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.activityCode), true)/>
+                        </#if> 
+                      </#if>
 
                      
 
