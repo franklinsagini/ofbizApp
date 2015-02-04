@@ -28,11 +28,14 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.loans.LoanServices;
 import org.ofbiz.service.GenericDispatcherFactory;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+import restcomponent.model.LoanAccount;
+import restcomponent.model.LoanAccountTransaction;
 import restcomponent.model.StatementAccount;
 import restcomponent.model.StatementAccountTransaction;
 
@@ -149,51 +152,7 @@ public class MemberStatement {
 
 			listStatmentAccount.add(statementAccount);
 		}
-
-		// Loan Products
-		EntityConditionList<EntityExpr> loansConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("partyId",
-								EntityOperator.EQUALS, partyId)),
-						EntityOperator.AND);
-		List<GenericValue> loanApplicationsELI = null;
-		//List<String> orderByList = new ArrayList<String>();
-		//orderByList.add("createdStamp DESC");
-		try {
-			loanApplicationsELI = delegator.findList(
-					"LoanApplication", loansConditions, null,
-					null, null, false);
-
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
 		
-		for (GenericValue genericValue : loanApplicationsELI) {
-			
-			statementAccount = new StatementAccount();
-			Long memberAccountId = genericValue.getLong("loanApplicationId");
-			statementAccount.setMemberAccountId(memberAccountId);
-			
-			GenericValue loanProduct = null;
-
-			try {
-				loanProduct = delegator.findOne("LoanProduct",
-						UtilMisc.toMap("loanProductId", genericValue.getLong("loanProductId")),
-						false);
-			} catch (GenericEntityException e) {
-				e.printStackTrace();
-			}
-			
-			statementAccount.setProductName(loanProduct.getString("name"));
-			statementAccount
-					.setAccountCode("");
-			statementAccount.setAccountName("");
-			statementAccount.setBdAvailableBalance(genericValue.getBigDecimal("loanAmt"));
-			statementAccount.setBdBookBalance(null);
-			statementAccount.setIsLoan("Y");
-			listStatmentAccount.add(statementAccount);
-
-		}
 
 		Gson gson = new Gson();
 		String json = gson.toJson(listStatmentAccount);
@@ -274,35 +233,45 @@ public class MemberStatement {
 			} catch (GenericEntityException e2) {
 				e2.printStackTrace();
 			}
-
+			BigDecimal bdCurrentBalanceAmount = BigDecimal.ZERO;
 			for (GenericValue genericValueOpening : memberAccountDetailsELI) {
 				statementAccountTransaction = new StatementAccountTransaction();
 				statementAccountTransaction.setMemberAccountId(memberAccountId);
-				//statementAccountTransaction.setTransactionDate(genericValueOpening.getTimestamp("openingBalanceDate"));
+				// statementAccountTransaction.setTransactionDate(genericValueOpening.getTimestamp("openingBalanceDate"));
 				statementAccountTransaction.setDescription("Opening Balance");
 				// transaction.setTransactionType();
-				statementAccountTransaction.setAmount(genericValueOpening.getBigDecimal("savingsOpeningBalance"));
+				statementAccountTransaction.setAmount(genericValueOpening
+						.getBigDecimal("savingsOpeningBalance"));
+				statementAccountTransaction.setDebitCredit("C");
 				// transaction.setTransactionAmount();
 
 				// genericValue.getT
-				Timestamp dateCreated = new Timestamp(genericValueOpening.getTimestamp("openingBalanceDate").getTime());
-				 DateTime dateTimeCreated = new	 DateTime(dateCreated.getTime());
+				Timestamp dateCreated = new Timestamp(genericValueOpening
+						.getTimestamp("openingBalanceDate").getTime());
+				DateTime dateTimeCreated = new DateTime(dateCreated.getTime());
 				// transaction.setCreatedStamp(dateTimeCreated.toString("dd/MM/yyyy"));
-				
-				statementAccountTransaction.setTransactionDate(dateTimeCreated.toString("dd/MM/yyyy"));
+
+				statementAccountTransaction.setTransactionDate(dateTimeCreated
+						.toString("dd/MM/yyyy"));
 
 				statementAccountTransaction.setAccountName(memberAccount
 						.getString("accountName"));
 				statementAccountTransaction.setAccountNo(memberAccount
 						.getString("accountNo"));
+
+				bdCurrentBalanceAmount = bdCurrentBalanceAmount
+						.add(genericValueOpening
+								.getBigDecimal("savingsOpeningBalance"));
+				statementAccountTransaction
+						.setBdBalanceAmount(bdCurrentBalanceAmount);
 				listStatmentAccountTransaction.add(statementAccountTransaction);
 			}
 
 			for (GenericValue genericValue : accountTransactionELI) {
 				statementAccountTransaction = new StatementAccountTransaction();
 				statementAccountTransaction.setMemberAccountId(memberAccountId);
-				//statementAccountTransaction.setTransactionDate(genericValue
-				//		.getTimestamp("createdStamp"));
+				// statementAccountTransaction.setTransactionDate(genericValue
+				// .getTimestamp("createdStamp"));
 				statementAccountTransaction.setDescription(genericValue
 						.getString("transactionType"));
 				// transaction.setTransactionType();
@@ -311,15 +280,31 @@ public class MemberStatement {
 				// transaction.setTransactionAmount();
 
 				// genericValue.getT
-				 Timestamp dateCreated = new Timestamp(genericValue.getTimestamp("createdStamp").getTime());
-				 DateTime dateTimeCreated = new
-				 DateTime(dateCreated.getTime());
-				 statementAccountTransaction.setTransactionDate(dateTimeCreated.toString("dd/MM/yyyy"));
+				Timestamp dateCreated = new Timestamp(genericValue
+						.getTimestamp("createdStamp").getTime());
+				DateTime dateTimeCreated = new DateTime(dateCreated.getTime());
+				statementAccountTransaction.setTransactionDate(dateTimeCreated
+						.toString("dd/MM/yyyy"));
 
 				statementAccountTransaction.setAccountName(memberAccount
 						.getString("accountName"));
 				statementAccountTransaction.setAccountNo(memberAccount
 						.getString("accountNo"));
+
+				if (genericValue.getString("increaseDecrease").equals("I")) {
+					bdCurrentBalanceAmount = bdCurrentBalanceAmount
+							.add(genericValue
+									.getBigDecimal("transactionAmount"));
+					statementAccountTransaction.setDebitCredit("C");
+				} else {
+					bdCurrentBalanceAmount = bdCurrentBalanceAmount
+							.subtract(genericValue
+									.getBigDecimal("transactionAmount"));
+					statementAccountTransaction.setDebitCredit("D");
+				}
+				statementAccountTransaction
+						.setBdBalanceAmount(bdCurrentBalanceAmount);
+
 				listStatmentAccountTransaction.add(statementAccountTransaction);
 			}
 		}
@@ -327,11 +312,337 @@ public class MemberStatement {
 		// Loan - get transactions to this loan
 		else {
 			// Add Loan Transactions
-			
+
 		}
 
 		Gson gson = new Gson();
 		String json = gson.toJson(listStatmentAccountTransaction);
+
+		return Response.ok(json).type("application/json").build();
+	}
+
+	// Add Loans
+	@GET
+	@Produces("application/json")
+	@Path("/loansbalances/{user}")
+	public Response getLoanBalances(@PathParam("user") String user) {
+		// BigDecimal bdBalance = null;
+
+		List<LoanAccount> listLoanAccount = new ArrayList<LoanAccount>();
+		LoanAccount loanAccount;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// Give User Login get the :-
+		GenericValue userLogin = null;
+		try {
+			userLogin = delegator.findOne("UserLogin",
+					UtilMisc.toMap("userLoginId", user), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (userLogin == null)
+			return null;
+		
+		String partyIdStr = userLogin.getString("partyId");
+
+		if ((partyIdStr == null) || (partyIdStr.equals(""))) {
+			return null;
+		}
+		partyIdStr = partyIdStr.replaceAll(",", "");
+		Long partyId = Long.valueOf(partyIdStr);
+
+		// Loan Products
+		EntityConditionList<EntityExpr> loansConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId)),
+						EntityOperator.AND);
+		List<GenericValue> loanApplicationsELI = null;
+		// List<String> orderByList = new ArrayList<String>();
+		// orderByList.add("createdStamp DESC");
+		try {
+			loanApplicationsELI = delegator.findList("LoanApplication",
+					loansConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue genericValue : loanApplicationsELI) {
+
+			loanAccount = new LoanAccount();
+			Long loanApplicationId = genericValue.getLong("loanApplicationId");
+			loanAccount.setLoanApplicationId(loanApplicationId);
+			loanAccount.setLoanNo(genericValue.getString("loanNo"));
+
+			GenericValue loanProduct = null;
+
+			try {
+				loanProduct = delegator.findOne(
+						"LoanProduct",
+						UtilMisc.toMap("loanProductId",
+								genericValue.getLong("loanProductId")), false);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			loanAccount.setLoanType(loanProduct.getString("name"));
+
+			if (genericValue.getTimestamp("disbursementDate") != null){
+			Timestamp dateCreated = new Timestamp(genericValue.getTimestamp(
+					"disbursementDate").getTime());
+			DateTime dateTimeCreated = new DateTime(dateCreated.getTime());
+			// transaction.setCreatedStamp(dateTimeCreated.toString("dd/MM/yyyy"));
+
+			loanAccount
+					.setDateDisbursed(dateTimeCreated.toString("dd/MM/yyyy"));
+			} 
+			BigDecimal bdLoanAmt = genericValue.getBigDecimal("loanAmt");
+			loanAccount.setLoanAmt(bdLoanAmt);
+
+			BigDecimal bdBalance = bdLoanAmt.subtract(LoanServices
+					.getLoansRepaidByLoanApplicationId(loanApplicationId));
+			loanAccount.setLoanBalance(bdBalance);
+
+			listLoanAccount.add(loanAccount);
+
+		}
+
+		Gson gson = new Gson();
+		String json = gson.toJson(listLoanAccount);
+
+		return Response.ok(json).type("application/json").build();
+	}
+
+	// Add Loan Transactions
+
+	@GET
+	@Produces("application/json")
+	@Path("/loanstransactions/{loanApplicationId}")
+	public Response getLoanBalances(
+			@PathParam("loanApplicationId") Long loanApplicationId) {
+		// BigDecimal bdBalance = null;
+
+		List<LoanAccountTransaction> listLoanAccountTransaction = new ArrayList<LoanAccountTransaction>();
+		LoanAccountTransaction loanAccountTransaction;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// Give User Login get the :-
+		GenericValue loanApplication = null;
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		BigDecimal bdCurrentLoanBalance = loanApplication
+				.getBigDecimal("loanAmt");
+		//Add Disbursement
+		loanAccountTransaction = new LoanAccountTransaction();
+
+		Timestamp dateCreated = new Timestamp(loanApplication.getTimestamp(
+				"disbursementDate").getTime());
+		DateTime dateTimeCreated = new DateTime(dateCreated.getTime());
+		// transaction.setCreatedStamp(dateTimeCreated.toString("dd/MM/yyyy"));
+
+		loanAccountTransaction.setTransactionDate(dateTimeCreated
+				.toString("dd/MM/yyyy"));
+		loanAccountTransaction.setDescription("Loan Disbursed");
+		loanAccountTransaction.setDebitCredit("C");
+
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		//BigDecimal bdOutstandingBalance = loanApplication
+		//		.getBigDecimal("outstandingBalance");
+
+		BigDecimal dbAmount = bdLoanAmt;
+		loanAccountTransaction.setDbAmount(dbAmount);
+
+		loanAccountTransaction.setBdBalanceAmount(bdLoanAmt);
+		bdCurrentLoanBalance = dbAmount;
+		listLoanAccountTransaction.add(loanAccountTransaction);
+
+		// Add opening repayment
+		
+		
+		
+		
+		if (loanApplication.getBigDecimal("outstandingBalance") != null) {
+			// Add opening repayment balance
+			loanAccountTransaction = new LoanAccountTransaction();
+
+			dateCreated = new Timestamp(loanApplication.getTimestamp(
+					"createdStamp").getTime());
+			dateTimeCreated = new DateTime(dateCreated.getTime());
+			// transaction.setCreatedStamp(dateTimeCreated.toString("dd/MM/yyyy"));
+
+			loanAccountTransaction.setTransactionDate(dateTimeCreated
+					.toString("dd/MM/yyyy"));
+			loanAccountTransaction.setDescription("Total Repaid at Opening");
+			loanAccountTransaction.setDebitCredit("D");
+
+			bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+			BigDecimal bdOutstandingBalance = loanApplication
+					.getBigDecimal("outstandingBalance");
+
+			dbAmount = bdLoanAmt.subtract(bdOutstandingBalance);
+			loanAccountTransaction.setDbAmount(dbAmount);
+
+			loanAccountTransaction.setBdBalanceAmount(bdOutstandingBalance);
+			bdCurrentLoanBalance = bdOutstandingBalance;
+			listLoanAccountTransaction.add(loanAccountTransaction);
+
+		}
+		// Add Interest and Insurance Charges
+		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId)), EntityOperator.AND);
+		List<GenericValue> loanExpectationsELI = null;
+		List<String> orderByList = new ArrayList<String>();
+		orderByList.add("createdStamp DESC");
+		try {
+			loanExpectationsELI = delegator.findList("LoanExpectation",
+					loanExpectationConditions, null, orderByList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanExpectation : loanExpectationsELI) {
+
+			String repaymentName = loanExpectation.getString("repaymentName");
+			String description = "";
+			if ((repaymentName.equals("INTEREST"))
+					|| (repaymentName.equals("INSURANCE"))) {
+				// Add Interest or Insurance
+
+				if (repaymentName.equals("INTEREST")) {
+					description = "Interest Charged";
+				} else if (repaymentName.equals("INSURANCE")) {
+					description = "Insurance Charged";
+				}
+
+				loanAccountTransaction = new LoanAccountTransaction();
+
+				dateCreated = new Timestamp(loanExpectation
+						.getTimestamp("dateAccrued").getTime());
+				dateTimeCreated = new DateTime(dateCreated.getTime());
+				loanAccountTransaction.setTransactionDate(dateTimeCreated
+						.toString("dd/MM/yyyy"));
+
+				loanAccountTransaction.setDescription(description);
+				loanAccountTransaction.setDebitCredit("C");
+				loanAccountTransaction.setDbAmount(loanExpectation
+						.getBigDecimal("amountAccrued"));
+
+				bdCurrentLoanBalance = bdCurrentLoanBalance.add(loanExpectation
+						.getBigDecimal("amountAccrued"));
+				loanAccountTransaction.setBdBalanceAmount(bdCurrentLoanBalance);
+				listLoanAccountTransaction.add(loanAccountTransaction);
+			}
+
+		}
+
+		// Add Loan Repayments
+		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId)), EntityOperator.AND);
+
+		List<GenericValue> loanRepaymentsELI = null;
+		List<String> orderByRepaymentList = new ArrayList<String>();
+		orderByList.add("createdStamp DESC");
+		try {
+			loanRepaymentsELI = delegator.findList("LoanRepayment",
+					loanRepaymentConditions, null, orderByRepaymentList, null,
+					false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanRepayment : loanRepaymentsELI) {
+
+			// Add Insurance if Insurance Amount is greater than ZERO
+
+			BigDecimal bdInsuranceAmount = loanRepayment
+					.getBigDecimal("insuranceAmount");
+			if ((bdInsuranceAmount != null)
+					&& (bdInsuranceAmount.compareTo(BigDecimal.ZERO) == 1)) {
+				// Add Insurance
+				loanAccountTransaction = new LoanAccountTransaction();
+				dateCreated = new Timestamp(loanRepayment
+						.getTimestamp("createdStamp").getTime());
+				dateTimeCreated = new DateTime(dateCreated.getTime());
+				loanAccountTransaction.setTransactionDate(dateTimeCreated
+						.toString("dd/MM/yyyy"));
+
+				loanAccountTransaction.setDebitCredit("D");
+				loanAccountTransaction.setDbAmount(bdInsuranceAmount);
+
+				loanAccountTransaction.setDescription("Insurance Paid");
+
+				bdCurrentLoanBalance = bdCurrentLoanBalance
+						.subtract(bdInsuranceAmount);
+				loanAccountTransaction.setBdBalanceAmount(bdCurrentLoanBalance);
+
+				listLoanAccountTransaction.add(loanAccountTransaction);
+			}
+
+			// Add Interest is Interest Amount is greater than ZERO
+			BigDecimal interestAmount = loanRepayment
+					.getBigDecimal("interestAmount");
+			if ((interestAmount != null)
+					&& (interestAmount.compareTo(BigDecimal.ZERO) == 1)) {
+				// Add Insurance
+				loanAccountTransaction = new LoanAccountTransaction();
+				dateCreated = new Timestamp(loanRepayment
+						.getTimestamp("createdStamp").getTime());
+				dateTimeCreated = new DateTime(dateCreated.getTime());
+				loanAccountTransaction.setTransactionDate(dateTimeCreated
+						.toString("dd/MM/yyyy"));
+
+				loanAccountTransaction.setDebitCredit("D");
+				loanAccountTransaction.setDbAmount(interestAmount);
+
+				loanAccountTransaction.setDescription("Interest Paid");
+
+				bdCurrentLoanBalance = bdCurrentLoanBalance
+						.subtract(interestAmount);
+				loanAccountTransaction.setBdBalanceAmount(bdCurrentLoanBalance);
+				listLoanAccountTransaction.add(loanAccountTransaction);
+			}
+			// Add Principal if Principal Amount Greater than ZERO
+
+			BigDecimal principalAmount = loanRepayment
+					.getBigDecimal("principalAmount");
+			if ((principalAmount != null)
+					&& (principalAmount.compareTo(BigDecimal.ZERO) == 1)) {
+				// Add Insurance
+				loanAccountTransaction = new LoanAccountTransaction();
+				dateCreated = new Timestamp(loanRepayment
+						.getTimestamp("createdStamp").getTime());
+				dateTimeCreated = new DateTime(dateCreated.getTime());
+				loanAccountTransaction.setTransactionDate(dateTimeCreated
+						.toString("dd/MM/yyyy"));
+
+				loanAccountTransaction.setDebitCredit("D");
+				loanAccountTransaction.setDbAmount(principalAmount);
+
+				loanAccountTransaction.setDescription("Principal Paid");
+				bdCurrentLoanBalance = bdCurrentLoanBalance
+						.subtract(principalAmount);
+
+				loanAccountTransaction.setBdBalanceAmount(bdCurrentLoanBalance);
+
+				listLoanAccountTransaction.add(loanAccountTransaction);
+			}
+
+		}
+
+		Gson gson = new Gson();
+		String json = gson.toJson(listLoanAccountTransaction);
 
 		return Response.ok(json).type("application/json").build();
 	}

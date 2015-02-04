@@ -77,15 +77,10 @@
 	<form name="EditFilesForm" type="single" target="creatememberFiles"	focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="FilesContext">
 		 <!-- <field name="partyId"><lookup target-form-name="LookupActiveMember"/></field> -->
 		 <field name="partyId" title="Select Member"><lookup target-form-name="LookupActiveMember"/></field>
-		  <field name="isAuthorized" title="Require Authorization?" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
-            <drop-down allow-empty="true" >
-                <option key="Y" description="Yes"/>
-                <option key="N" description="No"/>
-            </drop-down>
-        </field>
+		 
 		<!-- submitButton -->
 	<!-- 	<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="button"><submit button-type="text-link" /></field> -->
-		 <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+		 <field name="submitButton" title="create file" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	
 	 <form name="FindMemberfilesToAddVolumeAndDoc" default-map-name="FilesContext" target="editfiles" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
@@ -753,6 +748,7 @@
 		 <field name="status"><hidden/></field>
 		 <field name="currentPossesser"><hidden/></field>
 		 
+		 
        <field name="fileoverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
 				<parameter param-name="partyId" />
@@ -1114,7 +1110,7 @@
       	<actions>
             <entity-condition entity-name="RegistryFileActions">
                 <condition-expr field-name="partyId" from-field="partyId"/>
-                <order-by field-name="actionId"/>
+                <order-by field-name="-actionDate"/>
             </entity-condition>
         </actions>
          <field name="actionId"><hidden/></field>
@@ -1196,7 +1192,7 @@
 	  <field name="creationDate"><display/></field>
     </form>
     
-    <!-- ================================================FILE REQUEST========================================================= -->
+    <!-- ================================================ FILE REQUEST ========================================================= -->
     
      <form name="requestFileForm" type="single" target="requestfiles"
 		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
@@ -1215,7 +1211,7 @@
 		 <field name="submitButton" title="Request" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	
-	  <!-- ================================================FILE AUTHORIZATION========================================================= -->
+	  <!-- ================================================ FILE AUTHORIZATION ========================================================= -->
     
      <form name="authorizeFileForm" type="single" target=""
 		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
@@ -1232,7 +1228,7 @@
 		
 	</form>
 	
-	 <!-- ================================================FILE ISSUE========================================================= -->
+	 <!-- ================================================ FILE ISSUE ========================================================= -->
     
      <form name="issueFileForm" type="single" target="issuefiles"
 		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
