@@ -110,7 +110,7 @@ under the License.
                     </#if>
                     <#if movement.releasedTo?has_content>
                         <#-- <#assign releasedTo = delegator.findOne("Person", {"partyId" : movement.releasedTo}, false)/>		 -->
-                        <#assign releasedTo = delegator.findOne("Person", {"partyId" : movement.carriedBy}, false)/>
+                        <#assign releasedTo = delegator.findOne("Person", {"partyId" : movement.releasedTo}, false)/>
                    </#if>
                      <#if movement.receivedBy?has_content>
                         <#assign receivedBy = delegator.findOne("Person", {"partyId" : movement.receivedBy}, false)/>
