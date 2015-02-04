@@ -95,49 +95,35 @@ under the License.
             </fo:table-header>
 			
             <fo:table-body>
-            
+             
             
 					<#list activity.listMovements as movement>
                   
 
                     <#if movement.releasedBy?has_content>
-                        <#-- assign releasedBy = delegator.findOne("Person", {"partyId" : movement.releasedBy}, false)/ -->
-                        <#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedBy), true))>
-                        	<#assign releasedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedBy), true) />
-                        </#if>
+                        <#assign releasedBy = delegator.findOne("Person", {"partyId" : movement.releasedBy}, false)/>
+                        
                     </#if>
 					
                     <#if movement.carriedBy?has_content>
-                        <#-- assign carriedBy = delegator.findOne("Person", {"partyId" : movement.carriedBy}, false)/ -->
-                        
-                    	 <#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.carriedBy), true))>
-                        	<#assign carriedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.carriedBy), true)/>
-                        </#if>
+                        <#assign carriedBy = delegator.findOne("Person", {"partyId" : movement.carriedBy}, false)/>
                     </#if>
                     <#if movement.releasedTo?has_content>
-                        <#-- assign releasedTo = delegator.findOne("Person", {"partyId" : movement.releasedTo}, false)/ -->
-                        
-                   
-                  		<#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedTo), true))>
-                        	<#assign releasedTo = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.releasedTo), true)/>
-                        </#if>
+                        <#-- <#assign releasedTo = delegator.findOne("Person", {"partyId" : movement.releasedTo}, false)/>		 -->
+                        <#assign releasedTo = delegator.findOne("Person", {"partyId" : movement.carriedBy}, false)/>
                    </#if>
                      <#if movement.receivedBy?has_content>
-                        <#-- assign receivedBy = delegator.findOne("Person", {"partyId" : movement.receivedBy}, false)/ -->
+                        <#assign receivedBy = delegator.findOne("Person", {"partyId" : movement.receivedBy}, false)/>
                         
                         
                         
-                        <#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.receivedBy), true))>
-                        	<#assign receivedBy = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.receivedBy), true)/>
-                        </#if>
+                       
                     </#if>
                      <#if movement.activityCode?has_content>
-                        <#-- assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : movement.activityCode}, false)/ -->
+                        <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : movement.activityCode}, false)/>
                         
                       
-                     	 <#if (delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.activityCode), true))>
-                        	<#assign reason = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", movement.activityCode), true)/>
-                        </#if> 
+                     	
                       </#if>
 
                      
@@ -152,11 +138,19 @@ under the License.
                             </#if>
                         </fo:table-cell>
 						
-						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+<#--                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if releasedTo?has_content>
                                 <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>${movement.releasedTo?if_exists}</fo:block>
+                                <fo:block>REGISTRY</fo:block>
+                            </#if>
+                        </fo:table-cell> -->
+						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if movement.releasedTo?if_exists == "REGISTRY">
+                             <fo:block>${movement.releasedTo?if_exists}</fo:block>
+                               
+                            <#else>
+                                <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
                             </#if>
                         </fo:table-cell>
 						

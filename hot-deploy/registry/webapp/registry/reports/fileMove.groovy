@@ -9,6 +9,7 @@ lpartyId = partyId.toLong();
 
 def movementActivityList = []
 member = delegator.findOne("Member", [partyId : lpartyId], false);
+System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMEMBER "+ member)
 context.member = member;
 
 
@@ -35,6 +36,7 @@ activityList = delegator.findByAnd("fileMovementActivityView", [partyId : partyI
  
  activityList.eachWithIndex { activityItem, index ->
  activities = delegator.findByAnd("RegistryFileMovement", [partyId : partyId, activityCode : activityItem.activityCode], null, false);
+
  duration = delegator.findByAnd("RegistryFileActivity", [activityId : activityItem.activityCode], null, false);
  
  activity = new MovementActivity()
@@ -54,11 +56,13 @@ activities.eachWithIndex { movementItem, indexMovement ->
 	 movement.timeIn = movementItem.timeIn
 	 movement.timeOut = movementItem.timeOut
 	 activity.listMovements.add(movement)
+	 System.out.println("RELEASEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD TO " + movement.releasedTo)
 	 
  }
  
  
  movementActivityList.add(activity)
+  
  
  }
  context.movementActivityList = movementActivityList;
