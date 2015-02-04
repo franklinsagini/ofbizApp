@@ -82,6 +82,43 @@ under the License.
       <prim-key field="reportId"/>
     </entity>
 
+    <entity entity-name="DepositReturnsRanges"
+            package-name="org.ofbiz.accounting.reports"
+            title="Deposit Return Ranges">
+      <field name="rangesId" type="id-ne"></field>
+      <field name="code" type="short-varchar"></field> <!-- used to record things like the vendor's invoice number -->
+      <field name="minRange" type="currency-amount"></field>
+      <field name="maxRange" type="currency-amount"></field>
+      <prim-key field="rangesId"/>
+    </entity>
+
+    <entity entity-name="DepositType"
+            package-name="org.ofbiz.accounting.reports"
+            title="Deposit Type">
+      <field name="depositTypeId" type="id-ne"></field>
+      <field name="name" type="description"></field>
+      <prim-key field="depositTypeId"/>
+    </entity>
+
+    <entity entity-name="StatementDepositReturns"
+            package-name="org.ofbiz.accounting.reports"
+            title="statement of deposit returns report entity">
+      <field name="depositReturnsId" type="id-ne"></field>
+      <field name="rangesId" type="id-ne"></field>
+      <field name="depositTypeId" type="id-ne"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="noOfAccounts" type="id-ne"></field>
+      <prim-key field="depositReturnsId"/>
+      <relation type="one" fk-name="RPT_RNG" rel-entity-name="DepositReturnsRanges">
+        <key-map field-name="rangesId"/>
+      </relation>
+      <relation type="one" fk-name="DEP_RPT_TYP" rel-entity-name="DepositType">
+        <key-map field-name="depositTypeId"/>
+      </relation>
+    </entity>
+
+
+
 
     <entity entity-name="ImprestType"
             package-name="org.ofbiz.accounting.imprest"
