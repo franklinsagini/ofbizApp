@@ -25,5 +25,5 @@ expr = exprBldr.AND() {
 EntityFindOptions findOptions = new EntityFindOptions();
 findOptions.setMaxRows(100);
 leaveBalancelist = [];
-leaveBalances = delegator.findList("LeavesBalanceView", expr, null, null, findOptions, false);
+leaveBalances = delegator.findList("LeavesBalanceView", null, null, null, findOptions, false);
 context.leaveBalances = leaveBalances;

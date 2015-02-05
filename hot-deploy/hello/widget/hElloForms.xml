@@ -43,21 +43,8 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 
-     <form name="CheckTrialListForm" type="multi" title="" target="deleteCheckTrial"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-
-        <actions>
-            <entity-condition entity-name="UsersHW"></entity-condition>
-        </actions>
-       <field name="userId"><display /></field>
-       <field name="firstName" title="First Name"> <display/> </field>
-       <field name="lastName" title="Last Name"> <display/> </field>
-       <field name="dob" title="DOB"><display/></field>
-       <field name="deleteChecked"><check/></field>
-
-        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitButton" title="delete selected" widget-style="smallSubmit"><submit/></field>
-    </form>
+     
+	
     
     
     
@@ -218,6 +205,18 @@
         </field>
     </form>
     
+	
+	
+	<form name="CheckTrialListForm" type="single" target="sendMail" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="emailContext">
+      
+        <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
+        <field name="sendFrom" title="Sender"> <text size="45"></text> </field>
+		 <field name="sendTo" title="Receipient"> <text size="45"></text> </field>
+        <field name="subject" title="Subject"> <text size="45"></text> </field>
+        <field name="body" title="Body"><textarea/> </field>
+        <field name="submitButton" title="Send" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     
     
     
