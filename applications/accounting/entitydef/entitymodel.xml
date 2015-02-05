@@ -117,7 +117,49 @@ under the License.
       </relation>
     </entity>
 
+    <entity entity-name="ComprehensiveIncomeReport"
+            package-name="org.ofbiz.accounting.reports"
+            title="Comprehensive Income Report report entity">
+      <field name="comprehensiveId" type="id-ne"></field>
+      <field name="attribName" type="name"></field>
+      <field name="amount" type="currency-amount"></field>
+      <prim-key field="comprehensiveId"/>
+    </entity>
 
+    <entity entity-name="InvestmentReturnReport"
+            package-name="org.ofbiz.accounting.reports"
+            title="Investment Return Report entity">
+      <field name="investmentReturnId" type="id-ne"></field>
+      <field name="code" type="short-varchar"></field>
+      <field name="attribName" type="name"></field>
+      <field name="amount" type="currency-amount"></field>
+      <prim-key field="investmentReturnId"/>
+    </entity>
+
+
+    <entity entity-name="RiskClassification"
+            package-name="org.ofbiz.accounting.reports"
+            title="Risk Classification">
+      <field name="riskClassificationId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <field name="provisioningPercentage" type="id-ne"></field>
+      <prim-key field="riskClassificationId"/>
+    </entity>
+
+    <entity entity-name="AssetProvisioning"
+            package-name="org.ofbiz.accounting.reports"
+            title="Risk Classification of Assets and Provisioning Entity">
+      <field name="assetProvisioningId" type="id-ne"></field>
+      <field name="riskClassificationId" type="id-ne"></field>
+      <field name="outstandingAmount" type="currency-amount"></field>
+      <field name="provisioningAmount" type="currency-amount"></field>
+      <field name="provisioningPercentage" type="id-ne"></field>
+      <field name="noOfAccounts" type="id-ne"></field>
+      <prim-key field="assetProvisioningId"/>
+      <relation type="one" fk-name="CLS_PROV" rel-entity-name="RiskClassification">
+        <key-map field-name="riskClassificationId"/>
+      </relation>
+    </entity>
 
 
     <entity entity-name="ImprestType"
