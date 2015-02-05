@@ -365,6 +365,86 @@ under the License.
             <key-map field-name="payrollElementId"/>
         </relation>
 	</entity>
+	
+	 <view-entity entity-name="P10Report" package-name="org.ofbiz.payroll"
+    	title="P10 Report View">
+        <member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+        <member-entity entity-alias="SP" entity-name="StaffPayroll" />
+    	<member-entity entity-alias="PP" entity-name="PayrollPeriod" />
+    	<member-entity entity-alias="PY" entity-name="PayrollYear" />
+               
+        <alias entity-alias="PY" name="payrollYearId" group-by="true"></alias>
+        <alias entity-alias="PY" field="name"  name="yearName" group-by="true"></alias>        
+		<alias entity-alias="PP" field="name" name="periodName"  group-by="true"></alias>
+		<alias entity-alias="PP" name="sequence_no" group-by="true" ></alias>
+		<alias entity-alias="SPE" name="payrollElementId" group-by="true" ></alias>	
+		<alias entity-alias="SPE" name="amount" function="sum" ></alias>
+		
+        <view-link entity-alias="SPE" rel-entity-alias="SP">
+            <key-map field-name="staffPayrollId" />
+        </view-link>
+         <view-link entity-alias="SP" rel-entity-alias="PP">
+            <key-map field-name="payrollPeriodId" />
+        </view-link>
+         <view-link entity-alias="PP" rel-entity-alias="PY">
+            <key-map field-name="payrollYearId" />
+        </view-link>
+        <entity-condition>
+        <condition-list combine="and">
+        	<condition-expr entity-alias="SP" field-name="closed" operator="equals" value="Y"/>
+	        <condition-list combine="or">
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="PAYE"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="LOWINTERESTBENEFIT"/>
+	        </condition-list>
+        </condition-list>
+        
+        </entity-condition>
+     </view-entity>
+     
+     <view-entity entity-name="P10AReport" package-name="org.ofbiz.payroll"
+    	title="P10A Report View">
+    	<member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+        <member-entity entity-alias="SP" entity-name="StaffPayroll" />
+        <member-entity entity-alias="P" entity-name="Person" />            	
+    	<member-entity entity-alias="PP" entity-name="PayrollPeriod" />
+    	<member-entity entity-alias="PY" entity-name="PayrollYear" />
+               
+        <alias entity-alias="PY" name="payrollYearId" group-by="true"></alias>
+        <alias entity-alias="PY" field="name"  name="yearName" group-by="true"></alias>       
+        <alias entity-alias="P" name="partyId" group-by="true"></alias>
+        <alias entity-alias="P" name="employeeNumber" group-by="true"></alias>
+        <alias entity-alias="P" name="pinNumber" group-by="true"></alias>
+        <alias entity-alias="P" name="firstName"  group-by="true"></alias>        
+		<alias entity-alias="P" name="lastName" group-by="true"></alias>
+		<alias entity-alias="SPE" name="payrollElementId" group-by="true" ></alias>	
+		<alias entity-alias="SPE" name="amount" function="sum" ></alias>
+		
+        <view-link entity-alias="SPE" rel-entity-alias="SP">
+            <key-map field-name="staffPayrollId" />
+        </view-link>
+         <view-link entity-alias="SP" rel-entity-alias="P">
+            <key-map field-name="partyId" />
+        </view-link>
+         <view-link entity-alias="SP" rel-entity-alias="PP">
+            <key-map field-name="payrollPeriodId" />
+        </view-link>
+        <view-link entity-alias="PP" rel-entity-alias="PY">
+            <key-map field-name="payrollYearId" />
+        </view-link>
+        <entity-condition>
+        <condition-list combine="and">
+        	<condition-expr entity-alias="SP" field-name="closed" operator="equals" value="Y"/>
+        	<condition-expr entity-alias="SPE" field-name="amount" operator="greater" value="0"/>
+	        <condition-list combine="or">
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="GROSSPAY"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="PAYE"/>
+	        </condition-list>
+        </condition-list>
+        
+        </entity-condition>
+     </view-entity>
+     
+     
 
 
 	<view-entity entity-name="P9Report" package-name="org.ofbiz.payroll">

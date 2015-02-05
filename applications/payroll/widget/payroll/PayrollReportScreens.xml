@@ -49,7 +49,7 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>
@@ -122,14 +122,14 @@
 		</section>
 	</screen>
 
-	<screen name="PayrollElementReport">
+	<screen name="PayrollCodeReport">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Payroll Element Report" />
-				<set field="headerItem" value="payrollElementsView" />
-				<set field="tabButtonItem" value="payrollElementsView" />
+				<set field="titleProperty" value="Payroll Codes Report" />
+				<set field="headerItem" value="payrollCodesView" />
+				<set field="tabButtonItem" value="payrollCodesView" />
 				<set field="displayPassword" value="Y" />
-				<set field="target" value="payrollElementsView" />
+				<set field="target" value="payrollCodesView" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
 
 				<!--
@@ -147,30 +147,30 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>
 								<container style="lefthalf">
 		                            <screenlet title="Payroll Codes List (PDF)">
-		                                <include-form name="listPayrollElementsReport" location="component://payroll/widget/payroll/PayrollReportForms.xml" />
+		                                <include-form name="listPayrollCodesReport" location="component://payroll/widget/payroll/PayrollReportForms.xml" />
 		                            </screenlet>
 		                        </container>
 		                        
 		                        <container style="righthalf">
 		                            <screenlet title="Payroll Codes List (CSV)">
-		                                <include-form name="listPayrollElementsReport" location="component://payroll/widget/payroll/PayrollReportForms.xml" />
+		                                <include-form name="listPayrollCodesReport" location="component://payroll/widget/payroll/PayrollReportForms.xml" />
 		                            </screenlet>
 		                        </container>
 
                          		<container style="lefthalf">
 		                            <screenlet title="Payroll Codes By Type (PDF)">
-		                                <include-form name="listPayrollElementsByType" location="component://payroll/widget/payroll/PayrollReportForms.xml" />
+		                                <include-form name="listPayrollCodesByType" location="component://payroll/widget/payroll/PayrollReportForms.xml" />
 		                            </screenlet>
 		                        </container>
 		                        <container style="righthalf">
 		                            <screenlet title="Payroll Codes By Type (CSV)">
-		                                <include-form name="listPayrollElementsByType" location="component://payroll/widget/payroll/PayrollReportForms.xml" />
+		                                <include-form name="listPayrollCodesByType" location="component://payroll/widget/payroll/PayrollReportForms.xml" />
 		                            </screenlet>
 		                        </container>
 							<!--
@@ -210,6 +210,55 @@
 			</widgets>
 		</section>
 	</screen>
+		
+	<screen name="PayrollCodePDF">
+	    <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://payroll/webapp/payroll/WEB-INF/actions/reports/payrollCodesList.groovy"/>                
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component:///payroll/webapp/reports/payrollCodeList.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="PayrollCodesByTypePDF">
+	    <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://payroll/webapp/payroll/WEB-INF/actions/reports/payrollCodesByType.groovy"/>                
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component:///payroll/webapp/reports/payrollCodesByType.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+	
+	
 	<screen name="PayslipReport">
 		<section>
 			<actions>
@@ -235,7 +284,7 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>
@@ -333,7 +382,7 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>
@@ -431,7 +480,7 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>
@@ -499,30 +548,25 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>
-								<screenlet>
-									<section>
-										<widgets>
-											<container style="button-bar">
-												<link url-mode="inter-app"
-													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;437900182"
-													text="P10 HTML Report" style="buttontext create">
-													<image url-mode="raw" src="${iconsLocation}/add.png" />
-
-												</link>
-												<link url-mode="inter-app"
-													target="http://127.0.0.1:57512/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fpayroll%2Fwidget%2Fpayroll%2FP10.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;437900182"
-													text="P10 PDF Report" style="buttontext create">
-													<image url-mode="raw"
-														src="${iconsLocation}/page_white_acrobat.png" />
-												</link>
-											</container>
-										</widgets>
-									</section>
-								</screenlet>
+								<container style="lefthalf">
+		                            <screenlet title="P9 Report">
+		                                <include-form name="P9Report" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
+		                            </screenlet>
+		                        </container>
+								 <container style="righthalf">
+		                            <screenlet title="P10 Report">
+		                                <include-form name="P10Report" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
+		                            </screenlet>
+		                        </container>
+		                        <container style="lefthalf">
+		                            <screenlet title="P10A Report">
+		                                <include-form name="P10AReport" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
+		                            </screenlet>
+		                        </container>
 							</widgets>
 							<fail-widgets>
 								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
@@ -534,8 +578,56 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="P10ReportPDF">
+	    <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://payroll/webapp/payroll/WEB-INF/actions/reports/p10.groovy"/>                
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="KRADecorator" location="component://payroll/widget/payroll/CommonScreens.xml">
+            	
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component:///payroll/webapp/reports/p10.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="P10AReportPDF">
+	    <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://payroll/webapp/payroll/WEB-INF/actions/reports/p10A.groovy"/>                
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="KRADecorator" location="component://payroll/widget/payroll/CommonScreens.xml">
+            	
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component:///payroll/webapp/reports/p10A.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
 
-	<screen name="P10AReport">
+	<!--<screen name="P10AReport">
 		<section>
 			<actions>
 				<set field="titleProperty" value="P10A Report" />
@@ -545,10 +637,10 @@
 				<set field="target" value="P10AReportView" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
 
-				<!--
+				
 					entity-one entity-name="PayslipView"
 					value-field="payslipViewContext"/
-				-->
+				
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -560,7 +652,7 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>
@@ -594,7 +686,7 @@
 				</decorator-screen>
 			</widgets>
 		</section>
-	</screen>
+	</screen>-->
 
 	<screen name="NSSFReport">
 		<section>
@@ -621,7 +713,7 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>
@@ -682,7 +774,7 @@
 							location="component://payroll/widget/payroll/ExampleMenus.xml" />
 						<section>
 							<condition>
-								<if-has-permission permission="PARTYMGR"
+								<if-has-permission permission="PAYROLLMANAGEMENT"
 									action="_CREATE" />
 							</condition>
 							<widgets>

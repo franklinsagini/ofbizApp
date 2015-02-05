@@ -546,5 +546,26 @@ public class FileServices {
 		
 		
 	}
+	
+	public static Boolean isOfficerWithFile(String officerPartyId, String memmberPayrol) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue file = null;
+		try {
+			file = delegator.findOne("RegistryFiles", UtilMisc.toMap("payrollNumber", memmberPayrol, "currentPossesser", officerPartyId), false);
+
+			log.info("File Has been Fetched Guyz ###### File with payroll>>"+memmberPayrol+" And in possesion of>>"+officerPartyId);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (file == null) {
+			
+			return false;
+		}
+		
+		return true;
+	}
+	
 
 }

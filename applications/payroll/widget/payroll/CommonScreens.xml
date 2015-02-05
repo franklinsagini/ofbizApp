@@ -371,5 +371,58 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+        <!-- Simple decorator (no application and menu bars); it can be used:
+         * for printer friendly html screens (no logo and no application bar, header and footer); a print button is also available at the top of the screen
+         * for simple PDF report (a simple header with the logo/date is rendered and a footer with page numbers)
+    -->
+    <screen name="KRADecorator">
+        <section>
+            <actions>
+                <!-- The default (global) stylesheet -->
+                <set field="layoutSettings.styleSheets[+0]" value="/images/maincss.css" global="true"/>
+                <set field="layoutSettings.rtlStyleSheets[+0]" value="/images/mainrtl.css" global="true"/>
+                <!-- The default (global) java scripts -->
+                    <!-- jQuery part -->
+                <!-- Load available JS Language Files -->
+                <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
+                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.datejs.getFilePath(initialLocaleComplete)}" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true"/>
+
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon.min-1.4.3.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/ui/js/jquery-ui-1.10.3.min.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>
+                    <!-- jQuery CSSs -->
+                <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true"/>
+
+                <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
+                <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true"/>
+                <!-- The default (global) shortcut icon -->
+                <set field="layoutSettings.shortcutIcon" value="/images/ofbiz.ico" global="true"/>
+                <!-- The settings below are used for xsl-fo screens -->
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="logoImageUrl" value="/images/KRAlogo.gif"/>
+                <!--<set field="defaultFontFamily" value="Arial"/>-->
+            </actions>
+            <widgets>
+                <!-- render header -->
+                <platform-specific>
+                    <html><html-template location="component:///payroll/webapp/reports/KRATemplate.fo.ftl"/></html>
+                    <xsl-fo><html-template location="component:///payroll/webapp/reports/KRATemplate.fo.ftl"/></xsl-fo>
+                    <xml><html-template location="component://common/webcommon/includes/minimal-decorator.ftl"/></xml>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
 
 </screens>
