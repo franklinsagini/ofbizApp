@@ -137,6 +137,29 @@ under the License.
     </entity>
 
 
+    <entity entity-name="RiskClassification"
+            package-name="org.ofbiz.accounting.reports"
+            title="Risk Classification">
+      <field name="riskClassificationId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <field name="provisioningPercentage" type="id-ne"></field>
+      <prim-key field="riskClassificationId"/>
+    </entity>
+
+    <entity entity-name="AssetProvisioning"
+            package-name="org.ofbiz.accounting.reports"
+            title="Risk Classification of Assets and Provisioning Entity">
+      <field name="assetProvisioningId" type="id-ne"></field>
+      <field name="riskClassificationId" type="id-ne"></field>
+      <field name="outstandingAmount" type="currency-amount"></field>
+      <field name="provisioningAmount" type="currency-amount"></field>
+      <field name="provisioningPercentage" type="id-ne"></field>
+      <field name="noOfAccounts" type="id-ne"></field>
+      <prim-key field="assetProvisioningId"/>
+      <relation type="one" fk-name="CLS_PROV" rel-entity-name="RiskClassification">
+        <key-map field-name="riskClassificationId"/>
+      </relation>
+    </entity>
 
 
     <entity entity-name="ImprestType"
