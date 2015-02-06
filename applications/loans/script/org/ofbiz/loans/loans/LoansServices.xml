@@ -985,4 +985,41 @@ under the License.
         <create-value value-field="newEntity"/>
     </simple-method>
     
+    <!-- MonthlyRepaymentChange -->
+      <simple-method method-name="createMonthlyRepaymentChange" short-description="Create MonthlyRepaymentChange">
+        <call-simple-method method-name="saveMonthlyRepaymentChange" scope="inline"></call-simple-method>
+        <!-- Get Loan Application and update -->
+		<entity-one entity-name="LoanApplication" value-field="loanApplication">
+				<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"></field-map>
+		</entity-one>
+		<set field="loanApplication.monthlyRepayment" value="${newEntity.toMonthlyRepayment}"></set>
+		<store-value value-field="loanApplication"></store-value>
+    </simple-method>
+    <simple-method method-name="saveMonthlyRepaymentChange" use-transaction="true">
+    	<make-value entity-name="MonthlyRepaymentChange" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        
+       <set field="entityName" value="MonthlyRepaymentChange"></set>
+       <set field="newEntity.monthlyRepaymentChangeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="monthlyRepaymentChangeId" field="newEntity.monthlyRepaymentChangeId"/>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateMonthlyRepaymentChange" short-description="Update MonthlyRepaymentChange">
+        <entity-one entity-name="MonthlyRepaymentChange" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteMonthlyRepaymentChange" short-description="Delete MonthlyRepaymentChange">
+        <entity-one entity-name="MonthlyRepaymentChange" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

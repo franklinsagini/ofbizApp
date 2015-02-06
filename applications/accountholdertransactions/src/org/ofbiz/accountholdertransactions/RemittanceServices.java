@@ -171,6 +171,10 @@ public class RemittanceServices {
 	 * **/
 	private static void addExpectedLoanRepayment(GenericValue loanExpectation) {
 		GenericValue member = findMember(loanExpectation.getString("partyId"));
+		
+		Long activeMemberStatusId = getMemberStatusId("ACTIVE");
+		if (member.getLong("memberStatusId").equals(activeMemberStatusId)){
+		
 		GenericValue loanApplication = findLoanApplication(loanExpectation
 				.getString("loanApplicationId"));
 		GenericValue loanProduct = findLoanProduct(loanApplication
@@ -223,6 +227,10 @@ public class RemittanceServices {
 						"stationName", station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
+						
+						"employeeNumber", member.getString("employeeNumber"),
+						"memberNumber", member.getString("memberNumber"),
+						
 						"loanNo", loanApplication.getString("loanNo"),
 						"employerNo", employerName, "amount",
 						loanExpectation.getBigDecimal("amountAccrued"),
@@ -239,6 +247,8 @@ public class RemittanceServices {
 			TransactionUtil.commit();
 		} catch (GenericTransactionException e) {
 			e.printStackTrace();
+		}
+		
 		}
 
 	}
@@ -376,6 +386,9 @@ public class RemittanceServices {
 						"stationName", station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
+						"employeeNumber", member.getString("employeeNumber"),
+						"memberNumber", member.getString("memberNumber"),
+						
 						"loanNo", "0", "employerNo", employerName, "amount",
 						bdContributingAmt, "remitanceDescription",
 						accountProduct.getString("name"), "employeeName",
@@ -477,6 +490,9 @@ public class RemittanceServices {
 						"stationName", station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
+						"employeeNumber", member.getString("employeeNumber"),
+						"memberNumber", member.getString("memberNumber"),
+						
 						"loanNo", "0", "employerNo", employerName, "amount",
 						bdShareAmount, "remitanceDescription",
 						"Member deposits", "employeeName", employeeNames,
