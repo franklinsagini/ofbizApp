@@ -599,15 +599,13 @@
         	
         	<set field="ready" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.loanReadyForAppraisal(theApplicationId);}" type="Boolean"/>
         </actions>
-        
         <field name="loanApplicationId"><hidden/></field>
        	<field name="loanStatusLogId"><hidden/></field>
        	<field name="loanStatusId"><hidden value="${statusId}"/></field>
+       	<field name="loanAmt"><hidden value="${loanAmt}"/></field>
         <field name="appraisedAmt" title="Appraised Amount"  widget-style="required" required-field="true"><text default-value="${appraisedAmt}"/></field>
-        
         <field name="comment" title="Comment "  widget-style="required" required-field="true"><textarea/></field>
-                
-        <field name="submitButton" use-when="${ready}" title="Appraise" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="${ready}" title="Appraise" widget-style="smallSubmit" event="onclick" action="javascript: return isAmountExcess('${appraisedAmt}'.replace(/,/g, ''));"><submit button-type="button"/></field>
     </form>
     
     <!-- listMyLoanApplication -->
@@ -624,13 +622,10 @@
 			
 			<set field="forwardedStatusName" value="FORWARDED"/>
 	   		<set field="forwardedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(forwardedStatusName);}"/> 
-		
 			<set field="statusName" value="FORWARDEDLOANS"/>
 	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
-		
 			<set field="returnedStatusName" value="RETURNEDTOAPPRAISAL"/>
 	   		<set field="returnedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(returnedStatusName);}"/> 
-			
 		
 			<entity-condition entity-name="LoanApplication">
 				<!-- condition-list combine="and">
