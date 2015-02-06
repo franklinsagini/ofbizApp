@@ -854,7 +854,7 @@ under the License.
 	<!-- LoanStatusChange -->
 	<entity entity-name="LoanStatusChange" package-name="org.ofbiz.loans"
 		title="LoanStatusChange Entity">
-		<field name="loanStatusChangeId" type="id-int"></field>
+		<field name="loanStatusChangeId" type="id-vlong-int"></field>
 		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
@@ -872,7 +872,7 @@ under the License.
 	<!-- LoanInterestChange -->
 	<entity entity-name="LoanInterestChange" package-name="org.ofbiz.loans"
 		title="LoanInterestChange Entity">
-		<field name="loanInterestChangeId" type="id-int"></field>
+		<field name="loanInterestChangeId" type="id-vlong-int"></field>
 		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
@@ -890,8 +890,8 @@ under the License.
 	<!-- LoanAmountChange -->
 	<entity entity-name="LoanAmountChange" package-name="org.ofbiz.loans"
 		title="LoanAmountChange Entity">
-		<field name="loanAmountChangeId" type="id-int"></field>
-		<field name="loanApplicationId" type="fixed-point"></field>
+		<field name="loanAmountChangeId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
@@ -905,6 +905,26 @@ under the License.
         	<key-map field-name="loanApplicationId"/>
       	</relation>
 	</entity>
+	
+	<!-- Monthly Repayment Change -->
+		<entity entity-name="MonthlyRepaymentChange" package-name="org.ofbiz.loans"
+		title="MonthlyRepaymentChange Entity">
+		<field name="monthlyRepaymentChangeId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		
+		<field name="fromMonthlyRepayment" type="fixed-point"></field>
+		<field name="toMonthlyRepayment" type="fixed-point"></field>
+		<field name="changedBy" type="name"></field>
+		
+		<prim-key field="monthlyRepaymentChangeId"/>
+		<relation type="one" fk-name="MonthlyRepaymentChange_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
 	<!-- LoanRepaymentPeriodChange -->
 	<entity entity-name="LoanRepaymentPeriodChange" package-name="org.ofbiz.loans"
 		title="LoanRepaymentPeriodChange Entity">

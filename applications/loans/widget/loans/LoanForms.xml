@@ -2276,4 +2276,37 @@ under the License.
 		
 		
 	</form>
+	
+	<!-- Monthly Repayment Change -->
+	      <form name="MonthlyRepaymentChange" type="single" target="createMonthlyRepaymentChange"
+        focus-field-name="toInterestRate" header-row-style="header-row"  default-table-style="basic-table" default-map-name="monthlyRepaymentChangeContext">
+        <actions>
+        	<set field="monthlyRepayment" value="${loanApplication.monthlyRepayment}"/>
+        </actions>
+        <field name="monthlyRepaymentChangeId"><hidden/></field>
+        
+       <field name="loanApplicationId"><hidden value="${loanApplicationId}"/></field>
+      <field name="fromMonthlyRepayment" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60" default-value="${monthlyRepayment}"/></field>
+      <field name="toMonthlyRepayment" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
+    </form>
+    
+    <form name="listMonthlyRepaymentChange" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMonthlyRepaymentChange" paginate-target="changeMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="MonthlyRepaymentChange">
+        		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+        	</entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateMonthlyRepaymentChange"/>
+        <field name="monthlyRepaymentChangeId"><hidden/></field>
+        
+        <field name="loanApplicationId"><hidden/></field>
+		<field name="fromMonthlyRepayment" title="From"><display></display></field>
+		<field name="toMonthlyRepayment" title="To"><display></display></field>
+        
+
+        <field name="changedBy" title="Changed By"><display></display></field>
+        <field name="createdStamp" title="On"><display type="date-time"></display></field>
+    </form>
 </forms>

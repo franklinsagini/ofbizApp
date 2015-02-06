@@ -78,13 +78,14 @@ under the License.
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
             	<fo:table-column column-width="30pt"/>
-                <fo:table-column column-width="140pt"/>
+                <fo:table-column column-width="120pt"/>
                 <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="45pt"/>
                 <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="60pt"/>
+                 <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="60pt"/>
                 
-                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="40pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 <#-- fo:table-column column-width="60pt"/>
@@ -109,6 +110,11 @@ under the License.
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Payroll Number</fo:block>
                         </fo:table-cell>
+                        
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Mobile Number</fo:block>
+                        </fo:table-cell>
+                        
                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Join Date</fo:block>
                         </fo:table-cell>
@@ -158,6 +164,9 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${member.payrollNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${member.mobileNumber?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${member.joinDate?date}</fo:block>
