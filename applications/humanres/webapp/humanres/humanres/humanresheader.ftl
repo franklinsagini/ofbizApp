@@ -8,31 +8,17 @@
 	
          var leaveTypeId = this.value;
          //console.log(leaveTypeId);
-         if (leaveTypeId =="ANNUAL_LEAVE"){
+         if (leaveTypeId =="ANNUAL_LEAVE") {
           var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
          var partyId =  jQuery('input[name="partyId"]').val();
-         
          var reqUrl = '/humanres/control/emplleavebalance';
-          if ((partyId.length > 0) && (leaveTypeId.length > 0) && (appointmentdate.length > 0)){
          	calculateBalance(reqUrl, leaveTypeId, partyId,appointmentdate);
-                  }
              }
-             else if (leaveTypeId =="COMPASSIONATE_LEAVE"){
-         var partyId =  jQuery('input[name="partyId"]').val();
-         
-         var reqUrl = '/humanres/control/emplCompassionateleavebalance';
-          if ((partyId.length > 0) && (leaveTypeId.length > 0)){
-         	calculateCompassionateLeaveBalance(reqUrl, leaveTypeId, partyId);
-                  }
-             }
-             
-              else if ((leaveTypeId !="COMPASSIONATE_LEAVE") && (leaveTypeId !="ANNUAL_LEAVE")){
-          if (leaveTypeId.length > 0){
+              else {
          	 $('input[name="approvedLeaveSumed"]').val('NOT APPLICABLE');
 					 $('input[name="accruedLeaveDays"]').val('NOT APPLICABLE');
 					 $('input[name="leaveBalance"]').val('NOT APPLICABLE');
 					 $('input[name="carryOverLeaveDays"]').val('NOT APPLICABLE');
-                  }
              }
          
          
@@ -108,7 +94,7 @@
         var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
         var diff = leaveDuration - leaveBalance;
         var reqUrl = '/humanres/control/emplleaveend';
-		if((leaveTypeId == 'COMPASSIONATE_LEAVE') || (leaveTypeId=='ANNUAL_LEAVE')) {
+		if(leaveTypeId=='ANNUAL_LEAVE'){
 		 if ((fromDate.length > 0) && (leaveDuration.length > 0) && (diff <= 0)){
          	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId);
          } if(diff > 0){
@@ -118,7 +104,7 @@
           
          }
 		}
-		else if((leaveTypeId != 'COMPASSIONATE_LEAVE') && (leaveTypeId!='ANNUAL_LEAVE')) {
+		else if(leaveTypeId!='ANNUAL_LEAVE'){
 		 if ((fromDate.length > 0) && (leaveDuration.length > 0)){
          	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId);
          }
@@ -194,26 +180,8 @@
 	    });
 	    } 
 	    
-	     function calculateCompassionateLeaveBalance(reqUrl, leaveTypeId, partyId){
-	    jQuery.ajax({
-	
-	     url    : reqUrl,
-	     type   : 'GET',
-	     data   : {'leaveTypeId': leaveTypeId, 'partyId':partyId}, //here you can pass the parameters to  
-	                                                   //the request if any.
-	     success : function(data){
-	     			 $('input[name="approvedLeaveSumed"]').val(data.approvedLeaveSumed);
-					 $('input[name="accruedLeaveDays"]').val(data.accruedLeaveDays);
-					 $('input[name="leaveBalance"]').val(data.leaveBalance);
-					 $('input[name="carryOverLeaveDays"]').val(data.carryOverLeaveDays);
-					 
-	               },
-	      error : function(errorData){
-	
-	              alert("Some error occurred while processing the request");
-	              }
-	    });
-	    } 
+	     
+
 	    
 	  
 	  function calculateDuration(reqUrl, fromDate, thruDate, leaveTypeId){
