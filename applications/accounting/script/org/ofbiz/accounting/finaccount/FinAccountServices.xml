@@ -782,6 +782,14 @@ under the License.
         <set field="adjustedCashBookBalance" from-field="adjustedCashBookBalance" />
         <call-object-method obj-field="finAccountTransList" method-name="size" ret-field="searchedNumberOfRecords"/>
         <set field="totalCreatedApprovedTransactions" value="${totalCreatedTransactions + totalApprovedTransactions}" type="Long"/>
+        <!-- HACK TO ENSURE RECON WORKS -->
+        <set field="uncreditedBankingsTotal" type="BigDecimal" value="0"/>
+        <set field="unpresentedChequesTotal" type="BigDecimal" value="0"/>
+        <set field="unreceiptedBankingsTotal" type="BigDecimal" value="0"/>
+        <set field="unidentifiedDebitsTotal" type="BigDecimal" value="0"/>
+        <set field="adjustedCashBookBalance" type="BigDecimal" value="0"/>
+        <!-- END OF HACK TO ENSURE RECON WORKS -->
+
         <field-to-result field="finAccountTransList"/>
         <field-to-result field="searchedNumberOfRecords"/>
         <field-to-result field="uncreditedBankingsTotal"/>
@@ -855,7 +863,7 @@ under the License.
             </condition>
                 <then>
                     <log message="UNPRESENTED CHEQUES BEFORE: ${showUnpresentedChequesTotal} - ${finAccountTrans.amount}"/>
-                    <set field="showUnpresentedChequesTotal" value="${showUnpresentedChequesTotal - finAccountTrans.amount}" type="BigDecimal"/>
+                    <set field="showUnpresentedChequesTotal" value="${showUnpresentedChequesTotal + finAccountTrans.amount}" type="BigDecimal"/>
                     <log message="UNPRESENTED CHEQUES AFTER: ${showUnpresentedChequesTotal}" />
                 </then>
             <else-if>
@@ -864,7 +872,7 @@ under the License.
                 </condition>
                 <then>
                     <log message="UNCREDITED BANKINGS BEFORE: ${showUncreditedBankingsTotal} + ${finAccountTrans.amount}" />
-                    <set field="showUncreditedBankingsTotal" value="${showUncreditedBankingsTotal - finAccountTrans.amount}" type="BigDecimal"/>
+                    <set field="showUncreditedBankingsTotal" value="${showUncreditedBankingsTotal + finAccountTrans.amount}" type="BigDecimal"/>
                     <log message="UNCREDITED BANKINGS AFTER: ${showUncreditedBankingsTotal}" />
                 </then>
             </else-if>
@@ -874,7 +882,7 @@ under the License.
                 </condition>
                 <then>
                     <log message="UNIDENTIFIED DEBITS BEFORE: ${showUnidentifiedDebitsTotal} + ${finAccountTrans.amount}" />
-                    <set field="showUnidentifiedDebitsTotal" value="${showUnidentifiedDebitsTotal - finAccountTrans.amount}" type="BigDecimal"/>
+                    <set field="showUnidentifiedDebitsTotal" value="${showUnidentifiedDebitsTotal + finAccountTrans.amount}" type="BigDecimal"/>
                     <log message="UNIDENTIFIED DEBITS AFTER: ${showUnidentifiedDebitsTotal}" />
                 </then>
             </else-if>
@@ -884,7 +892,7 @@ under the License.
                 </condition>
                 <then>
                     <log message="UNRECEIPTED BANKINGS BEFORE: ${showUnreceiptedBankingsTotal} + ${finAccountTrans.amount}" />
-                    <set field="showUnreceiptedBankingsTotal" value="${showUnreceiptedBankingsTotal - finAccountTrans.amount}" type="BigDecimal"/>
+                    <set field="showUnreceiptedBankingsTotal" value="${showUnreceiptedBankingsTotal + finAccountTrans.amount}" type="BigDecimal"/>
                     <log message="UNRECEIPTED BANKINGS AFTER: ${showUnreceiptedBankingsTotal}" />
                 </then>
             </else-if>
@@ -899,7 +907,7 @@ under the License.
         </condition>
             <then>
                 <log message="UNPRESENTED CHEQUES BEFORE: ${showUnpresentedChequesTotal} + ${finAccountTrans.amount}"/>
-                <set field="showUnpresentedChequesTotal" value="${showUnpresentedChequesTotal + finAccountTrans.amount}" type="BigDecimal"/>
+                <set field="showUnpresentedChequesTotal" value="${showUnpresentedChequesTotal - finAccountTrans.amount}" type="BigDecimal"/>
                 <log message="UNPRESENTED CHEQUES AFTER: ${showUnpresentedChequesTotal}" />
             </then>
         <else-if>
@@ -908,7 +916,7 @@ under the License.
             </condition>
             <then>
                 <log message="UNCREDITED BANKINGS BEFORE: ${showUncreditedBankingsTotal} + ${finAccountTrans.amount}" />
-                <set field="showUncreditedBankingsTotal" value="${showUncreditedBankingsTotal + finAccountTrans.amount}" type="BigDecimal"/>
+                <set field="showUncreditedBankingsTotal" value="${showUncreditedBankingsTotal - finAccountTrans.amount}" type="BigDecimal"/>
                 <log message="UNCREDITED BANKINGS AFTER: ${showUncreditedBankingsTotal}" />
             </then>
         </else-if>
@@ -918,7 +926,7 @@ under the License.
             </condition>
             <then>
                 <log message="UNIDENTIFIED DEBITS BEFORE: ${showUnidentifiedDebitsTotal} + ${finAccountTrans.amount}" />
-                <set field="showUnidentifiedDebitsTotal" value="${showUnidentifiedDebitsTotal + finAccountTrans.amount}" type="BigDecimal"/>
+                <set field="showUnidentifiedDebitsTotal" value="${showUnidentifiedDebitsTotal - finAccountTrans.amount}" type="BigDecimal"/>
                 <log message="UNIDENTIFIED DEBITS AFTER: ${showUnidentifiedDebitsTotal}" />
             </then>
         </else-if>
@@ -928,7 +936,7 @@ under the License.
             </condition>
             <then>
                 <log message="UNRECEIPTED BANKINGS BEFORE: ${showUnreceiptedBankingsTotal} + ${finAccountTrans.amount}" />
-                <set field="showUnreceiptedBankingsTotal" value="${showUnreceiptedBankingsTotal + finAccountTrans.amount}" type="BigDecimal"/>
+                <set field="showUnreceiptedBankingsTotal" value="${showUnreceiptedBankingsTotal - finAccountTrans.amount}" type="BigDecimal"/>
                 <log message="UNRECEIPTED BANKINGS AFTER: ${showUnreceiptedBankingsTotal}" />
             </then>
         </else-if>
