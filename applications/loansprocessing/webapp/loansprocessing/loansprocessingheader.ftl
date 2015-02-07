@@ -375,4 +375,27 @@
 		
 		return isSelf;
     }
+    
+    
+    
+        function isAmountExcess(loanAmt){
+    	
+		//if (!hasSavingsAccount){
+			appraisedAmt  = jQuery('input[name="appraisedAmt"]').val();
+			aprraisedAmt = appraisedAmt.replace(/,/g, '');
+			//alert('Loan Amount '+loanAmt+' Appraised '+appraisedAmt)
+			
+			if (parseFloat(loanAmt) < parseFloat(aprraisedAmt))
+			{
+				alert('Cannot appraise more than applied amount ');
+				return false;
+			} else{
+				alert('Will appraise ');
+				return true;
+			}
+			
+			alert(' Cannot appraise more than applied');
+		//}
+    	//return false;
+    }
    </script>

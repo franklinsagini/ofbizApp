@@ -1287,6 +1287,31 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="LookupActiveMember" />
 	</request-map>
+	
+	<!-- MonthlyRepaymentChange CRUD -->
+	<request-map uri="createMonthlyRepaymentChange">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMonthlyRepaymentChange" />
+		<response name="success" type="request-redirect" value="changeLoanDetails">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="changeLoanDetails" />
+	</request-map>
+
+	<request-map uri="updateMonthlyRepaymentChange">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMonthlyRepaymentChange" />
+		<response name="success" type="request-redirect" value="loanApplicationId"></response>
+		<response name="error" type="view" value="changeLoanDetails" />
+	</request-map>
+
+	<request-map uri="deleteMonthlyRepaymentChange">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMonthlyRepaymentChange" />
+		<response name="success" type="request-redirect-noparam"
+			value="changeLoanDetails"></response>
+		<response name="error" type="view" value="changeLoanDetails" />
+	</request-map>
 
 	<!-- end of request mappings -->
 

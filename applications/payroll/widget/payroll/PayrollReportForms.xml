@@ -51,35 +51,19 @@ under the License.
         
         <field name="submitButton" title="Run" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
-        
-        <form name="listPayrollElementsReport" type="single" target="" title="" header-row-style="header-row"
-        default-table-style="basic-table">
-       
+    
+    <form name="listPayrollCodesReport" type="single" target="payrollCodesViewPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <!--<actions>
-            <entity-condition entity-name="PayrollElement">
-            	<order-by field-name="elementCode"/>
-            </entity-condition>
-            <entity-condition entity-name="PayrollElement" list="payrollElementList"></entity-condition>
-        </actions>
-       
-       <field name="payrollElementId" > <hidden/>  </field>        
-        <field name="elementCode" title="Element Code"> 
-	        <display/>
-	    </field>        
-        <field name="name"> <display also-hidden="false"/> </field>
-        <field name="elementType"> <display also-hidden="false"/> </field>
-        <field name="payslipdisplay" title="Payslip Display"> <display also-hidden="false"/> </field>   
-    -->
     </form>
     
     
-    <form name="listPayrollElementsByType" type="single" target="" title="" header-row-style="header-row"
+    <form name="listPayrollCodesByType" type="single" target="payrollCodesByTypePDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
-        <field name="elementType"   title="Code Type">
-            <drop-down>
+        <field name="elementType" title="Code Type" required-field="true">
+            <drop-down allow-empty="true">
             	<option key="Payment" description="Earning"/>
             	<option key="Deduction" description="Deduction"/>
             	<option key="System Element" description="System Element"/>
@@ -134,6 +118,47 @@ under the License.
         </field>
     </form>
     
+    <form name="P9Report" type="single" target="p9reportPdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="payrollYearId" title="Year" required-field="true">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="PayrollYear" key-field-name="payrollYearId">
+        			<entity-order-by field-name="yearSeq"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="P10Report" type="single" target="P10ReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="payrollYearId" title="Year" required-field="true">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="PayrollYear" key-field-name="payrollYearId">
+        			<entity-order-by field-name="yearSeq"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="P10AReport" type="single" target="P10AReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="payrollYearId" title="Year" required-field="true">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="PayrollYear" key-field-name="payrollYearId">
+        			<entity-order-by field-name="yearSeq"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
     
     
     

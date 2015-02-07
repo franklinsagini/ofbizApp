@@ -1,22 +1,25 @@
-    <service name="createLoanClear" engine="simple" default-entity-name="LoanClear"
-             location="component://loanclearing/script/org/ofbiz/loanclearing/LoanClearingServices.xml" invoke="createLoanClear" auth="true">
-        <description>Create LoanClear</description>
-        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="true"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
-    
-    <service name="updateLoanClear" engine="simple" default-entity-name="LoanClear"
-             location="component://loanclearing/script/org/ofbiz/loanclearing/LoanClearingServices.xml" invoke="updateLoanClear" auth="true">
-        <description>Update LoanClear</description>
-        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-    </service>
-	
-	<service name="deleteLoanClear" engine="simple" default-entity-name="LoanClear"
-             location="component://loanclearing/script/org/ofbiz/loanclearing/LoanClearingServices.xml" invoke="deleteLoanClear" auth="true">
-        <description>Delete LoanClear</description>
-        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-    </service>
+<!-- MonthlyRepaymentChange CRUD -->
+	<request-map uri="createMonthlyRepaymentChange">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMonthlyRepaymentChange" />
+		<response name="success" type="request-redirect" value="changeLoanDetails">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="changeLoanDetails" />
+	</request-map>
+
+	<request-map uri="updateMonthlyRepaymentChange">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMonthlyRepaymentChange" />
+		<response name="success" type="request-redirect" value="loanApplicationId"></response>
+		<response name="error" type="view" value="changeLoanDetails" />
+	</request-map>
+
+	<request-map uri="deleteMonthlyRepaymentChange">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMonthlyRepaymentChange" />
+		<response name="success" type="request-redirect-noparam"
+			value="changeLoanDetails"></response>
+		<response name="error" type="view" value="changeLoanDetails" />
+	</request-map>
+
