@@ -1,6 +1,7 @@
 package org.ofbiz.loans;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -278,7 +279,11 @@ public class LoanAccounting {
 			processCharge(loanApplication, userLogin, acctgTransType,
 					loanApplicationCharge);
 			
-			transactionAmount = loanApplicationCharge.getBigDecimal("fixedAmount");
+			//transactionAmount = loanApplicationCharge.getBigDecimal("fixedAmount");
+			BigDecimal dbONEHUNDRED = new BigDecimal(100);
+			transactionAmount = loanApplicationCharge.getBigDecimal("rateAmount").multiply(loanApplication.getBigDecimal("loanAmt")).divide(dbONEHUNDRED, 4, RoundingMode.HALF_UP);
+			
+			
 			String transactionType = getChargeName(loanApplicationCharge);
 			String productChargeId = loanApplicationCharge.getString("productChargeId");
 			createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, productChargeId, accountTransactionParentId);
