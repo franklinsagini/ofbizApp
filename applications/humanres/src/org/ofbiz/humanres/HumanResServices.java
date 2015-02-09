@@ -225,7 +225,7 @@ public static String getLeaveBalance(HttpServletRequest request,HttpServletRespo
 
 	}
  /*============================COMPASSIONATE LEAVE BALANCES========================================*/
-public static String getCompassionateLeaveBalance(HttpServletRequest request,HttpServletResponse response) {
+/*public static String getCompassionateLeaveBalance(HttpServletRequest request,HttpServletResponse response) {
 	Map<String, Object> result = FastMap.newInstance();
 	Delegator delegator = (Delegator) request.getAttribute("delegator");
 	Timestamp now = UtilDateTime.nowTimestamp();
@@ -348,7 +348,7 @@ GenericValue employeeLeaveType = null;
 
 	return json;
 
-}
+}*/
 
 
 // ==============================================================
@@ -1143,9 +1143,12 @@ GenericValue employeeLeaveType = null;
 		String state="";
 		
 		if (today.isAfter(confirm)) {
-			state="CONFIRM";
+			state="OVERDUE";
 		} else if(today.isBefore(confirm)){
-			state="NOCONFIRM";
+			state="NOT YET";
+
+		}else if(today.equals(confirm)){
+			state="DUE";
 
 		}
 
