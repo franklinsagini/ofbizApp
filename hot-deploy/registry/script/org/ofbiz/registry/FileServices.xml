@@ -852,13 +852,13 @@
 		<set field="newEntity.fileActionTypeId" value="Receive File"/>
 		<set field="newEntity.currentPossesser" value="${userLogin.partyId}" />
 		<set field="newEntity.receiptStatus" value="RECEIVED"/>
-		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		
 		
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		
-		
+		<set field="newEntity.carriedBy" from-field="reg.carriedBy" />
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
 		<set field="newEntity.Reason" from-field="reg.Reason"/>
 		
@@ -883,12 +883,13 @@
 		<iterate entry="singleOpenVol" list="dateList">
 		<log message=">>>>>>>>>>>>>>>>>>>>>>> TIME-OUT >> ${singleOpenVol.movementId}" level="info"/>
         
-        <entity-one entity-name="RegistryFileMovement" value-field="reg">
+        <entity-one entity-name="RegistryFileMovement" value-field="regMove">
 		 	<field-map field-name="movementId" value="${singleOpenVol.movementId}"/>
 		 </entity-one>
+		 
         
-        <set field="reg.timeIn" from-field="nowTimestamp"/>
-         <set field="reg.receivedBy" value="${userLogin.partyId}"/>
+        <set field="regMove.timeIn" from-field="nowTimestamp"/>
+         <set field="regMove.receivedBy" value="${userLogin.partyId}"/>
         <store-value value-field="reg" />
         </iterate>
     </simple-method>
@@ -912,6 +913,7 @@
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.recieptStatus" value="RELEASED"/>
+		 <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile"/>
 	</simple-method>
 	
@@ -999,6 +1001,7 @@
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
 		 <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
+		 <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile"/>
 	</simple-method>
 	
