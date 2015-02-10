@@ -82,6 +82,20 @@
          }
         });
         
+
+
+         jQuery('select[name="contractPeriod"]').change(function(){
+		 
+         var employmentStatusEnumId = this.value;
+         var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
+         var contractPeriod= jQuery('select[name="contractPeriod"]').val();
+         var employmentTerms= jQuery('select[name="contractPeriod"]').val();
+         var reqUrl = '/humanres/control/emplContractEndDate';
+          
+          if ((appointmentdate.length > 0) && (contractPeriod.length > 0) && (employmentTerms != "permanent")){
+         	calculateContractEndDate(reqUrl, appointmentdate, contractPeriod);
+         }
+        });
         
    
 		 
@@ -120,13 +134,41 @@
          var reqUrl =  '/humanres/control/departmentslist';
          branchDepartments(reqUrl, branchId);
         });
+
+         jQuery('select[name="employmentTerms"]').change(function(){
+         var employmentTerms = this.value;
+         var reqUrl =  '/humanres/control/payrollNumber';
+         getNextPayrollNumber(reqUrl, employmentTerms);
+        });
+
+
+
         });
         
         
          
     
      
-     
+      function getNextPayrollNumber(reqUrl, employmentTerms){
+	    	jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'employmentTerms': employmentTerms}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+					 $('input[name="employeeNumber"]').val(data.nextEmployeeNumber);
+					  $('input[name="employeeNumber_i18n"]').val(data.nextEmployeeNumber_i18n);
+					  
+					  
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    }
      
      
      
@@ -315,6 +357,28 @@
 	     success : function(data){
 					 $('input[name="retirementdate"]').val(data.retirementdate);
 					  $('input[name="retirementdate_i18n"]').val(data.retirementdate_i18n);
+					  
+					  
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	    });
+	    }
+
+	    
+	     function calculateContractEndDate(reqUrl, appointmentdate, contractPeriod, employmentTerms){
+	    	jQuery.ajax({
+	
+	     url    : reqUrl,
+	     type   : 'GET',
+	     data   : {'appointmentdate': appointmentdate, 'contractPeriod': contractPeriod, 'employmentTerms': employmentTerms}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+					 $('input[name="contractEnd"]').val(data.contractEnd);
+					  $('input[name="contractEnd_i18n"]').val(data.contractEnd_i18n);
 					  
 					  
 					 

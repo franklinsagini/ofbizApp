@@ -810,10 +810,73 @@ GenericValue employeeLeaveType = null;
 
 	}
 	
+	public static String  getEndOfContractDate(HttpServletRequest request,	HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Date appointmentdate = null;
+		int period = new Integer(request.getParameter("contractPeriod")).intValue();
+		
+		try {
+			appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("appointmentdate")));
+			 log.info("++++++++++++++>>>>>>>>>Appointment Date" +appointmentdate+">>>>>>>Period"+period);
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		LocalDate datebirthDate = new LocalDate(appointmentdate);
+
+		LocalDate contEndDate = datebirthDate.plusMonths(period);
+		
+	
+		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String i18contractEnd = sdfDisplayDate.format(contEndDate.toDate());
+	    String contractEnd = sdfDate.format(contEndDate.toDate());
+	    
+	    result.put("contractEnd_i18n", i18contractEnd);
+	    result.put("contractEnd", contractEnd);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
 	
 	
 	
-	public static String  NextPayrollNumber() {
+	
+	/*public static String  NextPayrollNumber() {
 		
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -860,6 +923,252 @@ GenericValue employeeLeaveType = null;
 				 nextEmployeeNumber=PayrollPrefix.concat(h);
 				 
 				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+		}
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+	
+		
+	    
+	    result.put("employeeNumber_i18n", nextEmployeeNumber);
+	    result.put("employeeNumber", nextEmployeeNumber);
+	   
+	    return nextEmployeeNumber;
+
+
+	}*/
+	
+	public static String  NextStaffPayrollNumber(HttpServletRequest request,
+			HttpServletResponse response) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Map<String, Object> result = FastMap.newInstance();
+		String employmentTerms = new String((request.getParameter("employmentTerms")).toString());
+		
+		String nextEmployeeNumber = null;
+		String PayrollPrefix="HCS";
+		String contractPayrollPrefix="CONT-";
+		String internPayrollPrefix="INT-";
+		
+		
+		List<GenericValue> employeeELI = null;
+		
+		
+		GenericValue lastEmployee = null;
+		List<GenericValue> prefix = null;
+		GenericValue pre = null;
+		
+		try {
+			
+			prefix = delegator.findList("payRollPrefix",null, null, null, null, false);
+			
+		} catch (GenericEntityException e) {
+			return null;
+		}
+		
+		if (prefix.size() > 0){
+			pre = prefix.get(0); 
+			PayrollPrefix = pre.getString("payRollPrefix");
+		}
+		
+		
+		EntityConditionList<EntityExpr> payRollConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
+				EntityCondition.makeCondition("employmentTerms",EntityOperator.EQUALS, employmentTerms)),
+					EntityOperator.AND);
+		
+	try {
+		List<String> orderByList = new ArrayList<String>();
+		orderByList.add("-createdStamp");
+
+		employeeELI = delegator.findList("RoleTypeAndPersonEmployeeAndBranch",payRollConditions, null, orderByList, null, false);
+		
+		if (employeeELI.size() > 0){
+			lastEmployee = employeeELI.get(0); 
+		String emplNo=lastEmployee.getString("employeeNumber");
+		String emplTerms=lastEmployee.getString("employmentTerms");
+		
+		if (employmentTerms.equalsIgnoreCase("permanent")) {
+			
+			 String trancatemplNo= StringUtils.substring(emplNo, 3);
+			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+			 String h=String.valueOf(newEmplNo);
+			 nextEmployeeNumber=PayrollPrefix.concat(h);
+			 
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+			
+		} else if(employmentTerms.equalsIgnoreCase("contract")) {
+			
+			 String trancatemplNo= StringUtils.substring(emplNo, 5);
+			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+			 String h=String.valueOf(newEmplNo);
+			 nextEmployeeNumber=contractPayrollPrefix.concat(h);
+			 
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+		}else if(employmentTerms.equalsIgnoreCase("intern")) {
+			
+			 String trancatemplNo= StringUtils.substring(emplNo, 4);
+			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+			 String h=String.valueOf(newEmplNo);
+			 nextEmployeeNumber=internPayrollPrefix.concat(h);
+			 
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+		}
+		}else if(employeeELI.size() == 0){
+			
+			if (employmentTerms.equalsIgnoreCase("permanent")) {
+				
+				 int newEmplNo=100000001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=PayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+				
+			} else if(employmentTerms.equalsIgnoreCase("contract")) {
+			
+				 int newEmplNo=100000001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=contractPayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+			}else if(employmentTerms.equalsIgnoreCase("intern")) {
+				
+				 int newEmplNo=100000001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=internPayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+			}
+		
+		}
+		
+	} catch (GenericEntityException e2) {
+		e2.printStackTrace();
+	}
+	
+	    
+	    result.put("nextEmployeeNumber_i18n", nextEmployeeNumber);
+	    result.put("nextEmployeeNumber", nextEmployeeNumber);
+	   
+	    Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
+
+	}
+	
+	
+public static String  NextPayrollNumber(String employmentTerms) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String nextEmployeeNumber = null;
+		String PayrollPrefix="HCS";
+		String contractPayrollPrefix="CONT-";
+		String internPayrollPrefix="INT-";
+		
+		
+		List<GenericValue> employeeELI = null;
+		
+		
+		GenericValue lastEmployee = null;
+		List<GenericValue> prefix = null;
+		GenericValue pre = null;
+		
+		try {
+			
+			prefix = delegator.findList("payRollPrefix",null, null, null, null, false);
+			
+		} catch (GenericEntityException e) {
+			return null;
+		}
+		
+		if (prefix.size() > 0){
+			pre = prefix.get(0); 
+			PayrollPrefix = pre.getString("payRollPrefix");
+		}
+		
+		
+		EntityConditionList<EntityExpr> payRollConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
+				EntityCondition.makeCondition("employmentTerms",EntityOperator.EQUALS, employmentTerms)),
+					EntityOperator.AND);
+		
+	try {
+		List<String> orderByList = new ArrayList<String>();
+		orderByList.add("-createdStamp");
+
+		employeeELI = delegator.findList("RoleTypeAndPersonEmployeeAndBranch",payRollConditions, null, orderByList, null, false);
+		
+		if (employeeELI.size() > 0){
+			lastEmployee = employeeELI.get(0); 
+		String emplNo=lastEmployee.getString("employeeNumber");
+		String emplTerms=lastEmployee.getString("employmentTerms");
+		
+		if (emplTerms.equalsIgnoreCase("permanent")) {
+			
+			 String trancatemplNo= StringUtils.substring(emplNo, 3);
+			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+			 String h=String.valueOf(newEmplNo);
+			 nextEmployeeNumber=PayrollPrefix.concat(h);
+			 
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+			
+		} else if(emplTerms.equalsIgnoreCase("contract")) {
+			
+			 String trancatemplNo= StringUtils.substring(emplNo, 5);
+			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+			 String h=String.valueOf(newEmplNo);
+			 nextEmployeeNumber=contractPayrollPrefix.concat(h);
+			 
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+		}else if(emplTerms.equalsIgnoreCase("intern")) {
+			
+			 String trancatemplNo= StringUtils.substring(emplNo, 4);
+			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
+			 String h=String.valueOf(newEmplNo);
+			 nextEmployeeNumber=internPayrollPrefix.concat(h);
+			 
+			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+		}
+				
+			
+				
 		}
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
