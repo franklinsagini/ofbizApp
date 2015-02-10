@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="WithdrawalProcessingCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <screen name="withdrawalApprovals">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Withdrawal Approvals"/>
+                <set field="headerItem" value="withdrawalApprovals"/>
+                <set field="tabButtonItem" value="withdrawalApprovals"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createMemberWithdrawal"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="memberWithdrawalCtx" from-field="parameters"/>
+                <entity-one entity-name="MemberWithdrawal" value-field="memberWithdrawalContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}" -->
+                    <decorator-section name="body">
+                        <section>
+                            
+                            <widgets>
+                                <screenlet title="Find Withdrawal">
+                                    <include-form name="FindMemberWithdrawal" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                           
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Withdrawals">
+                        			<include-form name="listApproveWithdrawal" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+        <!-- approveWithdrawal -->
+      <screen name="approveWithdrawal">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Withdrawal Log"/>
+                <set field="headerItem" value="approveWithdrawal"/>
+                <set field="tabButtonItem" value="approveWithdrawal"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createWithdrawaLog"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="memberWithdrawalId" from-field="parameters.memberWithdrawalId"/>
+                <entity-one entity-name="WithdrawalLog" value-field="withdrawalLogContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}" -->
+                    <decorator-section name="body">
+                        <section>
+                            <!--condition>
+                                <if-has-permission permission="MEMBERWITHRAWAL" action="_CREATE"/>
+                            </condition-->
+                            <widgets>
+                                <screenlet title="Approve Withdrawal">
+                                    <include-form name="ApproveWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <!--fail-widgets>
+                                <label style="h3">Member Withdrawal Permission</label>
+                            </fail-widgets -->
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Log List">
+                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- rejectWithdrawal -->
+        <screen name="rejectWithdrawal">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Reject Withdrawal"/>
+                <set field="headerItem" value="rejectWithdrawal"/>
+                <set field="tabButtonItem" value="rejectWithdrawal"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createWithdrawalLog"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                 <set field="memberWithdrawalId" from-field="parameters.memberWithdrawalId"/>
+                <entity-one entity-name="WithdrawalLog" value-field="withdrawalLogContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}" -->
+                    <decorator-section name="body">
+                        <section>
+                            <!--condition>
+                                <if-has-permission permission="MEMBERWITHRAWAL" action="_CREATE"/>
+                            </condition-->
+                            <widgets>
+                                <screenlet title="Withdrawal Log">
+                                    <include-form name="RejectWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <!--fail-widgets>
+                                <label style="h3">Member Withdrawal Permission</label>
+                            </fail-widgets -->
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Logs List">
+                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- memberObligations -->
+            <screen name="memberObligations">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Reject Withdrawal"/>
+                <set field="headerItem" value="rejectWithdrawal"/>
+                <set field="tabButtonItem" value="rejectWithdrawal"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createWithdrawalLog"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                 <set field="memberWithdrawalId" from-field="parameters.memberWithdrawalId"/>
+                <entity-one entity-name="WithdrawalLog" value-field="withdrawalLogContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <!-- decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}" -->
+                    <decorator-section name="body">
+                        
+                        <section name="obligations">
+                        	<widgets>
+                        		<screenlet title="Member Obligations">
+                        		</screenlet>
+                        	
+                        		<screenlet title="Loans">
+                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet title="Guarantors">
+                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet title="Share Capital Level">
+                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        		</screenlet>
+                        		
+                        		<screenlet title="Member Deposits">
+                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+
+</screens>
