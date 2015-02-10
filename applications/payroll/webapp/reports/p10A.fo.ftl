@@ -17,20 +17,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if yearList?has_content>
+    <#if p10AItemsList?has_content>
         <#-- REPORT TITLE -->
-        <fo:block font-size="10pt" margin-top="14mm"  font-weight="bold" text-align="left">
-         	P.10A
-        </fo:block>
-        <fo:block font-size="10pt" margin-top="14mm" margin-left="45mm" font-weight="bold" text-align="left">
-         P.A.Y.E. SUPPORTING LIST FOR END OF YEAR CERTIFICATE: YEAR ${year.name?if_exists}
-        </fo:block>
-        <fo:block font-size="10pt" margin-top="14mm" font-weight="bold" text-align="center">
-         EMPLOYER NAME ${empDet.employer?if_exists} 
-         EMPLOYER PIN ${empDet.pinNumber?if_exists}
-        </fo:block>
-        <fo:block><fo:leader/></fo:block>
-               
+        <fo:list-block provisional-distance-between-starts="2in">
+        	<fo:list-item>
+                <fo:list-item-label>
+                <fo:block  font-weight="bold" font-size="10pt">P.10A</fo:block>
+                    <fo:block font-size="10pt" margin-top="8mm" margin-left="-15mm" font-weight="bold" text-align="center">
+			         P.A.Y.E. SUPPORTING LIST FOR END OF YEAR CERTIFICATE:
+			         <fo:block  font-weight="bold" font-size="10pt" text-align="center">YEAR ${year.name?if_exists}</fo:block>
+			        </fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block></fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="-100mm" text-align="center">EMPLOYER NAME </fo:block>                    
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="130mm">EMPLOYER PIN </fo:block>         
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block></fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="-100mm" text-align="center">${empDet.employer?if_exists}</fo:block>
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="130mm">${empDet.pinNumber?if_exists}</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block></fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+         </fo:list-block>
+        
         <fo:block><fo:leader/></fo:block>
         <#-- Loan Details -->
         <fo:block space-after.optimum="10pt" font-size="9pt">
@@ -77,7 +99,7 @@ under the License.
                             </fo:table-cell>
                             
                         </fo:table-row -->
-                    <#list yearList as yearList>
+                    <#list p10AItemsList as yearList>
                     
                          <fo:table-row font-size="10pt">
                             
@@ -93,12 +115,12 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
-									${yearList.amount?string(",##0.00")}
+									${yearList.totalGrossAmount?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
-									${yearList.amount?string(",##0.00")}
+									${yearList.totalPayeAmount?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             
