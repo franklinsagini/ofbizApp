@@ -22,12 +22,25 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
         
      <simple-method method-name="createDeathNotification" short-description="Create DeathNotification">
-        <make-value entity-name="DeathNotification" value-field="newEntity"/>
+			<call-simple-method method-name="saveDeathNotification"></call-simple-method>
+			
+			<!-- set field="notificationNo" from-field="newEntity.deathNotificationId"/>
+			<store-value value-field="newEntity"/ -->
+    </simple-method>
+    
+    <simple-method method-name="saveDeathNotification" use-transaction="true">
+    	<make-value entity-name="DeathNotification" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set field="entityName" value="DeathNotification"></set>
-        <set field="newEntity.deathNotificationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        <set field="notificationNo" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}" type="String"/>
+        <set field="deathNotificationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"/>
+        <set field="newEntity.deathNotificationId" from-field="deathNotificationId" ></set>
+        
+        <!-- set field="deathNotificationId" value="${newEntity.deathNotificationId}" type="Long"/ -->
+        <set field="newEntity.notificationNo" from-field="deathNotificationId"/>
+        
+        
+        
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.closed" value="NO"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
@@ -88,6 +101,30 @@ under the License.
     
     <simple-method method-name="deleteFuneralExpensePayment" short-description="Delete FuneralExpensePayment">
         <entity-one entity-name="FuneralExpensePayment" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- FuneralExpenseAmount -->
+        <simple-method method-name="createFuneralExpenseAmount" short-description="Create FuneralExpenseAmount">
+        <make-value entity-name="FuneralExpenseAmount" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="FuneralExpenseAmount"></set>
+        <set field="newEntity.funeralExpenseAmountId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.closed" value="NO"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateFuneralExpenseAmount" short-description="Update FuneralExpenseAmount">
+        <entity-one entity-name="FuneralExpenseAmount" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteFuneralExpenseAmount" short-description="Delete FuneralExpenseAmount">
+        <entity-one entity-name="FuneralExpenseAmount" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     

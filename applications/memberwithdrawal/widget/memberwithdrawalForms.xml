@@ -36,9 +36,10 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
         <actions>
-        	<entity-condition entity-name="Member">
-        		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
-        	</entity-condition>
+        	<!-- entity-condition entity-name="Member">
+        		
+        	</entity-condition -->
+        	<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
         	
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
@@ -73,7 +74,7 @@
      </form>
      
      <!-- Member Withdrawal -->
-      <form name="NewMemberWithdrawal" type="single" target="createMemberWithdrawal"
+    <form name="NewMemberWithdrawal" type="single" target="createMemberWithdrawal"
 	focus-field-name="transactionAmount" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="cardApplicationContext">
         
@@ -81,14 +82,16 @@
         	<entity-one entity-name="Member" value-field="member">
         		<field-map field-name="partyId" from-field="parameters.partyId"/>
         	</entity-one>
-         	<entity-condition entity-name="Member" list="memberList">
+         	<!-- entity-condition entity-name="Member" list="memberList">
         		<order-by field-name="firstName"/>
-        	</entity-condition>
+        	</entity-condition -->
         	
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
             	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             </entity-condition>
+            
+            
         </actions>
         <field name="memberWithdrawalId"><hidden/></field>
         <field name="partyId"><hidden/></field>
@@ -120,7 +123,9 @@
 		<field name="withdrawalNo" title="Withdrawal No." ><text  disabled="true" default-value="**GENERATED**"></text></field>
 		
 		              
-         <field name="dateApplied" title="Date Applied"  widget-style="required" required-field="true"><date-time/></field>
+         <field name="dateApplied" title="Date Applied"  widget-style="required" required-field="true">
+			<date-time default-value="${bsh: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" type="date" />         
+         </field>
          <field name="withdrawalreason" title="Reason"  widget-style="required" required-field="true">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="name" entity-name="WithdrawalReason">
@@ -152,9 +157,9 @@
             	<order-by field-name="-memberWithdrawalId"></order-by>
             </entity-condition>
             
-            <entity-condition entity-name="Member" list="memberList">
+            <!-- entity-condition entity-name="Member" list="memberList">
         		<order-by field-name="firstName"/>
-        	</entity-condition>
+        	</entity-condition -->
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateMemberWithdrawal"/>
 		

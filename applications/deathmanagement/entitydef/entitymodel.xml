@@ -14,7 +14,7 @@
 	     	<field name="isActive" type="indicator"></field>
 			<field name="createdBy" type="name"></field>
 			<field name="updatedBy" type="name"></field>
-     		<field name="notificationNo" type="name"></field>
+     		<field name="notificationNo" type="id-vlong-int"></field>
      		
      		
      		<field name="dateReported" type="date-time"></field>
@@ -22,7 +22,7 @@
      		
      		<field name="dateofDeath" type="date-time"></field>
      		<field name="causeOfDeath" type="name"></field>
-     		<field name="deathCertificateNo" type="name"></field>
+     		<field name="burialPermitNo" type="name"></field>
      		<field name="reportedBy" type="name"></field>
      		<field name="relationship" type="name"></field>
      		
@@ -78,6 +78,8 @@
      		
      		<field name="comment" type="name"></field>
      		
+     		<field name="payeeOptions" type="name"></field>
+     		
 			<prim-key field="funeralExpensePaymentId"/>
 
     	<relation type="one" fk-name="FuneralExpensePayment_MEMBER" rel-entity-name="Member">
@@ -121,4 +123,32 @@
 			<field name="name" type="name"></field>
 			<prim-key field="insuranceCompanyId"/>
      </entity>
+     
+     
+     		<entity entity-name="FuneralExpenseAmount" package-name="org.ofbiz.deathmanagement"
+		title="FuneralExpenseAmount Entity">
+		<field name="funeralExpenseAmountId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+
+		
+		<prim-key field="funeralExpenseAmountId"/>
+	</entity>
+	
+	<view-entity entity-name="NotificationMemberView" package-name="org.ofbiz.deathmanagement">
+    	<member-entity entity-alias="DN" entity-name="DeathNotification"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<alias entity-alias="DN" name="deathNotificationId" ></alias>
+    	<alias entity-alias="DN" name="notificationNo" ></alias>
+    	
+    	<alias entity-alias="M" name="firstName" /> 
+    	<alias entity-alias="M" name="middleName" /> 
+    	<alias entity-alias="M" name="lastName" /> 
+    	
+    	<view-link entity-alias="DN" rel-entity-alias="M"> 
+            <key-map field-name="partyId" rel-field-name="partyId"/> 
+        </view-link> 
+    </view-entity>
 </entitymodel>

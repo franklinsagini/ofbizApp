@@ -8,13 +8,17 @@
         <field name="deathNotificationId"><hidden/></field>
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember" show-description="true"/></field>
 
-        <field name="notificationNo" title="Notification No" widget-style="required" required-field="true"><text disabled="true" default-value="Auto-Generated"></text></field>
-        <field name="dateReported" title="Date Reported" widget-style="required" required-field="true"><date-time type="date"/></field>
+        <field name="notificationNo" title="Death No. (Generated)" widget-style="required" required-field="true"><text disabled="true"></text></field>
+        <field name="dateReported" title="Date Reported" widget-style="required" required-field="true">
+        	<date-time default-value="${bsh: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" type="date" />   
+        </field>
         
-        <field name="dateofDeath" title="Date of Death"><date-time type="date"/></field>
+        <field name="dateofDeath" title="Date of Death">
+        	<date-time default-value="${bsh: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" type="date" />   
+        </field>
         
         <field name="causeOfDeath" title="Cause of Death" widget-style="required" required-field="true"><textarea/></field>
-        <field name="deathCertificateNo" title="Death Certificat No." widget-style="required" required-field="true"><text></text></field>
+        <field name="burialPermitNo" title="Burial Permit No." widget-style="required" required-field="true"><text></text></field>
         <field name="reportedBy" title="Reported By" widget-style="required" required-field="true"><text></text></field>
         <field name="relationship" title="Relationship" widget-style="required" required-field="true"><text></text></field>
        
@@ -38,13 +42,13 @@
         	</drop-down>
         </field>
 
-        <field name="notificationNo" title="Notification No" widget-style="required" required-field="true"><text></text></field>
+        <field name="notificationNo" title="Death No" widget-style="required" required-field="true"><text></text></field>
         <field name="dateReported" title="Date Reported" widget-style="required" required-field="true"><date-time type="date"/></field>
         
         <field name="dateofDeath" title="Date of Death"><date-time type="date"/></field>
         
         <field name="causeOfDeath" title="Cause of Death"><text></text></field>
-        <field name="deathCertificateNo" title="Death Certificat No."><text></text></field>
+        <field name="burialPermitNo" title="Burial Permit No."><text></text></field>
         <field name="reportedBy" title="Reported By"><text></text></field>
         <field name="relationship" title="Relationship"><text></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
@@ -109,19 +113,30 @@
     </form>
     
     <!-- Funeral Expense Payment -->
-        <form name="NewFuneralExpensePayment" type="single" target="createFuneralExpensePayment"
+    <form name="NewFuneralExpensePayment" type="single" target="createFuneralExpensePayment"
         focus-field-name="amountPayable" header-row-style="header-row" default-table-style="basic-table">
         
         <field name="funeralExpensePaymentId"><hidden/></field>
-        <field name="deathNotificationId" title="Death Notification">
-        	<drop-down>
-        		<entity-options description="${notificationNo}" entity-name="DeathNotification"></entity-options>
+        <field name="deathNotificationId" title="Death Notification" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${notificationNo}  - ${firstName} ${middleName} ${lastName}" key-field-name="deathNotificationId"  entity-name="NotificationMemberView"></entity-options>
         	</drop-down>
         </field>
 
-        <field name="amountPayable" title="Amount Payable" widget-style="required" required-field="true"><text></text></field>
+        <field name="amountPayable" title="Amount Payable" widget-style="required" required-field="true"><text default-value="${bsh: org.ofbiz.deathmanagement.DeathManagement.getFuneralExpenseAmount()}"></text></field>
         <field name="authorizedBy" title="Authorized By" widget-style="required" required-field="true"><text></text></field>
         <field name="nominee" title="Nominee" widget-style="required" required-field="true"><text></text></field>
+       
+       <field name="payeeOptions" title="Payee Options" widget-style="required" required-field="true">
+       	<drop-down allow-empty="true">
+       		<option key="Employer"/>
+       		<option key="Nominee"/>
+       		<option key="Public Trustee"/>
+       	</drop-down>
+       
+       </field>
+       
+       
         <field name="nomineePercentage" title="Nominee Percentage" widget-style="required" required-field="true"><text></text></field>
         <field name="comment" title="Comment"><textarea></textarea></field>
 
@@ -139,7 +154,7 @@
          <field name="funeralExpensePaymentId"><hidden/></field>
         <field name="deathNotificationId" title="Death Notification">
         	<drop-down>
-        		<entity-options description="${notificationNo}" entity-name="DeathNotification"></entity-options>
+        		<entity-options description="${notificationNo} - ${firstName} ${middleName} ${lastName}" key-field-name="deathNotificationId" entity-name="NotificationMemberView"></entity-options>
         	</drop-down>
         </field>
 
@@ -150,6 +165,33 @@
         <field name="comment" title="Comment"><textarea></textarea></field>
 
          <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-
     </form>
+    
+    
+    <!-- FuneralExpenseAmount Setup -->
+   <form name="funeralExpenseAmount" type="single" target="createFuneralExpenseAmount"
+	focus-field-name="amount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="funeralExpenseAmountContext">
+        <field name="funeralExpenseAmountId"><hidden/></field>
+ 		<field name="amount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+        
+        <!-- 
+        	event="onclick" action="javascript: return checkAvailableBalance();"
+         -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listFuneralExpenseAmount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFuneralExpenseAmount" paginate-target="withdrawalreason"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="FuneralExpenseAmount" >
+             	<order-by field-name="-funeralExpenseAmountId"></order-by>
+            </entity-condition>
+            
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateFuneralExpenseAmount"/>
+		<field name="amount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
 </forms>
