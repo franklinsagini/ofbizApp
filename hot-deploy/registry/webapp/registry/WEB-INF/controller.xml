@@ -458,10 +458,21 @@
 	</request-map>
 
 
-	 <request-map uri="recieveFiles">
+	<!--  <request-map uri="recieveFiles">
 		<security https="true" auth="true" />
 		<event type="service" invoke="recieveFiles" />
 		<response name="success" type="view" value="fileDispatchScreen" />
+		<response name="error" type="view" value="fileDispatchScreen" />
+	</request-map> -->
+
+	 <request-map uri="recieveFiles">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="recieveFiles" />
+		<response name="success" type="request-redirect" value="fileDispatchScreen" >
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="status"/>
+			<redirect-parameter name="currentPossesser"/>
+		</response>
 		<response name="error" type="view" value="fileDispatchScreen" />
 	</request-map>
 
@@ -482,8 +493,12 @@
 
 	<request-map uri="returnfiles">
 		<security https="true" auth="true" />
-		<event type="service" path="" invoke="returnfiles" />
-		<response name="success" type="view" value="fileReturnScreen" />
+		<event type="service-multi" invoke="returnfiles" />
+		<response name="success" type="request-redirect" value="fileReturnScreen" >
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="status"/>
+			<redirect-parameter name="currentPossesser"/>
+		</response>
 		<response name="error" type="view" value="fileReturnScreen" />
 	</request-map>
 

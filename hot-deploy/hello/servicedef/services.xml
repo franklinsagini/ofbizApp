@@ -22,7 +22,8 @@
     </service>
 	
 	<service name="sendMail" engine="java"
-        location="org.ofbiz.common.email.EmailServices" invoke="sendMail">
+        <!-- location="org.ofbiz.common.email.EmailServices" invoke="sendMail"> -->
+        location="org.ofbiz.common.email.NotificationServices" invoke="sendNotification">
         <description>Send E-Mail Service.  partyId and communicationEventId aren't used by sendMail
             but are passed down to storeEmailAsCommunication during the SECA chain.  See sendMailInterface for more comments.</description>
         <implements service="sendMailOnePartInterface"/>
@@ -100,6 +101,13 @@
              location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="deleteCheckTrial" auth="true">
         <description>remove estate</description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	 <service name="updateCheckedUser" engine="simple" default-entity-name="UsersHW"
+             location="component://hello/script/org/ofbiz/hello/hElloServices.xml" invoke="updateCheckedUser" auth="true">
+        <description>Update Valid SkillType</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
