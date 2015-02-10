@@ -16,9 +16,10 @@ stafflist = [];
  pin = staffItem.getString("pinNumber");
  nhif = staffItem.getString("nhifNumber");
  nssf = staffItem.getString("socialSecurityNumber");
+ isManagement = staffItem.getString("isManagement");
  
  stafflist.add([payrollNo :payrollNo, fname :fname, lname : lname, IdNo : IdNo, gender : gender,
- pin : pin, nhif : nhif, nssf : nssf, appointmentDate : appointmentDate]);
+ pin : pin, nhif : nhif, nssf : nssf, appointmentDate : appointmentDate, isManagement : isManagement]);
  }
  
  

@@ -369,11 +369,12 @@
         <field name="loanApplicationId"><hidden/></field>
        	<field name="loanStatusLogId"><hidden/></field>
        	<field name="loanStatusId"><hidden value="${statusId}"/></field>
+       	<field name="loanAmt" ><hidden value="${loanAmt}"/></field>
         <field name="approvedAmt" title="Approved Amount"  widget-style="required" required-field="true"><text default-value="${approvedAmt}"/></field>
         
         <field name="comment" title="Comment "  widget-style="required" required-field="true"><textarea/></field>
                 
-        <field name="submitButton" use-when="ready" title="Approve" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="ready" title="Approve" widget-style="smallSubmit" event="onclick" action="javascript: return isAmountExcess('${approvedAmt}'.replace(/,/g, ''));"><submit button-type="button"/></field>
     </form>
 	
 	<!-- NewReturnToLoans -->

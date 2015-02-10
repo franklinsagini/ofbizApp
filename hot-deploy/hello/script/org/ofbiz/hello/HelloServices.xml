@@ -34,6 +34,8 @@
             <set from-field="userId" field="newEntity.userId"/>
             <create-value value-field="newEntity"/>
     </simple-method>
+	
+	
     
      <!-- Estate -->
     <simple-method method-name="createEstate" short-description="Create Estate">
@@ -200,6 +202,23 @@
 <remove-value value-field="lookedUpValue"/>
        </if-compare> 
     </simple-method>
+	
+	<simple-method method-name="updateCheckedUser"
+		short-description="Update SkillType">
+		<entity-one entity-name="UsersHW" value-field="lookedUpValue" />
+		
+		
+
+
+    <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+        
+
+<store-value value-field="lookedUpValue" />
+<property-to-field resource="HumanResUiLabels"
+property="UpdateSuccess" field="successMessage" />
+
+
+	</simple-method>
 
 
 </simple-methods>
