@@ -224,7 +224,7 @@ under the License.
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
         	
         	
-			<set field="employeeNumber" value="${bsh:org.ofbiz.humanres.HumanResServices.NextPayrollNumber();}" type="String"/>
+			<!--<set field="employeeNumber" value="${bsh:org.ofbiz.humanres.HumanResServices.NextPayrollNumber();}" type="String"/> -->
         </actions>
 
         <alt-target use-when="personalInfo!=null" target="updatePerson"/>
@@ -237,13 +237,19 @@ under the License.
 
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
-       
+       <field name="employmentTerms" title="Terms of Employment" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+            	<option key="permanent" description="Permanent"/>
+                <option key="contract" description="On Contract"/>
+                <option key="intern" description="Internship"/>
+            </drop-down>
+        </field>
         <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
         <field use-when="personalInfo!=null" name="employeeNumber" title="Employee Payroll Number"><display></display></field>
 		 <field name="isManagement" title="Type of Staff" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
-                <option key="Management" description="Is Management"/>
-                <option key="Normal" description="Is Normal Staff"/>
+                <option key="Management" description="Management"/>
+                <option key="Normal" description="Normal Staff"/>
             </drop-down>
         </field>
         <field name="firstName" title="First Names" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
@@ -319,8 +325,22 @@ under the License.
         <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>
          <field name="birthDate" title="Date Of Birth"><date-time type="date"/></field>
         <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>
-
-        <field name="employmentStatusEnumId" title="Employment Status">
+        
+        <field name="contractPeriod"  title="Contract Perion" tooltip="(Select if terms of Employment is CONTRACT)">
+            <drop-down allow-empty="true">
+                <option key="1" description="One Month"/>
+                <option key="2" description="Two Months"/>
+                <option key="3" description="Three Months"/>
+                <option key="4" description="Four Months"/>
+                <option key="5" description="Five Months"/>
+                <option key="6" description="Six Months"/>
+                <option key="12" description="Twelve Months"/>
+                <option key="24" description="Twenty Four Months"/>
+                <option key="36" description="Thirty Six Months"/>
+            </drop-down>
+        </field>
+        <field name="contractEnd" title="End of Contract"><date-time type="date"/></field>
+        <field name="employmentStatusEnumId" title="Employment Status" tooltip="(Select if terms of Employment is PERMANENT)">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="EMPLOY_STTS"/>
@@ -359,9 +379,9 @@ under the License.
         <field name="disabilityDetails"><text size="40" maxlength="60"/></field>
         <field name="placeofbirth" title="Place of Birth"><text size="40" maxlength="60"/></field>
         <field name="nationalIDNumber"  title="National ID Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
-        <field name="pinNumber"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
-        <field name="socialSecurityNumber" title="NSSF Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
-        <field name="nhifNumber" title="NHIF Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="40" maxlength="60"/></field>
+        <field name="pinNumber"><text size="40" maxlength="60"/></field>
+        <field name="socialSecurityNumber" title="NSSF Number"><text size="40" maxlength="60"/></field>
+        <field name="nhifNumber" title="NHIF Number" ><text size="40" maxlength="60"/></field>
         <field name="passportNumber"><text size="40" maxlength="60"/></field>
 
         <field name="emplPositionTypeId" title="Job Position">

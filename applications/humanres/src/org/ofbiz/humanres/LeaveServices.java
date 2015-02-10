@@ -70,9 +70,9 @@ public static String closeFinacialYear(HttpServletRequest request,
 			log.info("---------------------			appointmentdate--------------------------" +partyId);
 			
 			calculateCarryOverLost(partyId, appointmentdate);// call method to calculate
-			Leave.closeFinacialYearForCompassionate(request, response);
 			deleteExistingResetAnnualLost(delegator);
 			deleteExistingLeaveOpeningBalances(delegator);
+			deleteExistingLeaveCalendar(delegator);
 			}
 			
 			
@@ -519,6 +519,20 @@ public static void resetCarryOverLeaveDays(Delegator delegator, String partyId, 
 		log.info("DELETED ALL LEAVE OPENING BALANCES!");
 		
 	}
+	
+	private static void deleteExistingLeaveCalendar(Delegator delegator){
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+
+		try {
+			delegator.removeAll("EmplLeaveCalender");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED ALL LEAVE CALENDAR!");
+		
+	}
+
 
 public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, String partyId) {
 	Map<String, Object> UsedDays = FastMap.newInstance();

@@ -400,7 +400,7 @@ under the License.
         </field>
          <field use-when="editleavetype!=null&amp;&amp;leaveTypeId!=null" 
             name="leaveTypeId" title="Leave Type">
-            <text />
+            <display />
         </field>
 
         <field name="description" title="Name of Leave" tooltip="(This field is required)" widget-style="required" required-field="true"><text/></field>
@@ -710,11 +710,13 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" target="updateDepartment">
         <actions>
             <entity-condition entity-name="department">
+                <entity-order-by field-name="branchId"/>
             </entity-condition>
         </actions>
-        <auto-fields-entity entity-name="department" default-field-type="display"/>
+        
         <field name="departmentId"> <hidden/> </field>
          <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity></field>
+         <field name="departmentName"> <display/> </field>
           <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
                 <hyperlink target="deleteDepartment" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                     <parameter param-name="departmentId"/>
