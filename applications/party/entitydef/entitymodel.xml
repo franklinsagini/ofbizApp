@@ -3441,7 +3441,7 @@ under the License.
 
      <!-- Relationship -->
      <entity entity-name="Relationship" package-name="org.ofbiz.party.party" title="Relationship Entity">
-     		<field name="relationshipId" type="id-ne"></field>
+     		<field name="relationshipId" type="id-int"></field>
      		<field name="name" type="name"></field>
      		<prim-key field="relationshipId"/>
      </entity>
@@ -3450,15 +3450,17 @@ under the License.
     <entity entity-name="MemberNominee" package-name="org.ofbiz.party.party" title="MemberNominee Entity">
      		<field name="memberNomineeId" type="id-vlong-int"></field>
      		<field name="partyId" type="id-vlong-int"></field>
-     		<field name="firstName" type="name"></field>
-     		<field name="middleName" type="name"></field>
-     		<field name="lastName" type="name"></field>
-     		<field name="idNumber" type="name"></field>
+     		<field name="firstName" type="name" enable-audit-log="true"></field>
+     		<field name="middleName" type="name" enable-audit-log="true"></field>
+     		<field name="lastName" type="name" enable-audit-log="true"></field>
+     		<field name="idNumber" type="name" enable-audit-log="true"></field>
      		<field name="passportNumber" type="name"></field>
      		<field name="postalAddress" type="name"></field>
      		<field name="telephoneNumber" type="name"></field>
-     		<field name="mobilePhone" type="name"></field>
+     		<field name="mobilePhone" type="name" enable-audit-log="true"></field>
      		<field name="relationshipId" type="id-int"></field>
+     		<field name="genderId" type="id-int" enable-audit-log="true"></field>
+     		
      		<field name="isAdministrator" type="indicator"></field>
      		<field name="percentage" type="fixed-point"></field>
      		<field name="independentwitnessnames" type="name"></field>
@@ -3471,6 +3473,8 @@ under the License.
      		<field name="administratorIdNo" type="name"></field>
      		<field name="administratorMobileNo" type="name"></field>
      		<field name="administratorPostalAddress" type="name"></field>
+     		
+     		<field name="dateOfBirth" type="date-time"></field>
 
      		<prim-key field="memberNomineeId"/>
 
