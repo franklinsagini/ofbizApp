@@ -2,6 +2,7 @@ package org.ofbiz.humanres;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +60,9 @@ public class AddAllStaffToTraining {
 				if(thruDate.before(cal.getTime()))
 					return "";
 			}
+			
+		
+			
 			
 			
 			log.info("######### approverId is :::: " + approverId);

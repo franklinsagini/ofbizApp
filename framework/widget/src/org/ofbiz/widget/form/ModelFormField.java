@@ -2609,6 +2609,14 @@ public class ModelFormField {
 					&& !this.entityName.equals("MessageStatus")
 					&& !this.entityName.equals("NotificationType")
 					
+					&& !this.entityName.equals("WithdrawalLog")
+					&& !this.entityName.equals("WithdrawalStatus")
+					&& !this.entityName.equals("MemberWithdrawal")
+					&& !this.entityName.equals("FuneralExpenseAmount")
+					&& !this.entityName.equals("Relationship")
+					
+					
+					
 					
 					&& !this.entityName.equals("CardApplication")) {
 				try {

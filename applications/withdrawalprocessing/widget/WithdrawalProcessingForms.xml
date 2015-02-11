@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+		<form name="FindMemberWithdrawal" type="single" target="withdrawalApprovals" default-entity-name="MemberWithdrawal">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+        
+        <field name="idNumber" title="ID Number" position="2"><text-find/></field>
+        
+        <field name="middleName" title="Middle Name"><text-find/></field>
+        
+        <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
+        
+        <field name="lastName" title="Last Name"><text-find/></field>
+        
+        <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+        
+        <field name="withdrawalNo" title="Status"><text-find></text-find></field>
+       
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    <form name="listApproveWithdrawal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberWithdrawal" paginate-target="withdrawalApprovals"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="MemberWithdrawal">
+        		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        	</entity-condition>
+        	
+        	
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberWithdrawalCtx"/>
+                <field-map field-name="entityName" value="MemberWithdrawal"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+  		<field name="memberWithdrawalId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="memberObligations">
+        	<hyperlink target="memberObligations?memberWithdrawalId=${memberWithdrawalId}" description="View Obligations for ${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
+        
+        <field name="approveWithdrawal">
+        	<hyperlink target="approveWithdrawal?memberWithdrawalId=${memberWithdrawalId}" description="Approve Withdrawal for ${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
+        
+        <field name="rejectWithdrawal">
+        	<hyperlink target="rejectWithdrawal?memberWithdrawalId=${memberWithdrawalId}" description="Reject Withdrawal for ${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
+		<field name="idNumber" title="ID Number"><display></display></field>
+		<field name="mobilePhoneNumber" title="Mobile Number"  ><display></display></field>
+		<!-- field name="firstName" title="First Name"  ><display></display></field>
+		<field name="middleName" title="Middle Name"  ><display></display></field>
+		<field name="lastName" title="Last Name"  ><display></display></field -->
+		
+		<field name="payrollNumber" title="Payroll Number"  ><display></display></field>
+		<field name="memberNumber" title="Member No."><display></display></field>
+
+		<field name="withdrawalstatus" title="Withrawal Status">
+        	<!-- drop-down allow-empty="false">
+                <option key="Applied" description="Applied"/>
+                <option key="Active" description="Active"/>
+                <option key="Renewing" description="Renewing"/>
+                <option key="Deactivated" description="Deactivated"/>
+            </drop-down -->
+            <display></display>
+      	</field>
+		
+		
+      	<field name="initiatedBy" title="Initiated By">
+        	<!-- drop-down allow-empty="false">
+                <option key="Member" description="Member"/>
+                <option key="Chai Sacco" description="Chai Sacco"/>
+            </drop-down -->
+            <display></display>
+      	</field>
+		<field name="withdrawalNo" title="Withdrawal No." ><display></display></field>
+		
+		              
+         <field name="dateApplied" title="Date Applied"  ><display type="date"></display></field>
+        <field name="withdrawalreason" title="Reason">
+            <!-- drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="name" entity-name="WithdrawalReason">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down -->
+            <display-entity entity-name="WithdrawalReason" key-field-name="name" description="${name}"></display-entity>
+        </field>
+        
+        <field name="comments" title="Comments"><display></display></field>
+
+        <field name="deathOccurrenceDate" title="Death Occurrence Date"  ><display></display></field>
+        <field name="deathCertificateNumber" title="Death Certificate No."  ><display type="date"></display></field>        
+     </form>
+     
+          <!-- ApproveWithdrawal -->
+     <form name="ApproveWithdrawalLog" type="single" target="createWithdrawalLog"
+	focus-field-name="withdrawalstatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="withdrawalReasonContext">
+        <field name="withdrawalLogId"><hidden/></field>
+        <field name="memberWithdrawalId"><hidden/></field>
+ 		<field name="withdrawalstatus" title="Status" ><hidden value="APPROVED"/></field>
+ 		<field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea/></field>
+        
+        <!-- 
+        	event="onclick" action="javascript: return checkAvailableBalance();"
+         -->
+        <field name="submitButton" title="Approve" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listWithdrawalLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateWithdrawalLog" paginate-target="withdrawalLog"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="WithdrawalLog" >
+            	<condition-expr field-name="memberWithdrawalId" operator="equals" from-field="memberWithdrawalId"/>
+             	<order-by field-name="-createdStamp"></order-by>
+            </entity-condition>
+            
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateWithdrawalLog"/>
+		<field name="withdrawalstatus" title="Status" ><display></display></field>
+		<field name="comments" title="Comments" ><display></display></field>
+		<field name="createdStamp" title="When" ><display type="date-time"></display></field>
+    </form>
+	 <!-- RejectWithdrawal -->
+	<form name="RejectWithdrawalLog" type="single" target="createWithdrawalLog"
+	focus-field-name="withdrawalstatus" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="withdrawalReasonContext">
+        <field name="withdrawalLogId"><hidden/></field>
+        <field name="memberWithdrawalId"><hidden/></field>
+ 		<field name="withdrawalstatus" title="Status"  widget-style="required" required-field="true"><hidden value="REJECTED"/></field>
+ 		<field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea/></field>
+        <field name="submitButton" title="Reject" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+</forms>

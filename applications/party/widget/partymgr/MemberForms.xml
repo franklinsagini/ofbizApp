@@ -226,11 +226,20 @@ under the License.
         <field name="postalAddress"  title="Postal Address"><textarea/></field>
         <field name="telephoneNumber" title="Telephone No"><text/></field>
         <field name="mobilePhone" title="Mobile Phone"><text/></field>
+        <field name="genderId" title="Gender"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="Gender"></entity-options>
+            </drop-down>
+        </field>
+        
         <field name="relationshipId" title="Relationship"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="relationshipList" key-name="relationshipId" description="${name}" />
             </drop-down>
         </field>
+        
+        
+        <field name="dateOfBirth" title="Death Of Birth"><date-time type="date" /></field>
         <field name="isAdministrator" title="Is Administrator">
             <drop-down allow-empty="false" no-current-selected-key="N">
                 <option key="Y" description="Yes"/>
@@ -303,7 +312,7 @@ under the License.
     
     <!-- Member Details Listing -->
     <!-- Relationships List -->
-    <form name="listRelationships" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateRelationships" paginate-target="findRelationships"
+    <form name="listRelationships" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateRelationships" paginate-target="relationships"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="Relationship">
@@ -313,13 +322,13 @@ under the License.
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
-        <field name="name"><display also-hidden="false"/></field>
+        <field name="name"><text/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteRelationships" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="relationshipId"/>
             </hyperlink>
         </field>
-        <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
     <!--  employmentDetails List-->

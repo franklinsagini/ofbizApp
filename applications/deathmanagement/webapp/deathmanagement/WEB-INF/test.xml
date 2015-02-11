@@ -1,22 +1,20 @@
-    <simple-method method-name="createFuneralExpensePayment" short-description="Create FuneralExpensePayment">
-        <make-value entity-name="FuneralExpensePayment" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set field="entityName" value="FuneralExpensePayment"></set>
-        <set field="newEntity.deathInsuranceClaimId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.closed" value="NO"/>
-	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    
-     <simple-method method-name="updateFuneralExpensePayment" short-description="Update FuneralExpensePayment">
-        <entity-one entity-name="FuneralExpensePayment" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteFuneralExpensePayment" short-description="Delete FuneralExpensePayment">
-        <entity-one entity-name="FuneralExpensePayment" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
+  <service name="createFuneralExpenseAmount" engine="simple" default-entity-name="FuneralExpenseAmount"
+             location="component://deathmanagement/script/org/ofbiz/deathmanagement/DeathManagementServices.xml" invoke="createFuneralExpenseAmount" auth="true">
+        <description>Create FuneralExpenseAmount</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateFuneralExpenseAmount" engine="simple" default-entity-name="FuneralExpenseAmount"
+             location="component://deathmanagement/script/org/ofbiz/deathmanagement/DeathManagementServices.xml" invoke="updateFuneralExpenseAmount" auth="true">
+        <description>Update FuneralExpenseAmount</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteFuneralExpenseAmount" engine="simple" default-entity-name="FuneralExpenseAmount"
+             location="component://deathmanagement/script/org/ofbiz/deathmanagement/DeathManagementServices.xml" invoke="deleteFuneralExpenseAmount" auth="true">
+        <description>Delete FuneralExpenseAmount</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>

@@ -17,22 +17,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if yearList?has_content>
+    <#if p10ItemsList?has_content>
         <#-- REPORT TITLE -->
-        <fo:block font-size="10pt" margin-top="14mm"  font-weight="bold" text-align="left">
-         	P.10
-        </fo:block>
-        <fo:block font-size="10pt" margin-top="14mm" margin-left="61mm" font-weight="bold" text-align="left">
-         P.A.Y.E - EMPLOYER'S CERTIFICATE
-          YEAR ${year.name?if_exists}
-        </fo:block>
-        <fo:block font-size="10pt" margin-top="14mm" margin-left="100mm" font-weight="bold" text-align="right">
-         EMPLOYER'S PIN 
-         ${empDet.pinNumber?if_exists}
-        </fo:block>
-        <fo:block><fo:leader/></fo:block>
-       
-		 
+         <fo:list-block provisional-distance-between-starts="2in">
+            <fo:list-item>
+                <fo:list-item-label>
+                <fo:block  font-weight="bold" font-size="10pt">P.10</fo:block>
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="-10mm" margin-top="10mm" text-align="center">P.A.Y.E - EMPLOYER'S CERTIFICATE</fo:block>                    
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="160mm">EMPLOYER'S PIN</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block></fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="-10mm" text-align="center"> YEAR ${year.name?if_exists} </fo:block>
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="165mm">${empDet.pinNumber?if_exists}</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block></fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+         </fo:list-block>
+        
         <fo:list-block provisional-distance-between-starts="5in" font-size="10pt">
             <fo:list-item>
                 <fo:list-item-label>
@@ -124,8 +133,8 @@ under the License.
                             </fo:table-cell>
                             
                         </fo:table-row -->
-                    <#list yearList as yearList>
-                    
+                    <#list p10ItemsList as yearList>
+                   <#-- <#if yearList.payeamount?if_exists != 0> -->
                          <fo:table-row font-size="10pt">
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -133,20 +142,24 @@ under the License.
                                  	${yearList.periodName?if_exists}
                                  </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block text-align="right">
-                                	${yearList.amount?string(",##0.00")}
-                                </fo:block>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                                <#-- if yearList.payrollElementId?if_exists == "PAYE" -->
+                                	<fo:block>${yearList.totalPayeAmount?string(",##0.00")}</fo:block>
+                           		<#-- else>
+                                	<fo:block>0.00</fo:block>
+                            	</#if -->
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 									
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block text-align="right">
-									${yearList.amount?string(",##0.00")}
-                                </fo:block>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                                <#--if yearList.payrollElementId?if_exists == "LOWINTERESTBENEFIT" -->
+                                	<fo:block>${yearList.totalFringeAmount?string(",##0.00")}</fo:block>
+                           		<#--else>
+                                	<fo:block>0.00</fo:block>
+                            	</#if-->
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
@@ -155,6 +168,7 @@ under the License.
                             </fo:table-cell>
                             
                         </fo:table-row>
+                       <#-- </#if> -->
                     </#list>
                     <fo:table-row column-height="30mm" font-weight="bold" font-size="12pt">
                             
@@ -221,7 +235,7 @@ under the License.
           </fo:list-block>
           
           
-          <fo:list-block provisional-distance-between-starts="5in" font-size="10pt" >
+          <fo:list-block provisional-distance-between-starts="5in" font-size="10pt" margin-top="8mm">
              <fo:list-item>
                 <fo:list-item-label>
                     <fo:block font-weight="bold" font-size="10pt">NAME OF EMPLOYER_______________________________________________</fo:block>

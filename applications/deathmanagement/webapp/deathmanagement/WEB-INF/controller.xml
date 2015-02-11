@@ -23,7 +23,7 @@
 	<request-map uri="createDeathNotification">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createDeathNotification" />
-		<response name="success" type="request-redirect" value="deathNotifications">
+		<response name="success" type="request-redirect-noparam" value="deathNotifications">
 			<redirect-parameter name="partyId" />
 		</response>
 		<response name="error" type="view" value="deathNotifications" />
@@ -117,6 +117,35 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="deathNotifications" />
 	</request-map>
+	
+	
+	        <!-- Funeral Expense Amount -->
+        
+        <request-map uri="funeralExpenseAmount">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="funeralExpenseAmount" />
+        </request-map>
+        
+        <request-map uri="createFuneralExpenseAmount">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createFuneralExpenseAmount" />
+                <response name="success" type="request-redirect-noparam"
+                        value="funeralExpenseAmount"></response>
+        </request-map>
+                <request-map uri="updateFuneralExpenseAmount">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateFuneralExpenseAmount" />
+                <response name="success" type="request-redirect"
+                        value="funeralExpenseAmount"></response>
+                <response name="error" type="view" value="funeralExpenseAmount" />
+        </request-map>
+
+        <request-map uri="deleteFuneralExpenseAmount">
+                <security https="true" auth="true" />
+                <event type="service" invoke="funeralExpenseAmount" />
+                <response name="success" type="request-redirect"
+                        value="funeralExpenseAmount"></response>
+        </request-map> 
 
 	<!-- View Mappings -->
 	<view-map name="LookupActiveMember" type="screen"
@@ -132,5 +161,10 @@
 		
 				<view-map name="funeralExpensePayment" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#funeralExpensePayment" />
+		
+		
+		
+		<view-map name="funeralExpenseAmount" type="screen"
+		page="component://deathmanagement/widget/DeathManagementScreens.xml#funeralExpenseAmount" />
 		
 </site-conf>
