@@ -21,6 +21,143 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+    <form name="SasraReportName" type="single" target="createSasraReport" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="sasraReportNameContext">
+        <alt-target use-when="sasraReportNameContext!=null" target="UpdateSasraReport"/>
+
+        <field name="reportId">
+            <hidden/>
+        </field>
+
+        <field name="reportId" use-when="sasraReportNameContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="name" title="Report Name">
+            <text size="45"></text>
+        </field>
+                <!-- submitButton -->
+        <field use-when="sasraReportNameContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="sasraReportNameContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+    <form name="SasraReportNameList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
+        paginate-target="createSasraReport" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SasraReportName"></entity-condition>
+        </actions>
+        <field name="reportId"><display /></field>
+        <field name="name" title="Report Name">
+            <display />
+        </field>
+         <field name="ReportItems">
+            <hyperlink target="SasraReportItem" description="Report Items">
+                <parameter param-name="reportId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="SasraReportItem" type="single" target="createSasraReportItem" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="sasraReportItemContext">
+        <alt-target use-when="sasraReportItemContext!=null" target="UpdateSasraReportItem"/>
+
+        <field name="reportItemId">
+            <hidden/>
+        </field>
+        <field name="reportId">
+            <hidden/>
+        </field>
+
+        <field name="reportItemId" use-when="sasraReportItemContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="code" title="Report Item Code">
+            <text size="45"></text>
+        </field>
+
+        <field name="name" title="Report Item Name">
+            <text size="45"></text>
+        </field>
+                <!-- submitButton -->
+        <field use-when="sasraReportItemContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="sasraReportItemContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+
+    <form name="SasraReportItemList" list-name="listIt" target="" title="" type="list" view-size="20"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate-target="createSasraReportItem">
+        <actions>
+            <entity-condition entity-name="SasraReportItem">
+                <condition-expr field-name="reportId" from-field="reportId"/>
+                <order-by field-name="code"/>
+            </entity-condition>
+        </actions>
+        <field name="reportItemId"><display /></field>
+        <field name="name" title="Report Item Name">
+            <display />
+        </field>
+        <field name="code" title="Report Code">
+            <display />
+        </field>
+        <field name="GlAccounts">
+            <hyperlink target="SasraGLAccounts" description="GL Accounts">
+                <parameter param-name="reportItemId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+
+    <form name="SasraGLAccounts" type="single" target="createSasraGLAccounts" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="sasraReportGlAccountContext">
+        <alt-target use-when="sasraReportGlAccountContext!=null" target="UpdateSasraGLAccounts"/>
+
+        <field name="sasraReportGlAccountId">
+            <hidden/>
+        </field>
+        <field name="reportItemId">
+            <hidden/>
+        </field>
+
+        <field name="sasraReportGlAccountId" use-when="sasraReportGlAccountContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="glAccountId" title="Gl Account">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="GlAccount"
+                    description="${accountName}"><entity-order-by field-name="accountCode" />
+                </entity-options>
+            </drop-down>
+        </field>
+
+
+                <!-- submitButton -->
+        <field use-when="sasraReportGlAccountContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="sasraReportGlAccountContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+
+    <form name="SasraGLAccountList" list-name="listIt" target="" title="" type="list" view-size="20"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate-target="createSasraGLAccounts">
+        <actions>
+            <entity-condition entity-name="SasraReportGlAccount">
+                <condition-expr field-name="reportItemId" from-field="reportItemId"/>
+                <order-by field-name="sasraReportGlAccountId"/>
+            </entity-condition>
+        </actions>
+        <field name="sasraReportGlAccountId" >
+            <display/>
+        </field>
+        <field name="glAccountId" title="GL Account Name">
+            <display-entity entity-name="GlAccount" description="${accountName}"/>
+        </field>
+    </form>
+
+
+
+
+
     <form name="ListGlAccountOrganization" list-name="listIt" target="" title="" type="list" paginate-target="ListGlAccountOrganization"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>

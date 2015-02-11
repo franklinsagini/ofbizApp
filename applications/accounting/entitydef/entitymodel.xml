@@ -82,6 +82,44 @@ under the License.
       <prim-key field="reportId"/>
     </entity>
 
+    <entity entity-name="SasraReportName"
+            package-name="org.ofbiz.accounting.reports"
+            title="Sasra Report Entity">
+      <field name="reportId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <prim-key field="reportId"/>
+    </entity>
+
+    <entity entity-name="SasraReportItem"
+            package-name="org.ofbiz.accounting.reports"
+            title="Sasra Report Item entity">
+      <field name="reportItemId" type="id-ne"></field>
+      <field name="reportId" type="id-ne"></field>
+      <field name="code" type="short-varchar"></field>
+      <field name="name" type="name"></field>
+      <prim-key field="reportItemId"/>
+      <relation type="one" fk-name="RPT_ITM_NAME" rel-entity-name="SasraReportName">
+        <key-map field-name="reportId"/>
+      </relation>
+    </entity>
+
+
+    <entity entity-name="SasraReportGlAccount"
+            package-name="org.ofbiz.accounting.reports"
+            title="Sasra Report Item entity">
+      <field name="sasraReportGlAccountId" type="id-ne"></field>
+      <field name="reportItemId" type="id-ne"></field>
+      <field name="glAccountId" type="id"></field>
+      <prim-key field="sasraReportGlAccountId"/>
+      <relation type="one" fk-name="RPT_ITM_GLAC" rel-entity-name="SasraReportItem">
+        <key-map field-name="reportItemId"/>
+      </relation>
+      <relation type="one" fk-name="SASRA_GLAC" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId" rel-field-name="glAccountId"/>
+      </relation>
+    </entity>
+
+
     <entity entity-name="DepositReturnsRanges"
             package-name="org.ofbiz.accounting.reports"
             title="Deposit Return Ranges">
