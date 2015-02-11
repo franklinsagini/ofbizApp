@@ -208,6 +208,8 @@ under the License.
         <attribute name="finAccountAuthId" type="String" mode="IN" optional="true"/>
         <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
     </service>
+
+    <!-- FROM BANK RECON SCREEN -->
     <service name="getFinAccountTransListAndTotals" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="getFinAccountTransListAndTotals">
         <description>Financial Account Transaction List and Totals</description>
@@ -297,6 +299,12 @@ under the License.
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="debitCreditFlag" type="String" mode="IN" optional="true"/>
+        <attribute name="cashBookTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="bankBalanceTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUnreceiptedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUnidentifiedDebitsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUncreditedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUnpresentedChequesTotal" type="BigDecimal" mode="INOUT" optional="true"/>
     </service>
     <service name="reconcileAdjustmentFinAcctgTrans" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="reconcileAdjustmentFinAcctgTrans">
@@ -517,6 +525,7 @@ under the License.
         <implements service="createPayment"/>
         <attribute name="isDepositWithDrawPayment" type="String" mode="IN" optional="true"/>
         <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentRefNum" type="String" mode="IN" optional="false"/>
         <attribute name="paymentGroupTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>

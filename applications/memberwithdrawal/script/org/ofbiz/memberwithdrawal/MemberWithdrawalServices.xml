@@ -26,9 +26,12 @@ under the License.
         <make-value entity-name="MemberWithdrawal" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="MemberWithdrawal" field="memberWithdrawalId"/>
-        <set from-field="memberWithdrawalId" field="newEntity.memberWithdrawalId"/>
-        <set from-field="memberWithdrawalId" field="newEntity.withdrawalNo"/>
+        <!-- sequenced-id sequence-name="MemberWithdrawal" field="memberWithdrawalId"/>
+        <set from-field="memberWithdrawalId" field="newEntity.memberWithdrawalId"/ -->
+        <set field="entityName" value="MemberWithdrawal"></set>
+		<set field="newEntity.memberWithdrawalId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <set from-field="memberWithdrawalId" field="newEntity.withdrawalNo" type="String"/>
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
@@ -52,8 +55,11 @@ under the License.
         <make-value entity-name="WithdrawalStatus" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="WithdrawalStatus" field="withdrawalStatusId"/>
-        <set from-field="withdrawalStatusId" field="newEntity.withdrawalStatusId"/>
+        <!-- sequenced-id sequence-name="WithdrawalStatus" field="withdrawalStatusId"/>
+        <set from-field="withdrawalStatusId" field="newEntity.withdrawalStatusId"/ -->
+        <set field="entityName" value="WithdrawalStatus"></set>
+		<set field="newEntity.withdrawalStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
@@ -110,8 +116,13 @@ under the License.
     	<make-value entity-name="WithdrawalLog" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="WithdrawalLog" field="withdrawalLogId"/>
-        <set from-field="withdrawalLogId" field="newEntity.withdrawalLogId"/>
+        <!-- sequenced-id sequence-name="WithdrawalLog" field="withdrawalLogId"/>
+        <set from-field="withdrawalLogId" field="newEntity.withdrawalLogId"/ -->
+        
+        <set field="entityName" value="WithdrawalLog"></set>
+		<set field="newEntity.withdrawalLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
@@ -132,7 +143,9 @@ under the License.
     	<entity-one value-field="member" entity-name="Member">
     		<field-map field-name="partyId" value="${memberWithdrawal.partyId}"/>
     	</entity-one>
-    	<set field="member.memberStatus" value="WITHDRAWN"/>
+    	<set field="statusName" value="WITHDRAWN"/>
+    	<set field="memberStatusId" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getMemberStatusId(statusName);}" />
+    	<set field="member.memberStatusId" from-field="memberStatusId"/>
     	<store-value value-field="member"/>
     </simple-method>
     <simple-method method-name="updateWithdrawalToRejected" use-transaction="true">
@@ -147,7 +160,14 @@ under the License.
     	<entity-one value-field="member" entity-name="Member">
     		<field-map field-name="partyId" value="${memberWithdrawal.partyId}"/>
     	</entity-one>
-    	<set field="member.memberStatus" value="ACTIVE"/>
+    	
+    	
+    	<set field="statusName" value="ACTIVE"/>
+    	<set field="memberStatusId" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getMemberStatusId(statusName);}" />
+    	<set field="member.memberStatusId" from-field="memberStatusId"/>
+    	
+    	
+    	<!-- set field="member.memberStatus" value="ACTIVE"/ -->
     	<store-value value-field="member"/>
     </simple-method>
     

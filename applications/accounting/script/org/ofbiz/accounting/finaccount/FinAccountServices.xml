@@ -996,6 +996,23 @@ under the License.
     </simple-method>
 
     <simple-method method-name="reconcileFinAccountTrans" short-description="Reconcile Financial Accounting Transaction">
+        <set field="cashBookTotal" type="BigDecimal" from-field="parameters.cashBookTotal"/>
+        <set field="bankBalanceTotal" type="BigDecimal" from-field="parameters.bankBalanceTotal"/>
+        <!-- UB - UNRECEIPTED BANKINGS -->
+        <set field="showUnreceiptedBankingsTotal" type="BigDecimal"  from-field="parameters.showUnreceiptedBankingsTotal"/>
+        <!-- UD UNIDENTIFIED DEPOSITS -->
+        <set field="showUnidentifiedDebitsTotal" type="BigDecimal"   from-field="parameters.showUnidentifiedDebitsTotal"/>
+         <!-- DEPOSIT -->
+        <set field="showUncreditedBankingsTotal" type="BigDecimal"   from-field="parameters.showUncreditedBankingsTotal"/>
+        <!-- WITHDRAWAL -->
+        <set field="showUnpresentedChequesTotal" type="BigDecimal"   from-field="parameters.showUnpresentedChequesTotal"/>
+
+        <log level="info" message="############################################################## ${showUnreceiptedBankingsTotal}" />
+        <log level="info" message="############################################################## ${showUnidentifiedDebitsTotal}" />
+        <log level="info" message="############################################################## ${showUnpresentedChequesTotal}" />
+        <log level="info" message="############################################################## ${showUncreditedBankingsTotal}" />
+        <log level="info" message="############################################################## ${bankBalanceTotal}" />
+        <log level="info" message="############################################################## ${cashBookTotal}" />
         <now-timestamp field="nowTimestamp"/>
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" auto-field-map="true"/>
         <if-not-empty field="finAccountTrans.glReconciliationId">

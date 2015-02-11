@@ -53,6 +53,13 @@ under the License.
 		<response name="success" type="none">
     </response>
     </request-map>
+    
+      <request-map uri="payrollNumber">
+    	<!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+    	<event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="NextStaffPayrollNumber" />
+		<response name="success" type="none">
+    </response>
+    </request-map>
 
     <request-map uri="LeaveBalancesAdd">
 		<security https="true" auth="true" />
@@ -499,6 +506,13 @@ under the License.
         <response name="success" type="none">
     </response>
     </request-map>
+    
+    <request-map uri="emplContractEndDate">
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="getEndOfContractDate" />
+        <response name="success" type="none">
+    </response>
+    </request-map>
+    
      <request-map uri="showHideFields">
         <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="showHideFields" />
         <response name="success" type="none">
