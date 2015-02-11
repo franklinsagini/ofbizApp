@@ -19,74 +19,10 @@ under the License.
 <#escape x as x?xml>
     <#if p9ItemsList?has_content>
         <#-- REPORT TITLE -->
-         <fo:list-block provisional-distance-between-starts="2in">
-            <fo:list-item>
-                <fo:list-item-label>
-                <fo:block  font-weight="bold" font-size="10pt">P.9</fo:block>
-                    <fo:block font-weight="bold" font-size="10pt" margin-left="-10mm" margin-top="7mm" text-align="center">
-                    	TAX DEDUCTION CARD  YEAR ${year.name?if_exists} 
-                    </fo:block>  
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-         </fo:list-block>
-        
-        <fo:list-block provisional-distance-between-starts="5in" font-size="9pt">
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">Employer's Name: ${empDet.employer?if_exists} </fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">Employer's PIN: ${empDet.pinNumber?if_exists}</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">Employee's Main Name: </fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">Employee's PIN: </fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">Employee's Other Names: </fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">PFNO: </fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-        </fo:list-block>
-        
+      
         <fo:block><fo:leader/></fo:block>
         <#-- Loan Details -->
-        <fo:block space-after.optimum="10pt" font-size="9pt">
+        <fo:block space-after.optimum="5pt" font-size="9pt" margin-top="1mm">
 <#--        <fo:table border="0.5pt solid black"
           text-align="center"
           border-spacing="3pt">
@@ -141,9 +77,15 @@ under the License.
                 <fo:table-column column-width="55pt" number-columns-repeated="3"/>
                 <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="70pt"/>
-             <fo:table-column column-width="50pt"/>
+             	<fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="50pt"/>
-                 <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="50pt"/>
                 <#-- fo:table-column column-width="75pt"/>
@@ -153,6 +95,102 @@ under the License.
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/ -->
                 <fo:table-header>
+                
+                	<fo:table-row font-weight="bold" font-size="9pt" text-align="center">
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                 		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid white" background-color="#FFFFFF" number-columns-spanned="3">
+                            <fo:block font-weight="bold" font-size="9pt" text-align="right">
+                            TAX DEDUCTION CARD </fo:block>
+                        </fo:table-cell>
+                       <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white" number-columns-spanned="3">
+                            <fo:block font-weight="bold" font-size="9pt" text-align="left">YEAR ${year.name?if_exists} </fo:block>
+                        </fo:table-cell>
+                   		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell> 
+                    </fo:table-row>
+                	
+                	<fo:table-row font-weight="bold" font-size="9pt" text-align="left">
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" number-columns-spanned="3" border="1pt solid white">
+                            <fo:block>Employer's Name: </fo:block>
+                            <fo:block>Employee's Main Name: </fo:block>
+                            <fo:block>Employee's Other Names: </fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" number-columns-spanned="3" border="1pt solid white">
+                            <fo:block>${empDet.employer?if_exists}</fo:block>
+                            <fo:block>${empDet.employer?if_exists}</fo:block>
+                            <fo:block>${empDet.employer?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block font-size="1pt">. </fo:block>                            
+                            <fo:block font-size="1pt">. </fo:block>                            
+                            <fo:block>PFNO: </fo:block>
+                        </fo:table-cell>
+                 		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                 			<fo:block font-size="1pt">. </fo:block>                            
+                            <fo:block font-size="1pt">. </fo:block>  
+                            <fo:block>${empDet.pinNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid white" background-color="#FFFFFF">
+		        			<fo:block></fo:block>
+					      </fo:table-cell>
+                       <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white" number-columns-spanned="3">
+                            <fo:block text-align="right" font-weight="bold">Employer's PIN: </fo:block>
+		        			<fo:block text-align="right" font-weight="bold">Employee's PIN: </fo:block>
+                        </fo:table-cell>
+                  		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white" number-columns-spanned="3">
+                  			<fo:block text-align="center" font-weight="bold">${empDet.pinNumber?if_exists}</fo:block>
+		        			<fo:block text-align="center" font-weight="bold">${empDet.pinNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
+                            <fo:block></fo:block>
+                        </fo:table-cell> 
+                    </fo:table-row>
+			                
                     <fo:table-row font-weight="bold" font-size="9pt" text-align="center">
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>MONTH</fo:block>
@@ -201,85 +239,85 @@ under the License.
                     </fo:table-row>
                     
                     <fo:table-row font-weight="bold" font-size="9pt" text-align="center">
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block></fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                         <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                 		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                 		<fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" background-color="#FFFFFF" number-columns-spanned="3">
+                        <fo:table-cell padding="1pt" border="1pt solid" background-color="#FFFFFF" number-columns-spanned="3">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                       <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                       <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                   		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                   		<fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                         <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                         <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                         <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>Kshs.</fo:block>
                         </fo:table-cell> 
                     </fo:table-row>
                     
                     <fo:table-row font-weight="bold" font-size="9pt" text-align="center">
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block></fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>A</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>B</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                         <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>C</fo:block>
                         </fo:table-cell>
-                 		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                 		<fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>D</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2" border="1pt solid" background-color="#FFFFFF" number-columns-spanned="3">
                             <fo:block>E</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>F</fo:block>
                         </fo:table-cell>
-                   		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                   		<fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>G</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                         <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>H</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>J</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                        <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>K</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                         <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>-</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid">
+                         <fo:table-cell padding="1pt" background-color="#FFFFFF" border="1pt solid">
                             <fo:block>L</fo:block>
                         </fo:table-cell> 
                     </fo:table-row>
@@ -351,7 +389,7 @@ under the License.
                         </fo:table-row -->
                     <#list p9ItemsList as yearList>
                    <#-- <#if yearList.payeamount?if_exists != 0> -->
-                         <fo:table-row font-size="9pt">                            
+                         <fo:table-row font-size="8pt">                            
                             <fo:table-cell padding="2pt" border="1pt solid">
                                  <fo:block>
                                  	${yearList.periodName?if_exists}
@@ -404,109 +442,101 @@ under the License.
                         </fo:table-row>
                        <#-- </#if> -->
                     </#list>
-                    <fo:table-row column-height="30mm" font-weight="bold" font-size="12pt">
-                            
-                            <fo:table-cell padding="2pt" border="1pt solid">
-                                <fo:block text-align="left" >
-                                	TOTAL TAX KSH. 
-                                </fo:block>
-                            </fo:table-cell>
-                           <fo:table-cell padding="2pt" border="1pt solid">
-                                <fo:block text-align="right">
-                                </fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid">
-                                <fo:block text-align="right">
-                                </fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid">
-                                <fo:block text-align="right">
-                                </fo:block>
-                            </fo:table-cell>
-                            
-                        </fo:table-row>
+                    <fo:table-row column-height="30mm" font-weight="bold" font-size="9pt">
+                    	<fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="left" >TOTALS</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>                        
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid white">
+                            <fo:block text-align="right"></fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
                     
+                    <fo:table-row column-height="30mm" font-size="9pt">
+                    	<fo:table-cell padding="2pt" border="1pt solid white" number-columns-spanned="7">
+                            <fo:block text-align="left" >To be completed by Employer at end of year</fo:block>
+                            <fo:block margin-top="6pt" text-align="left" >TOTAL CHARGEABLE PAY (COL H.) Kshs. </fo:block>
+                            <fo:block margin-top="2pt" text-align="left" text-decoration="underline">IMPORTANT</fo:block>
+                            <fo:block margin-top="2pt" text-align="left" >1. Use P9A</fo:block>
+                            <fo:block margin-top="2pt" margin-left="10pt" text-align="left" >
+                            	(a) For all liable employees and where director/employee received Benefits in addition to cash emoluments.
+                            </fo:block>
+                            <fo:block margin-top="2pt" margin-left="10pt" text-align="left" >
+                            	(b) Where an employee is eligibe to deduction of owner occupier interest.
+                            </fo:block>
+                            <fo:block margin-top="2pt" text-align="left" >2.</fo:block>
+                            <fo:block margin-top="2pt" margin-left="10pt" text-align="left" >
+                            	(a) Deductible interest in respect of any month must not exceed Kshs. 12,500/=
+                            </fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid white">
+                            <fo:block text-align="left"></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid white" number-columns-spanned="7">
+                            <fo:block text-align="left">TOTAL TAX (COL L.) Kshs. </fo:block>
+                            <fo:block margin-top="6pt" margin-left="10pt" text-align="left" >
+                            	(b) Attach
+                            </fo:block>
+                            <fo:block margin-top="2pt" margin-left="15pt" text-align="left" >
+                            	i. Photostat copy of interest certificate and statement of account from the Financial Institution.
+                            </fo:block>
+                            <fo:block margin-top="2pt" margin-left="15pt" text-align="left" >
+                            	ii. The Declaration duly signed by the employee.
+                            </fo:block>
+                            <fo:block margin-top="10pt" text-align="left">NAMES OF FINANCIAL INSTITUTION ADVANCING MORGAGE LOAN</fo:block>
+                            <fo:block margin-top="2pt" text-align="left">_____________________________________________________________</fo:block>
+                            <fo:block margin-top="3pt" text-align="left">L.R. NO. OF OWNER OCCUPIED PROPERTY__________________________</fo:block>
+                            <fo:block margin-top="3pt" text-align="left">DATE OF OCCUPATION OF HOUSE:_________________________________</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid white">
+                            <fo:block text-align="left"></fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
                 </fo:table-body>
             </fo:table>
-      
         </fo:block>
-        
-        <fo:list-block provisional-distance-between-starts="5in" font-size="9pt">
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">NOTE:-</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-size="9pt">(1) Attach Photostat copies All the Pay-in Credit Slips (P11s) for the year.</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-            <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-size="9pt">(2) Complete this certificate in triplicate and send the top two copies with the enclosures to your 
-						Income Tax Office not later than 28th February.</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-             <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-size="9pt">(3) Provide statistical information required by Central Bureau of Statistics. (See Overleaf)
-						We/I certify the particulars entered above are correct.</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-          </fo:list-block>
-          
-          
-          <fo:list-block provisional-distance-between-starts="5in" font-size="9pt" margin-top="8mm">
-             <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">NAME OF EMPLOYER_______________________________________________</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-             <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">ADDRESS__________________________________________________________</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-             <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">SIGNATURE_________________________________________________________</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-             <fo:list-item>
-                <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="9pt">DATE_______________________________________________________________</fo:block>
-                </fo:list-item-label>
-                <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
-                </fo:list-item-body>
-            </fo:list-item>
-        </fo:list-block>
-        
-     
-        
-
+      
     <#else>
         <fo:block margin-top="50mm" text-align="center">NO DATA FOUND</fo:block>
     </#if>
