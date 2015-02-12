@@ -487,11 +487,13 @@ under the License.
                                 <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                 <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                             </link>
-							
-							 <link text="Financial Position" style="button" target="FinancialPositionPDF" target-window="_BLANK">
+							<screenlet title="Select Dates">
+							<include-form name="financialPositionAssetsForm" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+							</screenlet>
+							 <link text="Financial Position (pdf)" style="button" target="FinancialPositionPDF" target-window="_BLANK">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
-                            </link>
+                            </link> 
 							 <screenlet></screenlet>
                             <label style="h3" text="ASSETS"/>
                             <include-form name="financialPositionAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -515,7 +517,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="viewSize" value="99999"/>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/sasra/StatementFinancialPosition.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/sasra/StatementFinancialPositionpdf.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">

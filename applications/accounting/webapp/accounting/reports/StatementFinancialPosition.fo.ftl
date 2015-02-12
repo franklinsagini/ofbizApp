@@ -33,10 +33,10 @@ under the License.
         FINANCIAL YEAR: 
     </fo:block>
     <fo:block font-size="10pt" text-align="left" font-weight="bold">
-       START DATE: 
+       START DATE: ${fromDate}
     </fo:block>
 	<fo:block font-size="10pt" text-align="left" font-weight="bold">
-       END DATE: 
+       END DATE: ${thruDate}
     </fo:block>
     <fo:block><fo:leader/></fo:block>
    
@@ -47,7 +47,7 @@ under the License.
 
     <#-- REPORT BODY -->
 	
-	<#list assetsList as activity>
+	
 	
 	 <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
             <fo:list-item>
@@ -67,9 +67,9 @@ under the License.
 	
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="40pt"/>
-            <fo:table-column column-width="170pt"/>
-            <fo:table-column column-width="80pt"/>
+           <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="300pt"/>
+            <fo:table-column column-width="150pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -84,6 +84,7 @@ under the License.
                 </fo:table-row>
             </fo:table-header>
 			
+			<#list assetsList as activity>
             <fo:table-body>
              
                      <fo:table-row>
@@ -101,10 +102,154 @@ under the License.
                      </fo:table-row>
            
             </fo:table-body>
+			</#list>
         </fo:table>
     </fo:block>
 	 
-   </#list>
+   
+  <#else>
+     <fo:block space-after.optimum="10pt" >
+        <fo:block text-align="center" font-size="14pt">Nothing To ShowFor: ${member.firstName} ${member.lastName}</fo:block>
+    </fo:block>
+  </#if>
+  
+  <#if liabilityList?has_content>
+
+
+    <#-- REPORT BODY -->
+	
+	
+	
+	 <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">LIABILITIES</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block></fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            
+        </fo:list-block>
+    <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+	
+    </fo:block>
+	
+	
+    <fo:block space-after.optimum="10pt" font-size="10pt">
+        <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="300pt"/>
+            <fo:table-column column-width="150pt"/>
+            <fo:table-header>
+                <fo:table-row font-weight="bold">
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Code</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Name</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Balance</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+            </fo:table-header>
+			
+			<#list liabilityList as activity>
+            <fo:table-body>
+             
+                     <fo:table-row>
+                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.code?if_exists}</fo:block>
+                        </fo:table-cell>
+						
+						<fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.name?if_exists}</fo:block>
+                        </fo:table-cell>
+						
+						<fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.balance?if_exists}</fo:block>
+                        </fo:table-cell>
+                     </fo:table-row>
+           
+            </fo:table-body>
+			 </#list>
+        </fo:table>
+    </fo:block>
+	 
+  
+  <#else>
+     <fo:block space-after.optimum="10pt" >
+        <fo:block text-align="center" font-size="14pt">Nothing To ShowFor: ${member.firstName} ${member.lastName}</fo:block>
+    </fo:block>
+  </#if>
+  
+   <#if equityList?has_content>
+
+
+    <#-- REPORT BODY -->
+	
+	
+	
+	 <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">EQUITY</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block></fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            
+        </fo:list-block>
+    <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+	
+    </fo:block>
+	
+	
+    <fo:block space-after.optimum="10pt" font-size="10pt">
+        <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="300pt"/>
+            <fo:table-column column-width="150pt"/>
+            <fo:table-header>
+                <fo:table-row font-weight="bold">
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Code</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Name</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Balance</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+            </fo:table-header>
+			
+			
+			<#list equityList as activity>
+            <fo:table-body>
+             
+                     <fo:table-row>
+                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.code?if_exists}</fo:block>
+                        </fo:table-cell>
+						
+						<fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.name?if_exists}</fo:block>
+                        </fo:table-cell>
+						
+						<fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${activity.balance?if_exists}</fo:block>
+                        </fo:table-cell>
+                     </fo:table-row>
+           
+            </fo:table-body>
+			</#list>
+        </fo:table>
+    </fo:block>
+	 
+   
   <#else>
      <fo:block space-after.optimum="10pt" >
         <fo:block text-align="center" font-size="14pt">Nothing To ShowFor: ${member.firstName} ${member.lastName}</fo:block>
