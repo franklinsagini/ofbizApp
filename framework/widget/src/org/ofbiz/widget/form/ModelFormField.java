@@ -2613,6 +2613,7 @@ public class ModelFormField {
 					&& !this.entityName.equals("WithdrawalStatus")
 					&& !this.entityName.equals("MemberWithdrawal")
 					&& !this.entityName.equals("FuneralExpenseAmount")
+					&& !this.entityName.equals("Relationship")
 					
 					
 					
