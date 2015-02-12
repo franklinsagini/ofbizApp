@@ -125,7 +125,6 @@
 
         <field name="amountPayable" title="Amount Payable" widget-style="required" required-field="true"><text default-value="${bsh: org.ofbiz.deathmanagement.DeathManagement.getFuneralExpenseAmount()}"></text></field>
         <field name="authorizedBy" title="Authorized By" widget-style="required" required-field="true"><text></text></field>
-        <field name="nominee" title="Nominee" widget-style="required" required-field="true"><text></text></field>
        
        <field name="payeeOptions" title="Payee Options" widget-style="required" required-field="true">
        	<drop-down allow-empty="true">
@@ -136,6 +135,20 @@
        
        </field>
        
+        <!-- field name="nominee" title="Nominee" widget-style="required" required-field="true"><text></text></field -->
+        
+         <field name="memberNomineeId" title="Nominee" widget-style="required" required-field="true">
+         	<drop-down allow-empty="true">
+         		<entity-options description="${firstName} ${middleName} ${lastName}" key-field-name="memberNomineeId" entity-name="MemberNominee">
+         			<!-- entity-constraint name=""/ -->
+         		</entity-options>
+         	</drop-down>
+         </field>
+          <field name="stationId" title="Station" widget-style="required" required-field="true">
+          	<drop-down allow-empty="true">
+          		<!-- entity-options description="${name} - ${stationNumber}" entity-name="Station"></entity-options -->
+          	</drop-down>
+          </field>
        
         <field name="nomineePercentage" title="Nominee Percentage" widget-style="required" required-field="true"><text></text></field>
         <field name="comment" title="Comment"><textarea></textarea></field>

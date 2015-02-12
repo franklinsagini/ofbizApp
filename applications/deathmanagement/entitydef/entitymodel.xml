@@ -80,6 +80,10 @@
      		
      		<field name="payeeOptions" type="name"></field>
      		
+     		<field name="memberNomineeId" type="id-vlong-int"></field>
+     		
+     		<field name="stationId" type="id-ne"></field>
+     		
 			<prim-key field="funeralExpensePaymentId"/>
 
     	<relation type="one" fk-name="FuneralExpensePayment_MEMBER" rel-entity-name="Member">
@@ -87,6 +91,14 @@
         </relation>
         <relation type="one" fk-name="FuneralExpensePayment_DeathNotification" rel-entity-name="DeathNotification">
             <key-map field-name="deathNotificationId"/>
+        </relation>
+        
+         <relation type="one" fk-name="FuneralExpensePayment_MemberNominee" rel-entity-name="MemberNominee">
+            <key-map field-name="memberNomineeId"/>
+        </relation>
+        
+        <relation type="one" fk-name="FuneralExpensePayment_Station" rel-entity-name="Station">
+            <key-map field-name="stationId"/>
         </relation>
      </entity>
      
