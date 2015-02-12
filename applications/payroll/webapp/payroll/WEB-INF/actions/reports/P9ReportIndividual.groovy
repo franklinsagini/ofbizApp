@@ -47,7 +47,7 @@ context.year = year;
 maxPension = delegator.findOne("PayrollConstants", [payrollConstantsId : "10001"], false);
 context.maxPension = maxPension;
 
-yearList = delegator.findByAnd("P9Report",  [payrollYearId : payrollYearId], ['sequence_no'], false);
+yearList = delegator.findByAnd("P9Report",  [payrollYearId : payrollYearId], null, false);
 context.yearList = yearList;
 	
 List mainAndExprs = FastList.newInstance();
@@ -411,7 +411,7 @@ p9ItemsList.each{ item ->
 	println(" totalTaxChargedAmount IS "+item.totalTaxChargedAmount)
 }
 
-p9ItemsList.sort {it.sequenceNo}
+//p9ItemsList.sort {it.sequenceNo}
 context.p9ItemsList = p9ItemsList
 
 context.grossMap = grossMap;
