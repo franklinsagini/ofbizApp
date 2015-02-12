@@ -43,7 +43,10 @@ under the License.
                             <widgets>
                                 <container style="button-bar">
                                     <link target="NewEmployee" text="${uiLabelMap.HumanResNewEmployee}" style="buttontext create"/>
+									<link target="contractEmployee" text="Interns and Contract Employees" style="buttontext create"/>
                                 </container>
+								
+								
                                 <section>                                	
                                     <widgets>
                                     	<screenlet title="Search Employees">
@@ -51,10 +54,7 @@ under the License.
                             			</screenlet>
                                 		<screenlet title="Employees Found">
                                 			<include-form  name="employeesList" location="component://humanres/widget/forms/EmployeeForms.xml"/>
-                                		</screenlet>                                    	
-                                        <!--<platform-specific>
-                                            <html><html-template location="component://humanres/webapp/humanres/humanres/findEmployee.ftl"/></html>
-                                        </platform-specific>-->
+                                		</screenlet>       
                                     </widgets>
                                 </section>
                             </widgets>
@@ -68,6 +68,54 @@ under the License.
         </section>
     </screen>    
         
+		
+		
+		
+		<screen name="FindContractEmployee">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Employee"/>
+                <set field="headerItem" value="Employees"/>
+                <set field="employeeCtx" from-field="parameters"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+
+                <!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <actions>
+                                <service service-name="findParty" auto-field-map="true"/>
+                                <set field="tabButtonItem" value="Employee"/>
+                            </actions>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="NewEmployee" text="${uiLabelMap.HumanResNewEmployee}" style="buttontext create"/>
+									<link target="contractEmployee" text="Interns and Contract Employees" style="buttontext create"/>
+                                </container>
+								
+								
+                                <section>                                	
+                                    <widgets>
+                                    	<screenlet title="Search Employees">
+                                        	<include-form name="FindContractEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                            			</screenlet>
+                                		<screenlet title="Employees Found">
+                                			<include-form  name="ContractemployeesList" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                		</screenlet>       
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
         
     <!-- screen name="FindEmployee">
         <section>

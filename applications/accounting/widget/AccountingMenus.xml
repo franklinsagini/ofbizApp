@@ -572,6 +572,34 @@ http://www.apache.org/licenses/LICENSE-2.0
                 <parameter param-name="paymentId" from-field="payment.paymentId"/>
             </link>
         </menu-item>
+        <menu-item name="CashPaymentVoucher" title="Print Payment Voucher">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="payment.paymentId"/>
+                    </not>
+                    <if-compare field="isDisbursement" operator="equals" value="true"/>
+                    <if-compare field="payment.statusId" operator="equals" value="PMNT_SENT"/>
+                </and>
+            </condition>
+            <link target="PrintCashPaymentVoucher">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+                <parameter param-name="statusId" value="PMNT_SENT"/>
+            </link>
+        </menu-item>
+        <menu-item name="CashReceiptVoucher" title="Print Receipt Voucher">
+            <condition>
+                <and>
+                    <not><if-empty field="payment.paymentId"/></not>
+                    <if-compare field="isDisbursement" operator="equals" value="false"/>
+                    <if-compare field="payment.statusId" operator="equals" value="PMNT_RECEIVED"/>
+                </and>
+            </condition>
+            <link target="PrintCashReceiptVoucher">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+                <parameter param-name="statusId" value="PMNT_SENT"/>
+            </link>
+        </menu-item>
     </menu>
 
     <menu name="PaymentGroupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -1247,6 +1275,9 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
             <link target="CostCenters"/>
         </menu-item>
+        <menu-item name="SasraSetup" title="SASRA Reports Setup">
+            <link target="SasraReportName"/>
+        </menu-item>
     </menu>
 
     <menu name="AgreementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -1387,6 +1418,21 @@ http://www.apache.org/licenses/LICENSE-2.0
         </menu-item>
         <menu-item name="AssignGlAccount" title="${uiLabelMap.AcctgAssignGlAccount}">
             <link target="AssignGlAccount"/>
+        </menu-item>
+    </menu>
+
+    <menu name="SASRASetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="SasraReportName" title="Report">
+            <link target="SasraReportName">
+                <parameter param-name="trail" value="null"/>
+            </link>
+        </menu-item>
+        <menu-item name="SasraReportItem" title="Report Item">
+            <link target="SasraReportItem"/>
+        </menu-item>
+        <menu-item name="SasraGLAccounts" title="GL Accounts">
+            <link target="SasraGLAccounts" />
         </menu-item>
     </menu>
 

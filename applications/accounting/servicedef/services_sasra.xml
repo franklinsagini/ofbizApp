@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>ImprestManagement Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="createSasraReport" engine="simple" default-entity-name="SasraReportName"
+             location="component://accounting/script/org/ofbiz/accounting/sasra/SasraServices.xml" invoke="createSasraReport" auth="true">
+        <description>Create Imprest Account Mapping</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="UpdateImprestAccount" engine="simple" default-entity-name="ImprestAccount"
+             location="component://accounting/script/org/ofbiz/accounting/sasra/SasraServices.xml" invoke="UpdateImprestAccount" auth="true">
+        <description>Update Imprest Account Mapping</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createSasraReportItem" engine="simple" default-entity-name="SasraReportItem"
+             location="component://accounting/script/org/ofbiz/accounting/sasra/SasraServices.xml" invoke="createSasraReportItem" auth="true">
+        <description>Create Imprest Account Mapping</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="UpdateSasraReportItem" engine="simple" default-entity-name="SasraReportItem"
+             location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="UpdateImprestDestination" auth="true">
+        <description>Update Imprest Account Mapping</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createSasraGLAccounts" engine="simple" default-entity-name="SasraReportGlAccount"
+             location="component://accounting/script/org/ofbiz/accounting/sasra/SasraServices.xml" invoke="createSasraGLAccounts" auth="true">
+        <description>Create Imprest Account Mapping</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateSasraGLAccounts" engine="simple" default-entity-name="SasraReportGlAccount"
+             location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="updateSasraGLAccounts" auth="true">
+        <description>Update Imprest Account Mapping</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createPerDiemSetup" engine="simple" default-entity-name="ImprestPerDiemSetup"
+             location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="createPerDiemSetup" auth="true">
+        <description>Create Destination/Job Grade Mapping</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="UpdatePerDiemSetup" engine="simple" default-entity-name="ImprestPerDiemSetup"
+             location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="UpdatePerDiemSetup" auth="true">
+        <description>Update Destination/Job Grade Mapping</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createPettySetup" engine="simple" default-entity-name="ImprestPettySetup"
+             location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="createPettySetup" auth="true">
+        <description>Create ImprestPettySetup</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="UpdatePettySetup" engine="simple" default-entity-name="ImprestPettySetup"
+             location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="UpdatePettySetup" auth="true">
+        <description>Update ImprestPettySetup</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+
+    <!-- ImprestSurrenderable  -->
+    <service name="createSurrendable" default-entity-name="ImprestSurrenderable" engine="simple"
+        location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="createSurrendable" auth="true">
+        <description>Create a ImprestSurrenderable</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="updateSurrenderable" engine="simple" default-entity-name="ImprestSurrenderable"
+             location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="updateSurrenderable" auth="true">
+        <description>Update Destination/Job Grade Mapping</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateSurrendableStatus" default-entity-name="SurrendableStatus" engine="simple"
+                location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="updateSurrendableStatus">
+        <description>Update a Budget</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- PETTY CASH SERVICES  -->
+    <service name="createPettyCash" default-entity-name="ImprestPettyCash" engine="simple"
+        location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="createPettyCash" auth="true">
+        <description>Create a ImprestPettyCash</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="updatePettyCash" default-entity-name="ImprestPettyCash" engine="simple"
+                location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="updatePettyCash" auth="true">
+        <description>Update a ImprestPettyCash</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="customTimePeriodId" mode="OUT" type="String" optional="false"></attribute>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="finalizePettyCash" default-entity-name="ImprestPettyCash" engine="simple"
+                location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="finalizePettyCash" auth="true">
+        <description>finalize a ImprestPettyCash</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="customTimePeriodId" mode="OUT" type="String" optional="false"></attribute>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="replenishPettyCash" default-entity-name="ImprestReplenishPettyCash" engine="simple"
+                location="component://imprestmanagement/script/org/ofbiz/imprest/ImprestServices.xml" invoke="replenishPettyCash" auth="true">
+        <description>Replenish Petty Cash ImprestReplenishPettyCash</description>
+           <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+</services>
