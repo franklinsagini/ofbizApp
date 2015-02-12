@@ -147,8 +147,8 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" number-columns-spanned="3" border="1pt solid white">
                             <fo:block>${empDet.employer?if_exists}</fo:block>
-                            <fo:block>${empDet.employer?if_exists}</fo:block>
-                            <fo:block>${empDet.employer?if_exists}</fo:block>
+                            <fo:block>${person.lastName?if_exists}</fo:block>
+                            <fo:block>${person.firstName?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                             <fo:block></fo:block>
@@ -161,7 +161,7 @@ under the License.
                  		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                  			<fo:block font-size="1pt">. </fo:block>                            
                             <fo:block font-size="1pt">. </fo:block>  
-                            <fo:block>${empDet.pinNumber?if_exists}</fo:block>
+                            <fo:block>${person.employeeNumber?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid white" background-color="#FFFFFF">
 		        			<fo:block></fo:block>
@@ -172,7 +172,7 @@ under the License.
                         </fo:table-cell>
                   		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white" number-columns-spanned="3">
                   			<fo:block text-align="center" font-weight="bold">${empDet.pinNumber?if_exists}</fo:block>
-		        			<fo:block text-align="center" font-weight="bold">${empDet.pinNumber?if_exists}</fo:block>
+		        			<fo:block text-align="center" font-weight="bold">${person.pinNumber?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                             <fo:block></fo:block>
