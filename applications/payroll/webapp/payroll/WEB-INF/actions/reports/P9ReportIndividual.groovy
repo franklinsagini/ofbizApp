@@ -11,6 +11,7 @@ import org.ofbiz.entity.Delegator;
 import java.math.BigDecimal;
 
 payrollYearId = parameters.payrollYearId
+partyId = parameters.partyId
 
 basicPayMap = [:];
 grossMap = [:];
@@ -36,6 +37,9 @@ totalE1Amount  = BigDecimal.ZERO
 totalE2Amount  = BigDecimal.ZERO
 totalRetConOwnAmount  = BigDecimal.ZERO
 totalTaxChargedAmount = BigDecimal.ZERO
+
+person = delegator.findOne("Person", [partyId : partyId], false);
+context.person = person;
 
 year = delegator.findOne("PayrollYear", [payrollYearId : payrollYearId], false);
 context.year = year;
@@ -300,100 +304,94 @@ class StaffDetails{
 	def lastName;
 }
 
-staffList.each { staff ->
-	person = delegator.findOne("Person", [partyId : staff.partyId], false);
+monthList.each { component ->
+	//	System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii "+component.partyId)
+		 
+	//
+		
+	totalBasicAmount  = new BigDecimal(0.0);
+	totalGrossAmount  = new BigDecimal(0.0);
+	totalPensionAmount  = new BigDecimal(0.0);
+	totalNssfAmount  = new BigDecimal(0.0);
+	totalTaxablePayAmount  = new BigDecimal(0.0);
+	totalMprAmount  = new BigDecimal(0.0);
+	totalInsuranceReliefAmount  = new BigDecimal(0.0);
+	totalPayeAmount  = new BigDecimal(0.0);
 	
-	monthList.each { component ->
-		//	System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii "+component.partyId)
-			 
-		//
+	totalE1Amount  = new BigDecimal(0.0);
+	totalE2Amount  = new BigDecimal(0.0);
+	totalRetConOwnAmount  = new BigDecimal(0.0);
+	totalTaxChargedAmount  = new BigDecimal(0.0);
+	
+	P9List.each{ p9 ->
 			
-		totalBasicAmount  = new BigDecimal(0.0);
-		totalGrossAmount  = new BigDecimal(0.0);
-		totalPensionAmount  = new BigDecimal(0.0);
-		totalNssfAmount  = new BigDecimal(0.0);
-		totalTaxablePayAmount  = new BigDecimal(0.0);
-		totalMprAmount  = new BigDecimal(0.0);
-		totalInsuranceReliefAmount  = new BigDecimal(0.0);
-		totalPayeAmount  = new BigDecimal(0.0);
-		
-		totalE1Amount  = new BigDecimal(0.0);
-		totalE2Amount  = new BigDecimal(0.0);
-		totalRetConOwnAmount  = new BigDecimal(0.0);
-		totalTaxChargedAmount  = new BigDecimal(0.0);
-		
-		P9List.each{ p9 ->
-				
-			yearId = p9.payrollYearId;
-			yearName = p9.yearName;
-			payrollPeriodId = p9.payrollPeriodId;
-			periodName = p9.periodName;
-			sequenceNo = p9.sequence_no;
-			employeeNumber = p9.employeeNumber;
-			firstName = p9.firstName;
-			lastName = p9.lastName;
-			pinNumber = p9.pinNumber;
-			partyId = p9.partyId;
-			payrollElementId = p9.payrollElementId;
-			 
-			if(p9.periodName==component.periodName)
-			{
-				/*println(" PAYEEEEEEEEEEEEEE  "+p9.payeamount);
-				println(" GROSSSS            "+p9.grossamount);*/
-	
-				
-				totalBasicAmount  = totalBasicAmount.add(p9.basicAmount.toBigDecimal());
-				totalGrossAmount  = totalGrossAmount.add(p9.grossAmount.toBigDecimal());
-				totalPensionAmount  = totalPensionAmount.add(p9.pensionAmount.toBigDecimal());
-				totalNssfAmount  = totalNssfAmount.add(p9.nssfAmount.toBigDecimal());
-				totalTaxablePayAmount  = totalTaxablePayAmount.add(p9.taxablePayAmount.toBigDecimal());
-				totalMprAmount  = totalMprAmount.add(p9.mprAmount.toBigDecimal());
-				totalInsuranceReliefAmount  = totalInsuranceReliefAmount.add(p9.insuranceReliefAmount.toBigDecimal());
-				totalPayeAmount  = totalPayeAmount.add(p9.payeAmount.toBigDecimal());
-				
-				totalE1Amount = totalBasicAmount.multiply(new BigDecimal(0.3));
-				totalE2Amount = totalPensionAmount.add(totalNssfAmount);
-				totalRetConOwnAmount = totalPensionAmount.add(totalNssfAmount);
-				totalTaxChargedAmount = totalPayeAmount.add(totalMprAmount).add(totalInsuranceReliefAmount);
-	
-			}
-		 }
-		
-		
-	//	println("TOTATAAAAAAAAAAAAAAAAAAAAAAAAL totalPayeAmount 2 "+totalPayeAmount)
-		p9Item = new P9Item();
-	
-		p9Item.yearId = yearId;
-		p9Item.yearName = yearName;
-		p9Item.payrollPeriodId = payrollPeriodId;
-		p9Item.periodName = component.periodName;
-		p9Item.sequenceNo = sequenceNo;
-		p9Item.employeeNumber = person.employeeNumber;
-		p9Item.firstName = person.firstName;
-		p9Item.lastName = person.lastName;
-		p9Item.pinNumber = person.pinNumber;
-		p9Item.partyId = partyId;
-		p9Item.payrollElementId = payrollElementId;
-		
-		p9Item.totalBasicAmount = totalBasicAmount;
-		p9Item.totalGrossAmount = totalGrossAmount;
-		p9Item.totalPensionAmount = totalPensionAmount;
-		p9Item.totalNssfAmount = totalNssfAmount;
-		p9Item.totalTaxablePayAmount = totalTaxablePayAmount;
-		p9Item.totalMprAmount = totalMprAmount;
-		p9Item.totalInsuranceReliefAmount = totalInsuranceReliefAmount;
-		p9Item.totalPayeAmount = totalPayeAmount;
-		
-		p9Item.totalE1Amount = totalE1Amount;
-		p9Item.totalE2Amount = totalE2Amount;
-		p9Item.totalRetConOwnAmount = totalRetConOwnAmount;
-		p9Item.totalTaxChargedAmount = totalTaxChargedAmount;
-	
-		p9ItemsList << p9Item
+		yearId = p9.payrollYearId;
+		yearName = p9.yearName;
+		payrollPeriodId = p9.payrollPeriodId;
+		periodName = p9.periodName;
+		sequenceNo = p9.sequence_no;
+		employeeNumber = p9.employeeNumber;
+		firstName = p9.firstName;
+		lastName = p9.lastName;
+		pinNumber = p9.pinNumber;
+		partyId = p9.partyId;
+		payrollElementId = p9.payrollElementId;
+		 
+		if(p9.periodName==component.periodName)
+		{
+			/*println(" PAYEEEEEEEEEEEEEE  "+p9.payeamount);
+			println(" GROSSSS            "+p9.grossamount);*/
+
+			
+			totalBasicAmount  = totalBasicAmount.add(p9.basicAmount.toBigDecimal());
+			totalGrossAmount  = totalGrossAmount.add(p9.grossAmount.toBigDecimal());
+			totalPensionAmount  = totalPensionAmount.add(p9.pensionAmount.toBigDecimal());
+			totalNssfAmount  = totalNssfAmount.add(p9.nssfAmount.toBigDecimal());
+			totalTaxablePayAmount  = totalTaxablePayAmount.add(p9.taxablePayAmount.toBigDecimal());
+			totalMprAmount  = totalMprAmount.add(p9.mprAmount.toBigDecimal());
+			totalInsuranceReliefAmount  = totalInsuranceReliefAmount.add(p9.insuranceReliefAmount.toBigDecimal());
+			totalPayeAmount  = totalPayeAmount.add(p9.payeAmount.toBigDecimal());
+			
+			totalE1Amount = totalBasicAmount.multiply(new BigDecimal(0.3));
+			totalE2Amount = totalPensionAmount.add(totalNssfAmount);
+			totalRetConOwnAmount = totalPensionAmount.add(totalNssfAmount);
+			totalTaxChargedAmount = totalPayeAmount.add(totalMprAmount).add(totalInsuranceReliefAmount);
+
+		}
 	 }
-}
+	
+	
+//	println("TOTATAAAAAAAAAAAAAAAAAAAAAAAAL totalPayeAmount 2 "+totalPayeAmount)
+	p9Item = new P9Item();
 
+	p9Item.yearId = yearId;
+	p9Item.yearName = yearName;
+	p9Item.payrollPeriodId = payrollPeriodId;
+	p9Item.periodName = component.periodName;
+	p9Item.sequenceNo = sequenceNo;
+/*	p9Item.employeeNumber = person.employeeNumber;
+	p9Item.firstName = person.firstName;
+	p9Item.lastName = person.lastName;
+	p9Item.pinNumber = person.pinNumber;*/
+	p9Item.partyId = partyId;
+	p9Item.payrollElementId = payrollElementId;
+	
+	p9Item.totalBasicAmount = totalBasicAmount;
+	p9Item.totalGrossAmount = totalGrossAmount;
+	p9Item.totalPensionAmount = totalPensionAmount;
+	p9Item.totalNssfAmount = totalNssfAmount;
+	p9Item.totalTaxablePayAmount = totalTaxablePayAmount;
+	p9Item.totalMprAmount = totalMprAmount;
+	p9Item.totalInsuranceReliefAmount = totalInsuranceReliefAmount;
+	p9Item.totalPayeAmount = totalPayeAmount;
+	
+	p9Item.totalE1Amount = totalE1Amount;
+	p9Item.totalE2Amount = totalE2Amount;
+	p9Item.totalRetConOwnAmount = totalRetConOwnAmount;
+	p9Item.totalTaxChargedAmount = totalTaxChargedAmount;
 
+	p9ItemsList << p9Item
+ }
 
 println("________________All ITEMS")
 p9ItemsList.each{ item ->
@@ -413,7 +411,7 @@ p9ItemsList.each{ item ->
 	println(" totalTaxChargedAmount IS "+item.totalTaxChargedAmount)
 }
 
-P9List.sort {it.sequence_no}
+p9ItemsList.sort {it.sequenceNo}
 context.p9ItemsList = p9ItemsList
 
 context.grossMap = grossMap;

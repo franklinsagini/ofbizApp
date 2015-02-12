@@ -454,6 +454,40 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="P9ReportPdfIndividual">
+		<section>
+			<actions>
+				<set field="titleProperty" value="P9 Report Individual" />
+				<set field="headerItem" value="P9ReportIndividualView" />
+				<set field="tabButtonItem" value="P9ReportIndividualView" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="P9ReportPdfIndividual" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+				<!--
+					entity-one entity-name="PayslipView"
+					value-field="payslipViewContext"/
+				-->
+				<set field="viewSize" value="99999" />
+				<script
+					location="component://payroll/webapp/payroll/WEB-INF/actions/reports/P9ReportIndividual.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="P9Decorator" location="component://payroll/widget/payroll/CommonScreens.xml">
+					<decorator-section name="body">
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://payroll/webapp/reports/P9ReportIndividual.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	<screen name="P9Report">
 		<section>
 			<actions>
@@ -552,16 +586,21 @@
 							</condition>
 							<widgets>
 								<container style="lefthalf">
-		                            <screenlet title="P9 Report">
+		                            <screenlet title="P9 Report (General)">
 		                                <include-form name="P9Report" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
 		                            </screenlet>
 		                        </container>
-								 <container style="righthalf">
+		                        <container style="lefthalf">
+		                            <screenlet title="P9 Report (Per Individual)">
+		                                <include-form name="P9ReportIndividual" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
+		                            </screenlet>
+		                        </container>
+								 <container style="lefthalf">
 		                            <screenlet title="P10 Report">
 		                                <include-form name="P10Report" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
 		                            </screenlet>
 		                        </container>
-		                        <container style="lefthalf">
+		                        <container style="righthalf">
 		                            <screenlet title="P10A Report">
 		                                <include-form name="P10AReport" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
 		                            </screenlet>
