@@ -11,7 +11,6 @@ import org.ofbiz.entity.Delegator;
 import java.math.BigDecimal;
 
 payrollYearId = parameters.payrollYearId
-partyId = parameters.partyId
 
 basicPayMap = [:];
 grossMap = [:];
@@ -51,15 +50,13 @@ employeeSet.each { employee ->
 	println " PPPPPPPPPPPPPP ID is "+employee.partyId;
 }
 
-
-
 year = delegator.findOne("PayrollYear", [payrollYearId : payrollYearId], false);
 context.year = year;
 
 maxPension = delegator.findOne("PayrollConstants", [payrollConstantsId : "10001"], false);
 context.maxPension = maxPension;
 
-yearList = delegator.findByAnd("P9Report",  [payrollYearId : payrollYearId], ['sequence_no'], false);
+yearList = delegator.findByAnd("P9Report",  [payrollYearId : payrollYearId], null, false);
 context.yearList = yearList;
 
 
@@ -335,7 +332,6 @@ employeeSet.each { employee ->
 
 	p9ItemsList = []
 
-
 	totalBasicAmount  = new BigDecimal(0.0);
 	totalGrossAmount  = new BigDecimal(0.0);
 	totalPensionAmount  = new BigDecimal(0.0);
@@ -377,7 +373,9 @@ employeeSet.each { employee ->
 		totalRetConOwnAmount  = new BigDecimal(0.0);
 		totalTaxChargedAmount  = new BigDecimal(0.0);
 
+
 		P9List.each{ p9 ->
+
 
 			yearId = p9.payrollYearId;
 			yearName = p9.yearName;
@@ -390,6 +388,7 @@ employeeSet.each { employee ->
 			pinNumber = p9.pinNumber;
 			partyId = p9.partyId;
 			payrollElementId = p9.payrollElementId;
+
 
 			if(p9.periodName==component.periodName)
 			{
@@ -413,6 +412,41 @@ employeeSet.each { employee ->
 
 			}
 		}
+		
+		
+	//	println("TOTATAAAAAAAAAAAAAAAAAAAAAAAAL totalPayeAmount 2 "+totalPayeAmount)
+		p9Item = new P9Item();
+	
+		p9Item.yearId = yearId;
+		p9Item.yearName = yearName;
+		p9Item.payrollPeriodId = payrollPeriodId;
+		p9Item.periodName = component.periodName;
+		p9Item.sequenceNo = sequenceNo;
+		p9Item.employeeNumber = person.employeeNumber;
+		p9Item.firstName = person.firstName;
+		p9Item.lastName = person.lastName;
+		p9Item.pinNumber = person.pinNumber;
+		p9Item.partyId = partyId;
+		p9Item.payrollElementId = payrollElementId;
+		
+		p9Item.totalBasicAmount = totalBasicAmount;
+		p9Item.totalGrossAmount = totalGrossAmount;
+		p9Item.totalPensionAmount = totalPensionAmount;
+		p9Item.totalNssfAmount = totalNssfAmount;
+		p9Item.totalTaxablePayAmount = totalTaxablePayAmount;
+		p9Item.totalMprAmount = totalMprAmount;
+		p9Item.totalInsuranceReliefAmount = totalInsuranceReliefAmount;
+		p9Item.totalPayeAmount = totalPayeAmount;
+		
+		p9Item.totalE1Amount = totalE1Amount;
+		p9Item.totalE2Amount = totalE2Amount;
+		p9Item.totalRetConOwnAmount = totalRetConOwnAmount;
+		p9Item.totalTaxChargedAmount = totalTaxChargedAmount;
+	
+		p9ItemsList << p9Item
+	 }
+}
+
 
 
 		//	println("TOTATAAAAAAAAAAAAAAAAAAAAAAAAL totalPayeAmount 2 "+totalPayeAmount)
