@@ -6,9 +6,22 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
 
+import org.ofbiz.base.util.UtilDateTime;
+import java.text.SimpleDateFormat; 
+
+sqlStartDate = parameters.startDate
+sqlEndDate = parameters.endDate
+
+
+dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(sqlStartDate);
+dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(sqlEndDate);
+
+   fromDate= new java.sql.Timestamp(dateStartDate.getTime());
+   thruDate= new java.sql.Timestamp(dateEndDate.getTime());
 
 
 
+exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
 assetsList = [];
 liabilityList = [];
