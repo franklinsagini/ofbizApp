@@ -32,7 +32,7 @@ under the License.
         </fo:simple-page-master>
         <fo:simple-page-master master-name="simple-landscape"
               page-width="12in" page-height="8.5in"
-              margin-top="0.3in" margin-bottom="0.3in"
+              margin-top="0in" margin-bottom="0.1in"
               margin-left="0.4in" margin-right="0.3in">
             <fo:region-body margin-top="1in" margin-bottom="0.5in"/>
             <fo:region-before extent="1in"/>
@@ -54,22 +54,23 @@ under the License.
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell>
-                            <fo:block margin-left="95mm">
+                            <fo:block margin-left="100mm">
                             <#if logoImageUrl?exists>
-                                <fo:external-graphic src="${logoImageUrl}" overflow="hidden" height="70px" content-height="scale-to-fit"/>
+                                <fo:external-graphic src="${logoImageUrl}" overflow="hidden" height="60px" content-height="scale-to-fit"/>
                             </#if>
-                            </fo:block>
-                            <fo:block font-size="10pt" margin-left="80mm" font-weight="bold" text-align="center">
+                            </fo:block>                        	
+                            <fo:block font-size="9pt" margin-left="80mm" margin-top="0mm" font-weight="bold" text-align="center">
 					            ISO 9001:2008 CERTIFIED
 					        </fo:block>    
-					        <fo:block font-size="10pt" margin-left="80mm" margin-top="1mm" font-weight="bold" text-align="center">
+					        <fo:block font-size="9pt" margin-left="80mm" margin-top="0mm" font-weight="bold" text-align="center">
 					            DOMESTIC TAXES DEPARTMENT
 					        </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
                             <#-- The title of the report -->
-                            <fo:block font-weight="bold" text-decoration="underline" space-after="0.03in">
-                                <#if titleProperty?exists>${uiLabelMap.get(titleProperty)}<#else>${title?if_exists}</#if>
+                            <fo:block font-weight="bold" space-after="0.03in">
+                            	
+                              <#--  <#if titleProperty?exists>${uiLabelMap.get(titleProperty)}<#else>${title?if_exists}</#if> -->
                             </fo:block>
 
                         </fo:table-cell>
