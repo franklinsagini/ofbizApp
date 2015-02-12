@@ -273,7 +273,7 @@ public class SasraReportsService {
 		List<GenericValue> acctgTransEntrySumsELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			acctgTransEntrySumsELI = delegator.findList("AcctgTransEntrySums",
+			acctgTransEntrySumsELI = delegator.findList("AcctgTransEntrySumsWithTransType",
 					acctgTransEntrySumsConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
