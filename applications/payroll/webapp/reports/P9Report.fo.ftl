@@ -104,13 +104,10 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" number-columns-spanned="3" border="1pt solid white">
                             <fo:block>${empDet.employer?if_exists}</fo:block>
-<<<<<<< HEAD
+
                             <fo:block>${currentStaff.lastName?if_exists}</fo:block>
                             <fo:block>${currentStaff.firstName?if_exists}</fo:block>
-=======
-                            <fo:block>${empDet.employer?if_exists}</fo:block>
-                            <fo:block>${empDet.employer?if_exists}</fo:block>
->>>>>>> a950e9dad684260e664484d3dd555b0e0bb19d80
+
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                             <fo:block></fo:block>
@@ -123,11 +120,9 @@ under the License.
                  		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                  			<fo:block font-size="1pt">. </fo:block>                            
                             <fo:block font-size="1pt">. </fo:block>  
-<<<<<<< HEAD
+                            
                             <fo:block>${currentStaff.employeeNumber?if_exists}</fo:block>
-=======
-                            <fo:block>${empDet.pinNumber?if_exists}</fo:block>
->>>>>>> a950e9dad684260e664484d3dd555b0e0bb19d80
+
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid white" background-color="#FFFFFF">
 		        			<fo:block></fo:block>
@@ -138,11 +133,8 @@ under the License.
                         </fo:table-cell>
                   		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white" number-columns-spanned="3">
                   			<fo:block text-align="center" font-weight="bold">${empDet.pinNumber?if_exists}</fo:block>
-<<<<<<< HEAD
 		        			<fo:block text-align="center" font-weight="bold">${currentStaff.pinNumber?if_exists}</fo:block>
-=======
-		        			<fo:block text-align="center" font-weight="bold">${empDet.pinNumber?if_exists}</fo:block>
->>>>>>> a950e9dad684260e664484d3dd555b0e0bb19d80
+
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                             <fo:block></fo:block>
