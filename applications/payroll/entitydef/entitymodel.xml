@@ -566,4 +566,30 @@ under the License.
             <key-map field-name="payrollElementId"/>
         </relation>
 	</view-entity -->
+	
+	<!-- Guys With Payroll -->
+	<view-entity entity-name="P9PayrollGuys" package-name="org.ofbiz.payroll">
+        <member-entity entity-alias="SP" entity-name="StaffPayroll" />
+    	<member-entity entity-alias="PP" entity-name="PayrollPeriod" />
+    	<member-entity entity-alias="PY" entity-name="PayrollYear" />
+		
+		<alias entity-alias="PY" name="payrollYearId"></alias>
+           
+		<alias entity-alias="PP" name="payrollPeriodId"></alias> 
+		
+		<alias entity-alias="SP" name="partyId"></alias>
+		
+		<alias entity-alias="PP" name="sequence_no" ></alias>
+		<!--alias entity-alias="SPE" name="payrollElementId" group-by="true"></alias>
+		<alias entity-alias="SPE" name="amount" function="sum"></alias -->
+        
+         <view-link entity-alias="SP" rel-entity-alias="PP">
+            <key-map field-name="payrollPeriodId" />
+        </view-link>
+        <view-link entity-alias="PP" rel-entity-alias="PY">
+            <key-map field-name="payrollYearId" />
+        </view-link>
+            
+	</view-entity>
+	
 </entitymodel>
