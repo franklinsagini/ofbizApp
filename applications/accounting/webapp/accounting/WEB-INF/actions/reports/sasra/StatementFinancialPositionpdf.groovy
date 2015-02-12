@@ -5,6 +5,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
+import javolution.util.FastList;
 
 import org.ofbiz.base.util.UtilDateTime;
 import java.text.SimpleDateFormat; 
@@ -12,6 +13,10 @@ import java.text.SimpleDateFormat;
 sqlStartDate = parameters.startDate
 sqlEndDate = parameters.endDate
 
+reportId = "6"
+List mainAndExprs = FastList.newInstance();
+
+mainAndExprs.add(EntityCondition.makeCondition("reportId", EntityOperator.EQUALS, reportId));
 
 dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(sqlStartDate);
 dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(sqlEndDate);
@@ -31,7 +36,7 @@ equityList = [];
  List<String> orderByList = new ArrayList<String>();
  orderByList.add("code");
  
- statement = delegator.findList("SasraReportItem", null, null, orderByList, null, false);
+ statement = delegator.findList("SasraReportItem", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND), null, orderByList, null, false);
  
    statement.eachWithIndex { statementItem, index ->
       def codeString = statementItem.code

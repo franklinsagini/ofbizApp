@@ -5,6 +5,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
+import javolution.util.FastList;
 
 
 
@@ -14,11 +15,15 @@ assetsList = [];
 liabilityList = [];
 equityList = [];
 
+reportId = "6"
+List mainAndExprs = FastList.newInstance();
+
+mainAndExprs.add(EntityCondition.makeCondition("reportId", EntityOperator.EQUALS, reportId));
 	
  List<String> orderByList = new ArrayList<String>();
  orderByList.add("code");
  
- statement = delegator.findList("SasraReportItem", null, null, orderByList, null, false);
+ statement = delegator.findList("SasraReportItem", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND), null, orderByList, null, false);
  
    statement.eachWithIndex { statementItem, index ->
       def codeString = statementItem.code
