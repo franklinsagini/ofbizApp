@@ -46,8 +46,8 @@ employeePeriodList.each { employeePeriod ->
 	employeeSet.add(employeePeriod.partyId);
 }
 
-employeeSet.each { employee ->
-	println " PPPPPPPPPPPPPP ID is "+employee.partyId;
+employeeSet.each { partyId ->
+	println " PPPPPPPPPPPPPP ID is "+partyId;
 }
 
 year = delegator.findOne("PayrollYear", [payrollYearId : payrollYearId], false);
@@ -85,13 +85,48 @@ class P9Staff{
 	def listOfP9Items = []
 }
 
+class P9Item {
+	
+			def yearId
+			def yearName
+			def payrollPeriodId
+			def periodName
+			def sequenceNo
+			def employeeNumber
+			def firstName
+			def lastName
+			def pinNumber
+			def partyId
+			def payrollElementId
+	
+			def totalBasicAmount;
+			def totalGrossAmount;
+			def totalPensionAmount;
+			def totalNssfAmount;
+			def totalTaxablePayAmount;
+			def totalMprAmount;
+			def totalInsuranceReliefAmount;
+			def totalPayeAmount;
+			def totalE1Amount;
+			def totalE2Amount;
+			def totalRetConOwnAmount;
+			def totalTaxChargedAmount;
+		}
+
+class StaffDetails{
+	def employeeNumber;
+	def pinNumber;
+	def firstName;
+	def lastName;
+}
+
 listP9Staff = []
 
 
-employeeSet.each { employee ->
+employeeSet.each { employeepartyId ->
 
 	currentStaff = new P9Staff();
-	currentStaff.partyId = employee.partyId;
+	currentStaff.partyId = employeepartyId;
 
 	
 	List mainAndExprs = FastList.newInstance();
@@ -302,33 +337,7 @@ employeeSet.each { employee ->
 	def totalRetConOwnAmount
 	def totalTaxChargedAmount
 
-	class P9Item{
 
-		def yearId
-		def yearName
-		def payrollPeriodId
-		def periodName
-		def sequenceNo
-		def employeeNumber
-		def firstName
-		def lastName
-		def pinNumber
-		def partyId
-		def payrollElementId
-
-		def totalBasicAmount;
-		def totalGrossAmount;
-		def totalPensionAmount;
-		def totalNssfAmount;
-		def totalTaxablePayAmount;
-		def totalMprAmount;
-		def totalInsuranceReliefAmount;
-		def totalPayeAmount;
-		def totalE1Amount;
-		def totalE2Amount;
-		def totalRetConOwnAmount;
-		def totalTaxChargedAmount;
-	}
 
 	p9ItemsList = []
 
@@ -347,12 +356,7 @@ employeeSet.each { employee ->
 	totalTaxChargedAmount  = new BigDecimal(0.0);
 
 
-	class StaffDetails{
-		def employeeNumber;
-		def pinNumber;
-		def firstName;
-		def lastName;
-	}
+
 
 	monthList.each { component ->
 		//	System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii "+component.partyId)
@@ -445,41 +449,7 @@ employeeSet.each { employee ->
 	
 		p9ItemsList << p9Item
 	 }
-}
 
-
-
-		//	println("TOTATAAAAAAAAAAAAAAAAAAAAAAAAL totalPayeAmount 2 "+totalPayeAmount)
-		p9Item = new P9Item();
-
-		p9Item.yearId = yearId;
-		p9Item.yearName = yearName;
-		p9Item.payrollPeriodId = payrollPeriodId;
-		p9Item.periodName = component.periodName;
-		p9Item.sequenceNo = sequenceNo;
-		/*	p9Item.employeeNumber = person.employeeNumber;
-		 p9Item.firstName = person.firstName;
-		 p9Item.lastName = person.lastName;
-		 p9Item.pinNumber = person.pinNumber;*/
-		p9Item.partyId = partyId;
-		p9Item.payrollElementId = payrollElementId;
-
-		p9Item.totalBasicAmount = totalBasicAmount;
-		p9Item.totalGrossAmount = totalGrossAmount;
-		p9Item.totalPensionAmount = totalPensionAmount;
-		p9Item.totalNssfAmount = totalNssfAmount;
-		p9Item.totalTaxablePayAmount = totalTaxablePayAmount;
-		p9Item.totalMprAmount = totalMprAmount;
-		p9Item.totalInsuranceReliefAmount = totalInsuranceReliefAmount;
-		p9Item.totalPayeAmount = totalPayeAmount;
-
-		p9Item.totalE1Amount = totalE1Amount;
-		p9Item.totalE2Amount = totalE2Amount;
-		p9Item.totalRetConOwnAmount = totalRetConOwnAmount;
-		p9Item.totalTaxChargedAmount = totalTaxChargedAmount;
-
-		p9ItemsList << p9Item
-	}
 
 	println("________________All ITEMS")
 	p9ItemsList.each{ item ->
