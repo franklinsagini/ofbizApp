@@ -17,56 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if p9ItemsList?has_content>
+    <#if listP9Staff?has_content>
         <#-- REPORT TITLE -->
-      
+       <#list listP9Staff as currentStaff>
         <fo:block><fo:leader/></fo:block>
-        <#-- Loan Details -->
+        <#-- P9 Details -->
         <fo:block space-after.optimum="5pt" font-size="9pt" margin-top="1mm">
-<#--        <fo:table border="0.5pt solid black"
-          text-align="center"
-          border-spacing="3pt">
-		  <fo:table-column column-width="1in"/>
-		  <fo:table-column column-width="0.5in" number-columns-repeated="2"/>
-		  <fo:table-header>
-		    <fo:table-row>
-		      <fo:table-cell padding="6pt"
-		                     border="1pt solid blue"
-		                     background-color="silver"
-		                     number-columns-spanned="3">
-		        <fo:block text-align="center" font-weight="bold">
-		          Header
-		        </fo:block>
-		      </fo:table-cell>
-		    </fo:table-row>
-		  </fo:table-header>
-		  <fo:table-body>
-		    <fo:table-row>
-		      <fo:table-cell padding="6pt"
-		                     border="1pt solid blue"
-		                     background-color="silver"
-		                     number-rows-spanned="2">
-		        <fo:block text-align="end" font-weight="bold">
-		          Items:
-		        </fo:block>
-		      </fo:table-cell>
-		      <fo:table-cell padding="6pt" border="0.5pt solid black">
-		        <fo:block> 1 : 1 </fo:block>
-		      </fo:table-cell>
-		      <fo:table-cell padding="6pt" border="0.5pt solid black">
-		        <fo:block> 1 : 2 </fo:block>
-		      </fo:table-cell>
-		    </fo:table-row>
-		    <fo:table-row>
-		      <fo:table-cell padding="6pt" border="0.5pt solid black">
-		        <fo:block> 2 : 1 </fo:block>
-		      </fo:table-cell>
-		      <fo:table-cell padding="6pt" border="0.5pt solid black">
-		        <fo:block> 2 : 2 </fo:block>
-		      </fo:table-cell>
-		    </fo:table-row>
-		  </fo:table-body>
-		</fo:table> -->
+
         
             <fo:table table-layout="fixed" width="100%" border="0.5pt solid black" >
                 <fo:table-column column-width="50pt"/>
@@ -147,8 +104,10 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" number-columns-spanned="3" border="1pt solid white">
                             <fo:block>${empDet.employer?if_exists}</fo:block>
-                            <fo:block>${empDet.employer?if_exists}</fo:block>
-                            <fo:block>${empDet.employer?if_exists}</fo:block>
+
+                            <fo:block>${currentStaff.lastName?if_exists}</fo:block>
+                            <fo:block>${currentStaff.firstName?if_exists}</fo:block>
+
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                             <fo:block></fo:block>
@@ -161,7 +120,9 @@ under the License.
                  		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                  			<fo:block font-size="1pt">. </fo:block>                            
                             <fo:block font-size="1pt">. </fo:block>  
-                            <fo:block>${empDet.pinNumber?if_exists}</fo:block>
+                            
+                            <fo:block>${currentStaff.employeeNumber?if_exists}</fo:block>
+
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid white" background-color="#FFFFFF">
 		        			<fo:block></fo:block>
@@ -172,7 +133,8 @@ under the License.
                         </fo:table-cell>
                   		<fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white" number-columns-spanned="3">
                   			<fo:block text-align="center" font-weight="bold">${empDet.pinNumber?if_exists}</fo:block>
-		        			<fo:block text-align="center" font-weight="bold">${empDet.pinNumber?if_exists}</fo:block>
+		        			<fo:block text-align="center" font-weight="bold">${currentStaff.pinNumber?if_exists}</fo:block>
+
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                             <fo:block></fo:block>
@@ -387,16 +349,17 @@ under the License.
                             </fo:table-cell>
                             
                         </fo:table-row -->
-                    <#list p9ItemsList as yearList>
-                   <#-- <#if yearList.payeamount?if_exists != 0> -->
+                    <#assign listOfP9Items = currentStaff.listOfP9Items >
+                    <#list listOfP9Items as p9Item >
+                   <#-- <#if p9Item.payeamount?if_exists != 0> -->
                          <fo:table-row font-size="8pt">                            
                             <fo:table-cell padding="2pt" border="1pt solid">
                                  <fo:block>
-                                 	${yearList.periodName?if_exists}
+                                 	${p9Item.periodName?if_exists}
                                  </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalBasicAmount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalBasicAmount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid">
                                 <fo:block text-align="right">
@@ -407,13 +370,13 @@ under the License.
                                 	
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalGrossAmount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalGrossAmount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalE1Amount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalE1Amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalE2Amount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalE2Amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
                                 	<fo:block>${maxPension.pension_maxContibution?string(",##0.00")}</fo:block>
@@ -422,22 +385,22 @@ under the License.
                                 	<fo:block></fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalRetConOwnAmount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalRetConOwnAmount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalTaxablePayAmount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalTaxablePayAmount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalTaxChargedAmount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalTaxChargedAmount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalMprAmount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalMprAmount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalInsuranceReliefAmount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalInsuranceReliefAmount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" text-align="right">
-                                	<fo:block>${yearList.totalPayeAmount?string(",##0.00")}</fo:block>
+                                	<fo:block>${p9Item.totalPayeAmount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                        <#-- </#if> -->
@@ -536,6 +499,8 @@ under the License.
                 </fo:table-body>
             </fo:table>
         </fo:block>
+        
+        </#list>
       
     <#else>
         <fo:block margin-top="50mm" text-align="center">NO DATA FOUND</fo:block>

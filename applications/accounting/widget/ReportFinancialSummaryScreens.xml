@@ -299,14 +299,14 @@ under the License.
                                 <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                 <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                             </link>
-                            <label style="h3" text="Capital Components"/>
+                            <label style="h3" text="Liquidity Statement"/>
                             <include-form name="LiquidityStatement" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="On-Balance Sheet Assets"/>
+<!--                             <label style="h3" text="On-Balance Sheet Assets"/>
                             <include-form name="IncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label style="h3" text="Capital Ratio Calculations"/>
                             <include-form name="IncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label style="h3" text="${uiLabelMap.CommonTotal}"/>
-                            <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                            <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/> -->
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -487,12 +487,20 @@ under the License.
                                 <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                 <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                             </link>
-                            <label style="h3" text="${uiLabelMap.AccountingIncome}"/>
-                            <include-form name="IncomeStatementIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingRevenues}"/>
-                            <include-form name="IncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingExpenses}"/>
-                            <include-form name="IncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+							<screenlet title="Select Dates">
+							<include-form name="financialPositionAssetsForm" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+							</screenlet>
+							 <link text="Financial Position (pdf)" style="button" target="FinancialPositionPDF" target-window="_BLANK">
+                                <parameter param-name="fromDate" from-field="fromDate"/>
+                                <parameter param-name="thruDate" from-field="thruDate"/>
+                            </link>
+							 <screenlet></screenlet>
+                            <label style="h3" text="ASSETS"/>
+                            <include-form name="financialPositionAssets" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                            <label style="h3" text="LIABILITIES"/>
+                            <include-form name="financialPositionLiabilities" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                            <label style="h3" text="EQUITY"/>
+                            <include-form name="financialPositionEquity" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label style="h3" text="${uiLabelMap.CommonTotal}"/>
                             <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
@@ -501,6 +509,28 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+	 <screen name="FinancialPositionPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/sasra/StatementFinancialPositionpdf.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/reports/StatementFinancialPosition.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="StatementComprehensiveIncome">
         <section>
             <actions>
@@ -531,7 +561,7 @@ under the License.
                             <include-form name="TransactionSelectionForm" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <screenlet title="Statement Comprehensive Income">
-                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="button" target="IncomeStatementListCsv.csv">
+                           <!--  <link text="${uiLabelMap.AccountingExportAsCsv}" style="button" target="IncomeStatementListCsv.csv">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
                                 <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
@@ -542,15 +572,15 @@ under the License.
                                 <parameter param-name="thruDate" from-field="thruDate"/>
                                 <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                 <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
-                            </link>
+                            </link> -->
                             <label style="h3" text="Statement Comprehensive Income"/>
-                            <include-form name="IncomeStatementIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                            <label style="h3" text="${uiLabelMap.AccountingRevenues}"/>
+                            <include-form name="FinacialIncome" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                          <!--  <label style="h3" text="Financial Income From Investment"/>
                             <include-form name="IncomeStatementRevenues" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label style="h3" text="${uiLabelMap.AccountingExpenses}"/>
                             <include-form name="IncomeStatementExpenses" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                             <label style="h3" text="${uiLabelMap.CommonTotal}"/>
-                            <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                            <include-form name="BalanceTotals" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/> -->
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
