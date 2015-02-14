@@ -7,18 +7,31 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
 import javolution.util.FastList;
 
+import org.ofbiz.base.util.UtilDateTime;
+import java.text.SimpleDateFormat; 
 
-
-
-
-assetsList = [];
-liabilityList = [];
-equityList = [];
+sqlStartDate = parameters.startDate
+sqlEndDate = parameters.endDate
 
 reportId = "6"
 List mainAndExprs = FastList.newInstance();
 
 mainAndExprs.add(EntityCondition.makeCondition("reportId", EntityOperator.EQUALS, reportId));
+
+dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(sqlStartDate);
+dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(sqlEndDate);
+
+   fromDate= new java.sql.Timestamp(dateStartDate.getTime());
+   thruDate= new java.sql.Timestamp(dateEndDate.getTime());
+
+
+
+exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
+
+assetsList = [];
+liabilityList = [];
+equityList = [];
+
 	
  List<String> orderByList = new ArrayList<String>();
  orderByList.add("code");

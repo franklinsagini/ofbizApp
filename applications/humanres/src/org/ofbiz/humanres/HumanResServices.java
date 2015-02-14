@@ -1019,7 +1019,7 @@ GenericValue employeeLeaveType = null;
 			
 			if (employmentTerms.equalsIgnoreCase("permanent")) {
 				
-				 int newEmplNo=100000001;
+				 int newEmplNo=1001;
 				 String h=String.valueOf(newEmplNo);
 				 nextEmployeeNumber=PayrollPrefix.concat(h);
 				 
@@ -1027,7 +1027,7 @@ GenericValue employeeLeaveType = null;
 				
 			} else if(employmentTerms.equalsIgnoreCase("contract")) {
 			
-				 int newEmplNo=100000001;
+				 int newEmplNo=1001;
 				 String h=String.valueOf(newEmplNo);
 				 nextEmployeeNumber=contractPayrollPrefix.concat(h);
 				 
@@ -1035,7 +1035,7 @@ GenericValue employeeLeaveType = null;
 
 			}else if(employmentTerms.equalsIgnoreCase("intern")) {
 				
-				 int newEmplNo=100000001;
+				 int newEmplNo=1001;
 				 String h=String.valueOf(newEmplNo);
 				 nextEmployeeNumber=internPayrollPrefix.concat(h);
 				 

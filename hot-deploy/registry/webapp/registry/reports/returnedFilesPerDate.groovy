@@ -7,6 +7,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.util.EntityFindOptions;
 import java.text.SimpleDateFormat; 
+import org.joda.time.LocalDate;
 
 
 
@@ -16,9 +17,15 @@ endDate = parameters.endDate
 dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
 dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
 
+
+
  sqlStartDate = new java.sql.Timestamp(dateStartDate.getTime());
  sqlEndDate = new java.sql.Timestamp(dateEndDate.getTime());
 
+ 
+ appointmentdate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(startDate));
+ LocalDate localDateEndDate = new LocalDate(appointmentdate.getTime());
+System.out.println("DATE>>>>>>"+localDateEndDate)
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
 
