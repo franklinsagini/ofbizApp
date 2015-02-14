@@ -97,8 +97,8 @@ under the License.
                 <fo:table-header>
                 
                 	<fo:table-row font-weight="bold" font-size="9pt" text-align="center">
-                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
-                            <fo:block></fo:block>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white" text-align="left">
+                            <fo:block>P.9</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                             <fo:block></fo:block>
