@@ -58,9 +58,6 @@ under the License.
                     <#if activity.actionBy?has_content>
                         <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
                     </#if>
-                    <#if activity.currentPossesser?has_content>
-                        <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
-                    </#if>
                      <fo:table-row>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if actionBy?has_content>
