@@ -31,10 +31,16 @@ under the License.
         </fo:block>
         <fo:block><fo:leader/></fo:block>
 
-<#--         <#if activity.carriedBy?has_content>
-            <#assign carriedBy = delegator.findOne("Person", {"partyId" : activity.carriedBy}, false)/>
+         <#if payment.paymentTypeId?has_content>
+            <#assign paymentType = delegator.findOne("PaymentType", {"paymentTypeId" : payment.paymentTypeId}, false)/>
         </#if>
-        <#if activity.actionBy?has_content>
+         <#if payment.paymentMethodId?has_content>
+            <#assign paymentMethod = delegator.findOne("PaymentMethod", {"paymentMethodId" : payment.paymentMethodId}, false)/>
+        </#if>
+         <#if payment.statusId?has_content>
+            <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : payment.statusId}, false)/>
+        </#if>
+<#--        <#if activity.actionBy?has_content>
             <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
         </#if>
         <#if activity.currentPossesser?has_content>
@@ -69,15 +75,15 @@ under the License.
                                     <fo:block>Payment Type:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
-                                    <fo:block>Vendor Payment</fo:block>
+                                    <fo:block>${paymentType.description?if_exists}</fo:block>
                                 </fo:list-item-body>
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>Payment Status</fo:block>
+                                    <fo:block>Payment Status:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
-                                    <fo:block>Dispachted</fo:block>
+                                    <fo:block>${statusItem.description?if_exists}</fo:block>
                                 </fo:list-item-body>
                             </fo:list-item>
                             <fo:list-item>
@@ -85,7 +91,7 @@ under the License.
                                     <fo:block>Total Amount</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
-                                    <fo:block>KES 120,023</fo:block>
+                                    <fo:block>${payment.amount?if_exists}</fo:block>
                                 </fo:list-item-body>
                             </fo:list-item>
                         </fo:list-block>
@@ -102,18 +108,18 @@ under the License.
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>Payment Mode</fo:block>
+                                    <fo:block>Payment Mode:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
-                                    <fo:block>CHEQUE PAYMENT</fo:block>
+                                    <fo:block>${paymentMethod.paymentMethodId?if_exists}</fo:block>
                                 </fo:list-item-body>
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>CPV Date</fo:block>
+                                    <fo:block>CPV Date:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
-                                    <fo:block>12th Jan 2012</fo:block>
+                                    <fo:block>${payment.effectiveDate?if_exists}</fo:block>
                                 </fo:list-item-body>
                             </fo:list-item>
                             <fo:list-item>
@@ -121,7 +127,7 @@ under the License.
                                     <fo:block>EFT/CHQ/REF No: </fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
-                                    <fo:block>12345678</fo:block>
+                                    <fo:block>${payment.paymentRefNum?if_exists}</fo:block>
                                 </fo:list-item-body>
                             </fo:list-item>
                         </fo:list-block>
@@ -131,7 +137,27 @@ under the License.
         </fo:table>
 
         <fo:block><fo:leader/></fo:block>
-        <fo:block><fo:leader/></fo:block>
+        <fo:block font-size="9pt"  text-align="left" margin-left="0%" margin-top="0%" margin-bottom="0.0in">
+        <fo:table table-layout="fixed" width="100%" font-size="9pt" margin-left="0.3in">
+            <fo:table-column column-number="1" column-width="proportional-column-width(100)"/>
+            <fo:table-body>
+                <fo:table-row>
+                    <fo:table-cell>
+                        <fo:list-block provisional-distance-between-starts="1.3in">
+                            <fo:list-item>
+                                <fo:list-item-label font-weight="bold">
+                                    <fo:block>Payment Description: </fo:block>
+                                </fo:list-item-label>
+                                <fo:list-item-body start-indent="body-start()" text-decoration="underline">
+                                    <fo:block>${payment.comments?if_exists}</fo:block>
+                                </fo:list-item-body>
+                            </fo:list-item>
+                        </fo:list-block>
+                    </fo:table-cell>
+                </fo:table-row>
+            </fo:table-body>
+        </fo:table>
+        </fo:block>
         <fo:block><fo:leader/></fo:block>
         <fo:block><fo:leader/></fo:block>
         <#if acctgTransAndEntries?has_content>
