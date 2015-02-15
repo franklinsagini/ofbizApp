@@ -94,5 +94,18 @@ public class LoanUtilities {
 		}
 		return loanApplication;
 	}
+	
+	public static GenericValue getLoanProduct(Long loanProductId){
+		GenericValue loanProduct = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", loanProductId),
+					false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return loanProduct;
+	}
 
 }
