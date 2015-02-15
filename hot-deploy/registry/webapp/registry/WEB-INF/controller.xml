@@ -403,7 +403,7 @@
 	<request-map uri="creatememberFiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="creatememberFiles" />
-		<response name="success" type="view" value="editfiles" />
+		<response name="success" type="request-redirect-noparam" value="editfiles" />
 		<response name="error" type="view" value="editfiles" />
 	</request-map>
 
@@ -421,24 +421,23 @@
 	<request-map uri="requestfiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="requestfiles" />
-		<response name="success" type="view" value="fileRquestScreen" />
-		<response name="error" type="view" value="fileRquestScreen" />
+		<response name="success" type="request-redirect-noparam" value="regFileRequest" />
 	</request-map>
 	
 
 	<request-map uri="issuefiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="issuefiles" />
-		<response name="success" type="view" value="fileIssueScreen" />
-		<response name="error" type="view" value="fileIssueScreen" />
+		<response name="success" type="request-redirect-noparam" value="regFileIssue" />
+		<response name="error" type="view" value="regFileIssue" />
 	</request-map>
 
 	
 	<request-map uri="divertfiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="divertfiles" />
-		<response name="success" type="view" value="fileDivertScreen" />
-		<response name="error" type="view" value="fileDivertScreen" />
+		<response name="success" type="request-redirect-noparam" value="regFileDivert" />
+		<response name="error" type="view" value="regFileDivert" />
 	</request-map>
 
 	<!-- ================ AUTHORIZATION ================= -->
@@ -468,38 +467,37 @@
 	 <request-map uri="recieveFiles">
 		<security https="true" auth="true" />
 		<event type="service-multi" invoke="recieveFiles" />
-		<response name="success" type="request-redirect" value="fileDispatchScreen" >
+		<response name="success" type="request-redirect" value="regFileDispatch" >
 			<redirect-parameter name="partyId"/>
 			<redirect-parameter name="status"/>
 			<redirect-parameter name="currentPossesser"/>
 		</response>
-		<response name="error" type="view" value="fileDispatchScreen" />
+		<response name="error" type="view" value="regFileDispatch" />
 	</request-map>
 
 
 	<request-map uri="releasefiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="releasefiles" />
-		<response name="success" type="view" value="fileReleaseScreen" />
-		<response name="error" type="view" value="fileReleaseScreen" />
+		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
 	</request-map>
+	
 
 	<request-map uri="releaseFileToAnotherStaff">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="releaseFileToAnotherStaff" />
-		<response name="success" type="view" value="fileReleaseScreen" />
-		<response name="error" type="view" value="fileReleaseScreen" />
+		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
 	</request-map>
 
 	<request-map uri="returnfiles">
 		<security https="true" auth="true" />
 		<event type="service-multi" invoke="returnfiles" />
-		<response name="success" type="request-redirect" value="fileReturnScreen" >
+		<response name="success" type="request-redirect" value="regFileReturn" >
 			<redirect-parameter name="partyId"/>
 			<redirect-parameter name="status"/>
 			<redirect-parameter name="currentPossesser"/>
 		</response>
-		<response name="error" type="view" value="fileReturnScreen" />
+		<response name="error" type="view" value="regFileReturn" />
 	</request-map>
 
 
@@ -551,42 +549,42 @@
      <request-map uri="deactivateFile">
         <security https="true" auth="true"/>
         <event type="service" invoke="deactivateFile"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="request-redirect-noparam" value="main"/>
     </request-map>
 
 	 <!-- ================MOVE FILE TO SEMI-ACTIVE========================= -->
      <request-map uri="moveToSemiActive">
         <security https="true" auth="true"/>
         <event type="service" invoke="moveToSemiActive"/>
-        <response name="success" type="view" value="inactiveFiles"/>
+        <response name="success" type="request-redirect-noparam" value="inactiveFiles"/>
     </request-map>
 
      <!-- ================MOVE FILE TO ARCHIVE========================= -->
      <request-map uri="moveToArchive">
         <security https="true" auth="true"/>
         <event type="service" invoke="moveToArchive"/>
-        <response name="success" type="view" value="semiActiveFiles"/>
+        <response name="success" type="request-redirect-noparam" value="semiActiveFiles"/>
     </request-map>
 
      <!-- ================MOVE FILE FOR DISPOSAL========================= -->
      <request-map uri="moveToDisposal">
         <security https="true" auth="true"/>
         <event type="service" invoke="moveToDisposal"/>
-        <response name="success" type="view" value="archive"/>
+        <response name="success" type="request-redirect-noparam" value="archive"/>
     </request-map>
 
       <!-- ================ ACTIVATE FILE ========================= -->
      <request-map uri="activateFile">
         <security https="true" auth="true"/>
         <event type="service" invoke="activateFile"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="request-redirect-noparam" value="main"/>
     </request-map>
 
       <!-- ================ MOVE FILE TO DECEASED MEMBER FILES ========================= -->
      <request-map uri="deceasedMember">
         <security https="true" auth="true"/>
         <event type="service" invoke="deceasedMember"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="request-redirect-noparam" value="main"/>
     </request-map>
 
       <!-- ================ CLOSE A FILE VOLUME ========================= -->
@@ -622,8 +620,7 @@
 <request-map uri="createDocument">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createDocument" />
-		<response name="success" type="view" value="editfile" />
-		<response name="error" type="view" value="editfile" />
+		<response name="success" type="request-redirect-noparam" value="editfile" />
 	</request-map>
 
 	<!-- Document Overview -->

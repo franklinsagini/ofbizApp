@@ -31,11 +31,24 @@ totalTaxablePayAmount = BigDecimal.ZERO
 totalMPRAmount = BigDecimal.ZERO
 totalInsuranceReliefAmount = BigDecimal.ZERO
 totalPAYEeAmount = BigDecimal.ZERO
-
 totalE1Amount  = BigDecimal.ZERO
 totalE2Amount  = BigDecimal.ZERO
 totalRetConOwnAmount  = BigDecimal.ZERO
 totalTaxChargedAmount = BigDecimal.ZERO
+
+
+FinalTotalBasicPayAmount = BigDecimal.ZERO
+FinalTotalGrossAmount = BigDecimal.ZERO
+FinalTotalPensionAmount = BigDecimal.ZERO
+FinalTotalNSSFAmount = BigDecimal.ZERO
+FinalTotalTaxablePayAmount = BigDecimal.ZERO
+FinalTotalMPRAmount = BigDecimal.ZERO
+FinalTotalInsuranceReliefAmount = BigDecimal.ZERO
+FinalTotalPAYEAmount = BigDecimal.ZERO
+FinalTotalE1Amount  = BigDecimal.ZERO
+FinalTotalE2Amount  = BigDecimal.ZERO
+FinalTotalRetConOwnAmount  = BigDecimal.ZERO
+FinalTotalTaxChargedAmount = BigDecimal.ZERO
 
 
 employeeSet = new HashSet();
@@ -111,6 +124,19 @@ class P9Item {
 			def totalE2Amount;
 			def totalRetConOwnAmount;
 			def totalTaxChargedAmount;
+/*			
+			def FinalTotalBasicPayAmount;
+			def FinalTotalGrossAmount;
+			def FinalTotalPensionAmount;
+			def FinalTotalNSSFAmount;
+			def FinalTotalTaxablePayAmount;
+			def FinalTotalMPRAmount;
+			def FinalTotalInsuranceReliefAmount;
+			def FinalTotalPAYEAmount;
+			def FinalTotalE1Amount;
+			def FinalTotalE2Amount;
+			def FinalTotalRetConOwnAmount;
+			def FinalTotalTaxChargedAmount;*/
 		}
 
 class StaffDetails{
@@ -125,6 +151,8 @@ listP9Staff = []
 
 employeeSet.each { employeepartyId ->
 
+	FinalTotalBasicPayAmount = new BigDecimal(0.0);
+	
 	currentStaff = new P9Staff();
 	currentStaff.partyId = employeepartyId;
 
@@ -356,12 +384,12 @@ employeeSet.each { employeepartyId ->
 	totalTaxChargedAmount  = new BigDecimal(0.0);
 
 
-
-
+	FinalTotalBasicPayAmount = new BigDecimal(0.0);
+	
 	monthList.each { component ->
 		//	System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii "+component.partyId)
 
-		//
+	
 
 		totalBasicAmount  = new BigDecimal(0.0);
 		totalGrossAmount  = new BigDecimal(0.0);
@@ -440,15 +468,32 @@ employeeSet.each { employeepartyId ->
 		p9Item.totalTaxablePayAmount = totalTaxablePayAmount;
 		p9Item.totalMprAmount = totalMprAmount;
 		p9Item.totalInsuranceReliefAmount = totalInsuranceReliefAmount;
-		p9Item.totalPayeAmount = totalPayeAmount;
-		
+		p9Item.totalPayeAmount = totalPayeAmount;		
 		p9Item.totalE1Amount = totalE1Amount;
 		p9Item.totalE2Amount = totalE2Amount;
 		p9Item.totalRetConOwnAmount = totalRetConOwnAmount;
 		p9Item.totalTaxChargedAmount = totalTaxChargedAmount;
-	
+		
+		FinalTotalBasicPayAmount = FinalTotalBasicPayAmount.add(totalBasicAmount);
+		
+	/*	p9Item.FinalTotalBasicPayAmount = FinalTotalBasicPayAmount;
+		p9Item.FinalTotalGrossAmount = FinalTotalGrossAmount;
+		p9Item.FinalTotalPensionAmount = FinalTotalPensionAmount;
+		p9Item.FinalTotalNSSFAmount = FinalTotalNSSFAmount;
+		p9Item.FinalTotalTaxablePayAmount = FinalTotalTaxablePayAmount;
+		p9Item.FinalTotalMPRAmount = FinalTotalMPRAmount;
+		p9Item.FinalTotalInsuranceReliefAmount = FinalTotalInsuranceReliefAmount;
+		p9Item.FinalTotalPAYEAmount = FinalTotalPAYEAmount;
+		p9Item.FinalTotalE1Amount = FinalTotalE1Amount;
+		p9Item.FinalTotalE2Amount = FinalTotalE2Amount;
+		p9Item.FinalTotalRetConOwnAmount = FinalTotalRetConOwnAmount;
+		p9Item.FinalTotalTaxChargedAmount = FinalTotalTaxChargedAmount;
+	*/
 		p9ItemsList << p9Item
-	 }
+	 
+		
+		
+		}
 
 
 	println("________________All ITEMS")
@@ -471,19 +516,47 @@ employeeSet.each { employeepartyId ->
 
 	p9ItemsList.sort {it.sequenceNo}
 	
+/*	
+	FinalTotalGrossAmount = FinalTotalGrossAmount.add(totalGrossAmount);
+	FinalTotalPensionAmount = FinalTotalPensionAmount.add(totalPensionAmount);
+	FinalTotalNSSFAmount = FinalTotalNSSFAmount.add(totalNssfAmount);
+	FinalTotalTaxablePayAmount = FinalTotalTaxablePayAmount.add(totalTaxablePayAmount);
+	FinalTotalMPRAmount = FinalTotalMPRAmount.add(totalMprAmount);
+	FinalTotalInsuranceReliefAmount = FinalTotalInsuranceReliefAmount.add(totalInsuranceReliefAmount);
+	FinalTotalPAYEAmount = FinalTotalPAYEAmount.add(totalPayeAmount);
+	FinalTotalE1Amount  = FinalTotalE1Amount.add(totalE1Amount);
+	FinalTotalE2Amount  = FinalTotalE2Amount.add(totalE2Amount);
+	FinalTotalRetConOwnAmount  = FinalTotalRetConOwnAmount.add(totalRetConOwnAmount);
+	FinalTotalTaxChargedAmount = FinalTotalTaxChargedAmount.add(totalTaxChargedAmount);*/
+	
 	
 
 	currentStaff.listOfP9Items = p9ItemsList;
 	listP9Staff << currentStaff;
+	
+	context.FinalTotalBasicPayAmount=FinalTotalBasicPayAmount
 
 }
 //context.p9ItemsList = p9ItemsList
 
 context.listP9Staff = listP9Staff
 
-//context.grossMap = grossMap;
 
 
+//maxPension.pension_maxContibution
+
+
+context.FinalTotalGrossAmount=FinalTotalGrossAmount
+context.FinalTotalPensionAmount=FinalTotalPensionAmount
+context.FinalTotalNSSFAmount=FinalTotalNSSFAmount
+context.FinalTotalTaxablePayAmount=FinalTotalTaxablePayAmount
+context.FinalTotalMPRAmount=FinalTotalMPRAmount
+context.FinalTotalInsuranceReliefAmount=FinalTotalInsuranceReliefAmount
+context.FinalTotalPAYEAmount=FinalTotalPAYEAmount
+context.FinalTotalE1Amount=FinalTotalE1Amount
+context.FinalTotalE2Amount=FinalTotalE2Amount
+context.FinalTotalRetConOwnAmount=FinalTotalRetConOwnAmount
+context.FinalTotalTaxChargedAmount=FinalTotalTaxChargedAmount
 
 
 

@@ -170,23 +170,23 @@ under the License.
                         </fo:table-row>
                        <#-- </#if> -->
                     </#list>
-                    <fo:table-row column-height="30mm" font-weight="bold" font-size="12pt">
+                    <fo:table-row column-height="30mm" font-weight="bold">
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="12pt">
                                 <fo:block text-align="left" >
                                 	TOTAL TAX KSH. 
                                 </fo:block>
                             </fo:table-cell>
-                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
+                                <fo:block text-align="right">${totalPayeTax?string(",##0.00")}
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
                                 <fo:block text-align="right">
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block text-align="right">
-                                </fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block text-align="right">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
+                                <fo:block text-align="right">${totalFringeBenefit?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             
