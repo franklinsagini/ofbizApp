@@ -949,7 +949,24 @@ under the License.
         <field-to-result field="showUnreceiptedBankingsTotal"/>
     </simple-method>
 
+    <simple-method method-name="createBankReconSummary" short-description="create Bank Recon Summary">
+        <make-value entity-name="BankReconSummary" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="BankReconSummary" field="bankReconSummaryId"/>
+        <set from-field="bankReconSummaryId" field="newEntity.bankReconSummaryId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateBankReconSummary" short-description="Update Bank Recon Summary">
+        <entity-one entity-name="BankReconSummary" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+         <log message="LOOKED UP VALUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ${lookedUpValue}" />
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
     <simple-method method-name="calculateReconBalances" short-description="Recalculate the Recon Balances">
+
         <set field="cashBookTotal" type="BigDecimal" value="0"/>
         <set field="bankBalanceTotal" type="BigDecimal" from-field="parameters.bankBalanceTotal"/>
         <set field="showUncreditedBankingsTotal" type="BigDecimal" from-field="parameters.showUncreditedBankingsTotal"/>
@@ -993,27 +1010,62 @@ under the License.
         <field-to-result field="showAdjustedCashBookBalance"/>
         <field-to-result field="bankBalanceTotal"/>
         <field-to-result field="showAdjustedBankBalance"/>
+
+<!--         <entity-one entity-name="BankReconSummary" value-field="bankReconSummary">
+            <field-map field-name="glReconciliationId" from-field="parameters.glReconciliationId"/>
+        </entity-one> -->
+
+        <entity-and entity-name="BankReconSummary" list="bankReconSummaryList">
+            <field-map field-name="glReconciliationId" from-field="parameters.glReconciliationId"/>
+        </entity-and>
+        <if-not-empty field="bankReconSummaryList">
+            <first-from-list list="bankReconSummaryList" entry="bankReconSummary"/>
+        </if-not-empty>
+
+        <if-empty field="bankReconSummaryList">
+            <log message="INSIDE CREATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ${bankReconSummary}" />
+            <set-service-fields service-name="createBankReconSummary" map="parameters" to-map="createBankReconSummaryMap"/>
+            <set field="createBankReconSummaryMap.glReconciliationId" from-field="parameters.glReconciliationId"/>
+            <set field="createBankReconSummaryMap.cashBookBalance" from-field="parameters.cashBookTotal"/>
+            <set field="createBankReconSummaryMap.unreceiptedBankings" from-field="showUnreceiptedBankingsTotal"/>
+            <set field="createBankReconSummaryMap.unidentifiedDebits" from-field="parameters.showUnidentifiedDebitsTotal"/>
+            <set field="createBankReconSummaryMap.adjustedCashBookBalance" from-field="showAdjustedCashBookBalance"/>
+            <set field="createBankReconSummaryMap.bankBalance" from-field="bankBalanceTotal"/>
+            <set field="createBankReconSummaryMap.uncreditedBankings" from-field="parameters.showUncreditedBankingsTotal"/>
+            <set field="createBankReconSummaryMap.unpresentedCheques" from-field="parameters.showUnpresentedChequesTotal"/>
+            <set field="createBankReconSummaryMap.adjustedBankBalance" from-field="showAdjustedBankBalance"/>
+            <call-service service-name="createBankReconSummary" in-map-name="createBankReconSummaryMap"/>
+        </if-empty>
+        <if-not-empty field="bankReconSummaryList">
+            <first-from-list list="bankReconSummaryList" entry="bankReconSummary"/>
+            <set-service-fields service-name="updateBankReconSummary" map="bankReconSummary" to-map="updateBankReconSummaryMap"/>
+            <set field="updateBankReconSummaryMap.bankReconSummaryId" from-field="bankReconSummary.bankReconSummaryId"/>
+            <set field="updateBankReconSummaryMap.glReconciliationId" from-field="bankReconSummary.glReconciliationId"/>
+            <set field="updateBankReconSummaryMap.cashBookBalance" from-field="parameters.cashBookTotal"/>
+            <set field="updateBankReconSummaryMap.unreceiptedBankings" from-field="showUnreceiptedBankingsTotal"/>
+            <set field="updateBankReconSummaryMap.unidentifiedDebits" from-field="parameters.showUnidentifiedDebitsTotal"/>
+            <set field="updateBankReconSummaryMap.adjustedCashBookBalance" from-field="showAdjustedCashBookBalance"/>
+            <set field="updateBankReconSummaryMap.bankBalance" from-field="parameters.bankBalanceTotal"/>
+            <set field="updateBankReconSummaryMap.uncreditedBankings" from-field="parameters.showUncreditedBankingsTotal"/>
+            <set field="updateBankReconSummaryMap.unpresentedCheques" from-field="parameters.showUnpresentedChequesTotal"/>
+            <set field="updateBankReconSummaryMap.adjustedBankBalance" from-field="showAdjustedBankBalance"/>
+            <log message="INSIDE UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ${bankReconSummary.bankReconSummaryId}" />
+            <log message="BANK BALANCE VALUEEEEEEEEEEEEEEEEEEEEEEEEEEEE ${parameters.bankBalanceTotal}" />
+            <call-service service-name="updateBankReconSummary" in-map-name="updateBankReconSummaryMap"/>
+        </if-not-empty>
+        <!-- Populate GLReconSummaryTable -->
+        <!-- showUnreceiptedBankingsTotal=0 -->
+        <!-- showUnidentifiedDebitsTotal=0 -->
+        <!-- cashBookTotal=212783 -->
+        <!-- bankBalanceTotal=0 -->
+        <!-- glReconciliationId=12 -->
+        <!-- showUncreditedBankingsTotal=0 -->
+        <!-- showUnpresentedChequesTotal=0 -->
+
     </simple-method>
 
     <simple-method method-name="reconcileFinAccountTrans" short-description="Reconcile Financial Accounting Transaction">
-        <set field="cashBookTotal" type="BigDecimal" from-field="parameters.cashBookTotal"/>
-        <set field="bankBalanceTotal" type="BigDecimal" from-field="parameters.bankBalanceTotal"/>
-        <!-- UB - UNRECEIPTED BANKINGS -->
-        <set field="showUnreceiptedBankingsTotal" type="BigDecimal"  from-field="parameters.showUnreceiptedBankingsTotal"/>
-        <!-- UD UNIDENTIFIED DEPOSITS -->
-        <set field="showUnidentifiedDebitsTotal" type="BigDecimal"   from-field="parameters.showUnidentifiedDebitsTotal"/>
-         <!-- DEPOSIT -->
-        <set field="showUncreditedBankingsTotal" type="BigDecimal"   from-field="parameters.showUncreditedBankingsTotal"/>
-        <!-- WITHDRAWAL -->
-        <set field="showUnpresentedChequesTotal" type="BigDecimal"   from-field="parameters.showUnpresentedChequesTotal"/>
-
-        <log level="info" message="############################################################## ${showUnreceiptedBankingsTotal}" />
-        <log level="info" message="############################################################## ${showUnidentifiedDebitsTotal}" />
-        <log level="info" message="############################################################## ${showUnpresentedChequesTotal}" />
-        <log level="info" message="############################################################## ${showUncreditedBankingsTotal}" />
-        <log level="info" message="############################################################## ${bankBalanceTotal}" />
-        <log level="info" message="############################################################## ${cashBookTotal}" />
-        <now-timestamp field="nowTimestamp"/>
+     <now-timestamp field="nowTimestamp"/>
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" auto-field-map="true"/>
         <if-not-empty field="finAccountTrans.glReconciliationId">
             <!-- Create AcctgTrans, AcctgTransEntries and GlReconciliationEntries -->
