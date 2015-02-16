@@ -51,10 +51,31 @@ under the License.
               <td>${currentStatus.description?if_exists}</td>
             </tr>
           </#if>
-          <tr>
-            <td><span class="label">${uiLabelMap.FormFieldTitle_reconciledDate}</span></td>
-            <td>${currentGlReconciliation.reconciledDate?if_exists}</td>
+           <tr>
+            <td><span class="label">Cash Book Amount</span></td>
+            <td>${cashBook?if_exists}</td>
           </tr>
+           <tr>
+            <td><span class="label">Unreceipted Direct Deposits</span></td>
+            <td>${unreceiptedDirectDeposits?if_exists}</td>
+          </tr>
+           <tr>
+            <td><span class="label">Unpresented Cheques</span></td>
+            <td>${unpresentedCheques?if_exists}</td>
+          </tr>
+           <tr>
+            <td><span class="label">Uncredited Cheques</span></td>
+            <td>${uncreditedCheques?if_exists}</td>
+          </tr>
+           <tr>
+            <td><span class="label">Withdrawals Not in Cash</span></td>
+            <td>${withdrawalNotInCashBook?if_exists}</td>
+          </tr>
+           <tr>
+            <td><span class="label">Bank Statement Amount</span></td>
+            <td>${bankStatement?if_exists}</td>
+          </tr>
+          <#--
           <tr>
             <td><span class="label">${uiLabelMap.AccountingOpeningBalance}</span></td>
             <td><@ofbizCurrency amount=currentGlReconciliation.openingBalance?default('0')/></td>
@@ -70,7 +91,7 @@ under the License.
               <td><span class="label">${uiLabelMap.FormFieldTitle_closingBalance}</span></td>
               <td><@ofbizCurrency amount=currentClosingBalance/></td>
             </tr>
-          </#if>
+          </#if> -->
         </table>
       </#if>
     </div>
