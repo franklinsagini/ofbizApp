@@ -1078,6 +1078,7 @@ under the License.
       <alias name="employeeNumber" entity-alias="P" field="employeeNumber"/>
       <alias name="firstName" entity-alias="P" field="firstName"/>
       <alias name="lastName" entity-alias="P" field="lastName"/>
+	  <alias name="lastName" entity-alias="P" field="lastName"/>
        <alias name="annualaccruedDays" entity-alias="ANNUAL" field="accruedDays"/>
        <alias name="annualCarriedOverDays" entity-alias="ANNUAL" field="LeaveDaysCarriedOver"/>
       <alias name="annualUsedLeaveDays" entity-alias="ANNUAL" field="usedLeaveDays"/>
@@ -1092,6 +1093,9 @@ under the License.
       </view-link>
       <view-link entity-alias="ANNUAL" rel-entity-alias="P">
         <key-map field-name="partyId"/>
+		 <entity-condition>
+       <condition-expr field-name="employmentTerms" entity-alias="P" operator="equals" value="permanent"/>
+       </entity-condition>
       </view-link>
     </view-entity>
 
