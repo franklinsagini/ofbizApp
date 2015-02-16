@@ -796,6 +796,12 @@ under the License.
         <response name="success" type="view" value="EditAcctgTrans"/>
         <response name="error" type="view" value="EditAcctgTrans"/>
     </request-map>
+    <request-map uri="approveAcctgTrans">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveAcctgTrans"/>
+        <response name="success" type="view" value="EditAcctgTrans"/>
+        <response name="error" type="view" value="EditAcctgTrans"/>
+    </request-map>
     <request-map uri="updateAcctgTrans">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateAcctgTrans"/>
@@ -2760,12 +2766,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IncomeStatementListPdf"/>
     </request-map>
-	
+
 	<request-map uri="FinancialPositionPDF">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinancialPositionPDF"/>
     </request-map>
-	
+
     <request-map uri="IncomeStatementListCsv.csv">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IncomeStatementListCsv"/>
@@ -3245,7 +3251,7 @@ under the License.
     <!-- END OF SASRA REPORTS -->
 
  <view-map name="FinancialPositionPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialPositionPDF" content-type="application/pdf" encoding="none"/>
- 
+
     <view-map name="TrialBalance" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalance"/>
     <view-map name="TrialBalanceSearchResultsPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="TrialBalanceSearchResultsCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsCsv" content-type="text/csv" encoding="none"/>
