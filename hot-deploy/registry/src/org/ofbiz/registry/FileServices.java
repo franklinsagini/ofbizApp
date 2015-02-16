@@ -572,38 +572,32 @@ public class FileServices {
 		return true;
 	}
 	
-	public static String exampleSendEmail(HttpServletRequest request,
-			HttpServletResponse response) {
+	public static String exampleSendEmail(HttpServletRequest request, HttpServletResponse response) {
 			// Get the local Service dispatcher from the context
 			// Note: Dont forget to import the org.ofbiz.service.* classes
-			LocalDispatcher dispatcher =
-			(LocalDispatcher) request.getAttribute("dispatcher");
+			LocalDispatcher dispatcher =(LocalDispatcher) request.getAttribute("dispatcher");
 			String errMsg = null;
 			// The following are hardcoded as an example only
 			// Your program would set these up from the context or from
 			// database lookups
 			String mailBody = "This is the body of my email";
-			Map sendMailContext = new HashMap();
+			Map<String, String> sendMailContext = new HashMap<String, String>();
 			sendMailContext.put("sendTo", "juliandan17@gmail.com");
 			//sendMailContext.put("sendCC", "");
 			//sendMailContext.put("sendBcc","" );
 			sendMailContext.put("sendFrom", "juliandan7@gmail.com");
-			sendMailContext.put("subject",
-			"Testing emails sent from an OFBiz Event");
+			sendMailContext.put("subject", "Testing emails sent from an OFBiz Event");
 			sendMailContext.put("body", mailBody);
 			try {
 			// Call the sendMail Service and pass the sendMailContext
 			// Map object.
 			// Set timeout to 360 and wrap with a new transaction
-			Map<String, Object> result =
-			dispatcher.runSync("sendMail", sendMailContext,360, true);
+			Map<String, Object> result = dispatcher.runSync("sendMail", sendMailContext,360, true);
 			// Note easy way to get errors when they are returned
 			// from another Service
 			if (ModelService.RESPOND_ERROR.equals((String)
 			result.get(ModelService.RESPONSE_MESSAGE))) {
-			Map<String, Object> messageMap =
-			UtilMisc.toMap("errorMessage",
-			result.get(ModelService.ERROR_MESSAGE));
+			Map<String, Object> messageMap = UtilMisc.toMap("errorMessage",	result.get(ModelService.ERROR_MESSAGE));
 			errMsg = "Problem sending this email";
 			request.setAttribute("_ERROR_MESSAGE_", errMsg);
 			return "error";
