@@ -155,23 +155,24 @@ public class LoanAccounting {
 		String transactionType = "LOANDISBURSEMENT";
 
 		//Retention
-		
+		GenericValue loanProduct = LoanUtilities.getLoanProduct(loanApplication.getLong("loanProductId"));
 		//Check if the Loan Retains BOSA 
-		if ((loanApplication.getString("retainBOSADeposit") != null) && (loanApplication.getString("retainBOSADeposit").equals("Yes"))){
+		if ((loanProduct.getString("retainBOSADeposit") != null) && (loanProduct.getString("retainBOSADeposit").equals("Yes"))){
 			//This loan retains for BOSA deposit e.g JEKI LOAN, lets get the percentage retained and add it to the
 			// member deposits
 			//BigDecimal percentageOfMemberNetSalaryAmt = 
-			GenericValue loanProduct = LoanUtilities.getLoanProduct(loanApplication.getLong("loanProductId"));
+			
 			BigDecimal percentageDepositRetained = loanProduct.getBigDecimal("percentageDepositRetained");
 			if (percentageDepositRetained != null){
 				//Process the Retention
 				BigDecimal bdBosaRetainedAmount = (percentageDepositRetained.divide(new BigDecimal(100), 4, RoundingMode.HALF_UP)).multiply(transactionAmount).setScale(4, RoundingMode.HALF_UP);
 				
-				Long memberDepositAccountId = getAccountProductGivenCodeId("901");
+				Long memberDepositProductId = getAccountProductGivenCodeId("901");
+				String memberDepositAccountId = getMemberAccountId(loanApplication, memberDepositProductId);
 				
 				String retentionTransactionType = "RETAINEDASDEPOSIT";
 				
-				createTransaction(loanApplication, retentionTransactionType, userLogin, memberDepositAccountId.toString(), bdBosaRetainedAmount, null, accountTransactionParentId);
+				createTransaction(loanApplication, retentionTransactionType, userLogin, memberDepositAccountId, bdBosaRetainedAmount, null, accountTransactionParentId);
 				
 				transactionAmount = transactionAmount.subtract(bdBosaRetainedAmount);
 				
