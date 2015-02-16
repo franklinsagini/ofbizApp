@@ -225,4 +225,31 @@ public class LoanUtilities {
 		
 		return fromAnotherSacco;
 	}
+	
+	public static GenericValue getAccountProductGivenCodeId(String code) {
+
+		List<GenericValue> accountProductELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> accountProductConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"code", EntityOperator.EQUALS,
+						code)),
+						EntityOperator.AND);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					accountProductConditions, null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue accountProduct = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProduct = genericValue;
+		}
+		
+		
+
+		return accountProduct;
+	}
+
 }

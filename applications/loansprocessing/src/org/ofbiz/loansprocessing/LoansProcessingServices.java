@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.DurationFieldType;
 import org.joda.time.Months;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -25,6 +26,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.loans.AmortizationServices;
+import org.ofbiz.loans.LoanAccounting;
 import org.ofbiz.loans.LoanServices;
 
 import com.ibm.icu.util.Calendar;
@@ -276,7 +278,40 @@ public class LoansProcessingServices {
 		BigDecimal newLoansTotal = bdTotalDisbursedLoans.add(loanAmt);
 
 		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(newLoansTotal);
+		
+		//Get Contribution Amount of Loan Product Affect Member Deposits e.g. Super Loan
+		GenericValue loanProduct = getLoanProduct(loanProductId);
+		
+		if ((loanProduct.getString("affectMemberDeposit") != null) && (loanProduct.getString("affectMemberDeposit").equals("Yes")) && (loanProduct.getBigDecimal("affectMemberDepositPercentage") != null)){
+			BigDecimal bdContributionAffectedByProductAmt = getNewContributionWhenAffectedByProductType(loanProductId, loanAmt);
+			
+			if (bdContributionAffectedByProductAmt.compareTo(bdContributionAmount) == 1){
+				bdContributionAmount = bdContributionAffectedByProductAmt;
+			}
+		}
 		return bdContributionAmount;
+	}
+
+	private static BigDecimal getNewContributionWhenAffectedByProductType(
+			Long loanProductId, BigDecimal loanAmt) {
+		
+		GenericValue loanProduct = getLoanProduct(loanProductId);
+		
+		BigDecimal affectMemberDepositPercentage = loanProduct.getBigDecimal("affectMemberDepositPercentage");
+		
+		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId("901");
+		BigDecimal bdMinimumDepositAmount = BigDecimal.ZERO;
+		
+		BigDecimal contributionAmount = loanAmt.multiply(affectMemberDepositPercentage).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);
+		contributionAmount.setScale(4, RoundingMode.HALF_UP);
+		
+		if (accountProduct != null){
+			bdMinimumDepositAmount = accountProduct.getBigDecimal("minSavingsAmt");
+		}
+				
+		contributionAmount = contributionAmount.add(bdMinimumDepositAmount);
+		
+		return contributionAmount;
 	}
 
 	public static Long getLoanStatus(String name) {
