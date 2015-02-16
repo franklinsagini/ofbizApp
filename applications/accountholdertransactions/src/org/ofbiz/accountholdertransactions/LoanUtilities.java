@@ -1,8 +1,13 @@
 package org.ofbiz.accountholdertransactions;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -107,5 +112,117 @@ public class LoanUtilities {
 		}
 		return loanProduct;
 	}
+	
+	
+	/***
+	 * Get Loan Status
+	 * */
 
+	public static Long getLoanStatusId(String name) {
+		List<GenericValue> loanStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanStatusELI = delegator.findList("LoanStatus",
+					EntityCondition.makeCondition("name", name), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long loanStatusId = 0L;
+		for (GenericValue genericValue : loanStatusELI) {
+			loanStatusId = genericValue.getLong("loanStatusId");
+		}
+
+		String statusIdString = String.valueOf(loanStatusId);
+		statusIdString = statusIdString.replaceAll(",", "");
+		loanStatusId = Long.valueOf(statusIdString);
+		return loanStatusId;
+	}
+	
+	//Count Loan Guarantors
+	
+	public static Long getGuarantorsCount(Long loanApplicationId) {
+		List<GenericValue> guaranteedLoanELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			guaranteedLoanELI = delegator.findList("LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId", loanApplicationId), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		Long guarantorCount = 0L;
+		
+		guarantorCount = new Long(guaranteedLoanELI.size());
+
+		return guarantorCount;
+	}
+	
+	public static GenericValue getMember(String partyId){
+		
+		partyId = partyId.replaceAll(",", "");
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", Long.valueOf(partyId)), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		return member;
+	}
+
+	public static int getMemberDurations(Date joinDate) {
+
+		LocalDateTime stJoinDate = new LocalDateTime(joinDate.getTime());
+		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
+				.getTimeInMillis());
+
+		PeriodType monthDay = PeriodType.months();
+
+		Period difference = new Period(stJoinDate, stCurrentDate, monthDay);
+
+		int months = difference.getMonths();
+
+		return months;
+
+	}
+	
+	public static boolean isOldEnough(String partyId){
+		
+		Boolean oldEnough = false;
+		
+		GenericValue member = getMember(partyId);
+		
+		int duration = getMemberDurations(member.getDate("joinDate"));
+		
+		if (duration < 6)
+		{
+			oldEnough = false;
+		} else{
+			oldEnough = true;
+		}
+		
+		return oldEnough;
+	}
+	
+	public static boolean isFromAnotherSacco(String partyId){
+		
+		Boolean fromAnotherSacco = false;
+		
+		GenericValue member = getMember(partyId);
+		
+		String membershipofOtherSacco = member.getString("membershipofOtherSacco");
+		
+		if ((membershipofOtherSacco != null) && (membershipofOtherSacco.equals("Y")))
+		{
+			fromAnotherSacco = true;
+		} else{
+			fromAnotherSacco = false;
+		}
+		
+		return fromAnotherSacco;
+	}
 }

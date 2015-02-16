@@ -390,7 +390,7 @@
 				alert('Cannot appraise more than applied amount ');
 				return false;
 			} else{
-				alert('Will appraise ');
+			//	alert('Will appraise ');
 				return true;
 			}
 			
@@ -398,4 +398,9 @@
 		//}
     	//return false;
     }
+    
+ 
+
+    
+    
    </script>

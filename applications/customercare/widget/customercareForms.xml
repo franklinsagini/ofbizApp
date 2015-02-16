@@ -6,8 +6,9 @@
 	<form name="FindMember" type="single" target="main"
 		default-entity-name="Member">
 		<actions>
-			<!-- set field="statusName" value="ACTIVE"/> <set field="memberStatusId" 
-				value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ -->
+			<set field="statusName" value="ACTIVE"/> 
+			<set field="memberStatusId" 
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/>
 			<entity-condition entity-name="PartyGroup" list="partyGroups">
 				<condition-expr field-name="isBranch" operator="equals"
 					value="Y" />
@@ -46,12 +47,13 @@
 		</field>
 
 		<field name="memberStatusId" title="Status">
-			<drop-down allow-empty="true">
+			<hidden value="${memberStatusId}"/>
+			<!-- drop-down allow-empty="true">
 				<entity-options description="${name}" entity-name="MemberStatus"
 					key-field-name="memberStatusId">
 					<entity-order-by field-name="name" />
 				</entity-options>
-			</drop-down>
+			</drop-down -->
 		</field>
 		
 		<field name="mobileNumber" title="Phone Number" position="2">
@@ -179,9 +181,9 @@
 			<set field="partyId" from-field="parameters.partyId" />
 			<entity-condition entity-name="LoanProduct" list="productsList"></entity-condition>
 
-			<entity-condition entity-name="PaymentMethodType"
+			<!-- entity-condition entity-name="PaymentMethodType"
 				list="paymentMethodsList">
-			</entity-condition>
+			</entity-condition -->
 
 			<entity-condition entity-name="LoanStatus" list="loanStatusList">
 			</entity-condition>
@@ -200,7 +202,7 @@
 			<set field="membershipDuration"
 				value="${bsh:org.ofbiz.loans.LoanServices.getMemberDuration(partyId);}"
 				type="Integer" />
-				
+			<set field="newLoanStatus" value="NEW"/>
 		
 		</actions>
 
@@ -359,21 +361,22 @@
 			<hidden />
 		</field>
 
-		<field name="paymentMethodTypeId" title="Payment Method"
+		<!--  field name="paymentMethodTypeId" title="Payment Method"
 			widget-style="required" required-field="true">
 			<drop-down allow-empty="false">
 				<list-options list-name="paymentMethodsList" key-name="paymentMethodTypeId"
 					description="${description}" />
 			</drop-down>
-		</field>
+		</field -->
 
 
 		<field name="loanStatusId" title="Status" widget-style="required"
 			required-field="true">
-			<drop-down allow-empty="false">
+			<hidden value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getLoanStatusId(newLoanStatus);}"/>
+			<!-- drop-down allow-empty="false">
 				<list-options list-name="loanStatusList" key-name="loanStatusId"
 					description="${name}" />
-			</drop-down>
+			</drop-down -->
 		</field>
 
 
@@ -468,6 +471,10 @@
 				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(returnStatusName);}"
 				type="PlainString" />
 
+			<set field="statusNameRejected" value="REJECTED" />
+			<set field="rejectedStatusId"
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusNameRejected);}"
+				type="PlainString" />
 
 
 			<entity-condition entity-name="LoanApplication">
@@ -477,6 +484,8 @@
 						value="${statusId}"></condition-expr>
 						<condition-expr field-name="loanStatusId" operator="equals"
 						value="${returnStatusId}"></condition-expr>
+						<condition-expr field-name="loanStatusId" operator="equals"
+						value="${rejectedStatusId}"></condition-expr>
 					</condition-list>
 					<condition-expr field-name="createdBy" operator="equals"
 						from-field="userLogin.userLoginId"></condition-expr>
@@ -524,10 +533,10 @@
 		</field>
 
 
-		<field name="paymentMethodTypeId" title="Payment Method">
+		<!-- field name="paymentMethodTypeId" title="Payment Method">
 			<display-entity description="${description}"
 				entity-name="PaymentMethodType"></display-entity>
-		</field>
+		</field -->
 
 		<!-- field name="loanSecurityId" title="LoanSecurity"> <drop-down allow-empty="true"> 
 			<entity-options description="${description}" entity-name="PaymentMethodType" -->
@@ -559,6 +568,16 @@
 		<field name="Forward" use-when="(loanStatusId==${statusId}) || (loanStatusId==${returnStatusId})">
 
 			<hyperlink target="forwardApplicationToLoans" description="Forward Application"
+				link-type="anchor">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+
+
+		</field>
+		
+		<field name="Reject" use-when="(loanStatusId==${statusId}) || (loanStatusId==${returnStatusId})">
+
+			<hyperlink target="rejectLoanApplication" description="Reject Application"
 				link-type="anchor">
 				<parameter param-name="loanApplicationId" />
 			</hyperlink>
