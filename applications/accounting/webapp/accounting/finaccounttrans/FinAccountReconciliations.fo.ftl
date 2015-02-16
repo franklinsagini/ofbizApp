@@ -28,130 +28,101 @@ under the License.
         </fo:block>
         <fo:block><fo:leader/></fo:block>
         <#-- BANK Details -->
-        <fo:block font-size="10pt" text-align="left" font-weight="bold">
+        <fo:block font-size="10pt" text-align="center" font-weight="bold">
             BANK NAME: ${bankAccount.finAccountName?if_exists}
         </fo:block>
-        <fo:block font-size="10pt" text-align="left" font-weight="bold">
-            BANK RECONCILIATION AS AT: ${reconciliation.reconciledDate?if_exists}
+        <fo:block font-size="10pt" text-align="center" font-weight="bold">
+            RECONCILIATION AS AT: ${reconciliation.reconciledDate?if_exists}
         </fo:block>
         <fo:block><fo:leader/></fo:block>
 
     <#-- REPORT BODY -->
-        <fo:block font-size="10pt" text-align="left"  font-weight="bold" >
-            <fo:table table-layout="fixed">
-                <fo:table-column column-number="1" column-width="proportional-column-width(50)"/>
-                <fo:table-column column-number="2" column-width="proportional-column-width(50)"/>
-                <fo:table-body>
-                    <fo:table-row text-align="center" height="0.5cm" text-decoration="underline">
-                        <fo:table-cell>
-                            <fo:block>
-                                CASH BOOK
-                            </fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell>
-                            <fo:block>
-                                BANK STATEMENT
-                            </fo:block>
-                        </fo:table-cell>
-                    </fo:table-row>
-                    <fo:table-row height="1.0in">
-                        <fo:table-cell>
-                            <fo:list-block provisional-distance-between-starts="2.4in">
-                                <fo:list-item height="0.5cm">
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">Closing Balance Cash Book</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block>24,193,668.91</fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item height="0.5cm">
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">Less Unidentified Debits</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block text-decoration="underline">
-                                            <#if udTotal?exists><@ofbizCurrency amount=udTotal /></#if>
-                                        </fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item height="1.5cm">
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">Add Ureceipted Bankings</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block text-decoration="underline">
-                                            <#if ubTotal?exists><@ofbizCurrency amount=ubTotal /></#if>
-                                        </fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold"></fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block><fo:leader/></fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">Adjusted Cash Book Balance</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block>14,654,014.12</fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                            </fo:list-block>
-                        </fo:table-cell>
-                        <fo:table-cell>
-                            <fo:list-block provisional-distance-between-starts="2.4in">
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">Closing Balance Bank Statement</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block>24,193,668.91</fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">Add Uncredited Bankings</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block text-decoration="underline"><#if depositTotal?exists><@ofbizCurrency amount=depositTotal /></#if></fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">Less Unpresented Cheques</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block text-decoration="underline"><#if withdrawalTotal?exists><@ofbizCurrency amount=withdrawalTotal /></#if></fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold"></fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block><fo:leader/></fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">Adjusted Bank Statement Balance</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block>14,654,014.12</fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                            </fo:list-block>
-                        </fo:table-cell>
-                    </fo:table-row>
-                </fo:table-body>
-            </fo:table>
-        </fo:block>
-
+        <fo:table table-layout="fixed" width="100%" font-size="9pt" margin-left="0%">
+            <fo:table-column column-number="1" column-width="proportional-column-width(10)"/>
+            <fo:table-column column-number="1" column-width="proportional-column-width(60)"/>
+            <fo:table-column column-number="1" column-width="proportional-column-width(30)"/>
+            <fo:table-header>
+              <fo:table-row font-weight="bold">
+                <fo:table-cell padding="1%" background-color="#D4D0C8" border="1pt solid" border-width=".5mm">
+                  <fo:block font-size="10pt">Operator</fo:block>
+                </fo:table-cell>
+                <fo:table-cell padding="1%" background-color="#D4D0C8" border="1pt solid" border-width=".5mm">
+                  <fo:block font-size="10pt">Reconciliation Item</fo:block>
+                </fo:table-cell>
+                <fo:table-cell padding="1%" background-color="#D4D0C8" border="1pt solid" border-width=".5mm">
+                  <fo:block font-size="10pt">Amount in KES</fo:block>
+                </fo:table-cell>
+              </fo:table-row>
+            </fo:table-header>
+            <fo:table-body>
+                <fo:table-row font-weight="bold">
+                    <fo:table-cell border="1pt solid">
+                        <fo:block></fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" padding="1%">
+                        <fo:block>Balance as per Cash Book</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" text-align="right" padding="1%">
+                        <fo:block>${cashBook?if_exists}</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+                <fo:table-row>
+                    <fo:table-cell border="1pt solid" padding="1%">
+                        <fo:block>ADD</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" padding="1%">
+                        <fo:block>Unreceipted Direct Deposits</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" text-align="right" padding="1%">
+                        <fo:block>${cashBook?if_exists}</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+                <fo:table-row>
+                    <fo:table-cell border="1pt solid">
+                        <fo:block></fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" padding="1%">
+                        <fo:block>Unpresented Cheques</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" text-align="right" padding="1%">
+                        <fo:block>${unreceiptedDirectDeposits?if_exists}</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+                <fo:table-row>
+                    <fo:table-cell border="1pt solid" padding="1%">
+                        <fo:block>LESS</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" padding="1%">
+                        <fo:block>Uncredited Cheques</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" text-align="right" padding="1%">
+                        <fo:block>${unpresentedCheques?if_exists}</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+                <fo:table-row>
+                    <fo:table-cell border="1pt solid">
+                        <fo:block></fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" padding="1%">
+                        <fo:block>Withdrawals not in the cash book</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" text-align="right" padding="1%">
+                        <fo:block>${withdrawalNotInCashBook?if_exists}</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+                <fo:table-row font-weight="bold">
+                    <fo:table-cell border="1pt solid">
+                        <fo:block></fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" padding="1%">
+                        <fo:block font-weight="bold">Balance as per bank statement</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell border="1pt solid" text-align="right" padding="1%">
+                        <fo:block>${bankStatement?if_exists}</fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+            </fo:table-body>
+        </fo:table>
 
     <#else>
         <fo:block text-align="center">No BANKs Found With that ID</fo:block>

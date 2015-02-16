@@ -165,6 +165,7 @@ function calculateReconBalances() {
     <h3>
     <form id="reconValues" method="post" name="reconValues" action="">
     <table width="100%" border='0' cellspacing='0' cellpadding='0'>
+    <input name="glReconciliationId" type="hidden" value="${parameters.glReconciliationId}"/>
       <tr>
         <td>
           <table>

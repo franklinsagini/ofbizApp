@@ -283,6 +283,7 @@ under the License.
     <service name="calculateReconBalances" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="calculateReconBalances">
         <description>Financial Account Running Total</description>
+        <attribute name="glReconciliationId" type="String" mode="IN" optional="true"/>
         <attribute name="bankBalanceTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="showUncreditedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="showUnpresentedChequesTotal" type="BigDecimal" mode="INOUT" optional="true"/>
@@ -292,6 +293,20 @@ under the License.
         <attribute name="showUnidentifiedDebitsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="showAdjustedCashBookBalance" type="BigDecimal" mode="INOUT" optional="true"/>
     </service>
+    <service name="createBankReconSummary" engine="simple" default-entity-name="BankReconSummary"
+             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createBankReconSummary" auth="true">
+        <description>Create Imprest Account Mapping</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateBankReconSummary" engine="simple" default-entity-name="BankReconSummary"
+             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateBankReconSummary" auth="true">
+        <description>Update Imprest Account Mapping</description>
+         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
     <service name="reconcileFinAccountTrans" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="reconcileFinAccountTrans">
         <description>Reconcile Financial Accounting Financial Transactions</description>
@@ -301,10 +316,10 @@ under the License.
         <attribute name="debitCreditFlag" type="String" mode="IN" optional="true"/>
         <attribute name="cashBookTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="bankBalanceTotal" type="BigDecimal" mode="INOUT" optional="true"/>
-        <attribute name="showUnreceiptedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
-        <attribute name="showUnidentifiedDebitsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
-        <attribute name="showUncreditedBankingsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
-        <attribute name="showUnpresentedChequesTotal" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="showUnreceiptedBankingsTotal" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="showUnidentifiedDebitsTotal" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="showUncreditedBankingsTotal" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="showUnpresentedChequesTotal" type="BigDecimal" mode="IN" optional="true"/>
     </service>
     <service name="reconcileAdjustmentFinAcctgTrans" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="reconcileAdjustmentFinAcctgTrans">
