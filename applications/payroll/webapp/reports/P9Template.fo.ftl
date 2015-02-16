@@ -68,8 +68,7 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell>
                             <#-- The title of the report -->
-                            <fo:block font-weight="bold" space-after="0.03in">
-                            	
+                            <fo:block font-weight="bold" space-after="0.03in"  text-align="left">
                               <#--  <#if titleProperty?exists>${uiLabelMap.get(titleProperty)}<#else>${title?if_exists}</#if> -->
                             </fo:block>
 

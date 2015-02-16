@@ -22,7 +22,7 @@ under the License.
        <#list listP9Staff as currentStaff>
         <fo:block><fo:leader/></fo:block>
         <#-- P9 Details -->
-        <fo:block space-after.optimum="5pt" font-size="9pt" margin-top="1mm">
+        <fo:block space-after.optimum="5pt" font-size="9pt" margin-top="4mm">
 
         
             <fo:table table-layout="fixed" width="100%" border="0.5pt solid black" >
@@ -53,9 +53,9 @@ under the License.
                 <fo:table-column column-width="60pt"/ -->
                 <fo:table-header>
                 
-                	<fo:table-row font-weight="bold" font-size="9pt" text-align="center">
+                	<fo:table-row font-weight="bold" font-size="9pt" text-align="left">
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
-                            <fo:block></fo:block>
+                            <fo:block>P.9</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid white">
                             <fo:block></fo:block>
@@ -405,12 +405,13 @@ under the License.
                         </fo:table-row>
                        <#-- </#if> -->
                     </#list>
-                    <fo:table-row column-height="30mm" font-weight="bold" font-size="9pt">
-                    	<fo:table-cell padding="2pt" border="1pt solid">
+
+                    <fo:table-row column-height="30mm" font-weight="bold" font-size="8pt">
+                    	<fo:table-cell padding="2pt" border="1pt solid" font-size="8pt">
                             <fo:block text-align="left" >TOTALS</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalBasicPayAmount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
                             <fo:block text-align="right"></fo:block>
@@ -419,13 +420,13 @@ under the License.
                             <fo:block text-align="right"></fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalGrossAmount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalE1Amount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalE2Amount?string(",##0.00")}</fo:block>
                         </fo:table-cell>                        
                         <fo:table-cell padding="2pt" border="1pt solid">
                             <fo:block text-align="right"></fo:block>
@@ -434,22 +435,22 @@ under the License.
                             <fo:block text-align="right"></fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalRetConOwnAmount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalTaxablePayAmount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalTaxChargedAmount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalMPRAmount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalInsuranceReliefAmount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid">
-                            <fo:block text-align="right"></fo:block>
+                            <fo:block text-align="right">${FinalTotalPAYEAmount?string(",##0.00")}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid white">
                             <fo:block text-align="right"></fo:block>

@@ -12,6 +12,40 @@ if (glReconciliationId) {
 context.bankAccount = bankAccount
 context.reconciliation = reconciliation
 
+summaryCondition = [];
+summaryCondition.add(EntityCondition.makeCondition("glReconciliationId", EntityOperator.EQUALS, glReconciliationId));
+List summaryList = delegator.findList('BankReconSummary', EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null, null, null, false)
+count = 1
+cashBookBalance = BigDecimal.ZERO;
+unreceiptedBankings = BigDecimal.ZERO;
+unpresentedCheques = BigDecimal.ZERO;
+uncreditedBankings = BigDecimal.ZERO;
+unidentifiedDebits = BigDecimal.ZERO;
+bankBalance = BigDecimal.ZERO;
+summaryList.each { summary ->
+  cashBookBalance = summary.cashBookBalance
+  unreceiptedBankings = summary.unreceiptedBankings
+  unpresentedCheques = summary.unpresentedCheques
+  uncreditedBankings = summary.uncreditedBankings
+  unidentifiedDebits = summary.unidentifiedDebits
+  bankBalance = summary.bankBalance
+  System.out.println("COUNTTTTTTTTTTTTTTTTTT " + count)
+  count++
+}
+
+context.cashBook = cashBookBalance
+context.unreceiptedDirectDeposits = unpresentedCheques
+context.unpresentedCheques = unpresentedCheques
+context.uncreditedCheques = uncreditedBankings
+context.withdrawalNotInCashBook = unidentifiedDebits
+context.bankStatement = bankBalance
+
+
+
+
+
+
+
 //UB CONDITION
 ubCondition = [];
 ubCondition.add(EntityCondition.makeCondition("glReconciliationId", EntityOperator.EQUALS, glReconciliationId));

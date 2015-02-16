@@ -12,6 +12,7 @@ import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -147,12 +148,77 @@ public class LoanAccounting {
 		// Create an Account Holder Transaction for this disbursement
 		
 		BigDecimal transactionAmount = loanApplication.getBigDecimal("loanAmt");
-		String memberAccountId = getMemberAccountId(loanApplication);
+		
+		Long savingsAccountProductId = getAccountProductGivenCodeId("999");
+		
+		String memberAccountId = getMemberAccountId(loanApplication, savingsAccountProductId);
 		String transactionType = "LOANDISBURSEMENT";
 
+		//Retention
+		GenericValue loanProduct = LoanUtilities.getLoanProduct(loanApplication.getLong("loanProductId"));
+		//Check if the Loan Retains BOSA 
+		if ((loanProduct.getString("retainBOSADeposit") != null) && (loanProduct.getString("retainBOSADeposit").equals("Yes"))){
+			//This loan retains for BOSA deposit e.g JEKI LOAN, lets get the percentage retained and add it to the
+			// member deposits
+			//BigDecimal percentageOfMemberNetSalaryAmt = 
+			
+			BigDecimal percentageDepositRetained = loanProduct.getBigDecimal("percentageDepositRetained");
+			if (percentageDepositRetained != null){
+				//Process the Retention
+				BigDecimal bdBosaRetainedAmount = (percentageDepositRetained.divide(new BigDecimal(100), 4, RoundingMode.HALF_UP)).multiply(transactionAmount).setScale(4, RoundingMode.HALF_UP);
+				
+				Long memberDepositProductId = getAccountProductGivenCodeId("901");
+				String memberDepositAccountId = getMemberAccountId(loanApplication, memberDepositProductId);
+				
+				String retentionTransactionType = "RETAINEDASDEPOSIT";
+				
+				createTransaction(loanApplication, retentionTransactionType, userLogin, memberDepositAccountId, bdBosaRetainedAmount, null, accountTransactionParentId);
+				
+				transactionAmount = transactionAmount.subtract(bdBosaRetainedAmount);
+				
+				
+			} else{
+				log.error(" percentageDepositRetained ########### The Retention Value is not specified #####333");
+			}
+			
+			
+		//	tt
+		}
 
 		createTransaction(loanApplication, transactionType, userLogin, memberAccountId, transactionAmount, null, accountTransactionParentId);
 	}
+
+	//Get Account Product Id given Code, for instance, Savings Account is code 999
+	
+	private static Long getAccountProductGivenCodeId(String code) {
+		Long accountProductId = null;
+
+		List<GenericValue> accountProductELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> accountProductConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"code", EntityOperator.EQUALS,
+						code)),
+						EntityOperator.AND);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					accountProductConditions, null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue accountProduct = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProduct = genericValue;
+		}
+		
+		if (accountProduct != null){
+			accountProductId = accountProduct.getLong("accountProductId");
+		}
+
+		return accountProductId;
+	}
+
 
 	private static void createTransaction(GenericValue loanApplication, String transactionType, Map<String, String> userLogin, String memberAccountId,
 			BigDecimal transactionAmount, String productChargeId, String accountTransactionParentId) {
@@ -218,6 +284,45 @@ public class LoanAccounting {
 						Long.valueOf(memberId)), EntityCondition
 						.makeCondition("withdrawable",
 								EntityOperator.EQUALS, "Yes")),
+						EntityOperator.AND);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue memberAccount = null;
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccount = genericValue;
+		}
+		
+		String memberAccountId = "";
+		
+		if (memberAccount != null){
+			memberAccountId = memberAccount.getString("memberAccountId");
+		}
+
+		return memberAccountId;
+	}
+	
+	
+	private static String getMemberAccountId(GenericValue loanApplication, Long accountProductId) {
+		String memberId = loanApplication.getString("partyId");
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		Delegator delegator = loanApplication.getDelegator();
+		memberId = memberId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						Long.valueOf(memberId)),
+
+						EntityCondition
+									.makeCondition("accountProductId",
+											EntityOperator.EQUALS, accountProductId)
+								
+						),
 						EntityOperator.AND);
 		try {
 			memberAccountELI = delegator.findList("MemberAccount",

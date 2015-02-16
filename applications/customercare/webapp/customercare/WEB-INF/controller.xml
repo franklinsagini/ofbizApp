@@ -83,6 +83,17 @@
                 <response name="error" type="view" value="forwardedLoanApplications" />
     </request-map>
     
+    
+    <!-- Reject Loan Application -->
+    <request-map uri="rejectLoanApplication">
+                <security auth="true" https="true"/>
+              <event type="java" path="org.ofbiz.loans.LoanServices" invoke="rejectLoanApplication"  />
+                <response name="success" type="request-redirect"
+                        value="receivedLoanApplication"> 
+                        </response>
+                <response name="error" type="view" value="forwardedLoanApplications" />
+    </request-map>
+    
     	<request-map uri="LookupActiveMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="LookupActiveMember" />

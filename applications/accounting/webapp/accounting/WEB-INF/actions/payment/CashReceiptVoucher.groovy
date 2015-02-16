@@ -16,13 +16,13 @@ if (organizationPartyGroupFrom) {
 
 
 if(!organizationPartyGroupFrom){
-  organizationPartyGroupFrom = delegator.findOne("Person", [partyId : organizationPartyIdTo], false);
+  organizationPartyGroupFrom = delegator.findOne("Person", [partyId : organizationPartyIdFrom], false);
   context.organizationPartyGroupFrom = organizationPartyGroupFrom.firstName + " " + organizationPartyGroupFrom.lastName;
 }
 
 if(!organizationPartyGroupFrom){
-  organizationPartyIdToLong = organizationPartyIdTo.toLong()
-  organizationPartyGroupFrom = delegator.findOne("Member", [partyId : organizationPartyIdToLong], false);
+  organizationPartyIdFromLong = organizationPartyIdFrom.toLong()
+  organizationPartyGroupFrom = delegator.findOne("Member", [partyId : organizationPartyIdFromLong], false);
   if(organizationPartyGroupFrom){
     context.organizationPartyGroupFrom = organizationPartyGroupFrom.firstName + " " + organizationPartyGroupFrom.lastName;
   }

@@ -684,6 +684,36 @@ under the License.
             <key-map field-name="glReconciliationId"/>
         </relation>
     </entity>
+
+        <!-- showUnreceiptedBankingsTotal=0 -->
+        <!-- showUnidentifiedDebitsTotal=0 -->
+        <!-- cashBookTotal=212783 -->
+        <!-- bankBalanceTotal=0 -->
+        <!-- glReconciliationId=12 -->
+        <!-- showUncreditedBankingsTotal=0 -->
+        <!-- showUnpresentedChequesTotal=0 -->
+
+    <entity entity-name="BankReconSummary"
+            package-name="org.ofbiz.accounting.finaccount"
+            title="Bank Reconciliation Summary">
+      <field name="bankReconSummaryId" type="id"></field>
+      <field name="glReconciliationId" type="id"></field>
+      <field name="cashBookBalance" type="currency-amount"></field>
+      <field name="unreceiptedBankings" type="currency-amount"></field>
+      <field name="unidentifiedDebits" type="currency-amount"></field>
+      <field name="adjustedCashBookBalance" type="currency-amount"></field>
+      <field name="bankBalance" type="currency-amount"></field>
+      <field name="uncreditedBankings" type="currency-amount"></field>
+      <field name="unpresentedCheques" type="currency-amount"></field>
+      <field name="adjustedBankBalance" type="currency-amount"></field>
+      <prim-key field="bankReconSummaryId"/>
+      <prim-key field="glReconciliationId"/>
+        <relation type="one" fk-name="BNK_SUM_GLREC" rel-entity-name="GlReconciliation">
+            <key-map field-name="glReconciliationId"/>
+        </relation>
+    </entity>
+
+
     <entity entity-name="FinAccountTransAttribute" package-name="org.ofbiz.accounting.finaccount" title="Financial Account Transaction Attribute Entity">
         <field name="finAccountTransId" type="id-ne"></field>
         <field name="attrName" type="id-long-ne"></field>
@@ -1951,6 +1981,7 @@ under the License.
       <field name="description" type="description"></field>
       <field name="transactionDate" type="date-time"></field>
       <field name="isPosted" type="indicator"></field>
+      <field name="isApproved" type="indicator"></field>
       <field name="postedDate" type="date-time"></field>
       <field name="scheduledPostingDate" type="date-time"></field>
       <field name="glJournalId" type="id"></field>
@@ -2128,6 +2159,7 @@ under the License.
       <member-entity entity-alias="GLA" entity-name="GlAccount"/>
       <member-entity entity-alias="GLAC" entity-name="GlAccountClass"/>
       <alias entity-alias="ATR" name="isPosted"/>
+      <alias entity-alias="ATR" name="isApproved"/>
       <alias entity-alias="ATR" name="glFiscalTypeId"/>
       <alias entity-alias="ATR" name="acctgTransTypeId"/>
       <alias entity-alias="ATR" name="transactionDate"/>
@@ -2209,6 +2241,7 @@ under the License.
       <alias entity-alias="ATE" name="amount" function="sum"/>
       <alias entity-alias="ATE" name="organizationPartyId" group-by="false"/>
       <alias entity-alias="ACT" name="isPosted" group-by="false"/>
+      <alias entity-alias="ACT" name="isApproved" group-by="false"/>
       <alias entity-alias="ACT" name="transactionDate" group-by="false"/> <!-- so we can select the sum by date -->
       <view-link entity-alias="ATE" rel-entity-alias="ACT">
         <key-map field-name="acctgTransId"/>
@@ -2217,7 +2250,7 @@ under the License.
         <key-map field-name="glAccountId"/>
       </view-link>
     </view-entity>
-    
+
         <view-entity entity-name="AcctgTransEntrySumsWithTransType"
             package-name="org.ofbiz.accounting.ledger"
             title="Sum of AcctgTransEntry entity amounts grouped by glAccountId, debitCreditFlag">
@@ -2235,6 +2268,7 @@ under the License.
       <alias entity-alias="ATE" name="amount" function="sum"/>
       <alias entity-alias="ATE" name="organizationPartyId" group-by="true"/>
       <alias entity-alias="ACT" name="isPosted" group-by="true"/>
+      <alias entity-alias="ACT" name="isApproved" group-by="true"/>
       <alias entity-alias="ACT" name="transactionDate" group-by="true"/> <!-- so we can select the sum by date -->
       <view-link entity-alias="ATE" rel-entity-alias="ACT">
         <key-map field-name="acctgTransId"/>
@@ -2243,7 +2277,7 @@ under the License.
         <key-map field-name="glAccountId"/>
       </view-link>
     </view-entity>
-    
+
     <entity entity-name="AcctgTransEntryType"
             package-name="org.ofbiz.accounting.ledger"
             title="Accounting Transaction Entry Type Entity">
