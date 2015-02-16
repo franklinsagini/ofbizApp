@@ -578,21 +578,29 @@ http://www.apache.org/licenses/LICENSE-2.0
                     <not>
                         <if-empty field="payment.paymentId"/>
                     </not>
-                    <if-compare field="isDisbursement" operator="equals" value="true"/>
-                    <if-compare field="payment.statusId" operator="equals" value="PMNT_SENT"/>
+                        <if-compare field="isDisbursement" operator="equals" value="true"/>
+                    <or>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_SENT"/>
+
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_CONFIRMED"/>
+                    </or>
                 </and>
             </condition>
             <link target="PrintCashPaymentVoucher" target-window="_BLANK">
                 <parameter param-name="paymentId" from-field="payment.paymentId"/>
-                <parameter param-name="statusId" value="PMNT_SENT"/>
             </link>
         </menu-item>
         <menu-item name="CashReceiptVoucher" title="Print Receipt Voucher">
             <condition>
                 <and>
-                    <not><if-empty field="payment.paymentId"/></not>
-                    <if-compare field="isDisbursement" operator="equals" value="false"/>
-                    <if-compare field="payment.statusId" operator="equals" value="PMNT_RECEIVED"/>
+                    <not>
+                        <if-empty field="payment.paymentId"/>
+                    </not>
+                        <if-compare field="isDisbursement" operator="equals" value="false"/>
+                    <or>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_RECEIVED"/>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_CONFIRMED"/>
+                    </or>
                 </and>
             </condition>
             <link target="PrintCashReceiptVoucher" target-window="_BLANK">
