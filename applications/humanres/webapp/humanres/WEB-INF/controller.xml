@@ -2439,6 +2439,13 @@ under the License.
         <response name="error" type="view" value="department"
         	save-home-view="true"/>
     </request-map>
+	
+	<request-map uri="officialEmails">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="officialEmails"/>
+        <response name="error" type="view" value="officialEmails"
+        	save-home-view="true"/>
+    </request-map>
 
     <request-map uri="createCounty">
         <security https="true" auth="true"/>
@@ -2482,6 +2489,31 @@ under the License.
         <response name="success" type="view" value="department"></response>
         <response name="error" type="view" value="department" />
     </request-map>
+	
+	 <!-- =============================== OFFICIAL EMAILS DEFINITION =============================================== -->
+
+    <request-map uri="createEmail">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createEmail" />
+        <response name="success" type="request-redirect-noparam" value="officialEmails" />
+        <response name="error" type="view" value="officialEmails" />
+    </request-map>
+
+
+    <request-map uri="deleteEmail">
+        <security https="true" auth="true" />
+        <event type="service" invoke="deleteEmail" />
+        <response name="success" type="request-redirect-noparam" value="officialEmails"></response>
+        <response name="error" type="view" value="officialEmails" />
+    </request-map>
+
+    <request-map uri="updateEmail">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updateEmail" />
+        <response name="success" type="view" value="officialEmails"></response>
+        <response name="error" type="view" value="officialEmails" />
+    </request-map>
+
 
 
     <request-map uri="bloodgroup">
@@ -3388,6 +3420,7 @@ under the License.
 
     <view-map name="county" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewCounty"/>
     <view-map name="department" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#editDepartment"/>
+	 <view-map name="officialEmails" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#staffOfficialEmails"/>
 
     <view-map name="bloodgroup" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewBloodGroup"/>
     <view-map name="religion" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewReligion"/>
