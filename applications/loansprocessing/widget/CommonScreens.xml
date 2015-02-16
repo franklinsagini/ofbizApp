@@ -59,8 +59,10 @@
         <section>
             <actions>
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
-                
-                <entity-one entity-name="LoanApplication" value-field="loanApplication"/>
+                <set field="loanApplicationIdLong" from-field="loanApplicationId" type="Long"/>
+                <entity-one entity-name="LoanApplication" value-field="loanApplication">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationIdLong"/>
+                </entity-one>
                 <!-- entity-one entity-name="sa" value-field="loanApplication"/ -->
                 
                 <entity-one entity-name="Person" value-field="lookupPerson"/>

@@ -34,8 +34,8 @@ under the License.
             </fo:list-item>
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="10pt" margin-left="-100mm" text-align="center">EMPLOYER NAME </fo:block>                    
-                    <fo:block font-weight="bold" font-size="10pt" margin-left="130mm">EMPLOYER PIN </fo:block>         
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="-100mm" text-align="center"> </fo:block>                    
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="130mm"> </fo:block>         
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
                     <fo:block></fo:block>
@@ -44,8 +44,8 @@ under the License.
             
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold" font-size="10pt" margin-left="-100mm" text-align="center">${empDet.employer?if_exists}</fo:block>
-                    <fo:block font-weight="bold" font-size="10pt" margin-left="130mm">${empDet.pinNumber?if_exists}</fo:block>
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="-100mm" text-align="center"></fo:block>
+                    <fo:block font-weight="bold" font-size="10pt" margin-left="130mm"></fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
                     <fo:block></fo:block>
@@ -55,11 +55,11 @@ under the License.
         
         <fo:block><fo:leader/></fo:block>
         <#-- Loan Details -->
-        <fo:block space-after.optimum="10pt" font-size="9pt">
+        <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="120pt"/>
-                <fo:table-column column-width="150pt"/>
-                <fo:table-column column-width="120pt"/>
+                <fo:table-column column-width="150pt" number-columns-repeated="2"/>
+                <fo:table-column column-width="130pt" number-columns-repeated="2"/>
+                <fo:table-column column-width="90pt"/>
                 <fo:table-column column-width="120pt"/>
                 <#-- fo:table-column column-width="75pt"/>
                 < fo:table-column column-width="60pt"/>
@@ -68,6 +68,22 @@ under the License.
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/ -->
                 <fo:table-header>
+                <fo:table-row font-weight="bold" font-size="12pt">
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" number-columns-spanned="2" text-align="center">
+                            <fo:block>EMPLOYER NAME</fo:block>
+                             <fo:block>${empDet.employer?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#FFFFFF" number-columns-spanned="2" text-align="left">
+                            <fo:block>EMPLOYER PIN</fo:block>
+                            <fo:block>${empDet.pinNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
                     <fo:table-row font-weight="bold" font-size="12pt">
                         <fo:table-cell padding="2pt" background-color="#FFFFFF" border="1pt solid" border-width=".1mm">
                             <fo:block>EMPLOYEE'S PIN</fo:block>
@@ -101,7 +117,7 @@ under the License.
                         </fo:table-row -->
                     <#list p10AItemsList as yearList>
                     
-                         <fo:table-row font-size="10pt">
+                         <fo:table-row font-size="11pt">
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                  <fo:block>
@@ -126,18 +142,18 @@ under the License.
                             
                         </fo:table-row>
                     </#list>
-                    <fo:table-row column-height="30mm" font-weight="bold" font-size="12pt">
+                    <fo:table-row column-height="30mm">
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="left" >
                                 </fo:block>
                             </fo:table-cell>
-                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-weight="bold" font-size="12pt">
                                 <fo:block text-align="left"> TOTAL EMOLUMENTS
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block text-align="right">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="11pt">
+                                <fo:block text-align="right">${totalEmoluments?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -146,13 +162,13 @@ under the License.
                             </fo:table-cell>
                             
                         </fo:table-row>
-                     <fo:table-row column-height="30mm" font-weight="bold" font-size="12pt">
+                     <fo:table-row column-height="30mm">
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="left" >
                                 </fo:block>
                             </fo:table-cell>
-                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-weight="bold" font-size="12pt">
                                 <fo:block text-align="left">TOTAL PAYE TAX
                                 </fo:block>
                             </fo:table-cell>
@@ -160,19 +176,19 @@ under the License.
                                 <fo:block text-align="right">
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block text-align="right">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="11pt">
+                                <fo:block text-align="right">${totalPayeTax?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             
                         </fo:table-row>
-                     <fo:table-row column-height="30mm" font-weight="bold" font-size="12pt">
+                     <fo:table-row column-height="30mm" font-weight="bold">
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="left" >
                                 </fo:block>
                             </fo:table-cell>
-                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="12pt">
                                 <fo:block text-align="left">
                                 	TOTAL WCPS
                                 </fo:block>
@@ -187,13 +203,13 @@ under the License.
                             </fo:table-cell>
                             
                         </fo:table-row>
-                         <fo:table-row column-height="30mm" font-weight="bold" font-size="12pt">
+                         <fo:table-row column-height="30mm" font-weight="bold">
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="left" >
                                 </fo:block>
                             </fo:table-cell>
-                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="12pt">
                                 <fo:block text-align="left">
                                 	* TAX ON LUMPSUM/AUDIT/INTEREST/PENALTY
                                 </fo:block>
@@ -208,13 +224,13 @@ under the License.
                             </fo:table-cell>
                             
                         </fo:table-row>
-                         <fo:table-row column-height="30mm" font-weight="bold" font-size="12pt">
+                         <fo:table-row column-height="30mm" font-weight="bold">
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="left" >
                                 </fo:block>
                             </fo:table-cell>
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="12pt">
 						      <fo:block text-align="left">* TOTAL TAX DEDUCTED/ TOTAL C/F TO NEXT LIST 
 						      </fo:block>
 						    </fo:table-cell>

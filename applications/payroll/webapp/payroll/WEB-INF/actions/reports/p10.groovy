@@ -19,7 +19,10 @@ context.year = year;
 totalPayeAmount = BigDecimal.ZERO
 totalFringeAmount = BigDecimal.ZERO
 
-yearList = delegator.findByAnd("P10Report",  [payrollYearId : payrollYearId], ['sequence_no'], false);
+totalPayeTax = BigDecimal.ZERO
+totalFringeBenefit = BigDecimal.ZERO
+
+yearList = delegator.findByAnd("P10Report",  [payrollYearId : payrollYearId], null, false);
 context.yearList = yearList;
 	
 List mainAndExprs = FastList.newInstance();
@@ -35,9 +38,9 @@ componentList = delegator.findList("P10Report", EntityCondition.makeCondition(ma
 
  
  
- monthList = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"]
+ //monthList = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"]
  
- 
+ monthList=[];
 	
  componentList.each { component ->
 	 def payrollElemId = component.payrollElementId
@@ -88,6 +91,7 @@ componentList = delegator.findList("P10Report", EntityCondition.makeCondition(ma
 			 sequence_no:component.sequence_no, payrollElementId:component.payrollElementId,
 			  payeamount:component.amount, fringeamount:new BigDecimal(0.0)]
 		 p10List.add(payeMap);
+		 monthList.add([periodName:component.periodName])
 		
 	 }
 	 
@@ -96,12 +100,14 @@ componentList = delegator.findList("P10Report", EntityCondition.makeCondition(ma
 			 sequence_no:component.sequence_no, payrollElementId:component.payrollElementId,
 			  payeamount:new BigDecimal(0.0), fringeamount:component.amount]
 		 p10List.add(libMap);
+		 monthList.add([periodName:component.periodName])
 	 }
 	 
 	 
 
    }
  
+ monthList=monthList.unique();
  p10_Last = []
  p10ListFinal = []
  
@@ -128,8 +134,8 @@ componentList = delegator.findList("P10Report", EntityCondition.makeCondition(ma
  totalFringeAmount  = new BigDecimal(0.0);
 
  monthList.each { component ->
-	 System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii "+component)
-	 periodName = component;
+	 System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii "+component.periodName)
+	 periodName = component.periodName;
 	 
 	 totalPayeAmount = new BigDecimal(0.0);
 	 totalFringeAmount = new BigDecimal(0.0);
@@ -147,7 +153,7 @@ componentList = delegator.findList("P10Report", EntityCondition.makeCondition(ma
 		 payrollElementId = p10.payrollElementId;
 		 
 		 
-		 if(p10.periodName==component){
+		 if(p10.periodName==component.periodName){
 			 
 			 println(" PAYEEEEEEEEEEEEEE  "+p10.payeamount);
 			 println(" FRIIIIIIIIIIIIIII "+p10.fringeamount);
@@ -185,6 +191,10 @@ componentList = delegator.findList("P10Report", EntityCondition.makeCondition(ma
 	 p10Item.totalFringeAmount = totalFringeAmount;
 
 	 p10ItemsList << p10Item
+	 
+	 totalPayeTax = totalPayeTax.add(totalPayeAmount);
+	 totalFringeBenefit = totalFringeBenefit.add(totalFringeAmount);
+	 
 //	 p10ListFinal=[payrollYearId:yearId, yearName:yearName, periodName:periodName,
 //		 sequence_no:sequenceNo, payrollElementId:payrollElementId,
 //		  payeamount:theTotalPayeAmount as BigDecimal, fringeamount:totalFringeAmount]
@@ -206,10 +216,11 @@ componentList = delegator.findList("P10Report", EntityCondition.makeCondition(ma
  
  System.out.println("##################P10 List" +p10List);
  System.out.println("##################PPPPPPPPPPPPPPPPPPPPPPPPPPPP" +payeMap);
- p10List.sort {it.sequence_no}
+ //p10List.sort {it.sequenceNo}
  context.p10ItemsList = p10ItemsList
- //p10_Last;
- context.libMap = libMap;
+
+ context.totalPayeTax = totalPayeTax;
+ context.totalFringeBenefit = totalFringeBenefit;
  
 //Employer Details
 employerDetailsList = delegator.findByAnd("EmployerDetails",  null, null, false);

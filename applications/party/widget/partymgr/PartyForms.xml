@@ -2263,6 +2263,10 @@ Gender
         <!-- if this isn't there then with all fields empty no query will be done -->
         <actions>
        		<set field="fromDate" value="2014-04-01"/>
+       		
+       		<set field="statusName" value="ACTIVE"/> 
+			<set field="memberStatusId" 
+				value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/>
        	</actions>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
@@ -2279,11 +2283,12 @@ Gender
 
         <!-- field name="memberStatus" title="Status" ><hidden value="ACTIVE"/></field -->
         <field name="memberStatusId" title="Status">
-        	<drop-down allow-empty="true">
+        	<hidden value="${memberStatusId}"/>
+        	<!-- drop-down allow-empty="true">
         		<entity-options description="${name}" entity-name="MemberStatus" >
         			<entity-order-by field-name="name"/>
         		</entity-options>
-        	</drop-down>
+        	</drop-down -->
         </field>
         <field name="mobileNumber" title="Phone Number" position="2">
         	<text-find></text-find>

@@ -218,6 +218,49 @@
     	return isValid;
     }
     
+ 	function loanProcessingValidation(loanApplicationId){
+    	//alert(loanApplicationId+' Processing ... ');
+    	var reqUrl = '/loans/control/otherExistingLoans';
+    	var otherLoansProcessing = false;
+    	var otherLoanNoRepayment = false;
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'loanApplicationId': loanApplicationId}, 
+			     success : function(data){
+			     			otherLoansProcessing = data.otherLoansProcessing;
+			     			otherLoanNoRepayment = data.otherLoanNoRepayment;
+			     			anotherRunningLoanOfSameType = data.anotherRunningLoanOfSameType;
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating loan application");
+			              }
+			
+			
+		});
+		
+		if (otherLoansProcessing){
+			alert(' There is another Loan By the Same Member Being Processed');
+			return false;
+		}
+		
+		if (otherLoanNoRepayment){
+			alert(' You must have started repaying the previous loan to try and apply for another loan !');
+			return false;
+		}
+		
+		if (anotherRunningLoanOfSameType){
+			alert(' There is another running loan of same type, you may need to clear first !');
+			return false;
+		}
+		
+		
+    	return true;
+    }
+        
     function loanApplicationFormComplete(loanApplicationId){
     
     	var isValid = true;
@@ -298,6 +341,8 @@
     function customerCareLoanValidation(partyId){
     	var reqUrl = '/loans/control/hasSavingsAccount';
     	var hasSavingsAccount = false;
+    	var isOldEnough = false;
+    	var isFromAnotherSacco = false;
     	jQuery.ajax({
 
 			     url    : reqUrl,
@@ -306,6 +351,8 @@
 			     data   : {'partyId': partyId}, 
 			     success : function(data){
 			     			hasSavingsAccount = data.hasSavingsAccount;
+			     			isOldEnough = data.isOldEnough;
+			     			isFromAnotherSacco = data.isFromAnotherSacco;
 			               },
 			      error : function(errorData){
 			
@@ -316,7 +363,20 @@
 		});
 		if (!hasSavingsAccount){
 			alert(' The Member must have a Savings Account - this is the account to which the Loan Will be disbursed');
+			return hasSavingsAccount;
 		}
-    	return hasSavingsAccount;
+		
+		if (isOldEnough){
+			return true;
+		}
+		
+		if ((!isOldEnough) && (!isFromAnotherSacco)){
+			alert(' You must have been a member for at least 6 months or be from another Sacco to be able to apply for a loan! ');
+			return false;
+		}
+    	
+    	return true;
     }
+    
+    
    </script>

@@ -18,6 +18,9 @@ staffList=[:];
 totalPayeAmount = BigDecimal.ZERO
 totalGrossAmount = BigDecimal.ZERO
 
+totalPayeTax = BigDecimal.ZERO
+totalEmoluments = BigDecimal.ZERO
+
 year = delegator.findOne("PayrollYear", [payrollYearId : payrollYearId], false);
 context.year = year;
 
@@ -138,6 +141,10 @@ componentList = delegator.findList("P10AReport", EntityCondition.makeCondition(m
 	 p10AItem.totalGrossAmount = totalGrossAmount;
 	 
 	 p10AItemsList << p10AItem
+	 
+	 totalPayeTax = totalPayeTax.add(totalPayeAmount);
+	 totalEmoluments = totalEmoluments.add(totalGrossAmount);
+	 
  }
  println("________________All ITEMS")
  p10AItemsList.each{ item ->
@@ -150,8 +157,12 @@ componentList = delegator.findList("P10AReport", EntityCondition.makeCondition(m
  p10AList.sort {it.employeeNumber}
  context.p10AItemsList = p10AItemsList
 
- context.grossMap = grossMap;
+ context.totalPayeTax = totalPayeTax;
+ context.totalEmoluments = totalEmoluments;
 
+ 
+ println(" ####################### TOT TAX" +totalPayeTax);
+ println(" ####################### TOT EMOL" + totalEmoluments);
 
 	
 
