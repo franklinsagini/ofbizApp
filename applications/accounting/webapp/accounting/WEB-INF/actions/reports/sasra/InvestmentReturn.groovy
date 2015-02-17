@@ -12,6 +12,9 @@ reportId = "5"
 landBuildingCode = null
 totalAssets = null
 
+minimumRequiredLandBuildingToAsset = 5.00
+landBuildingAssetRatio = BigDecimal.ZERO;
+
 List mainAndExprs = FastList.newInstance();
 
 
@@ -33,10 +36,6 @@ reportItemList = delegator.findList("SasraReportItem", EntityCondition.makeCondi
 reportItemList.each { item ->
 
 
-    amount = SasraReportsService.getReportItemTotals(fromDate, thruDate, reportId, item.code)
-    finalReportItemList.add("code" : item.code, "name" : item.name, "amount" : amount)
-
-
 
     def codeString = item.code
     codeString = codeString.replace(".", "");
@@ -51,27 +50,24 @@ reportItemList.each { item ->
       landBuildingCode = item.code
     }
 
+
     //calculate land building to total asset ratio and update the map
     if (codeString.toInteger() == 20) {
-      System.out.println("System landBuildingCodeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee " + landBuildingCode)
-      System.out.println("System totalAssetsssssssssssssssssssssssssssssssssssssssss " + totalAssetsCode)
-      System.out.println("System totalAssetsssssssssssssssssssssssssssssssssssssssss " + fromDate)
-      System.out.println("System totalAssetsssssssssssssssssssssssssssssssssssssssss " + thruDate)
-      System.out.println("System totalAssetsssssssssssssssssssssssssssssssssssssssss " + reportId)
+      landBuildingAssetRatio = SasraReportsService.getReportItemRatioPercentage(fromDate, thruDate, reportId, landBuildingCode, totalAssetsCode)
+      finalReportItemList.add("code" : item.code, "name" : item.name, "amount" : amount)
+    }else if(codeString.toInteger() == 21){
+      amount = minimumRequiredLandBuildingToAsset
+      finalReportItemList.add("code" : item.code, "name" : item.name, "amount" : amount)
 
-      amount = SasraReportsService.getReportItemRatio(fromDate, thruDate, reportId, landBuildingCode, totalAssetsCode)
-      System.out.println("System AMMMMMMMMMMMMMMMMMMMMMMMMMMMMM " + amount)
+    }else if(codeString.toInteger() == 22){
+    //calculate excess deficiency
+      amount = landBuildingAssetRatio - minimumRequiredLandBuildingToAsset
+
+      finalReportItemList.add("code" : item.code, "name" : item.name, "amount" : amount)
+    }else{
+      //else just get the totals as usual and update the map
+      amount = SasraReportsService.getReportItemTotals(fromDate, thruDate, reportId, item.code)
+      finalReportItemList.add("code" : item.code, "name" : item.name, "amount" : amount)
     }
-
-
-    if(codeString.toInteger() == 16){
-      //get land and building code
-      landBuildingCode = item.code
-    }
-
-
-
 }
-
-
  context.investmentReturnList = finalReportItemList;
