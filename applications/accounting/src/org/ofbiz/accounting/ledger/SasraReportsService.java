@@ -61,8 +61,8 @@ public class SasraReportsService {
 		BigDecimal bdDenominatorTotal = getReportItemTotals(fromDate, thruDate,
 				reportId, reportItemCodeDenominator);
 
-		if ((bdNumeratorTotal.compareTo(BigDecimal.ZERO) == 1)
-				|| (bdDenominatorTotal.compareTo(BigDecimal.ZERO) == 1))
+		if ((bdNumeratorTotal.compareTo(BigDecimal.ZERO) == 0)
+				|| (bdDenominatorTotal.compareTo(BigDecimal.ZERO) == 0))
 			return BigDecimal.ZERO;
 
 		return bdNumeratorTotal.divide(bdDenominatorTotal, 4,

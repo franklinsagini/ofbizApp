@@ -1,5 +1,6 @@
 package org.ofbiz.accountholdertransactions;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -173,6 +174,21 @@ public class LoanUtilities {
 		
 		return member;
 	}
+	
+	
+	public static GenericValue getMember(Long partyId){
+		
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", partyId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		return member;
+	}
 
 	public static int getMemberDurations(Date joinDate) {
 
@@ -187,6 +203,23 @@ public class LoanUtilities {
 		int months = difference.getMonths();
 
 		return months;
+
+	}
+	
+	
+	public static int getMemberDurationYears(Date deathOfBirth) {
+
+		LocalDateTime stDeathOfBirth = new LocalDateTime(deathOfBirth.getTime());
+		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance()
+				.getTimeInMillis());
+
+		PeriodType years = PeriodType.years();
+
+		Period difference = new Period(stDeathOfBirth, stCurrentDate, years);
+
+		int yearDifference = difference.getYears();
+
+		return yearDifference;
 
 	}
 	
@@ -250,6 +283,28 @@ public class LoanUtilities {
 		
 
 		return accountProduct;
+	}
+	//org.ofbiz.accountholdertransactions.LoanUtilities.getRecommendedAmount(BigDecimal bdMaxLoanAmt, BigDecimal bdAppliedAmt)
+	public static BigDecimal getRecommendedAmount(BigDecimal bdMaxLoanAmt, BigDecimal bdAppliedAmt){
+		BigDecimal bdRecommendeAmt = bdAppliedAmt;
+		
+		if (bdAppliedAmt.compareTo(bdMaxLoanAmt) == 1){
+			bdRecommendeAmt = bdMaxLoanAmt;
+		}
+		
+		return bdRecommendeAmt;
+	}
+	
+	public static Long getMemberAge(Long partyId){
+		Long memberAge = 0L;
+		
+		GenericValue member =  getMember(partyId);
+		Date dateOfBirth = member.getDate("birthDate");
+		
+		memberAge = new Long(getMemberDurationYears(dateOfBirth));
+		
+		
+		return memberAge;
 	}
 
 }
