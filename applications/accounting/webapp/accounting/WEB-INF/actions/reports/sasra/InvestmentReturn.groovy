@@ -50,6 +50,16 @@ reportItemList.each { item ->
       landBuildingCode = item.code
     }
 
+    if(codeString.toInteger() == 15){
+    //get land and building code
+    financialAssetCode = item.code
+    }
+
+    if(codeString.toInteger() == 11){
+    //get land and building code
+    coreCapitalCode = item.code
+    }
+
 
     //calculate land building to total asset ratio and update the map
     if (codeString.toInteger() == 20) {
@@ -62,6 +72,11 @@ reportItemList.each { item ->
     }else if(codeString.toInteger() == 22){
     //calculate excess deficiency
       amount = landBuildingAssetRatio - minimumRequiredLandBuildingToAsset
+
+      finalReportItemList.add("code" : item.code, "name" : item.name, "amount" : amount)
+    }else if(codeString.toInteger() == 30){
+    //calculate excess deficiency
+      finacialCapitalToCoreCapitalRatio = SasraReportsService.getReportItemRatio(fromDate, thruDate, reportId, financialAssetCode, coreCapitalCode)
 
       finalReportItemList.add("code" : item.code, "name" : item.name, "amount" : amount)
     }else{
