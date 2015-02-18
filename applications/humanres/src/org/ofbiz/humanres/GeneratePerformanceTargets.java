@@ -139,12 +139,21 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 						.makeCondition("deptId", deptId), null,
 						null, null, false);
 			}
-			else
+			else if(perfReview.getString("reviewType").equals("Position"))
 			{
 				log.info("###################### ReviewType = POSITION ######################");
 				String empPosId = getPersonDetails(delegator, perfReview.getString("employeePartyId"), "emplPositionTypeId");
 				targetELI = delegator.findList("KPITargets", EntityCondition
 						.makeCondition("emplPositionTypeId", empPosId), null,
+						null, null, false);
+			}
+			else
+			{
+				log.info("###################### ReviewType = STAFF ######################");
+				String partyId = perfReview.getString("employeePartyId");
+				
+				targetELI = delegator.findList("KPITargets", EntityCondition
+						.makeCondition("partyId", partyId), null,
 						null, null, false);
 			}
 		
@@ -172,6 +181,7 @@ private static Logger log = Logger.getLogger(GeneratePerformanceTargets.class);
 		}catch (Exception e) {
 			e.printStackTrace();			
 		}
+		
 		for (GenericValue qualTarget : qualTargetELI) 
 		{
 			if(!(perfQualGoals.contains(qualTarget.getString("perfGoalsId"))))

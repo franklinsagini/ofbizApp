@@ -629,6 +629,95 @@
             </widgets>
         </section>
     </screen>
+    
+    
+    
+        <!-- New Staff Objectives -->  
+    
+    <!-- New Position Objectives -->    
+    <screen name="NewStaffObjectives">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Staff Objectives"/>
+                <set field="headerItem" value="staffObjectives"/>
+                <set field="tabButtonItem" value="staffObjectives"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createStaffObjectives"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="isBranch" from-field="parameters.isBranch"/>
+                <set field="isDepartment" from-field="parameters.isDepartment"/>
+                
+                <entity-one entity-name="KPITargets" value-field="staffObjectivesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfStaffBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Staff Objectives">
+                                    <include-form name="NewStaffObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff Objectives List">
+                        			<include-form name="listStaffObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>     
+    
+    <screen name="PerformanceStaff">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Staff"/>
+                <set field="headerItem" value="PerfStaff"/>
+                <set field="tabButtonItem" value="PerfStaff"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="perfStaffCtx" from-field="parameters"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindStaff" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="StaffObjectivesResult" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+            </fail-widgets>
+        </section>
+    </screen>
 	
 	     <!-- Performance Rating Types -->    
     <screen name="NewPerfRatingTypes">
@@ -650,6 +739,7 @@
                     <decorator-section name="body">
                     <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfRatingBar" location="component://humanres/widget/HumanresMenus.xml"/>
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
@@ -668,6 +758,54 @@
                         	<widgets>
                         		<screenlet title="Performance Rating Type List">
                         			<include-form name="listperfRatingType" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+         <!-- Performance Rating Types Qualitative -->    
+    <screen name="NewPerfRatingTypesQTT">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Qualitative Performance Rating Types"/>
+                <set field="headerItem" value="perfRatingTypeQTT"/>
+                <set field="tabButtonItem" value="perfRatingTypeQTT"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfRatingTypeQTT"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PerfRatingType_QTT" value-field="perfRatingTypeQTTContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfRatingBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Qualitative Performance Rating Type">
+                                    <include-form name="NewPerfRatingTypeQTT" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Qualitative Performance Rating Type List">
+                        			<include-form name="listperfRatingTypeQTT" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>
