@@ -2535,6 +2535,55 @@ public class LoanServices {
 
 		return json;
 	}
+	
+	/****
+	 * hasObligations 
+	 * **/
+	public static String hasObligations(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Long partyId = Long.valueOf((String) request.getParameter("partyId"));
+
+		result.put("hasLoans", LoanUtilities.hasLoans(partyId));
+		result.put("hasGuaranteed", LoanUtilities.hasGuaranteed(partyId));
+		result.put("shareCapitalBelowMinimum", LoanUtilities.shareCapitalBelowMinimum(partyId));
+		result.put("memberDepositsLessThanLoans", LoanUtilities.memberDepositsLessThanLoans(partyId));
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
 
 	/***
 	 * otherExistingLoans

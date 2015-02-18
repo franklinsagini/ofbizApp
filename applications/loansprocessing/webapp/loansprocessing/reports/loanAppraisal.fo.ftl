@@ -54,7 +54,7 @@ under the License.
 
    <fo:block font-size="8pt" font-weight="bold" space-after="0.04in" margin-left="10%" text-decoration="underline" text-align="left">
       
-       APPRAISAL
+       APPRAISAL 1
     </fo:block>
 
     <fo:list-block provisional-distance-between-starts="2.0in" font-size="8pt" margin-left="15%" margin-bottom="0.1in">
@@ -136,7 +136,7 @@ under the License.
             </fo:list-item-body>
         </fo:list-item>
         
-         <fo:list-item>
+         <#-- fo:list-item>
             <fo:list-item-label>
                 <fo:block font-weight="bold">Appraised Amount</fo:block>
             </fo:list-item-label>
@@ -148,16 +148,16 @@ under the License.
             	
                 <fo:block> KES ${appraisedAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
-        </fo:list-item>
+        </fo:list-item -->
         
-         <fo:list-item>
+         <#--fo:list-item>
             <fo:list-item-label>
                 <fo:block font-weight="bold">Recommended Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
                 <fo:block> KES ${appraisedAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
-        </fo:list-item>
+        </fo:list-item -->
         
          <fo:list-item>
             <fo:list-item-label>
@@ -333,7 +333,7 @@ under the License.
 
 	 <fo:block font-size="8pt" font-weight="bold" space-after="0.04in" margin-left="10%" text-decoration="underline" text-align="left">
       
-       CREDIT MANAGER COMMENT
+      LOANS OFFICER/ BRANCH MANAGER/ CREDIT MANAGER COMMENT
     </fo:block> 
     
     
