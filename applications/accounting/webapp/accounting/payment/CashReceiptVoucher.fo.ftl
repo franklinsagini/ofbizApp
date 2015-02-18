@@ -50,7 +50,7 @@ under the License.
                         <fo:list-block provisional-distance-between-starts="1.1in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>Payment To:</fo:block>
+                                    <fo:block>Receipt To:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                 <#if organizationPartyGroupTo?exists>
@@ -62,7 +62,7 @@ under the License.
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>Payment Type:</fo:block>
+                                    <fo:block>Receipt Type:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                     <fo:block>${paymentType.description?if_exists}</fo:block>
@@ -70,7 +70,7 @@ under the License.
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>Payment Status:</fo:block>
+                                    <fo:block>Receipt Status:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                     <fo:block>${statusItem.description?if_exists}</fo:block>
@@ -90,7 +90,7 @@ under the License.
                         <fo:list-block provisional-distance-between-starts="1.1in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>Payment From:</fo:block>
+                                    <fo:block>Receipt From:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                     <fo:block>${organizationPartyGroupFrom?if_exists}</fo:block>
@@ -98,7 +98,7 @@ under the License.
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>Payment Mode:</fo:block>
+                                    <fo:block>Receipt Mode:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                     <fo:block>${paymentMethod.paymentMethodId?if_exists}</fo:block>
@@ -136,7 +136,7 @@ under the License.
                         <fo:list-block provisional-distance-between-starts="1.3in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>Payment Description: </fo:block>
+                                    <fo:block>Receipt Description: </fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                     <fo:block>${payment.comments?if_exists}</fo:block>
