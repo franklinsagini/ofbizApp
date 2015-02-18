@@ -111,7 +111,8 @@ under the License.
             	<#assign memberPartyId = member.partyId>
             	<#assign lastContributionAmount = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLastMemberDepositContributionAmount(memberPartyId)/>
             	
-                <fo:block> KES ${lastContributionAmount?string(",##0.00")} </fo:block>
+                <fo:block> KES ${lastContributionAmount?if_exists} </fo:block>
+                <#-- ?string(",##0.00") -->
             </fo:list-item-body>
         </fo:list-item>
         
@@ -122,7 +123,7 @@ under the License.
             <fo:list-item-body start-indent="body-start()">
            	<#assign lastContributionDate = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLastMemberDepositContributionDate(memberPartyId)/>
  
-                <fo:block> ${lastContributionDate} </fo:block>
+                <fo:block> ${lastContributionDate?if_exists} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -162,8 +163,11 @@ under the License.
             <fo:list-item-label>
                 <fo:block font-weight="bold">Defaultor</fo:block>
             </fo:list-item-label>
+            
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> No Defaultor Loan </fo:block>
+            
+            <#assign defaulter = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getDefaultedLoansTotalsWithComment(memberPartyId)/>
+                <fo:block> ${defaulter} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -172,7 +176,8 @@ under the License.
                 <fo:block font-weight="bold">Defaultor Comment</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> No Comment </fo:block>
+             <#assign defaulterComment = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getDefaultedLoansComment(memberPartyId)/>
+                <fo:block> ${defaulterComment} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -223,7 +228,11 @@ under the License.
                 <fo:block font-weight="bold">Gross Salary</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>KES ${deductionEvaluation.grossSalaryAmt?string(",##0.00")} </fo:block>
+                <fo:block>KES 
+                <#if deductionEvaluation?has_content>
+                ${deductionEvaluation.grossSalaryAmt?string(",##0.00")} 
+                </#if>
+                </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
