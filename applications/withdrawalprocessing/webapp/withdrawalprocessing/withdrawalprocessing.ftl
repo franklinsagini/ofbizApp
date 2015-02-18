@@ -8,7 +8,7 @@
     ****/
        function memberObligationValidation(partyId){
        
-       // alert('Checking Customer !!! Party Is :: '+partyId);
+        //alert('Checking Customer !!! Party Is :: '+partyId);
        //return false;
        
        
