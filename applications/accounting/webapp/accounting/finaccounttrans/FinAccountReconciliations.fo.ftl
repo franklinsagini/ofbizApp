@@ -104,7 +104,7 @@ under the License.
                         <fo:block></fo:block>
                     </fo:table-cell>
                     <fo:table-cell border="1pt solid" padding="1%">
-                        <fo:block>Withdrawals not in the cash book</fo:block>
+                        <fo:block>Unidentified Debits</fo:block>
                     </fo:table-cell>
                     <fo:table-cell border="1pt solid" text-align="right" padding="1%">
                         <fo:block>${withdrawalNotInCashBook?if_exists}</fo:block>
