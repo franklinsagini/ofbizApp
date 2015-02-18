@@ -333,7 +333,7 @@ under the License.
 
 	 <fo:block font-size="8pt" font-weight="bold" space-after="0.04in" margin-left="10%" text-decoration="underline" text-align="left">
       
-       CREDIT MANAGER COMMENT
+      LOANS OFFICER/ BRANCH MANAGER/ CREDIT MANAGER COMMENT
     </fo:block> 
     
     
