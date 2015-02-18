@@ -72,7 +72,16 @@
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
                 <set field="memberWithdrawalId" from-field="parameters.memberWithdrawalId"/>
-                <entity-one entity-name="WithdrawalLog" value-field="withdrawalLogContext"/>
+                
+                
+                <entity-one entity-name="WithdrawalLog" value-field="withdrawalLogContext">
+                	
+                </entity-one>
+                
+                <entity-one value-field="memberWithdrawal" entity-name="MemberWithdrawal">
+                	<field-map field-name="memberWithdrawalId" from-field="memberWithdrawalId"/>
+                </entity-one>
+                <set field="partyId" value="${memberWithdrawal.partyId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

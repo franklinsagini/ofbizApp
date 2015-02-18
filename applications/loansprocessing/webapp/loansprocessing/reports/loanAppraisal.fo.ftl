@@ -54,7 +54,7 @@ under the License.
 
    <fo:block font-size="8pt" font-weight="bold" space-after="0.04in" margin-left="10%" text-decoration="underline" text-align="left">
       
-       APPRAISAL
+       APPRAISAL 1
     </fo:block>
 
     <fo:list-block provisional-distance-between-starts="2.0in" font-size="8pt" margin-left="15%" margin-bottom="0.1in">
@@ -108,7 +108,11 @@ under the License.
                 <fo:block font-weight="bold">Last Share Contribution Amt</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> NO PROVIDED </fo:block>
+            	<#assign memberPartyId = member.partyId>
+            	<#assign lastContributionAmount = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLastMemberDepositContributionAmount(memberPartyId)/>
+            	
+                <fo:block> KES ${lastContributionAmount?if_exists} </fo:block>
+                <#-- ?string(",##0.00") -->
             </fo:list-item-body>
         </fo:list-item>
         
@@ -117,7 +121,9 @@ under the License.
                 <fo:block font-weight="bold">Last Share Payment Date</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> NOT PROVIDED </fo:block>
+           	<#assign lastContributionDate = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLastMemberDepositContributionDate(memberPartyId)/>
+ 
+                <fo:block> ${lastContributionDate?if_exists} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -130,30 +136,38 @@ under the License.
             </fo:list-item-body>
         </fo:list-item>
         
-         <fo:list-item>
+         <#-- fo:list-item>
             <fo:list-item-label>
                 <fo:block font-weight="bold">Appraised Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> KES ${loanApplication.appraisedAmt?string(",##0.00")} </fo:block>
+            	<#assign maxLoanAmt = loanApplication.maxLoanAmt />
+            	<#assign theappliedAmt = loanApplication.appliedAmt />
+            	
+            	<#assign appraisedAmt = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getRecommendedAmount(maxLoanAmt, theappliedAmt)/>
+            	
+                <fo:block> KES ${appraisedAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
-        </fo:list-item>
+        </fo:list-item -->
         
-         <fo:list-item>
+         <#--fo:list-item>
             <fo:list-item-label>
                 <fo:block font-weight="bold">Recommended Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> KES ${loanApplication.appraisedAmt?string(",##0.00")} </fo:block>
+                <fo:block> KES ${appraisedAmt?string(",##0.00")} </fo:block>
             </fo:list-item-body>
-        </fo:list-item>
+        </fo:list-item -->
         
          <fo:list-item>
             <fo:list-item-label>
                 <fo:block font-weight="bold">Defaultor</fo:block>
             </fo:list-item-label>
+            
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> No Defaultor Loan </fo:block>
+            
+            <#assign defaulter = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getDefaultedLoansTotalsWithComment(memberPartyId)/>
+                <fo:block> ${defaulter} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -162,7 +176,8 @@ under the License.
                 <fo:block font-weight="bold">Defaultor Comment</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> No Comment </fo:block>
+             <#assign defaulterComment = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getDefaultedLoansComment(memberPartyId)/>
+                <fo:block> ${defaulterComment} </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -213,7 +228,11 @@ under the License.
                 <fo:block font-weight="bold">Gross Salary</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>KES ${deductionEvaluation.grossSalaryAmt?string(",##0.00")} </fo:block>
+                <fo:block>KES 
+                <#if deductionEvaluation?has_content>
+                ${deductionEvaluation.grossSalaryAmt?string(",##0.00")} 
+                </#if>
+                </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -314,7 +333,7 @@ under the License.
 
 	 <fo:block font-size="8pt" font-weight="bold" space-after="0.04in" margin-left="10%" text-decoration="underline" text-align="left">
       
-       CREDIT MANAGER COMMENT
+      LOANS OFFICER/ BRANCH MANAGER/ CREDIT MANAGER COMMENT
     </fo:block> 
     
     

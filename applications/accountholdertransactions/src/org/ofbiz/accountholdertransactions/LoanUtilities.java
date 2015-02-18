@@ -1,6 +1,7 @@
 package org.ofbiz.accountholdertransactions;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -306,5 +307,306 @@ public class LoanUtilities {
 		
 		return memberAge;
 	}
+	
+	/***
+	 * Get Last Member Deposit Contribution Date
+	 * */
+	public static Date getLastMemberDepositContributionDate(Long partyId)
+	{
+		Timestamp lastDate = null;
+		
+		//Get MemberDeposit AccountProductID
+		GenericValue accountProduct = getAccountProductGivenCodeId("901");
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		
+		//Get MemberAccount for the Account Product and party ID
+		GenericValue memberAccount = null;
+		
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccount = genericValue;
+		}
+		
+		lastDate = memberAccount.getTimestamp("lastContributionDate");
+		return lastDate;
+	}
+	
+	/****
+	 * Get Last Member Deposit Last Contribution Amount
+	 * */
+	public static BigDecimal getLastMemberDepositContributionAmount(Long partyId)
+	{
+		BigDecimal bdLastAmount = null;
+		//Get MemberDeposit AccountProductID
+		GenericValue accountProduct = getAccountProductGivenCodeId("901");
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		
+		//Get MemberAccount for the Account Product and party ID
+		GenericValue memberAccount = null;
+		
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccount = genericValue;
+		}
+		
+		bdLastAmount = memberAccount.getBigDecimal("contributingAmount");
+		return bdLastAmount;
+	}
+	
+	/***
+	 * Total Defaulted Loans
+	 * */
+	public static BigDecimal getTotalDefaultedLoans(Long partyId)
+	{
+		BigDecimal bdTotalLoans = BigDecimal.ZERO;
+		
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			bdTotalLoans.add(genericValue.getBigDecimal("loanAmt"));
+		}
+		
+		return bdTotalLoans;
+	}
+	
+	/***
+	 * Get Loan Default/Transfer Date
+	 * */
+	public static Date getDefaultTransferDate(Long partyId)
+	{
+		Timestamp lastDate = null;
+		
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			//bdTotalLoans.add(genericValue.getBigDecimal("loanAmt"));
+			lastDate = genericValue.getTimestamp("defaultTransferDate");
+		}
+		
+		return lastDate;
+	}
+	
+	public static String getDefaultedLoansComment(Long partyId){
+		
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		if (loanApplicationELI.size() > 0){
+			return "Has defaulted before";
+		} else
+			return "No Defaulted Loan";
+	}
+	
+	public static String getDefaultedLoansTotalsWithComment(Long partyId){
+		
+		BigDecimal bdTotalDefaulted = getTotalDefaultedLoans(partyId);
+		
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (bdTotalDefaulted.compareTo(BigDecimal.ZERO) == 1){
+			return bdTotalDefaulted+" In Total Defaults";
+		} else{
+			return "No Defaulted Loan";
+		}
+		
+//		if (loanApplicationELI.size() > 0){
+//			return "Has defaulted before";
+//		} else
+//			return "No Defaulted Loan";
+	}
+	
+//	result.put("hasLoans", LoanUtilities.hasLoans(partyId));
+//	result.put("hasGuaranteed", LoanUtilities.hasGuaranteed(partyId));
+//	result.put("shareCapitalBelowMinimum", LoanUtilities.shareCapitalBelowMinimum(partyId));
+//	result.put("memberDepositsLessThanLoans", LoanUtilities.memberDepositsLessThanLoans(partyId));
+	
+	public static boolean hasLoans(Long partyId){
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		if (loanApplicationELI.size() > 0){
+			return true;
+		} else
+			return false;
+	}
+
+	public static boolean hasGuaranteed(Long partyId){
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		if (loanApplicationELI.size() > 0){
+			return true;
+		} else
+			return false;
+	}
+
+	public static boolean shareCapitalBelowMinimum(Long partyId){
+		return true;
+	}
+
+	public static boolean memberDepositsLessThanLoans(Long partyId){
+		return true;
+	}
+
 
 }
