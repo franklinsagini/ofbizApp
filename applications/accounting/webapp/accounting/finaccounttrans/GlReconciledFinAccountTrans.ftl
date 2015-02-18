@@ -96,7 +96,7 @@ under the License.
       </#if>
     </div>
   </div>
-  <div class="screenlet">
+<#--   <div class="screenlet">
     <div class="screenlet-title-bar">
       <ul>
         <li class="h3">${uiLabelMap.AccountingPreviousBankReconciliation}</li>
@@ -140,7 +140,7 @@ under the License.
         </table>
       </#if>
     </div>
-  </div>
+  </div> -->
   <div class="screenlet">
     <div class="screenlet-title-bar">
       <ul>

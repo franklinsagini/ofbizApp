@@ -598,16 +598,25 @@
         	<set field="statusReturnedToAppraisalId" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanStatus(statusReturnedToAppraisal);}" type="Long"/ -->
         	
         	<set field="ready" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.loanReadyForAppraisal(theApplicationId);}" type="Boolean"/>
+        	
+        	<entity-one value-field="loanApplication" entity-name="LoanApplication">
+        		<field-map field-name="loanApplicationId" from-field="theApplicationId"/>
+        	</entity-one>
+        	
+        	<set field="maxLoanAmt" value="${loanApplication.maxLoanAmt}" type="BigDecimal"/>
+        	<set field="theappliedAmt" value="${loanApplication.appliedAmt}" type="BigDecimal"/>
+			<set field="recommendedAmt" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getRecommendedAmount(maxLoanAmt, theappliedAmt);}"/>
+			<set field="appraisedAmt" from-field="recommendedAmt"/>        	
         </actions>
         <field name="loanApplicationId"><hidden/></field>
        	<field name="loanStatusLogId"><hidden/></field>
        	<field name="loanStatusId"><hidden value="${statusId}"/></field>
        	<field name="loanAmt"><hidden value="${loanAmt}"/></field>
-        <field name="appliedAmt" title="Amount Applied"  widget-style="required" required-field="true"><text disabled="true" default-value="${appliedAmt}"/></field>
+        <field name="appliedAmt" title="Amount Applied"  widget-style="required" required-field="true"><text disabled="true" default-value="${loanApplication.appliedAmt}"/></field>
 
-        <field name="recommendedAmt" title="Amount Recommended"  widget-style="required" required-field="true"><text disabled="true" default-value="${appliedAmt}"/></field>
+        <field name="recommendedAmt" title="Amount Recommended"  widget-style="required" required-field="true"><text disabled="true" default-value="${recommendedAmt}"/></field>
 
-        <field name="appraisedAmt" title="Appraised Amount"  widget-style="required" required-field="true"><text default-value="${appraisedAmt}"/></field>
+        <field name="appraisedAmt" title="Appraised Amount"  widget-style="required" required-field="true"><text default-value="${recommendedAmt}"/></field>
         <field name="comment" title="Comment "  widget-style="required" required-field="true"><textarea/></field>
         <field name="submitButton" use-when="${ready}" title="Appraise" widget-style="smallSubmit" event="onclick" action="javascript: return isAmountExcess('${appraisedAmt}'.replace(/,/g, ''));"><submit button-type="button"/></field>
     </form>

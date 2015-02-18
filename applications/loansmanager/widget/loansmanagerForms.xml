@@ -364,6 +364,15 @@
         	<set field="statusId" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLoanStatus(status);}"/>
         	
         	<set field="ready" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.loanReadyForApproval(theloanApplicationId);}" type="Boolean"/>
+        	<entity-one value-field="loanApplication" entity-name="LoanApplication">
+        		<field-map field-name="loanApplicationId" from-field="theloanApplicationId"/>
+        	</entity-one>
+        	
+        	 <set field="maxLoanAmt" value="${loanApplication.maxLoanAmt}" type="BigDecimal"/>
+        	<set field="theappliedAmt" value="${loanApplication.appliedAmt}" type="BigDecimal"/>
+			<set field="recommendedAmt" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getRecommendedAmount(maxLoanAmt, theappliedAmt);}"/>
+			<set field="appraisedAmt" from-field="recommendedAmt"/>        	
+        	
         </actions>
         
         <field name="loanApplicationId"><hidden/></field>
@@ -372,13 +381,13 @@
        	<field name="loanAmt" ><hidden value="${loanAmt}"/></field>
        	
        	
-         <field name="appliedAmt" title="Amount Applied"  widget-style="required" required-field="true"><text disabled="true" default-value="${appliedAmt}"/></field>
+         <field name="appliedAmt" title="Amount Applied"  widget-style="required" required-field="true"><text disabled="true" default-value="${loanApplication.appliedAmt}"/></field>
 
-        <field name="recommendedAmt" title="Amount Recommended"  widget-style="required" required-field="true"><text disabled="true" default-value="${appliedAmt}"/></field>
+        <field name="recommendedAmt" title="Amount Recommended"  widget-style="required" required-field="true"><text disabled="true" default-value="${recommendedAmt}"/></field>
        	
-         <field name="appraisedAmt" title="Amount Applied"  widget-style="required" required-field="true"><text disabled="true" default-value="${appliedAmt}"/></field>
+         <field name="appraisedAmt" title="Amount Appraised"  widget-style="required" required-field="true"><text disabled="true" default-value="${appraisedAmt}"/></field>
        	
-        <field name="approvedAmt" title="Approved Amount"  widget-style="required" required-field="true"><text default-value="${approvedAmt}"/></field>
+        <field name="approvedAmt" title="Approved Amount"  widget-style="required" required-field="true"><text default-value="${appraisedAmt}"/></field>
         
         <field name="comment" title="Comment "  widget-style="required" required-field="true"><textarea/></field>
                 

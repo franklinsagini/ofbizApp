@@ -40,14 +40,10 @@ reportItemList.each { item ->
   def codeString = item.code
   codeString = codeString.replace(".", "");
   if (codeString.toInteger() < 30){
-    System.out.println("FROOOOOOOOOOOOOOOOOOOOOOOOOM " + fromDate)
-    System.out.println("THRUUUUUUUUUUUUUUUUUU " + thruDate)
-    System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEE" + item.reportId)
-    System.out.println("COOOOOOOOODDDDDDDEEEEEE " + item.code)
     amount = SasraReportsService.getReportItemTotals(fromDate, thruDate, reportId, item.code)
     finalReportItemList.add("code" : item.code, "name" : item.name, "amount" : amount)
   }
-
+/*
   context.incomeList = finalReportItemList
 
   if (codeString.toInteger() > 29 && codeString.toInteger() < 40){
@@ -58,12 +54,12 @@ reportItemList.each { item ->
   context.incomeFromInvestmentsList = incomeFromInvestmentsList
 
 
-
+//This computes the total of Financial Expenses. Should generate 4.0 automatically with the totals of 4.0 - 4.7
  if (codeString.toInteger() > 39 && codeString.toInteger() < 50){
     amount = SasraReportsService.getReportItemTotals(fromDate, thruDate, item.reportId, item.reportItemId)
-    incomeFromInvestmentsList.add("code" : item.code, "name" : item.name, "amount" : amount)
+    financialExpenseList.add("code" : item.code, "name" : item.name, "amount" : amount)
   }
-  context.incomeFromInvestmentsList = incomeFromInvestmentsList
+  context.financialExpenseList = financialExpenseList
 
 
  if (codeString.toInteger() > 49 && codeString.toInteger() < 60){
@@ -153,7 +149,7 @@ reportItemList.each { item ->
   context.revenueReservesList = revenueReservesList
 
 
-
+*/
 
 
 }//End of each
