@@ -46,6 +46,28 @@
                 <response name="success" type="view" value="rejectWithdrawal" />
         </request-map>
         
+        <request-map uri="createWithdrawalLog">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createWithdrawalLog" />
+                <response name="success" type="request-redirect"
+                        value="withdrawalApprovals"></response>
+        </request-map>
+                <request-map uri="updateWithdrawalLog">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateWithdrawalLog" />
+                <response name="success" type="request-redirect"
+                        value="withdrawalApprovals"></response>
+                <response name="error" type="view" value="withdrawalApprovals" />
+        </request-map>
+
+        <request-map uri="deleteWithdrawalLog">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteWithdrawalLog" />
+                <response name="success" type="request-redirect"
+                        value="withdrawalApprovals"></response>
+        </request-map>
+        
+        
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://withdrawalprocessing/widget/WithdrawalProcessingScreens.xml#main"/>
     
