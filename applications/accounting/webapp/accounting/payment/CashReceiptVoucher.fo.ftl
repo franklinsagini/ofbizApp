@@ -106,7 +106,7 @@ under the License.
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>CPV Date:</fo:block>
+                                    <fo:block>CRV Date:</fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                     <fo:block>${payment.effectiveDate?if_exists}</fo:block>

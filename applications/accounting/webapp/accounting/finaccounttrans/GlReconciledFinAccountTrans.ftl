@@ -68,7 +68,7 @@ under the License.
             <td>${uncreditedCheques?if_exists}</td>
           </tr>
            <tr>
-            <td><span class="label">Withdrawals Not in Cash</span></td>
+            <td><span class="label">Unidentified Debits</span></td>
             <td>${withdrawalNotInCashBook?if_exists}</td>
           </tr>
            <tr>
