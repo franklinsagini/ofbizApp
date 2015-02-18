@@ -496,5 +496,43 @@ public class LoanUtilities {
 		} else
 			return "No Defaulted Loan";
 	}
+	
+	public static String getDefaultedLoansTotalsWithComment(Long partyId){
+		
+		BigDecimal bdTotalDefaulted = getTotalDefaultedLoans(partyId);
+		
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (bdTotalDefaulted.compareTo(BigDecimal.ZERO) == 1){
+			return bdTotalDefaulted+" In Total Defaults";
+		} else{
+			return "No Defaulted Loan";
+		}
+		
+//		if (loanApplicationELI.size() > 0){
+//			return "Has defaulted before";
+//		} else
+//			return "No Defaulted Loan";
+	}
 
 }
