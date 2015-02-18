@@ -101,6 +101,9 @@
      <form name="ApproveWithdrawalLog" type="single" target="createWithdrawalLog"
 	focus-field-name="withdrawalstatus" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="withdrawalReasonContext">
+		<actions>
+			<set field="partyId" from-field="partyId"/>
+		</actions>
         <field name="withdrawalLogId"><hidden/></field>
         <field name="memberWithdrawalId"><hidden/></field>
  		<field name="withdrawalstatus" title="Status" ><hidden value="APPROVED"/></field>
@@ -109,8 +112,8 @@
         <!-- 
         	event="onclick" action="javascript: return checkAvailableBalance();"
          -->
-        <field name="submitButton" title="Approve" widget-style="smallSubmit"><submit button-type="button"/></field>
-       </form>
+        <field name="submitButton" title="Approve" event="onclick" action="javascript: return memberObligationValidation('${partyId}'.replace(/,/g, ''));" widget-style="smallSubmit"><submit button-type="button"/></field>
+     </form>
         
       <form name="listWithdrawalLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateWithdrawalLog" paginate-target="withdrawalLog"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
