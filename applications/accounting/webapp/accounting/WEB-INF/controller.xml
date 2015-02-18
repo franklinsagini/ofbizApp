@@ -41,6 +41,14 @@ under the License.
         <response name="success" type="request-redirect-noparam" value="SasraReportName" />
         <response name="error" type="view" value="SasraReportName" />
     </request-map>
+    <request-map uri="createDepositReturnItem">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createDepositReturnItem" />
+        <response name="success" type="request-redirect" value="DepositReturnItem">
+            <redirect-parameter name="depositTypeId"/>
+        </response>
+        <response name="error" type="view" value="SasraReportItem" />
+    </request-map>
     <request-map uri="createSasraReportItem">
         <security https="true" auth="true" />
         <event type="service" invoke="createSasraReportItem" />
@@ -2882,6 +2890,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CostCenters"/>
     </request-map>
+    <request-map uri="DepositReturnSetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepositReturnSetup"/>
+    </request-map>
+    <request-map uri="DepositReturnItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepositReturnItem"/>
+    </request-map>
     <request-map uri="SasraReportName">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="SasraReportName"/>
@@ -3314,6 +3330,8 @@ under the License.
     <view-map name="FindGlAccountCategory" type="screen" page="component://accounting/widget/GlSetupScreens.xml#FindGlAccountCategory"/>
     <view-map name="EditGlAccountCategoryMember" type="screen" page="component://accounting/widget/GlSetupScreens.xml#EditGlAccountCategoryMember"/>
     <view-map name="CostCenters" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#CostCenters"/>
+    <view-map name="DepositReturnSetup" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#DepositReturnSetup"/>
+    <view-map name="DepositReturnItem" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#DepositReturnItem"/>
     <view-map name="SasraReportName" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#SasraReportName"/>
     <view-map name="SasraReportItem" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#SasraReportItem"/>
     <view-map name="SasraGLAccounts" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#SasraGLAccounts"/>
