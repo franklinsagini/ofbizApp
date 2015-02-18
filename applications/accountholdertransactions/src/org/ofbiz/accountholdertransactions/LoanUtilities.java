@@ -534,5 +534,79 @@ public class LoanUtilities {
 //		} else
 //			return "No Defaulted Loan";
 	}
+	
+//	result.put("hasLoans", LoanUtilities.hasLoans(partyId));
+//	result.put("hasGuaranteed", LoanUtilities.hasGuaranteed(partyId));
+//	result.put("shareCapitalBelowMinimum", LoanUtilities.shareCapitalBelowMinimum(partyId));
+//	result.put("memberDepositsLessThanLoans", LoanUtilities.memberDepositsLessThanLoans(partyId));
+	
+	public static boolean hasLoans(Long partyId){
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		if (loanApplicationELI.size() > 0){
+			return true;
+		} else
+			return false;
+	}
+
+	public static boolean hasGuaranteed(Long partyId){
+		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanStatusId", EntityOperator.EQUALS,
+						defaultedLoanStatusId),
+						
+						EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		if (loanApplicationELI.size() > 0){
+			return true;
+		} else
+			return false;
+	}
+
+	public static boolean shareCapitalBelowMinimum(Long partyId){
+		return true;
+	}
+
+	public static boolean memberDepositsLessThanLoans(Long partyId){
+		return true;
+	}
+
 
 }
