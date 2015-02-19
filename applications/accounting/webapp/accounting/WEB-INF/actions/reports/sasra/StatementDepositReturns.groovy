@@ -4,7 +4,7 @@ import org.ofbiz.accounting.ledger.AccountCount;
 
 
 classificationId = "1"
-//AccountCount accountCount = SasraReportsService.getAccountTotals(classificationId, 1, 50000.00)
+AccountCount accountCount = SasraReportsService.getAccountTotals(classificationId, 1, 50000.00)
 count = SasraReportsService.getAccountTotalsCount(classificationId, new BigDecimal(1), new BigDecimal(50000))
 total = SasraReportsService.getAccountTotalsTotal(classificationId, new BigDecimal(1), new BigDecimal(50000))
 
