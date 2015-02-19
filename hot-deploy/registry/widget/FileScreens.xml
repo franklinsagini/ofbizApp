@@ -1991,6 +1991,15 @@
 				<set field="titleProperty" value="PageTitleFindInvoice" />
 				<set field="findFileCtx" from-field="parameters" />
 				<set field="partyId" from-field="parameters.partyId"/>
+				
+				 <entity-one entity-name="RegistryDocuments" value-field="doc">
+		 	<field-map field-name="documentId" from-field="parameters.documentId"/>
+		 </entity-one>
+		 
+		 <entity-one entity-name="RegistryDocumentType" value-field="docTyp">
+		 	<field-map field-name="DocumentTypeId" from-field="doc.DocumentTypeId"/>
+		 </entity-one>
+		 
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -2000,10 +2009,13 @@
 							<widgets>
 							<container style="leftclear">
 											<label style="h1"
-												text="Add Sub-Documents" />
+												text="Add Sub-Documents to [${docTyp.DocumentType}]" />
 										</container>
-								<screenlet title="Search File">
+								<screenlet title="Add Sub Document to [${docTyp.DocumentType}]">
 									<include-form name="addSubDocumentForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+								<screenlet title="[${docTyp.DocumentType}] Sub Document List">
+									<include-form name="ListSubDocumentForm" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>

@@ -81,6 +81,8 @@ import org.xml.sax.SAXException;
 
 import com.sun.mail.smtp.SMTPAddressFailedException;
 
+
+
 /**
  * Email Services
  */
@@ -98,6 +100,268 @@ public class EmailServices {
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
+    public static Map<String, Object> sendMail_verge(DispatchContext ctx, Map<String, ? extends Object> context) {
+        Delegator delegator = ctx.getDelegator();
+        String communicationEventId = (String) context.get("communicationEventId");
+        String orderId = (String) context.get("orderId");
+        Locale locale = (Locale) context.get("locale");
+        if (communicationEventId != null) {
+            Debug.logInfo("SendMail Running, for communicationEventId : " + communicationEventId, module);
+        }
+        Map<String, Object> results = ServiceUtil.returnSuccess();
+        String subject = (String) context.get("subject");
+        subject = FlexibleStringExpander.expandString(subject, context);
+
+        String partyId = (String) context.get("partyId");
+        String body = (String) context.get("body");
+       // List<Map<String, Object>> bodyParts = UtilGenerics.checkList(context.get("bodyParts"));
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        results.put("communicationEventId", communicationEventId);
+        results.put("partyId", partyId);
+        results.put("subject", subject);
+        
+        if (UtilValidate.isNotEmpty(orderId)) {
+            results.put("orderId", orderId);
+        }
+        if (UtilValidate.isNotEmpty(body)) {
+            body = FlexibleStringExpander.expandString(body, context);
+            results.put("body", body);
+        }
+      /*  if (UtilValidate.isNotEmpty(bodyParts)) {
+            results.put("bodyParts", bodyParts);
+        }*/
+        results.put("userLogin", userLogin);
+
+        String sendTo = (String) context.get("sendTo");
+        String sendCc = (String) context.get("sendCc");
+        String sendBcc = (String) context.get("sendBcc");
+
+        // check to see if we should redirect all mail for testing
+        String redirectAddress = UtilProperties.getPropertyValue("general.properties", "mail.notifications.redirectTo");
+        if (UtilValidate.isNotEmpty(redirectAddress)) {
+            String originalRecipients = " [To: " + sendTo + ", Cc: " + sendCc + ", Bcc: " + sendBcc + "]";
+            subject += originalRecipients;
+            sendTo = redirectAddress;
+            sendCc = null;
+            sendBcc = null;
+        }
+
+        String sendFrom = (String) context.get("sendFrom");
+        String sendType = (String) context.get("sendType");
+        String port = (String) context.get("port");
+        String socketFactoryClass = (String) context.get("socketFactoryClass");
+        String socketFactoryPort  = (String) context.get("socketFactoryPort");
+        String socketFactoryFallback  = (String) context.get("socketFactoryFallback");
+        String sendVia = (String) context.get("sendVia");
+        String authUser = (String) context.get("authUser");
+        String authPass = (String) context.get("authPass");
+        String messageId = (String) context.get("messageId");
+        String contentType = (String) context.get("contentType");
+        Boolean sendPartial = (Boolean) context.get("sendPartial");
+        Boolean isStartTLSEnabled = (Boolean) context.get("startTLSEnabled");
+
+        boolean useSmtpAuth = false;
+
+        // define some default
+        if (sendType == null || sendType.equals("mail.smtp.host")) {
+            sendType = "mail.smtp.host";
+            if (UtilValidate.isEmpty(sendVia)) {
+               // sendVia = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.relay.host", "localhost", delegator);
+                sendVia = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.relay.host", delegator);
+            }
+            if (UtilValidate.isEmpty(authUser)) {
+                authUser = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.auth.user", delegator);
+            }
+            if (UtilValidate.isEmpty(authPass)) {
+                authPass = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.auth.password", delegator);
+            }
+            if (UtilValidate.isNotEmpty(authUser)) {
+                useSmtpAuth = true;
+            }
+            if (UtilValidate.isEmpty(port)) {
+                port = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.port", delegator);
+            }
+            if (UtilValidate.isEmpty(socketFactoryPort)) {
+                socketFactoryPort = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.socketFactory.port", delegator);
+            }
+            if (UtilValidate.isEmpty(socketFactoryClass)) {
+                socketFactoryClass = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.socketFactory.class", delegator);
+            }
+            if (UtilValidate.isEmpty(socketFactoryFallback)) {
+                socketFactoryFallback = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.socketFactory.fallback", "false", delegator);
+            }
+            if (sendPartial == null) {
+                sendPartial = EntityUtilProperties.propertyValueEqualsIgnoreCase("general.properties", "mail.smtp.sendpartial", "true", delegator) ? true : false;
+            }
+            if (isStartTLSEnabled == null) {
+                isStartTLSEnabled = EntityUtilProperties.propertyValueEqualsIgnoreCase("general.properties", "mail.smtp.starttls.enable", "true", delegator);
+            }
+        } else if (sendVia == null) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendMissingParameterSendVia", locale));
+        }
+
+        if (contentType == null) {
+            contentType = "text/html";
+        }
+
+       /* if (UtilValidate.isNotEmpty(bodyParts)) {
+            contentType = "multipart/mixed";
+        }*/
+        results.put("contentType", contentType);
+
+        Session session;
+        MimeMessage mail;
+        try {
+            Properties props = System.getProperties();
+            props.put(sendType, sendVia);
+            if (UtilValidate.isNotEmpty(port)) {
+                props.put("mail.smtp.port", port);
+            }
+            if (UtilValidate.isNotEmpty(socketFactoryPort)) {
+                props.put("mail.smtp.socketFactory.port", socketFactoryPort);
+            }
+            if (UtilValidate.isNotEmpty(socketFactoryClass)) {
+                props.put("mail.smtp.socketFactory.class", socketFactoryClass);
+                Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+            }
+            if (UtilValidate.isNotEmpty(socketFactoryFallback)) {
+                props.put("mail.smtp.socketFactory.fallback", socketFactoryFallback);
+            }
+            if (useSmtpAuth) {
+                props.put("mail.smtp.auth", "true");
+            }
+            if (sendPartial != null) {
+                props.put("mail.smtp.sendpartial", sendPartial ? "true" : "false");
+            }
+            if (isStartTLSEnabled) {
+                props.put("mail.smtp.starttls.enable", "true");
+            }
+
+            session = Session.getInstance(props);
+            boolean debug = UtilProperties.propertyValueEqualsIgnoreCase("general.properties", "mail.debug.on", "Y");
+            session.setDebug(debug);
+
+            mail = new MimeMessage(session);
+            if (messageId != null) {
+                mail.setHeader("In-Reply-To", messageId);
+                mail.setHeader("References", messageId);
+            }
+            mail.setFrom(new InternetAddress(sendFrom));
+            mail.setSubject(subject, "UTF-8");
+            mail.setHeader("X-Mailer", "Apache OFBiz, The Apache Open For Business Project");
+            mail.setSentDate(new Date());
+            mail.addRecipients(Message.RecipientType.TO, sendTo);
+
+            if (UtilValidate.isNotEmpty(sendCc)) {
+                mail.addRecipients(Message.RecipientType.CC, sendCc);
+            }
+            if (UtilValidate.isNotEmpty(sendBcc)) {
+                mail.addRecipients(Message.RecipientType.BCC, sendBcc);
+            }
+/*
+            if (UtilValidate.isNotEmpty(bodyParts)) {
+                // check for multipart message (with attachments)
+                // BodyParts contain a list of Maps items containing content(String) and type(String) of the attachement
+                MimeMultipart mp = new MimeMultipart();
+                Debug.logInfo(bodyParts.size() + " multiparts found",module);
+                for (Map<String, Object> bodyPart: bodyParts) {
+                    Object bodyPartContent = bodyPart.get("content");
+                    MimeBodyPart mbp = new MimeBodyPart();
+
+                    if (bodyPartContent instanceof String) {
+                        Debug.logInfo("part of type: " + bodyPart.get("type") + " and size: " + bodyPart.get("content").toString().length() , module);
+                        mbp.setText((String) bodyPartContent, "UTF-8", ((String) bodyPart.get("type")).substring(5));
+                    } else if (bodyPartContent instanceof byte[]) {
+                        ByteArrayDataSource bads = new ByteArrayDataSource((byte[]) bodyPartContent, (String) bodyPart.get("type"));
+                        Debug.logInfo("part of type: " + bodyPart.get("type") + " and size: " + ((byte[]) bodyPartContent).length , module);
+                        mbp.setDataHandler(new DataHandler(bads));
+                    } else if (bodyPartContent instanceof DataHandler) {
+                        mbp.setDataHandler((DataHandler) bodyPartContent);
+                    } else {
+                        mbp.setDataHandler(new DataHandler(bodyPartContent, (String) bodyPart.get("type")));
+                    }
+
+                    String fileName = (String) bodyPart.get("filename");
+                    if (fileName != null) {
+                        mbp.setFileName(fileName);
+                    }
+                    mp.addBodyPart(mbp);
+                }
+                mail.setContent(mp);
+                mail.saveChanges();
+            } */
+                // create the singelpart message
+                if (contentType.startsWith("text")) {
+                    mail.setText(body, "UTF-8", contentType.substring(5));
+                } else {
+                    mail.setContent(body, contentType);
+                }
+                mail.saveChanges();
+           
+        } catch (MessagingException e) {
+            Debug.logError(e, "MessagingException when creating message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]", module);
+            Debug.logError("Email message that could not be created to [" + sendTo + "] had context: " + context, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendMessagingException", UtilMisc.toMap("sendTo", sendTo, "sendFrom", sendFrom, "sendCc", sendCc, "sendBcc", sendBcc, "subject", subject), locale));
+        }
+
+        // check to see if sending mail is enabled
+        String mailEnabled = EntityUtilProperties.getPropertyValue("general.properties", "mail.notifications.enabled", "N", delegator);
+        if (!"Y".equalsIgnoreCase(mailEnabled)) {
+            // no error; just return as if we already processed
+            Debug.logImportant("Mail notifications disabled in general.properties; mail with subject [" + subject + "] not sent to addressee [" + sendTo + "]", module);
+            Debug.logVerbose("What would have been sent, the addressee: " + sendTo + " subject: " + subject + " context: " + context, module);
+            results.put("messageWrapper", new MimeMessageWrapper(session, mail));
+            return results;
+        }
+
+        Transport trans = null;
+        try {
+            trans = session.getTransport("smtp");
+            if (!useSmtpAuth) {
+                trans.connect();
+            } else {
+                trans.connect(sendVia, authUser, authPass);
+            }
+            trans.sendMessage(mail, mail.getAllRecipients());
+            results.put("messageWrapper", new MimeMessageWrapper(session, mail));
+            results.put("messageId", mail.getMessageID());
+            trans.close();
+        } catch (SendFailedException e) {
+            // message code prefix may be used by calling services to determine the cause of the failure
+            Debug.logError(e, "[ADDRERR] Address error when sending message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]", module);
+            List<SMTPAddressFailedException> failedAddresses = FastList.newInstance();
+            Exception nestedException = null;
+            while ((nestedException = e.getNextException()) != null && nestedException instanceof MessagingException) {
+                if (nestedException instanceof SMTPAddressFailedException) {
+                    SMTPAddressFailedException safe = (SMTPAddressFailedException) nestedException;
+                    Debug.logError("Failed to send message to [" + safe.getAddress() + "], return code [" + safe.getReturnCode() + "], return message [" + safe.getMessage() + "]", module);
+                    failedAddresses.add(safe);
+                    break;
+                }
+            }
+           /* Boolean sendFailureNotification = (Boolean) context.get("sendFailureNotification");
+            if (sendFailureNotification == null || sendFailureNotification) {
+                sendFailureNotification(ctx, context, mail, failedAddresses);
+                results.put("messageWrapper", new MimeMessageWrapper(session, mail));
+                try {
+                    results.put("messageId", mail.getMessageID());
+                    trans.close();
+                } catch (MessagingException e1) {
+                    Debug.logError(e1, module);
+                }
+            } else {*/
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendAddressError", UtilMisc.toMap("sendTo", sendTo, "sendFrom", sendFrom, "sendCc", sendCc, "sendBcc", sendBcc, "subject", subject), locale));
+            
+        } catch (MessagingException e) {
+            // message code prefix may be used by calling services to determine the cause of the failure
+            Debug.logError(e, "[CON] Connection error when sending message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]", module);
+            Debug.logError("Email message that could not be sent to [" + sendTo + "] had context: " + context, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendConnectionError", UtilMisc.toMap("sendTo", sendTo, "sendFrom", sendFrom, "sendCc", sendCc, "sendBcc", sendBcc, "subject", subject), locale));
+        }
+        return results;
+    }
+			
     public static Map<String, Object> sendMail(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
         String communicationEventId = (String) context.get("communicationEventId");
