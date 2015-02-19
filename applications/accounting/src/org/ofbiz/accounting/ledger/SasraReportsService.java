@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -293,17 +294,106 @@ public class SasraReportsService {
 	/***
 	 * Sum Member Accounts greater than Lower and Less than Upper
 	 * **/
-	public static BigDecimal getAccountTotals(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
-		BigDecimal bdTotal = BigDecimal.ZERO;
+	public static AccountCount getAccountTotals(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
+		AccountCount accountAccount = new AccountCount();
+		//BigDecimal bdTotal = BigDecimal.ZERO;
+		accountAccount.setCount(0L);
+		accountAccount.setTotal(BigDecimal.ZERO);
 		
-		return bdTotal;
+		//Get Accounts
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue depositType = null;
+		try {
+			depositType = delegator.findOne("DepositType",
+					UtilMisc.toMap("depositTypeId", classificationId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		//Get Accounts
+		EntityConditionList<EntityExpr> depositTypeItemConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"depositTypeId", EntityOperator.EQUALS, classificationId)),
+						EntityOperator.AND);
+		List<GenericValue> depositTypeItemELI = null;
+		try {
+			depositTypeItemELI = delegator.findList("DepositTypeItem",
+					depositTypeItemConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Long accountProductId = null;
+		for (GenericValue genericValue : depositTypeItemELI) {
+			//reportItemId = genericValue.getString("reportItemId");
+			accountProductId = genericValue.getLong("accountProductId");
+			
+			accountAccount = processMemberAccounts(accountAccount, accountProductId, bdLower, bdUpper);
+			//Get Members with this account
+			
+			// each member , get account balance
+			
+			
+			//check if balance within range and add total and increment count
+		}
+		
+		//For each Account compute total balance and add it to total if within range
+		
+		
+		return accountAccount;
 	}
 	
+	private static AccountCount processMemberAccounts(
+			AccountCount accountAccount, Long accountProductId, BigDecimal bdLower, BigDecimal bdUpper) {
+		// TODO Auto-generated method stub
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//Get Accounts
+				EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+						.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+								"accountProductId", EntityOperator.EQUALS, accountProductId)),
+								EntityOperator.AND);
+				List<GenericValue> memberAccountELI = null;
+				try {
+					memberAccountELI = delegator.findList("MemberAccount",
+							memberAccountConditions, null, null, null, false);
+
+				} catch (GenericEntityException e2) {
+					e2.printStackTrace();
+				}
+
+				Long memberAccountId = null;
+				BigDecimal bdTotal = BigDecimal.ZERO;
+				Long count = 0L;
+				for (GenericValue genericValue : memberAccountELI) {
+					//reportItemId = genericValue.getString("reportItemId");
+					memberAccountId = genericValue.getLong("memberAccountId");
+					
+					//accountAccount = processMemberAccounts(accountAccount, accountProductId);
+					//Get Members with this account
+					bdTotal = AccHolderTransactionServices.getBookBalanceVer3(memberAccountId.toString(), delegator);
+					// each member , get account balance
+					
+					if ((bdTotal.compareTo(bdLower) > -1) && (bdTotal.compareTo(bdUpper) < 1)){
+						accountAccount.setCount(accountAccount.getCount() + 1);
+						accountAccount.setTotal(accountAccount.getTotal().add(bdTotal));
+					}
+					
+					//check if balance within range and add total and increment count
+				}
+		
+		return accountAccount;
+	}
+
 	/****
 	 * Count Member Accounts greater than Lower and Less than Upper
 	 * */
 	public static Long getAccountCounts(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
 		Long count = 0L;
+		//Get Accounts
+		
+		//For each Account compute total balance and add it to total if within range
+		
 		
 		return count;
 	}
