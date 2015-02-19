@@ -68,7 +68,7 @@ under the License.
             <td>${uncreditedCheques?if_exists}</td>
           </tr>
            <tr>
-            <td><span class="label">Withdrawals Not in Cash</span></td>
+            <td><span class="label">Unidentified Debits</span></td>
             <td>${withdrawalNotInCashBook?if_exists}</td>
           </tr>
            <tr>
@@ -96,7 +96,7 @@ under the License.
       </#if>
     </div>
   </div>
-  <div class="screenlet">
+<#--   <div class="screenlet">
     <div class="screenlet-title-bar">
       <ul>
         <li class="h3">${uiLabelMap.AccountingPreviousBankReconciliation}</li>
@@ -140,7 +140,7 @@ under the License.
         </table>
       </#if>
     </div>
-  </div>
+  </div> -->
   <div class="screenlet">
     <div class="screenlet-title-bar">
       <ul>

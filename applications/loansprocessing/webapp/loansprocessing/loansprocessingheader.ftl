@@ -378,25 +378,99 @@
     
     
     
-        function isAmountExcess(loanAmt){
-    	
+        function validateLoanAppraisal(loanApplicationId, loanAmt){
+        
+        //alert('Loan Application ID is '+loanApplicationId);
+        // alert('Loan Amount is '+loanAmt);
+        //return false;
+    	//loanAmt
 		//if (!hasSavingsAccount){
 			appraisedAmt  = jQuery('input[name="appraisedAmt"]').val();
 			aprraisedAmt = appraisedAmt.replace(/,/g, '');
 			//alert('Loan Amount '+loanAmt+' Appraised '+appraisedAmt)
 			
-			if (parseFloat(loanAmt) < parseFloat(aprraisedAmt))
-			{
-				alert('Cannot appraise more than applied amount ');
-				return false;
-			} else{
-			//	alert('Will appraise ');
-				return true;
-			}
+			//if (parseFloat(loanAmt) < parseFloat(aprraisedAmt))
+			//{
+			//	alert('Cannot appraise more than applied amount ');
+			//	return false;
+			//}
 			
-			alert(' Cannot appraise more than applied');
-		//}
-    	//return false;
+			var hasGuarantors = false;
+			var guarantorTotalEnough = false;
+			var minimumOK =  false;
+			var maximumOk = false;
+			var isNotSixMonthOldNotFromOtherSacco = false;
+			var isAppraisedAmounNotMoreEntitlement = false;
+			var repaymentPeriodNotMoreThanMaximum = false;
+			var addedDeductions = false;
+			
+			var reqUrl = '/loansprocessing/control/loanApplicationRules';
+    		//var isSelf = false;
+    		jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'loanApplicationId': loanApplicationId, 'loanAmt': loanAmt}, 
+			     success : function(data){
+			     
+			     			hasGuarantors = data.hasGuarantors;
+			     			guarantorTotalEnough = data.guarantorTotalEnough;
+			     			minimumOK = data.minimumOK;
+			     			maximumOk = data.maximumOk;
+			     			isNotSixMonthOldNotFromOtherSacco = data.isNotSixMonthOldNotFromOtherSacco;
+			     			isAppraisedAmounNotMoreEntitlement = data.isAppraisedAmounNotMoreEntitlement;
+			     			repaymentPeriodNotMoreThanMaximum = data.repaymentPeriodNotMoreThanMaximum;
+			     			addedDeductions = data.addedDeductions;
+			               },
+			      error : function(errorData){
+			              alert("Some error occurred while validating appraisal");
+			              }
+				});
+				
+				
+				if (!hasGuarantors){
+					alert('Loan Application must have guarantors!!! ');
+					return false;
+				} 
+		
+				if (!guarantorTotalEnough){
+					alert('Must provide enough guarantors!!! ');
+					return false;
+				}
+				
+				
+				if (!minimumOK){
+					alert('Amount does not meet the minimum required amount!!! ');
+					return false;
+				}
+				
+				if (!maximumOk){
+					alert('Amount must be less than the Maximum Amount!!! ');
+					return false;
+				}
+				
+				if (!isNotSixMonthOldNotFromOtherSacco){
+					alert('Must have been a member for at least 6 months or be from another sacco!!! ');
+					return false;
+				}
+				
+				if (!isAppraisedAmounNotMoreEntitlement){
+					alert('Cannot appraise more than the Entitled Amout!!! ');
+					return false;
+				}
+				
+				if (!repaymentPeriodNotMoreThanMaximum){
+					alert('Repayment Period Cannot be more than the Maximum Repayment Period!!! ');
+					return false;
+				}
+				
+				if (!addedDeductions){
+					alert('You must add loan deductions in the Add Deductions Section !!!');
+					return false;
+				}
+			
+    			return true;
     }
     
  

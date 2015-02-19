@@ -213,6 +213,29 @@ under the License.
         </field>
     </form>
     
+    <form name="PayrollCodeSummary" type="single" target="payrollCodeSummaryPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="payrollPeriodId" title="Period" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="PayrollPeriod" key-field-name="payrollPeriodId">
+        			<entity-constraint name="status" operator="equals" value="Closed"/>
+        			<entity-order-by field-name="-payrollPeriodId"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+         <field name="payrollElementId" title="Code Name" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="PayrollElement" key-field-name="payrollElementId">
+        			<entity-order-by field-name="elementCode"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
     
     
 </forms>

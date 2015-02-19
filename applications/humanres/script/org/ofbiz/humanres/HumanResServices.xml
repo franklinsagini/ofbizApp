@@ -654,6 +654,35 @@
         <property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
     </simple-method>
+    
+    <simple-method method-name="createStaffObjectives" short-description="create Staff Objectives">
+        <make-value entity-name="KPITargets" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="KPITargets" field="kpiTargetId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="kpiTargetId" field="newEntity.kpiTargetId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+    </simple-method>
+    <simple-method method-name="updateStaffObjectives" short-description="Update Staff Objectives">
+        <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+    </simple-method>
+    
+    <simple-method method-name="deleteStaffObjectives" short-description="Delete Staff Objectives">
+        <entity-one entity-name="KPITargets" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
 	
 	<simple-method method-name="createPerfRatingType" short-description="create Performance Rating Type">
         <make-value entity-name="PerfRatingType" value-field="newEntity"/>
@@ -679,6 +708,35 @@
     
     <simple-method method-name="deletePerfRatingType" short-description="Delete Performance Rating Type">
         <entity-one entity-name="PerfRatingType" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+    </simple-method>
+    
+    <simple-method method-name="createPerfRatingTypeQTT" short-description="create Performance Rating Type">
+        <make-value entity-name="PerfRatingType_QTT" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PerfRatingType_QTT" field="perfRatingTypeQTTId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="perfRatingTypeQTTId" field="newEntity.perfRatingTypeQTTId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+    </simple-method>
+    <simple-method method-name="updatePerfRatingTypeQTT" short-description="Update Performance Rating Type">
+        <entity-one entity-name="PerfRatingType_QTT" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+        <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+    </simple-method>
+    
+    <simple-method method-name="deletePerfRatingTypeQTT" short-description="Delete Performance Rating Type">
+        <entity-one entity-name="PerfRatingType_QTT" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
         <property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />

@@ -49,6 +49,11 @@ public class LoansProcessingServices {
 
 		// Get LoanAmount
 		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		BigDecimal bdmaxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
+
+		if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
+			bdLoanAmt = bdmaxLoanAmt;
+		}
 
 		Long repaymentPeriod = loanApplication.getLong("repaymentPeriod");
 
@@ -87,10 +92,16 @@ public class LoansProcessingServices {
 		BigDecimal bdInsuranceRate = AmortizationServices
 				.getInsuranceRate(loanApplication);
 
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		BigDecimal bdmaxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
+
+		if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
+			bdLoanAmt = bdmaxLoanAmt;
+		}
+
 		bdInsuranceAmount = bdInsuranceRate.multiply(
-				loanApplication.getBigDecimal("loanAmt").setScale(6,
-						RoundingMode.HALF_UP)).divide(new BigDecimal(100), 6,
-				RoundingMode.HALF_UP);
+				bdLoanAmt.setScale(6, RoundingMode.HALF_UP)).divide(
+				new BigDecimal(100), 6, RoundingMode.HALF_UP);
 		return bdInsuranceAmount;
 	}
 
@@ -151,18 +162,18 @@ public class LoansProcessingServices {
 			Long loanProductId) {
 		BigDecimal bdLoansBalance = BigDecimal.ZERO;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		BigDecimal bdTotalLoansWithoutAccountAmount = LoanServices
-				.calculateExistingAccountLessLoansTotal(
-						String.valueOf(memberId),
-						String.valueOf(loanProductId), delegator);
-		BigDecimal bdTotalLoansWithAccountAmount = LoanServices
+
+		// BigDecimal bdTotalLoansWithoutAccountAmount = LoanServices
+		// .calculateExistingAccountLessLoansTotal(
+		// String.valueOf(memberId),
+		// String.valueOf(loanProductId), delegator);
+		BigDecimal bdTotalLoansAmount = LoanServices
 				.calculateExistingLoansTotal(String.valueOf(memberId),
 						String.valueOf(loanProductId), delegator);
 
-		BigDecimal bdLoansRepaidAmount = getLoansRepaid(memberId);
-
-		bdLoansBalance = bdTotalLoansWithoutAccountAmount.add(
-				bdTotalLoansWithAccountAmount).subtract(bdLoansRepaidAmount);
+		// BigDecimal bdLoansRepaidAmount = getLoansRepaid(memberId);
+		// .subtract(bdLoansRepaidAmount)
+		bdLoansBalance = bdTotalLoansAmount;
 		return bdLoansBalance;
 	}
 
@@ -192,18 +203,17 @@ public class LoansProcessingServices {
 	public static BigDecimal getTotalLoansRunning(Long memberId,
 			Long loanProductId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-//		BigDecimal bdTotalLoansWithoutAccountAmount = LoanServices
-//				.calculateExistingAccountLessLoansTotal(
-//						String.valueOf(memberId),
-//						String.valueOf(loanProductId), delegator);
+		// BigDecimal bdTotalLoansWithoutAccountAmount = LoanServices
+		// .calculateExistingAccountLessLoansTotal(
+		// String.valueOf(memberId),
+		// String.valueOf(loanProductId), delegator);
 		BigDecimal bdTotalLoansWithAccountAmount = LoanServices
 				.calculateExistingLoansTotal(String.valueOf(memberId),
 						String.valueOf(loanProductId), delegator);
 
 		return bdTotalLoansWithAccountAmount;
 	}
-	
-	
+
 	public static BigDecimal getTotalLoansRunning(Long memberId) {
 		BigDecimal bdTotalLoansWithAccountAmount = LoanServices
 				.calculateExistingLoansTotal(memberId);
@@ -224,12 +234,12 @@ public class LoansProcessingServices {
 		}
 
 		GenericValue graduatedScale = null;
-		
+
 		if (bdAmount.compareTo(BigDecimal.ZERO) == -1)
 			bdAmount = new BigDecimal(1);
 
 		for (GenericValue genericValue : graduatedScaleELI) {
-			log.info("TTTTTTTTT The Amount is AAAAAAAAAA "+bdAmount);
+			log.info("TTTTTTTTT The Amount is AAAAAAAAAA " + bdAmount);
 			// bdTotalRepayment =
 			// bdTotalRepayment.add(genericValue.getBigDecimal("principalAmount"));
 			if (!(bdAmount.compareTo(genericValue.getBigDecimal("lowerValue")) == -1)
@@ -238,7 +248,6 @@ public class LoansProcessingServices {
 				graduatedScale = genericValue;
 			}
 		}
-		
 
 		BigDecimal bdContributedAmount = BigDecimal.ZERO;
 		// Use the graduated scale to compute the contribution
@@ -255,37 +264,45 @@ public class LoansProcessingServices {
 
 	public static BigDecimal getLoanCurrentContributionAmount(Long memberId,
 			Long loanProductId) {
-		BigDecimal bdTotalDisbursed = LoanServices.getTotalDisbursedLoans(memberId);
-				//getTotalLoanBalances(memberId,
-				//loanProductId);
+		BigDecimal bdTotalDisbursed = LoanServices
+				.getTotalDisbursedLoans(memberId);
+		// getTotalLoanBalances(memberId,
+		// loanProductId);
 		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursed);
 		return bdContributionAmount;
 	}
-	
+
 	public static BigDecimal getLoanCurrentContributionAmount(Long memberId) {
-		BigDecimal bdTotalDisbursedLoans = LoanServices.getTotalDisbursedLoans(memberId);
-				//getTotalLoansRunning(memberId);
+		BigDecimal bdTotalDisbursedLoans = LoanServices
+				.getTotalDisbursedLoans(memberId);
+		// getTotalLoansRunning(memberId);
 		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursedLoans);
 		return bdContributionAmount;
 	}
 
 	public static BigDecimal getLoanNewContributionAmount(Long memberId,
 			Long loanProductId, BigDecimal loanAmt) {
-		BigDecimal bdTotalDisbursedLoans = LoanServices.getTotalDisbursedLoans(memberId);
-				//getTotalLoanBalances(memberId,
-				//loanProductId);
+		BigDecimal bdTotalDisbursedLoans = LoanServices
+				.getTotalDisbursedLoans(memberId);
+		// getTotalLoanBalances(memberId,
+		// loanProductId);
 
 		BigDecimal newLoansTotal = bdTotalDisbursedLoans.add(loanAmt);
 
 		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(newLoansTotal);
-		
-		//Get Contribution Amount of Loan Product Affect Member Deposits e.g. Super Loan
+
+		// Get Contribution Amount of Loan Product Affect Member Deposits e.g.
+		// Super Loan
 		GenericValue loanProduct = getLoanProduct(loanProductId);
-		
-		if ((loanProduct.getString("affectMemberDeposit") != null) && (loanProduct.getString("affectMemberDeposit").equals("Yes")) && (loanProduct.getBigDecimal("affectMemberDepositPercentage") != null)){
-			BigDecimal bdContributionAffectedByProductAmt = getNewContributionWhenAffectedByProductType(loanProductId, loanAmt);
-			
-			if (bdContributionAffectedByProductAmt.compareTo(bdContributionAmount) == 1){
+
+		if ((loanProduct.getString("affectMemberDeposit") != null)
+				&& (loanProduct.getString("affectMemberDeposit").equals("Yes"))
+				&& (loanProduct.getBigDecimal("affectMemberDepositPercentage") != null)) {
+			BigDecimal bdContributionAffectedByProductAmt = getNewContributionWhenAffectedByProductType(
+					loanProductId, loanAmt);
+
+			if (bdContributionAffectedByProductAmt
+					.compareTo(bdContributionAmount) == 1) {
 				bdContributionAmount = bdContributionAffectedByProductAmt;
 			}
 		}
@@ -294,23 +311,28 @@ public class LoansProcessingServices {
 
 	private static BigDecimal getNewContributionWhenAffectedByProductType(
 			Long loanProductId, BigDecimal loanAmt) {
-		
+
 		GenericValue loanProduct = getLoanProduct(loanProductId);
-		
-		BigDecimal affectMemberDepositPercentage = loanProduct.getBigDecimal("affectMemberDepositPercentage");
-		
-		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId("901");
+
+		BigDecimal affectMemberDepositPercentage = loanProduct
+				.getBigDecimal("affectMemberDepositPercentage");
+
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenCodeId("901");
 		BigDecimal bdMinimumDepositAmount = BigDecimal.ZERO;
-		
-		BigDecimal contributionAmount = loanAmt.multiply(affectMemberDepositPercentage).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);
+
+		BigDecimal contributionAmount = loanAmt.multiply(
+				affectMemberDepositPercentage).divide(new BigDecimal(100), 4,
+				RoundingMode.HALF_UP);
 		contributionAmount.setScale(4, RoundingMode.HALF_UP);
-		
-		if (accountProduct != null){
-			bdMinimumDepositAmount = accountProduct.getBigDecimal("minSavingsAmt");
+
+		if (accountProduct != null) {
+			bdMinimumDepositAmount = accountProduct
+					.getBigDecimal("minSavingsAmt");
 		}
-				
+
 		contributionAmount = contributionAmount.add(bdMinimumDepositAmount);
-		
+
 		return contributionAmount;
 	}
 
@@ -495,54 +517,55 @@ public class LoansProcessingServices {
 			return BigDecimal.ZERO;
 		return loanApplication.getBigDecimal("loanAmt");
 	}
-	
-	public static Boolean loanReadyForAppraisal(Long loanApplicationId){
+
+	public static Boolean loanReadyForAppraisal(Long loanApplicationId) {
 		/***
-		 * The two ready statuses are
-		 * FORWARDEDLOANS
-		 * RETURNEDTOAPPRAISAL
+		 * The two ready statuses are FORWARDEDLOANS RETURNEDTOAPPRAISAL
 		 * 
 		 * */
-		Long loanStatusId = getLoanApplication(loanApplicationId).getLong("loanStatusId");
+		Long loanStatusId = getLoanApplication(loanApplicationId).getLong(
+				"loanStatusId");
 		
-		if ((getLoanStatus("FORWARDEDLOANS") == loanStatusId) || (getLoanStatus("RETURNEDTOAPPRAISAL") == loanStatusId))
-		{
+		if ((getLoanStatus("FORWARDEDLOANS").equals(loanStatusId) )
+				|| (getLoanStatus("RETURNEDTOAPPRAISAL").equals(loanStatusId))
+				
+				) {
 			return true;
-		} else{
+		} else {
 			return false;
 		}
 	}
-	
-	public static Boolean loanReadyForApproval(Long loanApplicationId){
+
+	public static Boolean loanReadyForApproval(Long loanApplicationId) {
 		/***
 		 * The two ready statuses are
 		 * 
 		 * APPRAISED
 		 * 
 		 * */
-		Long loanStatusId = getLoanApplication(loanApplicationId).getLong("loanStatusId");
-		
-		if ((getLoanStatus("APPRAISED") == loanStatusId))
-		{
+		Long loanStatusId = getLoanApplication(loanApplicationId).getLong(
+				"loanStatusId");
+
+		if ((getLoanStatus("APPRAISED") == loanStatusId)) {
 			return true;
-		} else{
+		} else {
 			return false;
 		}
 	}
-	
-	public static Boolean loanReadyForDisbursement(Long loanApplicationId){
+
+	public static Boolean loanReadyForDisbursement(Long loanApplicationId) {
 		/***
 		 * The Status that readies DISBURSEMENT
 		 * 
 		 * APPROVED
 		 * 
 		 * */
-		Long loanStatusId = getLoanApplication(loanApplicationId).getLong("loanStatusId");
-		
-		if ((getLoanStatus("APPROVED") == loanStatusId))
-		{
+		Long loanStatusId = getLoanApplication(loanApplicationId).getLong(
+				"loanStatusId");
+
+		if ((getLoanStatus("APPROVED") == loanStatusId)) {
 			return true;
-		} else{
+		} else {
 			return false;
 		}
 	}

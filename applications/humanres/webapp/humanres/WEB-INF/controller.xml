@@ -1013,6 +1013,12 @@ under the License.
 		<response name="success" type="view" value="PerfDepartments"
 			save-home-view="true" />
 	</request-map>
+	<request-map uri="PerfStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="PerfStaff"
+			save-home-view="true" />
+	</request-map>
+	
 	<request-map uri="ManagePerfObjectives">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="ManagePerfObjectives"
@@ -1107,7 +1113,7 @@ under the License.
         	<redirect-parameter name="isBranch"/>
         	<redirect-parameter name="isDepartment"/>
         </response>
-        <response name="error" type="view" value="positionObjectives" />
+        <response name="error" type="view" value="staffObjectives" />
     </request-map>
     
     
@@ -1197,6 +1203,49 @@ under the License.
         </response>
         <response name="error" type="view" value="departmentObjectives" />
     </request-map>
+    
+    <request-map uri="staffObjectives">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="staffObjectives"
+			save-home-view="true" />
+	</request-map>
+	
+    <request-map uri="createStaffObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createStaffObjectives"/>
+        <response name="success" type="request-redirect" value="staffObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="staffObjectives" />
+    </request-map>
+    <request-map uri="updateStaffObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateStaffObjectives"/>
+        <response name="success" type="request-redirect" value="staffObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="staffObjectives" />
+    </request-map>
+    <request-map uri="deleteStaffObjectives">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteStaffObjectives"/>
+        <response name="success" type="request-redirect" value="staffObjectives">
+        	<redirect-parameter name="emplPositionTypeId"/>
+        	<redirect-parameter name="perfGoalsId"/>
+        	<redirect-parameter name="partyId"/>
+        	<redirect-parameter name="isBranch"/>
+        	<redirect-parameter name="isDepartment"/>
+        </response>
+        <response name="error" type="view" value="staffObjectives" />
+    </request-map>
 
     <request-map uri="perfRatingType">
 		<security https="true" auth="true" />
@@ -1220,6 +1269,30 @@ under the License.
         <event type="service" invoke="deletePerfRatingType"/>
         <response name="success" type="request-redirect-noparam" value="perfRatingType"/>
         <response name="error" type="view" value="perfRatingType" />
+    </request-map>
+    
+    <request-map uri="perfRatingTypeQTT">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="perfRatingTypeQTT"
+			save-home-view="true" />
+	</request-map>
+    <request-map uri="createPerfRatingTypeQTT">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPerfRatingTypeQTT"/>
+        <response name="success" type="request-redirect-noparam" value="perfRatingTypeQTT"/>
+        <response name="error" type="view" value="perfRatingTypeQTT" />
+    </request-map>
+    <request-map uri="updatePerfRatingTypeQTT">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePerfRatingTypeQTT"/>
+        <response name="success" type="request-redirect-noparam" value="perfRatingTypeQTT"/>
+        <response name="error" type="view" value="perfRatingTypeQTT" />
+    </request-map>
+    <request-map uri="deletePerfRatingTypeQTT">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePerfRatingTypeQTT"/>
+        <response name="success" type="request-redirect-noparam" value="perfRatingTypeQTT"/>
+        <response name="error" type="view" value="perfRatingTypeQTT" />
     </request-map>
 
      <request-map uri="generateTargets">
@@ -3339,6 +3412,7 @@ under the License.
     <view-map name="FindPerfPositions" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#FindPerformancePositions"/>
     <view-map name="PerfBranches" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceBranches"/>
     <view-map name="PerfDepartments" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceDepartments"/>
+    <view-map name="PerfStaff" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceStaff"/>
     <view-map name="ManagePerfObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#ManagePerfObjectives"/>
     <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
     <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>
@@ -3346,8 +3420,10 @@ under the License.
     <view-map name="positionObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPositionObjectives"/>
     <view-map name="branchObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewBranchObjectives"/>
     <view-map name="departmentObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewDepartmentObjectives"/>
+	<view-map name="staffObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewStaffObjectives"/>
 
     <view-map name="perfRatingType" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfRatingTypes"/>
+    <view-map name="perfRatingTypeQTT" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfRatingTypesQTT"/>
 
     <view-map name="EditPerformanceNotes" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPerformanceNotes"/>
     <view-map name="EditSkillTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditSkillTypes"/>

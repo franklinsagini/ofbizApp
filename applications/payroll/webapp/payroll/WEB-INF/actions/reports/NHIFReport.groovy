@@ -64,10 +64,5 @@ if (payrollPeriodId) {
 	System.out.println("##########<><><><>########" +totDet.TotalStatutoryAmount);*/
 	
 	context.totalsList=totalsList
-
-	
-	
-
-
 }
 
