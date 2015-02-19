@@ -31,7 +31,7 @@ under the License.
             <display />
         </field>
          <field name="Products">
-            <hyperlink target="DepositReturnItem" description="Add Products">
+            <hyperlink target="DepositReturnItem" description="Add Account Products">
                 <parameter param-name="depositTypeId"/>
             </hyperlink>
         </field>
@@ -53,9 +53,9 @@ under the License.
             <display />
         </field>
 
-        <field name="loanProductId" title="Loan Product" widget-style="required" required-field="true">
+        <field name="accountProductId" title="Account Product" widget-style="required" required-field="true">
             <drop-down allow-empty="true">
-                <entity-options entity-name="LoanProduct"
+                <entity-options entity-name="AccountProduct"
                     description="${code}-${name}"><entity-order-by field-name="code" />
                 </entity-options>
             </drop-down>
@@ -71,39 +71,19 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate-target="">
         <actions>
             <entity-condition entity-name="DepositTypeItem">
-                <condition-expr field-name="depositTypeItemId" from-field="depositTypeItemId"/>
-                <order-by field-name="depositTypeItemId"/>
+                <condition-expr field-name="depositTypeId" from-field="depositTypeId"/>
+                <order-by field-name="depositTypeId"/>
             </entity-condition>
         </actions>
         <field name="depositTypeItemId" >
             <display/>
         </field>
-        <field name="loanProductId" title="Loan Product">
-            <display-entity entity-name="LoanProduct" description="${name}"/>
+        <field name="accountProductId" title="Account Product">
+            <display-entity entity-name="AccountProduct" description="${code} - ${name}"/>
         </field>
     </form>
 
-    <form name="DepositReturnItemList" list-name="listIt" target="" title="" type="list" view-size="20"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate-target="SasraReportItem">
-        <actions>
-            <entity-condition entity-name="DepositType">
-                <condition-expr field-name="depositTypeId" from-field="depositTypeId"/>
-                <order-by field-name="depositTypeId"/>
-            </entity-condition>
-        </actions>
-        <field name="reportItemId"><display /></field>
-        <field name="name" title="Report Item Name">
-            <display />
-        </field>
-        <field name="code" title="Report Code">
-            <display />
-        </field>
-        <field name="GlAccounts">
-            <hyperlink target="SasraGLAccounts" description="GL Accounts">
-                <parameter param-name="reportItemId"/>
-            </hyperlink>
-        </field>
-    </form>
+
 
 
     <form name="SasraReportName" type="single" target="createSasraReport" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
