@@ -291,6 +291,15 @@ public class SasraReportsService {
 		return bdAmount;
 	}
 	
+	
+	public static Long getAccountTotalsCount(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
+		return getAccountTotals(classificationId, bdLower, bdUpper).getCount();
+	}
+	
+	public static BigDecimal getAccountTotalsTotal(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
+		return getAccountTotals(classificationId, bdLower, bdUpper).getTotal();
+	}
+	
 	/***
 	 * Sum Member Accounts greater than Lower and Less than Upper
 	 * **/
