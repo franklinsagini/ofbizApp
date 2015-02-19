@@ -22,11 +22,21 @@
     </service>
 	
 	<service name="sendMail" engine="java"
-        <location="org.ofbiz.registry.FileServices" invoke="exampleSendEmail" > 
+	location="org.ofbiz.common.email.EmailServices" invoke="sendMail_verge">
+      <!--location="org.ofbiz.registry.FileServices" invoke="sendMailForIssueFile" -->
+         
+<description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
+but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
+
+        <implements service="sendMailOnePartInterface"/>
+    </service>
+	
+	<service name="sendMaxcxcil" engine="java"
+        location="org.ofbiz.registry.FileServices" invoke="exampleSendEmail" > 
        <!--location="org.ofbiz.common.email.EmailServices" invoke="sendMail"-->
         <description>Send E-Mail Service.  partyId and communicationEventId aren't used by sendMail
             but are passed down to storeEmailAsCommunication during the SECA chain.  See sendMailInterface for more comments.</description>
-        <implements service="sendMailOnePartInterface"/>
+        <implements service="sendMailOnePartInterface_verge"/>
     </service>
 	
 	<service name="sendMailOnePartInterface"  engine="interface" location="" invoke="">
@@ -38,6 +48,8 @@
         <override name="emailType" type="String" mode="INOUT" optional="true"/>
         <override name="sendTo" optional="false"/><!-- service will give an NPE when not provided -->
     </service>
+	
+	
     
     
     

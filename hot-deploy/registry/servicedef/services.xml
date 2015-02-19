@@ -181,7 +181,12 @@
 		<description>Create File Request header record</description>
 		<auto-attributes include="pk" mode="IN" optional="true" />
 		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+		
+		
 	</service>
+	
+	
+	
 	
 	<service name="divertfiles" engine="simple" default-entity-name="RegistryFiles"
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="divertfiles" auth="true">
@@ -315,24 +320,6 @@
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service> -->
-	
-	<service name="sendMail" engine="java"
-        <!--location="org.ofbiz.registry.FileServices" invoke="exampleSendEmail"--> 
-       <location="org.ofbiz.common.email.EmailServices" invoke="sendMail">
-        <description>Send E-Mail Service.  partyId and communicationEventId aren't used by sendMail
-            but are passed down to storeEmailAsCommunication during the SECA chain.  See sendMailInterface for more comments.</description>
-        <implements service="sendMailOnePartInterface"/>
-    </service>
-	
-	<service name="sendMailOnePartInterface"  engine="interface" location="" invoke="">
-        <description>Interface service for sendMail* services.</description>
-        <implements service="sendMailInterface"/>
-        <attribute name="body" type="String" mode="INOUT" optional="false" allow-html="any"/>        
-        <override name="contentType" mode="INOUT"/>
-        <override name="subject" mode="INOUT" optional="false"/>
-        <override name="emailType" type="String" mode="INOUT" optional="true"/>
-        <override name="sendTo" optional="false"/><!-- service will give an NPE when not provided -->
-    </service>
 
 
 </services>

@@ -383,8 +383,9 @@
 	<request-map uri="createfileVolume">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createfileVolume" />
-		<response name="success" type="view" value="addingFileVolume" />
-		<response name="error" type="view" value="addingFileVolume" />
+		<response name="success" type="request-redirect" value="goAddVolume">
+		<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 
 	<request-map uri="updatefileVolume">
@@ -591,7 +592,9 @@
      <request-map uri="closeFileVolume">
         <security https="true" auth="true"/>
         <event type="service" invoke="closeFileVolume"/>
-        <response name="success" type="view" value="goCloseFileVolume"/>
+       <response name="success" type="request-redirect" value="goAddVolume">
+		<redirect-parameter name="partyId" />
+		</response>
     </request-map>
 
       <!-- ================UPDATE MOVE STATUS========================= -->
@@ -620,7 +623,11 @@
 <request-map uri="createDocument">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createDocument" />
-		<response name="success" type="request-redirect-noparam" value="editfile" />
+		<response name="success" type="request-redirect" value="editfileURL">
+		
+		<redirect-parameter name="partyId" />
+		<redirect-parameter name="memberNumber" />
+		</response>
 	</request-map>
 
 	<!-- Document Overview -->
