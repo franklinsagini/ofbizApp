@@ -110,6 +110,28 @@ public class LoanUtilities {
 		}
 		return loanProduct;
 	}
+	
+	/***
+	 * Get Loan Product given Code
+	 * */
+	public static GenericValue getLoanProductGivenCode(String code) {
+		GenericValue loanProduct = null;
+		List<GenericValue> loanProductELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanProductELI = delegator.findList("LoanProduct",
+					EntityCondition.makeCondition("code", code), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : loanProductELI) {
+			loanProduct = genericValue;
+		}
+		
+		return loanProduct;
+	}
 
 	/***
 	 * Get Loan Status
@@ -385,12 +407,14 @@ public class LoanUtilities {
 	 * */
 	public static BigDecimal getTotalDefaultedLoans(Long partyId) {
 		BigDecimal bdTotalLoans = BigDecimal.ZERO;
-
-		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
+		
+		Long loanDefaulterProductId = getLoanProductGivenCode("D330").getLong("loanProductId");
+		System.out.println("DDDDDDD DEFFFFFFFFFF Calculate Defaulted Prod ID is "+loanDefaulterProductId);
+		//Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
 		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"loanStatusId", EntityOperator.EQUALS,
-						defaultedLoanStatusId),
+						"loanProductId", EntityOperator.EQUALS,
+						loanDefaulterProductId),
 
 				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
 						partyId)
@@ -408,8 +432,13 @@ public class LoanUtilities {
 		}
 
 		for (GenericValue genericValue : loanApplicationELI) {
-			bdTotalLoans.add(genericValue.getBigDecimal("loanAmt"));
+			System.out.println("DDDDDDD DEFFFFFFFFFF The Amount is "+genericValue.getBigDecimal("loanAmt"));
+			bdTotalLoans = bdTotalLoans.add(genericValue.getBigDecimal("loanAmt"));
 		}
+		
+		System.out.println("DDDDDDD DEFFFFFFFFFF total is "+bdTotalLoans);
+		System.out.println("DDDDDDD DEFFFFFFFFFF count is "+loanApplicationELI.size());
+		System.out.println("DDDDDDD DEFFFFFFFFFF party ID is "+partyId);
 
 		return bdTotalLoans;
 	}
@@ -450,12 +479,12 @@ public class LoanUtilities {
 	}
 
 	public static String getDefaultedLoansComment(Long partyId) {
-
-		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
+		Long loanDefaultedProductId = getLoanProductGivenCode("D330").getLong("loanProductId");
+		//Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
 		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"loanStatusId", EntityOperator.EQUALS,
-						defaultedLoanStatusId),
+						"loanProductId", EntityOperator.EQUALS,
+						loanDefaultedProductId),
 
 				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
 						partyId)
@@ -473,20 +502,23 @@ public class LoanUtilities {
 		}
 
 		if (loanApplicationELI.size() > 0) {
-			return "Has defaulted before";
+			return "Has attached Loan(s) ";
 		} else
-			return "No Defaulted Loan";
+			return "No attached Loan(s)";
 	}
 
 	public static String getDefaultedLoansTotalsWithComment(Long partyId) {
+		System.out.println(" LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL DDDDDDDDDDDDDDD D330 Looking for Defaulted Loans ..... "+partyId);
+		//D330
+		Long loanDefaulterProductId = getLoanProductGivenCode("D330").getLong("loanProductId");
 
 		BigDecimal bdTotalDefaulted = getTotalDefaultedLoans(partyId);
-
-		Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
+		BigDecimal bdTotalDefaultBalance = BigDecimal.ZERO;
+		//Long defaultedLoanStatusId = LoanServices.getLoanStatusId("DEFAULTED");
 		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"loanStatusId", EntityOperator.EQUALS,
-						defaultedLoanStatusId),
+						"loanProductId", EntityOperator.EQUALS,
+						loanDefaulterProductId),
 
 				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
 						partyId)
@@ -502,9 +534,13 @@ public class LoanUtilities {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			bdTotalDefaultBalance = bdTotalDefaultBalance.add(LoanServices.getLoanRemainingBalance(genericValue.getLong("loanApplicationId")));
+		}
 
 		if (bdTotalDefaulted.compareTo(BigDecimal.ZERO) == 1) {
-			return bdTotalDefaulted + " In Total Defaults";
+			return " Org Amount = "+bdTotalDefaulted + " Balance "+bdTotalDefaultBalance;
 		} else {
 			return "No Defaulted Loan";
 		}
