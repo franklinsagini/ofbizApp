@@ -82,6 +82,43 @@ under the License.
       <prim-key field="reportId"/>
     </entity>
 
+    <entity entity-name="CapitalAdequacyReport"
+            package-name="org.ofbiz.accounting.reports"
+            title="Capital Adequacy Report Entity">
+      <field name="reportId" type="id-ne"></field>
+      <field name="code" type="short-varchar"></field> <!-- used to record things like the vendor's invoice number -->
+      <field name="amount" type="currency-amount"></field>
+      <field name="name" type="description"></field>
+      <field name="isCapitalComponent" type="indicator"></field>
+      <field name="isOnBalanceSheetAsset" type="indicator"></field>
+      <field name="isOffBalanceSheetAsset" type="indicator"></field>
+      <prim-key field="reportId"/>
+    </entity>
+
+    <entity entity-name="DepositType"
+            package-name="org.ofbiz.accounting.reports"
+            title="Sasra Report Deposit Type">
+      <field name="depositTypeId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <prim-key field="depositTypeId"/>
+    </entity>
+
+    <entity entity-name="DepositTypeItem"
+            package-name="org.ofbiz.accounting.reports"
+            title="Sasra Report Deposit Type Item">
+      <field name="depositTypeItemId" type="id-ne"></field>
+      <field name="depositTypeId" type="id-ne"></field>
+      <field name="loanProductId" type="id-int"></field>
+      <field name="name" type="name"></field>
+      <prim-key field="depositTypeItemId"/>
+      <relation type="one" fk-name="DEPIT_ITM_NAME" rel-entity-name="DepositType">
+        <key-map field-name="depositTypeId"/>
+      </relation>
+      <relation type="one" fk-name="LOAN_PROD_NAME" rel-entity-name="LoanProduct">
+        <key-map field-name="loanProductId"/>
+      </relation>
+    </entity>
+
     <entity entity-name="SasraReportName"
             package-name="org.ofbiz.accounting.reports"
             title="Sasra Report Entity">

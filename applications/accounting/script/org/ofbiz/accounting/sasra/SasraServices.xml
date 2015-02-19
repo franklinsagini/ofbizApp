@@ -32,6 +32,17 @@
             <create-value value-field="newEntity"/>
     </simple-method>
 
+    <simple-method method-name="createDepositReturnItem" short-description="Create Sasra Report">
+            <make-value entity-name="DepositTypeItem" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <sequenced-id sequence-name="DepositTypeItem" field="depositTypeItemId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="depositTypeItemId" field="newEntity.depositTypeItemId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+
     <simple-method method-name="createSasraReportItem" short-description="Create Sasra Report">
             <make-value entity-name="SasraReportItem" value-field="newEntity"/>
              <set-pk-fields map="parameters" value-field="newEntity"/>

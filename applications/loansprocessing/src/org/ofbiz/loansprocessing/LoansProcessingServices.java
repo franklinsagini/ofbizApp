@@ -525,9 +525,11 @@ public class LoansProcessingServices {
 		 * */
 		Long loanStatusId = getLoanApplication(loanApplicationId).getLong(
 				"loanStatusId");
-
-		if ((getLoanStatus("FORWARDEDLOANS") == loanStatusId)
-				|| (getLoanStatus("RETURNEDTOAPPRAISAL") == loanStatusId)) {
+		
+		if ((getLoanStatus("FORWARDEDLOANS").equals(loanStatusId) )
+				|| (getLoanStatus("RETURNEDTOAPPRAISAL").equals(loanStatusId))
+				
+				) {
 			return true;
 		} else {
 			return false;

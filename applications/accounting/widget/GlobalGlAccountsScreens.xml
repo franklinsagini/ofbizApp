@@ -272,6 +272,68 @@ under the License.
         </section>
     </screen>
 
+    <screen name="DepositReturnSetup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="SASRA Reports Setup"/>
+                <set field="labelTitleProperty" value="SASRA Reports Setup"/>
+                <set field="tabButtonItem" value="SasraSetup"/>
+                <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list="entityList" use-cache="true" >
+                    <limit-range start="0" size="20"/>
+                </entity-and -->
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <entity-one entity-name="DepositType" value-field="depositTypeContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- <include-menu name="SASRASetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+<!--                         <screenlet title="SASRA: Reports Setup">
+                            <include-form name="DepositReturnSetup" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
+                        </screenlet> -->
+                         <include-form name="DepositReturnSetupList" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="DepositReturnItem">
+        <section>
+            <actions>
+                <set field="titleProperty" value="SASRA Report Item Setup"/>
+                <set field="labelTitleProperty" value="SASRA Report Item Setup"/>
+                <set field="tabButtonItem" value="SasraSetup"/>
+                <set field="depositTypeId" from-field="parameters.depositTypeId" global="true"/>
+                <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list="entityList" use-cache="true" >
+                    <limit-range start="0" size="20"/>
+                </entity-and -->
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <entity-one entity-name="DepositTypeItem" value-field="depositTypeItemContext"/>
+                <entity-one entity-name="DepositType" value-field="depositType" auto-field-map="false">
+                    <field-map field-name="depositTypeId" from-field="depositTypeId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- <include-menu name="SASRASetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${sasraReportName.name} [${reportId}]</label>
+                        <screenlet title="SASRA: Report Item Setup">
+                            <include-form name="DepositReturnItem" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
+                        </screenlet>
+                         <include-form name="DepositReturnItemList" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
     <screen name="SasraReportItem">
         <section>
             <actions>
