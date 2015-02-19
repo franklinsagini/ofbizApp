@@ -23,12 +23,24 @@
         
     <!-- Find Employee -->
     <form name="FindEmployee" type="single" target="findEmployees" default-entity-name="PersonActiveAndPartyGroup">
-    
+    <actions>
+		<entity-condition entity-name="PersonActiveAndPartyGroup">
+                <order-by field-name="firstName"/>
+            </entity-condition>
+			</actions>
      	<auto-fields-entity entity-name="Person" default-field-type="hidden"/>
-         <field name="noConditionFind"><hidden value="Y"/></field><!-- if this isn't there then with all fields empty no query will be done -->        
         <field name="partyId" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
         <field name="firstName" title="First Name"><text-find/></field>
         <field name="lastName" title="Last Name"><text-find/></field>
+		<field name="employmentTerms" title="Terms of Employment"><text-find/></field>
+		 <!--field name="employmentTermsdddd" title="Terms of Employment" >
+            <drop-down allow-empty="true">
+            	<option key="permanent" description="Permanent"/>
+                <option key="contract" description="Contract"/>
+                <option key="intern" description="Intern-ship"/>
+            </drop-down>
+        </field -->
+		 <field name="noConditionFind"><hidden value="Y"/></field><!-- if this isn't there then with all fields empty no query will be done -->        
         <field name="searchButton" title="LOOKUP EMPLOYEE" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
     
@@ -69,10 +81,10 @@
 	 
 	  <form name="FindContractEmployee" type="single" target="FindContractEmployee" default-entity-name="PersonActiveAndPartyGroup">
      <actions>
+	 
 		<entity-condition entity-name="PersonActiveAndPartyGroup">
-		<condition-expr field-name="employmentTerms" operator="not-equals" value="permanent"/>
-                <order-by field-name="firstName"/>
-            </entity-condition>
+		    <condition-expr field-name="employmentTerms" operator="not-equals" value="permanent"/>
+            </entity-condition> 
         </actions>
      	<auto-fields-entity entity-name="Person" default-field-type="hidden"/>
          <field name="noConditionFind"><hidden value="Y"/></field><!-- if this isn't there then with all fields empty no query will be done -->        
@@ -85,7 +97,11 @@
     <form name="ContractemployeesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="FindContractEmployee" paginate-target="FindContractEmployee"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">        
         <actions>
-		
+		 <entity-condition entity-name="PersonActiveAndPartyGroup">
+		    <condition-expr field-name="employmentTerms" operator="not-equals" value="permanent"/>
+                <order-by field-name="firstName"/>
+            </entity-condition> 
+			
         	<set field="inputFields" from-field="parameters"/>
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="employeeCtx"/>
@@ -95,10 +111,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
 			 
-			 <entity-condition entity-name="PersonActiveAndPartyGroup">
-		<condition-expr field-name="employmentTerms" operator="not-equals" value="permanent"/>
-                <order-by field-name="firstName"/>
-            </entity-condition>
+			
             
         </actions>
         <!-- auto-fields-entity entity-name="PersonActiveAndPartyGroup" default-field-type="hidden"/ -->

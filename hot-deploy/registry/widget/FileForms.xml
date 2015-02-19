@@ -357,6 +357,7 @@
 		<field name="memberNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
+		<field name="status"><hidden value="AVAILABLE"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -409,6 +410,8 @@
 		<field name="memberNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
+		<field name="status"><hidden value="REQUESTED"/></field>
+		<field name="isAuthorized"><hidden value="Y"/></field>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -470,6 +473,7 @@
 		<field name="memberNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
+		<field name="status"><hidden value="REQUESTED"/></field>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -531,6 +535,7 @@
 		<field name="memberNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
+		<field name="status"><hidden value="ISSUED"/></field>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -593,6 +598,9 @@
 		<field name="memberNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
+		<field name="status"><hidden value="ISSUED"/></field>
+		<field name="recieptStatus"><hidden value="NOTRECEIVED"/></field>
+		<field name="currentPossesser"><hidden value="${userLogin.partyId}"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -1585,7 +1593,7 @@
 			</hyperlink>
 		</field> 
 		
-		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
+		<field use-when="${volumeStatus == 'OPEN'}" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button" /></field>
 	</form>
 	
 	<!-- ================================ FILE CREATION LOOKUP========================================== -->
@@ -1820,6 +1828,19 @@
 		
 		 <field name="submitButton" title="Save" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
+	
+	 <form name="ListSubDocumentForm" type="list"  list-name="listIt" default-entity-name="RegistryFileSubDocuments" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  target="" title="File Documents" separate-columns="false">
+        <actions>
+            <entity-condition entity-name="RegistryFileSubDocuments">
+                <condition-expr field-name="documentId" from-field="parameters.documentId"/>
+                <order-by field-name="subDocumentId"/>
+            </entity-condition>
+        </actions>
+        <field name="subDocumentId"><hidden/></field>
+	  <field name="subDocument"><display/></field>
+	  <field name="creationDate"><display/></field>
+    </form>
 	
 	<!-- ================================================ SAVE CLOSED VOLUME IN A BOX ========================================================= -->
     
