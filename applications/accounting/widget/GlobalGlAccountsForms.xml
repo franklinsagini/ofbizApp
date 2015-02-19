@@ -21,6 +21,91 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+    <form name="DepositReturnSetupList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target=""
+        paginate-target="createSasraReport" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="DepositType"></entity-condition>
+        </actions>
+        <field name="depositTypeId"><display /></field>
+        <field name="name" title="Deposit Return Type">
+            <display />
+        </field>
+         <field name="Products">
+            <hyperlink target="DepositReturnItem" description="Add Products">
+                <parameter param-name="depositTypeId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="DepositReturnItem" type="single" target="createDepositReturnItem" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="depositTypeItemContext">
+        <alt-target use-when="depositTypeItemContext!=null" target="UpdateDepositReturnItem"/>
+
+        <field name="depositTypeItemId">
+            <hidden/>
+        </field>
+
+        <field name="depositTypeId">
+            <hidden/>
+        </field>
+
+        <field name="sasraReportGlAccountId" use-when="depositTypeItemContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="loanProductId" title="Loan Product" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="LoanProduct"
+                    description="${code}-${name}"><entity-order-by field-name="code" />
+                </entity-options>
+            </drop-down>
+        </field>
+
+                <!-- submitButton -->
+        <field use-when="depositTypeItemContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="button"/></field>
+        <field use-when="depositTypeItemContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="button"/></field>
+    </form>
+
+
+    <form name="DepositReturnItemList" list-name="listIt" target="" title="" type="list" view-size="20"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate-target="">
+        <actions>
+            <entity-condition entity-name="DepositTypeItem">
+                <condition-expr field-name="depositTypeItemId" from-field="depositTypeItemId"/>
+                <order-by field-name="depositTypeItemId"/>
+            </entity-condition>
+        </actions>
+        <field name="depositTypeItemId" >
+            <display/>
+        </field>
+        <field name="loanProductId" title="Loan Product">
+            <display-entity entity-name="LoanProduct" description="${name}"/>
+        </field>
+    </form>
+
+    <form name="DepositReturnItemList" list-name="listIt" target="" title="" type="list" view-size="20"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate-target="SasraReportItem">
+        <actions>
+            <entity-condition entity-name="DepositType">
+                <condition-expr field-name="depositTypeId" from-field="depositTypeId"/>
+                <order-by field-name="depositTypeId"/>
+            </entity-condition>
+        </actions>
+        <field name="reportItemId"><display /></field>
+        <field name="name" title="Report Item Name">
+            <display />
+        </field>
+        <field name="code" title="Report Code">
+            <display />
+        </field>
+        <field name="GlAccounts">
+            <hyperlink target="SasraGLAccounts" description="GL Accounts">
+                <parameter param-name="reportItemId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+
     <form name="SasraReportName" type="single" target="createSasraReport" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="sasraReportNameContext">
         <alt-target use-when="sasraReportNameContext!=null" target="UpdateSasraReport"/>
@@ -40,6 +125,7 @@ under the License.
         <field use-when="sasraReportNameContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field use-when="sasraReportNameContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
+
 
     <form name="SasraReportNameList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
         paginate-target="createSasraReport" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">

@@ -293,6 +293,20 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="perfRatingTypeId"/>
       </relation>
     </entity>
+    
+    <entity entity-name="PerfRatingType_QTT"
+            package-name="org.ofbiz.humanres.ability"
+            title="Qualitative Performance Rating Types Entity">
+      <field name="perfRatingTypeQTTId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <field name="points" type="numeric"></field>
+      <prim-key field="perfRatingTypeQTTId"/>
+      <relation type="one" fk-name="PERF_RATNG_TYP" title="Parent" rel-entity-name="PerfRatingType_QTT">
+        <key-map field-name="parentTypeId" rel-field-name="perfRatingTypeQTTId"/>
+      </relation>
+    </entity>
 
     <entity entity-name="PerfManager"
    		package-name="org.ofbiz.humanres.ability"
@@ -368,6 +382,7 @@ under the License.
       <field name="actionPlans" type="description"></field>      
       <field name="kpi" type="description"></field>
       <field name="perfRatingTypeId" type="id"></field>
+      <field name="perfRatingTypeQTTId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="kpiAchievementStatusId" type="id-ne"></field>
       <field name="achievementDate" type="date"></field>
@@ -392,6 +407,9 @@ under the License.
       </relation>
       <relation type="one-nofk" fk-name="PERF_RVITM_PRTTP" rel-entity-name="PerfRatingType">
         <key-map field-name="perfRatingTypeId"/>
+      </relation>
+      <relation type="one-nofk" fk-name="PERF_RVITM_PRTTP_QTT" rel-entity-name="PerfRatingType_QTT">
+        <key-map field-name="perfRatingTypeQTTId"/>
       </relation>
       <relation type="one-nofk" fk-name="PERF_RVITM_PRITTP" rel-entity-name="PerfReviewItemType">
         <key-map field-name="perfReviewItemTypeId"/>
@@ -476,6 +494,7 @@ under the License.
       <field name="keyPerformanceIndicatorsId" type="id-ne"></field>
       <field name="targetOption" type="indicator"></field>
       <field name="branchId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
       <field name="deptId" type="id-ne"></field>
       <field name="perfGoalsId" type="id-ne"></field>
       <field name="emplPositionTypeId" type="id-ne"></field>
@@ -487,6 +506,9 @@ under the License.
       </relation>
       <relation type="one" fk-name="Branch_IND" title="Branch" rel-entity-name="Party">
         <key-map field-name="partyId" rel-field-name="branchId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_IND" title="Person" rel-entity-name="Person">
+        <key-map field-name="partyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="Department_IND" title="Department" rel-entity-name="Party">
         <key-map field-name="partyId" rel-field-name="deptId"/>
