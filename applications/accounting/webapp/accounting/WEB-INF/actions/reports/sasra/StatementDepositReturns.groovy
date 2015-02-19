@@ -4,17 +4,17 @@ import org.ofbiz.accounting.ledger.AccountCount;
 
 
 classificationId = "1"
-AccountCount accountCount = SasraReportsService.getAccountTotals(classificationId, 1, 50000.00)
-count = getAccountTotalsCount(classificationId, 1, 50000.00)
-total = getAccountTotalsTotal(classificationId, 1, 50000.00)
+//AccountCount accountCount = SasraReportsService.getAccountTotals(classificationId, 1, 50000.00)
+count = SasraReportsService.getAccountTotalsCount(classificationId, new BigDecimal(1), new BigDecimal(50000))
+total = SasraReportsService.getAccountTotalsTotal(classificationId, new BigDecimal(1), new BigDecimal(50000))
 
 System.out.println("THIS IS ITTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT COUNT "+count)
 
 System.out.println("THIS IS ITTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT TOTAL "+total)
 
-classificationId = "2"
-getAccountTotalsTotal(String classificationId, BigDecimal bdLower, BigDecimal bdUpper)
-Use those two methods
+//classificationId = "2"
+//getAccountTotalsTotal(String classificationId, BigDecimal bdLower, BigDecimal bdUpper)
+//Use those two methods
 
 //Long count = 50L;
 //BigDecimal total = new BigDecimal("300000");
