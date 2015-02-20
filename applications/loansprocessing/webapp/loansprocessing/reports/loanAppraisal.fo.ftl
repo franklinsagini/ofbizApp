@@ -93,7 +93,7 @@ under the License.
         
          <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">Share(Savings) Value</fo:block>
+                <fo:block font-weight="bold">Member Deposits Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
                 <fo:block> 
@@ -105,7 +105,7 @@ under the License.
         
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">Last Share Contribution Amt</fo:block>
+                <fo:block font-weight="bold">Last Deposit Contribution Amt</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
             	<#assign memberPartyId = member.partyId>
@@ -118,7 +118,7 @@ under the License.
         
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">Last Share Payment Date</fo:block>
+                <fo:block font-weight="bold">Last Deposit Payment Date</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
            	<#assign lastContributionDate = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLastMemberDepositContributionDate(memberPartyId)/>
