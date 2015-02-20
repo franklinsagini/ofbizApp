@@ -19,11 +19,11 @@ under the License.
 <#escape x as x?xml>
     <#if memberStatementList?has_content>
         <#-- REPORT TITLE -->
-        <fo:block font-size="18pt" font-weight="bold" text-align="center">
+        <!-- fo:block font-size="18pt" font-weight="bold" text-align="center">
             CHAI SACCO
-        </fo:block>
+        </fo:block -->
         <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-            ${member.firstName} ${member.middleName} ${member.lastName} Statement
+            ${member.firstName} ${member.middleName} ${member.lastName}
         </fo:block>
         
         <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
@@ -43,14 +43,14 @@ under the License.
                     <fo:block>${member.payrollNumber}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
-            <fo:list-item>
+            <!-- fo:list-item>
                 <fo:list-item-label>
                     <fo:block font-weight="bold">Member Name</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
                     <fo:block>${member.firstName?if_exists} ${member.middleName?if_exists} ${member.lastName?if_exists}</fo:block>
                 </fo:list-item-body>
-            </fo:list-item>
+            </fo:list-item -->
             
             <fo:list-item>
                 <fo:list-item-label>
