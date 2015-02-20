@@ -2602,7 +2602,7 @@ public class LoanServices {
 		result.put("guarantorTotalEnough", LoanUtilities.guarantorTotalEnough(loanApplicationId, bdLoanAmt));
 		result.put("minimumOK", LoanUtilities.minimumOK(loanApplicationId, bdLoanAmt));
 		result.put("maximumOk", LoanUtilities.maximumOk(loanApplicationId, bdLoanAmt));
-		result.put("isSixMonthOldNotFromOtherSacco", LoanUtilities.isNotSixMonthOldNotFromOtherSacco(loanApplicationId));
+		result.put("isNotSixMonthOldNotFromOtherSacco", LoanUtilities.isNotSixMonthOldNotFromOtherSacco(loanApplicationId));
 		result.put("isAppraisedAmounNotMoreEntitlement", LoanUtilities.isAppraisedAmounNotMoreEntitlement(loanApplicationId, bdLoanAmt));
 		result.put("repaymentPeriodNotMoreThanMaximum", LoanUtilities.repaymentPeriodNotMoreThanMaximum(loanApplicationId));
 		result.put("addedDeductions", LoanUtilities.addedDeductions(loanApplicationId));
