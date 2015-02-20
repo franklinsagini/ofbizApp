@@ -589,6 +589,7 @@ public class LoanServices {
 	 * Get total deposit savings
 	 * 
 	 * */
+	// TOD Fix this, member deposits calculation
 	private static BigDecimal totalMemberDepositSavings(String memberId,
 			Delegator delegator) {
 		// Get the multiplier account - the account being used to get the
@@ -2445,7 +2446,7 @@ public class LoanServices {
 		return bdTotalGuaranteed;
 	}
 
-	private static BigDecimal getMyGuaranteedValue(Long loanApplicationId) {
+	public static BigDecimal getMyGuaranteedValue(Long loanApplicationId) {
 		// TODO Auto-generated method stub
 		BigDecimal bdLoanBalanceAmt = LoansProcessingServices
 				.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
@@ -2592,8 +2593,11 @@ public class LoanServices {
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
 		Long loanApplicationId = Long.valueOf((String) request.getParameter("loanApplicationId"));
+		String loanAmtStr = (String)request.getParameter("loanAmt");
+		loanAmtStr = loanAmtStr.replaceAll(",", "");
 		
-		Double loanAmt = Double.valueOf(request.getParameter("loanAmt"));
+		
+		Double loanAmt = Double.valueOf(loanAmtStr);
 		BigDecimal bdLoanAmt = BigDecimal.valueOf(loanAmt);
 		
 		System.out.println(" Start Building Things !!!!!!!!!!! ");
@@ -2601,7 +2605,7 @@ public class LoanServices {
 		result.put("guarantorTotalEnough", LoanUtilities.guarantorTotalEnough(loanApplicationId, bdLoanAmt));
 		result.put("minimumOK", LoanUtilities.minimumOK(loanApplicationId, bdLoanAmt));
 		result.put("maximumOk", LoanUtilities.maximumOk(loanApplicationId, bdLoanAmt));
-		result.put("isSixMonthOldNotFromOtherSacco", LoanUtilities.isNotSixMonthOldNotFromOtherSacco(loanApplicationId));
+		result.put("isNotSixMonthOldNotFromOtherSacco", LoanUtilities.isNotSixMonthOldNotFromOtherSacco(loanApplicationId));
 		result.put("isAppraisedAmounNotMoreEntitlement", LoanUtilities.isAppraisedAmounNotMoreEntitlement(loanApplicationId, bdLoanAmt));
 		result.put("repaymentPeriodNotMoreThanMaximum", LoanUtilities.repaymentPeriodNotMoreThanMaximum(loanApplicationId));
 		result.put("addedDeductions", LoanUtilities.addedDeductions(loanApplicationId));

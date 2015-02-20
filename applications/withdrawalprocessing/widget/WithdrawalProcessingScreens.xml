@@ -171,8 +171,12 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                 <set field="memberWithdrawalId" from-field="parameters.memberWithdrawalId"/>
+                 <set field="memberWithdrawalId" from-field="parameters.memberWithdrawalId" type="Long"/>
                 <entity-one entity-name="WithdrawalLog" value-field="withdrawalLogContext"/>
+                <entity-one value-field="memberWithdrawal" entity-name="MemberWithdrawal">
+                	<field-map field-name="memberWithdrawalId" from-field="memberWithdrawalId"/>
+                </entity-one>
+                <set field="partyId" value="${memberWithrawal.partyId}" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -185,11 +189,11 @@
                         		</screenlet>
                         	
                         		<screenlet title="Loans">
-                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        			<include-form name="listForwardedLoanApplications" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
                         		</screenlet>
                         		
-                        		<screenlet title="Guarantors">
-                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        		<screenlet title="Guaranteed Loans">
+                        			<include-form name="myGuaranteedLoans" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
                         		</screenlet>
                         		
                         		<screenlet title="Share Capital Level">

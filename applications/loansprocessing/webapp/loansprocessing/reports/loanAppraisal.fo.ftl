@@ -93,7 +93,7 @@ under the License.
         
          <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">Share(Savings) Value</fo:block>
+                <fo:block font-weight="bold">Member Deposits Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
                 <fo:block> 
@@ -105,7 +105,7 @@ under the License.
         
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">Last Share Contribution Amt</fo:block>
+                <fo:block font-weight="bold">Last Deposit Contribution Amt</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
             	<#assign memberPartyId = member.partyId>
@@ -118,7 +118,7 @@ under the License.
         
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">Last Share Payment Date</fo:block>
+                <fo:block font-weight="bold">Last Deposit Payment Date</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
            	<#assign lastContributionDate = Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLastMemberDepositContributionDate(memberPartyId)/>
@@ -249,7 +249,11 @@ under the License.
                 <fo:block font-weight="bold">Recovery Method Used</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${loanProduct.deductionType?if_exists}</fo:block>
+                <fo:block>
+                <#if loanProduct.deductionType.equals("REDUCING_BALANCE")>
+                Annuity Method
+                </#if>
+                </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -283,7 +287,7 @@ under the License.
         
          <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">New Contribution Amount</fo:block>
+                <fo:block font-weight="bold">New Deposit Contribution Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
                 <fo:block>KES ${deductionEvaluation.newMemberDepostContributionAmt?string(",##0.00")} </fo:block>
@@ -299,6 +303,27 @@ under the License.
             </fo:list-item-body>
         </fo:list-item>
         
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold" color="red">Two Thirds</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+            	
+                <fo:block color="red">KES ${deductionEvaluation.twothirdAmt?string(",##0.00")}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <#assign diff =  (deductionEvaluation.totalDeductionAfterLoanAddedAmt - deductionEvaluation.twothirdAmt)/>
+        <#if deductionEvaluation.violationDecision.equals("VIOLATES") >
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold" color="red">Violates By</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+            	
+                <fo:block color="red">KES ${diff?string(",##0.00")}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        </#if>
         <fo:list-item>
             <fo:list-item-label>
                 <fo:block font-weight="bold">Violation Verdict</fo:block>
