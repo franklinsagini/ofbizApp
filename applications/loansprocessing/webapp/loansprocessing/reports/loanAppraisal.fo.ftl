@@ -283,7 +283,7 @@ under the License.
         
          <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">New Contribution Amount</fo:block>
+                <fo:block font-weight="bold">New Deposit Contribution Amount</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
                 <fo:block>KES ${deductionEvaluation.newMemberDepostContributionAmt?string(",##0.00")} </fo:block>
