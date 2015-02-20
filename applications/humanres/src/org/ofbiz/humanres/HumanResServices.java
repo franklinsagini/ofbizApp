@@ -685,7 +685,7 @@ GenericValue employeeLeaveType = null;
 	           	log.info("++++++++++++++period++++++++++++++++" +period);
 	             }
 	       catch (GenericEntityException e) {
-	            e.printStackTrace();;
+	            e.printStackTrace();
 	       } 
 	      if (period!=null) {
 			periodBeforeConfirn=(period.getLong("periodBeforeConfirmation")).intValue();

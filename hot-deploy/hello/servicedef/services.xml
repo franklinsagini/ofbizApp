@@ -23,30 +23,20 @@
 	
 	<service name="sendMail" engine="java"
 	location="org.ofbiz.common.email.EmailServices" invoke="sendMail_verge">
-      <!--location="org.ofbiz.registry.FileServices" invoke="sendMailForIssueFile" -->
-         
-<description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
-but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
-
-        <implements service="sendMailOnePartInterface"/>
-    </service>
-	
-	<service name="sendMaxcxcil" engine="java"
-        location="org.ofbiz.registry.FileServices" invoke="exampleSendEmail" > 
-       <!--location="org.ofbiz.common.email.EmailServices" invoke="sendMail"-->
-        <description>Send E-Mail Service.  partyId and communicationEventId aren't used by sendMail
-            but are passed down to storeEmailAsCommunication during the SECA chain.  See sendMailInterface for more comments.</description>
-        <implements service="sendMailOnePartInterface_verge"/>
+    <description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
+    but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
+    <implements service="sendMailOnePartInterface"/>
     </service>
 	
 	<service name="sendMailOnePartInterface"  engine="interface" location="" invoke="">
         <description>Interface service for sendMail* services.</description>
         <implements service="sendMailInterface"/>
-        <attribute name="body" type="String" mode="INOUT" optional="false" allow-html="any"/>        
+        <attribute name="body" type="String" mode="INOUT" optional="true" allow-html="any"/>   
+        <attribute name="subject" type="String" mode="INOUT" optional="true" allow-html="any"/>		
         <override name="contentType" mode="INOUT"/>
-        <override name="subject" mode="INOUT" optional="false"/>
+        <!--  override name="subject" mode="INOUT" optional="true"/ -->
         <override name="emailType" type="String" mode="INOUT" optional="true"/>
-        <override name="sendTo" optional="false"/><!-- service will give an NPE when not provided -->
+        <override name="sendTo" optional="true"/><!-- service will give an NPE when not provided -->
     </service>
 	
 	
