@@ -25,6 +25,53 @@ under the License.
         <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
             ${member.firstName} ${member.middleName} ${member.lastName} Statement
         </fo:block>
+        
+        <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">Member Number</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block> ${member.memberNumber}</fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">Payroll Number</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block>${member.payrollNumber}</fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">Member Name</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block>${member.firstName?if_exists} ${member.middleName?if_exists} ${member.lastName?if_exists}</fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">Station Name</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block>
+                    	       <#assign stationId = member.stationId />
+                              <#assign stationIdString = stationId.toString() />
+                              <#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationIdString), true)/>
+                                <#-- if (expectation.totalAmount??)>
+								    Kshs.  ${expectation.totalAmount?string(",##0.0000")} 
+								    ${station.stationNumber} 
+								</#if -->
+								${station.name}
+ 
+                    </fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            
+        </fo:list-block>
         <fo:block><fo:leader/></fo:block>
         <#-- fo:block margin-left="0.4in" text-decoration="underline" font-size="10pt" text-align="left"  font-weight="bold" >
             Member Statement
