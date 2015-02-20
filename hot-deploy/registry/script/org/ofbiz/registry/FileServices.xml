@@ -101,6 +101,7 @@
 		
 		<call-simple-method method-name="saveRecordForFiling" scope="inline"></call-simple-method>
 		
+		
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
 	</simple-method>
@@ -413,6 +414,21 @@
 		 <set field="registryFile.status" value="REQUESTED"/>
 		 <set field="registryFile.Reason" from-field="parameters.Reason"/>
 		<store-value value-field="registryFile" />
+		
+		
+		  <entity-condition list="personList" entity-name="Person">
+				<condition-expr field-name="departmentId" value="2"/>
+		</entity-condition>
+		
+		<iterate entry="email" list="personList">
+        
+        <set field="emailparty" value="${email.partyId}"/>
+        <call-simple-method method-name="fileRequestEmailInformation" scope="inline"></call-simple-method>
+        
+        </iterate>
+		
+		
+		
 	</simple-method>
 	
 	<simple-method method-name="saveRequestAction">
@@ -469,6 +485,25 @@
 		<set field="newEntity.folioNo" from-field="reg.folioNo" />
 		<set field="newEntity.Reason" from-field="parameters.Reason" />
 		
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	 <simple-method method-name="fileRequestEmailInformation">
+		<make-value entity-name="StaffScheduledMail" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffScheduledMail" field="msgId" />
+		<set from-field="msgId" field="newEntity.msgId" />
+		
+		<set field="party" from-field="parameters.partyId"/> 
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="party"/>
+		 </entity-one>
+		 
+		 <set field="newEntity.partyId" from-field="emailparty"/> 
+		<set field="newEntity.body" value="A file belonging to:- [${reg.firstName} ${reg.lastName}] has been requested. Please log onto the system for details. " />
+		 <set field="newEntity.subject" value="File Request"/>
+		<set field="newEntity.sendStatus" value="NOTSEND" />
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
@@ -597,6 +632,7 @@
 		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
 		  <call-simple-method method-name="saveIssueActionToFileMovement" scope="inline"></call-simple-method>
+		  <call-simple-method method-name="saveIssueEmailInformation" scope="inline"></call-simple-method>
 		  
 		  <now-timestamp field="nowTimestamp"/>
 		 
@@ -628,6 +664,10 @@
 		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
 		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile" />
+		
+		<set field="email_party" from-field="parameters.actionBy"/>
+		<call-simple-method method-name="saveIssueEmailInformation" scope="inline"></call-simple-method>
+		
 	</simple-method>
 	
 	<simple-method method-name="deletefileFromRequested"
@@ -706,6 +746,19 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	<simple-method method-name="saveIssueEmailInformation">
+		<make-value entity-name="StaffScheduledMail" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffScheduledMail" field="msgId" />
+		<set from-field="msgId" field="newEntity.msgId" />
+		<set field="newEntity.partyId" from-field="email_party"/>
+		<set field="newEntity.body" value="The File(s) you requested has/have been released by Registry. If you don't receive the file(s), please communicate to Registry" />
+		 <set field="newEntity.subject" value="Requested Files"/>
+		<set field="newEntity.sendStatus" value="NOTSEND" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 	<!-- ==========================FILE DIVERT================================== -->
 	
 	<simple-method method-name="divertfiles" short-description="request File ">
@@ -726,6 +779,9 @@
 		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
 		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile" />
+		
+		<set field="email_divert_party" from-field="parameters.currentPossesser"/>
+		<call-simple-method method-name="saveDivertEmailInformation" scope="inline"></call-simple-method>
 	</simple-method>
 	
 	
@@ -793,6 +849,19 @@
 		
 		<set field="newEntity.activityCode" from-field="reg.Reason"/>
 		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<simple-method method-name="saveDivertEmailInformation">
+		<make-value entity-name="StaffScheduledMail" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffScheduledMail" field="msgId" />
+		<set from-field="msgId" field="newEntity.msgId" />
+		<set field="newEntity.partyId" from-field="email_divert_party"/>
+		<set field="newEntity.body" value="The File(s) you requested has/have been released by Registry. If you don't receive the file(s), please communicate to Registry" />
+		 <set field="newEntity.subject" value="Requested Files"/>
+		<set field="newEntity.sendStatus" value="NOTSEND" />
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
@@ -915,6 +984,25 @@
 		 <set field="registryFile.recieptStatus" value="RELEASED"/>
 		 <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile"/>
+		
+		
+		
+		
+	 <entity-condition list="personList" entity-name="Person">
+				<condition-expr field-name="departmentId" value="2"/>
+		</entity-condition>
+		
+		<iterate entry="email" list="personList">
+		
+		 <entity-one entity-name="Person" value-field="p">
+		 	<field-map field-name="partyId" value="${userLogin.partyId}"/>
+		 </entity-one>
+		
+        
+        <set field="emailpartysa" value="${email.partyId}"/>
+        <set field="releaser" value="${p.firstName}  ${p.lastName}"/>
+        <call-simple-method method-name="fileReleaseToRegEmailInformation" scope="inline"></call-simple-method>
+		</iterate>
 	</simple-method>
 	
 	<simple-method method-name="saveReleaseAction">
@@ -982,6 +1070,25 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	 <simple-method method-name="fileReleaseToRegEmailInformation">
+		<make-value entity-name="StaffScheduledMail" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffScheduledMail" field="msgId" />
+		<set from-field="msgId" field="newEntity.msgId" />
+		
+		<set field="party" from-field="parameters.partyId"/> 
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="party"/>
+		 </entity-one>
+		 
+		 <set field="newEntity.partyId" from-field="emailpartysa"/> 
+		<set field="newEntity.body" value="A file belonging to:- [${reg.firstName} ${reg.lastName}] has been released back to Registry. If you don't receive the file(s), please communicate to [${releaser}] " />
+		 <set field="newEntity.subject" value="File Request"/>
+		<set field="newEntity.sendStatus" value="NOTSEND" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
 	<!-- ========================== FILE RELEASE TO ANOTHER STAFF ================================== -->
 	
 	<simple-method method-name="releaseFileToAnotherStaff" short-description="request File ">
@@ -1003,6 +1110,16 @@
 		 <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		 <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile"/>
+		
+		 <entity-one entity-name="Person" value-field="p">
+		 	<field-map field-name="partyId" value="${userLogin.partyId}"/>
+		 </entity-one>
+		
+        
+        <set field="emailpartyAnotherstaff" from-field="parameters.currentPossesser" />
+        <set field="releaser" value="${p.firstName}  ${p.lastName}"/>
+		<call-simple-method method-name="fileReleaseToAnotherStaffEmailInformation" scope="inline"></call-simple-method>
+		
 	</simple-method>
 	
 	<simple-method method-name="savereleaseFileToAnotherStaffAction">
@@ -1067,6 +1184,20 @@
 		
 		<set field="newEntity.activityCode" from-field="reg.Reason"/>
 		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	
+	<simple-method method-name="fileReleaseToAnotherStaffEmailInformation">
+		<make-value entity-name="StaffScheduledMail" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffScheduledMail" field="msgId" />
+		<set from-field="msgId" field="newEntity.msgId" />
+		<set field="newEntity.partyId" from-field="emailpartyAnotherstaff"/>
+		<set field="newEntity.body" value="The File(s) you requested has/have been released by [${releaser}] If you don't receive the file(s), please communicate to [${releaser}]" />
+		 <set field="newEntity.subject" value="Requested Files"/>
+		<set field="newEntity.sendStatus" value="NOTSEND" />
 		<create-value value-field="newEntity" />
 	</simple-method>
 	

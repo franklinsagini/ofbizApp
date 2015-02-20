@@ -665,7 +665,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			String documentApprovalId = leave.getString("documentApprovalId");
 			double leaveDuration = leave.getDouble("leaveDuration");
 			Map carryOverLeaveDaysUsed = null;
-			GenericValue documentApproval = null; GenericValue leavelog = null;
+			GenericValue documentApproval = null; GenericValue leavelog = null; GenericValue emailRecord_approver = null; GenericValue emailRecord_applicant = null;
 			documentApproval =  WorkflowServices.doFoward(delegator, organizationUnitId,	workflowDocumentTypeId, documentApprovalId);
 		log.info("=====================" +documentApproval);
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WORKFLOW-DOC: " + workflowDocumentTypeId);
@@ -698,10 +698,24 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
             "nextApprover", documentApproval.getString("responsibleEmployee"),
             "partyId", partyId, 
             "leaveId", leaveId, "approvalStatus" ,approvalStatuslog);
+			
+			emailRecord_approver = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+					"partyId", documentApproval.getString("responsibleEmployee"),
+		            "subject", "Leave Approval", 
+		            "body", "A leave application has been forwarded to you and it requires your approval. Please log onto the System for details",
+		            "sendStatus", "NOTSEND");
+			
+			emailRecord_applicant = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+					"partyId", partyId,
+		            "subject", "Leave Status", 
+		            "body", "Your Leave Application has a status:-["+approvalStatuslog+"]",
+		            "sendStatus", "NOTSEND");
         
 
 			try {
 				leavelog.create();
+				emailRecord_approver.create();
+				emailRecord_applicant.create();
 			} catch (GenericEntityException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
