@@ -249,7 +249,11 @@ under the License.
                 <fo:block font-weight="bold">Recovery Method Used</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${loanProduct.deductionType?if_exists}</fo:block>
+                <fo:block>
+                <#if loanProduct.deductionType.equals("REDUCING_BALANCE")>
+                Annuity Method
+                </#if>
+                </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
@@ -299,6 +303,27 @@ under the License.
             </fo:list-item-body>
         </fo:list-item>
         
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold" color="red">Two Thirds</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+            	
+                <fo:block color="red">KES ${deductionEvaluation.twothirdAmt?string(",##0.00")}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        <#assign diff =  (deductionEvaluation.totalDeductionAfterLoanAddedAmt - deductionEvaluation.twothirdAmt)/>
+        <#if deductionEvaluation.violationDecision.equals("VIOLATES") >
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold" color="red">Violates By</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+            	
+                <fo:block color="red">KES ${diff?string(",##0.00")}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>
+        </#if>
         <fo:list-item>
             <fo:list-item-label>
                 <fo:block font-weight="bold">Violation Verdict</fo:block>
