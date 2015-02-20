@@ -386,7 +386,12 @@
     	//loanAmt
 		//if (!hasSavingsAccount){
 			appraisedAmt  = jQuery('input[name="appraisedAmt"]').val();
+			
+			//alert('Appraised -- '+appraisedAmt);
+			//alert('amount is '+loanAmt);
 			aprraisedAmt = appraisedAmt.replace(/,/g, '');
+			
+			//return false;
 			//alert('Loan Amount '+loanAmt+' Appraised '+appraisedAmt)
 			
 			//if (parseFloat(loanAmt) < parseFloat(aprraisedAmt))
@@ -411,7 +416,7 @@
 			     url    : reqUrl,
 			      async	: false,
 			     type   : 'GET',
-			     data   : {'loanApplicationId': loanApplicationId, 'loanAmt': loanAmt}, 
+			     data   : {'loanApplicationId': loanApplicationId, 'loanAmt': appraisedAmt}, 
 			     success : function(data){
 			     
 			     			hasGuarantors = data.hasGuarantors;
