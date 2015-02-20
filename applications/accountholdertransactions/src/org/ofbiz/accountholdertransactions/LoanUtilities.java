@@ -1,12 +1,14 @@
 package org.ofbiz.accountholdertransactions;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -20,8 +22,11 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.loans.LoanServices;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 
 public class LoanUtilities {
+	
+	public static Logger log = Logger.getLogger(LoanUtilities.class);
 
 	public static Long getMemberId(String payrollNo) {
 		Long memberId = null;
@@ -810,5 +815,60 @@ public class LoanUtilities {
 			return false;
 
 	}
+	
+	public static Integer getNumberOfGuarantors(Long loanApplicationId) {
+		List<GenericValue> loanGuarantorELI = null; // =
+		//loanApplicationId = loanApplicationId.replaceAll(",", "");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanGuarantorELI = delegator.findList(
+					"LoanGuarantor",
+					EntityCondition.makeCondition("loanApplicationId",
+							loanApplicationId), null, null, null,
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		Integer count = loanGuarantorELI.size();
+		// for (GenericValue genericValue : loanGuarantorELI) {
+		// count = count + 1;
+		// }
+
+		return count;
+	}
+	
+	public static BigDecimal getLoanAmount(Long loanApplicationId) {
+
+		GenericValue loanApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplication = delegator.findOne(
+					"LoanApplication",
+					UtilMisc.toMap("loanApplicationId",
+							loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.info("Cannot Fing LoanApplication");
+			// return "Cannot Get Product Details";
+		}
+
+		if (loanApplication != null) {
+			return loanApplication.getBigDecimal("loanAmt");
+		}
+
+		return null;
+	}
+	
+	public static BigDecimal getMyGuaranteedValue(Long loanApplicationId) {
+		// TODO Auto-generated method stub
+		BigDecimal bdLoanBalanceAmt = LoansProcessingServices
+				.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		Long noOfGuarantors = LoanUtilities
+				.getGuarantorsCount(loanApplicationId);
+		return bdLoanBalanceAmt.divide(new BigDecimal(noOfGuarantors), 4,
+				RoundingMode.HALF_UP);
+	}
+
+
 
 }
