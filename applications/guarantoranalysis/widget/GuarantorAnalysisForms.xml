@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="guarantorAnalysisForm" type="single" target="guarantorAnalysisPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="partyId" title="Member" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+        <!-- guantorsListingForm -->
+    <form name="guantorsListingForm" type="single" target="loansummaryreportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table"  target-window="_BLANK">
+
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="loanProductId" title="Loan Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+		
+</forms>
