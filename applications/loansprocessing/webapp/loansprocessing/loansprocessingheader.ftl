@@ -390,6 +390,7 @@
 			//alert('Appraised -- '+appraisedAmt);
 			//alert('amount is '+loanAmt);
 			aprraisedAmt = appraisedAmt.replace(/,/g, '');
+			loanApplicationId = loanApplicationId.replace(/,/g, '');
 			
 			//return false;
 			//alert('Loan Amount '+loanAmt+' Appraised '+appraisedAmt)
