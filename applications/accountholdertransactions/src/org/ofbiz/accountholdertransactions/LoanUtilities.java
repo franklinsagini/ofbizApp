@@ -649,6 +649,7 @@ public class LoanUtilities {
 			e2.printStackTrace();
 		}
 
+		System.out.println(" OOOOOOOOOOOOOOOOOOOOOO The Sizzzzzzzzzzzze "+loanGuarantorELI.size());
 		if (loanGuarantorELI.size() > 0) {
 			return true;
 		} else
