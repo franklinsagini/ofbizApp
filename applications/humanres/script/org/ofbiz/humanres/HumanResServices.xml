@@ -1752,8 +1752,14 @@
         <set field="newEntity.approvalStatus" value="Approved" />
         <create-value value-field="newEntity" />
         <log message="===== Leave Approved log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+        
+       
 
     </simple-method>
+    
+  
+	
+	
     
      <!-- ==============================EMPLOYEE CALL BACK FROM LEAVE================================== -->
      <simple-method method-name="updateLeaveDuration"
@@ -1827,7 +1833,24 @@
         <set field="newEntity.approvalStatus" value="Rejected" />
         <create-value value-field="newEntity" />
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+			
+			<call-simple-method method-name="rejectEmplLeaveStatusEmailInformation" scope="inline"></call-simple-method>
     </simple-method>
+    
+    
+      <simple-method method-name="rejectEmplLeaveStatusEmailInformation">
+		<make-value entity-name="StaffScheduledMail" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffScheduledMail" field="msgId" />
+		<set from-field="msgId" field="newEntity.msgId" />
+		 <set field="newEntity.partyId" from-field="parameters.partyId"/> 
+		<set field="newEntity.body" value="Your Leave Application has been rejected with the following reason/comment:- [${lookedUpValue.rejectReason}] " />
+		 <set field="newEntity.subject" value="Leave Status"/>
+		<set field="newEntity.sendStatus" value="NOTSEND" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
     
      <!-- ==============================SEND BACK LEAVE WITH REASON================================== -->
      <simple-method method-name="sentLeaveBackWithReason"
