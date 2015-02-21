@@ -439,6 +439,13 @@ public class LoansProcessingServices {
 			createGuarantorLoans(bdGuarantorLoanAmount, loanGuarantor,
 					loanApplication, userLoginId);
 		}
+		
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return "success";
 	}
@@ -448,18 +455,23 @@ public class LoansProcessingServices {
 			String userLoginId) {
 		// TODO Auto-generated method stub
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		Long loanStatusId = LoanServices.getLoanStatusId("GUARANTORLOAN");
+		Long loanStatusId = LoanServices.getLoanStatusId("DISBURSED");
 		Long loanApplicationId = delegator.getNextSeqIdLong("LoanApplication",
 				1);
 		GenericValue newLoanApplication;
+		
+		Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode("D330").getLong("loanProductId");
+		
 		newLoanApplication = delegator.makeValue("LoanApplication", UtilMisc
 				.toMap("loanApplicationId", loanApplicationId,
 						"parentLoanApplicationId",
 						loanApplication.getLong("loanApplicationId"), "loanNo",
 						String.valueOf(loanApplicationId), "createdBy",
 						userLoginId, "isActive", "Y", "partyId",
-						loanGuarantor.getLong("guarantorId"), "loanProductId",
-						loanApplication.getLong("loanProductId"),
+						loanGuarantor.getLong("guarantorId"), 
+						
+						"loanProductId",
+						defaulterLoanProductId,
 						"interestRatePM",
 						loanApplication.getBigDecimal("interestRatePM")
 
@@ -472,6 +484,8 @@ public class LoansProcessingServices {
 						bdGuarantorLoanAmount, "loanStatusId", loanStatusId,
 						"deductionType",
 						loanApplication.getString("deductionType"),
+						
+						"originalLoanProductId", loanApplication.getLong("loanProductId"),
 
 						"accountProductId",
 						loanApplication.getLong("accountProductId")
