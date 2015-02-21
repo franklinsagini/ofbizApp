@@ -2324,4 +2324,36 @@ under the License.
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
+    
+    <!-- List Loan Guarantors -->
+    <form name="listLoanApplicationGuarantors" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="update" paginate-target="defaultManagement"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanGuarantor">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            	<order-by field-name="-loanApplicationId"/>
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateDisburseLoan"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <!-- field name="applicationStatus"><display also-hidden="false"></display>  </field -->
+        <field name="guarantorId" title="Guarantor">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+        </field>
+        <!-- field name="disbursementDate" title="Date Disbursed"> <display/> </field>
+        
+        <field name="repaymentStartDate" title="Repayment Start Date"> <display /> </field -->
+        <!-- field name="comment" title="Comments"><display></display></field>
+        <field name="createdStamp" title="Date"><display also-hidden="false" type="date-time"></display> </field -->
+        <field name="printLoanRepaymentLetter" title="Print Loan Repayment Letter" widget-style="buttontext">
+            <hyperlink target="printLoanRepaymentLetter" description="Print Loan Repayment Letter" also-hidden="false">
+                <parameter param-name="loanApplicationId"/>
+                <parameter param-name="guarantorId"/>
+                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+            </hyperlink>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
 </forms>
