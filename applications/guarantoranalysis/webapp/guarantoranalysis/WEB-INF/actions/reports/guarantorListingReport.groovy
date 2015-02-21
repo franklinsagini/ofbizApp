@@ -28,6 +28,8 @@ if ((loanProductId != null) && (loanProductId != "")){
 //disburseLoanStatusId = 6.toLong();
 //overpayedLoanStatusId = 7.toLong();
 
+myGuarantorList = delegator.findByAnd("GuarantorListing",  null, null, false);
+
 if ((partyId != null) && (partyId != "")){
 	myGuarantorList = delegator.findByAnd("GuarantorListing",  [guarantorId : lpartyId], null, false);
 }
@@ -40,6 +42,9 @@ if ((loanProductId != null) && (loanProductId != "")){
 if ((stationId != null) && (stationId != "")){
 	myGuarantorList = delegator.findByAnd("GuarantorListing",  [guarantorStationId : lstationId], null, false);
 }
+
+
+
 
 
 context.myGuarantorList = myGuarantorList
