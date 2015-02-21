@@ -1349,7 +1349,32 @@
 			value="changeLoanDetails"></response>
 		<response name="error" type="view" value="changeLoanDetails" />
 	</request-map>
+	
+	<!-- Loan Variation -->
+<!-- LoanVariation CRUD -->
+	<request-map uri="createLoanVariation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanVariation" />
+		<response name="success" type="request-redirect" value="loanVariation">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="loanVariation" />
+	</request-map>
 
+	<request-map uri="updateLoanVariation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanVariation" />
+		<response name="success" type="request-redirect" value="loanApplicationId"></response>
+		<response name="error" type="view" value="loanVariation" />
+	</request-map>
+
+	<request-map uri="deleteLoanVariation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLoanVariation" />
+		<response name="success" type="request-redirect-noparam"
+			value="loanVariation"></response>
+		<response name="error" type="view" value="loanVariation" />
+	</request-map>
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->

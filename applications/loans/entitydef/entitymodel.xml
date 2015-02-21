@@ -1014,6 +1014,21 @@ under the License.
       <alias entity-alias="LA" name="loanApplicationId"/>
       <alias entity-alias="LA" name="loanStatusId"/>
     </view-entity>
+    
+    <entity entity-name="LoanVariation" package-name="org.ofbiz.loans"
+		title="LoanVariation Entity">
+		<field name="loanVariationId" type="id-vlong-int"></field>
+		<field name="loanApplicationId" type="id-vlong-int"></field>
+		
+		<field name="oldAmount" type="fixed-point" enable-audit-log="true"></field>
+		<field name="newAmount" type="fixed-point" enable-audit-log="true"></field>
+		<field name="comment" type="name"></field>
+		<prim-key field="loanVariationId"/>
+		
+      	<relation type="one" fk-name="LOANAPPLICATION_FK" rel-entity-name="LoanApplication">
+       		<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
 	
 	
 	
