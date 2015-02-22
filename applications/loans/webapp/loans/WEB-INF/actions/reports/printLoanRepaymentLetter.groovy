@@ -2,6 +2,8 @@ import groovy.time.*
 
 loanApplicationId = parameters.loanApplicationId
 lloanApplicationId = loanApplicationId.toLong();
+
+guarantorId = parameters.guarantorId
 context.title = "Chai Sacco"
 
 if (loanApplicationId) {
@@ -16,6 +18,16 @@ context.loanProduct = loanProduct;
 
 member = delegator.findOne("Member", [partyId : loanApplication.partyId], false);
 context.member = member;
+
+
+guarantorIdLong = guarantorId.toLong();
+
+guarantor = delegator.findOne("Member", [partyId : guarantorIdLong], false);
+context.guarantor = guarantor;
+
+guaranteedAmt = org.ofbiz.accountholdertransactions.LoanUtilities.getMyGuaranteedValue(lloanApplicationId);
+context.guaranteedAmt = guaranteedAmt
+
 
 salutation = delegator.findOne("Salutation", [salutationId : member.salutationId], false);
 context.salutation = salutation;

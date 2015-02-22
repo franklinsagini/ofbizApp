@@ -20,8 +20,32 @@ under the License.
  <#if loanApplication?has_content>
     <#if loanApplication?has_content>
     <#-- REPORT TITLE -->
-    <fo:block font-size="18pt" font-weight="bold" text-align="center">
-        CHAI SACCO
+      <#-- REPORT TITLE -->
+     <fo:block font-size="18pt" text-align="left">
+       The Factory Manager
+    </fo:block>
+  
+    <fo:block font-size="18pt"  text-align="left">
+       <#assign stationId = member.stationId />
+       <#assign stationIdString = stationId.toString() />
+       <#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationIdString), true)/>
+                                
+		${station.name}
+    </fo:block>
+    <fo:block font-size="18pt"  text-align="left">
+       ${station.boxAddress}
+    </fo:block>
+    <fo:block font-size="18pt" text-align="left">
+       THRO
+    </fo:block>
+    <fo:block font-size="18pt" text-align="left">
+      THE TREASURER
+    </fo:block>
+    <fo:block font-size="18pt" text-align="left">
+      CHAI SACCO LIMITED
+    </fo:block>
+     <fo:block font-size="18pt" text-align="left">
+      Date Printed : ${nowTimestamp?date}
     </fo:block>
     <fo:block font-size="12pt" text-align="center" text-decoration="underline" font-weight="bold" >
         RE: LOAN REPAYMENT AND VOLUNTARY CONTRIBUTION TO SOCIETY
@@ -33,8 +57,8 @@ under the License.
        Loan Type : ${loanProduct.name?if_exists}
     </fo:block>
     <fo:block font-size="12pt" text-align="center" margin-bottom="0.2in">
-       I ${salutation.name} ${member.lastName} ${member.middleName} ${member.firstName} Payroll No ${member.payrollNumber} Member No ${member.memberNumber}
-       hereby authorise you to deduct from my salary Kshs.  ${loanApplication.loanAmt?string(",##0.00")}
+       I  ${guarantor.lastName} ${guarantor.middleName} ${guarantor.firstName} Payroll No ${guarantor.payrollNumber} Member No ${member.memberNumber}
+       hereby authorise you to deduct from my salary Kshs.  ${guaranteedAmt?string(",##0.00")}
        <b/>
        to be credited to Chai Co-Operative Savings and credit society.
        P.R.D being my Monthly subscription as follows: -  
