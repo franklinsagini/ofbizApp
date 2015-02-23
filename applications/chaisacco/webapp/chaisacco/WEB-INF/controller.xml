@@ -22,7 +22,181 @@
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+	 <request-map uri="humanresource"><security https="true" auth="true"/><response name="success" type="view" value="humanresource"/></request-map>
+	 
+	   <request-map uri="FindEmplLeaves">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="humanresource"/>
+    </request-map>
+	
+	<request-map uri="EditEmplLeave">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditEmplLeave"/>
+    </request-map>
+	
+	<request-map uri="regFileRequest">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileRquestScreen" />
+	</request-map>
+	
+	<request-map uri="regFileReceive">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileReceiveScreen" />
+	</request-map>
+
+	<request-map uri="regFileRelease">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileReleaseScreen" />
+	</request-map>
+	
+	<request-map uri="goRequestFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="requestingFiles" />
+	</request-map>
+	
+	<request-map uri="goReleaseFile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="releasingFiles" />
+	</request-map>
+
+	<request-map uri="goReleaseFileToAnotherStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="releaseFileToAnotherStaff" />
+	</request-map>
+	
+	<request-map uri="requestfiles">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="requestfiles" />
+		<response name="success" type="request-redirect-noparam" value="regFileRequest" />
+	</request-map>
+	
+	<request-map uri="recieveFiles">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="recieveFiles" />
+		<response name="success" type="request-redirect" value="regFileReceive" >
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="status"/>
+			<redirect-parameter name="currentPossesser"/>
+		</response>
+		<response name="error" type="view" value="regFileReceive" />
+	</request-map>
+
+
+	<request-map uri="releasefiles">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="releasefiles" />
+		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
+	</request-map>
+	
+
+	<request-map uri="releaseFileToAnotherStaff">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="releaseFileToAnotherStaff" />
+		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
+	</request-map>
+	
+	<!-- Document Overview -->
+    <request-map uri="documentOverviewURL">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="documentOverviewViewMap"/>
+    </request-map>
+    
+    <!-- Volume Overview -->
+    <request-map uri="volumeOverviewURL">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="volumeOverviewURL"/>
+    </request-map>
+    
+    <!-- File Overview -->
+    <request-map uri="fileoverviewURL">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="fileOverviewViewMap"/>
+    </request-map>
+	
+	 <request-map uri="leaveCalender">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="leaveCalender"
+			save-home-view="true" />
+	</request-map>
+	
+	 <!-- ================LEAVE CALENDER========================= -->
+     <request-map uri="createLeaveCalender">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createLeaveCalender"/>
+        <response name="success" type="request-redirect-noparam" value="leaveCalender"/>
+    </request-map>
+    <request-map uri="updateLeaveCalender">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLeaveCalender"/>
+        <response name="success" type="request-redirect" value="leaveCalender">
+        <redirect-parameter name="leaveCalenderId"/>
+        </response>
+        <response name="error" type="view" value="leaveCalender" />
+    </request-map>
+    <request-map uri="deleteLeaveCalender">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteLeaveCalender"/>
+        <response name="success" type="request-redirect-noparam" value="leaveCalender"/>
+    </request-map>
+	
+	<request-map uri="forwardApplication">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="forwardApplication"/>
+    <response name="success" type="view" value="humanresource">
+    <redirect-parameter name="partyId"/>
+    <redirect-parameter name="fromDate"/>
+    <redirect-parameter name="leaveTypeId"/>
+    <redirect-parameter name="leaveId"/>
+    </response>
+    <response name="error" type="view" value="humanresource" />
+    </request-map>
+	
+	 <request-map uri="createEmplLeaveExt">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createEmplLeave"/>
+        <response name="success" type="view" value="humanresource"/>
+        <response name="error" type="view" value="EditEmplLeave"/>
+    </request-map>
+   
+	
+	<request-map uri="updateEmplLeaveExt">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditEmplLeave"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="updateEmplLeave">
+        <security https="true" auth="true" />
+        <event type="service" invoke="updateEmplLeave" />
+        <response name="success" type="view" value="humanresource"></response>
+        <response name="error" type="view" value="humanresource" />
+    </request-map> 
+	
+	<request-map uri="deleteEmplLeave">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteEmplLeave"/>
+        <response name="success" type="request-redirect-noparam" value="humanresource"/>
+        <response name="error" type="view" value="humanresource"/>
+    </request-map>
+	
+	
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#main"/>
+	<view-map name="humanresource" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#FindEmplLeaves"/>
+	 <view-map name="EditEmplLeave" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#EditEmplLeave"/>
+	 <view-map name="fileRquestScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRequest" />
+	  <view-map name="fileReceiveScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRecieve" />
+	   <view-map name="fileReleaseScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRelease" />
+	   <view-map name="leaveCalender" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#StaffLeaveCalender"/>
+	   <view-map name="FindEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindEmplLeaves"/>
+	   <!-- File Overview  -->
+	<view-map name="fileOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryFilesOverviewScreen"/>
+	<view-map name="documentOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryDocumentOverviewScreen"/>
+	<view-map name="volumeOverviewURL" type="screen" page="component://registry/widget/FileScreens.xml#RegistryVolumeOverviewScreen"/>
+
+	<view-map name="requestingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#requestingFiles" />
+	<view-map name="releasingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#releasingFiles" />
+	<view-map name="releaseFileToAnotherStaff" type="screen"	page="component://registry/widget/FileScreens.xml#releaseFileToAnotherStaff" />
+	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
+	
 </site-conf>
