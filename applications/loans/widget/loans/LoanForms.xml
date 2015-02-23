@@ -2112,7 +2112,7 @@ under the License.
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
     
-    <form name="FindLoan" type="single" target="loanapplicationslist"
+    <form name="FindLoan" type="single" target="FindLoanApplication"
 		default-entity-name="LoanApplication" default-map-name="loanApplicationCtx">
 
 		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
@@ -2324,4 +2324,96 @@ under the License.
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
+    
+    <!-- List Loan Guarantors -->
+    <form name="listLoanApplicationGuarantors" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="update" paginate-target="defaultManagement"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanGuarantor">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            	<order-by field-name="-loanApplicationId"/>
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateDisburseLoan"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <!-- field name="applicationStatus"><display also-hidden="false"></display>  </field -->
+        <field name="guarantorId" title="Guarantor">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+        </field>
+        <!-- field name="disbursementDate" title="Date Disbursed"> <display/> </field>
+        
+        <field name="repaymentStartDate" title="Repayment Start Date"> <display /> </field -->
+        <!-- field name="comment" title="Comments"><display></display></field>
+        <field name="createdStamp" title="Date"><display also-hidden="false" type="date-time"></display> </field -->
+        <field name="printLoanRepaymentLetter" title="Print Loan Repayment Letter" widget-style="buttontext">
+            <hyperlink target="printLoanRepaymentLetter" description="Print Loan Repayment Letter" also-hidden="false">
+                <parameter param-name="loanApplicationId"/>
+                <parameter param-name="guarantorId"/>
+                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+            </hyperlink>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+    
+    <!-- Loan Variation -->
+         <form name="loanVariation" type="single" target="createLoanVariation"
+        focus-field-name="newAmount" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanVariationLogContext">
+        <actions>
+        	<entity-one entity-name="LoanApplication" value-field="loanApplication">
+        		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+        	</entity-one>
+        	
+        	<entity-condition entity-name="LoanStatus" list="statusList"></entity-condition>
+        	
+        	<!-- set field="applicationStatusValue" value="${loanApplication.applicationStatus}"/ -->
+        	<set field="statusName" value="DISBURSED"/>
+	   		<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/> 
+        	
+        	<set field="ready" value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.loanReadyForDisbursement(theLoanApplicationId);}" type="Boolean"/>
+        </actions>
+        <field name="loanVariationId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        
+        <!-- field name="loanStatusId"  >
+        	<drop-down>
+        		<list-options key-name="loanStatusId" list-name="statusList" description="${name}"/>
+        	</drop-down>
+        </field -->
+        <!-- field name="applicationStatus" title="Status" required-field="true"><text size="30" maxlength="60" default-value="DISBURSED" /></field-->
+       <field name="oldAmount" title="Old Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text default-value="${loanApplication.monthlyRepayment}" disabled="true"/></field>
+       <field name="newAmount" title="New Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
+        <!-- field name="repaymentStartDate" title="Repayment Start Date"> <date-time type="date"/> </field -->
+ 		<!-- use-when="loanStatusId==statusId" -->
+        <field name="submitButton"  title="Change Repayment" widget-style="smallSubmit"><submit button-type="button"/></field>
+        
+    </form>
+    
+    <form name="listLoanVariation" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanVariation" paginate-target="loanVariation"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanVariation">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            	<order-by field-name="-loanVariationId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateLoanVariation"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <!-- field name="applicationStatus"><display also-hidden="false"></display>  </field -->
+      <field name="oldAmount" title="Old Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+       <field name="newAmount" title="New Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
+       <field name="createdStamp" title="Date"><display also-hidden="false" type="date-time"></display> </field>
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteDisburseLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusLogId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+    
 </forms>

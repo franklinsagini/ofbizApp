@@ -14,17 +14,11 @@ if (depositReturnsList) {
     depositReturnsList.each { depositReturn ->
         range = delegator.findOne("DepositReturnsRanges", UtilMisc.toMap("rangesId", depositReturn.rangesId), true);
         depositType = delegator.findOne("DepositType", UtilMisc.toMap("depositTypeId", depositReturn.depositTypeId), true);
-        System.out.println("DEPOSIT TYPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " + depositReturn.depositTypeId)
-        System.out.println("DEPOSIT MINNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN " + range.minRange)
-        System.out.println("DEPOSIT MAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " + range.maxRange)
-        count = SasraReportsService.getAccountTotalsCount(depositReturn.depositTypeId, new BigDecimal(range.minRange), new BigDecimal(range.maxRange))
-        total = SasraReportsService.getAccountTotalsTotal(depositReturn.depositTypeId, new BigDecimal(range.minRange), new BigDecimal(range.maxRange))
-
-
-
-        statementofDepositReturnsList.add(["minRange":range.minRange, "maxRange":range.maxRange, "depositType":depositType.name, noOfAccounts:count, amount:total]);
-        totalAccounts = totalAccounts + count
-        totalAmount = totalAmount + total
+        //count = SasraReportsService.getAccountTotalsCount(depositReturn.depositTypeId, new BigDecimal(range.minRange), new BigDecimal(range.maxRange))
+        //total = SasraReportsService.getAccountTotalsTotal(depositReturn.depositTypeId, new BigDecimal(range.minRange), new BigDecimal(range.maxRange))
+        statementofDepositReturnsList.add(["minRange":range.minRange, "maxRange":range.maxRange, "depositType":depositType.name, noOfAccounts:depositReturn.noOfAccounts, amount:depositReturn.amount]);
+        totalAccounts = totalAccounts + depositReturn.noOfAccounts
+        totalAmount = totalAmount + depositReturn.amount
     }
 }
 

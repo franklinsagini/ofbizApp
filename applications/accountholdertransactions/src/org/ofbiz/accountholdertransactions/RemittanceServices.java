@@ -1047,7 +1047,7 @@ public class RemittanceServices {
 							expectedPaymentReceived.getString("payrollNo"));
 
 					AccHolderTransactionServices.cashDeposit(transactionAmount,
-							memberAccountId, null, "C7DEPOSIT");
+							memberAccountId, null, month+" Remittance");
 					// Increment bdAccount with this amount
 					bdAccount = bdAccount.add(expectedPaymentReceived
 							.getBigDecimal("amount"));
@@ -1061,7 +1061,7 @@ public class RemittanceServices {
 					Long memberAccountId = getMemberAccountId(code,
 							expectedPaymentReceived.getString("payrollNo"));
 					AccHolderTransactionServices.cashDeposit(transactionAmount,
-							memberAccountId, null, "C7DEPOSIT");
+							memberAccountId, null, month+" Remittance");
 
 					// Increment Share Total
 					bdSharesTotal = bdSharesTotal.add(expectedPaymentReceived

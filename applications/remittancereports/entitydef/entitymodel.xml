@@ -9,6 +9,7 @@
     <copyright></copyright>
     <version></version>
     
+    <!-- Member Totals -->
      <view-entity entity-name="ExpectationSentSummary" package-name="org.ofbiz.remittancereports">
     	<member-entity entity-alias="ES" entity-name="ExpectedPaymentSent"></member-entity>
     	
@@ -22,6 +23,22 @@
     	<member-entity entity-alias="ES" entity-name="ExpectedPaymentReceived"></member-entity>
     	
     	<alias entity-alias="ES" name="payrollNo" group-by="true"></alias>
+    	<alias entity-alias="ES" name="stationNumber" group-by="true"/> 
+    	<alias entity-alias="ES" name="month" group-by="true" />
+    	<alias entity-alias="ES" name="amount" function="sum"/> 
+    </view-entity>
+    
+    <!-- Station Totals -->
+        <view-entity entity-name="ExpectationStationTotalSentSummary" package-name="org.ofbiz.remittancereports">
+    	<member-entity entity-alias="ES" entity-name="ExpectedPaymentSent"></member-entity>
+    	<alias entity-alias="ES" name="stationNumber" group-by="true"/> 
+    	<alias entity-alias="ES" name="month" group-by="true" />
+    	<alias entity-alias="ES" name="amount" function="sum"/> 
+    </view-entity>
+    
+    <view-entity entity-name="ExpectationStationTotalReceivedSummary" package-name="org.ofbiz.remittancereports">
+    	<member-entity entity-alias="ES" entity-name="ExpectedPaymentReceived"></member-entity>
+    	
     	<alias entity-alias="ES" name="stationNumber" group-by="true"/> 
     	<alias entity-alias="ES" name="month" group-by="true" />
     	<alias entity-alias="ES" name="amount" function="sum"/> 

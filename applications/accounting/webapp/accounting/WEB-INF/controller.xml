@@ -35,6 +35,13 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
+
+    <request-map uri="fetchAccountBalances">
+        <security https="true" auth="true" />
+        <event type="service" invoke="fetchAccountBalances" />
+        <response name="success" type="request-redirect-noparam" value="DepositReturnSetup" />
+        <response name="error" type="view" value="DepositReturnSetup" />
+    </request-map>
     <request-map uri="createSasraReport">
         <security https="true" auth="true" />
         <event type="service" invoke="createSasraReport" />
@@ -1052,9 +1059,18 @@ under the License.
     </request-map>
 
     <!-- =============== Fixed Asset mapping =================-->
-    <request-map uri="ListFixedAssets"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssets"/></request-map>
-    <request-map uri="FixedAssetSearchResults"><security https="true" auth="false"/><response name="success" type="view" value="FixedAssetSearchResults"/></request-map>
-    <request-map uri="EditFixedAsset"><security https="true" auth="true"/><response name="success" type="view" value="EditFixedAsset"/></request-map>
+    <request-map uri="ListFixedAssets">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssets"/>
+    </request-map>
+    <request-map uri="FixedAssetSearchResults">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="FixedAssetSearchResults"/>
+    </request-map>
+    <request-map uri="EditFixedAsset">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAsset"/>
+    </request-map>
     <request-map uri="createFixedAsset">
         <security https="true" auth="true"/>
         <event type="service" invoke="createFixedAsset"/>
@@ -1069,7 +1085,10 @@ under the License.
     </request-map>
 
    <!-- ================ Fixed Asset to Product Requests ================= -->
-    <request-map uri="ListFixedAssetProducts"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssetProducts"/></request-map>
+    <request-map uri="ListFixedAssetProducts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
     <request-map uri="addFixedAssetProduct">
         <security https="true" auth="true"/>
         <event type="service" invoke="addFixedAssetProduct"/>
@@ -1151,7 +1170,10 @@ under the License.
     -->
 
     <!-- ================ FixedAsset Standard Costs Requests ================= -->
-    <request-map uri="FixedAssetChildren"><security https="true" auth="true"/><response name="success" type="view" value="FixedAssetChildren"/></request-map>
+    <request-map uri="FixedAssetChildren">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FixedAssetChildren"/>
+    </request-map>
 
     <request-map uri="EditFixedAssetStdCosts">
         <security https="true" auth="true"/>
@@ -1172,6 +1194,7 @@ under the License.
         <event type="service" invoke="cancelFixedAssetStdCost"/>
         <response name="success" type="view" value="EditFixedAssetStdCosts"/>
     </request-map>
+
     <!-- FixedAssetIdent -->
     <request-map uri="EditFixedAssetIdents">
         <security https="true" auth="true"/>
@@ -1219,6 +1242,7 @@ under the License.
         <response name="success" type="view" value="EditFixedAssetRegistrations"/>
         <response name="error" type="view" value="EditFixedAssetRegistrations"/>
     </request-map>
+
     <!-- FixedAssetMaintenance Meter -->
     <request-map uri="EditFixedAssetMeters">
         <security https="true" auth="true"/>
@@ -1242,6 +1266,7 @@ under the License.
         <response name="success" type="view" value="EditFixedAssetMeters"/>
         <response name="error" type="view" value="EditFixedAssetMeters"/>
     </request-map>
+
     <!-- FixedAssetMaintenance -->
     <request-map uri="ListFixedAssetMaints">
         <security https="true" auth="true"/>
@@ -1278,6 +1303,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupOrderHeader"/>
     </request-map>
+
     <!-- FixedAssetMaintenance Calendar -->
     <request-map uri="calendar">
         <security https="true" auth="true"/>
@@ -1291,6 +1317,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="WorkEffortSummary"/>
     </request-map>
+
     <!-- FixedAssetMaintenance Order -->
     <request-map uri="EditFixedAssetMaintOrders">
         <security https="true" auth="true"/>
