@@ -2593,8 +2593,11 @@ public class LoanServices {
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
 		Long loanApplicationId = Long.valueOf((String) request.getParameter("loanApplicationId"));
+		String loanAmtStr = (String)request.getParameter("loanAmt");
+		loanAmtStr = loanAmtStr.replaceAll(",", "");
 		
-		Double loanAmt = Double.valueOf(request.getParameter("loanAmt"));
+		
+		Double loanAmt = Double.valueOf(loanAmtStr);
 		BigDecimal bdLoanAmt = BigDecimal.valueOf(loanAmt);
 		
 		System.out.println(" Start Building Things !!!!!!!!!!! ");

@@ -4,9 +4,9 @@ import org.ofbiz.entity.Delegator;
 
 partyId = parameters.partyId
 
-
-
+println(" PPP  ID IS "+partyId)
 lpartyId = partyId.toLong();
+println(" PPP  lpartyId IS "+lpartyId)
 
 member = delegator.findOne("Member", [partyId : lpartyId], false);
 payrollNo = member.payrollNumber;
@@ -49,6 +49,8 @@ loansGuaranteedList.eachWithIndex { guarantorItem, guarantorindex ->
 
 	Long loanApplicationId = guarantorItem.loanApplicationId;
 	System.out.println(" The Application Id PPPPPPPPPPPPPPPP "+loanApplicationId);
+	
+	if (loanApplicationId != null){
 	//Get Loan Product Name
 	loanApplication = delegator.findOne("LoanApplication", [loanApplicationId : loanApplicationId], false);
 
@@ -76,6 +78,7 @@ loansGuaranteedList.eachWithIndex { guarantorItem, guarantorindex ->
 
 
 	loansGuaranteedByMemberList << loanGuaranteedItem;
+	}
 }
 
 context.loansGuaranteedByMemberList = loansGuaranteedByMemberList;

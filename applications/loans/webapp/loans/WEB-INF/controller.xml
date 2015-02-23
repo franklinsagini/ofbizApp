@@ -793,6 +793,31 @@
 		<response name="success" type="view" value="disburseLoan"
 			save-home-view="true" />
 	</request-map>
+	
+	
+	
+	<request-map uri="defaultManagement">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="defaultManagement"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="loanVariation">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanVariation"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="printMemberDefaultLetter">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="printMemberDefaultLetter" />
+	</request-map>
+	
+	<request-map uri="printLoanRepaymentLetter">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="printLoanRepaymentLetter" />
+	</request-map>
+	
 
 	<!-- End Loan Applications Guarantor -->
 
@@ -1141,9 +1166,8 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="changeLoanDetails" />
 	</request-map>
-
-
-
+	
+	
 
 
 	<!-- LoanStatusChange CRUD -->
@@ -1325,7 +1349,32 @@
 			value="changeLoanDetails"></response>
 		<response name="error" type="view" value="changeLoanDetails" />
 	</request-map>
+	
+	<!-- Loan Variation -->
+<!-- LoanVariation CRUD -->
+	<request-map uri="createLoanVariation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanVariation" />
+		<response name="success" type="request-redirect" value="loanVariation">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="loanVariation" />
+	</request-map>
 
+	<request-map uri="updateLoanVariation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanVariation" />
+		<response name="success" type="request-redirect" value="loanApplicationId"></response>
+		<response name="error" type="view" value="loanVariation" />
+	</request-map>
+
+	<request-map uri="deleteLoanVariation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLoanVariation" />
+		<response name="success" type="request-redirect-noparam"
+			value="loanVariation"></response>
+		<response name="error" type="view" value="loanVariation" />
+	</request-map>
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
@@ -1448,6 +1497,17 @@
 
 	<view-map name="disburseLoan" type="screen"
 		page="component://loans/widget/loans/LoanScreens.xml#disburseLoan" />
+		
+		<view-map name="defaultManagement" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#defaultManagement" />
+		
+		<view-map name="loanVariation" type="screen"
+		page="component://loans/widget/loans/LoanScreens.xml#loanVariation" />
+		
+		
+		
+		
+		
 	<view-map name="printLoanSchedule" type="screenfop"
 		page="component://loans/widget/loans/LoanScreens.xml#printLoanSchedule" content-type="application/pdf" encoding="none"  />
 		
@@ -1511,6 +1571,12 @@
 	<!-- text/html application/pdf application/postscript application/vnd.ms-excel 
 		application/vnd.ms-word application/vnd.ms-powerpoint application/vnd.oasis.opendocument.text 
 		application/vnd.oasis.opendocument.spreadsheet application/vnd.oasis.opendocument.presentation -->
-
+	  <!-- view-map name="printMemberDefaultLetter" type="screenfop" page="component://guarantoranalysis/widget/GuarantorAnalysisScreens.xml#guantorsListingPDF" content-type="application/pdf" encoding="none"/-->
+	  
+	  <view-map name="printMemberDefaultLetter" type="screenfop" page="component://loans/widget/loans/LoanScreens.xml#printMemberDefaultLetter" content-type="application/pdf" encoding="none"/>
+	  <view-map name="printLoanRepaymentLetter" type="screenfop" page="component://loans/widget/loans/LoanScreens.xml#printLoanRepaymentLetter" content-type="application/pdf" encoding="none"/>
+	  
+	  
+	  
 	<!-- end of view mappings -->
 </site-conf>

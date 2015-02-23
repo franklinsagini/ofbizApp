@@ -8,5 +8,62 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+         <view-entity entity-name="GuarantorListing" package-name="org.ofbiz.guarantoranalysis">
+    	<member-entity entity-alias="LG" entity-name="LoanGuarantor"></member-entity>
+    	<member-entity entity-alias="LA" entity-name="LoanApplication"></member-entity>
+    	
+    	
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	
+    	<member-entity entity-alias="MS" entity-name="MemberStatus"></member-entity>
+    	
+    	<member-entity entity-alias="MG" entity-name="Member"></member-entity>
+    	
+    	
+    	<alias entity-alias="LA" name="loanNo"></alias>
+    	
+    	<alias entity-alias="M" name="memberNumber"/> 
+    	<alias entity-alias="MS" name="name"/>
+    	<alias entity-alias="M" name="stationId"/>
+    	<alias entity-alias="LA" name="disbursementDate"/>
+    	<alias entity-alias="LA" name="loanAmt"/>
+    	
+    	<alias entity-alias="LA" name="loanApplicationId"/>
+    	
+    	<alias entity-alias="LA" name="loanProductId"/>
+    	
+    	<alias entity-alias="LA" name="loanStatusId"/>
+    	
+    	<alias entity-alias="LG" name="guarantorId"/>
+    	
+    	<alias entity-alias="MG" name="guarantorMemberNumber" field="memberNumber"/>
+    	<alias entity-alias="MG" name="guarantorStationId" field="stationId"/>
+    	
+    	<alias entity-alias="MG" name="guarantorStatusId" field="memberStatusId"/>
+    	
+    	
+    	
+    	
+    	
+    	
+    	<view-link entity-alias="LG" rel-entity-alias="LA"> 
+            <key-map field-name="loanApplicationId" rel-field-name="loanApplicationId"/> 
+        </view-link>
+        
+        <view-link entity-alias="LA" rel-entity-alias="M"> 
+            <key-map field-name="partyId" rel-field-name="partyId"/> 
+        </view-link> 
+        
+        <view-link entity-alias="M" rel-entity-alias="MS"> 
+            <key-map field-name="memberStatusId" rel-field-name="memberStatusId"/> 
+        </view-link>
+        
+        <view-link entity-alias="LG" rel-entity-alias="MG"> 
+            <key-map field-name="guarantorId" rel-field-name="partyId"/> 
+        </view-link>
+        
+        
+    </view-entity>
 
 </entitymodel>
