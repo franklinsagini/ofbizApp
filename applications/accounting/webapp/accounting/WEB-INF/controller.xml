@@ -35,6 +35,13 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
+
+    <request-map uri="fetchAccountBalances">
+        <security https="true" auth="true" />
+        <event type="service" invoke="fetchAccountBalances" />
+        <response name="success" type="request-redirect-noparam" value="DepositReturnSetup" />
+        <response name="error" type="view" value="DepositReturnSetup" />
+    </request-map>
     <request-map uri="createSasraReport">
         <security https="true" auth="true" />
         <event type="service" invoke="createSasraReport" />
