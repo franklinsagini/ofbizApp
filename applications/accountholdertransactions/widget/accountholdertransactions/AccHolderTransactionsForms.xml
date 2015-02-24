@@ -1416,8 +1416,11 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         	<set field="currentDate" value="${nowTimestamp}"/>
-            <entity-condition entity-name="LoanExpectation">
-            	<condition-expr field-name="isPaid" operator="equals" value="N"/>
+            <!-- entity-condition entity-name="LoanExpectation">
+
+            </entity-condition -->
+            
+                        	<!-- condition-expr field-name="isPaid" operator="equals" value="N"/ -->
             	<!-- condition-list combine="and">
             		<condition-expr field-name="isActive" value="Y"/>
             		<condition-expr field-name="transactionType" value="CHEQUEDEPOSIT"/>
@@ -1425,8 +1428,7 @@ under the License.
             		<condition-expr field-name="clearDate" operator="greater" from-field="currentDate"/>
 					
             	</condition-list -->
-            	<order-by field-name="-loanExpectationId"></order-by>
-            </entity-condition>
+            	<!-- order-by field-name="-loanExpectationId"></order-by -->
             
             
              <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -1483,14 +1485,14 @@ under the License.
             	<order-by field-name="-loanExpectationId"></order-by>
             </entity-condition>
 
-			<service service-name="performFind" result-map="result" result-map-list="listIt">
+			<!-- service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="loanExpectationCtx"/>
                 <field-map field-name="entityName" value="LoanExpectation"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
                 
-            </service>
+            </service -->
         	
         </actions>
  		<!--field name="partyId" title="Member">
@@ -1979,7 +1981,7 @@ under the License.
         	
         </actions>
         
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="month" title="Month">
         	<drop-down allow-empty="true">
