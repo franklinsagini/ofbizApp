@@ -1,25 +1,56 @@
-<!-- LoanVariation CRUD -->
-	<request-map uri="createLoanVariation">
-		<security https="true" auth="true" />
-		<event type="service" invoke="createLoanVariation" />
-		<response name="success" type="request-redirect" value="loanVariation">
-			<redirect-parameter name="loanApplicationId" />
-		</response>
-		<response name="error" type="view" value="loanVariation" />
-	</request-map>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-	<request-map uri="updateLoanVariation">
-		<security https="true" auth="true" />
-		<event type="service" invoke="updateLoanVariation" />
-		<response name="success" type="request-redirect" value="loanApplicationId"></response>
-		<response name="error" type="view" value="loanVariation" />
-	</request-map>
+http://www.apache.org/licenses/LICENSE-2.0
 
-	<request-map uri="deleteLoanVariation">
-		<security https="true" auth="true" />
-		<event type="service" invoke="deleteLoanVariation" />
-		<response name="success" type="request-redirect-noparam"
-			value="loanVariation"></response>
-		<response name="error" type="view" value="loanVariation" />
-	</request-map>
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Example Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    
+    
+      <service name="createLoanVariation" engine="simple" default-entity-name="LoanVariation"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="createLoanVariation" auth="true">
+        <description>Create LoanVariation</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateLoanVariation" engine="simple" default-entity-name="LoanVariation"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="updateLoanVariation" auth="true">
+        <description>Update LoanVariation</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteLoanVariation" engine="simple" default-entity-name="LoanVariation"
+             location="component://loans/script/org/ofbiz/loans/loans/LoansServices.xml" invoke="deleteLoanVariation" auth="true">
+        <description>Delete LoanVariation</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+
+    
+</services>
+
 
