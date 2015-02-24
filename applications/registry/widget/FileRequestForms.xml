@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="FindFileRequest" type="single" target="FindFileRequest"
+		default-entity-name="FileRequest">
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="fileRequestId" title="File Request">
+			<text-find />
+		</field>
+		<field name="Document" title="Document Name">
+			<text-find />
+		</field>
+		<field name="requester" title="Requester"> <text /> 
+		</field> 
+		<field 
+			name="requestDate" title="Date Requested"> <date-time /> 
+		</field>
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+
+	<form name="ListFileRequest" type="list" list-name="listIt"
+		paginate-target="FindFileRequest" default-entity-name="FileRequest"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="FileRequestCtx" />
+				<field-map field-name="entityName" value="FileRequest" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		<field name="fileRequestId" title="File request Id"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="${fileRequestId}"
+				target="EditFileRequest">
+				<parameter param-name="fileRequestId" />
+			</hyperlink>
+		</field>
+		
+		<field name="registryFileId" title="Document">
+			<display />
+		</field>
+		<field 
+			name="requester" title="Requester"> 
+			<display /> 
+		</field>
+		<field 
+			name="requestStatus" title="Request Status"> 
+			<display /> 
+		</field>
+		<field 
+		    name="requestDate" title="Date Requested"> 
+			<display /> 
+		</field>
+		<field name="cancel" title="Cancel"
+			widget-style="buttontext">
+		<hyperlink also-hidden="false" description="Cancel Request"
+				target="cancelFileRequest">
+				<parameter param-name="fileRequestId" />
+			</hyperlink>
+		</field>
+		<field name="issue" title="Issue File"
+			widget-style="buttontext">
+		<hyperlink also-hidden="false" description="Issue File"
+				target="EditIssueFile">
+				<parameter param-name="fileRequestId" />
+			</hyperlink>
+		</field>
+	</form>
+
+	<form name="EditFileRequest" type="single" target="updateFileRequest"
+		title="" default-map-name="filerequestmap" default-entity-name="FileRequest"
+		header-row-style="header-row" default-table-style="basic-table">
+		<alt-target use-when="filerequestmap==null" target="createFileRequest" />
+		<!-- fileRequestId Field -->
+		<field use-when="filerequestmap!=null" name="fileRequestId"
+			title="File request" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+			<display />
+		</field>
+		<field use-when="filerequestmap==null&amp;&amp;fileRequestId==null"
+			name="fileRequestId" title="registry File Id">
+			<hidden />
+		</field>
+		<field use-when="filerequestmap==null&amp;&amp;fileRequestId!=null"
+			name="fileRequestId" title="${uiLabelMap.fileRequestId}"
+			tooltip="${uiLabelMap.CommonCannotBeFound}: [${fileRequestId}]">
+			<hidden />
+		</field>
+		<field name="registryFileId" parameter-name="registryFileId"><display /></field>
+		<field name="requestStatus" title="Request Status">
+			<drop-down allow-empty="false">
+			<option key="Requested" description="Requested"/>
+			<option key="Pending" description="Pending"/>
+			<option key="Rejected" description="Rejected"/>
+			</drop-down>
+		</field>
+				<!-- submitButton -->
+		<field use-when="filerequestmap==null" name="submitButton"
+			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+		<field use-when="filerequestmap!=null" name="updateButton"
+			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+	</form>
+</forms>
