@@ -1427,6 +1427,16 @@ under the License.
             	</condition-list -->
             	<order-by field-name="-loanExpectationId"></order-by>
             </entity-condition>
+            
+            
+             <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanExpectationCtx"/>
+                <field-map field-name="entityName" value="LoanExpectation"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
  
         	
         </actions>
@@ -1473,6 +1483,14 @@ under the License.
             	<order-by field-name="-loanExpectationId"></order-by>
             </entity-condition>
 
+			<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanExpectationCtx"/>
+                <field-map field-name="entityName" value="LoanExpectation"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
         	
         </actions>
  		<!--field name="partyId" title="Member">
@@ -1940,6 +1958,43 @@ under the License.
         <field name="stationNumber" title="Station No/Code" position="2"><text-find/></field>
 
         <field name="stationName" title="Station Name"><text-find/></field>
+
+        
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    
+    <form name="FindExpectation" type="single" target="loansrepaymentexpected" default-entity-name="LoanExpectation">
+        <actions>
+        
+        	<entity-condition entity-name="LoanExpectationMonth" list="monthExpectationList">
+        		<order-by field-name="-month"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="LoanExpectationRepaymentType" list="repaymentTypeList">
+        		<order-by field-name="-repaymentName"/>
+        	</entity-condition>
+        	
+        	
+        </actions>
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+        <field name="month" title="Month">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${month}"  entity-name="LoanExpectationMonth"></entity-options>
+        	</drop-down>
+        </field>
+
+        <!-- field name="partyId" title="Member" position="2"><text-find/></field -->
+        <field name="partyId" title="Member" position="2"><lookup target-form-name="LookupActiveMember"/></field>
+
+        <field name="repaymentName" title="Repayment Name">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${repaymentName}"  entity-name="LoanExpectationRepaymentType"></entity-options>
+        	</drop-down>
+        </field>
 
         
 
