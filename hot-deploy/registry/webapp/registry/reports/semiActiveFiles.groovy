@@ -1,1 +1,0 @@
-context.activities = delegator.findByAnd("RegistryFiles", [stageStatus : "SEMIACTIVE"], null, false);
