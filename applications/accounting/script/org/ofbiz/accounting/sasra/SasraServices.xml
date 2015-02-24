@@ -79,14 +79,12 @@
             <log message="TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ${statementDepositReturn.depositReturnsId}" level="info" />
             <log message="TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ${minRange}" level="info" />
             <log message="MAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ${maxRange}" level="info" />
-            <set field="count" value="${groovy:org.ofbiz.accounting.ledger.SasraReportsService.getAccountTotalsCount(statementDepositReturn.depositReturnsId, minRange, maxRange)}"/>
-            <set field="total" value="${groovy:org.ofbiz.accounting.ledger.SasraReportsService.getAccountTotalsTotal(statementDepositReturn.depositReturnsId, minRange, maxRange)}"/>
-            <log message="COUNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ${count}" level="info" />
-            <log message="TOTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ${total}" level="info" />
+            <set field="updateDepositReturnCtx.noOfAccounts" value="${groovy:org.ofbiz.accounting.ledger.SasraReportsService.getAccountTotalsCount(statementDepositReturn.depositReturnsId, minRange, maxRange)}" type="String"/>
+            <set field="updateDepositReturnCtx.amount" value="${groovy:org.ofbiz.accounting.ledger.SasraReportsService.getAccountTotalsTotal(statementDepositReturn.depositReturnsId, minRange, maxRange)}"/>
+            <log message="COUNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ${updateDepositReturnCtx.noOfAccounts}" level="info" />
+            <log message="TOTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ${updateDepositReturnCtx.amount}" level="info" />
 
             <set field="updateDepositReturnCtx.depositReturnsId" from-field="statementDepositReturn.depositReturnsId"/>
-            <set field="updateDepositReturnCtx.noOfAccounts" from-field="count" type="String"/>
-            <set field="updateDepositReturnCtx.amount" from-field="total"/>
             <call-service service-name="updateDepositReturnValues" in-map-name="updateDepositReturnCtx"/>
             <clear-field field="updateDepositReturnCtx"/>
         </iterate>
@@ -95,7 +93,7 @@
     <simple-method method-name="updateDepositReturnValues" short-description="update Deposit Return Values">
         <entity-one entity-name="StatementDepositReturns" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <log message="Updating using ID ${lookedUpValue.depositReturnsId} amount of ${lookedUpValue.amount} and Accounts Count ${lookedUpValue.noOfAccounts}" level="info" />
+        <log message="TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT-------Updating using ID ${lookedUpValue.depositReturnsId} amount of ${lookedUpValue.amount} and Accounts Count ${lookedUpValue.noOfAccounts}" level="info" />
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
