@@ -1981,7 +1981,7 @@
         <set field="newEntity.createdBy" value="${userLogin.partyId}" />
 		<sequenced-id sequence-name="EmplLeave" field="leaveId" />
 		<set field="newEntity.leaveId" from-field="leaveId" />
-		<create-value value-field="newEntity"/>
+		<!-- <create-value value-field="newEntity"/> -->
 
 		<make-value value-field="newStatusLog" entity-name="LeaveStatusLog" />
 		<set-pk-fields map="parameters" value-field="newStatusLog" />
@@ -1991,12 +1991,41 @@
 		<set field="newStatusLog.leaveId" from="newEntity.leaveId" />
 		<set field="newStatusLog.partyId" value="${userLogin.partyId}"  />
 		<set field="newStatusLog.approvalStatus" value="NEW" />
-		<create-value value-field="newStatusLog" />
 		
-		<property-to-field resource="HumanResUiLabels"
+		<set field="leaveType" from-field="newEntity.leaveTypeId"  />
+		<set field="party" value="${userLogin.partyId}"  />
+		<set field="valid" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getGenderState(leaveType, party);}"/>
+		<set field="that" value="INVALID"/>
+		
+		<if>
+			<condition>
+				
+					<if-compare-field field="valid"
+						to-field="that" operator="equals" />
+				
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="GenderError" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+			    <create-value value-field="newEntity"/>
+				<create-value value-field="newStatusLog" />
+				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
 		
-	</simple-method>
+		</simple-method>
+		
+		
+		
+		
+		
+	
 	<simple-method method-name="updateLeaveApplication" short-description="Update Leave Application">
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
@@ -2010,6 +2039,7 @@
         		<field-map field-name="fromDate" from-field="fromDate"/>
         	</entity-one>
            <set field="lookedUpValue.updatedBy" from-field="userLogin.userLoginId"/>
+           
 
         <store-value value-field="lookedUpValue"/>
         <property-to-field resource="HumanResUiLabels"

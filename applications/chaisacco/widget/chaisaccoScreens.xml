@@ -20,5 +20,286 @@
             </widgets>
         </section>
     </screen>
+	
+	<screen name="FindEmplLeaves">
+        <section>
+            <actions>
+				<set field="titleProperty" value="HumanResFindEmplLeave" />
+				<set field="headerItem" value="EmployeeLeave" />
+				<set field="tabButtonItem" value="EmployeeLeave" />
+				<set field="leaveCtx" from-field="parameters"/>
+				<set field="partyId" from-field="userLogin.partyId"/>
+						<service service-name="humanResManagerPermission"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ADMIN" />
+				</service>
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
+					global="true" />
+					
+				<entity-condition entity-name="EmplLeave" list="EmplLeave">
+        			<condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>
+        	</entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                						<decorator-section name="pre-body">
+						<include-menu name="UniversalEmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+
+                            <widgets>
+										<section>
+											<widgets>
+												<container style="button-bar">
+													<link target="EditEmplLeave" text="${uiLabelMap.HumanResNewLeave}"
+														style="buttontext create" />
+												</container>
+											</widgets>
+										</section>
+                              <screenlet title="Search My Leaves">
+                                        <include-form name="FindEmplLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                            	</screenlet>
+                                <screenlet title="My Leaves List">
+                              <include-form name="ListEmplLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" /> 
+											
+											<!--  <include-form name="ListEmplLeavesForUpdateAndDelete"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" /> -->
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="EditEmplLeave">
+		<section>
+			<actions>
+				<set field="titleProperty" value="HumanResEditEmplLeave" />
+				<set field="headerItem" value="humanresource" />
+				<set field="tabButtonItem" value="humanresource" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<set field="leaveTypeId" from-field="parameters.leaveTypeId" />
+				<set field="fromDate" from-field="parameters.fromDate" />
+				<set field="thruDate" from-field="parameters.thruDate" />
+				<entity-one entity-name="EmplLeave" value-field="leaveApp"
+					auto-field-map="false">
+					<field-map field-name="partyId" from-field="partyId" />
+					<field-map field-name="leaveTypeId" from-field="leaveTypeId" />
+					<field-map field-name="fromDate" from-field="fromDate" />
+					<field-map field-name="thruDate" from-field="thruDate" />
+				</entity-one>
+				<entity-one entity-name="Person" value-field="person">
+				<field-map field-name="partyId" from-field="userLogin.partyId"/>
+				</entity-one>
+			<set field="appointmentdate" value="${bsh:org.ofbiz.humanres.LeaveServices.getLeaveAppointmentDate(person);}"/>
+			<set field="organizationUnitId" value="${bsh:org.ofbiz.humanres.LeaveServices.getEmplUnit(person);}"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="UniversalEmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+						<screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}"
+							collapsible="true">
+							<include-form name="EditEmplLeave"
+								location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+						</screenlet>
+						<!-- <screenlet id="AddEmplLeavePanel2" title="Leave list"
+							collapsible="true">
+							<include-form name="ListEmplLeaves"
+								location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+						</screenlet> -->
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILE REQUEST====================================================== -->
+	<screen name="registryFileRequest">
+		<section>
+			<actions>
+				<set field="headerItem" value="registry" />
+				<set field="tabButtonItem" value="registry" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<include-menu name="universalRegistryMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+							<container style="leftclear">
+											<label style="h1"
+												text="Request File(s)" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForRequest" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listFindMemberfilesForRequest" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILE RECEIVE====================================================== -->
+	<screen name="registryFileRecieve">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesDispatch" />
+				<set field="tabButtonItem" value="recieve" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<include-menu name="universalRegistryMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+							<container style="leftclear">
+											<label style="h1"
+												text="Recieve File(s)" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForDispatch" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForDispatch" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ======================================================FILE RELEASE====================================================== -->
+	<screen name="registryFileRelease">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesRelease" />
+				<set field="tabButtonItem" value="release" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<include-menu name="universalRegistryMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+							<container style="leftclear">
+											<label style="h1"
+												text="Release File(s)" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="StaffLeaveCalender">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				<set field="headerItem" value="leaveCalender" />
+				<set field="tabButtonItem" value="leaveCalender" />
+				
+				<set field="OpeningLeaveBalanceContext" from-field="parameters"/>
+						<service service-name="humanResManagerPermission"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ADMIN" />
+				</service>
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
+					global="true" />
+
+				<entity-one entity-name="EmplLeaveCalender" value-field="EmplLeaveCalenderContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="UniversalEmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+					<decorator-section name="body">
+					
+					
+					 <section>
+							<widgets>
+								<screenlet title="Add Leave To Leave Calender">
+									<include-form name="EditEmplLeaveCalender"
+										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Preferred Personal Leave Calender">
+									<include-form name="EditEmplLeaveCalenderListForm"
+										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<screenlet>
+						</screenlet>
+						
+						 
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 
 </screens>
