@@ -1992,17 +1992,62 @@
 		<set field="newStatusLog.partyId" value="${userLogin.partyId}"  />
 		<set field="newStatusLog.approvalStatus" value="NEW" />
 		
-		<set field="leaveType" from-field="newEntity.leaveTypeId"  />
+		<set field="leaveType" from-field="newEntity.leaveTypeId"/>
 		<set field="party" value="${userLogin.partyId}"  />
-		<set field="valid" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getGenderState(leaveType, party);}"/>
-		<set field="that" value="INVALID"/>
+		<set field="durat" from-field="newEntity.leaveDuration" type="Integer"/>
+		<set field="userGender" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getGenderState(leaveType, party);}"/>
+		<set field="notice" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getNoticePeriodState(leaveType, fromDate);}"/>
+		<set field="duration" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getLeaveDurationState(leaveType, durat);}"/>
+		<set field="employementTermsState" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getEmploymentStatusState(party);}"/>
+		<set field="valid" value="INVALID"/>
+		
+		<log message=">>>>>>>>>>>>>>>>***>>>>>>>DURATION_STATE ${duration}" level="info"/>
+		<if>
+			<condition>
+					<if-compare-field field="employementTermsState"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="employmentTermsError" />
+				</add-error>
+				<check-errors />
+			</then>
+		</if>
 		
 		<if>
 			<condition>
-				
-					<if-compare-field field="valid"
-						to-field="that" operator="equals" />
-				
+					<if-compare-field field="duration"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="LeavedurationError" />
+				</add-error>
+				<check-errors />
+			</then>
+		</if>
+		
+		<if>
+			<condition>
+					<if-compare-field field="notice"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="NoticeperiodError" />
+				</add-error>
+				<check-errors />
+			</then>
+		</if>
+		
+		<if>
+			<condition>
+					<if-compare-field field="userGender"
+						to-field="valid" operator="equals" />
 			</condition>
 			<then>
 				<add-error>
@@ -2011,6 +2056,7 @@
 				</add-error>
 				<check-errors />
 			</then>
+			
 			<else>
 			    <create-value value-field="newEntity"/>
 				<create-value value-field="newStatusLog" />
@@ -2018,6 +2064,8 @@
 			property="CreateSuccess" field="successMessage" />
 			</else>
 		</if>
+		
+		
 		
 		</simple-method>
 		
