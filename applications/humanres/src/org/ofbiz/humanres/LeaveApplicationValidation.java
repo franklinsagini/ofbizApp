@@ -317,7 +317,7 @@ public class LeaveApplicationValidation {
 
 				if (statusELI.size() > 0) {
 					userStatus = statusELI.get(0);
-					status = userStatus.getString("employmentStatusEnumId");
+					status = userStatus.getString("employmentTerms");
 
 				}
 			} catch (GenericEntityException e2) {
@@ -325,7 +325,7 @@ public class LeaveApplicationValidation {
 			}
 
 			String state = "";
-			if (status.equalsIgnoreCase("15")) {
+			if ((status.equalsIgnoreCase("contract")) || (status.equalsIgnoreCase("intern"))) {
 
 				state = "INVALID";
 

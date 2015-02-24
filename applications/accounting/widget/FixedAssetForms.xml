@@ -72,10 +72,10 @@ under the License.
     <form name="EditFixedAsset" type="single" target="updateFixedAsset" title="" default-map-name="fixedAsset"
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="fixedAsset==null" target="createFixedAsset"/>
-        <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
+        <!-- <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/> -->
 
         <field use-when="fixedAsset!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId"><text size="20" maxlength="20"/></field>
+        <!-- <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId"><text size="20" maxlength="20"/></field> -->
         <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
 
         <field name="fixedAssetTypeId">
@@ -86,22 +86,22 @@ under the License.
             </drop-down>
         </field>
         <field name="instanceOfProductId"><lookup target-form-name="LookupProduct"/></field>
-        <field name="classEnumId">
+<!--         <field name="classEnumId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="FXAST_CLASS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field> -->
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPerson"/></field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
+<!--         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field> -->
         <field name="uomId" title="${uiLabelMap.CommonUom}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomAndType" description="[${typeDescription}] ${description}">
@@ -119,7 +119,7 @@ under the License.
         </field>
         <field name="parentFixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="locatedAtFacilityId"><lookup target-form-name="LookupFacility"/></field>
-        <field name="locatedAtLocationSeqId"><lookup target-form-name="LookupFacilityLocation"/></field>
+        <!-- <field name="locatedAtLocationSeqId"><lookup target-form-name="LookupFacilityLocation"/></field> -->
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

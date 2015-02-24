@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	<form name="FindRegistryFile" type="single" target="FindRegistryFile"
+		default-entity-name="RegistryFile">
+
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="isActive" title="is Active">
+			<hidden  value="Y" />
+		</field>
+		<field name="documentName" title="Document Name">
+			<text-find />
+		</field>
+		<field name="custodian" title="custodian">
+			<display />
+		</field>
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
+
+	<form name="ListRegistryFile" type="list" list-name="listIt"
+		paginate-target="FindRegistryFile" default-entity-name="RegistryFile"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="RegistryFileCtx" />
+				<field-map field-name="entityName" value="RegistryFile" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+
+			</service>
+		</actions>
+		
+		<field name="documentName" title="Document Name">
+			<display />
+		</field>
+		<field name="documentName" title="Document Name">
+			<display />
+		</field>
+		<field name="description" title="Description">
+			<display />
+		</field>
+		<field name="custodian" title="Custodian">
+			<display />
+		</field>
+		<field name="registryFileId" title="Update" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Update"
+				target="EditRegistryFile">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field>
+		<field name="partyId" title="Member" widget-style="buttontext">
+			<hyperlink target="/partymgr/control/viewmemberprofile"
+				target-type="inter-app" description="View Details">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		<field name="request" use-when="${fileStatus=='Available'}" title="Request File"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Request"
+				target="createFileRequest">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field>
+		<!-- <field name="request" use-when="${fileStatus=='Requested'}" title="Action"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Issue"
+				target="createFileRequest">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field>
+		<field name="fileStatus" title="File Status">
+			<display />
+					<field name="request" use-when="${fileStatus=='Issued'}" title="Action"
+			widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Release"
+				target="createFileRequest">
+				<parameter param-name="registryFileId" />
+			</hyperlink>
+		</field> -->
+		<field name="fileStatus" title="File Status">
+			<display />
+		</field>
+		<field name="fileStatus" use-when="${fileStatus=='Requested'} || ${fileStatus=='Issued'}"  title="File Status">
+			<hyperlink also-hidden="false" description="${fileStatus}"
+				target="/partymgr/control/viewmemberprofile"
+				target-type="inter-app">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+
+
+		<!-- use-when="${bsh:emplPositionId==userLogin.partyId}" -->
+	</form>
+
+	<form name="EditRegistryFile" type="single" target="updateRegistryFile"
+		title="" default-map-name="registryfilemap" default-entity-name="RegistryFile"
+		header-row-style="header-row" default-table-style="basic-table">
+
+
+		<alt-target use-when="registryfilemap==null" target="createRegistryFile" />
+
+		<!-- retentionScheduleID Field -->
+		<field use-when="registryfilemap!=null" name="registryFileId"
+			title="Registry File" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+			<display />
+		</field>
+		<field use-when="registryfilemap==null&amp;&amp;registryFileId==null"
+			name="registryFileId" title="registry File Id">
+			<hidden />
+		</field>
+		<field use-when="registryfilemap==null&amp;&amp;registryFileId!=null"
+			name="registryFileId" title="${uiLabelMap.registryFileId}"
+			tooltip="${uiLabelMap.CommonCannotBeFound}: [${registryFileId}]">
+			<hidden />
+		</field>
+		<field name="fileTypeId" title="File type id">
+			<hidden />
+		</field>
+		<field name="fileType" title="File Type">
+			<display />
+		</field>
+		<field use-when="registryfilemap!=null" name="isActive"
+			title="Active">
+			<text />
+		</field>
+		<field name="partyId" title="Member">
+			<drop-down allow-empty="true" current-description="Select Member">
+				<entity-options description="${firstName} ${lastName}"
+					key-field-name="partyId" entity-name="Member">
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="documentName" title="Document Name">
+			<text />
+		</field>
+		<field name="description" title="Description">
+			<textarea />
+		</field>
+		<field name="custodian" title="Custodian">
+			<drop-down allow-empty="true" current-description="Select Custodian">
+				<entity-options description="${partyId}"
+					key-field-name="partyId" entity-name="PartyRoleNameDetail">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="EMPLOYEE" />
+					<entity-order-by field-name="description" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<!-- <field name="requester" title="requester"> <text /> </field> <field 
+			name="requestDate" title="request Date"> <date-time /> </field> -->
+
+		<!-- submitButton -->
+		<field  use-when="registryfilemap==null" name="submitButton"
+			title="${uiLabelMap.CommonSave}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+		<field use-when="registryfilemap!=null" name="updateButton"
+			title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+			<submit button-type="text-link" />
+		</field>
+	</form>
+</forms>
