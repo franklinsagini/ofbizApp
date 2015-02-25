@@ -1539,6 +1539,8 @@ under the License.
         	<entity-condition entity-name="Station" list="stationList">
         		<order-by field-name="name"/>
         	</entity-condition>
+        	
+        	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
         </actions>
         <field name="stationAccountTransactionId"><hidden/></field>
         <field name="partyId"><hidden/></field>
@@ -1558,7 +1560,14 @@ under the License.
                 <list-options list-name="stationList" key-name="stationId" description="${name} - ${stationNumber} " />
             </drop-down>
         </field>
-        <field name="monthyear" title="Month of the Year (MonthYear)"  widget-style="required" required-field="true"><text></text></field>
+        <!-- field name="monthyear" title="Month of the Year (MonthYear)"  widget-style="required" required-field="true"><text></text></field -->
+        <field name="monthyear" title="Month of the Year (MonthYear)" widget-style="required" required-field="true">
+        	<drop-down allow-empty="false">
+        		<entity-options description="${month}"  entity-name="MonthStationCount">
+        			<entity-order-by field-name="-month"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
         <field name="chequeNumber" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
