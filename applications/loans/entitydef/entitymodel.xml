@@ -802,6 +802,8 @@ under the License.
 		<field name="loanApplicationId" type="id-vlong-int"></field>
 		<field name="partyId" type="id-vlong-int"></field>
 		
+		<field name="month" type="id"></field>
+		
 		<field name="loanNo" type="name"></field>
 		<field name="dateDue" type="date-time"></field>
 		<field name="employeeNo" type="name"></field>
@@ -1029,6 +1031,25 @@ under the License.
        		<key-map field-name="loanApplicationId"/>
       	</relation>
 	</entity>
+	
+	
+	<view-entity entity-name="LoanExpectationMonth" package-name="org.ofbiz.loans">
+    	<member-entity entity-alias="SE" entity-name="LoanExpectation"></member-entity>
+    	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
+    	<alias entity-alias="TR" name="name" group-by="true"/ --> 
+    	<alias entity-alias="SE" name="month" group-by="true" />
+    	<alias entity-alias="SE" name="total" function="count"/> 
+    </view-entity>
+    
+    <view-entity entity-name="LoanExpectationRepaymentType" package-name="org.ofbiz.loans">
+    	<member-entity entity-alias="SE" entity-name="LoanExpectation"></member-entity>
+    	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
+    	<alias entity-alias="TR" name="name" group-by="true"/ --> 
+    	<alias entity-alias="SE" name="repaymentName" group-by="true" />
+    	<alias entity-alias="SE" name="total" function="count"/> 
+    </view-entity>
 	
 	
 	
