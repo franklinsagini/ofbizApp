@@ -802,7 +802,7 @@ public static String paddString(int padDigits, String count) {
 
 		try {
 			expectedPaymentReceivedELI = delegator.findList(
-					"ExpectedPaymentReceived",
+					"ExpectedPaymentSent",
 					expectedPaymentReceivedConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
