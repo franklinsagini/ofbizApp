@@ -691,24 +691,24 @@ public class LoanRepayments {
 					new BigDecimal(100), 6, RoundingMode.HALF_UP);
 
 			// Adding Principal
-//			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
-//					.toMap("loanExpectationId", loanExpectationId, "loanNo",
-//							loanNo, "loanApplicationId", loanApplicationId,
-//							"employeeNo", employeeNo, "repaymentName",
-//							"PRINCIPAL", "employeeNames", employeeNames,
-//							"dateAccrued", new Timestamp(Calendar.getInstance()
-//									.getTimeInMillis()), "isPaid", "N",
-//							"isPosted", "N",
-//
-//							"amountDue", bdPrincipalAccrued, "amountAccrued",
-//							bdPrincipalAccrued,
-//							
-//							"month", monthYear,
-//
-//							"partyId", member.getLong("partyId"), "loanAmt",
-//							bdLoanAmt));
-//
-//			listTobeStored.add(loanExpectation);
+			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+					.toMap("loanExpectationId", loanExpectationId, "loanNo",
+							loanNo, "loanApplicationId", loanApplicationId,
+							"employeeNo", employeeNo, "repaymentName",
+							"PRINCIPAL", "employeeNames", employeeNames,
+							"dateAccrued", new Timestamp(Calendar.getInstance()
+									.getTimeInMillis()), "isPaid", "N",
+							"isPosted", "N",
+
+							"amountDue", bdPrincipalAccrued, "amountAccrued",
+							bdPrincipalAccrued,
+							
+							"month", monthYear,
+
+							"partyId", member.getLong("partyId"), "loanAmt",
+							bdLoanAmt));
+
+			listTobeStored.add(loanExpectation);
 
 			// Add Interest
 			loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
