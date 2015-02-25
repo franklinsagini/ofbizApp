@@ -825,13 +825,14 @@ GenericValue employeeLeaveType = null;
 		LocalDate datebirthDate = new LocalDate(appointmentdate);
 
 		LocalDate contEndDate = datebirthDate.plusMonths(period);
+		LocalDate contractEndDate = contEndDate.minusDays(1);
 		
 	
 		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		
-		String i18contractEnd = sdfDisplayDate.format(contEndDate.toDate());
-	    String contractEnd = sdfDate.format(contEndDate.toDate());
+		String i18contractEnd = sdfDisplayDate.format(contractEndDate.toDate());
+	    String contractEnd = sdfDate.format(contractEndDate.toDate());
 	    
 	    result.put("contractEnd_i18n", i18contractEnd);
 	    result.put("contractEnd", contractEnd);

@@ -224,9 +224,32 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="EmplLeaveCalender" field="leaveCalenderId" />
 		<set from-field="leaveCalenderId" field="newEntity.leaveCalenderId" />
-		<create-value value-field="newEntity" />
+		
+			 <entity-one entity-name="Person" value-field="empterms">
+		 	<field-map field-name="partyId" value="${userLogin.partyId}"/>
+		 </entity-one>
+		 
+		 <set from-field="empterms.employmentTerms" field="userEmploymentTerms"/>
+			
+			<if>
+			<condition>
+						<if-compare operator="not-equals" value="permanent" field="userEmploymentTerms"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels" 
+						property="employmentTermsError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			    <create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+			
 	</simple-method>
 
 	<simple-method method-name="updateLeaveCalender"
