@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -609,26 +610,24 @@ public class RemittanceServices {
 		}
 		return employer.getString("name");
 	}
-
+	
 	private static String getCurrentMonth() {
-		// TODO Auto-generated method stub
-		Calendar now = Calendar.getInstance();
-
-		int year = now.get(Calendar.YEAR);
-		int month = now.get(Calendar.MONTH);
-
-		month = month + 1;
-
-		String monthName = "";
-		// if (month < 10)
-		// {
-		// monthName = "0"+month;
-		// } else{
-		monthName = String.valueOf(month);
-		// }
-		String currentMonth = monthName + String.valueOf(year);
-		return currentMonth;
+	LocalDate localDate = new LocalDate();
+	int year = localDate.getYear();
+	int month = localDate.getMonthOfYear();
+	
+	String monthPadded = paddString(2, String.valueOf(month));
+	String monthYear = monthPadded+String.valueOf(year);
+		
+		
+		return monthYear;
 	}
+
+public static String paddString(int padDigits, String count) {
+	String padded = String.format("%" + padDigits + "s", count).replace(
+			' ', '0');
+	return padded;
+}
 
 	/***
 	 * @author Japheth Odonya @when Sep 18, 2014 1:02:52 PM
@@ -803,7 +802,7 @@ public class RemittanceServices {
 
 		try {
 			expectedPaymentReceivedELI = delegator.findList(
-					"ExpectedPaymentReceived",
+					"ExpectedPaymentSent",
 					expectedPaymentReceivedConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {

@@ -653,6 +653,13 @@ public class LoanRepayments {
 //		calculateLoanBalance(
 //				loanApplication.getString("partyId"),
 //				loanApplication.getString("loanApplicationId"), bdLoanAmt);
+		
+		LocalDate localDate = new LocalDate();
+		int year = localDate.getYear();
+		int month = localDate.getMonthOfYear();
+		
+		String monthPadded = paddString(2, String.valueOf(month));
+		String monthYear = monthPadded+String.valueOf(year);
 
 		if (bdLoanBalance.compareTo(BigDecimal.ZERO) == 1) {
 
@@ -695,6 +702,8 @@ public class LoanRepayments {
 
 							"amountDue", bdPrincipalAccrued, "amountAccrued",
 							bdPrincipalAccrued,
+							
+							"month", monthYear,
 
 							"partyId", member.getLong("partyId"), "loanAmt",
 							bdLoanAmt));
@@ -713,7 +722,9 @@ public class LoanRepayments {
 							"dateAccrued", new Timestamp(Calendar.getInstance()
 									.getTimeInMillis()), "isPaid", "N",
 							"isPosted", "N", "amountDue", bdInterestAccrued,
-							"amountAccrued", bdInterestAccrued, "partyId",
+							"amountAccrued", bdInterestAccrued,
+							"month", monthYear,
+							"partyId",
 							member.getLong("partyId"), "loanAmt", bdLoanAmt));
 			listTobeStored.add(loanExpectation);
 
@@ -728,7 +739,10 @@ public class LoanRepayments {
 							"dateAccrued", new Timestamp(Calendar.getInstance()
 									.getTimeInMillis()), "isPaid", "N",
 							"isPosted", "N", "amountDue", bdInsuranceAccrued,
-							"amountAccrued", bdInsuranceAccrued, "partyId",
+							"amountAccrued", bdInsuranceAccrued,
+							
+							"month", monthYear,
+							"partyId",
 							member.getLong("partyId"), "loanAmt", bdLoanAmt));
 			listTobeStored.add(loanExpectation);
 
@@ -755,6 +769,12 @@ public class LoanRepayments {
 			}
 		}
 
+	}
+	
+	public static String paddString(int padDigits, String count) {
+		String padded = String.format("%" + padDigits + "s", count).replace(
+				' ', '0');
+		return padded;
 	}
 
 	private static BigDecimal getUnpaidPrincipalTotal(

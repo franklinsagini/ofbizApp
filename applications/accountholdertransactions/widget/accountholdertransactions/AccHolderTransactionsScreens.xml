@@ -889,6 +889,7 @@ under the License.
                 
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="generateLoansRepaymentExpected"/>
+                <set field="loanExpectationCtx" from-field="parameters"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
@@ -957,6 +958,10 @@ under the License.
                                 		</fail-widgets -->
                                 	</section>
                                 </screenlet>
+                                
+                                <screenlet title="Find Expectation">
+                                        <include-form name="FindExpectation" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                            	</screenlet>
                                 
                                 <screenlet title="Unpaid Expected Repayments">
                                     <!-- include-form name="unpostedclearedcheques" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
@@ -1233,12 +1238,24 @@ under the License.
                         	
                         	<widgets>
                         		  <screenlet>
+                        		  <section>
+                        		  	<widgets>
+                        		  		      <container style="button-bar">
+                                			<label style="h3">Received Payments from ${stationName} for ${month} </label>
+                                      
+                                            </container>
+                        		  	</widgets>
+                        		  </section>
                                 	<section>
                                 		
+                                		<condition>
+                                			<if-compare-field operator="less" field="totalExpected" to-field="totalChequeAmount"/>
+                                			<!-- if-compare-field operator="greater-equals" field="totalChequeAmount" field="totalExpected"/ -->
+                                			
+                                		</condition>
                                 		<widgets>
                                 			
                                 			<container style="button-bar">
-                                			<label style="h3">Received Payments from ${stationName} for ${month} </label>
                                             <!-- link target="receivedPaymentBreakdownpdf" text="Print Received Payment Breakdown" style="buttontext">
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
@@ -1246,11 +1263,15 @@ under the License.
                                             <link target="receivedPaymentBreakdowncsv" text="Generate Received Payment Breakdown CSV" style="buttontext">
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link -->
-                                            <link target="processReceivedPaymentBreakdown?month=${month}&amp;stationNumber=${stationNumber}"  text="Process Received Payments" style="buttontext">
+                                            
+                                            <link  target="processReceivedPaymentBreakdown?month=${month}&amp;stationNumber=${stationNumber}"  text="Process Received Payments" style="buttontext">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
                                             </container>
                                 		</widgets>
+                                		<fail-widgets>
+                                				<label style="h3" >The Cheque has not been received!! or station account balance is less than expected amount</label>
+                                		</fail-widgets>
                                 		
                                 	</section>
                                 </screenlet>
