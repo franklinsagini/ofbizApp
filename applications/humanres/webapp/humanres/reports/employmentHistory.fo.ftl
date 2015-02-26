@@ -38,6 +38,7 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="20pt"/>
             <fo:table-column column-width="130pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
@@ -45,6 +46,9 @@ under the License.
             <fo:table-column column-width="100pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block></fo:block>
+                    </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Employer</fo:block>
                     </fo:table-cell>
@@ -63,9 +67,15 @@ under the License.
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
+
+             <#assign count=0>
                   <#list history as hist>
                     
                      <fo:table-row>
+                     <#assign count = count + 1>
+                      <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${count}</fo:block>
+                        </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${hist.employer?if_exists}</fo:block>
                         </fo:table-cell>
