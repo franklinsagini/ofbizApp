@@ -77,7 +77,7 @@ under the License.
         <field use-when="fixedAsset!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <!-- <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId"><text size="20" maxlength="20"/></field> -->
         <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
-
+        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text size="20"/></field>
         <field name="fixedAssetTypeId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="FixedAssetType" description="${description}">
@@ -85,7 +85,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="instanceOfProductId"><lookup target-form-name="LookupProduct"/></field>
+        <!-- <field name="instanceOfProductId"><lookup target-form-name="LookupProduct"/></field> -->
 <!--         <field name="classEnumId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
@@ -110,18 +110,24 @@ under the License.
             </drop-down>
         </field>
         <!--<field name="calendarId"><hidden/></field>-->  <!-- not show, can better be maintained by the system -->
-        <field name="calendarId">
+<!--         <field name="calendarId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="TechDataCalendar" description="[${calendarId}] ${description}">
                     <entity-order-by field-name="calendarId"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field> -->
+        <field name="dateAcquired"><date-time/></field>
+        <field name="expectedEndOfLife"><date-time/></field>
         <field name="parentFixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="locatedAtFacilityId"><lookup target-form-name="LookupFacility"/></field>
+        <field name="purchaseCost" ><text size="20"/></field>
+        <field name="salvageValue" ><text size="20"/></field>
+        <field name="depreciation" ><text size="20"/></field>
         <!-- <field name="locatedAtLocationSeqId"><lookup target-form-name="LookupFacilityLocation"/></field> -->
 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="fixedAsset==null" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="fixedAsset!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ListFixedAssetProducts" type="list"  list-name="fixedAssetProducts"  target="updateFixedAssetProduct"
