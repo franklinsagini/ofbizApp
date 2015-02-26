@@ -591,6 +591,33 @@ under the License.
         
     </entity>
     
+            <entity entity-name="SubStation" package-name="org.ofbiz.payroll" title="SubStation Entity">
+        	<field name="subStationId" type="id-vlong-int"><description>primary sequenced ID</description></field>
+        	<field name="stationId" type="id-ne"><description>Station ID</description></field>
+        	<field name="isActive" type="indicator"></field>
+        	<field name="createdBy" type="name"></field>
+        	<field name="updatedBy" type="name"></field>
+        	<field name="branchId" type="name"></field>
+        	<field name="stationNumber" type="id"  enable-audit-log="true"></field>
+        	<field name="employerCode" type="id" enable-audit-log="true"></field>
+        	<field name="employerName" type="name"  enable-audit-log="true"></field>
+       		<field name="name" type="name"  enable-audit-log="true"></field>
+        	<field name="employerId" type="id"></field>
+        	<field name="partyId" type="id"></field>
+
+        	<field name="boxAddress" type="name"  enable-audit-log="true"></field>
+        	<field name="fax" type="name"  enable-audit-log="true"></field>
+        	<field name="telephoneNo" type="name"  enable-audit-log="true"></field>
+        	<field name="mobile" type="name"  enable-audit-log="true"></field>
+        	<field name="email" type="name"  enable-audit-log="true"></field>
+        	<field name="contactPerson" type="name"  enable-audit-log="true"></field>
+
+        	<prim-key field="subStationId"/>
+        	<relation type="one" fk-name="subStation_Station" rel-entity-name="Station">
+            	<key-map field-name="stationId"/>
+        	</relation>
+        </entity>
+    
          <entity entity-name="ATMTransactionsLog" table-name="ATMTransactionsLog" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="ATMTransactions Entity">
         <field name="atmransactionsLogId" col-name="AccountID" type="id"><description>primary sequenced ID</description></field>
 		<field name="cardNumber"  type="id"></field>
