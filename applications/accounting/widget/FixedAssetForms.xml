@@ -78,6 +78,7 @@ under the License.
         <!-- <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId"><text size="20" maxlength="20"/></field> -->
         <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text size="20"/></field>
+        <field name="serialNumber" title="Serial Number"><text size="20"/></field>
         <field name="fixedAssetTypeId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="FixedAssetType" description="${description}">
@@ -102,13 +103,13 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field name="uomId" title="${uiLabelMap.CommonUom}">
+<!--         <field name="uomId" title="${uiLabelMap.CommonUom}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomAndType" description="[${typeDescription}] ${description}">
                     <entity-order-by field-name="uomTypeId"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field> -->
         <!--<field name="calendarId"><hidden/></field>-->  <!-- not show, can better be maintained by the system -->
 <!--         <field name="calendarId">
             <drop-down allow-empty="true">
@@ -117,6 +118,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
+        <field name="dateLastServiced"><date-time/></field>
+        <field name="dateNextService"><date-time/></field>
         <field name="dateAcquired"><date-time/></field>
         <field name="expectedEndOfLife"><date-time/></field>
         <field name="parentFixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
