@@ -227,6 +227,7 @@ public class RemittanceServices {
 						"stationName", station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
+						"employerCode", station.getString("employerCode"),
 						
 						"employeeNumber", member.getString("employeeNumber"),
 						"memberNumber", member.getString("memberNumber"),
@@ -351,8 +352,8 @@ public class RemittanceServices {
 		GenericValue accountProduct = findAccountProduct(memberAccount.getLong(
 				"accountProductId").toString());
 
-		String remitanceCode = accountProduct.getString("code")
-				+ String.valueOf(sequence);
+		String remitanceCode = accountProduct.getString("code");
+				//+ String.valueOf(sequence);
 
 		try {
 			TransactionUtil.begin();
@@ -368,6 +369,13 @@ public class RemittanceServices {
 			// Member Deposits
 			bdContributingAmt = LoansProcessingServices
 					.getLoanCurrentContributionAmount(member.getLong("partyId"));
+			
+			BigDecimal bdSpecifiedAmount = memberAccount.getBigDecimal("contributingAmount");
+			
+			if ((bdSpecifiedAmount != null) && (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)){
+				bdContributingAmt = bdSpecifiedAmount;
+			}
+			
 		} else {
 			if (memberAccount.getBigDecimal("contributingAmount") != null) {
 				bdContributingAmt = memberAccount
@@ -386,6 +394,7 @@ public class RemittanceServices {
 						"stationName", station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
+						"employerCode", station.getString("employerCode"),
 						"employeeNumber", member.getString("employeeNumber"),
 						"memberNumber", member.getString("memberNumber"),
 						
@@ -490,7 +499,9 @@ public class RemittanceServices {
 						"stationName", station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
+						"employerCode", station.getString("employerCode"),
 						"employeeNumber", member.getString("employeeNumber"),
+						
 						"memberNumber", member.getString("memberNumber"),
 						
 						"loanNo", "0", "employerNo", employerName, "amount",
@@ -653,10 +664,22 @@ public static String paddString(int padDigits, String count) {
 		String branchId = station.getString("branchId");
 		String stationNumber = station.getString("stationNumber").trim();
 		String stationName = station.getString("name");
+		
+		String employerCode = station.getString("employerCode");
+		String employerName = station.getString("employerName");
+		
 		GenericValue stationExpectation = null;
 		stationExpectation = delegator.makeValue("StationExpectation", UtilMisc
 				.toMap("isActive", "Y", "createdBy", createdBy, "branchId",
-						branchId, "stationNumber", stationNumber,
+						branchId,
+						
+						"employerCode", employerCode,
+						"employerName", employerName,
+						
+						"stationNumber", stationNumber,
+						
+						
+						
 						"stationName", stationName, "month", month));
 		try {
 			TransactionUtil.begin();
@@ -782,11 +805,31 @@ public static String paddString(int padDigits, String count) {
 		stationName = station.getString("name");
 		return stationName;
 	}
+	
+	
+	public static String getEmployerName(String employerCode) {
+		String employerName = "";
+		List<GenericValue> stationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			stationELI = delegator.findList("Station", EntityCondition
+					.makeCondition("employerCode", employerCode), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue station = null;
+		for (GenericValue genericValue : stationELI) {
+			station = genericValue;
+		}
+		employerName = station.getString("employerName");
+		return employerName;
+	}
 
 	/***
 	 * Get total expected for station and month
 	 * */
-	public static BigDecimal getTotalExpected(String stationNumber, String month) {
+	public static BigDecimal getTotalExpected(String employerCode, String month) {
 		BigDecimal totalExpected = BigDecimal.ZERO;
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -794,7 +837,7 @@ public static String paddString(int padDigits, String count) {
 
 		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"stationNumber", EntityOperator.EQUALS, stationNumber),
+						"employerCode", EntityOperator.EQUALS, employerCode),
 						EntityCondition.makeCondition("month",
 								EntityOperator.EQUALS, month)
 
@@ -824,10 +867,10 @@ public static String paddString(int padDigits, String count) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
-		String stationNumber = (String) request.getParameter("stationNumber");
+		String employerCode = (String) request.getParameter("employerCode");
 		String month = (String) request.getParameter("month");
 
-		GenericValue station = findStationGivenStationNumber(stationNumber);
+		//GenericValue station = findStationGivenStationNumber(stationNumber);
 
 		// Get
 		List<GenericValue> stationAccountTransactionELI = null;
@@ -835,8 +878,8 @@ public static String paddString(int padDigits, String count) {
 		// Get total amount given station and month
 		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"stationId", EntityOperator.EQUALS,
-						station.getString("stationId")), EntityCondition
+						"employerCode", EntityOperator.EQUALS,
+						employerCode), EntityCondition
 						.makeCondition("monthyear", EntityOperator.EQUALS,
 								month)
 
@@ -862,7 +905,7 @@ public static String paddString(int padDigits, String count) {
 		}
 
 		// Get total submitted
-		BigDecimal totalSubmitted = getTotalExpected(stationNumber, month);
+		BigDecimal totalSubmitted = getTotalExpected(employerCode, month);
 
 		if (totalSubmitted.compareTo(totalAmount) == -1) {
 			result.put("REMITANCEENOUGH", "NO");
@@ -923,10 +966,10 @@ public static String paddString(int padDigits, String count) {
 		return station;
 	}
 
-	public static BigDecimal getTotalRemittedChequeAmount(String stationNumber,
+	public static BigDecimal getTotalRemittedChequeAmount(String employerCode,
 			String month) {
 
-		GenericValue station = findStationGivenStationNumber(stationNumber);
+		//GenericValue station = findStationGivenStationNumber(stationNumber);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Get
 		List<GenericValue> stationAccountTransactionELI = null;
@@ -934,8 +977,8 @@ public static String paddString(int padDigits, String count) {
 		// Get total amount given station and month
 		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"stationId", EntityOperator.EQUALS,
-						Long.valueOf(station.getString("stationId"))),
+						"employerCode", EntityOperator.EQUALS,
+						Long.valueOf(employerCode)),
 						EntityCondition.makeCondition("monthyear",
 								EntityOperator.EQUALS, month)
 
@@ -974,10 +1017,10 @@ public static String paddString(int padDigits, String count) {
 
 		// Update Receipts to show generated and post
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		String stationNumber = (String) request.getParameter("stationNumber");
+		String employerCode = (String) request.getParameter("employerCode");
 		String month = (String) request.getParameter("month");
 
-		log.info("SSSSSSSSSSSSSSS  Station Number " + stationNumber);
+		log.info("SSSSSSSSSSSSSSS  Employer Code " + employerCode);
 		log.info("SSSSSSSSSSSSSSS  Month " + month);
 		/**
 		 * <field name="processed" type="indicator"></field> <field
@@ -987,7 +1030,7 @@ public static String paddString(int padDigits, String count) {
 
 		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"stationNumber", EntityOperator.EQUALS, stationNumber),
+						"employerCode", EntityOperator.EQUALS, employerCode),
 						EntityCondition.makeCondition("month",
 								EntityOperator.EQUALS, month), EntityCondition
 								.makeCondition("processed",
@@ -1034,7 +1077,7 @@ public static String paddString(int padDigits, String count) {
 			 * */
 
 			for (String code : accountProductCodesList) {
-				if (expectedPaymentReceived.getString("expectationType")
+				if (expectedPaymentReceived.getString("remitanceCode")
 						.equals(code) && !(code.equals("902"))) {
 					// Add a member account transaction from this expectation to
 					// the account of this code
@@ -1050,7 +1093,7 @@ public static String paddString(int padDigits, String count) {
 					// Increment bdAccount with this amount
 					bdAccount = bdAccount.add(expectedPaymentReceived
 							.getBigDecimal("amount"));
-				} else if (expectedPaymentReceived.getString("expectationType")
+				} else if (expectedPaymentReceived.getString("remitanceCode")
 						.equals(code) && (code.equals("902"))) {
 
 					// Add member account transaction from this expection to the
@@ -1077,9 +1120,21 @@ public static String paddString(int padDigits, String count) {
 			// bdAccount = bdAccount.add(expectedPaymentReceived
 			// .getBigDecimal("amount"));
 			// } else
+			
+			//Principal = Loan Product Code + A
+			//Interest = Loan Product Code + B
+			//Insurance = LoanProduct Code + C
+			String loanProductCode = LoanUtilities.getLoanProductCodeGivenLoanNo(expectedPaymentReceived.getString("loanNo"));
 
-			if (expectedPaymentReceived.getString("expectationType").equals(
-					"PRINCIPAL")) {
+			if (loanProductCode != null){
+				
+				
+				String remittanceCodePrincipal = loanProductCode+"A";
+				String remittanceCodeInterest = loanProductCode+"B";
+				String remittanceCodeInsurance = loanProductCode+"C";
+				
+			if (expectedPaymentReceived.getString("remitanceCode").equals(
+					remittanceCodePrincipal)) {
 				bdPrincipal = bdPrincipal.add(expectedPaymentReceived
 						.getBigDecimal("amount"));
 
@@ -1087,15 +1142,17 @@ public static String paddString(int padDigits, String count) {
 
 				saveLoanRepayment(expectedPaymentReceived);
 
-			} else if (expectedPaymentReceived.getString("expectationType")
-					.equals("INTEREST")) {
+			} else if (expectedPaymentReceived.getString("remitanceCode")
+					.equals(remittanceCodeInterest)) {
 				bdInterest = bdInterest.add(expectedPaymentReceived
 						.getBigDecimal("amount"));
-			} else if (expectedPaymentReceived.getString("expectationType")
-					.equals("INSURANCE")) {
+			} else if (expectedPaymentReceived.getString("remitanceCode")
+					.equals(remittanceCodeInsurance)) {
 				bdInsurance = bdInsurance.add(expectedPaymentReceived
 						.getBigDecimal("amount"));
 			}
+
+		}
 
 			bdTotal = bdTotal.add(expectedPaymentReceived
 					.getBigDecimal("amount"));
@@ -1309,16 +1366,26 @@ public static String paddString(int padDigits, String count) {
 		BigDecimal loanPrincipal = BigDecimal.ZERO;
 		BigDecimal loanInterest = BigDecimal.ZERO;
 		BigDecimal loanInsurance = BigDecimal.ZERO;
+		
 		// Loan Principal
 		loanPrincipal = expectedPaymentReceived.getBigDecimal("amount");
 		// Get This Loan's Interest
+		
+		String loanProductCode = LoanUtilities.getLoanProductCodeGivenLoanNo(expectedPaymentReceived.getString("loanNo"));
+
+			
+			
+			String remittanceCodePrincipal = loanProductCode+"A";
+			String remittanceCodeInterest = loanProductCode+"B";
+			String remittanceCodeInsurance = loanProductCode+"C";
+		
 		loanInterest = getLoanInterestOrInsurance(
 				expectedPaymentReceived.getString("loanNo"),
-				expectedPaymentReceived.getString("month"), "INTEREST");
+				expectedPaymentReceived.getString("month"), remittanceCodeInterest);
 		// Get This Loan's Insurance
 		loanInsurance = getLoanInterestOrInsurance(
 				expectedPaymentReceived.getString("loanNo"),
-				expectedPaymentReceived.getString("month"), "INSURANCE");
+				expectedPaymentReceived.getString("month"), remittanceCodeInsurance);
 		// Sum Principal, Interest and Insurance
 
 		BigDecimal transactionAmount = loanPrincipal.add(loanInterest).add(
@@ -1329,13 +1396,13 @@ public static String paddString(int padDigits, String count) {
 
 		BigDecimal totalInterestDue = getLoanInterestOrInsuranceDue(
 				expectedPaymentReceived.getString("loanNo"),
-				expectedPaymentReceived.getString("month"), "INTEREST");
+				expectedPaymentReceived.getString("month"), remittanceCodeInterest);
 		BigDecimal totalInsuranceDue = getLoanInterestOrInsuranceDue(
 				expectedPaymentReceived.getString("loanNo"),
-				expectedPaymentReceived.getString("month"), "INSURANCE");
+				expectedPaymentReceived.getString("month"), remittanceCodeInsurance);
 		BigDecimal totalPrincipalDue = getLoanInterestOrInsuranceDue(
 				expectedPaymentReceived.getString("loanNo"),
-				expectedPaymentReceived.getString("month"), "PRINCIPAL");
+				expectedPaymentReceived.getString("month"), remittanceCodePrincipal);
 		BigDecimal totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(
 				totalPrincipalDue);
 
@@ -1401,7 +1468,7 @@ public static String paddString(int padDigits, String count) {
 						EntityCondition.makeCondition("month",
 								EntityOperator.EQUALS, month),
 
-						EntityCondition.makeCondition("expectationType",
+						EntityCondition.makeCondition("remitanceCode",
 								EntityOperator.EQUALS, interestorinsurance)
 
 				), EntityOperator.AND);
@@ -1457,7 +1524,7 @@ public static String paddString(int padDigits, String count) {
 						EntityCondition.makeCondition("month",
 								EntityOperator.EQUALS, month),
 
-						EntityCondition.makeCondition("expectationType",
+						EntityCondition.makeCondition("remitanceCode",
 								EntityOperator.EQUALS, interestorinsurance)
 
 				), EntityOperator.AND);

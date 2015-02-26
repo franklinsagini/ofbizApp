@@ -552,6 +552,11 @@ under the License.
 		<call-simple-method method-name="saveStationTransaction" scope="inline"></call-simple-method>
         
         <set field="postStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.postStationTransaction(newEntity, userLogin);}" type="String"/>
+    	<entity-one value-field="stationEntity" entity-name="Station">
+    		<field-map field-name="stationId" from-field="newEntity.stationId"/>
+    	</entity-one>
+    	<set field="newEntity.employerCode" value="${stationEntity.employerCode}"/>
+    	<store-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="saveStationTransaction">
     	<make-value entity-name="StationAccountTransaction" value-field="newEntity"/>

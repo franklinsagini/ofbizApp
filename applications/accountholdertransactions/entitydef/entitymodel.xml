@@ -201,6 +201,7 @@ under the License.
         <field name="updatedBy" type="id"></field>
         <field name="branchId" type="id-int"></field>
          <field name="stationId" type="id-int"></field>
+         <field name="employerCode" type="id"></field>
         <field name="partyId" type="id-vlong-int"></field>
         <field name="slipNumber" type="name"></field>
         <field name="monthyear" type="name"></field>
@@ -489,6 +490,9 @@ under the License.
 		<field name="createdBy" type="name"></field>
 		<field name="updatedBy" type="name"></field>
 		<field name="branchId" type="name"></field>
+		<field name="employerCode" type="id"></field>
+		<field name="employerName" type="name"></field>
+		
 		<field name="stationNumber" type="id"></field>
 		<field name="stationName" type="name"></field>
 		<field name="total" type="numeric"></field>
@@ -498,6 +502,44 @@ under the License.
         <prim-key field="month"/>
         
     </entity>
+    
+     <entity entity-name="StationEmployer" package-name="org.ofbiz.accountholdertransactions" title="StationEmployer Entity">
+        <field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="branchId" type="name"></field>
+		<field name="employerCode" type="id"></field>
+		<field name="employerName" type="name"></field>
+		
+        <field name="month" type="name"></field>
+        
+        <prim-key field="employerCode"/>
+        <prim-key field="month"/>
+        
+    </entity>
+    
+    
+    <view-entity entity-name="EmployerExpectation" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="SE" entity-name="StationExpectation"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
+    	<alias entity-alias="TR" name="name" group-by="true"/ -->
+    	 
+    	<!--  alias entity-alias="SE" name="employerCode" group-by="true" col-alias="employerCode"  field="employerCode"/ -->
+    	<!-- alias entity-alias="SE" name="employerName" group-by="true"   / -->
+    	<!-- alias entity-alias="SE" name="month" group-by="true" / -->
+    	<!-- alias entity-alias="SE" name="stationNumber" function="count" col-alias="employerTotal"/ --> 
+    	<alias entity-alias="SE" name="employerCode"  group-by="true" col-alias="employerCode" field="employerCode"></alias>
+    	<alias entity-alias="SE" name="employerName"  group-by="true" col-alias="employerName"  field="employerName"></alias>
+    	<alias entity-alias="SE" name="month"  group-by="true" col-alias="month"  field="month"></alias>
+   
+   		<view-link entity-alias="SE" rel-entity-alias="S"> 
+            <key-map field-name="stationNumber" rel-field-name="stationNumber"/> 
+        </view-link> 
+    </view-entity>
+    
+    
     
     <!-- Expectation Sent 
     	Generate Expectation to send ExpectedPaymentSe
@@ -520,7 +562,7 @@ under the License.
 		<field name="stationNumber" type="name"></field>
 		<field name="stationName" type="name"></field>
 		<field name="payrollNo" type="name"></field>
-		
+		<field name="employerCode" type="id"></field>
 		<field name="employeeNumber" type="name"></field>
 		<field name="memberNumber" type="name"></field>
 		
@@ -556,6 +598,7 @@ under the License.
 		<field name="stationNumber" type="name"></field>
 		<field name="stationName" type="name"></field>
 		<field name="payrollNo" type="name"></field>
+		<field name="employerCode" type="id"></field>
 		<field name="employeeNumber" type="name"></field>
 		<field name="memberNumber" type="name"></field>
 		
@@ -591,7 +634,7 @@ under the License.
         
     </entity>
     
-            <entity entity-name="SubStation" package-name="org.ofbiz.payroll" title="SubStation Entity">
+            <entity entity-name="SubStation" package-name="org.ofbiz.accountholdertransactions" title="SubStation Entity">
         	<field name="subStationId" type="id-vlong-int"><description>primary sequenced ID</description></field>
         	<field name="stationId" type="id-ne"><description>Station ID</description></field>
         	<field name="isActive" type="indicator"></field>
