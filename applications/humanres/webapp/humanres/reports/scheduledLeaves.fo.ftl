@@ -32,6 +32,7 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="20pt"/>
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="130pt"/>
@@ -40,6 +41,9 @@ under the License.
             <fo:table-column column-width="100pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left"></fo:block>
+                    </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Staff Payroll number</fo:block>
                     </fo:table-cell>
@@ -64,6 +68,8 @@ under the License.
             </fo:table-header>
             <fo:table-body>
 
+             <#assign count=0>
+
                   <#list activities as activity>
                     <#if activity.partyId?has_content>
                         <#assign staff = delegator.findOne("Person", {"partyId" : activity.partyId}, false)/>
@@ -72,6 +78,10 @@ under the License.
                         <#assign leaveType = delegator.findOne("EmplLeaveType", {"leaveTypeId" : activity.leaveTypeId}, false)/>
                     </#if>
                      <fo:table-row>
+                      <#assign count = count + 1>
+                      <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${count}</fo:block>
+                        </fo:table-cell>
                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if staff?has_content>
                                 <fo:block>${staff.employeeNumber?if_exists}</fo:block>

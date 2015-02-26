@@ -75,9 +75,9 @@ under the License.
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-
+             <#assign count=0>
                   <#list employeeList as activity>
-				  <#assign count=0>
+				  
 				  
                     <#if activity.partyId?has_content>
                         <#assign staff = delegator.findOne("Person", {"partyId" : activity.partyId}, false)/>
