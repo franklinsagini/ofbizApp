@@ -1030,7 +1030,7 @@ public static String paddString(int padDigits, String count) {
 		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"employerCode", EntityOperator.EQUALS,
-						Long.valueOf(employerCode.trim())),
+						employerCode.trim()),
 						EntityCondition.makeCondition("monthyear",
 								EntityOperator.EQUALS, month)
 
