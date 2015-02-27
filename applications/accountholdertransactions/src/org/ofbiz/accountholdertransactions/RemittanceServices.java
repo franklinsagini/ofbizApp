@@ -1117,11 +1117,11 @@ public static String paddString(int padDigits, String count) {
 			 * Can either be an account, an INTEREST INSURANCE PRINCIPAL
 			 * */
 
-			if (branchId.equals("")) {
-				branchId = getMemberByPayrollNo(
-						expectedPaymentReceived.getString("payrollNo"))
-						.getString("branchId");
-			}
+//			if (branchId.equals("")) {
+//				branchId = getMemberByPayrollNo(
+//						expectedPaymentReceived.getString("payrollNo"))
+//						.getString("branchId");
+//			}
 
 			/**
 			 * PRINCIPAL INTEREST INSURANCE ACCOUNT SHARES
