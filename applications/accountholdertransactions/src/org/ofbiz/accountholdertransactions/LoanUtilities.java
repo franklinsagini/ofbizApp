@@ -870,6 +870,36 @@ public class LoanUtilities {
 				RoundingMode.HALF_UP);
 	}
 
+	public static String getLoanProductCodeGivenLoanNo(String loanNo) {
+		// TODO Auto-generated method stub
+		//Get Loan Product Code given loanNo
+		
+		List<GenericValue> loanApplicationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					EntityCondition.makeCondition("loanNo", loanNo),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (loanApplicationELI.size() < 1)
+		{
+			return null;
+		}
+		
+		Long loanProductId = null;
+
+		for (GenericValue genericValue : loanApplicationELI) {
+			loanProductId = genericValue.getLong("loanProductId");
+		}
+		
+		String productCode = getLoanProductCode(loanProductId);
+		
+		return productCode.trim();
+	}
+
 
 
 }

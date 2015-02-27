@@ -1609,38 +1609,42 @@ under the License.
     <form name="listExpectedStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStationAccountTransaction" paginate-target="expectedPaymentStations"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="StationExpectation">
+            <entity-condition entity-name="EmployerExpectation">
             	<order-by field-name="-month"></order-by>
-            	<order-by field-name="stationName"></order-by>
+            	<order-by field-name="employerName"></order-by>
             </entity-condition>
             
             
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <!--  service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="stationExpectationCtx"/>
-                <field-map field-name="entityName" value="StationExpectation"/>
+                <field-map field-name="entityName" value="StationEmployer"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
                 
-            </service>
+            </service -->
             
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateStationExpectation"/>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateStationExpectation"/ -->
  		
- 		<field name="stationNumber" title="Station No/Code"><text></text></field>
- 		<field name="stationName" title="Station Name"><text></text></field>
+ 		
+ 		<field name="employerCode" title="Employer Code"><text></text></field>
+ 		<field name="employerName" title="Employer Name"><text></text></field>
+ 		
+ 		<!-- field name="stationNumber" title="Station No/Code"><text></text></field>
+ 		<field name="stationName" title="Station Name"><text></text></field -->
         <field name="month" title="Month of the Year (MonthYear)" ><text></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
         <field name="expectedRemittance" title="Expected Remittance" widget-style="buttontext">
             <hyperlink target="expectedPaymentBreakdown" description="Expected Remittance" also-hidden="false">
-                <parameter param-name="stationNumber"/>
+                <parameter param-name="employerCode"/>
                  <parameter param-name="month"/>
             </hyperlink>
         </field>
         
          <field name="receivedRemittance" title="Received Remittance" widget-style="buttontext">
             <hyperlink target="receivedPaymentBreakdown" description="Received Remittance" also-hidden="false">
-                <parameter param-name="stationNumber"/>
+                <parameter param-name="employerCode"/>
                  <parameter param-name="month"/>
             </hyperlink>
         </field>
@@ -1954,7 +1958,7 @@ under the License.
     
     
     <!-- Find Station -->
-    	<form name="FindStation" type="single" target="expectedPaymentStations" default-entity-name="StationExpectation">
+    	<form name="FindStation" type="single" target="expectedPaymentStations" default-entity-name="StationEmployer">
         <actions>
         
         	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
@@ -1963,16 +1967,16 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="month" title="Month">
-        	<drop-down allow-empty="false">
+        	<drop-down allow-empty="true">
         		<entity-options description="${month}"  entity-name="MonthStationCount">
         			<entity-order-by field-name="-month"/>
         		</entity-options>
         	</drop-down>
         </field>
 
-        <field name="stationNumber" title="Station No/Code" position="2"><text-find/></field>
-
-        <field name="stationName" title="Station Name"><text-find/></field>
+        
+        <field name="employerCode" title="Employer Code" position="1"><text-find/></field>
+ 		<field name="employerName" title="Employer Name" position="2"><text-find/></field>
 
         
 
