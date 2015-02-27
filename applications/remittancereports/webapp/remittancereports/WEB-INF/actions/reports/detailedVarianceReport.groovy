@@ -10,6 +10,7 @@ station = delegator.findOne("Station", [stationId : stationId], false);
 
 //Station Number
 stationNumber = station.stationNumber
+employerCode = station.employerCode
 
 class MemberExpecation{
 	def payrollNumber
@@ -43,7 +44,7 @@ def expectedReceived
 
 def member
 //Get Expectation Sent for this stationNumber
-expectationList = delegator.findByAnd("ExpectationSentSummary",  [stationNumber : stationNumber, month: month], null, false);
+expectationList = delegator.findByAnd("ExpectationSentSummary",  [employerCode : employerCode, month: month], null, false);
 
 
 //Buid a variance list
@@ -88,7 +89,7 @@ expectationList.eachWithIndex { expectItem, index ->
 	memberExpecationItem.termsOfService = memberTerms.name
 	
 	//Add Items to Member List
-	sentDetailedList = delegator.findByAnd("ExpectedPaymentSent",  [stationNumber : stationNumber, month: month, payrollNo: expectItem.payrollNo], null, false);
+	sentDetailedList = delegator.findByAnd("ExpectedPaymentSent",  [employerCode : employerCode, month: month, payrollNo: expectItem.payrollNo], null, false);
 	sentDetailedList.eachWithIndex { sentItem, sentItemIndex ->
 		
 		expectedReceived = new ExpectReceive();
@@ -99,7 +100,7 @@ expectationList.eachWithIndex { expectItem, index ->
 		//receivedTotal = receivedTotal + receivedItem.amount;
 		
 		receivedTotal = new BigDecimal(0.0);
-		receivedDetailedList = delegator.findByAnd("ExpectedPaymentReceived",  [stationNumber : stationNumber, month: month, payrollNo: expectItem.payrollNo], null, false);
+		receivedDetailedList = delegator.findByAnd("ExpectedPaymentReceived",  [employerCode : employerCode, month: month, payrollNo: expectItem.payrollNo], null, false);
 		receivedDetailedList.eachWithIndex { receivedDetailedItem, receivedDetailedItemIndex ->
 			receivedTotal = receivedTotal + receivedDetailedItem.amount;
 		}
