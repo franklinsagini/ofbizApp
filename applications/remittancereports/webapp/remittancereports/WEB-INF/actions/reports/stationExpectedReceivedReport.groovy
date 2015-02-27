@@ -44,15 +44,15 @@ expectationList.eachWithIndex { expectItem, index ->
 //	def variance
 	
 	expectedReceived = new ExpectReceive();
-	expectedReceived.stationNumber = expectItem.stationNumber
+	expectedReceived.stationNumber = expectItem.employerCode
 	
 	
 	expectedReceived.month = month
-	expectedReceived.stationNumber = expectItem.stationNumber
+	expectedReceived.stationNumber = expectItem.employerCode
 	
 	//Get Member
-	stationNumber = expectedReceived.stationNumber;
-	stationList = delegator.findByAnd("Station",  [stationNumber : stationNumber], null, false);
+	employerCode = expectedReceived.stationNumber;
+	stationList = delegator.findByAnd("Station",  [employerCode : employerCode], null, false);
 	stationName = "";
 	stationList.eachWithIndex { stationItem, stationIndex ->
 		stationName = stationItem.name;
@@ -64,7 +64,7 @@ expectationList.eachWithIndex { expectItem, index ->
 	expectedReceived.expected = expectItem.amount;
 	
 	receivedTotal = new BigDecimal(0.0);
-	receivedList = delegator.findByAnd("ExpectationStationTotalReceivedSummary",  [stationNumber : expectedReceived.stationNumber, month: month], null, false);
+	receivedList = delegator.findByAnd("ExpectationStationTotalReceivedSummary",  [employerCode : expectedReceived.stationNumber, month: month], null, false);
 	receivedList.eachWithIndex { receivedItem, receivedItemIndex ->
 		receivedTotal = receivedTotal + receivedItem.amount;
 	}
