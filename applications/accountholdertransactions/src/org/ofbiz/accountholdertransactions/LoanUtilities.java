@@ -900,6 +900,42 @@ public class LoanUtilities {
 		return productCode.trim();
 	}
 
+	public static String getStationEmployerCode(String stationId) {
+		GenericValue station = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			station = delegator.findOne("Station",
+					UtilMisc.toMap("stationId", stationId.trim()), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (station == null)
+			return null;
+		
+		return station.getString("employerCode");
+	}
+	
+	public static String getStationId(String employerCode) {
+		List<GenericValue> stationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			stationELI = delegator.findList("Station",
+					EntityCondition.makeCondition("employerCode", employerCode),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String stationId = null;
+		if (stationELI.size() > 0){
+			stationId = stationELI.get(0).getString("stationId");
+		}
+		
+		return stationId;
+		
+	}
+
 
 
 }

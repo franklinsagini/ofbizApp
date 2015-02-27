@@ -1609,20 +1609,20 @@ under the License.
     <form name="listExpectedStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStationAccountTransaction" paginate-target="expectedPaymentStations"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="EmployerExpectation">
+            <!-- entity-condition entity-name="StationExpectation">
             	<order-by field-name="-month"></order-by>
             	<order-by field-name="employerName"></order-by>
-            </entity-condition>
+            </entity-condition -->
             
             
-            <!--  service service-name="performFind" result-map="result" result-map-list="listIt">
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="stationExpectationCtx"/>
-                <field-map field-name="entityName" value="StationEmployer"/>
+                <field-map field-name="entityName" value="StationExpectation"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
                 
-            </service -->
+            </service>
             
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateStationExpectation"/ -->
@@ -1657,7 +1657,7 @@ under the License.
             <entity-condition entity-name="ExpectedPaymentSent">
             	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
             	<condition-list combine="and">
-            		<condition-expr field-name="stationNumber" operator="equals" from-field="parameters.stationNumber"/>
+            		<condition-expr field-name="employerCode" operator="equals" from-field="parameters.employerCode"/>
             		<condition-expr field-name="month" operator="equals" from-field="parameters.month"/>
             	</condition-list>
             	<order-by field-name="remitanceCode"/>
@@ -1701,13 +1701,13 @@ under the License.
             <entity-condition entity-name="ExpectedPaymentReceived">
             	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
             	<condition-list combine="and">
-            		<condition-expr field-name="stationNumber" operator="equals" from-field="parameters.stationNumber"/>
+            		<condition-expr field-name="employerCode" operator="equals" from-field="parameters.employerCode"/>
             		<condition-expr field-name="month" operator="equals" from-field="parameters.month"/>
             	</condition-list>
             	<order-by field-name="remitanceCode"/>
             </entity-condition>
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentReceived"/>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentReceived"/ -->
 		
 		<field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
 		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
@@ -1803,7 +1803,7 @@ under the License.
             <entity-condition entity-name="ExpectedPaymentSent">
             	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
             	<condition-list combine="and">
-            		<condition-expr field-name="stationNumber" operator="equals" value="${stationNumber}"/>
+            		<condition-expr field-name="employerCode" operator="equals" value="${employerCode}"/>
             		<condition-expr field-name="month" operator="equals" value="${month}"/>
             	</condition-list>
             	<order-by field-name="remitanceCode"/>
@@ -1811,6 +1811,7 @@ under the License.
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentSent"/>
 		
+		<field name="employerCode" title="Employer Code"><display also-hidden="false"></display></field>
 		<field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
 		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
 		<field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field>
@@ -1958,7 +1959,7 @@ under the License.
     
     
     <!-- Find Station -->
-    	<form name="FindStation" type="single" target="expectedPaymentStations" default-entity-name="StationEmployer">
+    	<form name="FindStation" type="single" target="expectedPaymentStations" default-entity-name="StationExpectation">
         <actions>
         
         	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>

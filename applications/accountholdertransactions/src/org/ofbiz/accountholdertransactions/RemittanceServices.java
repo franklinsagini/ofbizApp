@@ -53,32 +53,47 @@ public class RemittanceServices {
 
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
-		List<GenericValue> memberELI = null;
+		List<GenericValue> memberStationELI = null;
 		Map<String, String> userLogin = (Map<String, String>) request
 				.getAttribute("userLogin");
+		
+		
+		
 
-		Long memberStatusId = getMemberStatusId("ACTIVE");
-		EntityConditionList<EntityExpr> memberConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("memberStatusId", EntityOperator.EQUALS,
-								memberStatusId)
-
-				), EntityOperator.AND);
-
+//		Long memberStatusId = getMemberStatusId("ACTIVE");
+//		EntityConditionList<EntityExpr> memberConditions = EntityCondition
+//				.makeCondition(UtilMisc.toList(EntityCondition
+//						.makeCondition("memberStatusId", EntityOperator.EQUALS,
+//								memberStatusId)
+//
+//				), EntityOperator.AND);
+//
+//		try {
+//			memberELI = delegator.findList("Member", memberConditions, null,
+//					null, null, false);
+//		} catch (GenericEntityException e2) {
+//			e2.printStackTrace();
+//		}
+		//MemberStationList
 		try {
-			memberELI = delegator.findList("Member", memberConditions, null,
-					null, null, false);
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
-
-		Set<String> setMemberStations = new HashSet<String>();
+		memberStationELI = delegator.findList("MemberStationList", null, null,
+				null, null, false);
+	} catch (GenericEntityException e2) {
+		e2.printStackTrace();
+	}
+				Set<String> setMemberStations = new HashSet<String>();
+		Set<String> setEmployerCode = new HashSet<String>();
 		Long stationId = null;
-		for (GenericValue member : memberELI) {
+		for (GenericValue memberStationItem : memberStationELI) {
 			// Add station Id to set
-			stationId = member.getLong("stationId");
+			stationId = memberStationItem.getLong("stationId");
 			if (stationId != null) {
 				setMemberStations.add(stationId.toString());
+				System.out.println(" SSSSSSSSSSSSSSSS "+stationId+" IIIIIII "+stationId);
+				
+				String theEmpCode = LoanUtilities.getStationEmployerCode(stationId.toString());
+				if (theEmpCode != null)
+					setEmployerCode.add(theEmpCode.trim());
 			}
 		}
 
@@ -93,8 +108,10 @@ public class RemittanceServices {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		for (String tempStationId : setMemberStations) {
-			createExpectedStation(tempStationId, month, createdBy);
+		for (String employerCode : setEmployerCode) {
+			String theStationId = LoanUtilities.getStationId(employerCode);
+					//getStationName(employerCode);
+			createExpectedStation(theStationId, employerCode.trim(),  month, createdBy);
 		}
 		try {
 			TransactionUtil.commit();
@@ -102,7 +119,9 @@ public class RemittanceServices {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-
+		
+	//	System.exit(0);
+		
 		// Add shares - Member Deposits
 		String shareCode = getMemberDepositsCode();
 		// getShareCode();
@@ -183,7 +202,22 @@ public class RemittanceServices {
 				.toString());
 
 		String month = getCurrentMonth();
-		String employerName = station.getString("name"); // getEmployer(station.getString("employerId"));
+		
+		String employerName = "";
+		
+		String stationNumber = "";
+		String stationName = "";
+		String employerCode = "";
+		
+		
+		if (station != null){
+			employerName = station.getString("name");// getEmployer(station.getString("employerId"));
+			stationNumber = station.getString("stationNumber").trim();;
+			stationName = station.getString("name");
+			employerCode = station.getString("employerCode").trim();
+		}
+		//String employerName = station.getString("name");
+		// getEmployer(station.getString("employerId"));
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Create an expectation
@@ -218,16 +252,18 @@ public class RemittanceServices {
 		} catch (GenericTransactionException e1) {
 			e1.printStackTrace();
 		}
+		
+
 
 		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
 				UtilMisc.toMap("isActive", "Y", "branchId",
 						member.getString("branchId"), "remitanceCode",
 						remitanceCode, "stationNumber",
-						station.getString("stationNumber").trim(),
-						"stationName", station.getString("name"),
+						stationNumber,
+						"stationName", stationName,
 
 						"payrollNo", member.getString("payrollNumber"),
-						"employerCode", station.getString("employerCode"),
+						"employerCode", employerCode,
 						
 						"employeeNumber", member.getString("employeeNumber"),
 						"memberNumber", member.getString("memberNumber"),
@@ -341,8 +377,20 @@ public class RemittanceServices {
 			GenericValue memberAccount, GenericValue member, int sequence) {
 		GenericValue station = findStation(member.getString("stationId"));
 		String month = getCurrentMonth();
-		String employerName = station.getString("name");// getEmployer(station.getString("employerId"));
-
+		
+		String employerName = "";
+		
+		String stationNumber = "";
+		String stationName = "";
+		String employerCode = "";
+		
+		
+		if (station != null){
+			employerName = station.getString("name");// getEmployer(station.getString("employerId"));
+			stationNumber = station.getString("stationNumber").trim();;
+			stationName = station.getString("name");
+			employerCode = station.getString("employerCode").trim();
+		}
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Create an expectation
 		GenericValue expectedPaymentSent = null;
@@ -386,15 +434,19 @@ public class RemittanceServices {
 			}
 		}
 
+
+		
+		
+		
 		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
 				UtilMisc.toMap("isActive", "Y", "branchId",
 						member.getString("branchId"), "remitanceCode",
 						remitanceCode, "stationNumber",
-						station.getString("stationNumber").trim(),
-						"stationName", station.getString("name"),
+						stationNumber,
+						"stationName", stationName,
 
 						"payrollNo", member.getString("payrollNumber"),
-						"employerCode", station.getString("employerCode"),
+						"employerCode", employerCode,
 						"employeeNumber", member.getString("employeeNumber"),
 						"memberNumber", member.getString("memberNumber"),
 						
@@ -499,7 +551,7 @@ public class RemittanceServices {
 						"stationName", station.getString("name"),
 
 						"payrollNo", member.getString("payrollNumber"),
-						"employerCode", station.getString("employerCode"),
+						"employerCode", station.getString("employerCode").trim(),
 						"employeeNumber", member.getString("employeeNumber"),
 						
 						"memberNumber", member.getString("memberNumber"),
@@ -646,11 +698,11 @@ public static String paddString(int padDigits, String count) {
 	 *         Create StationExpectation
 	 * 
 	 * */
-	private static void createExpectedStation(String tempStationId,
+	private static void createExpectedStation(String theStationId, String employerCode,
 			String month, String createdBy) {
 		// TODO Auto-generated method stub
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		GenericValue station = findStation(tempStationId);
+		GenericValue station = findStation(theStationId);
 		/***
 		 * <field name="isActive" type="indicator"></field> <field
 		 * name="createdBy" type="name"></field> <field name="updatedBy"
@@ -665,16 +717,16 @@ public static String paddString(int padDigits, String count) {
 		String stationNumber = station.getString("stationNumber").trim();
 		String stationName = station.getString("name");
 		
-		String employerCode = station.getString("employerCode");
-		String employerName = station.getString("employerName");
+		//String employerCode = station.getString("employerCode");
+		String employerName = station.getString("employerName").trim();
 		
 		GenericValue stationExpectation = null;
 		stationExpectation = delegator.makeValue("StationExpectation", UtilMisc
 				.toMap("isActive", "Y", "createdBy", createdBy, "branchId",
 						branchId,
 						
-						"employerCode", employerCode,
-						"employerName", employerName,
+						"employerCode", employerCode.trim(),
+						"employerName", employerName.trim(),
 						
 						"stationNumber", stationNumber,
 						
@@ -813,7 +865,7 @@ public static String paddString(int padDigits, String count) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			stationELI = delegator.findList("Station", EntityCondition
-					.makeCondition("employerCode", employerCode), null, null,
+					.makeCondition("employerCode", employerCode.trim()), null, null,
 					null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -837,7 +889,7 @@ public static String paddString(int padDigits, String count) {
 
 		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"employerCode", EntityOperator.EQUALS, employerCode),
+						"employerCode", EntityOperator.EQUALS, employerCode.trim()),
 						EntityCondition.makeCondition("month",
 								EntityOperator.EQUALS, month)
 
@@ -867,8 +919,8 @@ public static String paddString(int padDigits, String count) {
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
-		String employerCode = (String) request.getParameter("employerCode");
-		String month = (String) request.getParameter("month");
+		String employerCode = (String) request.getParameter("employerCode").trim();
+		String month = (String) request.getParameter("month").trim();
 
 		//GenericValue station = findStationGivenStationNumber(stationNumber);
 
@@ -879,7 +931,7 @@ public static String paddString(int padDigits, String count) {
 		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"employerCode", EntityOperator.EQUALS,
-						employerCode), EntityCondition
+						employerCode.trim()), EntityCondition
 						.makeCondition("monthyear", EntityOperator.EQUALS,
 								month)
 
@@ -905,7 +957,7 @@ public static String paddString(int padDigits, String count) {
 		}
 
 		// Get total submitted
-		BigDecimal totalSubmitted = getTotalExpected(employerCode, month);
+		BigDecimal totalSubmitted = getTotalExpected(employerCode.trim(), month);
 
 		if (totalSubmitted.compareTo(totalAmount) == -1) {
 			result.put("REMITANCEENOUGH", "NO");
@@ -978,7 +1030,7 @@ public static String paddString(int padDigits, String count) {
 		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"employerCode", EntityOperator.EQUALS,
-						Long.valueOf(employerCode)),
+						Long.valueOf(employerCode.trim())),
 						EntityCondition.makeCondition("monthyear",
 								EntityOperator.EQUALS, month)
 
@@ -1017,7 +1069,7 @@ public static String paddString(int padDigits, String count) {
 
 		// Update Receipts to show generated and post
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		String employerCode = (String) request.getParameter("employerCode");
+		String employerCode = (String) request.getParameter("employerCode").trim();
 		String month = (String) request.getParameter("month");
 
 		log.info("SSSSSSSSSSSSSSS  Employer Code " + employerCode);
@@ -1030,7 +1082,7 @@ public static String paddString(int padDigits, String count) {
 
 		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"employerCode", EntityOperator.EQUALS, employerCode),
+						"employerCode", EntityOperator.EQUALS, employerCode.trim()),
 						EntityCondition.makeCondition("month",
 								EntityOperator.EQUALS, month), EntityCondition
 								.makeCondition("processed",
