@@ -658,7 +658,7 @@ public class LoanRepayments {
 		int year = localDate.getYear();
 		int month = localDate.getMonthOfYear();
 		
-		String monthPadded = paddString(2, String.valueOf(month));
+		String monthPadded = String.valueOf(month);//paddString(2, String.valueOf(month));
 		String monthYear = monthPadded+String.valueOf(year);
 
 		if (bdLoanBalance.compareTo(BigDecimal.ZERO) == 1) {
