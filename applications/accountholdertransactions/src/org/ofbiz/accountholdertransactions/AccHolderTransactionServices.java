@@ -2743,9 +2743,13 @@ public class AccHolderTransactionServices {
 		return memberNames;
 	}
 
-	public static String cashDeposit(BigDecimal transactionAmount,
+	public static String cashDepositt(BigDecimal transactionAmount,
 			Long memberAccountId, Map<String, String> userLogin,
 			String withdrawalType) {
+		
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		log.info(" Transaction MA ---- " + memberAccountId);
+		
 
 		// log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
 		log.info(" Transaction Amount ---- " + transactionAmount);
