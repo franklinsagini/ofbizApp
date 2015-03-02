@@ -2705,12 +2705,20 @@ Gender
     <form name="NewStation" type="single" target="createStation"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="bankBranchContext">
         <actions>
-        	<set field="partyIdParam" from-field="parameters.partyId"/>
+        	<set field="partyIdParam" from-field="branchId"/>
         </actions>
 		<field name="partyId"><hidden value="${partyIdParam}"/></field>
+		<field name="branchId"><hidden value="${partyIdParam}"/></field>
+		
         <field name="stationId"><hidden/></field>
         <field name="stationNumber" title="Station Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="name" title="Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+
+    	<field name="telephoneNo" title="Telephone No." ><text size="30" maxlength="60"/></field>
+		<field name="boxAddress" title="Box Added"><textarea /></field>
+
+		<field name="employerCode" title="Employer Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+		<field name="employerName" title="Employer Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <!-- field name="employerId" title="Employer" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
         <drop-down allow-empty="true">
         	<list-options key-name="employerId" list-name="employerList"  description="${name}"/>
@@ -2724,7 +2732,11 @@ Gender
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         	<entity-condition entity-name="Station">
-        		<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+        		<condition-expr field-name="branchId" operator="equals" from-field="branchId"/>
+        	</entity-condition>
+        	
+        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateStation"/>
@@ -2742,6 +2754,20 @@ Gender
         	<list-options key-name="employerId" list-name="employerList"  description="${name}"/>
         </drop-down>
         </field -->
+        <field name="branchId" title="Branch" required-field="true" widget-style="required">
+            <drop-down allow-empty="false" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
+     	<field name="telephoneNo" title="Telephone No." tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+		<field name="boxAddress" title="Box Added" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea /></field>
+
+        
+      	<field name="employerCode" title="Employer Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+		<field name="employerName" title="Employer Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteStation" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="stationId"/>

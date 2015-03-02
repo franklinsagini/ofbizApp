@@ -8,5 +8,45 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+    <entity entity-name="SalaryMonthYear" package-name="org.ofbiz.salaryprocessing"
+		title="Salary Month Year Entity">
+		<field name="salaryMonthYearId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="month" type="id-int"></field>
+		<field name="year" type="id-int"></field>
+		<prim-key field="salaryMonthYearId"/>
+	</entity>
+	
+	
+	<entity entity-name="EmployerSalary" package-name="org.ofbiz.salaryprocessing"
+		title="EmployerSalary Entity">
+		
+		<field name="employerSalaryId" type="id-vlong-int"></field>
+		<field name="salaryMonthYearId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="stationId" type="id"></field>
+		<prim-key field="employerSalaryId"/>
+	</entity>
+	
+	 <entity entity-name="MemberSalary" package-name="org.ofbiz.salaryprocessing"
+		title="MemberSalary Entity">
+		
+		<field name="memberSalaryId" type="id-vlong-int"></field>
+		<field name="employerSalaryId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="employerCode" type="id"></field>
+		<field name="payrollNumber" type="id"></field>
+		<field name="netSalary" type="fixed-point"></field>
+		<prim-key field="memberSalaryId"/>
+		
+		
+	</entity>
+	
+	
 
 </entitymodel>
