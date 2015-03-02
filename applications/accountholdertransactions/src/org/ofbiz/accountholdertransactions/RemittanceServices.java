@@ -1118,10 +1118,9 @@ public static String paddString(int padDigits, String count) {
 			 * */
 
 			if (branchId.equals("")) {
-//				branchId = getMemberByPayrollNo(
-//						expectedPaymentReceived.getString("payrollNo"))
-//						.getString("branchId");
-				branchId = "Company";
+				branchId = getMemberByPayrollNo(
+						expectedPaymentReceived.getString("payrollNo"))
+						.getString("branchId");
 			}
 
 			/**
@@ -1141,6 +1140,7 @@ public static String paddString(int padDigits, String count) {
 					Long memberAccountId = getMemberAccountId(code,
 							expectedPaymentReceived.getString("payrollNo"));
 
+					//AccHolderTransactionServices.cashDepositt(transactionAmount, memberAccountId, userLogin, withdrawalType)
 					AccHolderTransactionServices.cashDeposit(transactionAmount,
 							memberAccountId, null, month+" Remittance");
 					// Increment bdAccount with this amount

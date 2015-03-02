@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -934,6 +935,20 @@ public class LoanUtilities {
 		
 		return stationId;
 		
+	}
+	
+	
+	public static String getCurrentYear(){
+		LocalDate localDate = new LocalDate();
+		
+		return String.valueOf(localDate.getYear());
+	}
+	
+	
+	public static String getCurrentMonth(){
+		LocalDate localDate = new LocalDate();
+		
+		return String.valueOf(localDate.getMonthOfYear());
 	}
 
 

@@ -2743,7 +2743,7 @@ public class AccHolderTransactionServices {
 		return memberNames;
 	}
 
-	public static String cashDepositt(BigDecimal transactionAmount,
+	public static String cashDeposit(BigDecimal transactionAmount,
 			Long memberAccountId, Map<String, String> userLogin,
 			String withdrawalType) {
 		

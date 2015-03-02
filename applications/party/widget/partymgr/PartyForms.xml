@@ -237,16 +237,16 @@ under the License.
 
   <!--       <field  use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
         <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field> -->
-       <field name="employmentTerms" title="Terms of Employment" widget-style="required" required-field="true">
+       <field name="employmentTerms" title="Terms of Employment" widget-style="required" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
             	<option key="permanent" description="Permanent"/>
                 <option key="contract" description="Contract"/>
                 <option key="intern" description="Intern-ship"/>
             </drop-down>
         </field>
-        <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
+        <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number" tooltip="${uiLabelMap.CommonRequired}"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
         <field use-when="personalInfo!=null" name="employeeNumber" title="Employee Payroll Number"><display></display></field>
-		 <field name="isManagement" title="Type of Staff" widget-style="required" required-field="true">
+		 <field name="isManagement" title="Type of Staff" widget-style="required" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
                 <option key="Management" description="Management"/>
                 <option key="Normal" description="Normal Staff"/>
@@ -255,7 +255,7 @@ under the License.
         <field name="firstName" title="First Names" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
          <field name="middleName" title="${uiLabelMap.PartyMiddleName}"><hidden/></field>
         <field name="lastName" title="Last Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
-        <field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true">
+        <field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
                 <option key="Mr." description="Mr."/>
                 <option key="Miss." description="Miss."/>
@@ -266,7 +266,7 @@ under the License.
                 <option key="Rev." description="Rev."/>
             </drop-down>
         </field>
-        <field name="gender">
+        <field name="gender" widget-style="required" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
                 <option key="Male" description="${uiLabelMap.CommonMale}"/>
                 <option key="Female" description="${uiLabelMap.CommonFemale}"/>
@@ -301,7 +301,7 @@ under the License.
        	 	<list-options list-name="countyList" key-name="countyId" description="${county}"/>
        	 </drop-down>
         </field>
-         <field use-when="personalInfo==null" name="branchId" title=" Select Branch" required-field="true" widget-style="required">
+         <field use-when="personalInfo==null" name="branchId" title=" Select Branch" required-field="true" widget-style="required" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
@@ -322,7 +322,7 @@ under the License.
                 <list-options list-name="stationList" key-name="stationId"  description="${name}" />
             </drop-down>
         </field -->
-        <field name="appointmentdate" title="Appointment Date"><date-time type="date"/></field>
+        <field name="appointmentdate" title="Appointment Date" widget-style="required" required-field="true" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
          <field name="birthDate" title="Date Of Birth"><date-time type="date"/></field>
         <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>
         
