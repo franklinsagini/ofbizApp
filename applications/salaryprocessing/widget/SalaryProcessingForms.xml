@@ -3,4 +3,81 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
 
+		    <!-- SalaryMonthYear -->
+    <form name="SalaryMonthYear" type="single" target="createSalaryMonthYear"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="chequeTypeContext">
+        
+       
+        <field name="salaryMonthYearId"><hidden/></field>
+		
+		
+        <field name="month" title="Month"><text></text></field>
+         <field name="year" title="Year"><text></text></field>
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+        
+      <form name="listSalaryMonthYear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSalaryMonthYear" paginate-target="salaryMonthYear"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SalaryMonthYear">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateSalaryMonthYear"/>
+		
+		
+        <field name="month" title="Month"><text></text></field>
+         <field name="year" title="Year"><text></text></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="salaryMonthYearId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
+    <!-- MemberSalary -->
+    <form name="MemberSalary" type="single" target="createMemberSalary"
+	focus-field-name="month" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="chequeTypeContext">
+        
+       
+        <field name="memberSalaryId"><hidden/></field>
+        <field name="salaryMonthYearId"><hidden/></field>
+		
+		
+        <field name="employerCode" title="Employer Code"><text></text></field>
+         <field name="payrollNumber" title="Payroll No."><text></text></field>
+        <field name="netSalary" title="Net Salary"><text></text></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+        
+      <form name="listMemberSalary" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberSalary" paginate-target="memberSalary"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SalaryMonthYear">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            </entity-condition>
+        </actions>
+        <field name="memberSalaryId"><hidden/></field>
+        <field name="salaryMonthYearId"><hidden/></field>
+		
+		
+        <field name="employerCode" title="Employer Code"><text></text></field>
+         <field name="payrollNumber" title="Payroll No."><text></text></field>
+        <field name="netSalary" title="Net Salary"><text></text></field>
+       
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberSalaryId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+		
 </forms>

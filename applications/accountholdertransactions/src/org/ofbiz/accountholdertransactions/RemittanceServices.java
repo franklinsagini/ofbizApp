@@ -1118,9 +1118,10 @@ public static String paddString(int padDigits, String count) {
 			 * */
 
 			if (branchId.equals("")) {
-				branchId = getMemberByPayrollNo(
-						expectedPaymentReceived.getString("payrollNo"))
-						.getString("branchId");
+//				branchId = getMemberByPayrollNo(
+//						expectedPaymentReceived.getString("payrollNo"))
+//						.getString("branchId");
+				branchId = "Company";
 			}
 
 			/**
