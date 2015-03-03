@@ -949,7 +949,7 @@ public static String paddString(int padDigits, String count) {
 			}
 		}
 		
-		totalRemitted = totalRemitted.setScale(2);
+		//totalRemitted = totalRemitted.setScale(newScale)
 
 		return totalRemitted;
 	}
