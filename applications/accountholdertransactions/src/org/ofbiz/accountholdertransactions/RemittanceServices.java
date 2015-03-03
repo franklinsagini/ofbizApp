@@ -948,6 +948,8 @@ public static String paddString(int padDigits, String count) {
 						.getBigDecimal("amount"));
 			}
 		}
+		
+		totalRemitted = totalRemitted.setScale(2);
 
 		return totalRemitted;
 	}
