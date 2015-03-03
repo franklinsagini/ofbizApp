@@ -913,6 +913,44 @@ public static String paddString(int padDigits, String count) {
 
 		return totalExpected;
 	}
+	
+	
+	
+	/***
+	 * Get total remitted by station
+	 * */
+	public static BigDecimal getTotalRemitted(String employerCode, String month) {
+		BigDecimal totalRemitted = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode.trim()),
+						EntityCondition.makeCondition("month",
+								EntityOperator.EQUALS, month)
+
+				), EntityOperator.AND);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue expectedPaymentReceived : expectedPaymentReceivedELI) {
+			if (expectedPaymentReceived.getBigDecimal("amount") != null) {
+				totalRemitted = totalRemitted.add(expectedPaymentReceived
+						.getBigDecimal("amount"));
+			}
+		}
+
+		return totalRemitted;
+	}
 
 	public static String isRemitanceEnough(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -1074,6 +1112,10 @@ public static String paddString(int padDigits, String count) {
 
 		log.info("SSSSSSSSSSSSSSS  Employer Code " + employerCode);
 		log.info("SSSSSSSSSSSSSSS  Month " + month);
+		
+		if (!AllPayrollCodesExist(employerCode, month)){
+			return "fail";
+		}
 		/**
 		 * <field name="processed" type="indicator"></field> <field
 		 * name="dateProcessed" type="date-time"></field>
@@ -1118,10 +1160,9 @@ public static String paddString(int padDigits, String count) {
 			 * */
 
 			if (branchId.equals("")) {
-//				branchId = getMemberByPayrollNo(
-//						expectedPaymentReceived.getString("payrollNo"))
-//						.getString("branchId");
-				branchId = "Company";
+				branchId = getMemberByPayrollNo(
+						expectedPaymentReceived.getString("payrollNo"))
+						.getString("branchId");
 			}
 
 			/**
@@ -1141,6 +1182,7 @@ public static String paddString(int padDigits, String count) {
 					Long memberAccountId = getMemberAccountId(code,
 							expectedPaymentReceived.getString("payrollNo"));
 
+					//AccHolderTransactionServices.cashDepositt(transactionAmount, memberAccountId, userLogin, withdrawalType)
 					AccHolderTransactionServices.cashDeposit(transactionAmount,
 							memberAccountId, null, month+" Remittance");
 					// Increment bdAccount with this amount
@@ -1333,9 +1375,132 @@ public static String paddString(int padDigits, String count) {
 				e1.printStackTrace();
 			}
 		}
-		return "";
+		return "success";
 	}
 
+	private static boolean AllPayrollCodesExist(String employerCode,
+			String month) {
+		Boolean exists = true;
+		
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode.trim()),
+						EntityCondition.makeCondition("month",
+								EntityOperator.EQUALS, month), EntityCondition
+								.makeCondition("processed",
+										EntityOperator.EQUALS, null)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		GenericValue missingMemberLog = null;
+		
+		for (GenericValue genericValue : expectedPaymentReceivedELI) {
+			
+			String payrollNo = genericValue.getString("payrollNo");
+			Boolean payrollExists = payrollNumberExists(payrollNo);
+			
+			if (!payrollExists){
+				exists = payrollExists;
+				
+				
+				//Save the Payroll Number Missing
+				Long missingMemberLogId = delegator.getNextSeqIdLong("MissingMemberLog", 1);
+				missingMemberLog = delegator.makeValue("MissingMemberLog", UtilMisc.toMap(
+						"missingMemberLogId", missingMemberLogId, "isActive", "Y",
+						"createdBy", "admin", "employerCode", employerCode, "payrollNumber",
+						payrollNo,
+
+						"month", month));
+				try {
+					delegator.createOrStore(missingMemberLog);
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			
+		}
+
+		
+		return exists;
+	}
+
+	private static Boolean payrollNumberExists(String payrollNo) {
+		
+		/***
+		 * Check if Payroll Number exists
+		 * */
+		List<GenericValue> memberELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> memberConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"payrollNumber", EntityOperator.EQUALS, payrollNo.trim())
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberELI = delegator.findList(
+					"Member",
+					memberConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (memberELI.size() > 0){
+			return true;
+		} else{
+			return false;
+		}
+	}
+
+	//missingPayrolls(employerCode, month)
+	public static Boolean missingPayrolls(String employerCode, String month) {
+		
+		/***
+		 * Check if Payroll Number exists
+		 * */
+		List<GenericValue> missingMemberLogELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> missingMemberLogConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode.trim()),
+						
+						EntityCondition.makeCondition(
+								"month", EntityOperator.EQUALS, month.trim())
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			missingMemberLogELI = delegator.findList(
+					"MissingMemberLog",
+					missingMemberLogConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (missingMemberLogELI.size() > 0){
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
 	private static Long getMemberAccountId(String code, String payrollNo) {
 		// Get Party ID given payrollNo
 		Long partyId = null;
@@ -1486,6 +1651,9 @@ public static String paddString(int padDigits, String count) {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+		
+		
+		//delegator.removeAll(dummyPKs)
 
 	}
 
@@ -1809,6 +1977,142 @@ public static String paddString(int padDigits, String count) {
 		loanApplicationIdString = loanApplicationIdString.replaceAll(",", "");
 		loanApplicationId = Long.valueOf(loanApplicationIdString);
 		return loanApplicationId;
+	}
+	
+	
+	public static String removeImportedPaymentBreakdown(
+			HttpServletRequest request, HttpServletResponse response) {
+
+		// Update Receipts to show generated and post
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String employerCode = (String) request.getParameter("employerCode").trim();
+		String month = (String) request.getParameter("month");
+
+		log.info("SSSSSSSSSSSSSSS  Employer Code " + employerCode);
+		log.info("SSSSSSSSSSSSSSS  Month " + month);
+		
+		//Get Received Records and Delete them
+		removeReceivedRecords(employerCode, month);
+		
+		
+		//Get the Missing Records and Delete them
+		removeMissingLog(employerCode, month);
+		
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return "success";
+	}
+
+	private static void removeMissingLog(String employerCode, String month) {
+		List<GenericValue> missingMemberLogELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> missingMemberLogConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode.trim()),
+						
+						EntityCondition.makeCondition(
+								"month", EntityOperator.EQUALS, month.trim())
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			missingMemberLogELI = delegator.findList(
+					"MissingMemberLog",
+					missingMemberLogConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		try {
+			delegator.removeAll(missingMemberLogELI);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	/***
+	 * Remove the received Records
+	 * 
+	 * */
+	private static void removeReceivedRecords(String employerCode, String month) {
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode.trim()),
+						
+						EntityCondition.makeCondition(
+								"month", EntityOperator.EQUALS, month.trim())
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		try {
+			delegator.removeAll(expectedPaymentReceivedELI);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+public static Boolean stationProcessed(String employerCode, String month) {
+		
+		/***
+		 * Check Station Processed
+		 * */
+	List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+	EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+			.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+					"employerCode", EntityOperator.EQUALS, employerCode.trim()),
+					EntityCondition.makeCondition("month",
+							EntityOperator.EQUALS, month), EntityCondition
+							.makeCondition("processed",
+									EntityOperator.EQUALS, "Y")
+
+			), EntityOperator.AND);
+
+	Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	try {
+		expectedPaymentReceivedELI = delegator.findList(
+				"ExpectedPaymentReceived",
+				expectedPaymentReceivedConditions, null, null, null, false);
+
+	} catch (GenericEntityException e2) {
+		e2.printStackTrace();
+	}
+		
+		if (expectedPaymentReceivedELI.size() > 0){
+			return true;
+		} else{
+			return false;
+		}
 	}
 
 }

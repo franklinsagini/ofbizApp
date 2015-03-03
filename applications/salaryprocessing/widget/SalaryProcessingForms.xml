@@ -7,13 +7,32 @@
     <form name="SalaryMonthYear" type="single" target="createSalaryMonthYear"
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="chequeTypeContext">
-        
+        <actions>
+        	<set field="currentYear" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getCurrentYear();}"/>
+        	<set field="currentMonth" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getCurrentMonth();}"/>
+        </actions>
        
         <field name="salaryMonthYearId"><hidden/></field>
 		
 		
-        <field name="month" title="Month"><text></text></field>
-         <field name="year" title="Year"><text></text></field>
+        <field name="month" title="Month">
+        	<drop-down current="first-in-list">
+        		<option key="${currentMonth}" description="${currentMonth}"/>
+        		<option key="1" description="1"/>
+        		<option key="2" description="2"/>
+        		<option key="3" description="3"/>
+        		<option key="4" description="4"/>
+        		<option key="5" description="5"/>
+        		<option key="6" description="6"/>
+        		<option key="7" description="7"/>
+        		<option key="8" description="8"/>
+        		<option key="9" description="9"/>
+        		<option key="10" description="10"/>
+        		<option key="11" description="11"/>
+        		<option key="12" description="12"/>
+        	</drop-down>
+        </field>
+         <field name="year" title="Year"><text default-value="${currentYear}"></text></field>
         
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
@@ -32,11 +51,19 @@
         <field name="month" title="Month"><text></text></field>
          <field name="year" title="Year"><text></text></field>
        
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+        <field name="memberSalary" title="Member Salaries" widget-style="buttontext">
+            <hyperlink target="memberSalary" description="Member Salaries" also-hidden="false">
                 <parameter param-name="salaryMonthYearId"/>
             </hyperlink>
         </field>
+        
+        
+        <field name="employer" title="Employer/Station" widget-style="buttontext">
+            <hyperlink target="employerSalary" description="Employer/Station" also-hidden="false">
+                <parameter param-name="salaryMonthYearId"/>
+            </hyperlink>
+        </field>
+               
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
@@ -60,7 +87,7 @@
       <form name="listMemberSalary" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberSalary" paginate-target="memberSalary"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="SalaryMonthYear">
+            <entity-condition entity-name="MemberSalary">
             	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
             </entity-condition>
         </actions>
@@ -79,5 +106,48 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+
+	<!-- Employer Salary -->
+	 <form name="EmployerSalary" type="single" target="createEmployerSalary"
+	focus-field-name="month" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="employerSalaryContext">
+
+       
+        <field name="employerSalaryId"><hidden/></field>
+        <field name="salaryMonthYearId"><hidden/></field>
 		
+		
+        <field name="employerCode" title="Employer Code">
+        	<drop-down>
+        		<entity-options description="${employerCode} - ${name}" key-field-name="employerCode" entity-name="AllEmployers"></entity-options>
+        	</drop-down>
+        </field>
+		
+		
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+        
+      <form name="listEmployerSalary" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployerSalary" paginate-target="employerSalary"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="EmployerSalary">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<condition-expr field-name="salaryMonthYearId" from-field="salaryMonthYearId"/>
+            </entity-condition>
+        </actions>
+                <field name="employerSalaryId"><hidden/></field>
+        <field name="salaryMonthYearId"><hidden/></field>
+		
+		
+        <field name="employerCode" title="Employer Code"><text></text></field>
+       
+        <field name="salaryImport" title="Salary Import" widget-style="buttontext">
+            <hyperlink target="salaryImport" description="Salary Import" also-hidden="false">
+                <parameter param-name="salaryMonthYearId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+			
 </forms>
