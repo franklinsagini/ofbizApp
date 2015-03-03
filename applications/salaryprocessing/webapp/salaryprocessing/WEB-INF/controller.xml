@@ -72,7 +72,7 @@
                 <event type="service" invoke="updateMemberSalary" />
                 <response name="success" type="request-redirect"
                         value="memberSalary"></response>
-                <response name="error" type="view" value="MemberSalary" />
+                <response name="error" type="view" value="memberSalary" />
         </request-map>
 
         <request-map uri="deleteMemberSalary">
@@ -81,11 +81,41 @@
                 <response name="success" type="request-redirect"
                         value="memberSalary"></response>
         </request-map>
+        
+        <!-- employerSalary -->
+                <request-map uri="employerSalary">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="employerSalary" />
+        </request-map>
+        
+        <request-map uri="createEmployerSalary">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createEmployerSalary" />
+                <response name="success" type="request-redirect"
+                        value="employerSalary"></response>
+        </request-map>
+                <request-map uri="updateEmployerSalary">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateEmployerSalary" />
+                <response name="success" type="request-redirect"
+                        value="employerSalary"></response>
+                <response name="error" type="view" value="employerSalary" />
+        </request-map>
+
+        <request-map uri="deleteEmployerSalary">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteEmployerSalary" />
+                <response name="success" type="request-redirect"
+                        value="employerSalary"></response>
+        </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#main"/>
     
     <view-map name="salaryMonthYear" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#salaryMonthYear"/>
+    <view-map name="employerSalary" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#employerSalary"/>
+    
+    
     <view-map name="memberSalary" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#memberSalary"/>
     
     <view-map name="salaryImport" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#salaryImport"/>

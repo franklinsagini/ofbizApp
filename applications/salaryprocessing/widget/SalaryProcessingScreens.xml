@@ -118,6 +118,61 @@
         </section>
     </screen>
     
+    <!-- employerSalary -->
+    <screen name="employerSalary">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Employer"/>
+                <set field="headerItem" value="employerSalary"/>
+                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createEmployerSalary"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="salaryMonthYearId" from-field="parameters.salaryMonthYearId" type="Long"/>
+                <entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYear">
+                	<field-map field-name="salaryMonthYearId" from-field="salaryMonthYearId"/>
+                </entity-one>
+                
+                <set field="month" value="${salaryMonthYear.month}" type="PlainString"/>
+                <set field="year" value="${salaryMonthYear.year}" type="PlainString"/>
+                <entity-one entity-name="MemberSalary" value-field="memberSalaryContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SalaryProcessingCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                	
+                    <decorator-section name="body">
+                    	
+                      <section>
+                      	<widgets>
+                      		<screenlet>
+                      			<container>
+                      			<label style="h3"> Month : ${month} Year : ${year} </label>
+                      				
+                      			</container>
+                      			
+                      			
+                      		</screenlet>
+                      	</widgets>
+                      </section>
+                        
+                        <section name="Employer">
+                        	<widgets>
+                        		<screenlet title="Employer">
+                        			<include-form name="EmployerSalary" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="List Employer">
+                        			<include-form name="listEmployerSalary" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- Salary Import -->
     	<screen name="salaryImport">
 		<section>
