@@ -345,7 +345,30 @@ under the License.
         <field name="debitCreditFlag" position="2"><display/></field>
         <field name="amount" position="2"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
-    <form name="ListFindAcctgTransEntriesByDate" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
+
+
+    <form name="ListFindAcctgTransEntriesByDate" type="list" list-name="entriesList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="transactionDate"><display/></field>
+        <field name="acctgTransId" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
+                <parameter param-name="acctgTransId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}"><display-entity entity-name="AcctgTransType"/></field>
+               <field name="accountName" title="${uiLabelMap.CommonDescription}">
+            <display description="${accountCode} ${accountName}"/>
+        </field>
+
+
+        <field name="debitCreditFlag"><display/></field>
+        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="runningBalance"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
+
+
+    <form name="ListFindAcctgTransEntriesByDateOld" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransEntryList">
@@ -366,7 +389,7 @@ under the License.
                     <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
                     <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
                 </condition-list>
-                <order-by field-name="-transactionDate"/>
+                <order-by field-name="transactionDate"/>
             </entity-condition>
         </actions>
 
