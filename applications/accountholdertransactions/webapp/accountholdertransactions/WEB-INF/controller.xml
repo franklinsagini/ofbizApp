@@ -635,7 +635,7 @@
 			<redirect-parameter name="stationNumber" />
 			<redirect-parameter name="month" />
 		</response>
-		<response name="error" type="view" value="receivedPaymentBreakdown" />
+		<response name="error" type="view" value="receivedPaymentBreakdownFailed" />
 	</request-map>
 
 	<request-map uri="codesSetup">
@@ -666,6 +666,37 @@
 		<response name="success" type="request-redirect-noparam"
 			value="codesSetup"></response>
 		<response name="error" type="view" value="codesSetup" />
+	</request-map>
+	
+	<!-- MissingMemberLog -->
+		<request-map uri="missingMemberLog">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="missingMemberLog"
+			save-current-view="true" />
+	</request-map>
+
+	<request-map uri="createMissingMemberLog">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMissingMemberLog" />
+		<response name="success" type="request-redirect" value="missingMemberLog">
+		</response>
+		<response name="error" type="view" value="missingMemberLog" />
+	</request-map>
+
+	<request-map uri="updateMissingMemberLog">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMissingMemberLog" />
+		<response name="success" type="request-redirect"
+			value="missingMemberLog"></response>
+		<response name="error" type="view" value="missingMemberLog" />
+	</request-map>
+
+	<request-map uri="deleteMissingMemberLog">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMissingMemberLog" />
+		<response name="success" type="request-redirect"
+			value="missingMemberLog"></response>
+		<response name="error" type="view" value="missingMemberLog" />
 	</request-map>
 
 	<!-- CRUD -->
@@ -729,6 +760,19 @@
 	</request-map>
 	
 	
+		<!-- processReceivedPaymentBreakdown -->
+	<request-map uri="removeImportedPaymentBreakdown">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.accountholdertransactions.RemittanceServices" invoke="removeImportedPaymentBreakdown" />
+		<response name="success" type="view" value="receivedPaymentBreakdown">
+			<redirect-parameter name="stationNumber" />
+			<redirect-parameter name="month" />
+		</response>
+		<response name="error" type="view" value="receivedPaymentBreakdownFailed" />
+	</request-map>
+	
+	
 	
 	<!-- end of request mappings -->
 
@@ -787,6 +831,10 @@
 	
 	<view-map name="chequeSetup" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeSetup" />
+	<!-- missingMemberLog -->
+	<view-map name="missingMemberLog" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#missingMemberLog" />
+	
 	<view-map name="accountHolderTransactionSetup" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewAccountHolderTransactionSetup" />
 	<view-map name="chequedepositposting" type="screen"
