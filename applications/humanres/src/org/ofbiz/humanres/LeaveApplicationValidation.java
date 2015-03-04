@@ -39,6 +39,9 @@ import org.ofbiz.webapp.event.EventHandlerException;
 
 
 
+
+
+
 import com.google.gson.Gson;
 
 /****
@@ -59,10 +62,16 @@ public class LeaveApplicationValidation {
 		String partyId = new String(request.getParameter("partyId")).toString();
 		int leaveDuration = new Integer(request.getParameter("leaveDuration")).intValue();
 		Date fromDate = null;
+		Date thruDate = null;
 
 		try {
-			fromDate = (Date) (new SimpleDateFormat("yyyy-MM-dd").parse(request
-					.getParameter("fromDate")));
+			fromDate = (Date) (new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fromDate")));
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+
+		try {
+			thruDate = (Date) (new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("thruDate")));
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
@@ -73,6 +82,7 @@ public class LeaveApplicationValidation {
 			result.put("durationState", getLeaveDurationState(leaveTypeId, leaveDuration));
 			result.put("onceAyearState", getLeaveOnceAyearState(partyId, fromDate, leaveTypeId));
 			result.put("employmentStatusState", getEmploymentStatusState(partyId));
+			result.put("correctDateState", isLeaveApplicationCorrect(leaveTypeId, fromDate, leaveDuration, thruDate) );
 	
 		
 
@@ -336,5 +346,53 @@ public class LeaveApplicationValidation {
 			return state;
 
 		}
+		
+		public static String isLeaveApplicationCorrect(String leavetype, Date fromdate, int leaveduration, Date thrudate) {
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			String isLeaveApplicationCorrect = "";
+			GenericValue getLeaveDayTypeELI=null;
+			String daytype="";
+			int correctDuration;
+			
+			try {
+				 
+				 getLeaveDayTypeELI = delegator.findOne("EmplLeaveType", UtilMisc.toMap("leaveTypeId",leavetype), false);
+				 
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+				
+			}
+			if (getLeaveDayTypeELI!=null) {
+				daytype=getLeaveDayTypeELI.getString("daytype");
+				
+				
+			} else {
+				String errorMsg = "================================NOTHING FOUND HERE===============";
+			}
+			
+			if (daytype.equalsIgnoreCase("Work_days")) {
+				 correctDuration = HumanResServices.calculateWorkingNonHolidayDaysBetweenDates(fromdate, thrudate);
+				 
+				 if (leaveduration != correctDuration) {
+					 isLeaveApplicationCorrect = "NO";
+				} else if(leaveduration == correctDuration) {
+					 isLeaveApplicationCorrect = "YES";
+				}
+				
+			} else if(daytype.equalsIgnoreCase("Calendar_days")){
+				correctDuration = HumanResServices.calculateCalenderDaysBetweenDates(fromdate, thrudate);
+				
+				 if (leaveduration != correctDuration) {
+					 isLeaveApplicationCorrect = "NO";
+				} else if(leaveduration == correctDuration) {
+					 isLeaveApplicationCorrect = "YES";
+				}
+
+			}
+
+
+			return isLeaveApplicationCorrect;
+		}
+		
 
 }
