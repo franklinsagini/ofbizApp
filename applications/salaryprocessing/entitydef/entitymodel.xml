@@ -28,7 +28,7 @@
 		<field name="salaryMonthYearId" type="id-vlong-int"></field>
 		<field name="isActive" type="indicator"></field>
 		<field name="createdBy" type="id"></field>
-		<field name="stationId" type="id"></field>
+		<field name="employerCode" type="id"></field>
 		<prim-key field="employerSalaryId"/>
 	</entity>
 	
@@ -43,9 +43,16 @@
 		<field name="payrollNumber" type="id"></field>
 		<field name="netSalary" type="fixed-point"></field>
 		<prim-key field="memberSalaryId"/>
-		
-		
 	</entity>
+	
+	<view-entity entity-name="AllEmployers" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="M" entity-name="Station"></member-entity>
+    	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
+    	<alias entity-alias="TR" name="name" group-by="true"/ --> 
+    	<alias entity-alias="M" name="name" />
+    	<alias entity-alias="M" name="employerCode" group-by="true" />
+    </view-entity>
 	
 	
 

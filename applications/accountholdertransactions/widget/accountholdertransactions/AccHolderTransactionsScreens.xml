@@ -1213,7 +1213,11 @@ under the License.
                 <set field="employerName" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getEmployerName(employerCode);}" type="String"/>
                 <set field="month"  from-field="parameters.month"/>
                 <set field="totalExpected" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalExpected(employerCode, month);}" type="BigDecimal"/>
+                <set field="totalRemitted" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemitted(employerCode, month);}" type="BigDecimal"/>
                 <set field="totalChequeAmount" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemittedChequeAmount(employerCode, month);}" type="BigDecimal"/>
+                
+                <set field="missingPayrollNumber" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.missingPayrolls(employerCode, month);}" type="Boolean"/>
+               	<set field="missing" value="true" type="Boolean"/>
                 <entity-one entity-name="ExpectedPaymentReceived" value-field="expectedPaymentReceivedContext"/>
             </actions>
             <widgets>
@@ -1249,7 +1253,7 @@ under the License.
                                 	<section>
                                 		
                                 		<condition>
-                                			<if-compare-field operator="less" field="totalExpected" to-field="totalChequeAmount"/>
+                                			<if-compare-field operator="less-equals" field="totalRemitted" to-field="totalChequeAmount" type="BigDecimal"/>
                                 			<!-- if-compare-field operator="greater-equals" field="totalChequeAmount" field="totalExpected"/ -->
                                 			
                                 		</condition>
@@ -1264,15 +1268,31 @@ under the License.
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link -->
                                             
-                                            <link  target="processReceivedPaymentBreakdown?month=${month}&amp;employerCode=${employerCode}"  text="Process Received Payments" style="buttontext">
+                                            <link  target="processReceivedPaymentBreakdown?month=${month}&amp;employerCode=${employerCode}"   text="Process Received Payments" style="buttontext">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
+                                            
                                             </container>
                                 		</widgets>
+                                		
                                 		<fail-widgets>
-                                				<label style="h3" >The Cheque has not been received!! or station account balance is less than expected amount</label>
+                                				<label style="h3" >The Cheque has not been received!! or station account balance is less than expected amount or Remittance Has not been received</label>
                                 		</fail-widgets>
                                 		
+                                	</section>
+                                	
+                                	<section>
+                                		<condition>
+                                			<if-compare-field operator="equals" field="missingPayrollNumber" to-field="missing" type="Boolean"/>
+                                		</condition>
+                                		<widgets>
+                                			<label style="h3" >Missing Payroll Numbers, Cannot Process for this Station, Re-import</label>	
+                                		
+                                			 <link  target="removeImportedPaymentBreakdown?month=${month}&amp;employerCode=${employerCode}"   text="Remove Imported Records" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                            </link>
+                                		
+                                		</widgets>
                                 	</section>
                                 </screenlet>
                         	</widgets>
@@ -1290,7 +1310,8 @@ under the License.
                         			<widgets>
                         				<container style="button-bar">
                                 			<label style="h3">Total Expected : Kshs. ${totalExpected} </label>
-                                			<label style="h3">Total Remitted (Cheque Amount)  : Kshs. ${totalChequeAmount} </label>
+                                			<label style="h3">Total Received (Schedule) : Kshs. ${totalRemitted} </label>
+                                			<label style="h3">Total Received (Cheque Amount)  : Kshs. ${totalChequeAmount} </label>
                                 			
                         				
                         				</container>
@@ -1551,6 +1572,60 @@ under the License.
                         	<widgets>
                         		<screenlet title="MSacco Transactions Log">
                         			<include-form name="listMsaccoTransactionsLog" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- Missing Member Log -->
+     <screen name="missingMemberLog">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Missing Member Log"/>
+                <set field="tabButtonItem" value="missingMemberLog"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createMissingMemberLog"/>
+                <set field="missingMemberLogCtx" from-field="parameters"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!--  set field="partyId" from-field="parameters.partyId"/ -->
+                <!-- entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/ -->
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="CommonExpectedPaymentsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml" name="expectedPaymentsTabBar"/>
+                        <!-- section>
+                            <condition>
+                                <if-has-permission permission="ACCOUNTHOLDER" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Station Deposit">
+                                    <include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section -->
+                       
+                        
+                        <section name="Station/Month">
+                        	<widgets>
+                        		<screenlet title="Station / Month">
+                                        <include-form name="FindStationMonth" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                            	</screenlet>
+                            	
+                        		<screenlet title="Missing Log">
+                        			<include-form name="listMissingMemberLog" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

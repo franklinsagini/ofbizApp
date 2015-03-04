@@ -58,12 +58,12 @@
         </field>
         
         
-        
-                <field name="salaryImport" title="Salary Import" widget-style="buttontext">
-            <hyperlink target="salaryImport" description="Salary Import" also-hidden="false">
+        <field name="employer" title="Employer/Station" widget-style="buttontext">
+            <hyperlink target="employerSalary" description="Employer/Station" also-hidden="false">
                 <parameter param-name="salaryMonthYearId"/>
             </hyperlink>
         </field>
+               
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
@@ -106,5 +106,48 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+
+	<!-- Employer Salary -->
+	 <form name="EmployerSalary" type="single" target="createEmployerSalary"
+	focus-field-name="month" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="employerSalaryContext">
+
+       
+        <field name="employerSalaryId"><hidden/></field>
+        <field name="salaryMonthYearId"><hidden/></field>
 		
+		
+        <field name="employerCode" title="Employer Code">
+        	<drop-down>
+        		<entity-options description="${employerCode} - ${name}" key-field-name="employerCode" entity-name="AllEmployers"></entity-options>
+        	</drop-down>
+        </field>
+		
+		
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       </form>
+        
+      <form name="listEmployerSalary" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployerSalary" paginate-target="employerSalary"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="EmployerSalary">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<condition-expr field-name="salaryMonthYearId" from-field="salaryMonthYearId"/>
+            </entity-condition>
+        </actions>
+                <field name="employerSalaryId"><hidden/></field>
+        <field name="salaryMonthYearId"><hidden/></field>
+		
+		
+        <field name="employerCode" title="Employer Code"><text></text></field>
+       
+        <field name="salaryImport" title="Salary Import" widget-style="buttontext">
+            <hyperlink target="salaryImport" description="Salary Import" also-hidden="false">
+                <parameter param-name="salaryMonthYearId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+			
 </forms>
