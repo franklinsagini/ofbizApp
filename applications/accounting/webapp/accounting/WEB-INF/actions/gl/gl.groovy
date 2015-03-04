@@ -23,11 +23,15 @@ totalCredits = BigDecimal.ZERO
 finalentriesList = [];
 entriesList.each { entry ->
     if(entry.debitCreditFlag == "D") {
+      if (entry.amount) {
       runningBalance = runningBalance + entry.amount
       totalDebits = totalDebits + entry.amount
+      }
     } else {
-       runningBalance = runningBalance - entry.amount
+      if (entry.amount) {
+        runningBalance = runningBalance - entry.amount
        totalCredits = totalCredits + entry.amount
+      }
     }
     finalentriesList.add("transactionDate" : entry.transactionDate, "acctgTransId" : entry.acctgTransId, "accountName" : entry.accountName,"acctgTransTypeId" : entry.acctgTransTypeId, "debitCreditFlag" : entry.debitCreditFlag, "amount" : entry.amount, "runningBalance" : runningBalance)
 }
