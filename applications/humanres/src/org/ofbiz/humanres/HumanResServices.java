@@ -363,6 +363,7 @@ GenericValue employeeLeaveType = null;
 		GenericValue getLeaveDayTypeELI=null;
 		String daytype="";
 		String hasbalance="";
+		int res=2;
 		try {
 			fromDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fromDate")));
 		} catch (ParseException e2) {
@@ -418,15 +419,23 @@ GenericValue employeeLeaveType = null;
 
 		}
 		
-		
+		Date resumeDate = calculateEndWorkingDay(thruDate, res);
+		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 
-		
+		String i18resumptionDate = sdfDisplayDate.format(resumeDate);
+	    String resumptionDate = sdfDate.format(resumeDate);
+	    
+	    
+	    result.put("resumptionDate_i18n", i18resumptionDate);
+	    result.put("resumptionDate", resumptionDate);
 		
 		result.put("leaveDuration", leaveDuration);
 		result.put("hasBalance", indicator);
 		
 		log.info("======================================leaveDuration :=== "+leaveDuration);
 		log.info("======================================hasBalance :==== "+indicator);
+		log.info("======================================resumeDate :==== "+resumptionDate);
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -537,7 +546,7 @@ GenericValue employeeLeaveType = null;
 		Date resumeDate = AccHolderTransactionServices.calculateEndWorkingDay(fromDate, leaveTillResumption);*/
 		
 		
-		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("MM/dd/yyyy");
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		
 		String i18ThruDate = sdfDisplayDate.format(endDate);
@@ -1680,7 +1689,7 @@ public static String  NextPayrollNumber(String employmentTerms) {
 	}
 	
 	public static int calculateWorkingNonHolidayDaysBetweenDates(Date startDate, Date endDate) {
-		int daysCount = 0;
+		int daysCount = 1;
 		LocalDate localDateStartDate = new LocalDate(startDate);
 		LocalDate localDateEndDate = new LocalDate(endDate);
 		while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
