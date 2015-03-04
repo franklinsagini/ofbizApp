@@ -940,6 +940,89 @@ under the License.
         <field-to-result field="endingBalanceCredit" result-name="endingBalanceCredit"/>
         <field-to-result field="endingBalanceDebit" result-name="endingBalanceDebit"/>
     </simple-method>
+    <simple-method method-name="computeGlAccountBalanceForTrialBalance" short-description="Compute the total debits, total credits, opening, ending balances of an account in a financial period">
+        <!-- <entity-one entity-name="CustomTimePeriod" auto-field-map="true" value-field="customTimePeriod"/> -->
+        <entity-one entity-name="GlAccount" auto-field-map="true" value-field="glAccount"/>
+
+        <!-- compute totalDebitsToOpeningDate, totalDebitsToEndingDate, totalCreditsToOpeningDate, totalCreditsToEndingDate -->
+        <entity-condition entity-name="AcctgTransEntrySums" list="totalDebitsToOpeningDates">
+            <condition-list combine="and">
+                <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.organizationPartyId"/>
+                <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId"/>
+                <condition-expr field-name="isPosted" operator="equals" value="Y"/>
+                <condition-expr field-name="debitCreditFlag" operator="equals" value="D"/>
+                <condition-expr field-name="glFiscalTypeId" operator="equals" value="ACTUAL"/>
+                <condition-expr field-name="transactionDate" operator="less" from-field="parameters.fromDate"/>
+            </condition-list>
+            <select-field field-name="amount"/>
+        </entity-condition>
+        <set field="totalDebitsToOpeningDate" from-field="totalDebitsToOpeningDates[0]"/>
+
+        <entity-condition entity-name="AcctgTransEntrySums" list="totalDebitsToEndingDates">
+            <condition-list combine="and">
+                <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.organizationPartyId"/>
+                <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId"/>
+                <condition-expr field-name="isPosted" operator="equals" value="Y"/>
+                <condition-expr field-name="debitCreditFlag" operator="equals" value="D"/>
+                <condition-expr field-name="glFiscalTypeId" operator="equals" value="ACTUAL"/>
+                <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate"/>
+            </condition-list>
+            <select-field field-name="amount"/>
+        </entity-condition>
+        <set field="totalDebitsToEndingDate" from-field="totalDebitsToEndingDates[0]"/>
+
+        <entity-condition entity-name="AcctgTransEntrySums" list="totalCreditsToOpeningDates">
+            <condition-list combine="and">
+                <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.organizationPartyId"/>
+                <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId"/>
+                <condition-expr field-name="isPosted" operator="equals" value="Y"/>
+                <condition-expr field-name="debitCreditFlag" operator="equals" value="C"/>
+                <condition-expr field-name="glFiscalTypeId" operator="equals" value="ACTUAL"/>
+                <condition-expr field-name="transactionDate" operator="less" from-field="parameters.fromDate"/>
+            </condition-list>
+            <select-field field-name="amount"/>
+        </entity-condition>
+        <set field="totalCreditsToOpeningDate" from-field="totalCreditsToOpeningDates[0]"/>
+
+        <entity-condition entity-name="AcctgTransEntrySums" list="totalCreditsToEndingDates">
+            <condition-list combine="and">
+                <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.organizationPartyId"/>
+                <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId"/>
+                <condition-expr field-name="isPosted" operator="equals" value="Y"/>
+                <condition-expr field-name="debitCreditFlag" operator="equals" value="C"/>
+                <condition-expr field-name="glFiscalTypeId" operator="equals" value="ACTUAL"/>
+                <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate"/>
+            </condition-list>
+            <select-field field-name="amount"/>
+        </entity-condition>
+        <set field="totalCreditsToEndingDate" from-field="totalCreditsToEndingDates[0]"/>
+
+        <!-- compute totalDebitsInTimePeriod, totalCreditsInTimePeriod and store them -->
+        <set field="totalDebitsInTimePeriod" value="${totalDebitsToEndingDate.amount - totalDebitsToOpeningDate.amount}" type="BigDecimal"/>
+        <set field="totalCreditsInTimePeriod" value="${totalCreditsToEndingDate.amount - totalCreditsToOpeningDate.amount}" type="BigDecimal"/>
+
+        <!-- compute opening and ending balance and store them -->
+        <set field="isDebit" value="${groovy:org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(glAccount)}"/>
+        <if-compare field="isDebit" operator="equals" value="true">
+            <!-- "Debit balance" account -->
+            <set field="openingBalance" value="${totalDebitsToOpeningDate.amount - totalCreditsToOpeningDate.amount}" type="BigDecimal"/>
+            <set field="endingBalance" value="${totalDebitsToEndingDate.amount - totalCreditsToEndingDate.amount}" type="BigDecimal"/>
+            <set field="endingBalanceDebit" value="${totalDebitsToEndingDate.amount - totalCreditsToEndingDate.amount}" type="BigDecimal"/>
+        <else>
+            <!-- "Credit balance" account -->
+            <set field="openingBalance" value="${totalCreditsToOpeningDate.amount - totalDebitsToOpeningDate.amount}" type="BigDecimal"/>
+            <set field="endingBalance" value="${totalCreditsToEndingDate.amount - totalDebitsToEndingDate.amount}" type="BigDecimal"/>
+            <set field="endingBalanceCredit" value="${totalCreditsToEndingDate.amount - totalDebitsToEndingDate.amount}" type="BigDecimal"/>
+        </else>
+        </if-compare>
+
+        <field-to-result field="openingBalance" result-name="openingBalance"/>
+        <field-to-result field="endingBalance" result-name="endingBalance"/>
+        <field-to-result field="totalDebitsInTimePeriod" result-name="postedDebits"/>
+        <field-to-result field="totalCreditsInTimePeriod" result-name="postedCredits"/>
+        <field-to-result field="endingBalanceCredit" result-name="endingBalanceCredit"/>
+        <field-to-result field="endingBalanceDebit" result-name="endingBalanceDebit"/>
+    </simple-method>
 
     <simple-method method-name="computeAndStoreGlAccountHistoryBalance" short-description="Compute and store the total debits, total credits, opening, ending balances of an account in a financial period">
         <entity-one entity-name="GlAccountHistory" auto-field-map="true" value-field="glAccountHistory"/>
