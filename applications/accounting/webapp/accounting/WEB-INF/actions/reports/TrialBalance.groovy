@@ -21,6 +21,8 @@ import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.party.party.PartyHelper;
 
+fromDate = thruDate - 365
+
 partyNameList = [];
 parties.each { party ->
     partyName = PartyHelper.getPartyName(party);
@@ -28,7 +30,7 @@ parties.each { party ->
 }
 context.partyNameList = partyNameList;
 
-if (parameters.customTimePeriodId) {
+if (parameters.thruDate) {
     customTimePeriod = delegator.findOne('CustomTimePeriod', [customTimePeriodId:parameters.customTimePeriodId], true)
     exprList = [];
     exprList.add(EntityCondition.makeCondition('organizationPartyId', EntityOperator.IN, partyIds))
@@ -41,7 +43,8 @@ if (parameters.customTimePeriodId) {
     postedCreditsTotal = 0
     organizationGlAccounts.each { organizationGlAccount ->
         accountBalance = [:]
-        accountBalance = dispatcher.runSync('computeGlAccountBalanceForTimePeriod', [organizationPartyId: organizationGlAccount.organizationPartyId, customTimePeriodId: customTimePeriod.customTimePeriodId, glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
+        //accountBalance = dispatcher.runSync('computeGlAccountBalanceForTimePeriod', [organizationPartyId: organizationGlAccount.organizationPartyId, customTimePeriodId: customTimePeriod.customTimePeriodId, glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
+        accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: organizationGlAccount.organizationPartyId, thruDate : thruDate, fromDate: fromDate,  glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
         if (accountBalance.postedDebits != 0 || accountBalance.postedCredits != 0) {
             accountBalance.glAccountId = organizationGlAccount.glAccountId
             accountBalance.accountCode = organizationGlAccount.accountCode

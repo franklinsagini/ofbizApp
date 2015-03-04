@@ -609,6 +609,7 @@ under the License.
                     <condition-expr field-name="partyId" operator="in" from-field="partyIds"/>
                 </entity-condition>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy"/>
             </actions>
             <widgets>
@@ -619,19 +620,19 @@ under the License.
                         </container>
                         <include-form name="TrialBalanceFinancialTimePeriodSelection" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         <section>
-                            <condition>
+<!--                             <condition>
                                 <not><if-empty field="parameters.customTimePeriodId"/></not>
-                            </condition>
+                            </condition> -->
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingTrialBalance}">
-                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="TrialBalanceSearchResultsCsv.csv">
+<!--                                     <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="TrialBalanceSearchResultsCsv.csv">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
                                     <link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
-                                    </link>
+                                    </link> -->
                                     <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                                     <screenlet title="Trial Balance Totals" >
                                     <container style="h2">
