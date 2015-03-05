@@ -75,6 +75,7 @@ under the License.
                 <set field="tabButtonItem" value="FindAcctgTrans"/>
                 <set field="labelTitleProperty" value="AccountingAcctgTrans"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
@@ -145,6 +146,8 @@ under the License.
                 <set field="tabButtonItem" value="FindAcctgTransEntries"/>
                 <set field="labelTitleProperty" value="AccountingAcctgTransEntries"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/gl/gl.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
@@ -214,6 +217,14 @@ under the License.
                                     </link>
                                     <include-form name="ListFindAcctgTransEntriesByAccount" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
+                                <screenlet title="Debit Credit Totals" >
+                                    <container style="h2">
+                                        <label text="${uiLabelMap.AccountingDebitFlag}: ${totalDebits}"/>
+                                    </container>
+                                    <container style="h2">
+                                        <label text="${uiLabelMap.AccountingCreditFlag}: ${totalCredits}"/>
+                                    </container>
+                                </screenlet>
                             </widgets>
                         </section>
                         <section>
@@ -260,6 +271,29 @@ under the License.
                                         <parameter param-name="paymentId" from-field="parameters.paymentId"/>
                                     </link>
                                     <include-form name="ListFindAcctgTransEntriesByDate" location="component://accounting/widget/GlForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Debit Credit Totals" >
+                                    <container style="h2">
+                                        <label text="Opening Balance: ${openingBalance}"/>
+                                    </container>
+                                    <container style="h1">
+                                        <label text=" || "/>
+                                    </container>
+                                    <container style="h2">
+                                        <label text="${uiLabelMap.AccountingDebitFlag}: ${totalDebits}"/>
+                                    </container>
+                                    <container style="h1">
+                                        <label text=" || "/>
+                                    </container>
+                                    <container style="h2">
+                                        <label text="${uiLabelMap.AccountingCreditFlag}: ${totalCredits}"/>
+                                    </container>
+                                    <container style="h1">
+                                        <label text=" || "/>
+                                    </container>
+                                    <container style="h2">
+                                        <label text="Running Balance: ${runningBalance}"/>
+                                    </container>
                                 </screenlet>
                             </widgets>
                         </section>
