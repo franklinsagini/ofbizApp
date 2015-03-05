@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+ 
+    <!-- Find Station -->
+    	<form name="FindStation" type="single" target="stationTransfer" default-entity-name="Station">
+        
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+        
+		<field name="name" title="Station Name" position="1"><text-find/></field>
+ 		<field name="stationNumber" title="Station Number" position="2"><text-find/></field>
+        
+        <field name="employerCode" title="Employer Code" position="1"><text-find/></field>
+ 		<field name="employerName" title="Employer Name" position="2"><text-find/></field>
+
+        
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+      <form name="listStations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="stationTransfer"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <!-- entity-condition entity-name="StationExpectation">
+            	<order-by field-name="-month"></order-by>
+            	<order-by field-name="employerName"></order-by>
+            </entity-condition -->
+            
+            
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="stationCtx"/>
+                <field-map field-name="entityName" value="Station"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
+            
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateStationExpectation"/ -->
+ 		
+ 		
+ 		<field name="employerCode" title="Employer Code"><text></text></field>
+ 		<field name="employerName" title="Employer Name"><text></text></field>
+ 		
+ 		<!-- field name="stationNumber" title="Station No/Code"><text></text></field>
+ 		<field name="stationName" title="Station Name"><text></text></field -->
+ 		<field name="branchId" title="Current Branch">
+ 			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
+ 		</field>
+ 		
+ 		<field name="newBranchId" title="New Branch"  widget-style="required" required-field="true">
+ 			<drop-down allow-empty="true">
+ 				<entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+ 					<entity-constraint name="isBranch" operator="equals" value="Y"/>
+ 				</entity-options>
+ 			</drop-down>
+ 		</field>
+ 		
+ 		<field name="employerName" title="Employer Name"><text></text></field>
+ 		
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="transferLogs" title="Transfer Logs" widget-style="buttontext">
+            <hyperlink target="transferLogs" description="Transfer Logs" also-hidden="false">
+                <parameter param-name="stationId"/>
+            </hyperlink>
+        </field>
+        
+         <field name="transferOnlyStation" title="Transfer Only Station" widget-style="buttontext">
+            <hyperlink target="transferOnlyStation" description="Transfer Only Station" also-hidden="false">
+                <parameter param-name="stationId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="transferEmployer" title="Transfer All Employer Stations" widget-style="buttontext">
+            <hyperlink target="transferEmployer" description="Transfer All Employer Stations" also-hidden="false">
+                <parameter param-name="stationId"/>
+            </hyperlink>
+        </field>
+    </form>
+</forms>
