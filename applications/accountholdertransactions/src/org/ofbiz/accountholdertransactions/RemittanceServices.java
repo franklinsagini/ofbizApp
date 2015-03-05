@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -950,6 +951,7 @@ public static String paddString(int padDigits, String count) {
 		}
 		
 		//totalRemitted = totalRemitted.setScale(newScale)
+		
 
 		return totalRemitted;
 	}
@@ -2116,5 +2118,27 @@ public static Boolean stationProcessed(String employerCode, String month) {
 			return false;
 		}
 	}
+
+
+public static Boolean remittedEqualsCheque(String employerCode, String month) {
+	BigDecimal totalRemitted = BigDecimal.ZERO;
+	BigDecimal chequeAmount = BigDecimal.ZERO;
+	
+	totalRemitted = getTotalRemitted(employerCode, month);
+	chequeAmount = getTotalRemittedChequeAmount(employerCode, month);
+	
+	totalRemitted = totalRemitted.setScale(0, RoundingMode.FLOOR);
+	chequeAmount = chequeAmount.setScale(0, RoundingMode.FLOOR);
+	
+	//return totalRemitted.setScale(0).compareTo(chequeAmount.setScale(0));
+	log.info(" ############## Total Remitted Scaled "+totalRemitted);
+	log.info(" ############## Total Cheque Scaled "+chequeAmount);
+	
+	if (totalRemitted.compareTo(BigDecimal.ZERO) == 0)
+		return false;
+	
+	return (totalRemitted.compareTo(chequeAmount) == 0);
+
+}
 
 }
