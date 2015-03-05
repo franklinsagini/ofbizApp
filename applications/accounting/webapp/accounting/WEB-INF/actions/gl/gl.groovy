@@ -15,8 +15,9 @@ List mainAndExprs = FastList.newInstance();
 if (parameters.glAccountId) {
   mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, parameters.glAccountId));
   accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: "Company", thruDate : thruDate, fromDate: fromDate,  glAccountId: parameters.glAccountId, userLogin: userLogin]);
-
+System.out.println("ACCOUNT BALANCE MAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP " + accountBalance)
 entriesList = delegator.findList("AcctgTransAndEntries", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND), UtilMisc.toSet("transactionDate", "acctgTransId", "accountName","acctgTransTypeId", "debitCreditFlag", "amount"), UtilMisc.toList("acctgTransEntrySeqId"), null, false);
+entriesList.sort {it.transactionDate}
 runningBalance = accountBalance. openingBalance
 totalDebits = BigDecimal.ZERO
 totalCredits = BigDecimal.ZERO

@@ -873,6 +873,7 @@ under the License.
             </condition-list>
             <select-field field-name="amount"/>
         </entity-condition>
+         <log message="LISTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ${totalDebitsToOpeningDates} " level="info" />
         <set field="totalDebitsToOpeningDate" from-field="totalDebitsToOpeningDates[0]"/>
 
         <entity-condition entity-name="AcctgTransEntrySums" list="totalDebitsToEndingDates">
@@ -956,6 +957,10 @@ under the License.
             </condition-list>
             <select-field field-name="amount"/>
         </entity-condition>
+         <iterate list="acctgTransAndEntries" entry="acctgTransAndEntry">
+             <log message="LISTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ${acctgTransAndEntry} " level="info" />
+         </iterate>
+
         <set field="totalDebitsToOpeningDate" from-field="totalDebitsToOpeningDates[0]"/>
 
         <entity-condition entity-name="AcctgTransEntrySums" list="totalDebitsToEndingDates">
