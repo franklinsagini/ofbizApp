@@ -1218,6 +1218,9 @@ under the License.
                 
                 <set field="missingPayrollNumber" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.missingPayrolls(employerCode, month);}" type="Boolean"/>
                	<set field="missing" value="true" type="Boolean"/>
+               	
+               	<set field="valueEqual" value="true" type="Boolean"/>
+               	<set field="chequeValueEqual" global="true" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.remittedEqualsCheque(employerCode, month);}" type="Boolean"/>
                 <entity-one entity-name="ExpectedPaymentReceived" value-field="expectedPaymentReceivedContext"/>
             </actions>
             <widgets>
@@ -1253,7 +1256,9 @@ under the License.
                                 	<section>
                                 		
                                 		<condition>
-                                			<if-compare-field operator="less-equals" field="totalRemitted" to-field="totalChequeAmount" type="BigDecimal"/>
+                                			<!--  if-compare-field operator="equals" field="totalRemitted" to-field="totalChequeAmount" type="BigDecimal"/ -->
+                                			<if-compare-field operator="equals" field="chequeValueEqual" to-field="valueEqual" type="Boolean"/>
+                                			
                                 			<!-- if-compare-field operator="greater-equals" field="totalChequeAmount" field="totalExpected"/ -->
                                 			
                                 		</condition>
