@@ -22,13 +22,16 @@ entriesList.sort {it.transactionDate}
 runningBalance = accountBalance. openingBalance
 totalDebits = BigDecimal.ZERO
 totalCredits = BigDecimal.ZERO
+openingBalance = BigDecimal.ZERO
 finalentriesList = [];
 count = 0;
 balanceType = "";
 GenericValue account = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", glAccountId), true);
 isDebit = org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(account);
 entriesList.each { entry ->
-
+  if (count==0) {
+    openingBalance = entry.amount
+  }
   if (isDebit) {
     System.out.println("THIS IS A DEBIT BALANCE ACCOUNT")
 
@@ -69,7 +72,7 @@ entriesList.each { entry ->
 }
 System.out.println("####################################################################### Account Balance " + accountBalance)
 context.entriesList = finalentriesList
-context.openingBalance = accountBalance.openingBalance
+context.openingBalance = openingBalance
 context.totalCredits = totalCredits
 context.totalDebits = totalDebits
 context.runningBalance = runningBalance
