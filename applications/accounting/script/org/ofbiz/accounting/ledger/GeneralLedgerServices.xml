@@ -941,6 +941,7 @@ under the License.
         <field-to-result field="endingBalanceCredit" result-name="endingBalanceCredit"/>
         <field-to-result field="endingBalanceDebit" result-name="endingBalanceDebit"/>
     </simple-method>
+
     <simple-method method-name="computeGlAccountBalanceForTrialBalance" short-description="Compute the total debits, total credits, opening, ending balances of an account in a financial period">
         <!-- <entity-one entity-name="CustomTimePeriod" auto-field-map="true" value-field="customTimePeriod"/> -->
         <entity-one entity-name="GlAccount" auto-field-map="true" value-field="glAccount"/>
@@ -957,9 +958,7 @@ under the License.
             </condition-list>
             <select-field field-name="amount"/>
         </entity-condition>
-         <iterate list="acctgTransAndEntries" entry="acctgTransAndEntry">
-             <log message="LISTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ${acctgTransAndEntry} " level="info" />
-         </iterate>
+
 
         <set field="totalDebitsToOpeningDate" from-field="totalDebitsToOpeningDates[0]"/>
 

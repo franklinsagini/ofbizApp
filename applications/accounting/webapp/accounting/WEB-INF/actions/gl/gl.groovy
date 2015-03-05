@@ -5,6 +5,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.party.party.PartyWorker;
+import org.ofbiz.accounting.util.UtilAccounting
 
 import javolution.util.FastList;
 glAccountId = parameters.glAccountId
@@ -24,9 +25,11 @@ totalCredits = BigDecimal.ZERO
 finalentriesList = [];
 count = 0;
 balanceType = "";
+GenericValue account = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", glAccountId), true);
+isDebit = org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(account);
 entriesList.each { entry ->
 
-  if (accountBalance.postedDebits != 0) {
+  if (isDebit) {
     System.out.println("THIS IS A DEBIT BALANCE ACCOUNT")
 
     if(entry.debitCreditFlag == "D") {
@@ -43,7 +46,7 @@ entriesList.each { entry ->
 
   }
 
-  if (accountBalance.postedCredits != 0) {
+  if (!isDebit) {
     System.out.println("THIS IS A CREDIT BALANCE ACCOUNT")
 
     if(entry.debitCreditFlag == "C") {
