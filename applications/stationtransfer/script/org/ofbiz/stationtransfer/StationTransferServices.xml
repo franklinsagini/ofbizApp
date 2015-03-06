@@ -50,8 +50,24 @@ under the License.
         
         <set field="updateMessage" value="${bsh:org.ofbiz.stationtransfer.StationTransferServices.tranferStation(stationId);}"></set>
   		
-  		<property-to-field resource="StationTransferUiLabels" 
-            property="UpdateSuccess" field="successMessage" />   	  
+  		<if> 
+            <condition> 
+                        <if-compare operator="not-equals" value="SUCCESS" field="updateMessage"></if-compare>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="StationTransferUiLabels"  
+                        property="stationTransferError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else> 
+                <property-to-field resource="StationTransferUiLabels" 
+            property="UpdateSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+  		   	  
         
     </simple-method>   
      

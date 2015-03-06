@@ -89,7 +89,7 @@ public class StationTransferServices {
 			e2.printStackTrace();
 		}
 		
-		return "Successfully Updated Station";
+		return "SUCCESS";
 
 	}
 
