@@ -28,6 +28,80 @@
 			save-current-view="true">
 			</response>
 	</request-map>
+	
+	<!-- StationTransferLog -->
+	    <request-map uri="stationTransferLog">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="stationTransferLog"
+			save-current-view="true">
+			</response>
+	</request-map>
+	
+	<!-- StationTransfer -->
+	<request-map uri="createStationTransfer">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStationTransfer" />
+		<response name="success" type="request-redirect" value="stationTransfer">
+			<!-- redirect-parameter name="loanApplicationId" / -->
+		</response>
+		<response name="error" type="view" value="stationTransfer" />
+	</request-map>
+
+	<request-map uri="updateStationTransfer">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStationTransfer" />
+		<response name="success" type="request-redirect" value="stationTransfer"></response>
+		<response name="error" type="view" value="stationTransfer" />
+	</request-map>
+
+	<request-map uri="deleteStationTransfer">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStationTransfer" />
+		<response name="success" type="request-redirect"
+			value="stationTransfer"></response>
+		<response name="error" type="view" value="stationTransfer" />
+	</request-map>
+	
+		<request-map uri="updateStationToTransfer">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStationToTransfer" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect"
+			value="stationTransfer">
+				<redirect-parameter name="stationId"/>
+			</response>
+		<response name="error" type="view" value="stationTransfer" />
+	</request-map>
+	
+	<!-- StationTransferLog -->
+	<request-map uri="createStationTransferLog">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStationTransferLog" />
+		<response name="success" type="request-redirect" value="stationTransferLog">
+		</response>
+		<response name="error" type="view" value="stationTransferLog" />
+	</request-map>
+
+	<request-map uri="updateStationTransferLog">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStationTransferLog" />
+		<response name="success" type="request-redirect" value="stationTransferLog"></response>
+		<response name="error" type="view" value="stationTransferLog" />
+	</request-map>
+
+	<request-map uri="deleteStationTransferLog">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStationTransferLog" />
+		<response name="success" type="request-redirect"
+			value="stationTransferLog"></response>
+		<response name="error" type="view" value="stationTransferLog" />
+	</request-map>
+	
+	
+	<!-- transferEmployer -->
+	<!-- transferOnlyStation -->
+	<!-- transferLogs -->
+	
     
     <!-- View Mappings -->
     
