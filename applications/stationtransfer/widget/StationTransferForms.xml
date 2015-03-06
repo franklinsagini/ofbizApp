@@ -69,7 +69,33 @@
                 <parameter param-name="employerCode"/>
             </hyperlink>
         </field>
+       
+    </form>
+    
+    <!-- listStationTransfer -->
+          <form name="listStationTransfer" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStationToTransfer" paginate-target="stationTransfer"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         
+ 		<field name="employerCode" title="Employer Code"><text></text></field>
+ 		<field name="employerName" title="Employer Name"><text></text></field>
+ 		
+ 		<!-- field name="stationNumber" title="Station No/Code"><text></text></field>
+ 		<field name="stationName" title="Station Name"><text></text></field -->
+ 		<field name="fromBranchId" title="From Branch">
+ 			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
+ 		</field>
+
+ 		
+ 		<field name="toBranchId" title="To Branch"  widget-style="required" required-field="true">
+ 			<drop-down allow-empty="true">
+ 				<entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+ 					<entity-constraint name="isBranch" operator="equals" value="Y"/>
+ 				</entity-options>
+ 			</drop-down>
+ 		</field>
+ 		
+ 		<field name="comments" title="Comments"><text></text></field>
+ 		
        
     </form>
 </forms>

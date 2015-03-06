@@ -55,5 +55,42 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- transferLogs -->
+          <screen name="transferLogs">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Transfer Logs"/>
+                <set field="tabButtonItem" value="transferLogs"/>
+                 <set field="headerItem" value="transferLogs"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createStationTransfer"/>
+                <set field="stationTransferCtx" from-field="parameters"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <!--  set field="partyId" from-field="parameters.partyId"/ -->
+                <!-- entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/ -->
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="StationTransferCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        
+                        <section name="Transfer Logs">
+                        	<widgets>
+                        	
+                            	
+                        		<screenlet title="Logs">
+                        			<include-form name="listStationTransfer" location="component://stationtransfer/widget/StationTransferForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>
