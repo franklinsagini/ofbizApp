@@ -1003,5 +1003,12 @@ public class LoanUtilities {
 	}
 
 
+	/**
+	 * Strips String of values
+	 * **/
+	public static String stripStringName(String id){
+		id = id.replaceAll(",", "");
+		return id;
+	}
 
 }
