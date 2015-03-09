@@ -950,7 +950,65 @@ public class LoanUtilities {
 		
 		return String.valueOf(localDate.getMonthOfYear());
 	}
+	
+	
+	public static GenericValue getStation(String stationId) {
+		GenericValue station = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			station = delegator.findOne("Station",
+					UtilMisc.toMap("stationId", stationId.trim()), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (station == null)
+			return null;
+		
+		return station;
+	}
+
+	public static List<String> getStationIds(String employerCode) {
+		List<GenericValue> stationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			stationELI = delegator.findList("Station",
+					EntityCondition.makeCondition("employerCode", employerCode),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		List<String> stationIdList = new ArrayList<String>();
+
+		for (GenericValue genericValue : stationELI) {
+			//memberId = genericValue.getLong("partyId");
+			stationIdList.add(genericValue.getString("stationId"));
+		}
+		return stationIdList;
+	}
+
+	public static String getBranchName(String fromBranchId) {
+		
+		//groupName
+		GenericValue partyGroup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			partyGroup = delegator.findOne("PartyGroup",
+					UtilMisc.toMap("partyId", fromBranchId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return partyGroup.getString("groupName");
+	}
 
 
+	/**
+	 * Strips String of values
+	 * **/
+	public static String stripStringName(String id){
+		id = id.replaceAll(",", "");
+		return id;
+	}
 
 }
