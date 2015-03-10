@@ -1413,7 +1413,7 @@ public static String paddString(int padDigits, String count) {
 		for (GenericValue genericValue : expectedPaymentReceivedELI) {
 			
 			String payrollNo = genericValue.getString("payrollNo");
-			Boolean payrollExists = payrollNumberExists(payrollNo);
+			Boolean payrollExists = LoanUtilities.payrollNumberExists(payrollNo);
 			
 			if (!payrollExists){
 				exists = payrollExists;
@@ -1441,36 +1441,7 @@ public static String paddString(int padDigits, String count) {
 		return exists;
 	}
 
-	private static Boolean payrollNumberExists(String payrollNo) {
-		
-		/***
-		 * Check if Payroll Number exists
-		 * */
-		List<GenericValue> memberELI = new ArrayList<GenericValue>();
-
-		EntityConditionList<EntityExpr> memberConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"payrollNumber", EntityOperator.EQUALS, payrollNo.trim())
-
-				), EntityOperator.AND);
-
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		try {
-			memberELI = delegator.findList(
-					"Member",
-					memberConditions, null, null, null, false);
-
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
-		
-		if (memberELI.size() > 0){
-			return true;
-		} else{
-			return false;
-		}
-	}
-
+	
 	//missingPayrolls(employerCode, month)
 	public static Boolean missingPayrolls(String employerCode, String month) {
 		

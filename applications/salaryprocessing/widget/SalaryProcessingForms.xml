@@ -34,8 +34,14 @@
         </field>
          <field name="year" title="Year"><text default-value="${currentYear}"></text></field>
         
-        
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="stationId" title="Station / Employer" required-field="true">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${employerName} - ${employerCode}" entity-name="Station">
+        			<entity-order-by field-name="employerName"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
       <form name="listSalaryMonthYear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSalaryMonthYear" paginate-target="salaryMonthYear"
@@ -50,6 +56,14 @@
 		
         <field name="month" title="Month"><text></text></field>
          <field name="year" title="Year"><text></text></field>
+         
+         <field name="stationId" title="Station / Employer" required-field="true">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${employerName} - ${employerCode}" entity-name="Station">
+        			<entity-order-by field-name="employerName"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
        
         <field name="memberSalary" title="Member Salaries" widget-style="buttontext">
             <hyperlink target="memberSalary" description="Member Salaries" also-hidden="false">
@@ -81,7 +95,7 @@
          <field name="payrollNumber" title="Payroll No."><text></text></field>
         <field name="netSalary" title="Net Salary"><text></text></field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
       <form name="listMemberSalary" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberSalary" paginate-target="memberSalary"
@@ -89,6 +103,11 @@
         <actions>
             <entity-condition entity-name="MemberSalary">
             	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<condition-list combine="and">
+            		<condition-expr field-name="month" operator="equals" from-field="month"/>
+            		<condition-expr field-name="year" operator="equals" from-field="year"/>
+            		<condition-expr field-name="employerCode" operator="equals" from-field="employerCode"/>
+            	</condition-list>
             </entity-condition>
         </actions>
         <field name="memberSalaryId"><hidden/></field>
@@ -97,15 +116,43 @@
 		
         <field name="employerCode" title="Employer Code"><text></text></field>
          <field name="payrollNumber" title="Payroll No."><text></text></field>
+         
+         <field name="name" title="Name."><display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getMemberName(payrollNumber);}"></display></field>
+         
         <field name="netSalary" title="Net Salary"><text></text></field>
        
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="memberSalaryId"/>
             </hyperlink>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
+    
+    <!-- listMissingSalaryPayrollNumber -->
+    
+          <form name="listMissingSalaryPayrollNumber" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMissingSalaryPayrollNumber" paginate-target="missingSalaryPayrollNumbers"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MissingSalaryPayrollNumber">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<condition-list combine="and">
+            		<condition-expr field-name="month" operator="equals" from-field="month"/>
+            		<condition-expr field-name="year" operator="equals" from-field="year"/>
+            		<condition-expr field-name="employerCode" operator="equals" from-field="employerCode"/>
+            	</condition-list>
+            </entity-condition>
+        </actions>
+		
+		<field name="month" title="Month"><text></text></field>
+		<field name="year" title="Year"><text></text></field>
+		
+        <field name="employerCode" title="Employer Code"><text></text></field>
+         <field name="payrollNumber" title="Payroll No."><text></text></field>
+         
+         <field name="name" title="Name."><display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getMemberName(payrollNumber);}"></display></field>
+         
+       </form>
 
 	<!-- Employer Salary -->
 	 <form name="EmployerSalary" type="single" target="createEmployerSalary"
