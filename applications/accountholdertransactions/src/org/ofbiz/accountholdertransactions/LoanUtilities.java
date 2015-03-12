@@ -1092,4 +1092,49 @@ public class LoanUtilities {
 		}
 	}
 
+	public static List<GenericValue> getAccountProductChargeList(String transactionType,
+			String productCode) {
+		
+		//Get the account Product ID
+		GenericValue accountProduct = getAccountProductGivenCodeId(productCode);
+		Long accountProductId = null;
+		if (accountProduct != null)
+			accountProductId = accountProduct.getLong("accountProductId");
+		
+		EntityConditionList<EntityExpr> accountProductChargeConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"transactionType", EntityOperator.EQUALS,
+						transactionType),
+
+				EntityCondition.makeCondition("accountProductId", EntityOperator.EQUALS,
+						accountProductId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> accountProductChargeELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductChargeELI = delegator.findList("AccountProductCharge",
+					accountProductChargeConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		return accountProductChargeELI;
+	}
+	
+	
+	public static GenericValue getProductCharge(Long productChargeId) {
+		GenericValue productCharge = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			productCharge = delegator.findOne("ProductCharge",
+					UtilMisc.toMap("productChargeId", productChargeId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return productCharge;
+	}
+
 }
