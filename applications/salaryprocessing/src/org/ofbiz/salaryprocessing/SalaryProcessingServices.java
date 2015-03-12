@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -30,7 +31,6 @@ public class SalaryProcessingServices {
 	public static String processSalaryReceivedNoDeduct(
 			HttpServletRequest request, HttpServletResponse response) {
 
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// salaryMonthYearId
 		String salaryMonthYearId = (String) request
 				.getParameter("salaryMonthYearId");
@@ -93,6 +93,12 @@ public class SalaryProcessingServices {
 		
 		BigDecimal bdSalaryChargeAmt = BigDecimal.ZERO;
 		BigDecimal bdSalaryExciseAmt = BigDecimal.ZERO;
+		Long salaryProductChargeId = null;
+		String salaryProductChargeName = null;
+		Long salaryExciseDutyId = null;
+		String salaryExciseDutyName = null;
+		
+		
 		
 		for (GenericValue genericValue : listAccountProductCharge) {
 			productChargeId = genericValue.getLong("productChargeId");
@@ -109,12 +115,18 @@ public class SalaryProcessingServices {
 			if (genericValue.getLong("parentChargeId") == null){
 				//Its salary amount
 				bdSalaryChargeAmt = genericValue.getBigDecimal("fixedAmount");
+				
+				salaryProductChargeId = genericValue.getLong("productChargeId");
+				salaryProductChargeName = productCharge.getString("name");
 			}
 			
 			//if has parent then its excise duty amount
 			if (genericValue.getLong("parentChargeId") != null){
 				//Its salary amount
 				bdSalaryExciseAmt = genericValue.getBigDecimal("rateAmount").multiply(bdSalaryChargeAmt).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);
+				
+				salaryExciseDutyId  = genericValue.getLong("productChargeId");
+				salaryExciseDutyName = productCharge.getString("name");
 			}
 			
 			
@@ -123,14 +135,16 @@ public class SalaryProcessingServices {
 			log.info(" CCCCCCCCCCCCCCCSSSS Excise Duty "
 					+ bdSalaryExciseAmt);
 		}
+		
+		Map<String, String> userLogin = (Map<String, String>) request
+				.getAttribute("userLogin");
 		// For each Member
 		// Post Net Salary
 		// Post Salary Processing Charge
 		// Post Salary Processing Excise Duty
-		doProcessing(month, year, employerCode, bdSalaryChargeAmt, bdSalaryExciseAmt);
+		doProcessing(userLogin, month, year, employerCode, bdSalaryChargeAmt, bdSalaryExciseAmt, salaryProductChargeId, salaryProductChargeName, salaryExciseDutyId, salaryExciseDutyName);
 
-		Map<String, String> userLogin = (Map<String, String>) request
-				.getAttribute("userLogin");
+		
 
 		log.info("HHHHHHHHHHHH Salary Processing ... No Deductions !!!");
 
@@ -150,45 +164,92 @@ public class SalaryProcessingServices {
 		return "SUCCESS";
 	}
 
-	private static void doProcessing(String month, String year,
+	private static void doProcessing(Map<String, String> userLogin, String month, String year,
 			String employerCode, BigDecimal bdSalaryChargeAmt,
-			BigDecimal bdSalaryExciseAmt) {
+			BigDecimal bdSalaryExciseAmt, Long salaryProductChargeId, String salaryProductChargeName, Long salaryExciseDutyId, String salaryExciseDutyName) {
 		//Get the payroll numbers from MemberSalary given month, year and employerCode
 		List<GenericValue> listMemberSalary = getMemberSalaryList(month, year, employerCode);
 		
 		BigDecimal bdTotalSalaryPosted = BigDecimal.ZERO;
 		BigDecimal bdTotalSalaryCharge = BigDecimal.ZERO;
 		BigDecimal bdTotalSalaryExciseDuty = BigDecimal.ZERO;
+		BigDecimal bdNetSalaryAmt = BigDecimal.ZERO;
+		Long memberAccountId = null;
+		String payrollNumber = null;
+		
+		
+		String accountTransactionParentId = null;
+
+		List<GenericValue> listSalaryToUpdate = new ArrayList<GenericValue>();
 		for (GenericValue genericValue : listMemberSalary) {
-			bdTotalSalaryPosted = bdTotalSalaryPosted.add(genericValue.getBigDecimal("netSalary"));
+			bdNetSalaryAmt = genericValue.getBigDecimal("netSalary");
+			bdTotalSalaryPosted = bdTotalSalaryPosted.add(bdNetSalaryAmt);
 			
+			accountTransactionParentId = AccHolderTransactionServices.getcreateAccountTransactionParentId(memberAccountId, userLogin);
+			payrollNumber = genericValue.getString("payrollNumber");
+			//memberAccountId = LoanUtilities.getS
 			//Add Net Salary to the Savings Account
+			memberAccountId = AccHolderTransactionServices.getMemberSavingsAccountId(payrollNumber);
+			AccHolderTransactionServices.memberTransactionDeposit(bdNetSalaryAmt, memberAccountId, userLogin, "SALARYPROCESSING", accountTransactionParentId, null);
 			
 			//Deduct the Salary Charge
-			
-			
-			//Deduct the Salary Duty
-			
-			
 			//Add Salary Charge
 			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalSalaryCharge, memberAccountId, userLogin, salaryProductChargeName, accountTransactionParentId, salaryProductChargeId.toString());
 			//Add Excise Duty
 			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty.add(bdSalaryExciseAmt);
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalSalaryExciseDuty, memberAccountId, userLogin, salaryExciseDutyName, accountTransactionParentId, salaryExciseDutyId.toString());
+	
+			genericValue.set("processed", "Y");
+			listSalaryToUpdate.add(genericValue);
 		}
 		
 		//Post Total Net Salary in GL bdTotalSalaryPosted
-		//Credit Leaf Base with the total
+		
+		//Create One AcctgTrans
+		GenericValue accountTransaction = null;
+		String acctgTransId = AccHolderTransactionServices.creatAccountTransRecord(accountTransaction,
+				userLogin);
+		//SALARYPROCESSING
+		GenericValue accountHolderTransactionSetup = AccHolderTransactionServices.getAccountHolderTransactionSetup("SALARYPROCESSING");
+		String debitAccountId = accountHolderTransactionSetup.getString("cashAccountId");
+		String creditAccountId = accountHolderTransactionSetup.getString("memberDepositAccId");
+		
+		//salaryProductChargeId = salaryProductChargeId.replaceAll(",", "");
+		GenericValue salaryProductCharge = LoanUtilities.getProductCharge(salaryProductChargeId);
+		String salaryChargeCreditAccountId = salaryProductCharge.getString("chargeAccountId");
+		
+		GenericValue salaryExciseDutyProductCharge = LoanUtilities.getProductCharge(salaryExciseDutyId);
+		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge.getString("chargeAccountId");
+		
+		//------------------------
+		//Debit Leaf Base with the total
+		AccHolderTransactionServices.createAccountPostingEntry(bdTotalSalaryPosted, acctgTransId, "D", debitAccountId);
 		
 		
-		//Debit Member Deposits with (total net - (total charge + total excise duty)) 
-		//Debit Salary Charge with total salary charge
-		// Debit Excise Duty with total excise duty
+		BigDecimal bdTotalCharges = bdTotalSalaryCharge.add(bdTotalSalaryExciseDuty);
+		BigDecimal bdTotalMemberDepositAmt = bdTotalSalaryPosted.subtract(bdTotalCharges);
 		
+		//Credit Member Deposits with (total net - (total charge + total excise duty))
+		AccHolderTransactionServices.createAccountPostingEntry(bdTotalMemberDepositAmt, acctgTransId, "C", creditAccountId);
+		//Credit Salary Charge with total salary charge
+		AccHolderTransactionServices.createAccountPostingEntry(bdTotalSalaryCharge, acctgTransId, "C", salaryChargeCreditAccountId);
+		// Credit Excise Duty with total excise duty
+		AccHolderTransactionServices.createAccountPostingEntry(bdTotalSalaryExciseDuty, acctgTransId, "C", salaryExciseCreditAccountId);
 		
+		//Update the MemberSalary to processed
 		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			delegator.storeAll(listSalaryToUpdate);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
 		//Prior Transaction when a cheque was paid
-		//Credit Cash at Bank
-		//Debit Leaf Base
+		//Debit Cash at Bank
+		//Credit Leaf Base
 		
 	}
 
@@ -199,11 +260,17 @@ public class SalaryProcessingServices {
 
 		EntityConditionList<EntityExpr> memberSalaryConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"month", EntityOperator.EQUALS, month), EntityCondition
+						"month", EntityOperator.EQUALS, month),
+						
+					EntityCondition
 						.makeCondition("year", EntityOperator.EQUALS, year),
 
 				EntityCondition.makeCondition("employerCode",
-						EntityOperator.EQUALS, employerCode)),
+						EntityOperator.EQUALS, employerCode), 
+						//processed
+				EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, null)		
+						),
 						EntityOperator.AND);
 
 		try {

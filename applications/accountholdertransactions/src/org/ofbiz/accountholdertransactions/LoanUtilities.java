@@ -28,6 +28,7 @@ import org.ofbiz.loansprocessing.LoansProcessingServices;
 public class LoanUtilities {
 
 	public static Logger log = Logger.getLogger(LoanUtilities.class);
+	public static String MEMBER_DEPOSIT_CODE = "901";
 
 	public static Long getMemberId(String payrollNo) {
 		Long memberId = null;
@@ -334,7 +335,7 @@ public class LoanUtilities {
 		Timestamp lastDate = null;
 
 		// Get MemberDeposit AccountProductID
-		GenericValue accountProduct = getAccountProductGivenCodeId("901");
+		GenericValue accountProduct = getAccountProductGivenCodeId(MEMBER_DEPOSIT_CODE);
 		Long accountProductId = accountProduct.getLong("accountProductId");
 
 		// Get MemberAccount for the Account Product and party ID
@@ -374,7 +375,7 @@ public class LoanUtilities {
 	public static BigDecimal getLastMemberDepositContributionAmount(Long partyId) {
 		BigDecimal bdLastAmount = null;
 		// Get MemberDeposit AccountProductID
-		GenericValue accountProduct = getAccountProductGivenCodeId("901");
+		GenericValue accountProduct = getAccountProductGivenCodeId(MEMBER_DEPOSIT_CODE);
 		Long accountProductId = accountProduct.getLong("accountProductId");
 
 		// Get MemberAccount for the Account Product and party ID
