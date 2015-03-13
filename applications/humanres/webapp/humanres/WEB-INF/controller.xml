@@ -434,13 +434,13 @@ under the License.
     <request-map uri="forwardApplication">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="forwardApplication"/>
-    <response name="success" type="view" value="FindEmplLeaves">
+    <response name="success" type="view" value="FindLeaveApprovals">
     <redirect-parameter name="partyId"/>
     <redirect-parameter name="fromDate"/>
     <redirect-parameter name="leaveTypeId"/>
     <redirect-parameter name="leaveId"/>
     </response>
-    <response name="error" type="view" value="FindEmplLeaves" />
+    <response name="error" type="view" value="FindLeaveApprovals" />
     </request-map>
 
 
@@ -1907,7 +1907,7 @@ under the License.
         <security https="true" auth="true" />
         <event type="service" invoke="updateEmplLeave" />
         <response name="success" type="view" value="FindEmplLeaves"></response>
-        <response name="error" type="view" value="FindEmplLeaves" />
+        <response name="error" type="view" value="EditEmplLeave" />
     </request-map> 
 
 
@@ -1932,20 +1932,20 @@ under the License.
     <request-map uri="forwardEmplLeave">
         <security https="true" auth="true"/>
         <event type="service" invoke="forwardEmplLeave"/>
-        <response name="success" type="view" value="FindEmplLeaves"/>
-        <response name="error" type="view" value="FindEmplLeaves"/>
+        <response name="success" type="request-redirect-noparam" value="FindEmplLeaves"/>
+        <response name="error" type="request-redirect-noparam" value="FindEmplLeaves"/>
     </request-map>
     <request-map uri="approveEmplLeaveStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="approveEmplLeaveStatus"/>
-        <response name="success" type="view" value="FindLeaveApprovals"/>
-        <response name="error" type="view" value="FindLeaveApprovals"/>
+        <response name="success" type="request-redirect-noparam" value="FindLeaveApprovals"/>
+        <response name="error" type="request-redirect-noparam" value="FindLeaveApprovals"/>
     </request-map>
         <request-map uri="rejectEmplLeaveStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="rejectEmplLeaveStatus"/>
-        <response name="success" type="view" value="FindLeaveApprovals"/>
-        <response name="error" type="view" value="FindLeaveApprovals"/>
+        <response name="success" type="request-redirect-noparam" value="FindLeaveApprovals"/>
+        <response name="error" type="request-redirect-noparam" value="FindLeaveApprovals"/>
     </request-map>
     <request-map uri="viewEmplLeaveDetails">
         <security https="true" auth="true"/>
