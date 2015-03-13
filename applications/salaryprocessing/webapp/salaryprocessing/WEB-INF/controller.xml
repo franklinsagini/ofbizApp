@@ -55,6 +55,13 @@
                         value="salaryMonthYear"></response>
         </request-map>
         
+        <!-- Missing Salary Payroll Numbers -->
+        
+        <request-map uri="missingSalaryPayrollNumbers">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="missingSalaryPayrollNumbers" />
+        </request-map>
+        
         <!-- Member Salary -->
         <request-map uri="memberSalary">
                 <security https="true" auth="true" />
@@ -81,6 +88,26 @@
                 <response name="success" type="request-redirect"
                         value="memberSalary"></response>
         </request-map>
+        
+        <!-- Process Salary -->
+      <request-map uri="processSalaryReceivedNoDeduct">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.salaryprocessing.SalaryProcessingServices" invoke="processSalaryReceivedNoDeduct" />
+		<response name="success" type="view" value="memberSalary">
+			<redirect-parameter name="salaryMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="memberSalary" />
+	</request-map>
+	<request-map uri="processSalaryReceivedDeduct">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.salaryprocessing.SalaryProcessingServices" invoke="processSalaryReceivedDeduct" />
+		<response name="success" type="view" value="memberSalary">
+			<redirect-parameter name="salaryMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="memberSalary" />
+	</request-map>
         
         <!-- employerSalary -->
                 <request-map uri="employerSalary">
@@ -120,5 +147,7 @@
     
     <view-map name="salaryImport" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#salaryImport"/>
     
+    
+    <view-map name="missingSalaryPayrollNumbers" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#missingSalaryPayrollNumbers"/>
     
 </site-conf>

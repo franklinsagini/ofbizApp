@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+    
+
+    
+    <!-- StationTransfer -->
+    <simple-method method-name="createStationTransfer" short-description="Create StationTransfer">
+        <make-value entity-name="StationTransfer" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="StationTransfer"></set>
+        <set field="newEntity.stationTransferId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateStationTransfer" short-description="Update StationTransfer">
+        <entity-one entity-name="StationTransfer" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    
+     <simple-method method-name="updateStationToTransfer" short-description="Update updateStationToTransfer">
+        <entity-one entity-name="Station" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+        <set field="stationId" value="${lookedUpValue.stationId}"/>
+        
+        <set field="updateMessage" value="${bsh:org.ofbiz.stationtransfer.StationTransferServices.tranferStation(stationId);}"></set>
+  		
+  		<if> 
+            <condition> 
+                        <if-compare operator="not-equals" value="SUCCESS" field="updateMessage"></if-compare>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="StationTransferUiLabels"  
+                        property="stationTransferError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else> 
+                <property-to-field resource="StationTransferUiLabels" 
+            property="UpdateSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+  		   	  
+        
+    </simple-method>   
+     
+    <simple-method method-name="deleteStationTransfer" short-description="Delete StationTransfer">
+        <entity-one entity-name="StationTransfer" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- StationTransferLog -->
+    <simple-method method-name="createStationTransferLog" short-description="Create StationTransferLog">
+        <make-value entity-name="StationTransferLog" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="StationTransferLog"></set>
+        <set field="newEntity.stationTransferLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateStationTransferLog" short-description="Update StationTransferLog">
+        <entity-one entity-name="StationTransferLog" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteStationTransferLog" short-description="Delete StationTransferLog">
+        <entity-one entity-name="StationTransferLog" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+</simple-methods>
