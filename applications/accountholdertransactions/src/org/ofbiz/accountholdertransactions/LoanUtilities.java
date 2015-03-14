@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -22,6 +23,8 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 
@@ -1093,39 +1096,39 @@ public class LoanUtilities {
 		}
 	}
 
-	public static List<GenericValue> getAccountProductChargeList(String transactionType,
-			String productCode) {
-		
-		//Get the account Product ID
+	public static List<GenericValue> getAccountProductChargeList(
+			String transactionType, String productCode) {
+
+		// Get the account Product ID
 		GenericValue accountProduct = getAccountProductGivenCodeId(productCode);
 		Long accountProductId = null;
 		if (accountProduct != null)
 			accountProductId = accountProduct.getLong("accountProductId");
-		
+
 		EntityConditionList<EntityExpr> accountProductChargeConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"transactionType", EntityOperator.EQUALS,
 						transactionType),
 
-				EntityCondition.makeCondition("accountProductId", EntityOperator.EQUALS,
-						accountProductId)
+				EntityCondition.makeCondition("accountProductId",
+						EntityOperator.EQUALS, accountProductId)
 
 				), EntityOperator.AND);
 
 		List<GenericValue> accountProductChargeELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			accountProductChargeELI = delegator.findList("AccountProductCharge",
-					accountProductChargeConditions, null, null, null, false);
+			accountProductChargeELI = delegator.findList(
+					"AccountProductCharge", accountProductChargeConditions,
+					null, null, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		return accountProductChargeELI;
 	}
-	
-	
+
 	public static GenericValue getProductCharge(Long productChargeId) {
 		GenericValue productCharge = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -1136,6 +1139,91 @@ public class LoanUtilities {
 			e2.printStackTrace();
 		}
 		return productCharge;
+	}
+
+	// ## Get the list of contributing accounts
+	public static List<GenericValue> getMemberContributingAccounts(Long memberId) {
+		// Get from MemberAccount - accounts that are contributing and belong to
+		// this member
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+
+		List<String> orderByList = new LinkedList<String>();
+		orderByList.add("accountProductId");
+		// String accountProductId = getShareDepositAccountId("901");
+		// accountProductId = accountProductId.replaceAll(",", "");
+		// Long accountProductIdLong = Long.valueOf(accountProductId);
+		// And accountProductId not equal to memberDeposit, not equal to share
+		// capital and not equal to
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"contributing", EntityOperator.EQUALS, "YES"),
+				//
+				// EntityCondition.makeCondition(
+				// "accountProductId", EntityOperator.NOT_EQUAL,
+				// accountProductIdLong),
+
+						EntityCondition.makeCondition("partyId",
+								EntityOperator.EQUALS, memberId)
+
+				), EntityOperator.AND);
+
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, orderByList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		return memberAccountELI;
+
+	}
+
+	// ### Get Contributing Amount
+	/****
+	 * Create Expectation
+	 * **/
+	public static BigDecimal getContributionAmount(
+			GenericValue memberAccount, Long memberId) {
+
+		GenericValue accountProduct = RemittanceServices
+				.findAccountProduct(memberAccount.getLong("accountProductId")
+						.toString());
+
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e1) {
+			e1.printStackTrace();
+		}
+
+		// Get Contributing Amount
+		BigDecimal bdContributingAmt = BigDecimal.ZERO;
+
+		if (accountProduct.getString("code").equals(MEMBER_DEPOSIT_CODE)) {
+			// Calculate Contribution based on graduated scale this is for
+			// Member Deposits
+			bdContributingAmt = LoansProcessingServices
+					.getLoanCurrentContributionAmount(memberId);
+
+			BigDecimal bdSpecifiedAmount = memberAccount
+					.getBigDecimal("contributingAmount");
+
+			if ((bdSpecifiedAmount != null)
+					&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+				bdContributingAmt = bdSpecifiedAmount;
+			}
+
+		} else {
+			if (memberAccount.getBigDecimal("contributingAmount") != null) {
+				bdContributingAmt = memberAccount
+						.getBigDecimal("contributingAmount");
+			} else {
+				bdContributingAmt = accountProduct
+						.getBigDecimal("minSavingsAmt");
+			}
+		}
+		return bdContributingAmt;
 	}
 
 }

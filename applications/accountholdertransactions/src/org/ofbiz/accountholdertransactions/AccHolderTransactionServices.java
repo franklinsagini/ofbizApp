@@ -3085,8 +3085,32 @@ public class AccHolderTransactionServices {
 	/***
 	 * Post Entry
 	 * */
-	public static void createAccountPostingEntry(BigDecimal amount,
+	public static void createAccountPostingEntryt(BigDecimal amount,
 			String acctgTransId, String postingType, String glAccountId) {
+
+		GenericValue acctgTransEntry = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		acctgTransEntry = delegator
+				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
+						"acctgTransId", acctgTransId,
+
+						"acctgTransEntrySeqId", "2", "partyId", "Company",
+						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
+						glAccountId,
+						"organizationPartyId", "Company", "amount", amount,
+						"currencyUomId", "KES", "origAmount", amount,
+						"origCurrencyUomId", "KES", "debitCreditFlag",
+						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create acctgTransEntry");
+		}
+	}
+	
+	public static void createAccountPostingEntry(BigDecimal amount,
+			String acctgTransId, String postingType, String glAccountId, String entrySequence) {
 
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
