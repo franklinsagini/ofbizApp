@@ -13,6 +13,7 @@ fromDate = thruDate - 366
 //balanceTotal = 0
 entriesList = [];
 List mainAndExprs = FastList.newInstance();
+finalentriesList = [];
 if (parameters.glAccountId) {
   mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, parameters.glAccountId));
   accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: "Company", thruDate : thruDate, fromDate: fromDate,  glAccountId: parameters.glAccountId, userLogin: userLogin]);
@@ -23,7 +24,7 @@ runningBalance = accountBalance. openingBalance
 totalDebits = BigDecimal.ZERO
 totalCredits = BigDecimal.ZERO
 openingBalance = BigDecimal.ZERO
-finalentriesList = [];
+
 count = 0;
 balanceType = "";
 GenericValue account = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", glAccountId), true);
@@ -76,6 +77,9 @@ context.openingBalance = openingBalance
 context.totalCredits = totalCredits
 context.totalDebits = totalDebits
 context.runningBalance = runningBalance
+}else{
+entriesList = delegator.findList("AcctgTransAndEntries", null, UtilMisc.toSet("transactionDate", "acctgTransId", "accountName","acctgTransTypeId", "debitCreditFlag", "amount"), UtilMisc.toList("acctgTransEntrySeqId"), null, false);
+context.entriesList = entriesList
 }
 //mainAndExprs.add(EntityCondition.makeCondition("isCapitalComponent", EntityOperator.EQUALS, "Y"));
 
