@@ -207,6 +207,55 @@ public class LeaveApplicationValidation {
 		return state;
 
 	}
+	
+	public static String getAnnualLeaveDurationState(String leaveTypeId, Double userDuration, String partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String state = "";
+		Double leaveBal = null;
+		GenericValue bal;
+		try {
+			 bal = delegator.findOne("LeaveBalances", 
+		          	UtilMisc.toMap("partyId", partyId), false);
+
+			if (bal!= null && !bal.isEmpty()) {
+				leaveBal = bal.getDouble("availableLeaveDays");
+				log.info("=================================USER-DURATION : "+userDuration);
+				log.info("=================================USER-BALANCE : "+leaveBal);
+			}
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((leaveTypeId.equals("ANNUAL_LEAVE")) && (userDuration > leaveBal)) {
+			state = "INVALID";
+		} else {
+			state = "VALID";
+		}
+	
+	
+	 
+	return state;
+	}
+	
+	public static String getAnnualLeaveBalance(String partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Double leaveBal = null;
+		GenericValue bal;
+		try {
+			 bal = delegator.findOne("LeaveBalances", 
+		          	UtilMisc.toMap("partyId", partyId), false);
+
+			if (bal!= null && !bal.isEmpty()) {
+				leaveBal = bal.getDouble("availableLeaveDays");
+				log.info("=================================USER-BALANCE : "+leaveBal);
+			}
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+	return leaveBal.toString();
+	}
+	
 
 	public static String getLeaveDurationState(String leaveTypeId,
 			int userDuration) {

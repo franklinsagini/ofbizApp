@@ -17,6 +17,8 @@
 		<field name="updatedBy" type="name"></field>
 		<field name="month" type="id-int"></field>
 		<field name="year" type="id-int"></field>
+		<field name="stationId" type="id"></field>
+		<field name="processed" type="indicator"></field>
 		<prim-key field="salaryMonthYearId"/>
 	</entity>
 	
@@ -50,13 +52,53 @@
 		<prim-key field="payrollNumber"/>
 	</entity>
 	
-	<view-entity entity-name="AllEmployers" package-name="org.ofbiz.accountholdertransactions">
+	
+	
+	<entity entity-name="MissingSalaryPayrollNumber" package-name="org.ofbiz.salaryprocessing"
+		title="MissingSalaryPayrollNumber Entity">
+		
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="month" type="id"></field>
+		<field name="year" type="id"></field>
+		<field name="employerCode" type="id"></field>
+		<field name="payrollNumber" type="id"></field>
+		
+		<prim-key field="month"/>
+		<prim-key field="year"/>
+		<prim-key field="payrollNumber"/>
+	</entity>
+	
+	<view-entity entity-name="AllEmployers" package-name="org.ofbiz.salaryprocessing">
     	<member-entity entity-alias="M" entity-name="Station"></member-entity>
     	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
     	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
     	<alias entity-alias="TR" name="name" group-by="true"/ --> 
     	<alias entity-alias="M" name="employerName"   group-by="true" />
     	<alias entity-alias="M" name="employerCode" group-by="true" />
+    </view-entity>
+    
+    
+     <view-entity entity-name="StationSalarySums" package-name="org.ofbiz.salaryprocessing">
+    	<member-entity entity-alias="MS" entity-name="MemberSalary"></member-entity>
+    	
+    	<alias entity-alias="MS" name="month" group-by="true"></alias>
+    	<alias entity-alias="MS" name="year" group-by="true"/> 
+    	<alias entity-alias="MS" name="employerCode" group-by="true"/>
+    	<alias entity-alias="MS" name="netSalary" function="sum"/> 
+    	
+    </view-entity>
+    
+    
+     <view-entity entity-name="MemberSalaryMemberMapped" package-name="org.ofbiz.salaryprocessing">
+    	<member-entity entity-alias="MS" entity-name="MemberSalary"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<alias entity-alias="MS" name="payrollNumber" group-by="true"></alias>
+    	
+    	<view-link entity-alias="MS" rel-entity-alias="M"> 
+            <key-map field-name="payrollNumber" rel-field-name="payrollNumber"/> 
+        </view-link> 
+       
     </view-entity>
 	
 	

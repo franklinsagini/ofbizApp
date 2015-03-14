@@ -62,7 +62,12 @@
             
         </actions>
         <!-- auto-fields-entity entity-name="PersonActiveAndPartyGroup" default-field-type="hidden"/ -->
-         <field name="partyId" title="Payroll Number"><display-entity entity-name="Person" key-field-name="partyId" description="${employeeNumber}"></display-entity></field>
+        <!--  <field name="partyId" title="Payroll Number"><display-entity entity-name="Person" key-field-name="partyId" description="${employeeNumber}"></display-entity></field> -->
+         <field name="partyId" title="Payroll Number">
+            <hyperlink target="EmployeeProfile" description="${employeeNumber}" also-hidden="false">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
          <field name="firstName" title="First Name"> <display also-hidden="false"/>
          	<!--<hyperlink target="EmployeeProfile" description="${firstName}" also-hidden="false">
                 <parameter param-name="partyId"/>
@@ -115,7 +120,11 @@
             
         </actions>
         <!-- auto-fields-entity entity-name="PersonActiveAndPartyGroup" default-field-type="hidden"/ -->
-         <field name="partyId" title="Payroll Number"><display-entity entity-name="Person" key-field-name="partyId" description="${employeeNumber}"></display-entity></field>
+  <field name="partyId" title="Payroll Number">
+            <hyperlink target="EmployeeProfile" description="${employeeNumber}" also-hidden="false">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
          <field name="firstName" title="First Name"><display also-hidden="false"/></field>
          <field name="lastName" title="Last Name"><display also-hidden="false"/></field>
 		 <field name="employmentTerms" title="Terms of Employment"><display also-hidden="false"/></field>
@@ -123,7 +132,7 @@
 		 <field name="contractPeriod" title="Period (In Months)"><display also-hidden="false"/></field>
 		 <field name="contractEnd" title="End Date"><display also-hidden="false"/></field>
 		  <field name="dismissStaff" title="-" widget-style="buttontext"  >
-			<hyperlink also-hidden="false" description="Dismis Staff" target="separationApplication" request-confirmation="true" confirmation-message="Dismis Staff">
+			<hyperlink also-hidden="false" description="Dismiss Staff" target="separationApplication" request-confirmation="true" confirmation-message="Dismis Staff">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
