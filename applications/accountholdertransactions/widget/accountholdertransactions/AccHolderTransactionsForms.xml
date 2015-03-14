@@ -622,9 +622,9 @@ under the License.
             </entity-condition>
             
 
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
+        	<!-- entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
         	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
-        	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
+        	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition -->
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanRepayment"/ -->
         <field name="partyId"><hidden/></field>
@@ -680,6 +680,87 @@ under the License.
         </field >
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
+    
+    <!-- combinedList -->
+    <!-- NewLoanAccountRepayment -->
+     <!-- form name="NewLoanAccountsRepayment" type="list" target="createLoanRepayment"
+	focus-field-name="loanNo" header-row-style="header-row"
+	default-table-style="basic-table" list-name="combinedList" -->
+	<form name="NewLoanAccountsRepayment" type="multi"  list-name="combinedList" use-row-submit="true" separate-columns="true" target="receiveLoanAccountRepayment" paginate-target="loanRepayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"  >
+        
+        <actions>
+
+        	<!-- entity-condition entity-name="MemberAccount" list="memberAccountList">
+        		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+        	</entity-condition -->
+        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
+            	</condition-list>
+            </entity-condition>
+        	<entity-condition entity-name="LoanApplication" list="loanApplicationList">
+        		<condition-list>
+        			<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+        			<condition-expr field-name="loanStatusId" operator="equals" from-field="6"/>
+        		</condition-list>
+        	</entity-condition>
+        	<entity-condition entity-name="LoanProduct" list="loanProductList"></entity-condition>
+        	
+        	<set field="partyId" from-field="parameters.partyId"/>
+        	<set field="totalLoanDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalLoanDue(partyId);}" type="BigDecimal"/>
+        	<set field="totalInterestDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInterestDue(partyId);}" type="BigDecimal"/>
+        	<set field="totalInsuranceDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInsuranceDue(partyId);}" type="BigDecimal"/>
+        	<set field="totalPrincipalDue" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTotalPrincipalDue(partyId);}" type="BigDecimal"/>
+        	
+        	 <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
+        	
+        </actions>
+        <field name="loanRepaymentId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+
+		<!-- field name="slipNumber" title="Slip Number">
+			<text default-value="${slipNumber}"></text>
+		</field -->        
+        <!-- field name="loanApplicationId" title="Loan" >
+        	<drop-down allow-empty="true"  size="10">
+        		<entity-options key-field-name="loanApplicationId" entity-name="LoanApplication" description="Loan No : ${loanNo} - Amount : ${loanAmt}">
+        			<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
+        		</entity-options>
+        	</drop-down>
+        </field -->
+        
+        <field name="loanNo" title="Loan No"  ><text size="5"></text></field>
+        <field name="loanProductId" title="Loan Type">
+        	<drop-down allow-empty="true"  size="10">
+        		<entity-options description="${name} - ${code}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+        		<!-- list-options key-name="loanProductId" list-name="loanProductList" description="${name} - ${code}">
+        			
+        		</list-options -->
+        	</drop-down>
+        	<!-- display-entity entity-name="LoanProduct"  key-field-name="loanProductId" description="${name} - ${code}"></display-entity -->
+        </field>
+        <field name="loanAmt" title="Loan Amount"  widget-style="required" required-field="true"><text  size="10"></text></field>
+        <field name="loanBalance" title="Loan Balance"  widget-style="required" required-field="true"><text  size="10"></text></field>
+        
+        
+        <!-- field name="loanBalanceAmt" title="Loan Balance"  widget-style="required" required-field="true"><text></text></field>
+        <field name="interestBalanceAmt" title="Interest Amount" position="2"  widget-style="required" required-field="true"><text></text></field>
+        <field name="loanRepaymentAmt" title="Loan Repayment Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="interestRepaymentAmt" title="Interest Repayment Amount" position="2"  widget-style="required" required-field="true"><text></text></field -->
+        <field name="totalLoanDue" title="Total Expected"  widget-style="required" required-field="true"><text  size="10"></text></field>
+        <field name="totalInterestDue" title="Interest Due"   widget-style="required" required-field="true"><text  size="10"></text></field>
+        <field name="totalInsuranceDue" title="Insurance Due"   widget-style="required" required-field="true"><text  size="10"></text></field>
+        <field name="totalPrincipalDue" title="Principal Due"   widget-style="required" required-field="true"><text  size="10"></text></field>
+        
+        <field name="transactionAmount" title="Amount Paid"  widget-style="required" required-field="true"><text  size="10"></text></field>
+      
+        <!-- field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field -->
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check all-checked="true"/></field>
+       <field name="submitButton" title="Received Payment" widget-style="smallSubmit"><submit/></field>
+       </form>
     
     <!-- NewApplyStandingOrder -->
     <form name="NewApplyStandingOrder" type="single" target="createApplyStandingOrder"

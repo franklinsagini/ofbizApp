@@ -79,6 +79,12 @@
 		<response name="success" type="view" value="loanRepayment"
 			save-current-view="true" />
 	</request-map>
+	
+	<request-map uri="loanAccountsPayment">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanAccountsPayment"
+			save-current-view="true" />
+	</request-map>
 
 	<request-map uri="applyStandingOrder">
 		<security https="true" auth="true" />
@@ -305,6 +311,15 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteLoanRepayment" />
 		<response name="success" type="request-redirect-noparam"
+			value="loanRepayment"></response>
+		<response name="error" type="view" value="loanRepayment" />
+	</request-map>
+	
+	
+		<request-map uri="receiveLoanAccountRepayment">
+		<security https="true" auth="true" />
+		<event type="multi-service" invoke="receiveLoanAccountRepayment" />
+		<response name="success" type="request-redirect"
 			value="loanRepayment"></response>
 		<response name="error" type="view" value="loanRepayment" />
 	</request-map>
@@ -817,6 +832,11 @@
 
 	<view-map name="loanRepayment" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewLoanRepayment" />
+	
+	
+	<view-map name="loanAccountsPayment" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#loanAccountsPayment" />
+	
 	<view-map name="applyStandingOrder" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewApplyStandingOrder" />
 	<view-map name="chequeType" type="screen"

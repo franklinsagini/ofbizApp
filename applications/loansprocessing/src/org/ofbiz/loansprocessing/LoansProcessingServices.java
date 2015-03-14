@@ -39,6 +39,7 @@ import com.ibm.icu.util.Calendar;
 public class LoansProcessingServices {
 
 	public static Logger log = Logger.getLogger(LoansProcessingServices.class);
+	public static String DEFAULTER_LOAN_CODE = "D330";
 
 	public static BigDecimal getMonthlyLoanRepayment(String loanApplicationId) {
 		BigDecimal monthlyRepayment = BigDecimal.ZERO;
@@ -460,7 +461,7 @@ public class LoansProcessingServices {
 				1);
 		GenericValue newLoanApplication;
 		
-		Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode("D330").getLong("loanProductId");
+		Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode(DEFAULTER_LOAN_CODE).getLong("loanProductId");
 		
 		newLoanApplication = delegator.makeValue("LoanApplication", UtilMisc
 				.toMap("loanApplicationId", loanApplicationId,
