@@ -1199,7 +1199,6 @@ public static String paddString(int padDigits, String count) {
 							.getBigDecimal("amount"));
 				} else if (expectedPaymentReceived.getString("remitanceCode")
 						.equals(code) && (code.equals(SHARE_CAPITAL_CODE))) {
-
 					// Add member account transaction from this expection to the
 					// account of this code
 					BigDecimal transactionAmount = expectedPaymentReceived
