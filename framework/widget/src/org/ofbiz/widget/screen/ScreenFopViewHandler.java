@@ -28,7 +28,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
 import javax.print.PrintException;
@@ -167,7 +166,8 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 		System.out.println("PPPPPPPPPPPPPPPPPPPPPPP - " + page);
 		System.out.println("IIIIIIIIIIIIIIIIIIIIIII - " + info);
 
-		if (name.equals("transactionPrintOut")) {
+		//Added _t to skip using jpedal
+		if (name.equals("transactionPrintOut_t")) {
 
 			String printoutname = "printout"
 					+ Calendar.getInstance().getTimeInMillis() + ".pdf";
@@ -208,6 +208,8 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+
 
 			PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
 			JobName jobName = new JobName("Transaction Printout", null);
