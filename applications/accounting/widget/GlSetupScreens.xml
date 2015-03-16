@@ -41,7 +41,8 @@ under the License.
                                 <include-menu name="PartyAdminAssignTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </widgets>
                         </section>
-                        <label style="h1">${labelTitleProperty} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                        <!-- <label style="h1">${labelTitleProperty} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label> -->
+                        <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -126,7 +127,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                    <include-form name="ExportInvoiceCsv" location="component://accounting/widget/GlSetupForms.xml"/>           
+                    <include-form name="ExportInvoiceCsv" location="component://accounting/widget/GlSetupForms.xml"/>
             </widgets>
         </section>
     </screen>
@@ -137,6 +138,8 @@ under the License.
                 <set field="titleProperty" value="AccountingChartOfAcctsMenu"/>
                 <set field="tabButtonItem" value="ListGlAccountOrganization"/>
                 <set field="labelTitleProperty" value="${uiLabelMap.AccountingChartOfAcctsMenu}"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="partyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonGlSetupDecorator" location="${parameters.commonGlSetupDecoratorLocation}">
@@ -206,7 +209,7 @@ under the License.
                 <set field="labelTitleProperty" value="${uiLabelMap.AccountingPreference}"/>
                 <set field="tabButtonItem" value="PartyAcctgPreference"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
                 <set field="partyId" from-field="parameters.organizationPartyId"/>
                 <entity-one entity-name="PartyAcctgPreference" value-field="partyAcctgPreference"/>
             </actions>
@@ -591,7 +594,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                    <include-form name="ListGlAccountOrgCsv" location="component://accounting/widget/GlSetupForms.xml"/>           
+                    <include-form name="ListGlAccountOrgCsv" location="component://accounting/widget/GlSetupForms.xml"/>
             </widgets>
         </section>
     </screen>
