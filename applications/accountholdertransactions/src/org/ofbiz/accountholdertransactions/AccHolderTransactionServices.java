@@ -2417,6 +2417,11 @@ public class AccHolderTransactionServices {
 		GenericValue acctgTrans = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String acctgTransId = delegator.getNextSeqId("AcctgTrans", 1);
+		
+		if (userLogin == null){
+			userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+		}
 		String createdBy = (String) userLogin.get("userLoginId");
 		String updatedBy = (String) userLogin.get("userLoginId");
 
@@ -2799,6 +2804,12 @@ public class AccHolderTransactionServices {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String accountTransactionParentId = delegator
 				.getNextSeqId("AccountTransactionParent");
+		if (userLogin == null){
+			userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+		}
+		
+		
 		String createdBy = (String) userLogin.get("userLoginId");
 		String updatedBy = (String) userLogin.get("userLoginId");
 		// String branchId = getEmployeeBranch((String)
