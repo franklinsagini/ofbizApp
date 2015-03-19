@@ -48,6 +48,8 @@ import com.google.gson.Gson;
 public class RemittanceServices {
 
 	public static Logger log = Logger.getLogger(RemittanceServices.class);
+	public static String MEMBER_DEPOSIT_CODE = "901";
+	public static String SHARE_CAPITAL_CODE = "902";
 
 	public static String generateExpectedPaymentStations(
 			HttpServletRequest request, HttpServletResponse response) {
@@ -327,7 +329,7 @@ public class RemittanceServices {
 
 		List<String> orderByList = new LinkedList<String>();
 		orderByList.add("accountProductId");
-		// String accountProductId = getShareDepositAccountId("901");
+		// String accountProductId = getShareDepositAccountId(MEMBER_DEPOSIT_CODE);
 		// accountProductId = accountProductId.replaceAll(",", "");
 		// Long accountProductIdLong = Long.valueOf(accountProductId);
 		// And accountProductId not equal to memberDeposit, not equal to share
@@ -413,7 +415,7 @@ public class RemittanceServices {
 		// Get Contributing Amount
 		BigDecimal bdContributingAmt = BigDecimal.ZERO;
 
-		if (accountProduct.getString("code").equals("901")) {
+		if (accountProduct.getString("code").equals(MEMBER_DEPOSIT_CODE)) {
 			// Calculate Contribution based on graduated scale this is for
 			// Member Deposits
 			bdContributingAmt = LoansProcessingServices
@@ -487,7 +489,7 @@ public class RemittanceServices {
 	}
 
 	private static String getMemberDepositsCode() {
-		return "901";
+		return MEMBER_DEPOSIT_CODE;
 	}
 
 	private static void addExpectedShares(String shareCode) {
@@ -526,7 +528,7 @@ public class RemittanceServices {
 		bdShareAmount = getMemberShareContribution(member.getLong("partyId"));
 
 		if (bdShareAmount == null) {
-			bdShareAmount = getMinimumShareContribution("901");
+			bdShareAmount = getMinimumShareContribution(MEMBER_DEPOSIT_CODE);
 		}
 
 		String employeeNames = getNames(member);
@@ -578,7 +580,7 @@ public class RemittanceServices {
 	}
 
 	private static BigDecimal getMemberShareContribution(Long memberId) {
-		String accountProductId = getShareDepositAccountId("901");
+		String accountProductId = getShareDepositAccountId(MEMBER_DEPOSIT_CODE);
 		BigDecimal bdShareAmount = null;
 
 		accountProductId = accountProductId.replaceAll(",", "");
@@ -784,7 +786,7 @@ public static String paddString(int padDigits, String count) {
 		return employeeNames;
 	}
 
-	private static GenericValue findAccountProduct(String accountProductId) {
+	public static GenericValue findAccountProduct(String accountProductId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue accountProduct = null;
 		accountProductId = accountProductId.replaceFirst(",", "");
@@ -1176,7 +1178,7 @@ public static String paddString(int padDigits, String count) {
 
 			for (String code : accountProductCodesList) {
 				if (expectedPaymentReceived.getString("remitanceCode")
-						.equals(code) && !(code.equals("902"))) {
+						.equals(code) && !(code.equals(SHARE_CAPITAL_CODE))) {
 					// Add a member account transaction from this expectation to
 					// the account of this code
 					BigDecimal transactionAmount = expectedPaymentReceived
@@ -1185,6 +1187,9 @@ public static String paddString(int padDigits, String count) {
 					// Get Member Account ID given product code and payrollNO
 					Long memberAccountId = getMemberAccountId(code,
 							expectedPaymentReceived.getString("payrollNo"));
+					
+					System.out.println(" The Payroll No in Question ##### PPPPPPPP "+expectedPaymentReceived.getString("payrollNo"));
+					System.out.println(" The Payroll No in Question ##### PPPPPPPP "+memberAccountId);
 
 					//AccHolderTransactionServices.cashDepositt(transactionAmount, memberAccountId, userLogin, withdrawalType)
 					AccHolderTransactionServices.cashDeposit(transactionAmount,
@@ -1193,8 +1198,7 @@ public static String paddString(int padDigits, String count) {
 					bdAccount = bdAccount.add(expectedPaymentReceived
 							.getBigDecimal("amount"));
 				} else if (expectedPaymentReceived.getString("remitanceCode")
-						.equals(code) && (code.equals("902"))) {
-
+						.equals(code) && (code.equals(SHARE_CAPITAL_CODE))) {
 					// Add member account transaction from this expection to the
 					// account of this code
 					BigDecimal transactionAmount = expectedPaymentReceived

@@ -372,6 +372,9 @@ under the License.
             <set value="Y" field="updateAcctgTransParams.isPosted"/>
 
             <call-service service-name="updateAcctgTrans" in-map-name="updateAcctgTransParams" include-user-login="true"/>
+
+            <property-to-field resource="AccountingErrorUiLabels.xml" property="PostedSuccess" field="successMessage" />
+
         </else>
         </if-compare>
     </simple-method>
@@ -542,6 +545,7 @@ under the License.
             <set value="Y" field="updateAcctgTransParams.isApproved"/>
 
             <call-service service-name="updateAcctgTrans" in-map-name="updateAcctgTransParams" include-user-login="true"/>
+            <property-to-field resource="AccountingErrorUiLabels.xml" property="ApprovalSuccess" field="successMessage" />
         </else>
         </if-compare>
     </simple-method>

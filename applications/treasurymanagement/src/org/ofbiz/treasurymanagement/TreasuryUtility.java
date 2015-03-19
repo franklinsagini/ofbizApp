@@ -3,6 +3,7 @@ package org.ofbiz.treasurymanagement;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -56,11 +57,19 @@ public class TreasuryUtility {
 		
 		//Get amount allocated to Transaction
 		BigDecimal bdAmountAllocated = BigDecimal.ZERO;
-		GenericValue treasuryTransfer = null;
-		treasuryTransfer = getTreasuryTransfer(treasuryId);
+		//GenericValue treasuryTransfer = null;
+		//treasuryTransfer = getTreasuryTransfer(treasuryId);
+		List<GenericValue> listTreasuryTransfer = getTreasuryTransferList(treasuryId);
 		
-		if (treasuryTransfer != null){
-			bdAmountAllocated = treasuryTransfer.getBigDecimal("transactionAmount");
+		// if (treasuryTransfer != null){
+		// bdAmountAllocated =
+		// treasuryTransfer.getBigDecimal("transactionAmount");
+		// }
+		
+		for (GenericValue genericValue : listTreasuryTransfer) {
+			if ((genericValue != null) && (genericValue.getBigDecimal("transactionAmount") != null)){
+			bdAmountAllocated = bdAmountAllocated.add(genericValue.getBigDecimal("transactionAmount"));
+			}
 		}
 		
 		
@@ -106,6 +115,46 @@ public class TreasuryUtility {
 		return treasuryTransfer;
 	}
 
+	
+	private static List<GenericValue> getTreasuryTransferList(String treasuryId) {
+		List<GenericValue> treasuryTransferELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		//Set calendar to truncate current time timestamp to Year, Month and Day only (exclude hour, minute and seconds)
+		Calendar calendar =  Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		
+		//UtilDateTime.
+		log.info("################## The time is "+new Timestamp(calendar.getTimeInMillis()));
+		log.info("################## The treasury is "+treasuryId);
+		
+		EntityConditionList<EntityExpr> transferConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"destinationTreasury", EntityOperator.EQUALS,
+						treasuryId),  EntityCondition
+						.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								new Timestamp(calendar.getTimeInMillis()))),
+						EntityOperator.AND);
+
+		try {
+			treasuryTransferELI = delegator.findList("TreasuryTransfer",
+					transferConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		List<GenericValue> treasuryTransferList = new ArrayList<GenericValue>();
+		for (GenericValue genericValue : treasuryTransferELI) {
+			//treasuryTransfer = genericValue;
+			treasuryTransferList.add(genericValue);
+		}
+		return treasuryTransferList;
+	}
 	/***
 	 * Cash Amount Withdrawn today
 	 * */

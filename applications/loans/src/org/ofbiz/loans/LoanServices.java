@@ -1867,7 +1867,7 @@ public class LoanServices {
 		return bdTotalRepayment;
 	}
 
-	private static List<Long> getDisbursedLoansIds(Long memberId) {
+	public static List<Long> getDisbursedLoansIds(Long memberId) {
 		Long loanStatusId = getLoanStatusId("DISBURSED");
 		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(

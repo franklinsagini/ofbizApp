@@ -591,6 +591,67 @@ under the License.
 <!--  END OF SASRA REPORTS -->
 
 
+    <screen name="TrialBalanceSummary">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <set field="titleProperty" value="AccountingTrialBalance"/>
+                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
+                <set field="tabButtonItem2" value="TrialBalanceSummary"/>
+                <set field="organizationPartyId" value="Company"/>
+                <service service-name="getPartyAccountingPreferences" result-map="result">
+                    <field-map field-name="organizationPartyId"/>
+                </service>
+                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
+                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
+                <entity-condition entity-name="Party" list="parties">
+                    <condition-expr field-name="partyId" operator="in" from-field="partyIds"/>
+                </entity-condition>
+                <set field="partyIds[]" from-field="organizationPartyId"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceSummary.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="h3">
+                            <label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}"/>
+                        </container>
+                        <include-form name="TrialBalanceSummarySync" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                        <section>
+<!--                             <condition>
+                                <not><if-empty field="parameters.customTimePeriodId"/></not>
+                            </condition> -->
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingTrialBalance}">
+<!--                                     <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="TrialBalanceSearchResultsCsv.csv">
+                                        <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
+                                        <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+                                    </link>
+                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
+                                        <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
+                                        <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+                                    </link> -->
+                                    <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                                    <screenlet title="Trial Balance Totals" >
+                                    <container style="h2">
+                                        <label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/>
+                                    </container>
+                                    <container style="h2">
+                                        <label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/>
+                                    </container>
+                                </screenlet>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
     <screen name="TrialBalance">
         <section>
             <actions>

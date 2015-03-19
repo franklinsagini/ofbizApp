@@ -1514,6 +1514,220 @@ public class LoanRepayments {
 
 		return "";
 	}
+	
+	/***
+	 * Post Loan Repayment without Debiting Cash 
+	 *  Like in Salary Processing or C7 Processing
+	 * */
+	public static Long repayLoanWithoutDebitingCash(GenericValue loanRepayment,
+			Map<String, String> userLogin, Long entrySequence) {
+		
+		//Long entrySequenceId = entrySequence + 1;
+		entrySequence = entrySequence + 1;
+		log.info("FFFFFFFFF start loan repayment FFFFFFFFFF");
+
+		BigDecimal transactionAmount = loanRepayment
+				.getBigDecimal("transactionAmount");
+		BigDecimal totalInterestDue = loanRepayment
+				.getBigDecimal("totalInterestDue");
+		BigDecimal totalInsuranceDue = loanRepayment
+				.getBigDecimal("totalInsuranceDue");
+		BigDecimal totalPrincipalDue = loanRepayment
+				.getBigDecimal("totalPrincipalDue");
+
+		log.info("TTTTTT transactionAmount = " + transactionAmount);
+		log.info("TTTTTT totalInterestDue = " + totalInterestDue);
+		log.info("TTTTTT totalInsuranceDue = " + totalInsuranceDue);
+		log.info("TTTTTT totalPrincipalDue = " + totalPrincipalDue);
+
+		BigDecimal amountRemaining = transactionAmount;
+
+		BigDecimal insuranceAmount = BigDecimal.ZERO;
+		BigDecimal interestAmount = BigDecimal.ZERO;
+		BigDecimal principalAmount = BigDecimal.ZERO;
+		BigDecimal excessAmount = BigDecimal.ZERO;
+
+		// BigDecimal bdTotalLoanRepaid = BigDecimal.ZERO;
+		BigDecimal bdLoanBalance = BigDecimal.ZERO;
+		bdLoanBalance = LoanServices.getLoanRemainingBalance(loanRepayment
+				.getLong("loanApplicationId"));
+		// BigDecimal bdLoanAmt = loanRepayment.getBigDecimal("loanAmt");
+
+		if (amountRemaining.compareTo(BigDecimal.ZERO) == 1) {
+			// Remove Insurance
+			if (totalInsuranceDue.compareTo(BigDecimal.ZERO) == 1) {
+				if (amountRemaining.compareTo(totalInsuranceDue) >= 0) {
+					insuranceAmount = totalInsuranceDue;
+					amountRemaining = amountRemaining
+							.subtract(totalInsuranceDue);
+				} else {
+					insuranceAmount = amountRemaining;
+					amountRemaining = BigDecimal.ZERO;
+
+				}
+			}
+
+			// Remove Interest
+			if (totalInterestDue.compareTo(BigDecimal.ZERO) == 1) {
+				if (amountRemaining.compareTo(totalInterestDue) >= 0) {
+					interestAmount = totalInterestDue;
+					amountRemaining = amountRemaining
+							.subtract(totalInterestDue);
+				} else {
+					interestAmount = amountRemaining;
+					amountRemaining = BigDecimal.ZERO;
+
+				}
+			}
+
+			// Remove Principal
+			// if (totalPrincipalDue.compareTo(BigDecimal.ZERO) == 1) {
+			// if (amountRemaining.compareTo(totalPrincipalDue) >= 0) {
+			// principalAmount = totalPrincipalDue;
+			// amountRemaining = amountRemaining
+			// .subtract(totalPrincipalDue);
+			// } else {
+			// principalAmount = amountRemaining;
+			// amountRemaining = BigDecimal.ZERO;
+			//
+			// }
+			// }
+
+			if (bdLoanBalance.compareTo(BigDecimal.ZERO) == 1) {
+				if (amountRemaining.compareTo(bdLoanBalance) >= 0) {
+					principalAmount = bdLoanBalance;
+					amountRemaining = amountRemaining.subtract(bdLoanBalance);
+				} else {
+					principalAmount = amountRemaining;
+					amountRemaining = BigDecimal.ZERO;
+
+				}
+			}
+
+			if (amountRemaining.compareTo(BigDecimal.ZERO) >= 0) {
+				excessAmount = amountRemaining;
+
+				// Deposit Excess to Savings Account
+
+				// TODO
+			}
+
+		}
+
+		principalAmount = principalAmount.add(excessAmount);
+
+		loanRepayment.set("interestAmount", interestAmount);
+		loanRepayment.set("insuranceAmount", insuranceAmount);
+		loanRepayment.set("principalAmount", principalAmount);
+		// loanRepayment.set("excessAmount", excessAmount);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+
+		// createLoanRepaymentAccountingTransaction(loanRepayment, userLogin);
+
+		// Return if amount provided is zero
+		if (loanRepayment.getBigDecimal("transactionAmount").compareTo(
+				BigDecimal.ZERO) != 1) {
+			return 0L;
+		}
+		// Create Acctg Transa
+		String acctgTransType = "LOAN_RECEIVABLE";
+		String acctgTransId = createAccountingTransaction(loanRepayment,
+				acctgTransType, userLogin, delegator);
+		// String acctgTransId = createAccountingTransaction(loanRepayment,
+		// acctgTransType, userLogin);
+		// Debit Member Deposits with repayment amount
+		// Get MemberDepositAccount
+		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord(
+				"MEMBERTRANSACTIONACCOUNT", delegator);
+		String memberDepositAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		String postingType = "D";
+		//String entrySequenceId = "00001";
+		// String partyId =
+		// getLoanApplication(loanExpectation.getString("loanApplicationId"),
+		// delegator).getString("partyId");
+		String partyId = getMemberGivenParty(
+				loanRepayment.getString("partyId"), delegator).getString(
+				"branchId");
+
+//		log.info(" ####### Party or Branch or Company in Loan Repayment is ###### "
+//				+ partyId);
+//		postTransactionEntry(delegator,
+//				loanRepayment.getBigDecimal("transactionAmount"), partyId,
+//				memberDepositAccountId, postingType, acctgTransId,
+//				acctgTransType, entrySequenceId);
+
+		// Credit Interest_receivable
+		// INTERESTPAYMENT
+		postingType = "C";
+		//entrySequenceId = "00002";
+		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord(
+				"INTERESTPAYMENT", delegator);
+		String accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		// postingType, delegator);
+		if (interestAmount.compareTo(BigDecimal.ZERO) == 1) {
+			postTransactionEntry(delegator, interestAmount, partyId, accountId,
+					postingType, acctgTransId, acctgTransType, entrySequence.toString());
+		}
+
+		// Credit Insurance_receivable
+		// INSURANCEPAYMENT
+		postingType = "C";
+		//entrySequenceId = "00003";
+		entrySequence = entrySequence +1;
+		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord(
+				"INSURANCEPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		// postingType, delegator);
+		if (insuranceAmount.compareTo(BigDecimal.ZERO) == 1) {
+			postTransactionEntry(delegator, insuranceAmount, partyId,
+					accountId, postingType, acctgTransId, acctgTransType,
+					entrySequence.toString());
+		}
+		// Credit Principal Receivable
+		// PRINCIPALPAYMENT
+		postingType = "C";
+		//entrySequenceId = "00004";
+		entrySequence = entrySequence + 1;
+		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord(
+				"PRINCIPALPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		// postingType, delegator);
+
+		if (principalAmount.compareTo(BigDecimal.ZERO) == 1) {
+			postTransactionEntry(delegator, principalAmount, partyId,
+					accountId, postingType, acctgTransId, acctgTransType,
+					entrySequence.toString());
+		}
+
+		// Mark the loan expectation as paid
+		updateExpactationAsPaid(loanRepayment.getString("partyId"));
+		log.info("EEEEEEEEE end loan repayment EEEEEEEEE");
+
+		return entrySequence;
+	}
 
 	/***
 	 * Now mark expectation for this member as paid
