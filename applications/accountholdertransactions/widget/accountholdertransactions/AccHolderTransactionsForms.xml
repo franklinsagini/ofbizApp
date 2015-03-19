@@ -48,9 +48,9 @@ under the License.
      </form>
 	
 		<!-- NewCashWithdrawal -->
-	<form name="NewCashWithdrawal" type="single" target="createCashWithdrawal"
+	<form name="NewCashWithdrawal" type="single" target="createCashWithdrawal" 
 	focus-field-name="transactionAmount" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="cashWithdrawalContext" extends="TransactionForm">
+	default-table-style="basic-table" target-type="intra-app" default-map-name="cashWithdrawalContext" extends="TransactionForm">
         
 
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
@@ -1027,8 +1027,8 @@ under the License.
     
 	<form name="FindMember" type="single" target="main" default-entity-name="Member">
         <actions>
-        	<!-- set field="statusName" value="ACTIVE"/>
-	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ --> 
+        	<set field="statusName" value="ACTIVE"/>
+	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
 	        	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
@@ -1050,15 +1050,24 @@ under the License.
 
         <field name="memberNumber" title="Member No." position="2"><text-find/></field>
 
-        <field name="memberStatusId" title="Status" >
+        <!-- field name="memberStatusId" title="Status" >
         	<drop-down allow-empty="true">
         		<entity-options description="${name}" entity-name="MemberStatus" key-field-name="memberStatusId">
         			<entity-order-by field-name="name"/>
         		</entity-options>
         	</drop-down>
-        </field>
+        </field -->
+        <field name="memberStatusId" title="Status">
+			<hidden value="${memberStatusId}"/>
+			<!-- drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="MemberStatus"
+					key-field-name="memberStatusId">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down -->
+		</field>
         
-        	<field name="mobileNumber" title="Mobile" position="2"><text-find/></field>
+        	<field name="mobileNumber" title="Mobile" position="1"><text-find/></field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -1066,7 +1075,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="branchId" title="Branch">
+        <field name="branchId" title="Branch" position="2">
             <drop-down allow-empty="true" current-description="">
                 <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
                 <list-options key-name="partyId" list-name="partyGroups" description="${groupName}" />

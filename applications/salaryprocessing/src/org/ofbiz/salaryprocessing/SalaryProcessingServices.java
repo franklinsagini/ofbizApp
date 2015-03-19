@@ -600,9 +600,9 @@ public class SalaryProcessingServices {
 								"loanRepaymentId", loanRepaymentId,
 								"isActive", "Y",
 								"createdBy", "admin",
-								"transactionType", "LOANREPAYMENT",
+								//"transactionType", "LOANREPAYMENT",
 								"loanApplicationId", loanApplicationId,
-								"partyId", member.getLong("partyId").toString(),
+								"partyId", member.getLong("partyId"),
 								
 								"transactionAmount",
 								bdLoanExpectedAmt,
