@@ -333,6 +333,17 @@ under the License.
         <attribute name="endingBalanceCredit" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="endingBalanceDebit" type="BigDecimal" mode="OUT" optional="true"/>
     </service>
+
+    <service name="storeGlAccountBlances" engine="simple"
+             location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="storeGlAccountBlances" auth="true">
+        <description>Compute the total debits, total credits, opening, ending balances of an account in a financial period</description>
+        <attribute name="runDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="balance" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="debitCreditFlag" type="String" mode="IN" optional="true"/>
+    </service>
+
+
     <service name="computeAndStoreGlAccountHistoryBalance" engine="simple"
              location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="computeAndStoreGlAccountHistoryBalance" auth="true">
         <description>Compute and store in a GlAccountHistory record the total debits, total credits, opening, ending balances of an account in a financial period</description>
