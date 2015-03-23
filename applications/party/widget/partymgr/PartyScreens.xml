@@ -2160,6 +2160,45 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- memberNetSalary -->
+		<screen name="memberNetSalary">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Member Net Salary" />
+				<set field="tabButtonItem" value="memberNetSalary" />
+				<set field="labelTitleProperty" value="Member Net Salary" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="viewprofile" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="partyId" from-field="parameters.partyId" />
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonMemberDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Add Net Salary">
+									<include-form name="memberNetSalary"
+										location="component://party/widget/partymgr/MemberForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<!-- List Here -->
+						<section name="search-results">
+							<widgets>
+								<screenlet title="List">
+									<include-form name="listMemberNetSalary"
+										location="component://party/widget/partymgr/MemberForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 	<!-- Member Referee -->
 	<screen name="memberReferee">
