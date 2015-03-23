@@ -5,9 +5,9 @@ activityCode = parameters.activityId
 partyId = parameters.partyId
 LpartyId = partyId.toLong();
 singleActivityfileMovement = delegator.findByAnd("RegistryFileMovement", [partyId : partyId, activityCode : activityCode], null, false);
- 
+  member = delegator.findOne("Member", [partyId : LpartyId], false);
  singleActivityfileMovement.eachWithIndex { singleActivityfileMovementItem, index ->
- member = delegator.findOne("Member", [partyId : LpartyId], false);
+
  releasedby = delegator.findOne("Person", [partyId : singleActivityfileMovementItem.releasedBy], false);
  releasedto = delegator.findOne("Person", [partyId : singleActivityfileMovementItem.releasedTo], false);
  carriedby = delegator.findOne("Person", [partyId : singleActivityfileMovementItem.carriedBy], false);
@@ -39,6 +39,6 @@ singleActivityfileMovement = delegator.findByAnd("RegistryFileMovement", [partyI
  singleActivityfileMovementlist.add([releasedBy :releasedBy, releasedTo :releasedTo, carriedBy : carriedBy,
  timeReleased :timeReleased,  receivedBy : receivedBy, timeReceived : timeReceived]);
  }
- 
- 
+ context.member = member;
+ context.singleActivityfileMovement = singleActivityfileMovement;
 context.singleActivityfileMovementlist = singleActivityfileMovementlist;
