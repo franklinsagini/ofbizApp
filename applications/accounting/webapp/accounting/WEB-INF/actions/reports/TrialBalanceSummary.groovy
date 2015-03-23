@@ -27,6 +27,9 @@ organizationGlAccounts.each { organizationGlAccount ->
         GenericValue account = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", organizationGlAccount.glAccountId), true);
         isDebit = org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(account);
 
+        //clean the entity
+        dispatcher.runSync('purgeGlAccountBlances', [glAccountId: accountBalance.glAccountId, userLogin: userLogin])
+
         if (isDebit) {
           System.out.println("THIS IS A DEBIT ACCOUNT")
           dispatcher.runSync('storeGlAccountBlances', [runDate : thruDate,   glAccountId: accountBalance.glAccountId, debitCreditFlag:"D", balance:accountBalance.endingBalance, userLogin: userLogin]);

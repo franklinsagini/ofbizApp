@@ -343,6 +343,12 @@ under the License.
         <attribute name="debitCreditFlag" type="String" mode="IN" optional="true"/>
     </service>
 
+    <service name="purgeGlAccountBlances" engine="simple" default-entity-name="TrialBalanceSummary"
+             location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="purgeGlAccountBlances" auth="true">
+        <description>Delete GL Summary Account</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
 
     <service name="computeAndStoreGlAccountHistoryBalance" engine="simple"
              location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="computeAndStoreGlAccountHistoryBalance" auth="true">
