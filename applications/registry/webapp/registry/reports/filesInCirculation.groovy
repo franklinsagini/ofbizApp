@@ -10,15 +10,7 @@ import java.text.SimpleDateFormat;
 
 
 
-startDate = parameters.startDate
-endDate = parameters.endDate
-partyId = parameters.partyId
 
-dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
-dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
-
- sqlStartDate = new java.sql.Timestamp(dateStartDate.getTime());
- sqlEndDate = new java.sql.Timestamp(dateEndDate.getTime());
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
@@ -27,14 +19,10 @@ exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
 
 	expr = exprBldr.AND() {
-			GREATER_THAN_EQUAL_TO(issueDate: sqlStartDate)
-			LESS_THAN_EQUAL_TO(issueDate: sqlEndDate)
-			EQUALS(currentPossesser : partyId)
-			EQUALS(status : "ISSUED")
+			NOT_EQUAL(currentPossesser: "REGISTRY")
 		}
 EntityFindOptions findOptions = new EntityFindOptions();
 findOptions.setMaxRows(100);
-context.partyId = partyId
-context.activities = delegator.findList("RegistryFiles", expr, null, ["issueDate ASC"], findOptions, false)
+context.activities = delegator.findList("RegistryFiles", expr, null, null, findOptions, false)
 	
   
