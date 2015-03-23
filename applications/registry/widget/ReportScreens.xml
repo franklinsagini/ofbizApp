@@ -70,14 +70,14 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="viewSize" value="99999"/>
-                <script location="component://registry/webapp/registry/reports/SingleActivityFileMovement.groovy"/>
+                <script location="component://registry/webapp/registry/reports/singleActivityFileMovementExport.groovy"/>
               
             </actions>
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific>
-                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/SingleActivityFileMovement.fo.ftl"/></xsl-fo>
+                            <xsl-fo><html-template location="component://registry/webapp/registry/reports/SingleFileMove.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -395,7 +395,7 @@ under the License.
                              </container>
                              
                               <container style="lefthalf">
-                            <screenlet title="Inactive Files (PDF">
+                            <screenlet title="Inactive Files (PDF)">
                                 <include-form name="inactiveFiles" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
@@ -413,7 +413,7 @@ under the License.
                         </container>
                         
                               <container style="righthalf">
-                            <screenlet title="Files in Disposal ()PDF">
+                            <screenlet title="Files in Disposal (PDF)">
                                 <include-form name="filesInDisposal" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
@@ -461,80 +461,80 @@ under the License.
 					<include-menu name="ReportsTabBar"
 												location="component://registry/widget/RegistryMenus.xml" />
                         <container style="lefthalf">
-                            <screenlet title="All Activities File Movement (CSV)">
+                            <screenlet title="All Activities File Movement (EXCEL)">
                                 <include-form name="fileMovementFormCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="righthalf">
-                         <screenlet title="Single Activity File Movement (CSV)">
+                         <screenlet title="Single Activity File Movement (EXCEL)">
                                 <include-form name="singleActivityfileMovementFormCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                          <container style="lefthalf">
-                            <screenlet title="Returned Files Per User (CSV)">
+                            <screenlet title="Returned Files Per User (EXCEL)">
                                 <include-form name="returnedFilesPerUserFormCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="righthalf">
-                         <screenlet title="Returned Files Per Date (CSV)">
+                         <screenlet title="Returned Files Per Date (EXCEL)">
                                 <include-form name="returnedFilesPerDateFormCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                              </container>
                              <container style="lefthalf">
-                            <screenlet title="Duration Between File Request and Issuance (CSV)">
+                            <screenlet title="Duration Between File Request and Issuance (EXCEL)">
                                 <include-form name="durationBeforeIssuanceFormCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                          <container style="righthalf">
-                         <screenlet title="Overstayed Files (CSV)">
+                         <screenlet title="Overstayed Files (EXCEL)">
                                 <include-form name="overStayedFilesCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                              </container>
                              
                               <container style="lefthalf">
-                            <screenlet title="Inactive Files (CSV)">
+                            <screenlet title="Inactive Files (EXCEL)">
                                 <include-form name="inactiveFilesCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="righthalf">
-                         <screenlet title="Semi-Active Files (CSV)">
+                         <screenlet title="Semi-Active Files (EXCEL)">
                                 <include-form name="semiActiveFilesCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                              </container>
                              
                               <container style="lefthalf">
-                            <screenlet title="Files in Archive (CSV)">
+                            <screenlet title="Files in Archive (EXCEL)">
                                 <include-form name="filesInArchiveCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                               <container style="righthalf">
-                            <screenlet title="Files in Disposal (CSV)">
+                            <screenlet title="Files in Disposal (EXCEL)">
                                 <include-form name="filesInDisposalCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="lefthalf">
-                            <screenlet title="Deceased Member Files (CSV)">
+                            <screenlet title="Deceased Member Files (EXCEL)">
                                 <include-form name="deceasedMemberFilesCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="righthalf">
-                            <screenlet title="Files Volumes Created (CSV)">
+                            <screenlet title="Files Volumes Created (EXCEL)">
                                 <include-form name="fileVolumesCreatedByDateFormCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="lefthalf">
-                            <screenlet title="Files Requests As Per Activity (CSV)">
+                            <screenlet title="Files Requests As Per Activity (EXCEL)">
                                 <include-form name="fileRequestByActivityFormCSV" location="component://registry/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         
                          <container style="righthalf">
-                            <screenlet title="Files In Circulation (CSV)">
+                            <screenlet title="Files In Circulation (EXCEL)">
                                 <include-form name="filesInCirculationFormCSV" location="component://registry/widget/ReportForms.xml"/>d
                             </screenlet>
                         </container>
@@ -897,7 +897,7 @@ under the License.
             </actions>
             <widgets>
                 <container>
-                    <label style="h1" text="FILES IN CIRCULATION AND IN CUSTODY OF [${staff.firstName} ${staff.lastName}]"/>
+                    <label style="h1" text="FILES IN CIRCULATION"/>
                 </container>
                 <include-form name="filesInCirculationExport" location="component://registry/widget/ReportForms.xml"/>
             </widgets>

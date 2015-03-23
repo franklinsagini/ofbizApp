@@ -33,9 +33,9 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="160pt"/>
+            <fo:table-column column-width="160pt"/>
+            <fo:table-column column-width="160pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">

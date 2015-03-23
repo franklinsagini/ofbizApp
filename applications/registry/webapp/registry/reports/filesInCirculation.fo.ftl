@@ -24,29 +24,27 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-      FILES IN CIRCULATION AND IN CUSTODY OF 
-         <#assign action_officer = delegator.findOne("Person", {"partyId" : partyId}, false)/>
-        [ ${action_officer.firstName} ${action_officer.lastName}]
+      FILES IN CIRCULATION 
     </fo:block>
     <fo:block><fo:leader/></fo:block>
 <#if activities?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="140pt"/>
+            <fo:table-column column-width="130pt"/>
+            <fo:table-column column-width="130pt"/>
+            <fo:table-column column-width="130pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Owner</fo:block>
+                        <fo:block text-align="left">File Member</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Member Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Member Payroll Number</fo:block>
+                        <fo:block text-align="left">File Now With</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Date File Issued</fo:block>
@@ -57,6 +55,10 @@ under the License.
             <fo:table-body>
 
                   <#list activities as activity>
+                  <#if activity.currentPossesser?has_content>
+                        <#assign fileWith = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
+                        
+                    </#if>
                      <fo:table-row>
                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if activity?has_content>
@@ -72,7 +74,7 @@ under the License.
                         </fo:table-cell>
                          
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.payrollNumber?if_exists}</fo:block>
+                            <fo:block>${fileWith.firstName?if_exists} ${fileWith.lastName?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.issueDate?if_exists}</fo:block>

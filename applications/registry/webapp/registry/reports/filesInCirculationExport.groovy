@@ -8,17 +8,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.util.EntityFindOptions;
 import java.text.SimpleDateFormat; 
 
-
-
-startDate = parameters.startDate
-endDate = parameters.endDate
-partyId = parameters.partyId
-filesInCirculationlist = [];
-dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
-dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
-
- sqlStartDate = new java.sql.Timestamp(dateStartDate.getTime());
- sqlEndDate = new java.sql.Timestamp(dateEndDate.getTime());
+filesInCirculationlist= [];
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
@@ -27,15 +17,11 @@ exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
 
 	expr = exprBldr.AND() {
-			GREATER_THAN_EQUAL_TO(issueDate: sqlStartDate)
-			LESS_THAN_EQUAL_TO(issueDate: sqlEndDate)
-			EQUALS(currentPossesser : partyId)
-			EQUALS(status : "ISSUED")
+			NOT_EQUAL(currentPossesser: "REGISTRY")
 		}
 EntityFindOptions findOptions = new EntityFindOptions();
 findOptions.setMaxRows(100);
-context.partyId = partyId
-filesInCirculation = delegator.findList("RegistryFiles", expr, null, ["issueDate ASC"], findOptions, false)
+filesInCirculation = delegator.findList("RegistryFiles", expr, null, null, findOptions, false)
 	
   filesInCirculation.eachWithIndex { filesInCirculationItem, index ->
  party = filesInCirculationItem.partyId;
@@ -43,8 +29,10 @@ filesInCirculation = delegator.findList("RegistryFiles", expr, null, ["issueDate
  member = delegator.findOne("Member", [partyId : partylong], false);
  
  memberNumber = filesInCirculationItem.memberNumber;
- fileOwner = "${member.firstName}${member.lastName}";
- payroll = filesInCirculationItem.payrollNumber;
+ fileOwner = "${member.firstName} ${member.lastName}";
+ currentPossesser = filesInCirculationItem.currentPossesser;
+ filewith = delegator.findOne("Person", [partyId : currentPossesser], false);
+ filewithName ="${filewith.firstName} ${filewith.lastName}";
  
   timein  = filesInCirculationItem.issueDate;
  dateStringin = timein.format("yyyy-MMM-dd HH:mm:ss a")
@@ -53,6 +41,6 @@ filesInCirculation = delegator.findList("RegistryFiles", expr, null, ["issueDate
  
  
  
- filesInCirculationlist.add([fileOwner :fileOwner, memberNumber :memberNumber, payroll : payroll, time : time]);
+ filesInCirculationlist.add([fileOwner :fileOwner, memberNumber :memberNumber, filewith : filewithName, time : time]);
  }
 context.filesInCirculationlist = filesInCirculationlist;
