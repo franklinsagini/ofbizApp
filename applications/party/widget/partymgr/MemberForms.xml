@@ -241,7 +241,7 @@ under the License.
         </field>
         
         
-        <field name="dateOfBirth" title="Death Of Birth"><date-time type="date" /></field>
+        <field name="dateOfBirth" title="Date Of Birth"><date-time type="date" /></field>
         <field name="isAdministrator" title="Is Administrator">
             <drop-down allow-empty="false" no-current-selected-key="N">
                 <option key="Y" description="Yes"/>
@@ -828,6 +828,32 @@ under the License.
         <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
     
+    <!-- MemberNetSalary -->
+     <form name="memberNetSalary" type="single" target="createMemberNetSalary"
+        focus-field-name="accountNo" header-row-style="header-row" default-table-style="basic-table">
+        
+     
+        <field name="partyId"><hidden/></field>
+        <field name="isActive"><hidden value="Y"/></field>
+        <field name="amount" title="Net Salary"  widget-style="required" required-field="true"><text></text></field>
+        <field name="comment" title="Comment"><textarea/> </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     
+    <form name="listMemberNetSalary" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberNetSalary" paginate-target="memberNetSalary"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberNetSalary">
+            	<condition-expr field-name="partyId" operator="equals" from-field="partyId"  />
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+         <field name="memberNetSalaryId"><hidden/></field>
+         <field name="partyId" parameter-name="partyId"><hidden/></field>
+         <field name="amount" title="Amount" ><text size="30"></text></field>
+         <field name="comment" title="Comment" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
     
 </forms>

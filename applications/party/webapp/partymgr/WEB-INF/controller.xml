@@ -1698,6 +1698,13 @@
 		<response name="success" type="view" value="memberAttachments"
 			save-current-view="true" />
 	</request-map>
+	
+	<!-- MemberNetSalary -->
+	<request-map uri="memberNetSalary">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberNetSalary"
+			save-current-view="true" />
+	</request-map>
 
 
 
@@ -1858,6 +1865,41 @@
 		<response name="success" type="request-redirect-noparam"
 			value="memberContribution"></response>
 		<response name="error" type="view" value="memberContribution" />
+	</request-map>
+	
+	<!-- CRUD MemberNetSalary -->
+	<request-map uri="createMemberNetSalary">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMemberNetSalary" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="memberNetSalary">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="memberNetSalary" />
+	</request-map>
+
+	<request-map uri="updateMemberNetSalary">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMemberNetSalary" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="memberNetSalary">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect" value="memberNetSalary">
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
+
+	<request-map uri="deleteMemberNetSalary">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMemberNetSalary" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="memberNetSalary">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect" value="memberNetSalary">
+			<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 
 	<!-- CRUD for memberAccount -->
@@ -3092,8 +3134,13 @@
 
 	<view-map name="memberContribution" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberContribution" />
+		
 	<view-map name="memberAccount" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberAccount" />
+		
+	<view-map name="memberNetSalary" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberNetSalary" />
+		
 	<view-map name="memberReferee" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberReferee" />
 	<view-map name="memberNominee" type="screen"

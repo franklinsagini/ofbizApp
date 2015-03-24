@@ -337,5 +337,59 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- stationUpload -->
+	<screen name="stationUpload">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Station Salary Upload" />
+				<set field="tabButtonItem" value="stationUpload" />
+				<set field="headerItem" value="stationUpload"/>
+				<set field="labelTitleProperty" value="Station Salary Upload" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="viewprofile" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<set field="photourl" value="N" />
+				<set field="idfronturl" value="N" />
+				<set field="idbackurl" value="N" />
+				<set field="signatureurl" value="N" />
+				<entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYear" />
+				<!-- script
+					location="component://salaryprocessing/webapp/salaryprocessing/WEB-INF/actions/uploads/salaryUploads.groovy" / -->
+			</actions>
+			<widgets>
+				<decorator-screen name="SalaryProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+						<section>
+							<widgets>
+
+							</widgets>
+						</section>
+						<section>
+							<widgets>
+								<screenlet title="Upload Station Salary">
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://salaryprocessing/webapp/salaryprocessing/uploadStation.ftl" />
+										</html>
+									</platform-specific>
+									<!-- include-form name="memberPhoto" location="component://party/widget/partymgr/MemberForms.xml"/ -->
+									<image src="${member.photourl}" url-mode="content" alt="Salary File"
+										style="cssImgStandard" />
+									<label style="h1">Salary File</label>
+								</screenlet>
+							</widgets>
+						</section>
+
+						
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 </screens>

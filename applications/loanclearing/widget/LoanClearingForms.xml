@@ -334,13 +334,17 @@
         	<drop-down allow-empty="true">
         		<entity-options description="${loanNo} - ${loanAmt}" entity-name="LoanApplication">
         			<entity-constraint name="partyId" operator="equals" value="${partyId}"  />
-        			<entity-constraint name="loanStatusId" operator="equals" value="8"/>
+        			
         		</entity-options>
         	</drop-down>
          </field>
          
-         <field name="loanTotalAmt">
-        	<display></display>
+         <!-- field name="loanTotalAmt">
+        	<display ></display>
+         </field -->
+         
+         <field name="amountToClear">
+         	<display default-value="${bsh:org.ofbiz.loanclearing.LoanClearingServices.getTotalAmountToClear(loanClearId)}"></display>
          </field>
          
          <field name="isCleared">
