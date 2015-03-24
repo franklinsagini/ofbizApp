@@ -32,6 +32,8 @@ public class LoanUtilities {
 
 	public static Logger log = Logger.getLogger(LoanUtilities.class);
 	public static String MEMBER_DEPOSIT_CODE = "901";
+	public static String SAVINGS_ACCOUNT_CODE = "999";
+	
 
 	public static Long getMemberId(String payrollNo) {
 		Long memberId = null;
@@ -1224,6 +1226,65 @@ public class LoanUtilities {
 			}
 		}
 		return bdContributingAmt;
+	}
+
+	public static Long getSavingsMemberAccountId(Long theLoanApplicationId) {
+		// TODO Auto-generated method stub
+		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE);
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		
+		GenericValue loanApplication = getLoanApplicationEntity(theLoanApplicationId);
+		
+		
+		
+		GenericValue member = getMemberGivenPartyId(loanApplication.getLong("partyId"));
+		Long partyId = member.getLong("partyId");
+		
+		GenericValue memberAccount = null;
+
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId),
+
+				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
+						partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccount = genericValue;
+		}
+		
+		Long memberAccountId = null;
+		
+		if (memberAccount != null)
+			memberAccountId = memberAccount.getLong("memberAccountId");
+		
+		return memberAccountId;
+	}
+	
+	
+	public static GenericValue getMemberGivenPartyId(Long partyId) {
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", partyId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return member;
 	}
 
 }

@@ -402,4 +402,45 @@
     }
     
     
+    /***
+    	Check that clearance has 
+    */
+    
+     function confirmNewLoanApplicationForClearance(loanClearId){
+     
+     	var reqUrl = '/loanclearing/control/hasNewLoan';
+    	var hasNewLoan = false;
+    	
+    	
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'loanClearId': loanClearId}, 
+			     success : function(data){
+			     			hasNewLoan = data.hasNewLoan;
+			     			
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating loan clearing");
+			              }
+			
+			
+		});
+		
+		if (hasNewLoan)
+		{
+			return true;
+		}
+		
+    
+    	alert(' Please provide loan application, the new loan and update first ');
+    	
+    	return false;
+    
+    }
+    
+    
    </script>
