@@ -153,6 +153,12 @@
      data   : {'loanProductId': loanProductId, 'memberId': memberId}, //here you can pass the parameters to  
                                                    //the request if any.
      success : function(data){
+     			
+     			if ((data.isBasedOnNetSalary == true) && (data.netSalaryIsSet == false)){
+     				 jQuery('select[name="loanProductId"]').val("");
+     				alert("Must set up Net Salary Amount for the Member (this loan product is based on The Net Salary)");
+     			}
+     
 				 $('input[name="maxLoanAmt"]').val(data.maxLoanAmt);
 				 $('input[name="existingLoans"]').val(data.existingLoans);
 				 
@@ -343,6 +349,21 @@
     	var hasSavingsAccount = false;
     	var isOldEnough = false;
     	var isFromAnotherSacco = false;
+    	
+    	
+    	
+    	var moreThanZero = false;
+    	
+    	var theLoanAmt = jQuery('input[name="loanAmt"]').val();
+     	var baseAmt = 0;
+     	
+     	//alert(theLoanAmt);
+     	if (parseFloat(theLoanAmt, 10) <= parseFloat(baseAmt, 10)){
+    		alert('You cannot apply for a loan of ZERO amount or less');
+    		return false;
+    	}
+    	
+    	
     	jQuery.ajax({
 
 			     url    : reqUrl,
@@ -365,10 +386,12 @@
 			alert(' The Member must have a Savings Account - this is the account to which the Loan Will be disbursed');
 			return hasSavingsAccount;
 		}
-		
+			
 		if (isOldEnough){
 			return true;
 		}
+		
+	
 		
 		if ((!isOldEnough) && (!isFromAnotherSacco)){
 			alert(' You must have been a member for at least 6 months or be from another Sacco to be able to apply for a loan! ');
@@ -376,6 +399,47 @@
 		}
     	
     	return true;
+    }
+    
+    
+    /***
+    	Check that clearance has 
+    */
+    
+     function confirmNewLoanApplicationForClearance(loanClearId){
+     
+     	var reqUrl = '/loanclearing/control/hasNewLoan';
+    	var hasNewLoan = false;
+    	
+    	
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'loanClearId': loanClearId}, 
+			     success : function(data){
+			     			hasNewLoan = data.hasNewLoan;
+			     			
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating loan clearing");
+			              }
+			
+			
+		});
+		
+		if (hasNewLoan)
+		{
+			return true;
+		}
+		
+    
+    	alert(' Please provide loan application, the new loan and update first ');
+    	
+    	return false;
+    
     }
     
     

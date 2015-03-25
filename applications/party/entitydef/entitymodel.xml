@@ -3282,7 +3282,7 @@ under the License.
 
     <!-- Member Attachments -->
     <entity entity-name="MemberAttachment" package-name="org.ofbiz.party.party" title="Member Attachment">
-    	<field name="memberAttachmentId" type="id-int"></field>
+    	<field name="memberAttachmentId" type="id-vlong-int"></field>
     	<field name="partyId" type="id-vlong-int"></field>
     	<field name="name" type="name"></field>
     	<field name="isActive" type="indicator"></field>
@@ -3290,6 +3290,20 @@ under the License.
     	<!-- Add attachment field -->
     	<prim-key field="memberAttachmentId"/>
     	<relation type="one" fk-name="ATTACHMENT_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+    </entity>
+    
+    <entity entity-name="MemberNetSalary" package-name="org.ofbiz.party.party" title="Member Net Salary">
+    	<field name="memberNetSalaryId" type="id-vlong-int"></field>
+    	<field name="partyId" type="id-vlong-int"></field>
+    	
+    	<field name="isActive" type="indicator"></field>
+		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+    	<field name="comment" type="description"></field>
+    	<!-- Add attachment field -->
+    	<prim-key field="memberNetSalaryId"/>
+    	<relation type="one" fk-name="NETSALARY_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
         </relation>
     </entity>
