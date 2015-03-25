@@ -481,7 +481,7 @@
 
    
 
-    <form name="listMemberfilesForIssuedsdsss" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForIssue"
+    <form name="listMemberfilesForIssue" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForIssue"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         <entity-condition entity-name="RegistryFiles" >
@@ -524,7 +524,7 @@
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
-    <form name="listMemberfilesForIssue" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="FindMemberfilesForIssue"
+    <form name="listMemberfilesForIssuedsdss" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="FindMemberfilesForIssue"
                  target="issuefiles"   default-table-style="basic-table hover-bar">
                <actions>
           <entity-condition entity-name="RegistryFiles" >
@@ -643,6 +643,46 @@
 		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
+
+     <form name="listMemberfilesForDivertytyy" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="FindMemberfilesForDivert"
+                 target="divertfiles"   default-table-style="basic-table hover-bar">
+               <actions>
+           <entity-condition entity-name="RegistryFiles" >
+        <condition-list>
+        <condition-expr field-name="status" operator="equals" value="ISSUED"/>
+          <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
+        </condition-list>
+          
+        </entity-condition>
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            
+            
+            
+        </actions>
+               
+                 
+        <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+         <field name="payrollNumber"><display/></field>
+         <field name="memberNumber"><display/></field>
+		 <field name="status"><hidden/></field>
+		 <field name="actionBy"><hidden/></field>
+		 <field name="Reason"><hidden/></field>
+		 
+       <field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+       <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+       <field name="submitButton" title="Divert Selected File(s)" widget-style="smallSubmit"><submit/></field>
+     
+        </form>
   
   
      <!--  ============================================== RECEIVE FILE ================================================== -->
@@ -876,7 +916,7 @@
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
             </drop-down>
 		</field>
-		<field name="currentPossesser" title="Divert File To:" tooltip="SELECT THIS IF YOU ARE SENDING TO OTHER STAFF. LEAVE BLANK IF RELEASING TO REGISTRY">
+		<field name="releaseto" title="Divert File To:" required-field="true">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
             </drop-down>
@@ -1497,7 +1537,8 @@
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><hidden/></field>
 		<field name="actionBy" title="Currently Possesser"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-		<field name="Reason" title="Reason for this request:"><display></display></field>
+
+		<field name="Reason" title="Reason for this request:"><display-entity entity-name="RegistryFileActivity" key-field-name="activityId" description="${activity}"></display-entity></field>
 		<field name="currentPossesser" title="Divert File To:" required-field="true">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
