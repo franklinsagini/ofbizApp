@@ -22,6 +22,7 @@ import java.net.*;
 import org.ofbiz.security.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.datafile.*;
+import groovy.io.FileType;
 
 uiLabelMap = UtilProperties.getResourceBundleMap("WebtoolsUiLabels", locale);
 messages = [];
@@ -31,8 +32,11 @@ dataFileSave = request.getParameter("DATAFILE_SAVE");
 entityXmlFileSave = request.getParameter("ENTITYXML_FILE_SAVE");
 
 dataFileLoc = request.getParameter("DATAFILE_LOCATION");
+filesLocationDir = request.getParameter("FILES_LOCATION_DIR");
+
 definitionLoc = request.getParameter("DEFINITION_LOCATION");
 definitionName = request.getParameter("DEFINITION_NAME");
+stationName = request.getParameter("STATION_NAME");
 dataFileIsUrl = null != request.getParameter("DATAFILE_IS_URL");
 definitionIsUrl = null != request.getParameter("DEFINITION_IS_URL");
 
@@ -101,3 +105,21 @@ if (dataFile && entityXmlFileSave) {
     }
 }
 context.messages = messages;
+
+
+if (filesLocationDir){
+def stationNamesList = [];
+
+def dir = new File(filesLocationDir)
+dir.eachFileRecurse (FileType.FILES) { file ->
+	//stationNamesList << file
+	//stationNamesList << file.name
+	
+	if(file.name.endsWith('.csv')) {
+		//println it
+		stationNamesList << file.name
+	}
+ }
+
+context.put("stationNamesList", stationNamesList);
+}
