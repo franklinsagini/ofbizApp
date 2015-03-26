@@ -23,7 +23,8 @@ under the License.
         <table class="basic-table" cellspacing="0">
           <tr>
             <td class="label">${uiLabelMap.WebtoolsDataDefinitionFileName}</td>
-            <td><input name="DEFINITION_LOCATION" type="text" size="60" value="${parameters.DEFINITION_LOCATION?if_exists}" /></td>
+            <!-- td><input name="DEFINITION_LOCATION" type="text" size="60" value="${parameters.DEFINITION_LOCATION?if_exists}" /></td -->
+            <td><input name="DEFINITION_LOCATION" type="text" size="60" value="/home/online/expecteddatafiles.xml" /></td>
             <td><span class="label">${uiLabelMap.WebtoolsDataIsUrl}</span><input type="checkbox" name="DEFINITION_IS_URL"<#if parameters.DEFINITION_IS_URL?has_content> checked="checked"</#if> /></td>
           </tr>
           <tr>
