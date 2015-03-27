@@ -334,20 +334,26 @@
         	<drop-down allow-empty="true">
         		<entity-options description="${loanNo} - ${loanAmt}" entity-name="LoanApplication">
         			<entity-constraint name="partyId" operator="equals" value="${partyId}"  />
-        			<entity-constraint name="loanStatusId" operator="equals" value="8"/>
+        			<entity-constraint name="loanStatusId" operator="equals" value="8"/>		
         		</entity-options>
         	</drop-down>
          </field>
          
-         <field name="loanTotalAmt">
-        	<display></display>
+         <!-- field name="loanTotalAmt">
+        	<display ></display>
+         </field -->
+         
+         <field name="amountToClear">
+         	<display default-value="${bsh:org.ofbiz.loanclearing.LoanClearingServices.getTotalAmountToClear(loanClearId)}"></display>
          </field>
          
          <field name="isCleared">
         	<hidden/>
          </field>
          
-         <field name="clearAll" title="Clear All" widget-style="buttontext" use-when="isCleared==null||isCleared.equals(&quot;N&quot;)">
+         
+         <field name="clearAll" title="Clear All" widget-style="buttontext" event="onclick"
+			action="javascript: return confirmNewLoanApplicationForClearance(${loanClearId});" use-when="isCleared==null||isCleared.equals(&quot;N&quot;)">
             <hyperlink target="clearAll" description="Clear All" also-hidden="false">
                 <parameter param-name="loanClearId"/>
             </hyperlink>

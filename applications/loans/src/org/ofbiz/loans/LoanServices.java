@@ -47,6 +47,7 @@ import com.google.gson.Gson;
 
 public class LoanServices {
 	public static Logger log = Logger.getLogger(LoanServices.class);
+	public static Long ONEHUNDRED = 100L;
 
 	public static String getLoanDetails(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -265,10 +266,30 @@ public class LoanServices {
 			memberId = memberId.replaceAll(",", "");
 			Long partyId = Long.valueOf(memberId);
 			bdExistingLoans = calculateExistingLoansTotal(partyId);
+			
+			Boolean netSalaryIsSet = false;
+			Boolean isBasedOnNetSalary = false;
+			BigDecimal bdNetSalaryAmount = null;
 
+			if (loanProduct.getString("percentageOfMemberNetSalary").equals("Yes")){
+				log.info(" LLLLLLLLLLLLLLL Percentage of Net Salary !!!!!!!!! ");
+				isBasedOnNetSalary = true;
+				bdNetSalaryAmount = getNetSalaryIsSetAmount(partyId);
+				bdMaximumLoanAmt = BigDecimal.ZERO;
+				if (bdNetSalaryAmount != null){
+					log.info(" LLLLLLLLLLLLLLL Has Net Amount !!!!!!!!! ");
+					netSalaryIsSet = true;
+					bdMaximumLoanAmt = bdNetSalaryAmount.multiply(loanProduct.getBigDecimal("percentageOfMemberNetSalaryAmt")).divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP);
+				} else{
+					log.info(" LLLLLLLLLLLLLLL DOES NOT HAVE Net Amount !!!!!!!!! ");
+				}
+				
+				
+				
+			}
 			// Get Existing Loans
 			// if this is a loan based on Multiples of Account Product then
-			if (loanProduct.getString("multipleOfSavings").equals("Yes")) {
+			else if (loanProduct.getString("multipleOfSavings").equals("Yes")) {
 				// bdExistingLoans = calculateExistingLoansTotal(memberId,
 				// loanProductId, delegator);
 				bdTotalSavings = totalSavings(memberId, loanProductId,
@@ -308,6 +329,9 @@ public class LoanServices {
 			}
 			result.put("maxLoanAmt", bdMaximumLoanAmt);
 			result.put("existingLoans", bdExistingLoans);
+			
+			result.put("isBasedOnNetSalary", isBasedOnNetSalary);
+			result.put("netSalaryIsSet", netSalaryIsSet);
 
 		} else {
 			System.out.println("######## Product details not found #### ");
@@ -361,6 +385,32 @@ public class LoanServices {
 		}
 
 		return json;
+	}
+
+	private static BigDecimal getNetSalaryIsSetAmount(Long partyId) {
+		List<GenericValue> memberNetSalaryELI = null; // =
+		EntityConditionList<EntityExpr> memberNetSalaryConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<String> listOrderBy = new ArrayList<String>();
+		listOrderBy.add("-memberNetSalaryId");
+		try {
+			memberNetSalaryELI = delegator.findList("MemberNetSalary",
+					memberNetSalaryConditions, null, listOrderBy, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if ((memberNetSalaryELI == null) || (memberNetSalaryELI.size() == 0))
+			return null;
+		
+		GenericValue memberNetSalary = memberNetSalaryELI.get(0);
+		
+		return memberNetSalary.getBigDecimal("amount");
 	}
 
 	/***

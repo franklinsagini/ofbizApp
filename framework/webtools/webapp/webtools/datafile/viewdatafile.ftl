@@ -16,14 +16,71 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<script type="text/javascript">
+   jQuery(document).ready(function(){
+
+	jQuery('select[name="STATION_NAME"]').change(function(){
+		var stationcsv = jQuery('select[name="STATION_NAME"]').val();
+		
+		var fileLocationDir = $('input[name="FILES_LOCATION_DIR"]').val()+'/'+stationcsv;
+		 $('input[name="DATAFILE_LOCATION"]').val(fileLocationDir);
+		 
+		var stationxml = stationcsv;
+		stationxml = stationxml.substring(0, stationxml.length - 4);
+		
+		var xmlfileLocationDir = $('input[name="FILES_LOCATION_DIR"]').val()+'/'+stationxml+'.xml';
+		 
+		 $('input[name="DATAFILE_SAVE"]').val(xmlfileLocationDir);
+		 $('input[name="ENTITYXML_FILE_SAVE"]').val(xmlfileLocationDir);
+		 
+
+         //alert(stationcsv);
+        });
+
+  });
+</script>
     <p>${uiLabelMap.WebtoolsDataFileMessage1}.</p>
     <br />
     <#if security.hasPermission("DATAFILE_MAINT", session)>
       <form method="post" action="<@ofbizUrl>viewdatafile</@ofbizUrl>">
         <table class="basic-table" cellspacing="0">
+        
+           <tr>
+            <td class="label">Station</td>
+            <td>
+              <#if stationNamesList?has_content>
+                <select name="STATION_NAME">
+                  <option value=""></option>
+                  <#list stationNamesList as oneStationName>
+                    boolean isSelected = stationName?? && stationName.equals(oneStationName);
+                    <option value="${oneStationName}" <#if parameters.STATION_NAME?exists && parameters.STATION_NAME == oneStationName> selected="selected" </#if>>${oneStationName}</option>
+                  </#list>
+                </select>
+              <#else>
+                <input name="STATION_NAME" type="text" size="30" value="${stationName?if_exists}" />
+              </#if>
+            </td>
+            <td>&nbsp;</td>
+          </tr>
+        
+        	<tr>
+            <td class="label">Files Directory</td>
+            <#if parameters.FILES_LOCATION_DIR??>
+            <td><input name="FILES_LOCATION_DIR" type="text" size="60" value="${parameters.FILES_LOCATION_DIR?if_exists}" /></td>
+            <#else>
+            <td><input name="FILES_LOCATION_DIR" type="text" size="60" value="/home/online" /></td>
+            </#if>
+            
+          </tr>
+        
           <tr>
             <td class="label">${uiLabelMap.WebtoolsDataDefinitionFileName}</td>
+            <#if parameters.DEFINITION_LOCATION??>
             <td><input name="DEFINITION_LOCATION" type="text" size="60" value="${parameters.DEFINITION_LOCATION?if_exists}" /></td>
+            <#else>
+            <td><input name="DEFINITION_LOCATION" type="text" size="60" value="/home/online/expecteddatafiles.xml" /></td>
+            </#if>
+            
             <td><span class="label">${uiLabelMap.WebtoolsDataIsUrl}</span><input type="checkbox" name="DEFINITION_IS_URL"<#if parameters.DEFINITION_IS_URL?has_content> checked="checked"</#if> /></td>
           </tr>
           <tr>
@@ -31,14 +88,20 @@ under the License.
             <td>
               <#if definitionNames?has_content>
                 <select name="DEFINITION_NAME">
-                  <option value=""></option>
+                  <option value="ExpectedPaymentReceived">ExpectedPaymentReceived</option>
                   <#list definitionNames as oneDefinitionName>
                     boolean isSelected = definitionName?? && definitionName.equals(oneDefinitionName);
                     <option value="${oneDefinitionName}" <#if parameters.DEFINITION_NAME?exists && parameters.DEFINITION_NAME == oneDefinitionName> selected="selected" </#if>>${oneDefinitionName}</option>
                   </#list>
                 </select>
               <#else>
-                <input name="DEFINITION_NAME" type="text" size="30" value="${definitionName?if_exists}" />
+              	<#if parameters.DEFINITION_LOCATION??>
+                	<input name="DEFINITION_NAME" type="text" size="30" value="${definitionName?if_exists}" />
+                
+                <#else>
+                	<input name="DEFINITION_NAME" type="text" size="30" value="ExpectedPaymentReceived" />
+                </#if>
+                
               </#if>
             </td>
             <td>&nbsp;</td>

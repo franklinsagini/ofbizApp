@@ -683,5 +683,28 @@
         <entity-one entity-name="Member" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+    
+    <!-- MemberNetSalary -->
+    <simple-method method-name="createMemberNetSalary" short-description="Create MemberNetSalary">
+        <make-value entity-name="MemberNetSalary" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="MemberNetSalary"></set>
+        <set field="newEntity.memberNetSalaryId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <!-- set from-field="memberAccountId" field="newEntity.memberAccountId"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateMemberNetSalary" short-description="Update MemberNetSalary">
+        <entity-one entity-name="MemberNetSalary" value-field="memberNetSalary"/>
+        <set-nonpk-fields value-field="memberNetSalary" map="parameters"/>
+        <store-value value-field="memberNetSalary"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteMemberNetSalary" short-description="Delete MemberNetSalary">
+        <entity-one entity-name="MemberNetSalary" value-field="memberNetSalary"/>
+        <remove-value value-field="memberNetSalary"/>
+    </simple-method>
+    
 
 </simple-methods>

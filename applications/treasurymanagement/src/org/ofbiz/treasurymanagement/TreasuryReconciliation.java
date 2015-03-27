@@ -210,9 +210,12 @@ public class TreasuryReconciliation {
 			e2.printStackTrace();
 		}
 		
+		String treasuryTransferId = "";
 		for (GenericValue genericValue : treasuryTransferELI) {
-			withdrawalAmount = withdrawalAmount.add(getTotalWithdrawal(genericValue.getString("treasuryTransferId")));
+			treasuryTransferId = genericValue.getString("treasuryTransferId");
 		}
+		
+		withdrawalAmount = withdrawalAmount.add(getTotalWithdrawal(treasuryTransferId));
 		return withdrawalAmount;
 	}
 	
@@ -239,9 +242,14 @@ public class TreasuryReconciliation {
 			e2.printStackTrace();
 		}
 		
+		
+		String treasuryTransferId = "";
+		
 		for (GenericValue genericValue : treasuryTransferELI) {
-			depositAmount = depositAmount.add(getTotalDeposits(genericValue.getString("treasuryTransferId")));
+			treasuryTransferId = genericValue.getString("treasuryTransferId");
 		}
+		
+		depositAmount = depositAmount.add(getTotalDeposits(treasuryTransferId));
 		
 		return depositAmount;
 	}
