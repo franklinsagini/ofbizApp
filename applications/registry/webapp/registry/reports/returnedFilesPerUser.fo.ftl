@@ -24,7 +24,7 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        RETURNED FILE PER USER  REPORT
+        FILES RETURNED BY [${employee.firstName} ${employee.lastName}] 
     </fo:block>
     <fo:block><fo:leader/></fo:block>
     <#-- Employee Details -->
@@ -42,7 +42,7 @@ under the License.
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">File Released By</fo:block>
+                        <fo:block text-align="left">File Member</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">File Carried By</fo:block>
@@ -63,14 +63,15 @@ under the License.
                     <#if activity.actionBy?has_content>
                         <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
                     </#if>
-                    <#if activity.currentPossesser?has_content>
-                        <#assign currentPossesser = delegator.findOne("Person", {"partyId" : activity.currentPossesser}, false)/>
+					<#if activity.partyId?has_content>
+                    	<#assign memberPartyId = activity.partyId?number />
+                        <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
                     </#if>
                      <fo:table-row>
                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if actionBy?has_content>
-                                <fo:block>${actionBy.firstName?if_exists} ${actionBy.lastName?if_exists}</fo:block>
+                                <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
