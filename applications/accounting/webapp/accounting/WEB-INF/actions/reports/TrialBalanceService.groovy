@@ -11,20 +11,12 @@ exprList.add(EntityCondition.makeCondition('organizationPartyId', EntityOperator
 
 List organizationGlAccounts = delegator.findList('GlAccountOrganizationAndClass', EntityCondition.makeCondition(exprList, EntityOperator.AND), null, ['accountCode'], null, false)
 
-accountBalances = []
-postedDebitsTotal = 0
-postedCreditsTotal = 0
 organizationGlAccounts.each { organizationGlAccount ->
     accountBalance = [:]
     //accountBalance = dispatcher.runSync('computeGlAccountBalanceForTimePeriod', [organizationPartyId: organizationGlAccount.organizationPartyId, customTimePeriodId: customTimePeriod.customTimePeriodId, glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
     accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: organizationGlAccount.organizationPartyId, thruDate : thruDate, fromDate: fromDate,  glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
     if (accountBalance.postedDebits != 0 || accountBalance.postedCredits != 0) {
-        accountBalance.glAccountId = organizationGlAccount.glAccountId
-        accountBalance.accountCode = organizationGlAccount.accountCode
-        accountBalance.accountName = organizationGlAccount.accountName
-        postedDebitsTotal = postedDebitsTotal + accountBalance.postedDebits
-        postedCreditsTotal = postedCreditsTotal + accountBalance.postedCredits
-        accountBalances.add(accountBalance)
+        System.out.println("########################################################################### accountBalance " + accountBalance)
 
         GenericValue account = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", organizationGlAccount.glAccountId), true);
         isDebit = org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(account);
@@ -42,19 +34,8 @@ organizationGlAccounts.each { organizationGlAccount ->
     }
 
  }
-    context.postedDebitsTotal = postedDebitsTotal
-    context.postedCreditsTotal = postedCreditsTotal
-    context.accountBalances = accountBalances
 
-organizationGlAccounts.each { organizationGlAccount ->
 
-thruDate = UtilDateTime.nowTimestamp()
-fromDate = UtilDateTime.getDayStart(thruDate);
 
-accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: organizationGlAccount.organizationPartyId, thruDate : thruDate, fromDate: fromDate,  glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
-System.out.println("########################################################################### accountBalance " + accountBalance)
-System.out.println("#################***********ACCOUNT*********#######################  " + organizationGlAccount.glAccountId)
-
-}
 
 
