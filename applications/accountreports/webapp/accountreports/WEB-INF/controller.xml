@@ -28,6 +28,8 @@
     <response name="success" type="view" value="memberAccountList" save-home-view="true" />
   </request-map>
   
+  
+  
   <request-map uri="memberAccountListPDF">
     <security https="true" auth="true" />
     <response name="success" type="view" value="memberAccountListPDF" save-home-view="true" />
@@ -49,7 +51,19 @@
 
 	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
 
+	<request-map uri="generateTransactionAudit">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.accountreports.AccountReportsServices" invoke="generateTransactionAudit" />
+		<response name="success" type="view" value="accountsAudit">
+		</response>
+		<response name="error" type="view" value="accountsAudit" />
+	</request-map>
 
+	<request-map uri="accountsAudit">
+	    <security https="true" auth="true" />
+	    <response name="success" type="view" value="accountsAudit" save-home-view="true" />
+	  </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#main"/>
@@ -62,4 +76,6 @@
 
 	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
     
+    
+    <view-map name="accountsAudit" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#accountsAudit"/>
 </site-conf>
