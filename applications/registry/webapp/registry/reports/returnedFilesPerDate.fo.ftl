@@ -33,13 +33,17 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="160pt"/>
-            <fo:table-column column-width="160pt"/>
-            <fo:table-column column-width="160pt"/>
+            <fo:table-column column-width="120pt"/>
+			<fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="120pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Returned By</fo:block>
+                        <fo:block text-align="left">File Member</fo:block>
+                    </fo:table-cell>
+					<fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Released By</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Carried By</fo:block>
@@ -52,6 +56,10 @@ under the License.
             <fo:table-body>
 
                   <#list activities as activity>
+				  <#if activity.partyId?has_content>
+                    	<#assign memberPartyId = activity.partyId?number />
+                        <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
+                    </#if>
                     <#if activity.carriedBy?has_content>
                         <#assign carriedBy = delegator.findOne("Person", {"partyId" : activity.carriedBy}, false)/>
                     </#if>
@@ -59,6 +67,9 @@ under the License.
                         <#assign actionBy = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
                     </#if>
                      <fo:table-row>
+					  <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
+                        </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if actionBy?has_content>
                                 <fo:block>${actionBy.firstName?if_exists} ${actionBy.lastName?if_exists}</fo:block>
