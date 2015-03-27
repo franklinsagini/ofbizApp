@@ -68,7 +68,7 @@ under the License.
             <#if parameters.FILES_LOCATION_DIR??>
             <td><input name="FILES_LOCATION_DIR" type="text" size="60" value="${parameters.FILES_LOCATION_DIR?if_exists}" /></td>
             <#else>
-            <td><input name="FILES_LOCATION_DIR" type="text" size="60" value="/home/online/chaisacco" /></td>
+            <td><input name="FILES_LOCATION_DIR" type="text" size="60" value="/home/online" /></td>
             </#if>
             
           </tr>
