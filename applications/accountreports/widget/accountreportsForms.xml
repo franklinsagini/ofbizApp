@@ -74,7 +74,28 @@
 
         <field name="minSavingsAmt" title="Book Balance"><display/></field>
         <field name="interestPerAnum" title="Available Balance"><display/></field>
-        
-        
     </form>
+    
+    <!-- acctTransAuditForm -->
+    <form name="listAcctTransAudit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAcctTransAudit" paginate-target="accountsAudit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="AcctTransAudit">
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanClearLimit"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="acctTransAuditId" title="Audit ID">
+        	<display></display>
+         </field>
+        <field name="acctgTransId" title="Account Trans">
+        	<display></display>
+         </field>
+         
+         <field name="glAccountId" title="Account">
+        	<display-entity entity-name="GlAccount" description="${accountCode} - ${accountName}" key-field-name="glAccountId"></display-entity>
+         </field>
+     </form>
 </forms>
