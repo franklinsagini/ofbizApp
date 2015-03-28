@@ -100,7 +100,7 @@ expectationList.eachWithIndex { expectItem, index ->
 		//receivedTotal = receivedTotal + receivedItem.amount;
 		
 		receivedTotal = new BigDecimal(0.0);
-		receivedDetailedList = delegator.findByAnd("ExpectedPaymentReceived",  [employerCode : employerCode, month: month, payrollNo: expectItem.payrollNo, remitanceCode: expectItem.remitanceCode], null, false);
+		receivedDetailedList = delegator.findByAnd("ExpectedPaymentReceived",  [employerCode : employerCode, month: month, payrollNo: sentItem.payrollNo, remitanceCode: sentItem.remitanceCode], null, false);
 		receivedDetailedList.eachWithIndex { receivedDetailedItem, receivedDetailedItemIndex ->
 			receivedTotal = receivedTotal + receivedDetailedItem.amount;
 		}
