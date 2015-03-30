@@ -238,7 +238,7 @@
 							<include-menu name="universalRegistryMenuBar" location="component://registry/widget/RegistryMenus.xml" />
 							<container style="leftclear">
 											<label style="h1"
-												text="Release File(s)" />
+												text="Release File(s) To Registry" />
 										</container>
 								<screenlet title="Search File">
 									<include-form name="FindMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
@@ -249,6 +249,52 @@
 							<widgets>
 								<screenlet title="File List (Search Results)">
 									<include-form name="listMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesPreparedForReleaseToReg" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	                                          <!-- TO ANOTHER STAFF -->
+	
+	<screen name="registryFileReleaseToAnotherStaff">
+		<section>
+			<actions>
+				<set field="headerItem" value="releaseToAnother" />
+				<set field="tabButtonItem" value="releaseToAnother" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<include-menu name="universalRegistryMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+							<container style="leftclear">
+											<label style="h1"
+												text="Release File(s) To Another Staff" />
+										</container>
+								<screenlet title="Search File">
+									<include-form name="FindMemberfilesForRelease" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="File List (Search Results)">
+									<include-form name="listMemberfilesForReleaseToAnotherStaff" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+								<screenlet title="Send Files">
+									<include-form name="listMemberfilesPreparedForReleaseToAnotherStaff" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>
