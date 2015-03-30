@@ -542,15 +542,15 @@
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		<field name="status"><hidden value="REQUESTED"/></field>
+		<field name="selectedToBeMoved"><hidden value="REQUESTED"/></field>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
    
-
-    <form name="listMemberfilesForIssue" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForIssue"
+<form name="listMemberfilesForIssue" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="selectFilesToIssue" paginate-target="FindMemberfilesForIssue"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
+	       		<actions>
         <entity-condition entity-name="RegistryFiles" >
         <condition-list>
         <condition-expr field-name="status" operator="equals" value="REQUESTED"/>
@@ -565,6 +565,14 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+			
+			<entity-condition entity-name="Person" list="fileCarrierList" >
+        		<condition-list combine="and">
+        			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>       		
+        		</condition-list>
+        	</entity-condition>
+		
             
         </actions>
           <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
@@ -579,76 +587,58 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		 <field name="filesIssue" title="-" widget-style="buttontext">
+		<field name="carriedBy" title="File Carried By" required-field="true">
+		 <drop-down allow-empty="true">
+             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
+            </drop-down>
+		</field>
+		
+		 <field name="submitButton" title="Select" widget-style="buttontext"> <submit button-type="button"/></field>
+		<!--  <field name="filesIssue" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Issue File" target="goIssueFile">
 				<parameter param-name="partyId" />
 				<parameter param-name="status" /> 
 				<parameter param-name="actionBy" /> 
 				<parameter param-name="Reason" /> 
 			</hyperlink>
-		</field>
+		</field> -->
 		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
-
-    <form name="listMemberfilesForIssuedsdss" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="FindMemberfilesForIssue"
+    
+    <form name="listMemberfilesPreparedForRelease" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"
                  target="issuefiles"   default-table-style="basic-table hover-bar">
                <actions>
-          <entity-condition entity-name="RegistryFiles" >
+           <entity-condition entity-name="RegistryFiles" >
         <condition-list>
-        <condition-expr field-name="status" operator="equals" value="REQUESTED"/>
+        <condition-expr field-name="selectedToBeMoved" operator="equals" value="SELECTED_FOR_ISSUE"/>
           <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
         </condition-list>
-          
         </entity-condition>
-            <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="RegistryFiles"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-            
-            
+           
         </actions>
                
-                 
         <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
          <field name="payrollNumber"><display/></field>
          <field name="memberNumber"><display/></field>
 		 <field name="status"><hidden/></field>
 		 <field name="actionBy"><hidden/></field>
 		 <field name="Reason"><hidden/></field>
-		 
-       <field name="fileoverview" title="Overview" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+		 <field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+		   <field name="carriedBy" title="Carried By"><display-entity key-field-name="partyId" entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="deselectfile" title="Deselect" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Deselect" target="selectFilesToIssue">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-       <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-       <field name="submitButton" title="Issue Selected File(s)" widget-style="smallSubmit"><submit/></field>
+      <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check all-checked="true"/></field>
+       <field name="submitButton" title="Issue File(s)" widget-style="smallSubmit"><submit/></field>
      
         </form>
+	
+	
 
-         <form name="fileCarrierForm" type="single" target=""
-		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
-		default-table-style="basic-table">
-		 <actions>
-		<entity-condition entity-name="Person" list="fileCarrierList" >
-        		<condition-list combine="and">
-        			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
-        			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>       		
-        		</condition-list>
-        	</entity-condition>
-        </actions>
-		<field name="carriedBy" title="File Carried By:" required-field="true">
-		 <drop-down allow-empty="true">
-             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
-            </drop-down>
-		</field>
-		
-	</form>
-  
+
   
   
     <!--  ============================================== FILE DIVERT ======================================================================= -->
@@ -668,7 +658,7 @@
 
    
 
-    <form name="listMemberfilesForDivert" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForDivert"
+    <form name="listMemberfilesForDivert323" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForDivert"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         <entity-condition entity-name="RegistryFiles" >
@@ -711,16 +701,24 @@
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
-     <form name="listMemberfilesForDivertytyy" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="FindMemberfilesForDivert"
-                 target="divertfiles"   default-table-style="basic-table hover-bar">
-               <actions>
-           <entity-condition entity-name="RegistryFiles" >
+   
+        <form name="listMemberfilesForDivert" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="selectFilesToDivert" paginate-target="FindMemberfilesForDivert"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	       		<actions>
+         <entity-condition entity-name="RegistryFiles" >
         <condition-list>
         <condition-expr field-name="status" operator="equals" value="ISSUED"/>
           <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
         </condition-list>
-          
         </entity-condition>
+        
+        <entity-condition entity-name="Person" list="fileCarrierList" >
+        		<condition-list combine="and">
+        			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>        		
+        		</condition-list>
+        	</entity-condition>
+        	
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="RegistryFiles"/>
@@ -728,12 +726,49 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-            
-            
+		
             
         </actions>
+          <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+         <field name="payrollNumber"><display/></field>
+         <field name="memberNumber"><display/></field>
+		 <field name="status"><hidden/></field>
+		 <field name="actionBy"><hidden/></field>
+		 <field name="Reason"><hidden/></field>
+
+		<field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		<field name="currentPossesser" title="Divert File To" required-field="true">
+		 <drop-down allow-empty="true">
+             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
+            </drop-down>
+		</field>
+		<field name="carriedBy" title="File Carried By" required-field="true">
+		 <drop-down allow-empty="true">
+             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
+            </drop-down>
+		</field>
+		
+		 <field name="submitButton" title="Select" widget-style="buttontext"> <submit button-type="button"/></field>
+		<field name="actionBy" title="Currently With"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
+    
+    <form name="listMemberfilesPreparedForDivert" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"
+                 target="divertfiles"   default-table-style="basic-table hover-bar">
+               <actions>
+           <entity-condition entity-name="RegistryFiles" >
+        <condition-list>
+        <condition-expr field-name="selectedToBeMoved" operator="equals" value="SELECTED_FOR_DIVERT"/>
+          <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
+        </condition-list>
+        </entity-condition>
+           
+        </actions>
                
-                 
         <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
          <field name="payrollNumber"><display/></field>
          <field name="memberNumber"><display/></field>
@@ -741,15 +776,18 @@
 		 <field name="actionBy"><hidden/></field>
 		 <field name="Reason"><hidden/></field>
 		 
-       <field name="fileoverview" title="Overview" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+		 <field name="currentPossesser" title="Divert To"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+		   <field name="carriedBy" title="Carried By"><display-entity key-field-name="partyId" entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="deselectfile" title="Deselect" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Deselect" target="selectFilesToIssue">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-       <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-       <field name="submitButton" title="Divert Selected File(s)" widget-style="smallSubmit"><submit/></field>
+      <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check all-checked="true"/></field>
+       <field name="submitButton" title="Divert File(s)" widget-style="smallSubmit"><submit/></field>
      
         </form>
+	
   
   
      <!--  ============================================== RECEIVE FILE ================================================== -->
@@ -877,7 +915,7 @@
 
     <!-- List Memeber Files -->
 
-    <form name="listMemberfilesForRelease" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForRelease"
+    <form name="listMemberfilesForReleaseccvc" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForRelease"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
@@ -888,6 +926,14 @@
          </condition-list>
        
         </entity-condition>
+        
+         <entity-condition entity-name="Person" list="fileCarrierList" >
+        		<condition-list combine="and">
+        			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>       		
+        		</condition-list>
+        	</entity-condition>
+        	
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="RegistryFiles"/>
@@ -924,12 +970,14 @@
 		</field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
+    
+    
+                                             <!-- LIST OF FILES TO BE SEND TO REGISTRY -->
 	
-	
-	   <form name="listMemberfilesForReleaseddd" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="FindMemberfilesForRelease"
-                 target="issuefiles"   default-table-style="basic-table hover-bar">
-               <actions>
-            <entity-condition entity-name="RegistryFiles" >
+	<form name="listMemberfilesForRelease" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="selectFilesToRegistry" paginate-target="FindMemberfilesForRelease"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	       		<actions>
+       <entity-condition entity-name="RegistryFiles" >
           <condition-list>
          <condition-expr field-name="recieptStatus" operator="equals" value="RECEIVED"/>
          <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
@@ -937,6 +985,14 @@
          </condition-list>
        
         </entity-condition>
+        
+         <entity-condition entity-name="Person" list="fileCarrierList" >
+        		<condition-list combine="and">
+        			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>       		
+        		</condition-list>
+        	</entity-condition>
+        
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="RegistryFiles"/>
@@ -944,12 +1000,56 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
-            
-            
+		
             
         </actions>
+          <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+         <field name="payrollNumber"><display/></field>
+         <field name="memberNumber"><display/></field>
+		 <field name="status"><hidden/></field>
+		 <field name="actionBy"><hidden/></field>
+		 <field name="Reason"><hidden/></field>
+
+		<field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		<field name="carriedBy" title="File Carried By" required-field="true">
+		 <drop-down allow-empty="true">
+             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
+            </drop-down>
+		</field>
+		
+		 <field name="submitButton" title="Select" widget-style="buttontext"> <submit button-type="button"/></field>
+		<!--  <field name="filesIssue" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Issue File" target="goIssueFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="status" /> 
+				<parameter param-name="actionBy" /> 
+				<parameter param-name="Reason" /> 
+			</hyperlink>
+		</field> -->
+		
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
+    
+    
+                            <!-- LIST OF FILES READY TO BE RELEASED TO REGISTRY -->
+    
+    <form name="listMemberfilesPreparedForReleaseToReg" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"
+                 target="releasefiles"   default-table-style="basic-table hover-bar">
+               <actions>
+           <entity-condition entity-name="RegistryFiles" >
+        <condition-list>
+        <condition-expr field-name="selectedToBeMoved" operator="equals" value="SELECTED_FOR_RETURN_TO_REGISTRY"/>
+          <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
+          <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
+        </condition-list>
+        </entity-condition>
+           
+        </actions>
                
-                 
         <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
          <field name="payrollNumber"><display/></field>
          <field name="memberNumber"><display/></field>
@@ -957,39 +1057,110 @@
 		 <field name="actionBy"><hidden/></field>
 		 <field name="Reason"><hidden/></field>
 		 
-       <field name="fileoverview" title="Overview" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+		   <field name="carriedBy" title="Carried By"><display-entity key-field-name="partyId" entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="deselectfile" title="Deselect" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Deselect" target="selectFilesToIssue">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-       <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-       <field name="submitButton" title="Release Selected File(s)" widget-style="smallSubmit"><submit/></field>
+      <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check all-checked="true"/></field>
+       <field name="submitButton" title="Release File(s) to Registry" widget-style="smallSubmit"><submit/></field>
      
         </form>
-
-         <form name="fileCarrierAndReceiverForm" type="single" target=""
-		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
-		default-table-style="basic-table">
-		 <actions>
-		<entity-condition entity-name="Person" list="fileCarrierList" >
+        
+                                    <!-- LIST OF FILES TO BE SEND TO OTHER STAFF -->
+        
+         <form name="listMemberfilesForReleaseToAnotherStaff" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="selectFilesToAnotherStaff" paginate-target="FindMemberfilesForDivert"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	       		<actions>
+         <entity-condition entity-name="RegistryFiles" >
+          <condition-list>
+         <condition-expr field-name="recieptStatus" operator="equals" value="RECEIVED"/>
+         <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
+         <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
+         </condition-list>
+       
+        </entity-condition>
+        
+         <entity-condition entity-name="Person" list="fileCarrierList" >
         		<condition-list combine="and">
         			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
         			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>       		
         		</condition-list>
         	</entity-condition>
+        
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+		
+            
         </actions>
-		<field name="carriedBy" title="File Carried By:" required-field="true">
+          <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+         <field name="payrollNumber"><display/></field>
+         <field name="memberNumber"><display/></field>
+		 <field name="status"><hidden/></field>
+		 <field name="actionBy"><hidden/></field>
+		 <field name="Reason"><hidden/></field>
+
+		<field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		<field name="intendedPossesser" title="Send File To" required-field="true">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
             </drop-down>
 		</field>
-		<field name="releaseto" title="Divert File To:" required-field="true">
+		<field name="carriedBy" title="File Carried By" required-field="true">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
             </drop-down>
 		</field>
 		
-	</form>
+		 <field name="submitButton" title="Select" widget-style="buttontext"> <submit button-type="button"/></field>
+		<field name="actionBy" title="Currently With"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+    </form>
+    
+                                       <!-- LIST OF FILES READY TO BE SEND TO ANOTHER STAFF -->
+    
+    <form name="listMemberfilesPreparedForReleaseToAnotherStaff" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"
+                 target="releaseFileToAnotherStaff"   default-table-style="basic-table hover-bar">
+               <actions>
+           <entity-condition entity-name="RegistryFiles" >
+        <condition-list>
+        <condition-expr field-name="selectedToBeMoved" operator="equals" value="SELECTED_FOR_ANOTHER_STAFF"/>
+          <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
+          <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
+        </condition-list>
+        </entity-condition>
+           
+        </actions>
+               
+        <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+         <field name="payrollNumber"><display/></field>
+         <field name="memberNumber"><display/></field>
+		 <field name="status"><hidden/></field>
+		 <field name="actionBy"><hidden/></field>
+		 <field name="Reason"><hidden/></field>
+		 
+		 <field name="intendedPossesser" title="Send To"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
+		   <field name="carriedBy" title="Carried By"><display-entity key-field-name="partyId" entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+		<field name="deselectfile" title="Deselect" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Deselect" target="selectFilesToIssue">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+      <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check all-checked="true"/></field>
+       <field name="submitButton" title="Send File(s)" widget-style="smallSubmit"><submit/></field>
+     
+        </form>
+	
 
 <!-- ============================================ RETURN FILE TO REGISTRY =============================================== -->
  <form name="FindMemberfilesForReturn" default-map-name="FindMemberfilesForReturnContext" target="regFileReturn" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
@@ -1987,6 +2158,21 @@
 				<parameter param-name="setupId" />
 			</hyperlink>
 		</field> -->
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+	</form>
+	
+	<!-- ========================= MAX NUMBER OF FILES ALLOWED PER USER ================================ -->
+	
+
+	<form name="MaxNumberOfFilesPerUserForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMaxNoOfFiles"
+		paginate-target="RegistryFileSettingMaxNumberOfFilesPerUser" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="RegistryFileSettingMaxNumberOfFilesPerUser">
+            </entity-condition>
+		</actions>
+		
+		
+		<field name="maxNumber" title="Maximum Number Of Files Allowed Per User" tooltip="(In Months)"><text/></field>
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
 	</form>
 	

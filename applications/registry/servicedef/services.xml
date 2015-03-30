@@ -159,6 +159,13 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    
+     <service name="updateMaxNoOfFiles" engine="simple" default-entity-name="RegistryFileSettingMaxNumberOfFilesPerUser"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="updateMaxNoOfFiles" auth="true">
+        <description>Update Blood Group</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
 	
 	<!-- =================== AUTHORIZATION =========================== -->
 	<service name="approveFileIssuance" engine="simple" default-entity-name="RegistryFiles"
@@ -175,6 +182,39 @@
 		<auto-attributes  include="nonpk" mode="IN" optional="true" />
 	</service>
 	
+	
+	<service name="selectFilesToIssue" engine="simple" default-entity-name="RegistryFiles"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="selectFilesToIssue" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+		
+	</service>
+	
+		<service name="selectFilesToDivert" engine="simple" default-entity-name="RegistryFiles"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="selectFilesToDivert" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+		
+	</service>
+	
+	
+		<service name="selectFilesToRegistry" engine="simple" default-entity-name="RegistryFiles"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="selectFilesToRegistry" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+		
+	</service>
+	
+	<service name="selectFilesToAnotherStaff" engine="simple" default-entity-name="RegistryFiles"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="selectFilesToAnotherStaff" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes  include="nonpk" mode="IN" optional="true" />
+		
+	</service>
 	
 	<service name="issuefiles" engine="simple" default-entity-name="RegistryFiles"
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="issuefiles" auth="true">

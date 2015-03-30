@@ -46,7 +46,12 @@
 
 	<request-map uri="regFileRelease">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="fileReleaseScreen" />
+		<response name="success" type="view" value="fileReleaseScreen"/>
+	</request-map>
+	
+	<request-map uri="regFileReleaseToAnotherStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="fileReleaseToAnotherStaffScreen"/>
 	</request-map>
 	
 	<request-map uri="goRequestFile">
@@ -84,15 +89,26 @@
 
 	<request-map uri="releasefiles">
 		<security https="true" auth="true" />
-		<event type="service" path="" invoke="releasefiles" />
+		<event type="service-multi" path="" invoke="releasefiles" />
 		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
 	</request-map>
 	
+	<request-map uri="selectFilesToRegistry">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="selectFilesToRegistry"/>
+		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
+	</request-map>
+	
+	<request-map uri="selectFilesToAnotherStaff">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="selectFilesToAnotherStaff"/>
+		<response name="success" type="request-redirect-noparam" value="regFileReleaseToAnotherStaff" />
+	</request-map>
 
 	<request-map uri="releaseFileToAnotherStaff">
 		<security https="true" auth="true" />
-		<event type="service" path="" invoke="releaseFileToAnotherStaff" />
-		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
+		<event type="service-multi" path="" invoke="releaseFileToAnotherStaff" />
+		<response name="success" type="request-redirect-noparam" value="regFileReleaseToAnotherStaff" />
 	</request-map>
 	
 	<!-- Document Overview -->
@@ -193,6 +209,7 @@
 	 <view-map name="fileRquestScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRequest" />
 	  <view-map name="fileReceiveScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRecieve" />
 	   <view-map name="fileReleaseScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRelease" />
+	   <view-map name="fileReleaseToAnotherStaffScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileReleaseToAnotherStaff" />
 	   <view-map name="leaveCalender" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#StaffLeaveCalender"/>
 	   <view-map name="FindEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindEmplLeaves"/>
 	   <!-- File Overview  -->
