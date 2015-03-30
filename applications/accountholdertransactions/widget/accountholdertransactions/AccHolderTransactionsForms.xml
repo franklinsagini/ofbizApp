@@ -773,7 +773,7 @@ under the License.
         	<entity-condition entity-name="MemberAccount" list="memberAccountList">
         		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
         	</entity-condition>
-        	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
+        	<!-- entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition -->
         	<entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
         	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
 			<entity-condition entity-name="LoanProduct" list="productList"></entity-condition>
@@ -862,8 +862,8 @@ under the License.
             </entity-condition>
             
 
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition>
-        	<entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition>
+        	<!-- entity-condition entity-name="MemberAccount" list="memberAccountList"></entity-condition -->
+        	<!-- entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition -->
         	<entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
         	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
         </actions>
@@ -893,13 +893,15 @@ under the License.
         
         <field name="loanTypeId" title="Loan Type">
         	<drop-down>
-        		<list-options key-name="saccoProductId" list-name="saccoProductList" description="${name} - ${code}"/>
+        		<!-- list-options key-name="loanProductId" list-name="saccoProductList" description="${name} - ${code}"/ -->
+        		<entity-options description="${name} - ${code}" key-field-name="loanProductId" entity-name="LoanProduct"></entity-options>
         	</drop-down>
         </field>
         
         <field name="loanApplicationId" title="Loan">
         	<drop-down>
-        		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/>
+        		<!-- list-options key-name="loanApplicationId" list-name="loanApplicationList" description="${loanNo}"/ -->
+        		<entity-options description="${loanNo}" entity-name="LoanApplication" key-field-name="loanApplicationId"></entity-options>
         	</drop-down>
         </field>
 		 <field name="loanBalanceAmt" title="Loan Amount"><text></text></field>
