@@ -179,7 +179,11 @@ under the License.
 
                              <#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationId.toString()), true)/>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${station.stationNumber?if_exists} - ${station.name?if_exists}</fo:block>
+                                <fo:block>
+                                <#if station?has_content>
+                                ${station.stationNumber?if_exists} - ${station.name?if_exists}
+                                </#if>
+                                </fo:block>
                             </fo:table-cell>
                             
                              <#assign branch = delegator.findOne("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", member.branchId), true)/>

@@ -32,7 +32,7 @@ under the License.
 
       <#if agreements?exists>
       <tr><td colspan="4">&nbsp;<input type='hidden' name='hasAgreements' value='Y'/></td></tr>
-      
+
       <tr>
         <td>&nbsp;</td>
         <td align='right' valign='top' nowrap="nowrap">
@@ -78,7 +78,7 @@ under the License.
       </#if>
 
       <#if "PURCHASE_ORDER" == cart.getOrderType()>
-        <tr>
+<#--         <tr>
           <td>&nbsp;</td>
           <td align='right' valign='middle' class='tableheadtext'>
             ${uiLabelMap.OrderOrderId}
@@ -87,7 +87,7 @@ under the License.
           <td align='left'>
             <input type='text' size='15' maxlength='100' name='orderId' value=""/>
           </td>
-        </tr>
+        </tr> -->
       </#if>
 
       <tr>
@@ -102,7 +102,7 @@ under the License.
       </tr>
 
       <#if cart.getOrderType() != "PURCHASE_ORDER">
-      <tr>
+<#--       <tr>
         <td>&nbsp;</td>
         <td align='right' valign='middle' class='tableheadtext' nowrap="nowrap">
           ${uiLabelMap.OrderPONumber}
@@ -111,7 +111,7 @@ under the License.
         <td align='left'>
           <input type="text" class='inputBox' name="correspondingPoId" size="15" />
         </td>
-      </tr>
+      </tr> -->
       </#if>
 
       <tr>
@@ -136,7 +136,7 @@ under the License.
         </td>
       </tr>
 
-      <tr>
+<#--       <tr>
         <td>&nbsp;</td>
         <td align="right">
           ${uiLabelMap.ProductChooseCatalog}
@@ -151,11 +151,11 @@ under the License.
             </#list>
           </select>
           <#else>
-             <input type="hidden" name='CURRENT_CATALOG_ID' value=""/> 
+             <input type="hidden" name='CURRENT_CATALOG_ID' value=""/>
           </#if>
         </td>
-      </tr>
-
+      </tr> -->
+<#--
       <tr>
         <td>&nbsp;</td>
         <td align="right">
@@ -165,7 +165,7 @@ under the License.
         <td>
           <@htmlTemplate.lookupField formName="agreementForm" name="workEffortId" id="workEffortId" fieldFormName="LookupWorkEffort"/>
         </td>
-      </tr>
+      </tr> -->
 
       <tr>
         <td>&nbsp;</td>

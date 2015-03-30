@@ -8,52 +8,65 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
-    
+
       <view-entity entity-name="MemberAccountBalance" package-name="org.ofbiz.accountreports">
     	<member-entity entity-alias="M" entity-name="Member"></member-entity>
     	<member-entity entity-alias="MA" entity-name="MemberAccount"></member-entity>
-    	
+
     	<member-entity entity-alias="AP" entity-name="AccountProduct"></member-entity>
     	<!-- member-entity entity-alias="S" entity-name="Station"></member-entity -->
-    	
+
     	<alias entity-alias="M" name="partyId"></alias>
     	<alias entity-alias="M" name="firstName"></alias>
     	<alias entity-alias="M" name="middleName"></alias>
     	<alias entity-alias="M" name="lastName"></alias>
-    	
+
     	<alias entity-alias="M" name="payrollNumber"></alias>
     	<alias entity-alias="M" name="memberNumber"></alias>
     	<alias entity-alias="M" name="idNumber"></alias>
-    	
-    	
+
+
     	<alias entity-alias="M" name="stationId"></alias>
-    	
+
     	<!-- alias entity-alias="S" name="stationNumber"></alias>
     	<alias entity-alias="S" name="name" col-alias="stationName"></alias -->
-    	
-    	
-    	<alias entity-alias="MA" name="memberAccountId"/> 
-    	<alias entity-alias="MA" name="accountProductId"/> 
+
+
+    	<alias entity-alias="MA" name="memberAccountId"/>
+    	<alias entity-alias="MA" name="accountProductId"/>
     	<alias entity-alias="MA" name="accountNo" />
     	<alias entity-alias="MA" name="accountName"/>
-    	
+
     	<alias entity-alias="AP" name="code"/>
-    	<alias entity-alias="AP" name="name"/> 
-    	
+    	<alias entity-alias="AP" name="name"/>
+
     	<alias entity-alias="AP" name="minSavingsAmt" col-alias="accountBalanceAmt"></alias>
     	<alias entity-alias="AP" name="interestPerAnum"></alias>
-    	
-    	<view-link entity-alias="M" rel-entity-alias="MA"> 
-            <key-map field-name="partyId" rel-field-name="partyId"/> 
+
+    	<view-link entity-alias="M" rel-entity-alias="MA">
+            <key-map field-name="partyId" rel-field-name="partyId"/>
         </view-link>
-        
-        <view-link entity-alias="MA" rel-entity-alias="AP"> 
-            <key-map field-name="accountProductId" rel-field-name="accountProductId"/> 
+
+        <view-link entity-alias="MA" rel-entity-alias="AP">
+            <key-map field-name="accountProductId" rel-field-name="accountProductId"/>
         </view-link>
-        
-        <!-- view-link entity-alias="M" rel-entity-alias="S"> 
-            <key-map field-name="stationId" rel-field-name="stationId"/> 
-        </view-link --> 
+
+        <!-- view-link entity-alias="M" rel-entity-alias="S">
+            <key-map field-name="stationId" rel-field-name="stationId"/>
+        </view-link -->
     </view-entity>
+
+    <entity entity-name="AcctTransAudit" package-name="org.ofbiz.accountreports"
+		title="AcctTransAudit Entity">
+		<field name="acctTransAuditId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="name"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="acctgTransId" type="id"></field>
+        <field name="acctgTransEntrySeqId" type="id-ne"></field>
+		<field name="glAccountId" type="id"></field>
+		<field name="accountName" type="name"></field>
+		<prim-key field="acctTransAuditId"/>
+	</entity>
 
 </entitymodel>

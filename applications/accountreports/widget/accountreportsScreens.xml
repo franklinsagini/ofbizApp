@@ -1,97 +1,214 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="main">
-        <section>
-            <actions>
-                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
-            </actions>
-            <widgets>
-                <decorator-screen name="accountreportsCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+	<screen name="main">
+		<section>
+			<actions>
+				<set field="headerItem" value="main" /><!-- this highlights the selected
+					menu-item with name "main" -->
+			</actions>
+			<widgets>
+				<decorator-screen name="accountreportsCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 
 	<screen name="memberAccountList">
-        <section>
-            <actions>
-                <set field="headerItem" value="memberAccountList" />
-                <set field="tabButtonItem" value="memberAccountList" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+		<section>
+			<actions>
+				<set field="headerItem" value="memberAccountList" />
+				<set field="tabButtonItem" value="memberAccountList" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
 
-                        <container>
-                            <screenlet title="Member Accounts List">
-                                <include-form name="memberAccountsReportForm" location="component://accountreports/widget/accountreportsForms.xml"/>
-                            </screenlet>
-                        </container>
-                        <container style="clear"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-     <!-- memberAccountListPDF -->
-    <screen name="memberAccountListPDF">
-        <section>
-           <actions>
-                <set field="viewSize" value="99999"/>
-                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
-               <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/memberAccountList.groovy"/>
-           </actions>
-           <widgets>
-               <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
-                   <decorator-section name="body">
-                        <platform-specific>
-                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
-                            <xsl-fo><html-template location="component://accountreports/webapp/accountreports/reports/memberAccountList.fo.ftl"/></xsl-fo>
-                        </platform-specific>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- memberAccountListDownload -->
-    <screen name="memberAccountListDownload">
+						<container>
+							<screenlet title="Member Accounts List">
+								<include-form name="memberAccountsReportForm"
+									location="component://accountreports/widget/accountreportsForms.xml" />
+							</screenlet>
+						</container>
+						<container style="clear" />
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<!-- accountsAudit -->
+	<screen name="accountsAudit">
+
+		<section>
+			<actions>
+				<set field="headerItem" value="accountsAudit" />
+				<set field="tabButtonItem" value="accountsAudit" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<container style="button-bar">
+								<!-- generateExpectedPaymentStations -->
+								<link target="generateTransactionAudit" text="Generate Transaction Audit"
+									style="buttontext">
+									<!-- parameter param-name="loanApplicationId"/ -->
+									<image url-mode="raw" src="${iconsLocation}/add.png" />
+								</link>
+
+
+							</container>
+						<container>
+							<screenlet title="Accounts Audit List">
+								<include-form name="listAcctTransAudit"
+									location="component://accountreports/widget/accountreportsForms.xml" />
+							</screenlet>
+						</container>
+						<container style="clear" />
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+	<!-- accountsAudit -->
+	<screen name="accountsEntriesAudit">
+		<section>
+			<actions>
+				<set field="headerItem" value="accountsEntriesAudit" />
+				<set field="tabButtonItem" value="accountsEntriesAudit" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<container style="button-bar">
+								<!-- generateExpectedPaymentStations -->
+								<link target="generateTransactionAudit" text="Generate Transaction Audit"
+									style="buttontext">
+									<!-- parameter param-name="loanApplicationId"/ -->
+									<image url-mode="raw" src="${iconsLocation}/add.png" />
+								</link>
+
+
+							</container>
+						<container>
+							<screenlet title="Accounts Audit List">
+								<include-form name="listEntriesAcctTransAudit"
+									location="component://accountreports/widget/accountreportsForms.xml" />
+							</screenlet>
+						</container>
+						<container style="clear" />
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+	   <screen name="DepositReturnItem">
         <section>
             <actions>
-                <set field="headerItem" value="memberAccountListDownload" />
-                <set field="tabButtonItem" value="memberAccountListDownload" />
+                <set field="titleProperty" value="SASRA Report Item Setup"/>
+                <set field="labelTitleProperty" value="SASRA Report Item Setup"/>
+                <set field="tabButtonItem" value="DepositReturnSetup"/>
+                <set field="depositTypeId" from-field="parameters.depositTypeId" global="true"/>
+                <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list="entityList" use-cache="true" >
+                    <limit-range start="0" size="20"/>
+                </entity-and -->
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <entity-one entity-name="DepositTypeItem" value-field="depositTypeItemContext"/>
+                <entity-one entity-name="DepositType" value-field="depositType" auto-field-map="false">
+                    <field-map field-name="depositTypeId" from-field="depositTypeId"/>
+                </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                            <screenlet title="Loans Listing">
-                                <include-form name="memberAccountListingDownloadForm" location="component://accountreports/widget/accountreportsForms.xml"/>
-                            </screenlet>
-                        </container>
-                        <container style="clear"/>
+                        <!-- <include-menu name="SASRASetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <label style="h1">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${depositType.name} [${depositTypeId}]</label>
+                        <screenlet title="SASRA: Report Item Setup">
+                            <include-form name="DepositReturnItem" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
+                        </screenlet>
+                         <include-form name="DepositReturnItemList" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
-       <screen name="memberAccountListDownloadexcel">
-        <section>
-           <actions>
-                <set field="viewSize" value="99999"/>
-                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
-               <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/memberAccountListExcel.groovy"/>
-           </actions>
-           <widgets>
-                <include-form name="memberAccountBalanceExport" location="component://accountreports/widget/accountreportsForms.xml"/>
-            </widgets>
-        </section>
-    </screen>
+
+	<!-- memberAccountListPDF -->
+	<screen name="memberAccountListPDF">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+				<script
+					location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/memberAccountList.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<platform-specific>
+							<!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
+							<xsl-fo>
+								<html-template
+									location="component://accountreports/webapp/accountreports/reports/memberAccountList.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<!-- memberAccountListDownload -->
+	<screen name="memberAccountListDownload">
+		<section>
+			<actions>
+				<set field="headerItem" value="memberAccountListDownload" />
+				<set field="tabButtonItem" value="memberAccountListDownload" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<container>
+							<screenlet title="Loans Listing">
+								<include-form name="memberAccountListingDownloadForm"
+									location="component://accountreports/widget/accountreportsForms.xml" />
+							</screenlet>
+						</container>
+						<container style="clear" />
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="memberAccountListDownloadexcel">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+				<script
+					location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/memberAccountListExcel.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="memberAccountBalanceExport"
+					location="component://accountreports/widget/accountreportsForms.xml" />
+			</widgets>
+		</section>
+	</screen>
 </screens>
