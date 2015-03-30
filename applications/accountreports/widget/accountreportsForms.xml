@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
 	<!-- memberAccountsReportForm -->
@@ -14,7 +14,7 @@
         		</entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="accountProductId" title="Account Type">
         	<drop-down allow-empty="true">
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
@@ -24,9 +24,9 @@
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <!-- memberAccountListingDownloadForm -->
-    
+
     <form name="memberAccountListingDownloadForm" type="single" target="memberAccountListDownloadexcel.csv" title="" header-row-style="header-row"
         default-table-style="basic-table" target-window="_BLANK">
 
@@ -38,7 +38,7 @@
         		</entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="accountProductId" title="Account Type">
         	<drop-down allow-empty="true">
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
@@ -48,36 +48,55 @@
             <submit button-type="button" />
         </field>
     </form>
-    
-       <form name="memberAccountBalanceExport" list-name="myAccountsList" default-map-name="accountBalance" target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false" > 
+
+       <form name="memberAccountBalanceExport" list-name="myAccountsList" default-map-name="accountBalance" target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false" >
          <!-- actions>
          	<set field="balance" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getTotalBalanceNow(accountBalance.memberAccountId);}"/>
          </actions -->
-        
+
         <field name="firstName" title="First Name"><display/></field>
         <field name="middleName" title="Middle Name"><display/></field>
         <field name="lastName" title="Last Name"><display/></field>
-        
+
          <field name="payrollNumber" title="Payroll Number"><display/></field>
          <field name="memberNumber" title="Member No"><display/></field>
          <field name="idNumber" title="ID No"><display/></field>
-        
+
         <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"></display-entity></field>
-        
+
         <field name="accountNo" title="Account No"><display/></field>
         <field name="accountName" title="Account Name"><display/></field>
-        
+
         <field name="code" title="Product Code"><display/></field>
         <field name="name" title="Product Name"><display/></field>
 
         <field name="minSavingsAmt" title="Book Balance"><display/></field>
         <field name="interestPerAnum" title="Available Balance"><display/></field>
     </form>
-    
+
     <!-- acctTransAuditForm -->
     <form name="listAcctTransAudit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAcctTransAudit" paginate-target="accountsAudit"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="AcctgTransEntry">
+                <condition-expr field-name="acctgTransId" operator="equals" from-field="parameters.acctgTransId"/>
+            </entity-condition>
+        </actions>
+    <field name="transactionDate"><display/></field>
+        <field name="acctgTransEntrySeqId" widget-style="buttontext"><display/></field>
+        <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}"><display-entity entity-name="AcctgTransType"/></field>
+        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
+        <field name="glAccountId"><display/></field>
+        <field name="glAccountDescription" title="${uiLabelMap.CommonDescription}">
+            <display description="${accountCode} ${accountName}"/>
+        </field>
+        <field name="debitCreditFlag"><display/></field>
+        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
+     </form>
+
+    <form name="listEntriesAcctTransAudit" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateAcctTransAudit" paginate-target="accountsAudit"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="AcctTransAudit">
@@ -93,9 +112,14 @@
         <field name="acctgTransId" title="Account Trans">
         	<display></display>
          </field>
-         
+
          <field name="glAccountId" title="Account">
         	<display-entity entity-name="GlAccount" description="${accountCode} - ${accountName}" key-field-name="glAccountId"></display-entity>
          </field>
+        <field name="Entries">
+            <hyperlink target="listAcctTransEntriesAudit" description="View Entries">
+                <parameter param-name="acctgTransId"/>
+            </hyperlink>
+        </field>
      </form>
 </forms>
