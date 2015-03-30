@@ -1257,6 +1257,9 @@ public class AccHolderTransactionServices {
 							
 					|| ((transactionType != null) && (transactionType
 							.equals("LOANCLEARANCE")))
+					|| ((transactionType != null) && (transactionType
+							.equals("LOANCLEARANCECHARGES")))		
+							
 							
 					|| ((transactionType != null) && (transactionType
 							.equals("POSCASHPURCHASE")))) {

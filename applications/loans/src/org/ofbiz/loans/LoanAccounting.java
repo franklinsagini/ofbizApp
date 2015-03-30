@@ -118,24 +118,30 @@ public class LoanAccounting {
 			bdTotalLoanCost = bdTotalLoanCost.add(bdTotalCleared);
 			
 			List<Long> listLoanApplicationIDs = getLoanApplicationIDsCleared(loanApplicationId);
+			
+			BigDecimal bdTotalCharge = BigDecimal.ZERO;
 			for (Long clearedLoanApplicationId : listLoanApplicationIDs) {
 				
 				BigDecimal bdTotalLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(clearedLoanApplicationId);
 				BigDecimal bdInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString());
 				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(listLoanApplicationIDs.toString());
-			
+		
 				saveLoanRepayment(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount);
 				//LoansProcessingServices.get
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(listLoanApplicationIDs.toString()));
 			
+				BigDecimal bdTotal = bdTotalLoanBalanceAmount.add(bdInterestAmount).add(bdTotalInsuranceAmount);
+				bdTotalCharge = bdTotalCharge.add(org.ofbiz.loans.LoanServices.getLoanClearingCharge(clearedLoanApplicationId, bdTotal));
 			}
 			
-			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCleared, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null);
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalLoanCost, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null);
 			
 			//Debit Member Account with the rate charged for clearances
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCECHARGES", accountTransactionParentId, null);
 			
 			//Post the clearance charges
+			
 		}
 		try {
 			
