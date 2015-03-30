@@ -341,6 +341,14 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
 	</simple-method>
+	
+	 <simple-method method-name="updateMaxNoOfFiles" short-description="Update status periods">
+		<entity-one entity-name="RegistryFileSettingMaxNumberOfFilesPerUser" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+	</simple-method>
         
         
         
@@ -412,6 +420,7 @@
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="REQUESTED"/>
+		 <set field="registryFile.selectedToBeMoved" value="REQUESTED"/>
 		 <set field="registryFile.Reason" from-field="parameters.Reason"/>
 		<store-value value-field="registryFile" />
 		
@@ -625,6 +634,52 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 	
+	                <!-- SELECT FILES TO ISSUE -->
+					
+		<simple-method method-name="selectFilesToIssue"
+		short-description="Update Family Relations">
+		<entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="lookedUpValue.selectedToBeMoved" value="SELECTED_FOR_ISSUE"/>
+		<set field="lookedUpValue.carriedBy" from-field="parameters.carriedBy" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	 <!-- SELECT FILES TO DIVERT -->
+					
+		<simple-method method-name="selectFilesToDivert"
+		short-description="Update Family Relations">
+		<entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="lookedUpValue.selectedToBeMoved" value="SELECTED_FOR_DIVERT"/>
+		<set field="lookedUpValue.carriedBy" from-field="parameters.carriedBy" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	 <!-- SELECT FILES TO RETURN TO REGISTRY -->
+					
+		<simple-method method-name="selectFilesToRegistry"
+		short-description="Update Family Relations">
+		<entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="lookedUpValue.selectedToBeMoved" value="SELECTED_FOR_RETURN_TO_REGISTRY"/>
+		<set field="lookedUpValue.carriedBy" from-field="parameters.carriedBy" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+	
+	 <!-- SELECT FILES TO SEND TO ANOTHER STAFF -->
+					
+		<simple-method method-name="selectFilesToAnotherStaff"
+		short-description="Update Family Relations">
+		<entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="lookedUpValue.selectedToBeMoved" value="SELECTED_FOR_ANOTHER_STAFF"/>
+		<set field="lookedUpValue.carriedBy" from-field="parameters.carriedBy" />
+		<set field="lookedUpValue.intendedPossesser" from-field="parameters.intendedPossesser" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+					
+	
 	
 	<!-- ==========================FILE ISSUE================================== -->
 	
@@ -650,6 +705,7 @@
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="ISSUED"/>
+		 <set field="registryFile.selectedToBeMoved" value="ISSUED"/>
 		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
 		 
 		  <set field="start" from-field="nowTimestamp"/>
@@ -662,7 +718,6 @@
 		 
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
-		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile" />
 		
 		<set field="email_party" from-field="parameters.actionBy"/>
@@ -688,7 +743,12 @@
 		<set field="newEntity.actionDate" from-field="nowTimestamp" />
 		<set field="partyId" from-field="parameters.partyId" />
 		<set field="newEntity.fileActionTypeId" value="File Issue"/>
-		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
+		
+		<entity-one entity-name="RegistryFiles" value-field="regi">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		
+		<set field="newEntity.carriedBy" from-field="regi.carriedBy" />
 		
 		<create-value value-field="newEntity" />
 	</simple-method>
@@ -778,6 +838,7 @@
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
 		  <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
+		   <set field="registryFile.selectedToBeMoved" value="DIVERTED"/>
 		<store-value value-field="registryFile" />
 		
 		<set field="email_divert_party" from-field="parameters.currentPossesser"/>
@@ -982,6 +1043,7 @@
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.recieptStatus" value="RELEASED"/>
+		 <set field="registryFile.selectedToBeMoved" value="RELEASED"/>
 		 <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile"/>
 		
@@ -1106,8 +1168,9 @@
       <log message=">>>>>>>>>>>>>>>>>>>>>>> PARAMETERS > ${parameters}" level="info"/>
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
-		  <set field="registryFile.currentPossesser" from-field="parameters.currentPossesser" />
+		  <set field="registryFile.currentPossesser" from-field="registryFile.intendedPossesser" />
 		 <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
+		 <set field="registryFile.selectedToBeMoved" value="SEND"/>
 		 <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
 		<store-value value-field="registryFile"/>
 		

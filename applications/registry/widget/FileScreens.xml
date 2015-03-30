@@ -453,6 +453,9 @@
 								<screenlet title="File List (Search Results)">
 									<include-form name="listMemberfilesForIssue" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
+								<screenlet title="Issue Files">
+									<include-form name="listMemberfilesPreparedForRelease" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
 							</widgets>
 						</section>
 					</decorator-section>
@@ -491,6 +494,9 @@
 							<widgets>
 								<screenlet title="File List (Search Results)">
 									<include-form name="listMemberfilesForDivert" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+								<screenlet title="Divert Selected Files">
+									<include-form name="listMemberfilesPreparedForDivert" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>
@@ -1971,13 +1977,41 @@
 								</screenlet>
 							</widgets>
 						</section>
-						<!-- <section name="search-results">
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- ====================================================== MAXIMUM NUMBER OF FILES ALLOWED PER USER ====================================================== -->
+	<screen name="registryFileSettingsMaxNumberOfFiles">
+		<section>
+			<actions>
+				<set field="headerItem" value="maxnumberRequested" />
+				<set field="tabButtonItem" value="maxnumberRequested" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
 							<widgets>
-								<screenlet title="Document List (Search Results)">
-									<include-form name="fileArchiveListForm" location="component://registry/widget/FileForms.xml" />
+							<include-menu name="registrySettingsMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+							<container style="leftclear">
+											<label style="h1"
+												text="Maximum Number Of Files Allowed In Possession Of A user"/>
+										</container>
+										
+									
+								
+								<screenlet title="Edit Maximum Number Of Files">
+									<include-form name="MaxNumberOfFilesPerUserForm" location="component://registry/widget/FileForms.xml" />
 								</screenlet>
 							</widgets>
-						</section> -->
+						</section>
 					</decorator-section>
 				</decorator-screen>
 			</widgets>
