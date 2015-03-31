@@ -124,12 +124,12 @@ public class LoanAccounting {
 				
 				BigDecimal bdTotalLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(clearedLoanApplicationId);
 				BigDecimal bdInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString());
-				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(listLoanApplicationIDs.toString());
+				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString());
 		
 				saveLoanRepayment(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount);
 				//LoansProcessingServices.get
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
-				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(listLoanApplicationIDs.toString()));
+				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString()));
 			
 				BigDecimal bdTotal = bdTotalLoanBalanceAmount.add(bdInterestAmount).add(bdTotalInsuranceAmount);
 				bdTotalCharge = bdTotalCharge.add(org.ofbiz.loans.LoanServices.getLoanClearingCharge(clearedLoanApplicationId, bdTotal));
