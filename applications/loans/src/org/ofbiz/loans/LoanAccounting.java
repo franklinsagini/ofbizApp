@@ -27,6 +27,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loanclearing.LoanClearingServices;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 
 /**
  * @author Japheth Odonya @when Aug 22, 2014 2:21:39 PM
@@ -42,17 +43,17 @@ public class LoanAccounting {
 	public static String postDisbursement(GenericValue loanApplication,
 			Map<String, String> userLogin) {
 		Map<String, Object> result = FastMap.newInstance();
-		String loanApplicationId = loanApplication
-				.getString("loanApplicationId");// (String)context.get("loanApplicationId");
+		Long loanApplicationId = loanApplication
+				.getLong("loanApplicationId");// (String)context.get("loanApplicationId");
 		log.info("What we got is ############ " + loanApplicationId);
 		Delegator delegator;
 		delegator = loanApplication.getDelegator();
 		// GenericValue accountTransaction = null;
-		loanApplicationId = loanApplicationId.replaceFirst(",", "");
-		Long theLoanApplicationId = Long.valueOf(loanApplicationId);
+		//loanApplicationId = loanApplicationId.replaceFirst(",", "");
+		//Long theLoanApplicationId = Long.valueOf(loanApplicationId);
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
-					UtilMisc.toMap("loanApplicationId", theLoanApplicationId),
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
 					false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -103,30 +104,44 @@ public class LoanAccounting {
 		createLoanDisbursementAccountingTransaction(loanApplication, userLogin, accountTransactionParentId);
 		
 		//If the Loan Was cleared - get cleared amount and post to mpa 
-		if (loanWasCleared(theLoanApplicationId)){
+		if (loanWasCleared(loanApplicationId)){
 			
 			//Get total amount cleared
-			BigDecimal bdTotalCleared = getTotalClearedAmount(theLoanApplicationId);
+			BigDecimal bdTotalCleared = getTotalClearedAmount(loanApplicationId);
 			//Debit Member Account with cleared amount
 			//AccHolderTransactionServices.cashWithdrawal(amount, memberAccountId, withdrawalType);
 			//Get Savings Member Account ID given loanApplicationId
-			Long memberAccountId = LoanUtilities.getSavingsMemberAccountId(theLoanApplicationId);
-			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCleared, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null);
+			Long memberAccountId = LoanUtilities.getSavingsMemberAccountId(loanApplicationId);
+			
 			//Get total charges based on rates
 			BigDecimal bdTotalLoanCost = BigDecimal.ZERO;
 			bdTotalLoanCost = bdTotalLoanCost.add(bdTotalCleared);
 			
-			List<Long> listLoanApplicationIDs = getLoanApplicationIDsCleared(theLoanApplicationId);
+			List<Long> listLoanApplicationIDs = getLoanApplicationIDsCleared(loanApplicationId);
+			
+			BigDecimal bdTotalCharge = BigDecimal.ZERO;
 			for (Long clearedLoanApplicationId : listLoanApplicationIDs) {
+				
+				BigDecimal bdTotalLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(clearedLoanApplicationId);
+				BigDecimal bdInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString());
+				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(listLoanApplicationIDs.toString());
+		
+				saveLoanRepayment(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount);
+				//LoansProcessingServices.get
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(listLoanApplicationIDs.toString()));
+			
+				BigDecimal bdTotal = bdTotalLoanBalanceAmount.add(bdInterestAmount).add(bdTotalInsuranceAmount);
+				bdTotalCharge = bdTotalCharge.add(org.ofbiz.loans.LoanServices.getLoanClearingCharge(clearedLoanApplicationId, bdTotal));
 			}
 			
-			
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalLoanCost, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null);
 			
 			//Debit Member Account with the rate charged for clearances
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCECHARGES", accountTransactionParentId, null);
 			
 			//Post the clearance charges
+			
 		}
 		try {
 			
@@ -146,7 +161,7 @@ public class LoanAccounting {
 				.makeCondition(UtilMisc.toList(
 
 				EntityCondition.makeCondition("loanApplicationId",
-						EntityOperator.NOT_EQUAL, theLoanApplicationId)
+						EntityOperator.EQUALS, theLoanApplicationId)
 
 				), EntityOperator.AND);
 
@@ -176,7 +191,7 @@ public class LoanAccounting {
 				.makeCondition(UtilMisc.toList(
 
 				EntityCondition.makeCondition("loanApplicationId",
-						EntityOperator.NOT_EQUAL, theLoanApplicationId)
+						EntityOperator.EQUALS, theLoanApplicationId)
 
 				), EntityOperator.AND);
 
@@ -203,7 +218,7 @@ public class LoanAccounting {
 				.makeCondition(UtilMisc.toList(
 
 				EntityCondition.makeCondition("loanApplicationId",
-						EntityOperator.NOT_EQUAL, theLoanApplicationId)
+						EntityOperator.EQUALS, theLoanApplicationId)
 
 				), EntityOperator.AND);
 
@@ -796,6 +811,63 @@ public class LoanAccounting {
 		}
 
 		return acctgTransId;
+	}
+	
+	public static void saveLoanRepayment(Long loanApplicationId, BigDecimal bdTotalLoanBalanceAmount, BigDecimal bdInterestAmount, BigDecimal bdTotalInsuranceAmount) {
+		BigDecimal loanPrincipal = BigDecimal.ZERO;
+		BigDecimal loanInterest = BigDecimal.ZERO;
+		BigDecimal loanInsurance = BigDecimal.ZERO;
+		
+		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(loanApplicationId);
+		
+		// Loan Principal
+		loanPrincipal = LoanRepayments.getTotalPrincipaByLoanDue(String.valueOf(loanApplicationId));
+		// Get This Loan's Interest
+				
+		loanInterest = bdInterestAmount;
+		// Get This Loan's Insurance
+		loanInsurance = bdTotalInsuranceAmount;
+		// Sum Principal, Interest and Insurance
+
+		BigDecimal transactionAmount = loanPrincipal.add(loanInterest).add(
+				loanInsurance);
+
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+
+		BigDecimal totalInterestDue = bdInterestAmount;
+		
+		BigDecimal totalInsuranceDue = bdTotalInsuranceAmount;
+		BigDecimal totalPrincipalDue = bdTotalLoanBalanceAmount;
+		
+		BigDecimal totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(
+				totalPrincipalDue);
+
+		
+		Long partyId = loanApplication.getLong("partyId");
+		GenericValue loanRepayment = null;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", "admin", "partyId", partyId, "loanApplicationId",
+				loanApplicationId,
+
+				"loanNo", loanApplication.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

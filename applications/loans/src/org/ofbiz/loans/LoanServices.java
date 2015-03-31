@@ -27,7 +27,6 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
-import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -35,10 +34,8 @@ import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityConditionBuilder;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -2147,8 +2144,38 @@ public class LoanServices {
 		String percentageRepaid = String.valueOf(repaidPercent) + " %";
 		return percentageRepaid;
 	}
+	
+	public static BigDecimal getLoanClearingCharge(Long loanApplicationId, BigDecimal bdAmount){
+		BigDecimal bdPercentagePaid = getLoanPercentageRepaidValue(loanApplicationId);
+		
+		BigDecimal bdChargeRate = BigDecimal.ZERO;
+		EntityConditionList<EntityExpr> loanClearRateConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"lowerLimit", EntityOperator.LESS_THAN_EQUAL_TO, bdPercentagePaid),
+						EntityCondition.makeCondition("upperLimit",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								bdPercentagePaid)),
+						EntityOperator.AND);
 
-	private static BigDecimal getLoanPercentageRepaidValue(
+		List<GenericValue> loanClearRateELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanClearRateELI = delegator.findList("LoanClearRate",
+					loanClearRateConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		for (GenericValue genericValue : loanClearRateELI) {
+			bdChargeRate = genericValue.getBigDecimal("chargeRate");
+		}
+		
+		BigDecimal bdChargeAmt = BigDecimal.ZERO;
+		
+		bdChargeAmt = bdAmount.multiply(bdChargeRate).divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP);
+		return bdChargeAmt;
+	}
+
+	public static BigDecimal getLoanPercentageRepaidValue(
 			Long loanApplicationId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		BigDecimal repaidPercent = (getLoansRepaidByLoanApplicationId(loanApplicationId)
