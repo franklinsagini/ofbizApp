@@ -40,6 +40,11 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="periodSetup" />
 	</request-map>
+	
+		<request-map uri="maxnumberRequested">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="maxnumberRequested" />
+	</request-map>
 
 
 
@@ -425,21 +430,46 @@
 		<response name="success" type="request-redirect-noparam" value="regFileRequest" />
 	</request-map>
 	
-
-	<request-map uri="issuefiles">
+    <request-map uri="selectFilesToIssue">
 		<security https="true" auth="true" />
-		<event type="service" path="" invoke="issuefiles" />
+		<event type="service" path="" invoke="selectFilesToIssue" />
 		<response name="success" type="request-redirect-noparam" value="regFileIssue" />
 		<response name="error" type="view" value="regFileIssue" />
 	</request-map>
+	
+	 <request-map uri="selectFilesToDivert">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="selectFilesToDivert" />
+		<response name="success" type="request-redirect-noparam" value="regFileDivert" />
+		<response name="error" type="view" value="regFileDivert" />
+	</request-map>
+	
+	<!-- <request-map uri="issuefiles">
+		<security https="true" auth="true" />
+		<event type="service-multi" path="" invoke="issuefiles" />
+		<response name="success" type="view" value="regFileIssue" />
+		<response name="error" type="view" value="regFileIssue" />
+	</request-map> -->
+	
+	<request-map uri="issuefiles">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="issuefiles"/>
+        <response name="success" type="request-redirect-noparam" value="regFileIssue"/>
+    </request-map>
 
 	
-	<request-map uri="divertfiles">
+	<!-- <request-map uri="divertfiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="divertfiles" />
 		<response name="success" type="request-redirect-noparam" value="regFileDivert" />
 		<response name="error" type="view" value="regFileDivert" />
-	</request-map>
+	</request-map> -->
+	
+	<request-map uri="divertfiles">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="divertfiles"/>
+        <response name="success" type="request-redirect-noparam" value="regFileDivert"/>
+    </request-map>
 
 	<!-- ================ AUTHORIZATION ================= -->
 
@@ -477,18 +507,32 @@
 	</request-map>
 
 
-	<request-map uri="releasefiles">
+	<!-- <request-map uri="releasefiles">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="releasefiles" />
 		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
-	</request-map>
+	</request-map> -->
+	
+	<request-map uri="releasefiles">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="releasefiles"/>
+        <response name="success" type="request-redirect-noparam" value="regFileRelease"/>
+    </request-map>
 	
 
-	<request-map uri="releaseFileToAnotherStaff">
+	<!-- <request-map uri="releaseFileToAnotherStaff">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="releaseFileToAnotherStaff" />
 		<response name="success" type="request-redirect-noparam" value="regFileRelease" />
-	</request-map>
+	</request-map> -->
+	
+	<request-map uri="releaseFileToAnotherStaff">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="releaseFileToAnotherStaff"/>
+        <response name="success" type="request-redirect-noparam" value="regFileRelease"/>
+    </request-map>
+	
+	
 
 	<request-map uri="returnfiles">
 		<security https="true" auth="true" />
@@ -615,6 +659,13 @@
         <security https="true" auth="true"/>
         <event type="service" invoke="updateStatusPeriods"/>
         <response name="success" type="view" value="periodSetup"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    
+     <request-map uri="updateMaxNoOfFiles">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateMaxNoOfFiles"/>
+        <response name="success" type="view" value="maxnumberRequested"/>
         <response name="error" type="view-last"/>
     </request-map>
 
@@ -844,6 +895,7 @@
  		<!-- View Maps -->
 	<view-map name="editfiletypeURL" type="screen" page="component://registry/widget/FileScreens.xml#filetype" />
 	<view-map name="periodSetup" type="screen" page="component://registry/widget/FileScreens.xml#registryFileSettings" />
+	<view-map name="maxnumberRequested" type="screen" page="component://registry/widget/FileScreens.xml#registryFileSettingsMaxNumberOfFiles" />
 	<view-map name="editfiles" type="screen" page="component://registry/widget/FileScreens.xml#files" />
 	<view-map name="editfile" type="screen" page="component://registry/widget/FileScreens.xml#documents" />
 	<view-map name="findfiles" type="screen" page="component://registry/widget/FileScreens.xml#FindFile" />

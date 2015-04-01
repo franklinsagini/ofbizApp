@@ -1,13 +1,13 @@
 //this code needs modifications yet its specific.
 
 jQuery(document).ready( function() {
-  jQuery("input[name*='fromDate']").bind('focusout', checkDate);
-  jQuery("input[name*='thruDate']").bind('focusout', checkDate);
+  jQuery("input[name*='fromDatenot']").bind('focusout', checkDate);
+  jQuery("input[name*='thruDatenot']").bind('focusout', checkDate);
 });
 
 function checkDate() {
-  var a = jQuery("input[name*='fromDate']");
-  var b = jQuery("input[name*='thruDate']");
+  var a = jQuery("input[name*='fromDatenot']");
+  var b = jQuery("input[name*='thruDatenot']");
 
   if(a.val() !="" && b.val() !="") {
     if (a.val() >= b.val()) {
