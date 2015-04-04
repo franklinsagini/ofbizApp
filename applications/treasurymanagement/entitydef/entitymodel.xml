@@ -10,31 +10,31 @@
     <version></version>
     
     <entity entity-name="TreasuryType" package-name="org.ofbiz.treasurymanagement" title="TreasuryType Entity">
-        <field name="treasuryTypeId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="id"></field>
+        <field name="treasuryTypeId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="branchId" type="id"   enable-audit-log="true"></field>
         
-        <field name="name" type="name"></field>
-        <field name="limitAmount" type="fixed-point"></field>
+        <field name="name" type="name"   enable-audit-log="true"></field>
+        <field name="limitAmount" type="fixed-point"   enable-audit-log="true"></field>
        
         <prim-key field="treasuryTypeId"/>
         
     </entity>
     
     <entity entity-name="Treasury" package-name="org.ofbiz.treasurymanagement" title="TreasuryType Entity">
-        <field name="treasuryId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="id"></field>
-        <field name="treasuryTypeId" type="id"/>
-        <field name="name" type="name"></field>
-        <field name="finAccountId" type="id"/>
-        <field name="glAccountId" type="id"/>
+        <field name="treasuryId" type="id-ne"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="branchId" type="id"   enable-audit-log="true"></field>
+        <field name="treasuryTypeId" type="id"   enable-audit-log="true"/>
+        <field name="name" type="name"   enable-audit-log="true"></field>
+        <field name="finAccountId" type="id"   enable-audit-log="true"/>
+        <field name="glAccountId" type="id"   enable-audit-log="true"/>
         
-        <field name="employeeResponsible" type="id"/>
+        <field name="employeeResponsible" type="id"   enable-audit-log="true"/>
        
         <prim-key field="treasuryId"/>
         <relation type="one" fk-name="Treasury_FinAccount" rel-entity-name="FinAccount">
@@ -54,16 +54,16 @@
     </entity>
     
      <entity entity-name="TreasuryTransaction" package-name="org.ofbiz.treasurymanagement" title="TreasuryTransaction Entity">
-        <field name="treasuryTransactionId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="id"></field>
-        <field name="treasuryTransferId" type="id"></field>
-        <field name="treasuryId" type="id-ne"></field>
-        <field name="transactionAmount" type="fixed-point"></field>
-        <field name="transactionType" type="name"></field>
-        <field name="increaseDecrease" type="indicator"></field>
+        <field name="treasuryTransactionId" type="id-ne"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="branchId" type="id"   enable-audit-log="true"></field>
+        <field name="treasuryTransferId" type="id"   enable-audit-log="true"></field>
+        <field name="treasuryId" type="id-ne"   enable-audit-log="true"></field>
+        <field name="transactionAmount" type="fixed-point"   enable-audit-log="true"></field>
+        <field name="transactionType" type="name"   enable-audit-log="true"></field>
+        <field name="increaseDecrease" type="indicator"   enable-audit-log="true"></field>
         
         
        
@@ -74,25 +74,25 @@
     </entity>
     
     <entity entity-name="TreasuryTransfer" package-name="org.ofbiz.treasurymanagement" title="TreasuryTransfer Entity">
-        <field name="treasuryTransferId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="id"></field>
+        <field name="treasuryTransferId" type="id-ne"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="branchId" type="id"   enable-audit-log="true"></field>
         <field name="sourceTreasury" type="id-ne" enable-audit-log="true"></field>
         <field name="destinationTreasury" type="id-ne" enable-audit-log="true"></field>
-        <field name="transferDate" type="date"></field>
+        <field name="transferDate" type="date"   enable-audit-log="true"></field>
         <field name="employeeResponsible" type="id" enable-audit-log="true"/>
         <field name="transactionNumber" type="name" enable-audit-log="true"/>
         
         <field name="chequeNumber" type="name" enable-audit-log="true"/>
         
         <field name="transactionAmount" type="fixed-point" enable-audit-log="true"></field>
-        <field name="comments" type="description"></field>
+        <field name="comments" type="description"   enable-audit-log="true"></field>
         
-        <field name="reconciled" type="indicator"></field>
-        <field name="dateProcessed" type="date-time"></field>
-        <field name="reconcileComments" type="description"></field>
+        <field name="reconciled" type="indicator"   enable-audit-log="true"></field>
+        <field name="dateProcessed" type="date-time"   enable-audit-log="true"></field>
+        <field name="reconcileComments" type="description"   enable-audit-log="true"></field>
        
         <prim-key field="treasuryTransferId"/>
         <relation type="one" fk-name="TreasuryTransactionSource_Treasury" rel-entity-name="Treasury">
@@ -110,12 +110,12 @@
     
     <!-- Transfer Rules -->
      <entity entity-name="TransferRule" package-name="org.ofbiz.treasurymanagement" title="TransferRule Entity">
-        <field name="transferRuleId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="sourceTreasuryType" type="id-ne"></field>
-        <field name="destinationTreasuryType" type="id-ne"></field>
+        <field name="transferRuleId" type="id-ne"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="sourceTreasuryType" type="id-ne"   enable-audit-log="true"></field>
+        <field name="destinationTreasuryType" type="id-ne"   enable-audit-log="true"></field>
        
         <prim-key field="transferRuleId"/>
         <relation type="one" fk-name="TransferRuleSource_Treasury" rel-entity-name="TreasuryType">
@@ -129,20 +129,20 @@
     
     <!-- CashRequest -->
     <entity entity-name="CashRequest" package-name="org.ofbiz.treasurymanagement" title="CashRequest Entity">
-        <field name="cashRequestId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="requestingEmployee" type="id-ne"></field>
-        <field name="comment" type="name"></field>
-        <field name="transactionAmount" type="fixed-point"></field>
+        <field name="cashRequestId" type="id-vlong-int"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="requestingEmployee" type="id-ne"   enable-audit-log="true"></field>
+        <field name="comment" type="name"   enable-audit-log="true"></field>
+        <field name="transactionAmount" type="fixed-point"   enable-audit-log="true"></field>
         
-        <field name="approvalStatus" type="name"></field>
-        <field name="approve" type="name"></field>
-        <field name="reject" type="name"></field>
+        <field name="approvalStatus" type="name"   enable-audit-log="true"></field>
+        <field name="approve" type="name"   enable-audit-log="true"></field>
+        <field name="reject" type="name"   enable-audit-log="true"></field>
         
-        <field name="dateApprovedReject" type="name"></field>
-        <field name="approveRejectComment" type="name"></field>
+        <field name="dateApprovedReject" type="name"   enable-audit-log="true"></field>
+        <field name="approveRejectComment" type="name"   enable-audit-log="true"></field>
        
         <prim-key field="cashRequestId"/>
         <relation type="one" fk-name="CashRequest_Treasury" rel-entity-name="Person">
@@ -152,15 +152,15 @@
     
     <!-- CashRequestItem -->
         <entity entity-name="CashRequestItem" package-name="org.ofbiz.treasurymanagement" title="CashRequest Entity">
-        <field name="cashRequestItemId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="cashRequestId" type="id-vlong-int"></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
+        <field name="cashRequestItemId" type="id-vlong-int"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="cashRequestId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
         
-        <field name="denominationId" type="id-int"></field>
-        <field name="denominationCount" type="id-int"></field>
-        <field name="transactionAmount" type="fixed-point"></field>
+        <field name="denominationId" type="id-int"   enable-audit-log="true"></field>
+        <field name="denominationCount" type="id-int"   enable-audit-log="true"></field>
+        <field name="transactionAmount" type="fixed-point"   enable-audit-log="true"></field>
         
         
        
@@ -175,14 +175,14 @@
     <!-- CashRequestLog -->
     
      <entity entity-name="CashRequestLog" package-name="org.ofbiz.treasurymanagement" title="CashRequestLog Entity">
-        <field name="cashRequestLogId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="cashRequestId" type="id-vlong-int"></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
+        <field name="cashRequestLogId" type="id-vlong-int"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="cashRequestId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
         
-        <field name="approvalStatus" type="name"></field>
-        <field name="comment" type="name"></field>
+        <field name="approvalStatus" type="name"   enable-audit-log="true"></field>
+        <field name="comment" type="name"   enable-audit-log="true"></field>
        
         <prim-key field="cashRequestLogId"/>
         <relation type="one" fk-name="CashRequestLog_CashRequest" rel-entity-name="CashRequest">
@@ -192,10 +192,10 @@
     
     <!-- Denomination -->
       <entity entity-name="Denomination" package-name="org.ofbiz.treasurymanagement" title="Denomination Entity">
-        <field name="denominationId" type="id-int"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
+        <field name="denominationId" type="id-int"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
         <prim-key field="denominationId"/>
     </entity>
     
@@ -203,7 +203,7 @@
     	<member-entity entity-alias="T" entity-name="Treasury"></member-entity>
     	<member-entity entity-alias="TR" entity-name="TransferRule"></member-entity>
     	
-    	<alias entity-alias="T" name="name" ></alias>
+    	<alias entity-alias="T" name="name"></alias>
     	<alias entity-alias="T" name="treasuryId"/>
     	<alias entity-alias="T" name="treasuryTypeId"/>
       	<alias entity-alias="TR" name="sourceTreasuryType" />
