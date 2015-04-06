@@ -709,6 +709,32 @@ under the License.
 		<field name="month" type="id"   enable-audit-log="true"></field>
 		<prim-key field="missingMemberLogId"/>
 	</entity>
+	
+	
+	<view-entity entity-name="MemberAccountWithProduct" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="MA" entity-name="MemberAccount"></member-entity>
+    	<member-entity entity-alias="AP" entity-name="AccountProduct"></member-entity>
+    	
+    	<alias entity-alias="MA" name="memberAccountId"></alias>
+    	<alias entity-alias="MA" name="accountNo"></alias>
+    	<alias entity-alias="MA" name="accountName"></alias>
+    	
+    	<alias entity-alias="MA" name="partyId"></alias>
+    	<alias entity-alias="MA" name="withdrawable"></alias>
+    	
+    	
+    	<alias entity-alias="AP" name="name"/>
+    	<alias entity-alias="AP" name="code"/>
+      	
+    	
+    	<view-link  entity-alias="MA" rel-entity-alias="AP">
+    		<key-map field-name="accountProductId" rel-field-name="accountProductId"/>
+    		<!-- entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition -->
+    	</view-link>
+    	
+    </view-entity>
     
     
 </entitymodel>
