@@ -704,26 +704,32 @@
         <field name="treasuryId"><hidden/></field>
 		
 		
-        <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
+        <field name="name" title="Name"  widget-style="required" required-field="true"><display></display> </field>
         
          <field name="treasuryTypeId" title="Treasury Type" widget-style="required" required-field="true" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="treasuryTypeId" list-name="treasuryTypeList" description="${name}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="TreasuryType" description="${name}"></display-entity>
         </field>
         
         <field name="finAccountId" title="Financial/Bank Account" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="FinAccount" description="${finAccountName}"></display-entity>
         </field>
         
         <field name="employeeResponsible" title="Employee Responsible" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity>
         </field>
         
+        <field name="balanceAmount" title="Balance Amount" widget-style="buttontext">
+            <display default-value="0"></display>
+        </field>
         
         <field name="openTransfer" title="Transfer" widget-style="buttontext">
             <hyperlink target="treasuryTransfer" description="Transfer " also-hidden="false">
