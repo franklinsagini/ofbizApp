@@ -420,7 +420,7 @@
     	var pinNumber  = jQuery('input[name="pinNumber"]').val();
 		var mobNo = jQuery('input[name="mobNo"]').val();
     	var emailAddress  = jQuery('input[name="emailAddress"]').val();
-		var employeeNumber = jQuery('input[name="employeeNumber"]').val();
+		/** var employeeNumber = jQuery('input[name="employeeNumber"]').val(); **/
 		var socialSecurityNumber = jQuery('input[name="socialSecurityNumber"]').val();
     	var nhifNumber  = jQuery('input[name="nhifNumber"]').val();
 		var passportNumber = jQuery('input[name="passportNumber"]').val();
@@ -430,7 +430,7 @@
     	var pinNumberState = '';
     	var passportNumberState = '';
     	var mobileNumberState = '';
-		var employeeNumberState = '';
+		//var employeeNumberState = '';
 		var nhifNumberState = '';
     	var socialSecurityNumberState = '';
 		var emailAddressState = '';
@@ -450,7 +450,7 @@
 							pinNumberState =  data.pinNumberState;
 							passportNumberState =  data.passportNumberState;
 							mobileNumberState =  data.mobileNumberState;
-							employeeNumberState =  data.employeeNumberState;
+							//employeeNumberState =  data.employeeNumberState;
 							nhifNumberState =  data.nhifNumberState;
 							socialSecurityNumberState =  data.socialSecurityNumberState;
 							emailAddressState =  data.emailAddressState;
