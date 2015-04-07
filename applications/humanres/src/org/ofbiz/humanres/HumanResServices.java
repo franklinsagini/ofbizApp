@@ -1865,5 +1865,32 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		return json;
 	}
 	
+	
+	public static String isEntryInteger(String text){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String state = null;
+		try {
+		  Integer.parseInt(text);
+		  state = "VALID";
+		  deleteExistingRetirementAge(delegator);
+		} catch (NumberFormatException e) {
+			state = "INVALID";
+		 }
+		return state; 
+		}
+	
+	private static void deleteExistingRetirementAge(Delegator delegator) {
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+
+		try {
+			delegator.removeAll("RetirementAge");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED  ALL RECORDS!" );
+		
+	}
+	
 }
 

@@ -600,37 +600,24 @@ under the License.
         </field>
     </form>
     
-    <form name="NewBankDetails" type="single" target="createBankDetails"
-        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="bankDetailsContext">
+    <form name="NewRetirementAge" type="single" target="createBankDetails"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="retirementAgeContext">
         
-        <field name="bankDetailsId"><hidden/></field>
-        <field name="bankName" title="Bank Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="ageId"><hidden/></field>
+        <field name="retirementAge" tooltip="Only Numbers are allowed" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
         
-        <form name="listBankDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankDetails" paginate-target="bankdetails"
+        <form name="listRetirementAge" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankDetails" paginate-target="NewRetirementAge"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="BankDetails">
+            <entity-condition entity-name="RetirementAge">
             </entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateBankDetails"/>
-        <!-- field name="skillTypeId">
-            <display-entity entity-name="SkillType" description="${description}"/>
-        </field -->
-        <field name="bankName"> <text></text> </field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteBankDetails" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${bankName} Bank?">
-                <parameter param-name="bankDetailsId"/>
-            </hyperlink>
-        </field>
-        <field name="addBranch" title="Add Branch" widget-style="buttontext">
-            <hyperlink target="bankbranch" description="Add Branch" also-hidden="false">
-                <parameter param-name="bankDetailsId"/>
-            </hyperlink>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="ageId"><hidden/></field>
+        <field name="retirementAge"><display/></field>
     </form>
     
     

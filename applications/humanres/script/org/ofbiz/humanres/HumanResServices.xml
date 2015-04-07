@@ -3013,6 +3013,43 @@
     </simple-method>
     
     
+       
+    <!--======================== Retirement Age Definiton ======================== -->
+    
+    
+    <simple-method method-name="createRetirementAge" short-description="Add Bank Details">
+        <make-value entity-name="RetirementAge" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="RetirementAge" field="ageId"/>
+        <set field="newEntity.ageId" from-field="ageId"/>
+        
+         <set field="valid" value="INVALID"/>
+         <set field="input" from-field="newEntity.retirementAge"/>
+        <set field="userInput" value="${bsh:org.ofbiz.humanres.HumanResServices.isEntryInteger(input);}" /> 
+        
+        <if>
+			<condition>
+					<if-compare-field field="userInput"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="IntegerInputError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			    <create-value value-field="newEntity"/>
+				<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+    </simple-method>
+    
+    
       
     <!--======================== payroll Prefix ======================== -->
     

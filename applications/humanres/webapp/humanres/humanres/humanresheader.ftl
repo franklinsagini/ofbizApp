@@ -8,7 +8,7 @@
 	
          var leaveTypeId = this.value;
          //console.log(leaveTypeId);
-         if (leaveTypeId =="ANNUAL_LEAVE") {
+         if ((leaveTypeId =="ANNUAL_LEAVE")||(leaveTypeId =="SPECIAL_DAY_OFF")) {
           var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
          var partyId =  jQuery('input[name="partyId"]').val();
          var reqUrl = '/humanres/control/emplleavebalance';

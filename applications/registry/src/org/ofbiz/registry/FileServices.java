@@ -860,4 +860,29 @@ public class FileServices {
 	            Debug.logError(e, module);
 	        }
 	    }
+	 
+	//================================ CHECK EXISTANCE OF A FILE ====================================================
+		
+		public static String findExistanceOfFile(String partyId) {
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			String state = null;
+			List<GenericValue> FileLI = null;
+			try {
+				FileLI = delegator.findList("RegistryFiles", EntityCondition.makeCondition("partyId", partyId), null, null, null, false);
+				
+			} catch (GenericEntityException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+
+			if (FileLI.size() > 0){
+			state = "INVALID";
+			}
+			else {
+				state = "VALID";
+			}
+		
+			return state;
+			
+		}
 }
