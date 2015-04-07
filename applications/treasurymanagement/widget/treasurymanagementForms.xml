@@ -323,19 +323,24 @@
         </field>
         
         <field name="destinationTreasury" title="To" >
-       		<drop-down allow-empty="true" text-size="20">
+       		<!-- drop-down allow-empty="true" text-size="20">
        			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="Treasury" description="${name}" key-field-name="treasuryId"></display-entity>
         </field>
          <field name="employeeResponsible" title="Employee Responsible" >
-       		<drop-down allow-empty="true">
-       			<!-- list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/ -->
+       		<!-- drop-down allow-empty="true">
        			<entity-options description="${firstName} ${lastName}" entity-name="Person" key-field-name="partyId"></entity-options>
-       		</drop-down>
+       		</drop-down -->
+       		
+       		<display-entity entity-name="Person" description="${firstName} ${lastName}" key-field-name="partyId" ></display-entity>
         </field>
-        <field name="chequeNumber" title="Cheque No."><text size="15"></text></field>
+        <field name="chequeNumber" title="Cheque No.">
+        	<!-- text size="15"></text -->
+        	<display></display>
+        </field>
         <field name="comments" title="Description"><display></display></field>
-        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text size="15"></text></field>
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><display></display> </field>
         <field name="createdStamp" title="When"><display type="date-time"></display></field>
          <!-- field name="comments" title="Comments"  widget-style="required" required-field="true"><textarea cols="40"></textarea></field -->       
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
@@ -343,7 +348,7 @@
                 <parameter param-name="treasuryTransferId"/>
             </hyperlink>
         </field -->
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field-->
     </form>
     
     <!-- Reconcile Treasury -->
@@ -732,7 +737,7 @@
         </field>
         
         <field name="balanceAmount" title="Balance Amount" widget-style="buttontext">
-            <display default-value="0"></display>
+            <display default-value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getNetAllocation(treasuryId);}"></display>
         </field>
         
         <field name="openTransfer" title="Transfer" widget-style="buttontext">
