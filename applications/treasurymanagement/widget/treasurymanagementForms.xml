@@ -283,9 +283,7 @@
         
         <field name="employeeResponsible" title="Employee Responsible" widget-style="required" required-field="true" >
        		<drop-down allow-empty="true">
-       			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}">
-       				
-       			</list-options>
+       			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
        		</drop-down>
         </field>
         
@@ -387,15 +385,22 @@
     </form>
     
     <!-- listShowTreasuryTransfers -->
-        <form name="listShowTreasuryTransfers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransfer"
+        <form name="listShowTreasuryTransfers" type="list" list-name="mergedSortedDetailsMapList" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransfer"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="TreasuryTransfer">
+            <!-- entity-condition entity-name="TreasuryTransfer">
+            	<condition-list combine="or">
             	<condition-list combine="and">
             		<condition-expr field-name="destinationTreasury" operator="equals" from-field="destinationTreasury"/>
             		<condition-expr field-name="transferDate" operator="equals" from-field="transferDate"/>
             	</condition-list>
-            </entity-condition>
+            	
+            	<condition-list combine="and">
+            		<condition-expr field-name="sourceTreasury" operator="equals" from-field="destinationTreasury"/>
+            		<condition-expr field-name="transferDate" operator="equals" from-field="transferDate"/>
+            	</condition-list>
+            	</condition-list>
+            </entity-condition -->
             
             <entity-condition entity-name="Treasury" list="treasuryFromList">
 			</entity-condition>
@@ -404,31 +409,42 @@
 			</entity-condition>
         </actions>
        
-        <field name="treasuryTransferId"><hidden/></field>
+        <!-- field name="treasuryTransferId"><hidden/></field -->
 		
        
-        <field name="destinationTreasury" title="To" >
+        <field name="treasuryFrom" title="From" >
        		<!-- drop-down allow-empty="true" text-size="20">
        			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
        		</drop-down -->
        		<display-entity entity-name="Treasury" key-field-name="treasuryId" description="${name}"></display-entity>
         </field>
         
-        <field name="transactionAmount" title="Amount Allocated" ><display></display></field>
-         <field name="comments" title="Comments"><display></display></field>   
-          <field name="createdStamp" title="Time Tranferred"><display type="date-time"></display></field> 
-           <field name="createdBy" title="Tranferred By"><display></display></field>       
+        <field name="treasuryTo" title="To" >
+       		<!-- drop-down allow-empty="true" text-size="20">
+       			<list-options key-name="treasuryId" list-name="treasuryToList" description="${name}"/>
+       		</drop-down -->
+       		<display-entity entity-name="Treasury" key-field-name="treasuryId" description="${name}"></display-entity>
+        </field>
+        
+        <field name="amountIn" title="Amount In" ><display></display></field>
+        <field name="amountOut" title="Amount Out" ><display></display></field>
+        
+         <field name="comment" title="Comments"><display></display></field>   
+         <field name="timeTransferred" title="Time Tranferred"><display type="date-time"></display></field> 
+         <field name="transferredBy" title="Tranferred By"><display></display></field>   
+         
+         <field name="runningBalance" title="Running Balance" ><display></display></field>    
         <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
             <hyperlink target="processReconciliation" description="Process Reconciliation" also-hidden="false">
                 <parameter param-name="processReconciliation"/>
             </hyperlink>
         </field -->
         
-          <field name="showTransactions" title="Show Transactions" widget-style="buttontext">
+          <!-- field name="showTransactions" title="Show Transactions" widget-style="buttontext">
             <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
                 <parameter param-name="treasuryTransferId"/>
             </hyperlink>
-        </field>
+        </field -->
     </form>
     
     <!-- reconcileTreasuryOutgoing -->
@@ -464,27 +480,38 @@
         </field>
     </form>
     
-    <!-- listReconcileTreasuryIncoming -->
-         <form name="listReconcileTreasuryIncoming" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransferIncoming"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-condition entity-name="TreasuryTransfersIncomingTotal">
-            	<order-by field-name="-transferDate"/>
-            </entity-condition>
-            
-            <entity-condition entity-name="Treasury" list="treasuryFromList">
-			</entity-condition>
-			
-			<entity-condition entity-name="Treasury" list="treasuryToList">
-			</entity-condition>
-        </actions>
-       
-  
-  		<field name="destinationTreasury"><hidden/></field>
+    <!-- form name="listReconcileTreasuryIncoming" type="list" list-name="transfers"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="name" title="Treasury" ><display></display></field>
         <field name="transferDate" title="Transfer Date" ><display type="date"></display></field>
         
-        <field name="transactionAmount" title="Amount Allocated" ><display></display></field>
+        <field name="amountIn" title="Amount In" ><display></display></field>
+    </form -->
+    
+    <!-- listReconcileTreasuryIncoming -->
+         <form name="listReconcileTreasuryIncoming" type="list" list-name="transfers"   default-map-name="transferTotal" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransferIncoming"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <!-- entity-condition entity-name="TreasuryTransfersIncomingTotal">
+            	<order-by field-name="-transferDate"/>
+            </entity-condition -->
+            
+            <!-- entity-condition entity-name="Treasury" list="treasuryFromList">
+			</entity-condition>
+			
+			<entity-condition entity-name="Treasury" list="treasuryToList">
+			</entity-condition -->
+			
+        </actions>
+       
+  
+  		<!-- field name="destinationTreasury"><hidden/></field -->
+        <field name="name" title="Treasury" ><display></display></field>
+        <field name="transferDate" title="Transfer Date" ><display type="date"></display></field>
+        
+        <field name="amountIn" title="Amount In" ><display></display></field>
+        <field name="amountOut" title="Amount Out" ><display></display></field>
+        <field name="amountBalance" title="Balance" ><display></display></field>
         <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
             <hyperlink target="processReconciliation" description="Process Reconciliation" also-hidden="false">
                 <parameter param-name="processReconciliation"/>
@@ -493,14 +520,14 @@
         
          <field name="showTransfers" title="Show Transfers(Issue)" widget-style="buttontext">
             <hyperlink target="showTransfers" description="Show Tranfers" also-hidden="false">
-                <!-- parameter param-name="treasuryTransferId"/ -->
+                
                 <parameter param-name="destinationTreasury"/>
                 <parameter param-name="transferDate"/>
             </hyperlink>
         </field>
           <field name="showTransactions" title="Show Transactions(Issue)" widget-style="buttontext">
             <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
-                <!-- parameter param-name="treasuryTransferId"/ -->
+              
                 <parameter param-name="destinationTreasury"/>
                 <parameter param-name="transferDate"/>
             </hyperlink>
@@ -677,26 +704,32 @@
         <field name="treasuryId"><hidden/></field>
 		
 		
-        <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
+        <field name="name" title="Name"  widget-style="required" required-field="true"><display></display> </field>
         
          <field name="treasuryTypeId" title="Treasury Type" widget-style="required" required-field="true" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="treasuryTypeId" list-name="treasuryTypeList" description="${name}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="TreasuryType" description="${name}"></display-entity>
         </field>
         
         <field name="finAccountId" title="Financial/Bank Account" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="FinAccount" description="${finAccountName}"></display-entity>
         </field>
         
         <field name="employeeResponsible" title="Employee Responsible" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity>
         </field>
         
+        <field name="balanceAmount" title="Balance Amount" widget-style="buttontext">
+            <display default-value="0"></display>
+        </field>
         
         <field name="openTransfer" title="Transfer" widget-style="buttontext">
             <hyperlink target="treasuryTransfer" description="Transfer " also-hidden="false">

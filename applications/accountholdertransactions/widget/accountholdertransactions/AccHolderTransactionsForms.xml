@@ -25,7 +25,13 @@ under the License.
     	       <actions>
     	       	 <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
     	       	
-         		<entity-condition entity-name="MemberAccount" list="memberAccountList">
+         		<!-- entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
+            	</condition-list>
+            </entity-condition -->
+            <entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
             	<condition-list combine="and">
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
@@ -41,7 +47,7 @@ under the License.
         </field -->
          <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
-                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName}  - ${code} - ${name}" />
             </drop-down>
         </field>
         <field name="slipNumber" title="SLIP Number"  widget-style="required" required-field="true"><text default-value="${slipNumber}"></text></field>
@@ -147,9 +153,15 @@ under the License.
 	default-table-style="basic-table" default-map-name="cashDepositContext" extends="TransactionForm">    
        
        	<actions>
-       		<entity-condition entity-name="MemberAccount" list="memberAccountList">
+       		<!-- entity-condition entity-name="MemberAccount" list="memberAccountList">
             	<condition-list combine="and">
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	</condition-list>
+            </entity-condition -->
+            <entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
             	</condition-list>
             </entity-condition>
             <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
@@ -280,7 +292,7 @@ under the License.
         
         <actions>
 
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        	<entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
             	<!-- condition-expr field-name="partyId" from-field="parameters.partyId"/ -->
             	<condition-list combine="and">
@@ -297,7 +309,7 @@ under the License.
        
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
-                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} - ${code} - ${name}" />
             </drop-down>
         </field>
         <field name="slipNumber" title="Slip Number">
@@ -403,7 +415,7 @@ under the License.
         	<entity-condition entity-name="FinAccount" list="accountList">
         		<order-by field-name="finAccountName"/>
         	</entity-condition>
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        	<entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
             	<condition-expr field-name="partyId" from-field="parameters.partyId"/>
             </entity-condition>
@@ -419,7 +431,7 @@ under the License.
         </field -->
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
-                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " />
+                <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName}  - ${code} - ${name} " />
             </drop-down>
         </field>
         <field name="slipNumber" title="Slip Number">
@@ -548,7 +560,7 @@ under the License.
         	<!-- entity-condition entity-name="MemberAccount" list="memberAccountList">
         		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
         	</entity-condition -->
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        	<entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
             	<condition-list combine="and">
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
@@ -694,7 +706,7 @@ under the License.
         	<!-- entity-condition entity-name="MemberAccount" list="memberAccountList">
         		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
         	</entity-condition -->
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        	<entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
             	<!-- condition-expr field-name="partyId" operator="equals" from-field="partyId"/-->
             	<condition-list combine="and">
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
@@ -770,7 +782,7 @@ under the License.
         <actions>
         	
 
-        	<entity-condition entity-name="MemberAccount" list="memberAccountList">
+        	<entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
         		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
         	</entity-condition>
         	<!-- entity-condition entity-name="LoanApplication" list="loanApplicationList"></entity-condition -->

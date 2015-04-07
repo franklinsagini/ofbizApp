@@ -49,41 +49,41 @@ under the License.
     	
     <!-- ========================================================= -->
     <entity entity-name="AccountTransaction" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
-        <field name="accountTransactionId" type="id"><description>primary sequenced ID</description></field>
-		<field name="accountTransactionParentId" type="id"></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="name"></field>
-        <field name="treasuryId" type="id"></field>
-        <field name="partyId" type="id-vlong-int"></field>
-        <field name="memberAccountId" type="id-vlong-int"></field>
-        <field name="slipNumber" type="name"></field>
-        <field name="transactionAmount" type="currency-amount"></field>
-        <field name="availableAmount" type="currency-amount"></field>
-        <field name="bookBalanceAmount" type="currency-amount"></field>
-        <field name="transactionType" type="name"></field>
-        <field name="paymentMethodTypeId" type="id"></field>
+        <field name="accountTransactionId" type="id"   enable-audit-log="true"><description>primary sequenced ID</description></field>
+		<field name="accountTransactionParentId" type="id"   enable-audit-log="true"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="branchId" type="name"   enable-audit-log="true"></field>
+        <field name="treasuryId" type="id"   enable-audit-log="true"></field>
+        <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="memberAccountId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="slipNumber" type="name"   enable-audit-log="true"></field>
+        <field name="transactionAmount" type="currency-amount"   enable-audit-log="true"></field>
+        <field name="availableAmount" type="currency-amount"   enable-audit-log="true"></field>
+        <field name="bookBalanceAmount" type="currency-amount"   enable-audit-log="true"></field>
+        <field name="transactionType" type="name"   enable-audit-log="true"></field>
+        <field name="paymentMethodTypeId" type="id"   enable-audit-log="true"></field>
         
         <!-- Cheque Withdrawal -->
-        <field name="chequeNo" type="name"></field>
-        <field name="payee" type="name"></field>
+        <field name="chequeNo" type="name"   enable-audit-log="true"></field>
+        <field name="payee" type="name"   enable-audit-log="true"></field>
         
         <!-- Cheque Deposit -->
-        <field name="internalexternal" type="name"></field> <!-- INTERNAL or EXTERNAL -->
-         <field name="chequeTypeId" type="id-int"></field> <!-- Bankers or Ordinary Cheque -->
-        <field name="bankDetailsId" type="id-int"></field>
-         <field name="bankBranchId" type="id-int"></field>
-         <field name="drawer" type="name"></field>
-         <field name="receiptNo" type="name"></field>
+        <field name="internalexternal" type="name"   enable-audit-log="true"></field> <!-- INTERNAL or EXTERNAL -->
+         <field name="chequeTypeId" type="id-int"   enable-audit-log="true"></field> <!-- Bankers or Ordinary Cheque -->
+        <field name="bankDetailsId" type="id-int"   enable-audit-log="true"></field>
+         <field name="bankBranchId" type="id-int"   enable-audit-log="true"></field>
+         <field name="drawer" type="name"   enable-audit-log="true"></field>
+         <field name="receiptNo" type="name"   enable-audit-log="true"></field>
          
-         <field name="clearDuration" type="numeric"></field>
-         <field name="clearDate" type="date-time"></field>
+         <field name="clearDuration" type="numeric"   enable-audit-log="true"></field>
+         <field name="clearDate" type="date-time"   enable-audit-log="true"></field>
          
-         <field name="productChargeId" type="id-int"></field>
-         <field name="increaseDecrease" type="indicator"></field>
-         <field name="isPosted" type="name"></field>
-         <field name="datePosted" type="date-time"></field>
+         <field name="productChargeId" type="id-int"   enable-audit-log="true"></field>
+         <field name="increaseDecrease" type="indicator"   enable-audit-log="true"></field>
+         <field name="isPosted" type="name"   enable-audit-log="true"></field>
+         <field name="datePosted" type="date-time"   enable-audit-log="true"></field>
          
         <prim-key field="accountTransactionId"/>
         
@@ -124,26 +124,26 @@ under the License.
     </entity>
     
     <entity entity-name="AccountTransactionParent" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
-        <field name="accountTransactionParentId" type="id"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="name"></field>
-        <field name="partyId" type="id-vlong-int"></field>
-        <field name="memberAccountId" type="id-vlong-int"></field>
+        <field name="accountTransactionParentId" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="branchId" type="name"   enable-audit-log="true"></field>
+        <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="memberAccountId" type="id-vlong-int"   enable-audit-log="true"></field>
         
-        <field name="approved" type="name"></field>
-        <field name="approvedBy" type="name"></field>
-        <field name="dateApproved" type="date-time"></field>
+        <field name="approved" type="name"   enable-audit-log="true"></field>
+        <field name="approvedBy" type="name"   enable-audit-log="true"></field>
+        <field name="dateApproved" type="date-time"   enable-audit-log="true"></field>
         
-        <field name="rejected" type="name"></field>
-        <field name="rejectedBy" type="name"></field>
-        <field name="dateRejected" type="date-time"></field>
+        <field name="rejected" type="name"   enable-audit-log="true"></field>
+        <field name="rejectedBy" type="name"   enable-audit-log="true"></field>
+        <field name="dateRejected" type="date-time"   enable-audit-log="true"></field>
         
-        <field name="posted" type="name"></field>
-        <field name="datePosted" type="date-time"></field>
+        <field name="posted" type="name"   enable-audit-log="true"></field>
+        <field name="datePosted" type="date-time"   enable-audit-log="true"></field>
         
-        <field name="comments" type="name"></field>
+        <field name="comments" type="name"   enable-audit-log="true"></field>
         
         <prim-key field="accountTransactionParentId"/>
         <relation type="one" fk-name="ACCOUNTTRANSACTIONPARENT_MEMBER" rel-entity-name="Member">
@@ -153,35 +153,35 @@ under the License.
      
      
     <entity entity-name="ATMTransactions" table-name="t_ATMTransactions" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="ATMTransactions Entity">
-        <field name="AccountID" col-name="AccountID" type="id"><description>primary sequenced ID</description></field>
-		<field name="SystemTrace" col-name="SystemTrace" type="id"></field>
+        <field name="AccountID" col-name="AccountID" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
+		<field name="SystemTrace" col-name="SystemTrace" type="id" enable-audit-log="true"></field>
 		
-		<field name="transactionId" type="id"></field>
-        <field name="Amount" col-name="Amount" type="currency-amount"></field>
-        <field name="TransactionDate" col-name="TransactionDate" type="date-time"></field>
+		<field name="transactionId" type="id"   enable-audit-log="true"></field>
+        <field name="Amount" col-name="Amount" type="currency-amount"   enable-audit-log="true"></field>
+        <field name="TransactionDate" col-name="TransactionDate" type="date-time"   enable-audit-log="true"></field>
         
         <prim-key field="transactionId"/>
      </entity>
      
      
      <entity entity-name="ATMTransactionsLog" table-name="ATMTransactionsLog" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="ATMTransactions Entity">
-        <field name="atmransactionsLogId" col-name="AccountID" type="id"><description>primary sequenced ID</description></field>
-		<field name="cardNumber"  type="id"></field>
-		<field name="transactionType"  type="id"></field>
+        <field name="atmransactionsLogId" col-name="AccountID" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
+		<field name="cardNumber"  type="id"   enable-audit-log="true"></field>
+		<field name="transactionType"  type="id"   enable-audit-log="true"></field>
         
         <prim-key field="atmransactionsLogId"/>
      </entity>
     
     <entity entity-name="CashWithdrawal" package-name="org.ofbiz.accountholdertransactions" title="CashWithdrawal Entity">
-        <field name="cashWithdrawalId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="active" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="partyId" type="id-vlong-int"></field>
-        <field name="memberAccountId" type="id-int"></field>
-        <field name="slipNumber" type="name"></field>
-        <field name="cashAmount" type="currency-amount"></field>
-        <field name="availableAmount" type="currency-amount"></field>
+        <field name="cashWithdrawalId" type="id-vlong-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="active" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="memberAccountId" type="id-int"   enable-audit-log="true"></field>
+        <field name="slipNumber" type="name"   enable-audit-log="true"></field>
+        <field name="cashAmount" type="currency-amount"   enable-audit-log="true"></field>
+        <field name="availableAmount" type="currency-amount"   enable-audit-log="true"></field>
        
         <prim-key field="cashWithdrawalId"/>
         
@@ -195,18 +195,18 @@ under the License.
     </entity>
     
     <entity entity-name="StationAccountTransaction" package-name="org.ofbiz.accountholdertransactions" sequence-bank-size="1" title="StationAccountTransaction Entity">
-        <field name="stationAccountTransactionId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="branchId" type="id-int"></field>
-         <field name="stationId" type="id-int"></field>
-         <field name="employerCode" type="id"></field>
-        <field name="partyId" type="id-vlong-int"></field>
-        <field name="slipNumber" type="name"></field>
-        <field name="monthyear" type="name"></field>
-        <field name="chequeNumber" type="name"></field>
-        <field name="transactionAmount" type="currency-amount"></field>
+        <field name="stationAccountTransactionId" type="id-vlong-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="branchId" type="id-int"   enable-audit-log="true"></field>
+         <field name="stationId" type="id-int"   enable-audit-log="true"></field>
+         <field name="employerCode" type="id"   enable-audit-log="true"></field>
+        <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="slipNumber" type="name"   enable-audit-log="true"></field>
+        <field name="monthyear" type="name"   enable-audit-log="true"></field>
+        <field name="chequeNumber" type="name"   enable-audit-log="true"></field>
+        <field name="transactionAmount" type="currency-amount"   enable-audit-log="true"></field>
        
         <prim-key field="stationAccountTransactionId"/>
         
@@ -219,18 +219,18 @@ under the License.
     </entity>
 
     <entity entity-name="CashDeposit" package-name="org.ofbiz.accountholdertransactions" title="CashDeposit Entity">
-        <field name="cashDepositId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="active" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="partyId" type="id-vlong-int"></field>
-        <field name="memberAccountId" type="id-vlong-int"></field>
-        <field name="slipNumber" type="name"></field>
-        <field name="cashAmount" type="currency-amount"></field>
+        <field name="cashDepositId" type="id-vlong-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="active" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="memberAccountId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="slipNumber" type="name"   enable-audit-log="true"></field>
+        <field name="cashAmount" type="currency-amount"   enable-audit-log="true"></field>
         
         
-        <field name="paymentMethodTypeId" type="id"></field>
-        <field name="availableAmount" type="currency-amount"></field>
+        <field name="paymentMethodTypeId" type="id"   enable-audit-log="true"></field>
+        <field name="availableAmount" type="currency-amount"   enable-audit-log="true"></field>
        
         <prim-key field="cashDepositId"/>
         
@@ -247,25 +247,25 @@ under the License.
     </entity>
     
      <entity entity-name="ChequeType" package-name="org.ofbiz.accountholdertransactions" title="ChequeType Entity">
-        <field name="chequeTypeId" type="id-int"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="name" type="name"></field>
+        <field name="chequeTypeId" type="id-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="name" type="name"   enable-audit-log="true"></field>
         
         <prim-key field="chequeTypeId"/>
     </entity>
     
     <entity entity-name="ChequeWithdrawal" package-name="org.ofbiz.accountholdertransactions" title="ChequeWithdrawal Entity">
-        <field name="chequeWithdrawalId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="active" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-         <field name="partyId" type="id-vlong-int"></field>
-         <field name="memberAccountId" type="id-vlong-int"></field>
-        <field name="chequeNo" type="name"></field>
-        <field name="payee" type="name"></field>
-        <field name="chequeAmount" type="currency-amount"></field>
+        <field name="chequeWithdrawalId" type="id-vlong-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="active" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+         <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+         <field name="memberAccountId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="chequeNo" type="name"   enable-audit-log="true"></field>
+        <field name="payee" type="name"   enable-audit-log="true"></field>
+        <field name="chequeAmount" type="currency-amount"   enable-audit-log="true"></field>
         <prim-key field="chequeWithdrawalId"/>
         <relation type="one" fk-name="CHEQUEWITHDRAWAL_MEMBER" rel-entity-name="Member">
             <key-map field-name="partyId"/>
@@ -279,23 +279,23 @@ under the License.
     
     
      <entity entity-name="ChequeDeposit" package-name="org.ofbiz.accountholdertransactions" title="ChequeDeposit Entity">
-        <field name="chequeDepositId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="active" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-         <field name="partyId" type="id-vlong-int"></field>
-         <field name="memberAccountId" type="id-vlong-int"></field>
-         <field name="internalexternal" type="name"></field> <!-- INTERNAL or EXTERNAL -->
+        <field name="chequeDepositId" type="id-vlong-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="active" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+         <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+         <field name="memberAccountId" type="id-vlong-int"   enable-audit-log="true"></field>
+         <field name="internalexternal" type="name"   enable-audit-log="true"></field> <!-- INTERNAL or EXTERNAL -->
          
          
-         <field name="chequeTypeId" type="id-int"></field> <!-- Bankers or Ordinary Cheque -->
+         <field name="chequeTypeId" type="id-int"   enable-audit-log="true"></field> <!-- Bankers or Ordinary Cheque -->
         
-        <field name="bankDetailsId" type="id-int"></field>
-         <field name="bankBranchId" type="id-int"></field>
-         <field name="drawer" type="name"></field>
-         <field name="chequeNo" type="name"></field>
-         <field name="receiptNo" type="name"></field>
-        <field name="chequeAmount" type="currency-amount"></field>
+        <field name="bankDetailsId" type="id-int"   enable-audit-log="true"></field>
+         <field name="bankBranchId" type="id-int"   enable-audit-log="true"></field>
+         <field name="drawer" type="name"   enable-audit-log="true"></field>
+         <field name="chequeNo" type="name"   enable-audit-log="true"></field>
+         <field name="receiptNo" type="name"   enable-audit-log="true"></field>
+        <field name="chequeAmount" type="currency-amount"   enable-audit-log="true"></field>
         
         
         
@@ -325,41 +325,41 @@ under the License.
     </entity>
     
      <entity entity-name="LoanRepayment" package-name="org.ofbiz.accountholdertransactions" title="LoanRepayment Entity">
-        <field name="loanRepaymentId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-         <field name="partyId" type="id-vlong-int"></field>
-         <field name="branchId" type="id-int"></field>
+        <field name="loanRepaymentId" type="id-vlong-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+         <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+         <field name="branchId" type="id-int"   enable-audit-log="true"></field>
          
          
-         <field name="memberAccountId" type="id-vlong-int"></field>
-         <field name="accountNo" type="name"></field>
-         <field name="accountName" type="name"></field>
-         <field name="accountBalance" type="currency-amount"></field>
+         <field name="memberAccountId" type="id-vlong-int"   enable-audit-log="true"></field>
+         <field name="accountNo" type="name"   enable-audit-log="true"></field>
+         <field name="accountName" type="name"   enable-audit-log="true"></field>
+         <field name="accountBalance" type="currency-amount"   enable-audit-log="true"></field>
          
-         <field name="loanApplicationId" type="id-vlong-int"></field>
-         <field name="loanNo" type="name"></field>
-         <field name="loanTypeId" type="id-int"></field> <!-- Sacco Product Id type of LOAN -->
+         <field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
+         <field name="loanNo" type="name"   enable-audit-log="true"></field>
+         <field name="loanTypeId" type="id-int"   enable-audit-log="true"></field> <!-- Sacco Product Id type of LOAN -->
          
-         <field name="loanAmt" type="currency-amount"></field>
-         <field name="loanBalanceAmt" type="currency-amount"></field>
-         <field name="interestBalanceAmt" type="currency-amount"></field>
-         <field name="loanRepaymentAmt" type="currency-amount"></field>
-         <field name="interestRepaymentAmt" type="currency-amount"></field>
+         <field name="loanAmt" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="loanBalanceAmt" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="interestBalanceAmt" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="loanRepaymentAmt" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="interestRepaymentAmt" type="currency-amount"   enable-audit-log="true"></field>
          
-         <field name="repaymentType" type="name"></field> <!-- INTEREST, INSURANCE, PRINCIPAL, EXCESS (to account) -->
-         <field name="totalLoanDue" type="currency-amount"></field>
-         <field name="totalInterestDue" type="currency-amount"></field>
-         <field name="totalInsuranceDue" type="currency-amount"></field>
-         <field name="totalPrincipalDue" type="currency-amount"></field>
+         <field name="repaymentType" type="name"   enable-audit-log="true"></field> <!-- INTEREST, INSURANCE, PRINCIPAL, EXCESS (to account) -->
+         <field name="totalLoanDue" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="totalInterestDue" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="totalInsuranceDue" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="totalPrincipalDue" type="currency-amount"   enable-audit-log="true"></field>
          
-         <field name="interestAmount" type="currency-amount"></field>
-         <field name="insuranceAmount" type="currency-amount"></field>
-         <field name="principalAmount" type="currency-amount"></field>
-         <field name="excessAmount" type="currency-amount"></field>
+         <field name="interestAmount" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="insuranceAmount" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="principalAmount" type="currency-amount"   enable-audit-log="true"></field>
+         <field name="excessAmount" type="currency-amount"   enable-audit-log="true"></field>
          
-         <field name="transactionAmount" type="currency-amount"></field>
+         <field name="transactionAmount" type="currency-amount"   enable-audit-log="true"></field>
         <prim-key field="loanRepaymentId"/>
         
         <relation type="one" fk-name="LOANREPAYMENT_MEMBER" rel-entity-name="Member">
@@ -380,37 +380,37 @@ under the License.
     </entity>
     
      <entity entity-name="StandingOrder" package-name="org.ofbiz.accountholdertransactions" title="StandingOrder Entity">
-        <field name="standingOrderId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="partyId" type="id-vlong-int"></field>
-        <field name="branchId" type="id-int"></field>
+        <field name="standingOrderId" type="id-vlong-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+        <field name="branchId" type="id-int"   enable-audit-log="true"></field>
         
-        <field name="memberNo" type="name"></field>
-        <field name="payrollNo" type="name"></field>
+        <field name="memberNo" type="name"   enable-audit-log="true"></field>
+        <field name="payrollNo" type="name"   enable-audit-log="true"></field>
      
-     	<field name="standingOrderAmount" type="currency-amount"></field>
-     	<field name="orderStartDate" type="date-time"></field>
+     	<field name="standingOrderAmount" type="currency-amount"   enable-audit-log="true"></field>
+     	<field name="orderStartDate" type="date-time"   enable-audit-log="true"></field>
      	
-     	<field name="internalexternal" type="name"></field> <!-- INTERNAL EXTERNAL -->
-     	<field name="transactionTYpe" type="name"></field> <!-- LOAN OTHERS -->
+     	<field name="internalexternal" type="name"   enable-audit-log="true"></field> <!-- INTERNAL EXTERNAL -->
+     	<field name="transactionTYpe" type="name"   enable-audit-log="true"></field> <!-- LOAN OTHERS -->
      	
      	<!-- LOAN -->
      	
-         <field name="loanTypeId" type="id-int"></field> <!-- Sacco Product Id type of LOAN -->
-         <field name="loanApplicationId" type="id-vlong-int"></field>
-         <field name="loanBalanceAmt" type="currency-amount"></field>
+         <field name="loanTypeId" type="id-int"   enable-audit-log="true"></field> <!-- Sacco Product Id type of LOAN -->
+         <field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
+         <field name="loanBalanceAmt" type="currency-amount"   enable-audit-log="true"></field>
      	
      	<!-- Inhouse Beneficiary -->
-     	<field name="beneficiaryId" type="id-vlong-int"></field> <!-- Member -->
-     	<field name="memberAccountId" type="id-vlong-int"></field>
-     	<field name="accountNo" type="name"></field>
-     	<field name="accountName" type="name"></field>
+     	<field name="beneficiaryId" type="id-vlong-int"   enable-audit-log="true"></field> <!-- Member -->
+     	<field name="memberAccountId" type="id-vlong-int"   enable-audit-log="true"></field>
+     	<field name="accountNo" type="name"   enable-audit-log="true"></field>
+     	<field name="accountName" type="name"   enable-audit-log="true"></field>
      	
      	<!-- External Beneficiary -->
-     	<field name="bankDetailsId" type="id-int"></field>
-         <field name="bankBranchId" type="id-int"></field>
+     	<field name="bankDetailsId" type="id-int"   enable-audit-log="true"></field>
+         <field name="bankBranchId" type="id-int"   enable-audit-log="true"></field>
      	
      	
      	<prim-key field="standingOrderId"/>  
@@ -424,12 +424,12 @@ under the License.
      </entity>
      
      <entity entity-name="ChequeSetup" package-name="org.ofbiz.accountholdertransactions" title="ChequeSetup Entity">
-        <field name="chequeSetupId" type="id"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="durationToClear" type="numeric"></field>
-        <field name="comments" type="name"></field>
+        <field name="chequeSetupId" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="durationToClear" type="numeric"   enable-audit-log="true"></field>
+        <field name="comments" type="name"   enable-audit-log="true"></field>
         
        
         <prim-key field="chequeSetupId"/>
@@ -437,14 +437,14 @@ under the License.
     </entity>
     
     <entity entity-name="AccountHolderTransactionSetup" package-name="org.ofbiz.accountholdertransactions" title="AccountHolderTransactionSetup Entity">
-        <field name="accountHolderTransactionSetupId" type="id"><description>primary sequenced ID</description></field>
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="cashAccountId" type="id"></field>
-        <field name="memberDepositAccId" type="id"></field>
+        <field name="accountHolderTransactionSetupId" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="cashAccountId" type="id"   enable-audit-log="true"></field>
+        <field name="memberDepositAccId" type="id"   enable-audit-log="true"></field>
         
-        <field name="comments" type="description"></field>
+        <field name="comments" type="description"   enable-audit-log="true"></field>
         
        
         <prim-key field="accountHolderTransactionSetupId"/>
@@ -458,19 +458,19 @@ under the License.
     
     <!-- Expected Payment -->
     <entity entity-name="ExpectedPayment" package-name="org.ofbiz.accountholdertransactions" title="ExpectedPayment Entity">
-        <field name="isActive" type="indicator"></field>
-		<field name="createdBy" type="name"></field>
-		<field name="branchId" type="name"></field>
-        <field name="month" type="name"></field>
-        <field name="loanNo" type="name"></field>
-        <field name="employerNo" type="name"></field>
-        <field name="remitanceCode" type="name"></field>
-        <field name="amount" type="fixed-point"></field>
-        <field name="remitanceDescription" type="id"></field>
-        <field name="payrollNo" type="name"></field>
-        <field name="name" type="name"></field>
-        <field name="status" type="name"></field>
-        <field name="generatedDate" type="date-time"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="branchId" type="name"   enable-audit-log="true"></field>
+        <field name="month" type="name"   enable-audit-log="true"></field>
+        <field name="loanNo" type="name"   enable-audit-log="true"></field>
+        <field name="employerNo" type="name"   enable-audit-log="true"></field>
+        <field name="remitanceCode" type="name"   enable-audit-log="true"></field>
+        <field name="amount" type="fixed-point"   enable-audit-log="true"></field>
+        <field name="remitanceDescription" type="id"   enable-audit-log="true"></field>
+        <field name="payrollNo" type="name"   enable-audit-log="true"></field>
+        <field name="name" type="name"   enable-audit-log="true"></field>
+        <field name="status" type="name"   enable-audit-log="true"></field>
+        <field name="generatedDate" type="date-time"   enable-audit-log="true"></field>
 
        
         <prim-key field="remitanceCode"/>
@@ -486,17 +486,17 @@ under the License.
     <!-- Station Expectation (Station/Month) 
     -->
    <entity entity-name="StationExpectation" package-name="org.ofbiz.accountholdertransactions" title="StationExpectation Entity">
-        <field name="isActive" type="indicator"></field>
-		<field name="createdBy" type="name"></field>
-		<field name="updatedBy" type="name"></field>
-		<field name="branchId" type="name"></field>
-		<field name="employerCode" type="id"></field>
-		<field name="employerName" type="name"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+		<field name="branchId" type="name"   enable-audit-log="true"></field>
+		<field name="employerCode" type="id"   enable-audit-log="true"></field>
+		<field name="employerName" type="name"   enable-audit-log="true"></field>
 		
-		<field name="stationNumber" type="id"></field>
-		<field name="stationName" type="name"></field>
-		<field name="total" type="numeric"></field>
-        <field name="month" type="name"></field>
+		<field name="stationNumber" type="id"   enable-audit-log="true"></field>
+		<field name="stationName" type="name"   enable-audit-log="true"></field>
+		<field name="total" type="numeric"   enable-audit-log="true"></field>
+        <field name="month" type="name"   enable-audit-log="true"></field>
         
         <prim-key field="stationNumber"/>
         <prim-key field="month"/>
@@ -504,14 +504,14 @@ under the License.
     </entity>
     
      <entity entity-name="StationEmployer" package-name="org.ofbiz.accountholdertransactions" title="StationEmployer Entity">
-        <field name="isActive" type="indicator"></field>
-		<field name="createdBy" type="name"></field>
-		<field name="updatedBy" type="name"></field>
-		<field name="branchId" type="name"></field>
-		<field name="employerCode" type="id"></field>
-		<field name="employerName" type="name"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+		<field name="branchId" type="name"   enable-audit-log="true"></field>
+		<field name="employerCode" type="id"   enable-audit-log="true"></field>
+		<field name="employerName" type="name"   enable-audit-log="true"></field>
 		
-        <field name="month" type="name"></field>
+        <field name="month" type="name"   enable-audit-log="true"></field>
         
         <prim-key field="employerCode"/>
         <prim-key field="month"/>
@@ -553,33 +553,33 @@ under the License.
     	
     --> 
     <entity entity-name="ExpectedPaymentSent" package-name="org.ofbiz.accountholdertransactions" title="ExpectedPaymentSent Entity">
-        <field name="isActive" type="indicator"></field>
-		<field name="isReceived" type="indicator"></field>
-		<field name="createdBy" type="name"></field>
-		<field name="updatedBy" type="name"></field>
-		<field name="branchId" type="name"></field>
-		<field name="remitanceCode" type="name"></field>
-		<field name="stationNumber" type="name"></field>
-		<field name="stationName" type="name"></field>
-		<field name="payrollNo" type="name"></field>
-		<field name="employerCode" type="id"></field>
-		<field name="employeeNumber" type="name"></field>
-		<field name="memberNumber" type="name"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+		<field name="isReceived" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+		<field name="branchId" type="name"   enable-audit-log="true"></field>
+		<field name="remitanceCode" type="name"   enable-audit-log="true"></field>
+		<field name="stationNumber" type="name"   enable-audit-log="true"></field>
+		<field name="stationName" type="name"   enable-audit-log="true"></field>
+		<field name="payrollNo" type="name"   enable-audit-log="true"></field>
+		<field name="employerCode" type="id"   enable-audit-log="true"></field>
+		<field name="employeeNumber" type="name"   enable-audit-log="true"></field>
+		<field name="memberNumber" type="name"   enable-audit-log="true"></field>
 		
 		
-        <field name="month" type="name"></field>
-        <field name="loanNo" type="name"></field>
-        <field name="employerNo" type="name"></field>
+        <field name="month" type="name"   enable-audit-log="true"></field>
+        <field name="loanNo" type="name"   enable-audit-log="true"></field>
+        <field name="employerNo" type="name"   enable-audit-log="true"></field>
         
-        <field name="amount" type="fixed-point"></field>
-        <field name="remitanceDescription" type="name"></field>
+        <field name="amount" type="fixed-point"   enable-audit-log="true"></field>
+        <field name="remitanceDescription" type="name"   enable-audit-log="true"></field>
         
-        <field name="employeeName" type="name"></field>
-        <field name="status" type="name"></field>
-        <field name="generatedDate" type="date-time"></field>
+        <field name="employeeName" type="name"   enable-audit-log="true"></field>
+        <field name="status" type="name"   enable-audit-log="true"></field>
+        <field name="generatedDate" type="date-time"   enable-audit-log="true"></field>
 
-		<field name="expectationType" type="name"></field> <!-- SHARES, LOAN, ACCOUNT -->
-		<field name="totalAmount" type="fixed-point"></field>
+		<field name="expectationType" type="name"   enable-audit-log="true"></field> <!-- SHARES, LOAN, ACCOUNT -->
+		<field name="totalAmount" type="fixed-point"   enable-audit-log="true"></field>
        
         <prim-key field="remitanceCode"/>
         <prim-key field="payrollNo"/>
@@ -589,35 +589,35 @@ under the License.
     
     <!-- Expectation Received -->
      <entity entity-name="ExpectedPaymentReceived"  package-name="org.ofbiz.accountholdertransactions" title="ExpectedPaymentReceived Entity">
-        <field name="isActive" type="indicator"></field>
-        <field name="isReceived" type="indicator"></field>
-		<field name="createdBy" type="name"></field>
-		<field name="updatedBy" type="name"></field>
-		<field name="branchId" type="name"></field>
-		<field name="remitanceCode" type="name"></field>
-		<field name="stationNumber" type="name"></field>
-		<field name="stationName" type="name"></field>
-		<field name="payrollNo" type="name"></field>
-		<field name="employerCode" type="id"></field>
-		<field name="employeeNumber" type="name"></field>
-		<field name="memberNumber" type="name"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="isReceived" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+		<field name="branchId" type="name"   enable-audit-log="true"></field>
+		<field name="remitanceCode" type="name"   enable-audit-log="true"></field>
+		<field name="stationNumber" type="name"   enable-audit-log="true"></field>
+		<field name="stationName" type="name"   enable-audit-log="true"></field>
+		<field name="payrollNo" type="name"   enable-audit-log="true"></field>
+		<field name="employerCode" type="id"   enable-audit-log="true"></field>
+		<field name="employeeNumber" type="name"   enable-audit-log="true"></field>
+		<field name="memberNumber" type="name"   enable-audit-log="true"></field>
 		
-        <field name="month" type="name"></field>
-        <field name="loanNo" type="name"></field>
-        <field name="employerNo" type="name"></field>
+        <field name="month" type="name"   enable-audit-log="true"></field>
+        <field name="loanNo" type="name"   enable-audit-log="true"></field>
+        <field name="employerNo" type="name"   enable-audit-log="true"></field>
         
-        <field name="amount" type="fixed-point"></field>
-        <field name="remitanceDescription" type="name"></field>
+        <field name="amount" type="fixed-point"   enable-audit-log="true"></field>
+        <field name="remitanceDescription" type="name"   enable-audit-log="true"></field>
         
-        <field name="employeeName" type="name"></field>
-        <field name="status" type="name"></field>
-        <field name="generatedDate" type="date-time"></field>
+        <field name="employeeName" type="name"   enable-audit-log="true"></field>
+        <field name="status" type="name"   enable-audit-log="true"></field>
+        <field name="generatedDate" type="date-time"   enable-audit-log="true"></field>
         
-        <field name="processed" type="indicator"></field>
-        <field name="dateProcessed" type="date-time"></field>
-		<field name="totalAmount" type="fixed-point"></field>
+        <field name="processed" type="indicator"   enable-audit-log="true"></field>
+        <field name="dateProcessed" type="date-time"   enable-audit-log="true"></field>
+		<field name="totalAmount" type="fixed-point"   enable-audit-log="true"></field>
 		
-       <field name="expectationType" type="name"></field> <!-- SHARES, LOAN, ACCOUNT -->
+       <field name="expectationType" type="name"   enable-audit-log="true"></field> <!-- SHARES, LOAN, ACCOUNT -->
         <prim-key field="remitanceCode"/>
         <prim-key field="payrollNo"/>
         <prim-key field="month"/>
@@ -625,28 +625,28 @@ under the License.
     </entity>
     
      <entity entity-name="CodesSetup" package-name="org.ofbiz.accountholdertransactions" title="CodesSetup Entity">
-        <field name="isActive" type="indicator"></field>
-        <field name="createdBy" type="id"></field>
-        <field name="updatedBy" type="id"></field>
-        <field name="name" type="name"></field>
-        <field name="code" type="name"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="createdBy" type="id"   enable-audit-log="true"></field>
+        <field name="updatedBy" type="id"   enable-audit-log="true"></field>
+        <field name="name" type="name"   enable-audit-log="true"></field>
+        <field name="code" type="name"   enable-audit-log="true"></field>
         <prim-key field="name"/>
         
     </entity>
     
             <entity entity-name="SubStation" package-name="org.ofbiz.accountholdertransactions" title="SubStation Entity">
-        	<field name="subStationId" type="id-vlong-int"><description>primary sequenced ID</description></field>
-        	<field name="stationId" type="id-ne"><description>Station ID</description></field>
-        	<field name="isActive" type="indicator"></field>
-        	<field name="createdBy" type="name"></field>
-        	<field name="updatedBy" type="name"></field>
-        	<field name="branchId" type="name"></field>
+        	<field name="subStationId" type="id-vlong-int" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        	<field name="stationId" type="id-ne" enable-audit-log="true"><description>Station ID</description></field>
+        	<field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        	<field name="createdBy" type="name"   enable-audit-log="true"></field>
+        	<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+        	<field name="branchId" type="name"   enable-audit-log="true"></field>
         	<field name="stationNumber" type="id"  enable-audit-log="true"></field>
         	<field name="employerCode" type="id" enable-audit-log="true"></field>
         	<field name="employerName" type="name"  enable-audit-log="true"></field>
        		<field name="name" type="name"  enable-audit-log="true"></field>
-        	<field name="employerId" type="id"></field>
-        	<field name="partyId" type="id"></field>
+        	<field name="employerId" type="id"   enable-audit-log="true"></field>
+        	<field name="partyId" type="id"   enable-audit-log="true"></field>
 
         	<field name="boxAddress" type="name"  enable-audit-log="true"></field>
         	<field name="fax" type="name"  enable-audit-log="true"></field>
@@ -662,18 +662,18 @@ under the License.
         </entity>
     
          <entity entity-name="ATMTransactionsLog" table-name="ATMTransactionsLog" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="ATMTransactions Entity">
-        <field name="atmransactionsLogId" col-name="AccountID" type="id"><description>primary sequenced ID</description></field>
-		<field name="cardNumber"  type="id"></field>
-		<field name="transactionType"  type="id"></field>
+        <field name="atmransactionsLogId" col-name="AccountID" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
+		<field name="cardNumber"  type="id"   enable-audit-log="true"></field>
+		<field name="transactionType"  type="id"   enable-audit-log="true"></field>
         
         <prim-key field="atmransactionsLogId"/>
      </entity>
      
      <entity entity-name="MsaccoTransactionsLog" table-name="MsaccoTransactionsLog" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="MsaccoTransactionsLog Entity">
-        <field name="msaccoTransactionsLogId" type="id"><description>primary sequenced ID</description></field>
-		<field name="phoneNo"  type="id"></field>
-		<field name="transactionType"  type="id"></field>
-        <field name="transactionAmount" type="currency-amount"></field>
+        <field name="msaccoTransactionsLogId" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
+		<field name="phoneNo"  type="id"   enable-audit-log="true"></field>
+		<field name="transactionType"  type="id"   enable-audit-log="true"></field>
+        <field name="transactionAmount" type="currency-amount"   enable-audit-log="true"></field>
         <prim-key field="msaccoTransactionsLogId"/>
      </entity>
      
@@ -701,14 +701,40 @@ under the License.
    	<entity entity-name="MissingMemberLog" package-name="org.ofbiz.salaryprocessing"
 		title="MissingMemberLog Entity">
 		
-		<field name="missingMemberLogId" type="id-vlong-int"></field>
-		<field name="isActive" type="indicator"></field>
-		<field name="createdBy" type="id"></field>
-		<field name="employerCode" type="id"></field>
-		<field name="payrollNumber" type="id"></field>
-		<field name="month" type="id"></field>
+		<field name="missingMemberLogId" type="id-vlong-int"   enable-audit-log="true"></field>
+		<field name="isActive" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="id"   enable-audit-log="true"></field>
+		<field name="employerCode" type="id"   enable-audit-log="true"></field>
+		<field name="payrollNumber" type="id"   enable-audit-log="true"></field>
+		<field name="month" type="id"   enable-audit-log="true"></field>
 		<prim-key field="missingMemberLogId"/>
 	</entity>
+	
+	
+	<view-entity entity-name="MemberAccountWithProduct" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="MA" entity-name="MemberAccount"></member-entity>
+    	<member-entity entity-alias="AP" entity-name="AccountProduct"></member-entity>
+    	
+    	<alias entity-alias="MA" name="memberAccountId"></alias>
+    	<alias entity-alias="MA" name="accountNo"></alias>
+    	<alias entity-alias="MA" name="accountName"></alias>
+    	
+    	<alias entity-alias="MA" name="partyId"></alias>
+    	<alias entity-alias="MA" name="withdrawable"></alias>
+    	
+    	
+    	<alias entity-alias="AP" name="name"/>
+    	<alias entity-alias="AP" name="code"/>
+      	
+    	
+    	<view-link  entity-alias="MA" rel-entity-alias="AP">
+    		<key-map field-name="accountProductId" rel-field-name="accountProductId"/>
+    		<!-- entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition -->
+    	</view-link>
+    	
+    </view-entity>
     
     
 </entitymodel>

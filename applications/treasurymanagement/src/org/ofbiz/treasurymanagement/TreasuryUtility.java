@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -263,9 +262,33 @@ public class TreasuryUtility {
 		
 		//Get the teller assigned to this partyId (name for Treasury where employeeResponsible is the guy logged in)
 		String partyId = userLogin.get("partyId"); 
-		tellerName = getTeller(partyId).getString("name");
+		
+		GenericValue teller = getTeller(partyId);
+		
+		if (teller != null)
+			tellerName = teller.getString("name");
+		
 		return tellerName;
 	}
+	
+	public static Boolean hasTellerAssigned(Map<String, String> userLogin){
+		
+		//Get the teller assigned to this partyId (name for Treasury where employeeResponsible is the guy logged in)
+		String partyId = userLogin.get("partyId"); 
+		
+		GenericValue teller = getTeller(partyId);
+		BigDecimal bdTellerBalance = getTellerBalance(userLogin);
+		
+		if (teller != null) // check that the teller assigned is of type teller
+		{
+			if (bdTellerBalance.compareTo(BigDecimal.ZERO) == 1){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	
 	private static GenericValue getTeller(String partyId) {
 		List<GenericValue> treasuryELI = null;
