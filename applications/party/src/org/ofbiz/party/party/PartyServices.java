@@ -70,6 +70,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.humanres.HumanResServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -279,12 +280,12 @@ public class PartyServices {
 			return ServiceUtil.returnError(UtilProperties.getMessage(
 					resourceError, "person.create.person_exists", locale));
 		}
-		
-		
-		
+
+		String employmentTerms = (String) context.get("employmentTerms");
+		String nextPayrollNo = HumanResServices.NextPayrollNumber(employmentTerms);
 
 		person = delegator.makeValue("Person",
-				UtilMisc.toMap("partyId", partyId));
+				UtilMisc.toMap("partyId", partyId, "employeeNumber", nextPayrollNo));
 		person.setNonPKFields(context);
 		toBeStored.add(person);
 

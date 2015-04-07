@@ -244,8 +244,9 @@ under the License.
                 <option key="intern" description="Intern-ship"/>
             </drop-down>
         </field>
-        <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number" tooltip="${uiLabelMap.CommonRequired}"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
-        <field use-when="personalInfo!=null" name="employeeNumber" title="Employee Payroll Number"><display></display></field>
+       <!--  <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number" tooltip="${uiLabelMap.CommonRequired}"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
+        <field use-when="personalInfo!=null" name="employeeNumber" title="Employee Payroll Number"><display></display></field> -->
+        <field use-when="personalInfo==null" name="payroll" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="*GENERATED*" disabled="true"/></field>
 		 <field name="isManagement" title="Type of Staff" widget-style="required" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
                 <option key="Management" description="Management"/>
@@ -326,7 +327,9 @@ under the License.
          <field name="birthDate" title="Date Of Birth"><date-time type="date"/></field>
         <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>
         
-        <field name="contractPeriod"  title="Contract Period" tooltip="(Select if terms of Employment is CONTRACT/INTERNSHIP)">
+        
+        
+        <field name="contractPeriod"  title="Contract Period" tooltip="(Select if terms of Employment is CONTRACT/INTERNSHIP)" use-when="${employmentTerms == 'contract'}">
             <drop-down allow-empty="true">
                 <option key="1" description="One Month"/>
                 <option key="2" description="Two Months"/>
