@@ -110,49 +110,53 @@
 			<entity-condition entity-name="FinAccount" list="finAccountList">
 			</entity-condition>
 			
-			<entity-condition entity-name="Person" list="employeesList">
-			</entity-condition>
+			<!-- entity-condition entity-name="Person" list="employeesList">
+			</entity-condition -->
 			
-			 <entity-condition entity-name="GlAccount" list="glAccountsList">
+			 <!-- entity-condition entity-name="GlAccount" list="glAccountsList">
 				<order-by field-name="accountName"/>
-			</entity-condition>
+			</entity-condition -->
         </actions>
        
         <field name="treasuryId"><hidden/></field>
 		
 		
-        <field name="name" title="Name"  widget-style="required" required-field="true"><text></text></field>
+        <field name="name" title="Name"  widget-style="required" required-field="true"> <display></display> </field>
         
          <field name="treasuryTypeId" title="Treasury Type" widget-style="required" required-field="true" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="treasuryTypeId" list-name="treasuryTypeList" description="${name}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="TreasuryType" description="${name}" key-field-name="treasuryTypeId"></display-entity>
         </field>
         
         <field name="finAccountId" title="Financial/Bank Account" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId"></display-entity>
         </field>
         
         <field name="employeeResponsible" title="Employee Responsible" >
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="Person" key-field-name="partyId"  description="${firstName} ${lastName}"></display-entity>
         </field>
         
         <field name="glAccountId" title="Account (Posting Account)" widget-style="required" required-field="true">
-       		<drop-down allow-empty="true">
+       		<!-- drop-down allow-empty="true">
        			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
-       		</drop-down>
+       		</drop-down -->
+       		<display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountName} - ${accountCode}"></display-entity>
         </field>
        
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteTreasury" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="treasuryId"/>
             </hyperlink>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
     <!-- TreasuryTransaction -->
     

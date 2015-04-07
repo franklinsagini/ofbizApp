@@ -1,7 +1,16 @@
 package org.ofbiz.treasurymanagement;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
@@ -10,7 +19,11 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.loans.LoanAccounting;
+import org.ofbiz.webapp.event.EventHandlerException;
+
+import com.google.gson.Gson;
 
 /***
  * @author Japheth Odonya  @when Sep 14, 2014 11:46:13 PM
@@ -97,5 +110,141 @@ public class TreasuryAccounting {
 		String accountId = treasuryType.getString("glAccountId");
 		return accountId;
 	}
+	
+	//accountHasBeenUsed
+	public static String accountHasBeenUsed(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
 
+		String glAccountId = (String) request.getParameter("glAccountId");
+		
+		log.info(" TTTTTTTTTTTTTTTT The Account is IIIIIIIII "+glAccountId);
+		Boolean usedState = false;
+		usedState = accountIdUsed(glAccountId);
+
+		result.put("usedState", usedState);
+		
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+
+
+
+	
+	public static Boolean accountIdUsed(String glAccountId) {
+		List<GenericValue> treasuryELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury",
+					EntityCondition.makeCondition("glAccountId",
+							glAccountId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (treasuryELI.size() > 0)
+			return true;
+		
+		return false;
+	}
+	
+	//employeeHasBeenGivenTreasury
+	public static String employeeHasBeenGivenTreasury(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+
+		String employeeResponsible = (String) request.getParameter("employeeResponsible");
+		
+		Boolean usedState = false;
+		usedState = employeeAssigned(employeeResponsible);
+
+		result.put("usedState", usedState);
+		
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+
+
+	private static Boolean employeeAssigned(String employeeResponsible) {
+		List<GenericValue> treasuryELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury",
+					EntityCondition.makeCondition("employeeResponsible",
+							employeeResponsible), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (treasuryELI.size() > 0)
+			return true;
+		
+		return false;
+	}
 }
