@@ -22,6 +22,15 @@ public class SaccoUtility {
 		return nextId;
 	}
 	
+	public static Long getNextPartySequence(String sequenceName){
+		String nextId = "";
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		nextId = delegator.getNextSeqId(sequenceName);
+		
+		return Long.valueOf(nextId);
+	}
+	
 	//Get memberStatusId
 	public static Long getMemberStatusID(String name) {
 		List<GenericValue> memberStatusELI = null; // =
@@ -115,6 +124,45 @@ public class SaccoUtility {
 		name = name.replaceAll(",", "");
 
 		return name;
+	}
+
+	public static Integer getBusinessMemberCount() {
+		Long memberTypeId = getMemberTypeId("BUSINESS");
+		
+		//Get the count of member of type Business
+		
+		List<GenericValue> memberELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberELI = delegator.findList("Member",
+					EntityCondition.makeCondition("memberTypeId",
+							memberTypeId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		return memberELI.size();
+	}
+	
+	
+	public static Long getMemberTypeId(String name) {
+		List<GenericValue> memberTypeELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberTypeELI = delegator.findList("MemberType",
+					EntityCondition.makeCondition("name",
+							name), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		Long memberTypeId = 0L;
+		 for (GenericValue genericValue : memberTypeELI) {
+			 memberTypeId = genericValue.getLong("memberTypeId");
+		 }
+		return memberTypeId;
 	}
 
 }
