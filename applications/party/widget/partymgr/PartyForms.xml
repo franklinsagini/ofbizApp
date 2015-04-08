@@ -244,8 +244,9 @@ under the License.
                 <option key="intern" description="Intern-ship"/>
             </drop-down>
         </field>
-        <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number" tooltip="${uiLabelMap.CommonRequired}"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
-        <field use-when="personalInfo!=null" name="employeeNumber" title="Employee Payroll Number"><display></display></field>
+       <!--  <field use-when="personalInfo==null" name="employeeNumber" title="Employee Payroll Number" tooltip="${uiLabelMap.CommonRequired}"><text size="40" maxlength="60" default-value="${employeeNumber}"/></field>
+        <field use-when="personalInfo!=null" name="employeeNumber" title="Employee Payroll Number"><display></display></field> -->
+        <field use-when="personalInfo==null" name="payroll" title="Employee Payroll Number"><text size="40" maxlength="60" default-value="*GENERATED*" disabled="true"/></field>
 		 <field name="isManagement" title="Type of Staff" widget-style="required" required-field="true" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
                 <option key="Management" description="Management"/>
@@ -326,7 +327,9 @@ under the License.
          <field name="birthDate" title="Date Of Birth"><date-time type="date"/></field>
         <field name="retirementdate" title="Retirement Date"><date-time type="date"/></field>
         
-        <field name="contractPeriod"  title="Contract Period" tooltip="(Select if terms of Employment is CONTRACT/INTERNSHIP)">
+        
+        
+        <field name="contractPeriod"  title="Contract Period" tooltip="(Select if terms of Employment is CONTRACT/INTERNSHIP)" use-when="${employmentTerms == 'contract'}">
             <drop-down allow-empty="true">
                 <option key="1" description="One Month"/>
                 <option key="2" description="Two Months"/>
@@ -946,28 +949,19 @@ Gender
         	<entity-condition entity-name="RecruitingAgent" list="recruitingAgentList"></entity-condition>
         	<entity-condition entity-name="EmploymentType" list="employmentTypeList"></entity-condition>
         	<entity-condition entity-name="Gender" list="genderList"></entity-condition>
+        	
         </actions>
         <field name="partyId"><hidden/></field>
         <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
         <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
         <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
+        <field name="memberDetails" title="Personal Details" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field name="firstName" title="${uiLabelMap.MemberFirstName}" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="middleName" title="${uiLabelMap.MemberMiddleName}"><text size="30" maxlength="60"/></field>
 
         <field name="lastName" title="${uiLabelMap.MemberLastName}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
 
-        <!-- field name="salutation" title="${uiLabelMap.MemberSalutation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field-->
-        <!-- field name="salutation"  title="${uiLabelMap.MemberSalutation}" widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
-                <option key="Mr." description="Mr."/>
-                <option key="Miss." description="Miss."/>
-                <option key="Mrs." description="Mrs."/>
-                <option key="Dr." description="Dr."/>
-                <option key="Prof." description="Prof."/>
-                <option key="Hon." description="Hon."/>
-                <option key="Rev." description="Rev."/>
-            </drop-down>
-        </field -->
+       
         <field name="salutationId" title="Salutation" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
                 <entity-options entity-name="Salutation" description="${name}" key-field-name="salutationId">
@@ -975,13 +969,6 @@ Gender
                 </entity-options>
             </drop-down>
         </field>
-        <!--  field name="MEMBER_GENDER" title="${uiLabelMap.MemberGender}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
-        <!-- field name="gender"  title="${uiLabelMap.MemberGender}" widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
-                <option key="M" description="${uiLabelMap.CommonMale}"/>
-                <option key="F" description="${uiLabelMap.CommonFemale}"/>
-            </drop-down>
-        </field -->
         <field name="genderId" title="Gender" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
                 <entity-options entity-name="Gender" description="${name}" key-field-name="genderId">
@@ -989,16 +976,7 @@ Gender
                 </entity-options>
             </drop-down>
         </field>
-        <!-- field name="maritalStatus" title="${uiLabelMap.MemberMaritalStatus}" widget-style="required" required-field="true">
-            <drop-down allow-empty="false">
-                <option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}"/>
-                <option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}"/>
-                <option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}"/>
-                <option key="D" description="${uiLabelMap.PartyMaritalStatusDivorced}"/>
-                <option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}"/>
-            </drop-down>
-        </field -->
-        <field name="maritalStatusId" title="Marital Status" widget-style="required" required-field="true">
+       <field name="maritalStatusId" title="Marital Status" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
                 <entity-options entity-name="MaritalStatus" description="${name}" key-field-name="maritalStatusId">
                     <entity-order-by field-name="name" />
@@ -1010,6 +988,9 @@ Gender
         <field name="idNumber"  title="${uiLabelMap.MemberIDNumber}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="pinNumber" title="${uiLabelMap.MemberPINNumber}"><text size="30" maxlength="60"/></field>
         <field name="passportNumber" title="${uiLabelMap.MemberPassportNumber}" ><text size="30" maxlength="60"/></field>
+       <field name="mobileNumber" title="${uiLabelMap.MemberMobileNumber}" required-field="true" widget-style="required"><text default-value="+254" size="30" maxlength="60"/></field>
+		<field name="birthDate" title="${uiLabelMap.MemberBirthDate}" required-field="true" widget-style="required"><date-time type="date"/></field>
+		
 		<field name="MemberAddressDetails" title="${uiLabelMap.MemberAddressDetails}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field name="emailAddress" title="${uiLabelMap.MemberEmailAddress}"><text size="30" maxlength="60"/></field>
         <field name="physicalAddress" title="${uiLabelMap.MemberPhysicalAddress}" widget-style="required" required-field="true"><textarea cols="30" /></field>
@@ -1068,10 +1049,9 @@ Gender
 
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
        <field name="memberNumber" title="${uiLabelMap.MemberNumber}"  required-field="true" widget-style="required"><text size="30" maxlength="60" disabled="true" default-value="**GENERATED**"/></field>
-       <field name="mobileNumber" title="${uiLabelMap.MemberMobileNumber}" required-field="true" widget-style="required"><text default-value="254" size="30" maxlength="60"/></field>
-       <field name="birthDate" title="${uiLabelMap.MemberBirthDate}" required-field="true" widget-style="required"><date-time type="date"/></field>
+       
        <field name="permanentAddress" title="Permanent Address" required-field="true" widget-style="required"><textarea cols="30"/></field>
-       <field name="currentAddress" title="${uiLabelMap.MemberCurrentAddress}" required-field="true" widget-style="required"><textarea cols="30"/></field>
+       <!-- field name="currentAddress" title="${uiLabelMap.MemberCurrentAddress}" required-field="true" widget-style="required"><textarea cols="30"/></field -->
 
        <!-- field name="MEMBER_COUNTRY_OF_RESIDENCE" title="${uiLabelMap.MemberCountryOfResidence}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
        <field name="countryOfResidence" title="${uiLabelMap.MemberCountryOfResidence}" required-field="true" widget-style="required">
@@ -1082,7 +1062,7 @@ Gender
                 </entity-options>
             </drop-down>
         </field>
-        <field name="country" title="Country" required-field="true" widget-style="required">
+        <field name="country" title="Nationality" required-field="true" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="${defaultCountryGeoId}">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoId}: ${geoName}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>
@@ -1103,8 +1083,10 @@ Gender
 	 <field name="membershipofOtherSacco" title="${uiLabelMap.MembershipOfOtherSacco}">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-
-       <field name="joinDate" title="Date Joined"  required-field="true" widget-style="required"><date-time type="date"/></field>
+		<!-- date-time default-value="${nowTimestamp}" type="date"/ -->
+       <field name="joinDate" title="Date Joined"  required-field="true" widget-style="required">
+       		<hidden value="${nowTimestamp}"/>
+       </field>
        <!-- field name="registrationFee" title="Registration Fee"  required-field="true"  widget-style="required"><text></text></field>
        <field name="paidAmount" title="Paid Amount"  required-field="true" widget-style="required"  position="2"><text/></field -->
 
@@ -1225,6 +1207,14 @@ Gender
             </drop-down>
         </field>
         
+        <field name="memberTypeId" title="Member Type" position="2">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberType" >
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
 
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
@@ -1299,6 +1289,12 @@ Gender
         		
         	</display-entity>
         </field>
+        
+        <field name="memberTypeId" title="Member Type">
+        	<display-entity entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
+        	</display-entity>
+        </field>
+        
         
         <field name="stationId" title="Station">
         	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
@@ -2301,6 +2297,14 @@ Gender
             </drop-down>
         </field>
         
+        <field name="memberTypeId" title="Member Type" position="2">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberType" >
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
         <field name="joinDate">
         	<date-find default-option-from="greaterThanFromDayStart" default-option-thru="upThruDay" type="date" />
         </field>
@@ -2351,6 +2355,11 @@ Gender
         <field name="stationId" title="Station">
         	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
         		
+        	</display-entity>
+        </field>
+        
+        <field name="memberTypeId" title="Member Type">
+        	<display-entity entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
         	</display-entity>
         </field>
         
@@ -2432,6 +2441,14 @@ Gender
                 </entity-options>
             </drop-down>
         </field>
+        
+        <field name="memberTypeId" title="Member Type" position="2">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberType" >
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" current-description="">
                 <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
@@ -2476,46 +2493,19 @@ Gender
        <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
 
        <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
-	     <!-- field name="branchId" title="Branch">
-            
-            <display-entity entity-name="PartyGroup" key-field-name="partyId"  description="${groupName}"></display-entity>
 
-        </field -->
-        
-        <!-- drop-down allow-empty="false">
-                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
-            </drop-down -->
-
-	   <!-- field name="stationId" title="Station">
-	     	<display-entity entity-name="Station" key-field-name="stationId"  description="${name}"></display-entity>
-            
-        </field -->
-        
-        <!-- drop-down allow-empty="true" >
-                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
-            </drop-down -->
 		
         <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
         <field name="memberNumber" title="Member No."><display></display></field>
 
-		<!--field name="memberStatusId" title="Member Status">
-			<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity>
-		</field -->
-		       	<!-- display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId" ></display-entity -->
-        	<!-- drop-down>
-        		<list-options key-name="memberStatusId" list-name="listStatus" description="${name}"/>
-        	</drop-down -->
-        	<!-- display-entity  entity-name="MemberStatus" also-hidden="true"></display-entity -->
-		
-		 <!-- field name="memberStatusId" title="Status">
-         	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId" ></display-entity>
-        </field -->
-        <!-- field name="memberStatusId">
-        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity>
-        </field -->
-        		<field name="memberStatusId" title="Status">
+        <field name="memberStatusId" title="Status">
         	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
         		
+        	</display-entity>
+        </field>
+        
+        <field name="memberTypeId" title="Member Type">
+        	<display-entity entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
         	</display-entity>
         </field>
         
@@ -2527,6 +2517,9 @@ Gender
 		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
 			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
 		</field>
+		
+
+		
 		
 		<field name="joinDate" title="Joined">
 			<display type="date"></display>

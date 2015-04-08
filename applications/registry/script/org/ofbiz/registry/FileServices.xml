@@ -154,6 +154,7 @@
 		<set value="${member.memberNumber}" field="newEntity.memberNumber" />
 		<set value="${member.firstName}" field="newEntity.firstName" />
 		<set value="${member.lastName}" field="newEntity.lastName" />
+		<set value="${member.idNumber}" field="newEntity.idNumber" />
 		
 		<set value="N" field="newEntity.isMemberInactive" />
 		<set value="N" field="newEntity.isReadyForSemiActive" />
@@ -162,12 +163,33 @@
 		
 		<set value="${userLogin.partyId}" field="newEntity.creator" />
 		<set from-field="nowTimestamp" field="newEntity.creationDate"/>
-		<create-value value-field="newEntity" />
+		<set field="party" value="${newEntity.partyId}"/>
+		<set field="exist" value="${bsh:org.ofbiz.registry.FileServices.findExistanceOfFile(party);}"/>
+		<set field="valid" value="INVALID"/>
 		
-		<call-simple-method method-name="createfileFirstVolume" scope="inline"></call-simple-method>
+		<if>
+			<condition>
+					<if-compare-field field="exist"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="FileExist" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			   <create-value value-field="newEntity" />
+		      <call-simple-method method-name="createfileFirstVolume" scope="inline"></call-simple-method>
+		      <property-to-field resource="HumanResUiLabels"
+			  property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
 		
-		<property-to-field resource="HumanResUiLabels"
-			property="CreateSuccess" field="successMessage" />
+		
+		
 	</simple-method>
 	
 	

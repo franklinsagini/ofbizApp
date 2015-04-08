@@ -121,9 +121,9 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 
-    <request-map uri="bankdetails">
+    <request-map uri="retirement">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="bankdetails"
+		<response name="success" type="view" value="retirement"
 			save-home-view="true" />
 	</request-map>
 
@@ -201,20 +201,24 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="createOpeningLeaveBalances"/>
     </request-map>
+    
 
-
-
+                  <!-- Retirement Age -->
+ <request-map uri="createRetirementAge">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createRetirementAge" />
+		<response name="success" type="request-redirect" value="retirement"/>
+		<response name="error" type="view" value="retirement" />
+	</request-map>
+	
 
 
     <!--  Request Mappings for calling leave duration and end date java functions -->
 
     <request-map uri="createBankDetails">
 		<security https="true" auth="true" />
-		<event type="service" invoke="createBankDetails" />
-		<response name="success" type="request-redirect"
-			value="bankdetails">
-			<redirect-parameter name="partyId"/>
-			</response>
+		<event type="service" invoke="createRetirementAge" />
+		<response name="success" type="request-redirect" value="bankdetails"/>
 		<response name="error" type="view" value="bankdetails" />
 	</request-map>
 
@@ -2916,7 +2920,7 @@ under the License.
 	 <request-map uri="separateEmployee">
 	 	<security https="true" auth="true" />
         <event type="java" path="org.ofbiz.humanres.SeparateEmployee" invoke="separateEmployee" ></event>
-        <response name="success" type="request-redirect-noparam" value="separationApplication"/>
+        <response name="success" type="view" value="separationApplication"/>
 		<response name="error" type="view" value="separationApplication" />
      </request-map>
 
@@ -3565,6 +3569,7 @@ under the License.
   <view-map name="employeeDependantDetailscsv" type="screencsv" content-type="text/csv" page="component://humanres/widget/ReportScreens.xml#EmployeeDependantDetailscsv" />
   <view-map name="employeeDependantDetailspdf" type="screenfop" page="component://humanres/widget/ReportScreens.xml#EmployeeDependantDetailspdf" content-type="application/pdf" encoding="none" />
 	<view-map name="bankdetails" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewBankDetails"/>
+	<view-map name="retirement" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#RetirementAgeSetupScreen"/>
 	<view-map name="bankbranch" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewBankBranch"/>
 	<view-map name="emplBankDetails" type="screen" page="component://humanres/widget/EmployeeScreens.xml#employeeBankDetails"/>
 	<view-map name="bank" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewEmplBankDetails"/>
