@@ -266,7 +266,17 @@ public class TreasuryAccounting {
 		result.put("employeeResponsible", employeeResponsible);
 		result.put("employeeNames", employeeNames);
 		
-
+		//Get Treasury type limit
+		BigDecimal bdLimitAmount = getTreasuryTypeLimit(destinationTreasury);
+		
+		BigDecimal bdTreasuryAvailable = TreasuryReconciliation.getNetAllocation(destinationTreasury);
+		
+		BigDecimal bdMaxAllowedTransfer = bdLimitAmount.subtract(bdTreasuryAvailable);
+		
+		result.put("bdLimitAmount", bdLimitAmount);
+		result.put("bdTreasuryAvailable", bdTreasuryAvailable);
+		result.put("bdMaxAllowedTransfer", bdMaxAllowedTransfer);
+		
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
 
@@ -301,6 +311,42 @@ public class TreasuryAccounting {
 		}
 
 		return json;
+	}
+
+
+	private static BigDecimal getTreasuryTypeLimit(String destinationTreasury) {
+		//Get the treasury type
+		List<GenericValue> treasuryELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury",
+					EntityCondition.makeCondition("treasuryId",
+							destinationTreasury), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String treasuryTypeId = "";
+		for (GenericValue genericValue : treasuryELI) {
+			treasuryTypeId = genericValue.getString("treasuryTypeId");
+		}
+		
+		//get the limit for the treasury type
+		List<GenericValue> treasuryTypeELI = null; // =
+		try {
+			treasuryTypeELI = delegator.findList("TreasuryType",
+					EntityCondition.makeCondition("treasuryTypeId",
+							treasuryTypeId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		BigDecimal bdLimitAmount = BigDecimal.ZERO;
+		for (GenericValue genericValue : treasuryTypeELI) {
+			bdLimitAmount = genericValue.getBigDecimal("limitAmount");
+		}
+		
+		return bdLimitAmount;
 	}
 
 

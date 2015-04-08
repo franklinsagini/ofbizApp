@@ -173,6 +173,9 @@
     	var reqUrl = '/treasurymanagement/control/getAssignedEmployee';
     	var employeeResponsible;
     	var employeeNames;
+    	var bdLimitAmount;
+    	var bdTreasuryAvailable;
+    	var bdMaxAllowedTransfer;
 
     	jQuery.ajax({
 
@@ -184,7 +187,9 @@
 
 							employeeResponsible = data.employeeResponsible;
 							employeeNames = data.employeeNames;
-
+							bdLimitAmount = data.bdLimitAmount;
+							bdTreasuryAvailable = data.bdTreasuryAvailable;
+							bdMaxAllowedTransfer = data.bdMaxAllowedTransfer;
 			               },
 			      error : function(errorData){
 
@@ -198,10 +203,24 @@
     		jQuery('#NewTreasuryTransfer input[name="employeeResponsible"]').val(employeeResponsible);
     		jQuery('#NewTreasuryTransfer input[name="employeeResponsibleVisible"]').val(employeeNames);
     		
+	   		jQuery('#NewTreasuryTransfer input[name="destinationLimit"]').val(bdLimitAmount);
+	   		jQuery('#NewTreasuryTransfer input[name="availableInDestination"]').val(bdTreasuryAvailable);
+	   		jQuery('#NewTreasuryTransfer input[name="maxAllowedTransfer"]').val(bdMaxAllowedTransfer);
+    		
+    		
     		jQuery('#NewTreasuryTransfer input[name="employeeResponsibleVisible"]').parent().parent().hide();
     		jQuery('#NewTreasuryTransfer input[name="employeeResponsibleVisible"]').parent().parent().show();
-    		//isValid = false;
     	
+
+    		jQuery('#NewTreasuryTransfer input[name="destinationLimit"]').parent().parent().hide();
+    		jQuery('#NewTreasuryTransfer input[name="destinationLimit"]').parent().parent().show();
+
+    		jQuery('#NewTreasuryTransfer input[name="availableInDestination"]').parent().parent().hide();
+    		jQuery('#NewTreasuryTransfer input[name="availableInDestination"]').parent().parent().show();
+
+    		jQuery('#NewTreasuryTransfer input[name="maxAllowedTransfer"]').parent().parent().hide();
+    		jQuery('#NewTreasuryTransfer input[name="maxAllowedTransfer"]').parent().parent().show();
+
 
     	return "";
 
