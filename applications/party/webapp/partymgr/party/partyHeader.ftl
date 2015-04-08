@@ -1,5 +1,7 @@
 <script>
         $(document).ready(function(){
+        
+			checkMemberType();
 
             $("#NewMember").validate({
 
@@ -16,19 +18,48 @@
             });
 
 
-             jQuery('select[name="accountProductId"]').change(function(){
+         jQuery('select[name="accountProductId"]').change(function(){
 
-         var accountProductId = this.value;
-         var partyId = jQuery('input[name="partyId"]').val();
-        var reqUrl = '/partymgr/control/generateAccountNumber';
+         	var accountProductId = this.value;
+         	var partyId = jQuery('input[name="partyId"]').val();
+        	var reqUrl = '/partymgr/control/generateAccountNumber';
 
-         if ((accountProductId.length > 0)){
+         	if ((accountProductId.length > 0)){
 
-			generateAccountNumber(reqUrl, partyId, accountProductId );
-         }
+				generateAccountNumber(reqUrl, partyId, accountProductId );
+         	}
 
         });
-        });
+        
+     	 
+     	
+     	jQuery('select[name="memberTypeId"]').change(function(){
+			selectedItem = jQuery('select[name="memberTypeId"] option:selected').text();
+			selectedItem = selectedItem.toUpperCase();
+			
+			if (selectedItem == 'BUSINESS'){
+         		jQuery('input[name="employeeNumber"]').parent().parent().hide();
+         		//jQuery('#NewMember_employeeNumber_title').hide();
+         		
+         		
+         		jQuery('input[name="payrollNumber"]').parent().parent().hide();
+         		
+         		jQuery('select[name="employmentTypeId"]').parent().parent().parent().hide();
+         		
+         		
+         	} else{
+         		jQuery('input[name="employeeNumber"]').parent().parent().show();
+         		//jQuery('#NewMember_employeeNumber_title').show();
+         		
+         		jQuery('input[name="payrollNumber"]').parent().parent().show();
+         		jQuery('select[name="employmentTypeId"]').parent().parent().parent().show();
+         	}
+         	
+         	
+         	//$('#NewMember').reset();
+        });  
+        
+     });
 
  /***
  	Generate Account Number Branch-Product-MemberNo-Sequence
@@ -54,6 +85,29 @@
     });
 
    }
+   
+   function checkMemberType(){
+           	selectedItem = jQuery('select[name="memberTypeId"] option:selected').text();
+			selectedItem = selectedItem.toUpperCase();
+			
+			if (selectedItem == 'BUSINESS'){
+         		jQuery('input[name="employeeNumber"]').parent().parent().hide();
+         		//jQuery('#NewMember_employeeNumber_title').hide();
+         		
+         		
+         		//jQuery('input[name="payrollNumber"]').parent().parent().hide();
+         		
+         		jQuery('select[name="employmentTypeId"]').parent().parent().parent().hide();
+         		
+         		
+         	} else{
+         		jQuery('input[name="employeeNumber"]').parent().parent().show();
+         		//jQuery('#NewMember_employeeNumber_title').show();
+         		
+         		//jQuery('input[name="payrollNumber"]').parent().parent().show();
+         		jQuery('select[name="employmentTypeId"]').parent().parent().parent().show();
+         	}
+   }
 
    /***
    	Validate Member details - ID Number, Payroll Number, Pin Number, Employee Number must all be unique
@@ -66,6 +120,9 @@
 		var payrollNumber = jQuery('input[name="payrollNumber"]').val();
     	var mobileNumber  = jQuery('input[name="mobileNumber"]').val();
 		var employeeNumber = jQuery('input[name="employeeNumber"]').val();
+		
+		var memberType = jQuery('select[name="memberTypeId"] option:selected').text();
+		memberType = memberType.toUpperCase();
 
     	var isValid = true;
     	var idNumberState = '';
@@ -86,7 +143,7 @@
 			     url    : reqUrl,
 			      async	: false,
 			     type   : 'GET',
-			     data   : {'idNumber': idNumber, 'pinNumber': pinNumber, 'payrollNumber': payrollNumber, 'mobileNumber': mobileNumber, 'mobileNumber': mobileNumber},
+			     data   : {'idNumber': idNumber, 'pinNumber': pinNumber, 'payrollNumber': payrollNumber, 'mobileNumber': mobileNumber, 'mobileNumber': mobileNumber, 'memberType': memberType},
 			     success : function(data){
 
 							idNumberState = data.idNumberState;
@@ -95,7 +152,7 @@
 							mobileNumberState =  data.mobileNumberState;
 							employeeNumberState =  data.employeeNumberState;
 							idNumberSize =  data.idNumberSize;
-
+							jQuery('input[name="payrollNumber"]').val(data.payrollNumber);
 
 					    	//alert('collateralsAvailable  inanon'+collateralsAvailable);
 							//alert('guarantorsAvailable inanon'+guarantorsAvailable);
@@ -133,7 +190,7 @@
     		isValid = false;
     	}
 
-		if ((employeeNumberState == 'USED')){
+		if ((employeeNumberState == 'USED') && (memberType != 'BUSINESS')){
     		message = "Employee Number already used, it must be unique ! ";
     		isValid = false;
     	}
@@ -151,10 +208,7 @@
 
     	if (!isValid){
     		alert(message);
-    	} else{
-    		alert(' Saving Member!');
-    	}
-
+    	} 
 
     	return isValid;
 
