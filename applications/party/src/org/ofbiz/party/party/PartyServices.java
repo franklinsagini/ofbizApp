@@ -284,8 +284,7 @@ public class PartyServices {
 		String employmentTerms = (String) context.get("employmentTerms");
 		String nextPayrollNo = HumanResServices.NextPayrollNumber(employmentTerms);
 
-		person = delegator.makeValue("Person",
-				UtilMisc.toMap("partyId", partyId, "employeeNumber", nextPayrollNo));
+		person = delegator.makeValue("Person", UtilMisc.toMap("partyId", partyId, "employeeNumber", nextPayrollNo));
 		person.setNonPKFields(context);
 		toBeStored.add(person);
 

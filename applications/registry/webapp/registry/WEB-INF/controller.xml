@@ -434,14 +434,14 @@
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="selectFilesToIssue" />
 		<response name="success" type="request-redirect-noparam" value="regFileIssue" />
-		<response name="error" type="view" value="regFileIssue" />
+		<response name="error" type="request-redirect-noparam" value="regFileIssue" />
 	</request-map>
 	
 	 <request-map uri="selectFilesToDivert">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="selectFilesToDivert" />
 		<response name="success" type="request-redirect-noparam" value="regFileDivert" />
-		<response name="error" type="view" value="regFileDivert" />
+		<response name="error" type="request-redirect-noparam" value="regFileDivert" />
 	</request-map>
 	
 	<!-- <request-map uri="issuefiles">
@@ -455,6 +455,7 @@
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="issuefiles"/>
         <response name="success" type="request-redirect-noparam" value="regFileIssue"/>
+		<response name="error" type="request-redirect-noparam" value="regFileIssue"/>
     </request-map>
 
 	
@@ -665,7 +666,7 @@
      <request-map uri="updateMaxNoOfFiles">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateMaxNoOfFiles"/>
-        <response name="success" type="view" value="maxnumberRequested"/>
+        <response name="success" type="request-redirect" value="maxnumberRequested"/>
         <response name="error" type="view-last"/>
     </request-map>
 
