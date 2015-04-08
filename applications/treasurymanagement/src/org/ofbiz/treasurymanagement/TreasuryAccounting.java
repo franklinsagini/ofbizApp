@@ -247,4 +247,105 @@ public class TreasuryAccounting {
 		
 		return false;
 	}
+	
+	//"getAssignedEmployee"
+	public static String getAssignedEmployee(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+
+		String destinationTreasury = (String) request.getParameter("destinationTreasury");
+		
+		GenericValue employee;
+		employee = getEmployee(destinationTreasury);
+		
+		String employeeResponsible = employee.getString("partyId");
+		String employeeNames = employee.getString("firstName")!=null?employee.getString("firstName"):""+" "+employee.getString("middleName")!=null?employee.getString("middleName"):""+" "+employee.getString("lastName")!=null?employee.getString("lastName"):"";
+
+//		employeeResponsible = data.employeeResponsible;
+//		employeeNames = data.employeeNames;
+		result.put("employeeResponsible", employeeResponsible);
+		result.put("employeeNames", employeeNames);
+		
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+
+
+	private static GenericValue getEmployee(String destinationTreasury) {
+		
+		//Get the employee assigned to this treasury
+		GenericValue employee = null;
+		
+		
+		//Get the employee responsible given a treasury
+		//
+		List<GenericValue> treasuryELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury",
+					EntityCondition.makeCondition("treasuryId",
+							destinationTreasury), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String employeeResponsible = "";
+		//Get the ID of the employee responsible (employeeResponsible)
+		for (GenericValue genericValue : treasuryELI) {
+			employeeResponsible = genericValue.getString("employeeResponsible");
+		}
+		
+		//Given the employeeResponsible find person
+		List<GenericValue> personELI = null; // =
+		//Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			personELI = delegator.findList("Person",
+					EntityCondition.makeCondition("partyId",
+							employeeResponsible), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//Get the person and return
+		for (GenericValue genericValue : personELI) {
+			employee = genericValue;
+		}
+		
+		
+		return employee;
+	}
+	
 }

@@ -48,6 +48,20 @@
          	//$('#NewMember').reset();
         }); 
         
+        
+        //destinationTreasury
+         jQuery('#NewTreasuryTransfer select[name="destinationTreasury"]').change(function(){
+     	
+			selectedItem = jQuery('#NewTreasuryTransfer select[name="destinationTreasury"] option:selected').val();
+			selectedItem = selectedItem.toUpperCase();
+			//alert(selectedItem);
+			
+			//employeeHasBeenGivenTreasury(selectedItem);
+			getAssignedEmployee(selectedItem);
+         	
+         	//$('#NewMember').reset();
+        }); 
+        
      });
      
      
@@ -145,6 +159,51 @@
     	} 
 
     	return isValid;
+
+    }
+    
+    
+    //Get Assigned Employee
+    function getAssignedEmployee(destinationTreasury){
+		var isValid = true;
+    	//var reqUrl = '/partymgr/control/memberRegistrationFormValidation';
+    	//var reqUrl = '/treasurymanagement/control/accountHasBeenUsed';
+    	
+    	//var reqUrl = '/treasurymanagement/control/employeeHasBeenGivenTreasury';
+    	var reqUrl = '/treasurymanagement/control/getAssignedEmployee';
+    	var employeeResponsible;
+    	var employeeNames;
+
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'destinationTreasury': destinationTreasury},
+			     success : function(data){
+
+							employeeResponsible = data.employeeResponsible;
+							employeeNames = data.employeeNames;
+
+			               },
+			      error : function(errorData){
+
+			              alert("Some error occurred while getting the employee responsible");
+			              }
+
+
+		});
+
+    	
+    		jQuery('#NewTreasuryTransfer input[name="employeeResponsible"]').val(employeeResponsible);
+    		jQuery('#NewTreasuryTransfer input[name="employeeResponsibleVisible"]').val(employeeNames);
+    		
+    		jQuery('#NewTreasuryTransfer input[name="employeeResponsibleVisible"]').parent().parent().hide();
+    		jQuery('#NewTreasuryTransfer input[name="employeeResponsibleVisible"]').parent().parent().show();
+    		//isValid = false;
+    	
+
+    	return "";
 
     }
  
