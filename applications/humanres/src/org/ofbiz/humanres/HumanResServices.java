@@ -1154,7 +1154,7 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		
 		
 		EntityConditionList<EntityExpr> payRollConditions = EntityCondition.makeCondition(UtilMisc.toList(
-				EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
+				/*EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),*/
 				EntityCondition.makeCondition("employmentTerms",EntityOperator.EQUALS, employmentTerms)),
 					EntityOperator.AND);
 		
