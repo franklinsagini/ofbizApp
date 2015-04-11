@@ -320,16 +320,17 @@ under the License.
             <entity-condition entity-name="Relationship">
             	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
                 <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
-                <!-- order-by field-name="saccoProductId"/ -->
+                <order-by field-name="-relationshipId"/>
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="relationshipId"><hidden/></field>
         <field name="name"><text/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteRelationships" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="relationshipId"/>
             </hyperlink>
-        </field>
+        </field -->
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
@@ -591,15 +592,16 @@ under the License.
             	<!-- condition-expr field-name="productType" operator="equals" value="Account"/ -->
                 <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
                 <!-- order-by field-name="saccoProductId"/ -->
+                <order-by field-name="-sourceOfFundId"/>
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
         <field name="name"><display also-hidden="false"/></field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteSourceOfFunds" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="sourceOfFundId"/>
             </hyperlink>
-        </field>
+        </field -->
         <!--  field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
 	
@@ -612,7 +614,7 @@ under the License.
                 <!-- condition-expr field-name="saccoProductId" from-field="saccoProductId"/ -->
                 <!-- order-by field-name="saccoProductId"/ -->
             <!--/entity-condition -->
-            <entity-condition entity-name="Employer" list="listIt"></entity-condition>
+            <entity-condition entity-name="Employer" ></entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateEmployers"/ -->
         <field name="employerId"><hidden/></field>

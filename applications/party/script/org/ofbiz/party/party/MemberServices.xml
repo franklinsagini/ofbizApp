@@ -21,14 +21,67 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<set field="entityName" value="Relationship"></set>
         <set field="newEntity.relationshipId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-		<create-value value-field="newEntity" />
+		
+		<set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
 	</simple-method>
 
 	<simple-method method-name="updateRelationships"
 		short-description="Update Relationship">
 		<entity-one entity-name="Relationship" value-field="relationship" />
 		<set-nonpk-fields value-field="relationship" map="parameters" />
-		<store-value value-field="relationship" />
+		
+		
+		<set field="entityName" value="Relationship"/>
+		<set field="fieldName" value="name"/>
+		<set field="value" from-field="relationship.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<store-value value-field="relationship" />
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+		
 	</simple-method>
 
 	<simple-method method-name="deleteRelationships"
@@ -221,7 +274,7 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
         <set field="entityName" value="SourceOfFund"></set>
-        <set field="newEntity.termsAndConditionsId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.sourceOfFundId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextStringSequence(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -245,6 +298,7 @@
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
 		<set field="entityName" value="Employer"></set>
 		<set field="newEntity.employerId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
         <create-value value-field="newEntity"/>
     </simple-method>
     

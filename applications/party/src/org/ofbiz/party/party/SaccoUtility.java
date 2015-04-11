@@ -2,6 +2,8 @@ package org.ofbiz.party.party;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -12,6 +14,8 @@ import org.ofbiz.entity.condition.EntityCondition;
 
 //org.ofbiz.party.party.getMemberStatusID.SaccoUtility(name)
 public class SaccoUtility {
+	
+	public static Log log = LogFactory.getLog(SaccoUtility.class);
 	
 	public static Long getNextSequenc(String sequenceName){
 		Long nextId = 0L;
@@ -29,6 +33,15 @@ public class SaccoUtility {
 		nextId = delegator.getNextSeqId(sequenceName);
 		
 		return Long.valueOf(nextId);
+	}
+	
+	public static String getNextStringSequence(String sequenceName){
+		String nextId = "";
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		nextId = delegator.getNextSeqId(sequenceName);
+		
+		return nextId;
 	}
 	
 	//Get memberStatusId
@@ -163,6 +176,30 @@ public class SaccoUtility {
 			 memberTypeId = genericValue.getLong("memberTypeId");
 		 }
 		return memberTypeId;
+	}
+	
+	
+	//value - Mother columnName name, entityName Relationship
+	public static Boolean itemExists(String value, String columnName, String entityName) {
+		List<GenericValue> entityListELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		log.info("##########VVVVVVVVVV Value :: "+value+" Column Name "+columnName+" Entity Name "+entityName);
+		
+		try {
+			entityListELI = delegator.findList(entityName,
+					EntityCondition.makeCondition(columnName,
+							value), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		log.info(" SSSSSSSSSSSS The Size is "+entityListELI.size());
+		
+		if (entityListELI.size() > 0)
+			return true;
+
+		return false;
 	}
 
 }
