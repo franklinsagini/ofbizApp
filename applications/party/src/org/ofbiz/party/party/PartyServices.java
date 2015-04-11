@@ -56,6 +56,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -3993,4 +3994,121 @@ public class PartyServices {
 
 		
 	}
+	
+	/***
+	 * memberHasPhoto
+	 * */
+	public static Boolean memberHasPhoto(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		//Get Member and confirm that photo has something - its not null
+		
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+			
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+		
+		if ((member != null) && (member.getString("photourl") != null) && (!member.getString("photourl").equals("")))
+			return true;
+		
+		return false;
+	}
+	
+	/***
+	 * memberHasIdFront
+	 * */
+	public static Boolean memberHasIdFront(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		//Get Member and confirm that Id Front  has something - its not null
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+			
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+		
+		if ((member != null) && (member.getString("idfronturl") != null) && (!member.getString("idfronturl").equals("")))
+			return true;
+		
+		return false;
+
+	}
+	
+	/***
+	 * memberHasIdBack
+	 * */
+	public static Boolean memberHasIdBack(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		//Get Member and confirm that photo has something - its not null
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+			
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+		
+		if ((member != null) && (member.getString("idbackurl") != null) && (!member.getString("idbackurl").equals("")))
+			return true;
+		
+		return false;	
+	}
+	/***
+	 * memberHasSignature
+	 * */
+	public static Boolean memberHasSignature(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		//Get Member and confirm that photo has something - its not null
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+			
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+		
+		if ((member != null) && (member.getString("signatureurl") != null) && (!member.getString("signatureurl").equals("")))
+			return true;
+		
+		return false;	
+	}
+
+	/***
+	 * memberHasTermsAndConditions
+	 * */
+	public static Boolean memberHasTermsAndConditions(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		//Get Member and confirm that photo has something - its not null
+		return false;
+	}
+
+	/***
+	 * memberHasShareCapital
+	 * */
+	public static Boolean memberHasShareCapital(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		//Get Member and confirm that photo has something - its not null
+		return false;
+	}
+	
+	/***
+	 * memberHasMemberDeposit
+	 * */
+	public static Boolean memberHasMemberDeposit(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		//Get Member and confirm that photo has something - its not null
+		return false;
+	}
+
 }

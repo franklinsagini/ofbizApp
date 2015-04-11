@@ -1636,7 +1636,14 @@
 	<request-map uri="memberNominee">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="memberNominee"
-			save-current-view="true" />
+			save-current-view="true" >
+				<redirect-parameter name="partyId"/>
+		</response>
+		
+		<response name="error" type="view" value="memberNominee"
+			save-current-view="true" >
+				<redirect-parameter name="partyId"/>
+		</response>
 	</request-map>
 	<request-map uri="termsAndConditions">
 		<security https="true" auth="true" />
@@ -1980,16 +1987,21 @@
 		<response name="success" type="request-redirect" value="memberNominee">
 			<redirect-parameter name="partyId" />
 		</response>
-		<response name="error" type="view" value="memberNominee" />
+		<response name="error" type="request-redirect" value="memberNominee">
+			<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 
 	<request-map uri="updateMemberNominee">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateMemberNominee" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam"
-			value="memberNominee"></response>
-		<response name="error" type="view" value="memberNominee" />
+		<response name="success" type="request-redirect" value="memberNominee">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect" value="memberNominee">
+			<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 
 	<request-map uri="deleteEmployers">

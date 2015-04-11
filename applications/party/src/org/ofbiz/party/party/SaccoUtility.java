@@ -1,5 +1,6 @@
 package org.ofbiz.party.party;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -200,6 +201,66 @@ public class SaccoUtility {
 			return true;
 
 		return false;
+	}
+	
+	public static Boolean isInExcess(Long memberNomineeId, BigDecimal percentage, String fieldName, String entityName, Long memberId){
+	
+		//Get the total already saved 
+		BigDecimal bdTotalAssigned = BigDecimal.ZERO;
+		
+		List<GenericValue> memberNomineeELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		//log.info("##########VVVVVVVVVV Value :: "+value+" Column Name "+columnName+" Entity Name "+entityName);
+		
+		try {
+			memberNomineeELI = delegator.findList(entityName,
+					EntityCondition.makeCondition("partyId",
+							memberId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : memberNomineeELI) {
+			bdTotalAssigned = bdTotalAssigned.add(genericValue.getBigDecimal("percentage"));
+		}
+
+		if (memberNomineeId == null){
+			bdTotalAssigned = bdTotalAssigned.add(percentage);
+		} else{
+			BigDecimal currentPercentage = getCurrentNomineePercentage(memberNomineeId);
+			bdTotalAssigned = bdTotalAssigned.add(percentage);
+			bdTotalAssigned = bdTotalAssigned.subtract(currentPercentage);
+		}
+		//total already saved plus percentage assigned must be less or equal to 100
+		
+		if (bdTotalAssigned.compareTo(new BigDecimal(100)) == 1)
+			return true; //In excess
+		
+		return false;
+	}
+
+	private static BigDecimal getCurrentNomineePercentage(Long memberNomineeId) {
+		List<GenericValue> memberNomineeELI = null; // =
+		BigDecimal bdNomineePercentage = BigDecimal.ZERO;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		//log.info("##########VVVVVVVVVV Value :: "+value+" Column Name "+columnName+" Entity Name "+entityName);
+		
+		try {
+			memberNomineeELI = delegator.findList("MemberNominee",
+					EntityCondition.makeCondition("memberNomineeId",
+							memberNomineeId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : memberNomineeELI) {
+			bdNomineePercentage = bdNomineePercentage.add(genericValue.getBigDecimal("percentage"));
+		}
+		
+		
+		return bdNomineePercentage;
 	}
 
 }
