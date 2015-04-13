@@ -1,10 +1,13 @@
 package org.ofbiz.party.party;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -261,6 +264,26 @@ public class SaccoUtility {
 		
 		
 		return bdNomineePercentage;
+	}
+	
+	public static Date getJoinDate(Long memberId)
+	{
+		Date joinDate = null;
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (member != null)
+			joinDate = member.getDate("joinDate");
+		
+		
+		log.info(" The OLD DATE IS IIIIIIIIIIIIIIIIIIIII "+joinDate);
+		return joinDate;
 	}
 
 }

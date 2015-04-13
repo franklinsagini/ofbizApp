@@ -241,7 +241,6 @@
 
 		<if> 
             <condition> 
-                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
                         <if-compare-field to-field="trueField" operator="equals" field="isInExcess"></if-compare-field>
             </condition> 
             <then> 
@@ -732,7 +731,12 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         
         <if-not-empty field="newEntity.partyId">
-        	<call-simple-method method-name="updateMember"></call-simple-method>
+        	<!-- Get the dateJoined and update the member with it joinDate -->
+        	<set field="memberId" from-field="newEntity.partyId" type="Long"/>
+        	<set field="oldJoinDate" value="${bsh:org.ofbiz.party.party.SaccoUtility.getJoinDate(memberId);}" type="Date"/>
+        	<set field="newEntity.joinDate" from-field="oldJoinDate"/>
+        	<!-- call-simple-method method-name="updateMember"></call-simple-method -->
+        	<store-value value-field="newEntity"/>
         </if-not-empty>
         
         <if-empty field="newEntity.partyId">
@@ -788,6 +792,10 @@
     <simple-method method-name="updateMember" short-description="Update Member">
         <entity-one entity-name="Member" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        
+        <set field="memberId" from-field="lookedUpValue.partyId" type="Long"/>
+        	<set field="oldJoinDate" value="${bsh:org.ofbiz.party.party.SaccoUtility.getJoinDate(memberId);}" type="Date"/>
+        <set field="lookedUpValue.joinDate" from-field="oldJoinDate"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 

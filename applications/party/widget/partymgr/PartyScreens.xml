@@ -2652,14 +2652,16 @@
 				
 				<set field="memberId" from-field="parameters.partyId" type="Long"/>
 				
-				<set field="memberHasPhoto"/>
-				<set field="memberHasIdFront"/>
-				<set field="memberHasIdBack"/>
-				<set field="memberHasSignature"/>
-				<set field="memberHasTermsAndConditions"/>
-				<set field="memberHasShareCapital"/>
-				<set field="memberHasMemberDeposit"/>
-
+				<set field="memberHasPhoto" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasPhoto(memberId);}" type="Boolean"/>
+				<set field="memberHasIdFront" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasIdFront(memberId);}" type="Boolean"/>
+				<set field="memberHasIdBack" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasIdBack(memberId);}" type="Boolean"/>
+				<set field="memberHasSignature" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasSignature(memberId);}" type="Boolean"/>
+				<set field="memberHasTermsAndConditions" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasTermsAndConditions(memberId);}" type="Boolean"/>
+				<set field="memberHasShareCapital" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasShareCapital(memberId);}" type="Boolean"/>
+				<set field="memberHasMemberDeposit" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasMemberDeposit(memberId);}" type="Boolean"/>
+				<set field="isMemberApproved" value="${bsh:org.ofbiz.party.party.PartyServices.isMemberApproved(memberId);}" type="Boolean"/>
+				
+				<set field="trueStatus" value="true" type="Boolean"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -2694,10 +2696,118 @@
 										</container>
 									</widgets>
 								</section>
+								
+								<!-- 
+								
+									<set field="memberHasPhoto" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasPhoto(memberId);}" type="Boolean"/>
+									<set field="memberHasIdFront" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasIdFront(memberId);}" type="Boolean"/>
+									<set field="memberHasIdBack" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasIdBack(memberId);}" type="Boolean"/>
+									<set field="memberHasSignature" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasSignature(memberId);}" type="Boolean"/>
+									<set field="memberHasTermsAndConditions" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasTermsAndConditions(memberId);}" type="Boolean"/>
+									<set field="memberHasShareCapital" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasShareCapital(memberId);}" type="Boolean"/>
+									<set field="memberHasMemberDeposit" value="${bsh:org.ofbiz.party.party.PartyServices.memberHasMemberDeposit(memberId);}" type="Boolean"/>
+									
+								 -->
 
+								<section>
+									<condition>
+										<if-compare-field operator="not-equals" to-field="trueStatus" field="memberHasPhoto"/>
+									</condition>
+									<widgets>
+										<container>
 
+												<label style="h3"> Member must have Photos - Please Add</label>
+										</container>
+									</widgets>
+								</section>
 
+									<section>
+									<condition>
+										<if-compare-field operator="not-equals" to-field="trueStatus" field="memberHasIdFront"/>
+									</condition>
+									<widgets>
+										<container>
 
+												<label style="h3"> Please  upload member's ID front </label>
+										</container>
+									</widgets>
+								</section>
+	
+								<section>
+									<condition>
+										<if-compare-field operator="not-equals" to-field="trueStatus" field="memberHasIdBack"/>
+									</condition>
+									<widgets>
+										<container>
+
+												<label style="h3"> Please  upload member's ID Back </label>
+										</container>
+									</widgets>
+								</section>
+								
+								
+								
+								<section>
+									<condition>
+										<if-compare-field operator="not-equals" to-field="trueStatus" field="memberHasSignature"/>
+									</condition>
+									<widgets>
+										<container>
+
+												<label style="h3"> Please  upload member's Signature </label>
+										</container>
+									</widgets>
+								</section>
+				<section>
+									<condition>
+										<if-compare-field operator="not-equals" to-field="trueStatus" field="memberHasTermsAndConditions"/>
+									</condition>
+									<widgets>
+										<container>
+
+												<label style="h3"> Member must check terms and conditions </label>
+										</container>
+									</widgets>
+								</section>
+			
+				<section>
+									<condition>
+										<if-compare-field operator="not-equals" to-field="trueStatus" field="memberHasShareCapital"/>
+									</condition>
+									<widgets>
+										<container>
+
+												<label style="h3"> Member must have Share Capital Account </label>
+										</container>
+									</widgets>
+								</section>
+				
+				<section>
+									<condition>
+										<if-compare-field operator="not-equals" to-field="trueStatus" field="memberHasMemberDeposit"/>
+									</condition>
+									<widgets>
+										<container>
+
+												<label style="h3"> Member must have Member Deposits Account </label>
+										</container>
+									</widgets>
+								</section>
+								
+								
+								
+								<section>
+									<condition>
+										<if-compare-field operator="equals" to-field="trueStatus" field="isMemberApproved"/>
+									</condition>
+									<widgets>
+										<container>
+
+												<label style="h3"> Member already approved (Active) </label>
+										</container>
+									</widgets>
+								</section>
+				
 								<screenlet title="Approve Member ${memberContext.firstName} ${memberContext.lastName}">
 									<include-form name="ApproveMember"
 										location="component://party/widget/partymgr/PartyForms.xml" />
