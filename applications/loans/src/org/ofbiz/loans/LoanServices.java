@@ -3160,5 +3160,31 @@ public class LoanServices {
 		return bdLoanBalance;
 
 	}
+	
+	//
+	public static Boolean repaymentPeriodValid(Long repaymentPeriod, Long loanProductId){
+		
+		log.info(" Repayment Period is ########  "+repaymentPeriod);
+		log.info(" Loan Product ID is ########  "+loanProductId);
+		
+		//Get the Loan Product based on the loanProductId and get the minimum repaymentPeriod
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue loanProduct = null;
+		// LoanProduct
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", loanProductId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			//return "Cannot Get Product Details";
+		}
+		
+		Long productRepaymentPeriod = loanProduct.getLong("maxRepaymentPeriod");
+		log.info(" Loan Product Repayment Period is ########  "+productRepaymentPeriod);
+		if (!(repaymentPeriod > productRepaymentPeriod))
+			return true;
+		
+		return false;
+	}
 
 }

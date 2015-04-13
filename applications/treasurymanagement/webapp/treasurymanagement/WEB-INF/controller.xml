@@ -21,7 +21,7 @@
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="recconcileTreasury"/></request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="reconcileTreasurIncoming"/></request-map>
     <request-map uri="treasuryType">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="treasuryType"
@@ -282,6 +282,32 @@
 			value="currencyDenominations"></response>
 		<response name="error" type="view" value="currencyDenominations" />
 	</request-map>
+	
+	<request-map uri="accountHasBeenUsed">
+        <event type="java" path="org.ofbiz.treasurymanagement.TreasuryAccounting" invoke="accountHasBeenUsed" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
+    
+    
+	<request-map uri="employeeHasBeenGivenTreasury">
+        <event type="java" path="org.ofbiz.treasurymanagement.TreasuryAccounting" invoke="employeeHasBeenGivenTreasury" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
+    
+    	<request-map uri="getAssignedEmployee">
+        <event type="java" path="org.ofbiz.treasurymanagement.TreasuryAccounting" invoke="getAssignedEmployee" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
+    
+    
+    	<request-map uri="destinationIsBank">
+        <event type="java" path="org.ofbiz.treasurymanagement.TreasuryAccounting" invoke="destinationIsBank" />
+                <response name="success" type="none">
+        </response>
+    </request-map>
 	
     
     <!-- View Mappings -->

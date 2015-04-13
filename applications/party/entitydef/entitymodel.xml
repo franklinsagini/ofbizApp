@@ -1981,7 +1981,7 @@ under the License.
             title="Party Content Type Entity">
         <field name="partyContentTypeId" type="id-ne"></field>
         <field name="parentTypeId" type="id"></field>
-        <field name="description" type="description"></field>
+        <field name="description" type="name"></field>
         <prim-key field="partyContentTypeId"/>
         <relation type="one" fk-name="PARTYCNT_TP_PAR" title="Parent" rel-entity-name="PartyContentType">
             <key-map field-name="parentTypeId" rel-field-name="partyContentTypeId"/>
@@ -3459,7 +3459,12 @@ under the License.
      <entity entity-name="Relationship" package-name="org.ofbiz.party.party" title="Relationship Entity">
      		<field name="relationshipId" type="id-int"></field>
      		<field name="name" type="name"></field>
+     		
      		<prim-key field="relationshipId"/>
+     		<index name="relation_name" unique="true">
+     			<index-field name="name" function="upper"/>
+     		</index>
+     		
      </entity>
 
     <!-- Member Nominee -->

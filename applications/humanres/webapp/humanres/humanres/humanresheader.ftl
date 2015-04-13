@@ -8,17 +8,15 @@
 	
          var leaveTypeId = this.value;
          //console.log(leaveTypeId);
-         if (leaveTypeId =="ANNUAL_LEAVE") {
+         if ((leaveTypeId =="ANNUAL_LEAVE")||(leaveTypeId =="SPECIAL_DAY_OFF")) {
           var appointmentdate =  jQuery('input[name="appointmentdate"]').val();
          var partyId =  jQuery('input[name="partyId"]').val();
          var reqUrl = '/humanres/control/emplleavebalance';
          	calculateBalance(reqUrl, leaveTypeId, partyId,appointmentdate);
+         	showFieldsLeaveApplication(leaveTypeId);
              }
               else {
-         	 $('input[name="approvedLeaveSumed"]').val('NOT APPLICABLE');
-					 $('input[name="accruedLeaveDays"]').val('NOT APPLICABLE');
-					 $('input[name="leaveBalance"]').val('NOT APPLICABLE');
-					 $('input[name="carryOverLeaveDays"]').val('NOT APPLICABLE');
+         	 HideFieldsLeaveApplication(leaveTypeId);
              }
          
          
@@ -108,7 +106,7 @@
         var leaveBalance =  jQuery('input[name="leaveBalance"]').val();
         var diff = leaveDuration - leaveBalance;
         var reqUrl = '/humanres/control/emplleaveend';
-		if(leaveTypeId=='ANNUAL_LEAVE'){
+		if((leaveTypeId =="ANNUAL_LEAVE")||(leaveTypeId =="SPECIAL_DAY_OFF")){
 		 if ((fromDate.length > 0) && (leaveDuration.length > 0) && (diff <= 0)){
          	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId);
          } if(diff > 0){
@@ -118,7 +116,7 @@
           
          }
 		}
-		else if(leaveTypeId!='ANNUAL_LEAVE'){
+		else if((leaveTypeId !="ANNUAL_LEAVE") && (leaveTypeId !="SPECIAL_DAY_OFF")){
 		 if ((fromDate.length > 0) && (leaveDuration.length > 0)){
          	calculateLeaveEndDate(reqUrl, fromDate, leaveDuration, leaveTypeId);
          }
@@ -140,12 +138,112 @@
          var reqUrl =  '/humanres/control/payrollNumber';
          getNextPayrollNumber(reqUrl, employmentTerms);
         });
+        
+         jQuery('select[name="employmentTerms"]').change(function(){
+         var employmentTerms = this.value;
+          if ((employmentTerms != "permanent")){
+         	showAndHideWhenNotPermanent(employmentTerms);
+         }
+          else if ((employmentTerms == "permanent")){
+         	showAndHideWhenPermanent(employmentTerms);
+         }
+         
+        });
 
 
 
         });
         
-        
+         function showAndHideWhenNotPermanent(employmentTerms){
+	    jQuery.ajax({
+	
+	     type   : 'GET',
+	     data   : {'employmentTerms': employmentTerms}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+	     			 $('select[name="employmentStatusEnumId"]').parent().parent().parent().hide();
+	     			 $('input[name="confirmationdate"]').parent().parent().parent().hide();
+	     			 $('input[name="contractEnd"]').parent().parent().parent().show();
+	     			 $('select[name="contractPeriod"]').parent().parent().parent().show();
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	              
+	             
+	    });
+	    } 
+
+	     function showAndHideWhenPermanent(employmentTerms){
+	    jQuery.ajax({
+	
+	     type   : 'GET',
+	     data   : {'employmentTerms': employmentTerms}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+	     			 $('select[name="employmentStatusEnumId"]').parent().parent().parent().show();
+	     			 $('input[name="confirmationdate"]').parent().parent().parent().show();
+	     			 $('input[name="contractEnd"]').parent().parent().parent().hide();
+	     			 $('select[name="contractPeriod"]').parent().parent().parent().hide();
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	              
+	             
+	    });
+	    } 
+
+
+	     function showFieldsLeaveApplication(leaveTypeId){
+	    jQuery.ajax({
+	
+	     type   : 'GET',
+	     data   : {'leaveTypeId': leaveTypeId}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+	     			 $('input[name="approvedLeaveSumed"]').parent().parent().show();
+					 $('input[name="accruedLeaveDays"]').parent().parent().show();
+					 $('input[name="leaveBalance"]').parent().parent().show();
+					 $('input[name="carryOverLeaveDays"]').parent().parent().show();
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	              
+	             
+	    });
+	    } 
+
+	      function HideFieldsLeaveApplication(leaveTypeId){
+	    jQuery.ajax({
+	
+	     type   : 'GET',
+	     data   : {'leaveTypeId': leaveTypeId}, //here you can pass the parameters to  
+	                                                   //the request if any.
+	     success : function(data){
+	     			 $('input[name="approvedLeaveSumed"]').parent().parent().hide();
+					 $('input[name="accruedLeaveDays"]').parent().parent().hide();
+					 $('input[name="leaveBalance"]').parent().parent().hide();
+					 $('input[name="carryOverLeaveDays"]').parent().parent().hide();
+					 
+	               },
+	      error : function(errorData){
+	
+	              alert("Some error occurred while processing the request");
+	              }
+	              
+	             
+	    });
+	    } 
+
+	    
          
     
      
@@ -420,7 +518,7 @@
     	var pinNumber  = jQuery('input[name="pinNumber"]').val();
 		var mobNo = jQuery('input[name="mobNo"]').val();
     	var emailAddress  = jQuery('input[name="emailAddress"]').val();
-		var employeeNumber = jQuery('input[name="employeeNumber"]').val();
+		/** var employeeNumber = jQuery('input[name="employeeNumber"]').val(); **/
 		var socialSecurityNumber = jQuery('input[name="socialSecurityNumber"]').val();
     	var nhifNumber  = jQuery('input[name="nhifNumber"]').val();
 		var passportNumber = jQuery('input[name="passportNumber"]').val();
@@ -430,7 +528,7 @@
     	var pinNumberState = '';
     	var passportNumberState = '';
     	var mobileNumberState = '';
-		var employeeNumberState = '';
+		//var employeeNumberState = '';
 		var nhifNumberState = '';
     	var socialSecurityNumberState = '';
 		var emailAddressState = '';
@@ -450,7 +548,7 @@
 							pinNumberState =  data.pinNumberState;
 							passportNumberState =  data.passportNumberState;
 							mobileNumberState =  data.mobileNumberState;
-							employeeNumberState =  data.employeeNumberState;
+							//employeeNumberState =  data.employeeNumberState;
 							nhifNumberState =  data.nhifNumberState;
 							socialSecurityNumberState =  data.socialSecurityNumberState;
 							emailAddressState =  data.emailAddressState;

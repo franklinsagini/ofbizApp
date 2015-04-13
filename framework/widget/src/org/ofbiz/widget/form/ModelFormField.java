@@ -2615,6 +2615,7 @@ public class ModelFormField {
 					&& !this.entityName.equals("FuneralExpenseAmount")
 					&& !this.entityName.equals("Relationship")
 					&& !this.entityName.equals("SalaryMonthYear")
+					&& !this.entityName.equals("MemberType")
 					
 					
 					

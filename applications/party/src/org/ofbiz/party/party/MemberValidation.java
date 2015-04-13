@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -28,6 +29,8 @@ import com.google.gson.Gson;
  *         idNumber pinNumber payrollNumber mobileNumber employeeNumber
  * */
 public class MemberValidation {
+	public static String BUSINESSPREFIX = "HAZ9";
+	public static Integer COUNTDIGITS = 6;
 
 	public static String uniqueFieldsValidation(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -38,6 +41,17 @@ public class MemberValidation {
 		String payrollNumber = (String) request.getParameter("payrollNumber");
 		String mobileNumber = (String) request.getParameter("mobileNumber");
 		String employeeNumber = (String) request.getParameter("employeeNumber");
+		String memberType = (String) request.getParameter("memberType");
+		
+		if (memberType.equals("BUSINESS")){
+			//Get the count of business numbers and + 1
+			Integer businessMemberCount = SaccoUtility.getBusinessMemberCount();
+			businessMemberCount = businessMemberCount + 1;
+			
+			payrollNumber = BUSINESSPREFIX+StringUtils.leftPad(String.valueOf(businessMemberCount), COUNTDIGITS, "0");
+			result.put("payrollNumber", payrollNumber);
+			System.out.println(" TTTTTTTTTTTTTPPPPPPPPPPPPP "+payrollNumber);
+		}
 
 		String idNumberState = "FREE";
 		String pinNumberState = "FREE";

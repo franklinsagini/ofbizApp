@@ -860,4 +860,146 @@ public class FileServices {
 	            Debug.logError(e, module);
 	        }
 	    }
+	 
+	//================================ CHECK EXISTANCE OF A FILE ====================================================
+		
+		public static String findExistanceOfFile(String partyId) {
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			String state = null;
+			List<GenericValue> FileLI = null;
+			try {
+				FileLI = delegator.findList("RegistryFiles", EntityCondition.makeCondition("partyId", partyId), null, null, null, false);
+				
+			} catch (GenericEntityException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+
+			if (FileLI.size() > 0){
+			state = "INVALID";
+			}
+			else {
+				state = "VALID";
+			}
+		
+			return state;
+			
+		}
+		
+		public static String isMaxEntryInteger(String input){
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			String state = null;
+			try {
+			  Integer.parseInt(input);
+			  state = "VALID";
+			  deleteExistingMaxNoFiles(delegator);
+			} catch (NumberFormatException e) {
+				state = "INVALID";
+			 }
+			return state; 
+			}
+		
+		private static void deleteExistingMaxNoFiles(Delegator delegator) {
+			// TODO Auto-generated method stub
+			log.info("######## Tyring to Delete ######## !!!");
+
+			try {
+				delegator.removeAll("RegistryFileSettingMaxNumberOfFilesPerUser");
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			log.info("DELETED  ALL RECORDS!" );
+			
+		}
+		
+		//================================ CHECK Number OF FILEs with a user ====================================================
+		
+				public static String findnoOfOfFileperUser(String userloginId) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					String state = null;
+					int count=0;
+					int count2=0;
+					int totalFiles=0;
+					String allowedfiles = null;
+					List<GenericValue> FileIssuedLI = null;
+					List<GenericValue> FileReqLI = null;
+					
+					EntityConditionList<EntityExpr> getfiles = EntityCondition.makeCondition(UtilMisc.toList(
+						    EntityCondition.makeCondition("actionBy", EntityOperator.EQUALS, userloginId),
+							EntityCondition.makeCondition("status",EntityOperator.EQUALS, "REQUESTED")),EntityOperator.AND);
+					try {
+						FileIssuedLI = delegator.findList("RegistryFiles", EntityCondition.makeCondition("currentPossesser", userloginId), null, null, null, false);
+						FileReqLI = delegator.findList("RegistryFiles",	 getfiles, null, null, null, false);
+						
+					} catch (GenericEntityException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					
+					for (GenericValue genericValue1 : FileIssuedLI) {
+						count++;
+					}
+					
+					for (GenericValue genericValue : FileReqLI) {
+						count2++;
+					}
+					totalFiles = count + count2;
+					
+					log.info("######## Requested ######## :"+count);
+					log.info("######## Issued ######## :"+count2);
+					log.info("######## Total ######## :"+totalFiles);
+					
+					
+					
+					 List<GenericValue> allowedMaxFileELI=null;
+					 GenericValue activity = null;
+					
+
+					try {
+						
+						allowedMaxFileELI = delegator.findList("RegistryFileSettingMaxNumberOfFilesPerUser", null, null, null, null, false);
+						
+					} catch (GenericEntityException e2) {
+						e2.printStackTrace();
+						
+					}
+					
+						
+						if ((allowedMaxFileELI.size() > 0)) {
+							activity = allowedMaxFileELI.get(0);
+							allowedfiles = activity.getString("maxNumber");
+
+						}
+					
+					int allowedMaxfiles = Integer.parseInt(allowedfiles);
+							
+					log.info("######## MaxAllowed ######## :"+allowedfiles);
+					
+					
+					
+					
+				
+
+					if (totalFiles >= allowedMaxfiles){
+					state = "INVALID";
+					}
+					else {
+						state = "VALID";
+					}
+				
+					return state;
+					
+				}
+				
+				public static String checkNull(String input){
+			    String state = null;
+			    input=null;
+				if(input != null){
+					state = "VALID";
+					}
+					else{
+						state = "INVALID";
+					}
+			return state; 
+			}
 }

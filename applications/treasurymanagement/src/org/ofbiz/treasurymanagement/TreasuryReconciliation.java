@@ -488,6 +488,141 @@ public class TreasuryReconciliation {
 		return bdBalance;
 	}
 	
+	public static BigDecimal getNetAllocation(String destinationTreasury){
+		BigDecimal bdNetAllocation = BigDecimal.ZERO;
+		log.info(" DDDDDDDDDDDDDD Destination "+destinationTreasury);
+		
+		//If this is of treasury type bank then get the balance from/in the gl
+		String treasuryTypeName = getTreasuryTypeName(destinationTreasury);
+		if (treasuryTypeName.equals("BANK"))
+		{
+			String glAccountId = getTreasuryAccountId(destinationTreasury);
+			bdNetAllocation = TreasuryAccounting.getAccountBalance(glAccountId);
+			
+			return bdNetAllocation;
+		}
+		
+		bdNetAllocation = bdNetAllocation.add(getTotalIn(destinationTreasury));
+		log.info(" NNNNNNNNNNNNNNNNN Net Allocation  "+bdNetAllocation);
+		bdNetAllocation = bdNetAllocation.subtract(getTotalOut(destinationTreasury));
+		log.info(" NNNNNNNNNNN Net Allocation after "+bdNetAllocation);
+		return bdNetAllocation;
+	}
+	
+	
+	private static String getTreasuryTypeName(String treasuryId) {
+		//Get the treasury type
+		List<GenericValue> treasuryELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury",
+					EntityCondition.makeCondition("treasuryId",
+							treasuryId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String treasuryTypeId = "";
+		for (GenericValue genericValue : treasuryELI) {
+			treasuryTypeId = genericValue.getString("treasuryTypeId");
+		}
+		
+		//get the limit for the treasury type
+		List<GenericValue> treasuryTypeELI = null; // =
+		try {
+			treasuryTypeELI = delegator.findList("TreasuryType",
+					EntityCondition.makeCondition("treasuryTypeId",
+							treasuryTypeId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String name = "";
+		for (GenericValue genericValue : treasuryTypeELI) {
+			name = genericValue.getString("name");
+		}
+		
+		return name.toUpperCase();
+	}
+	
+	private static String getTreasuryAccountId(String treasuryId) {
+		//Get the treasury type
+		List<GenericValue> treasuryELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury",
+					EntityCondition.makeCondition("treasuryId",
+							treasuryId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String glAccountId = "";
+		for (GenericValue genericValue : treasuryELI) {
+			glAccountId = genericValue.getString("glAccountId");
+		}
+		
+		return glAccountId;
+	}
+
+
+	
+	public static BigDecimal getTotalOut(String destinationTreasury) {
+		BigDecimal bdTotalOut = BigDecimal.ZERO;
+		
+		List<GenericValue> treasuryTransferELI = null;
+		//Get all the transfers for this destination treasury
+		EntityConditionList<EntityExpr> treasuryTransferConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"sourceTreasury", EntityOperator.EQUALS,
+						destinationTreasury)
+						),
+						EntityOperator.AND);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryTransferELI = delegator.findList("TreasuryTransfer",
+					treasuryTransferConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : treasuryTransferELI) {
+			bdTotalOut = bdTotalOut.add(genericValue.getBigDecimal("transactionAmount"));
+		}
+		return bdTotalOut;
+	}
+
+
+	public static BigDecimal getTotalIn(String destinationTreasury) {
+		BigDecimal bdTotalIn = BigDecimal.ZERO;
+		
+		List<GenericValue> treasuryTransferELI = null;
+		//Get all the transfers for this destination treasury
+		EntityConditionList<EntityExpr> treasuryTransferConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"destinationTreasury", EntityOperator.EQUALS,
+						destinationTreasury)
+						),
+						EntityOperator.AND);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryTransferELI = delegator.findList("TreasuryTransfer",
+					treasuryTransferConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : treasuryTransferELI) {
+			bdTotalIn = bdTotalIn.add(genericValue.getBigDecimal("transactionAmount"));
+		}
+		return bdTotalIn;
+	}
+
+
 	public static BigDecimal getTotalAllocated(String destinationTreasury, Date transferDate){
 		BigDecimal bdTotalAllocated = BigDecimal.ZERO;
 		

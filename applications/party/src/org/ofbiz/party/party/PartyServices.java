@@ -56,6 +56,8 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -70,6 +72,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.humanres.HumanResServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -88,6 +91,9 @@ public class PartyServices {
 	public static final String resource = "PartyUiLabels";
 	public static final String resourceError = "PartyErrorUiLabels";
 	public static Logger log = Logger.getLogger(PartyServices.class);
+	public static String SHARECAPITALCODE = "902";
+	public static String MEMBERDEPOSITCODE = "901";
+
 	/**
 	 * Deletes a Party.
 	 * 
@@ -160,8 +166,9 @@ public class PartyServices {
 		// check to see if party object exists, if so make sure it is PERSON
 		// type party
 		GenericValue party = null;
-		
-		//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
+
+		// NEW PARTY ROLE
+		// EMPLOYEE=======================================================================================================================
 		GenericValue partyRoleEmployee = null;
 
 		try {
@@ -188,11 +195,16 @@ public class PartyServices {
 					partyId, "partyTypeId", "PERSON", "description",
 					description, "createdDate", now, "lastModifiedDate", now,
 					"statusId", statusId);
-			
-			/*//NEW PARTY ROLE EMPLOYEE=======================================================================================================================
-			Map<String, Object> newPartyRoleMap = UtilMisc.toMap("partyId",
-					partyId, "roleTypeId", "EMPLOYEE");*/
-			
+
+			/*
+			 * //NEW PARTY ROLE
+			 * EMPLOYEE==========================================
+			 * ================
+			 * =============================================================
+			 * Map<String, Object> newPartyRoleMap = UtilMisc.toMap("partyId",
+			 * partyId, "roleTypeId", "EMPLOYEE");
+			 */
+
 			String preferredCurrencyUomId = (String) context
 					.get("preferredCurrencyUomId");
 			if (!UtilValidate.isEmpty(preferredCurrencyUomId)) {
@@ -209,54 +221,45 @@ public class PartyServices {
 				newPartyMap.put("lastModifiedByUserLogin",
 						userLogin.get("userLoginId"));
 			}
-			
-			
-			//====================================================NEW PARTY ROLE EMPLOYEE===================================================================
-			partyRoleEmployee = delegator.makeValue("PartyRole",
-					UtilMisc.toMap("partyId", partyId, "roleTypeId", "EMPLOYEE"));
-			
-			//===================================================NEW EMPLOYEE RECORD FOR FILING====================================================================
-			/*String memberPlusPersonId = (String) context.get("memberPlusPersonId");
-			
-			if (UtilValidate.isEmpty(memberPlusPersonId)) {
-				try {
-					memberPlusPersonId = delegator.getNextSeqId("memberPlusPerson");
-				} catch (IllegalArgumentException e) {
-					return ServiceUtil
-							.returnError(UtilProperties
-									.getMessage(
-											resourceError,
-											"partyservices.could_not_create_party_group_generation_failure",
-											locale));
-				}
-			} else {
-				// if specified partyId starts with a number, return an error
-				if (memberPlusPersonId.matches("\\d+")) {
-					return ServiceUtil
-							.returnError(UtilProperties
-									.getMessage(
-											resourceError,
-											"partyservices.could_not_create_party_ID_digit",
-											locale));
-				}
-			}
-			
-			
-			GenericValue fileEmployee = null;
-			fileEmployee = delegator.makeValue("memberPlusPerson",
-					UtilMisc.toMap(	"partyId", partyId,
-							"firstName", context.get("firstName"),  
-							"lastName", context.get("lastName"),  
-							"payrollNo", context.get("employeeNumber"), 
-							"idNumber", context.get("nationalIDNumber"),
-							"employmentStatus", context.get("employmentStatusEnumId"),
-							"fileType", "EMPLOYEE"));*/
-			
-			
+
+			// ====================================================NEW PARTY
+			// ROLE
+			// EMPLOYEE===================================================================
+			partyRoleEmployee = delegator.makeValue("PartyRole", UtilMisc
+					.toMap("partyId", partyId, "roleTypeId", "EMPLOYEE"));
+
+			// ===================================================NEW EMPLOYEE
+			// RECORD FOR
+			// FILING====================================================================
+			/*
+			 * String memberPlusPersonId = (String)
+			 * context.get("memberPlusPersonId");
+			 * 
+			 * if (UtilValidate.isEmpty(memberPlusPersonId)) { try {
+			 * memberPlusPersonId = delegator.getNextSeqId("memberPlusPerson");
+			 * } catch (IllegalArgumentException e) { return ServiceUtil
+			 * .returnError(UtilProperties .getMessage( resourceError,
+			 * "partyservices.could_not_create_party_group_generation_failure",
+			 * locale)); } } else { // if specified partyId starts with a
+			 * number, return an error if (memberPlusPersonId.matches("\\d+")) {
+			 * return ServiceUtil .returnError(UtilProperties .getMessage(
+			 * resourceError, "partyservices.could_not_create_party_ID_digit",
+			 * locale)); } }
+			 * 
+			 * 
+			 * GenericValue fileEmployee = null; fileEmployee =
+			 * delegator.makeValue("memberPlusPerson", UtilMisc.toMap(
+			 * "partyId", partyId, "firstName", context.get("firstName"),
+			 * "lastName", context.get("lastName"), "payrollNo",
+			 * context.get("employeeNumber"), "idNumber",
+			 * context.get("nationalIDNumber"), "employmentStatus",
+			 * context.get("employmentStatusEnumId"), "fileType", "EMPLOYEE"));
+			 */
+
 			party = delegator.makeValue("Party", newPartyMap);
 			toBeStored.add(party);
 			toBeStored.add(partyRoleEmployee);
-			/*toBeStored.add(fileEmployee);*/
+			/* toBeStored.add(fileEmployee); */
 
 			// create the status history
 			GenericValue statusRec = delegator.makeValue("PartyStatus",
@@ -270,7 +273,7 @@ public class PartyServices {
 		try {
 			person = delegator.findOne("Person",
 					UtilMisc.toMap("partyId", partyId), false);
-			
+
 		} catch (GenericEntityException e) {
 			Debug.logWarning(e.getMessage(), module);
 		}
@@ -279,12 +282,13 @@ public class PartyServices {
 			return ServiceUtil.returnError(UtilProperties.getMessage(
 					resourceError, "person.create.person_exists", locale));
 		}
-		
-		
-		
 
-		person = delegator.makeValue("Person",
-				UtilMisc.toMap("partyId", partyId));
+		String employmentTerms = (String) context.get("employmentTerms");
+		String nextPayrollNo = HumanResServices
+				.NextPayrollNumber(employmentTerms);
+
+		person = delegator.makeValue("Person", UtilMisc.toMap("partyId",
+				partyId, "employeeNumber", nextPayrollNo));
 		person.setNonPKFields(context);
 		toBeStored.add(person);
 
@@ -296,92 +300,85 @@ public class PartyServices {
 					resourceError, "person.create.db_error",
 					new Object[] { e.getMessage() }, locale));
 		}
-		
 
-		//===================================================UPDATE POSITION & POSTING DETAILS====================================================================
- 
+		// ===================================================UPDATE POSITION &
+		// POSTING
+		// DETAILS====================================================================
+
 		List<GenericValue> listUpdates = new ArrayList<GenericValue>();
-		//     String payGradeId = (String) context.get("payGradeId");
+		// String payGradeId = (String) context.get("payGradeId");
 		String emplPositionTypeId = (String) context.get("emplPositionTypeId");
-		
-		log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "+emplPositionTypeId);
+
+		log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "
+				+ emplPositionTypeId);
 		String emplPositionId = getempPositionId(delegator, emplPositionTypeId);
-		
+
 		String branchId = (String) context.get("branchId");
 		String departmentId = (String) context.get("departmentId");
-//		String partyId_upd = (String) context.get("partyId");
+		// String partyId_upd = (String) context.get("partyId");
 		Date applctnDte = (Date) context.get("appointmentdate");
 		Timestamp appDate = new Timestamp(applctnDte.getTime());
-		
-		
-		
 
-		log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "+emplPositionTypeId);
-		log.info("######### emplPositionId here>>>>>>>>>>>>>>>>>>>>>   "+emplPositionId);
-		log.info("######### branchId here>>>>>>>>>>>>>>>>>>>>>   "+branchId);
-		log.info("######### departmentId here>>>>>>>>>>>>>>>>>>>>>   "+departmentId);
-		log.info("######### partyId_upd here>>>>>>>>>>>>>>>>>>>>>   "+partyId);
-		log.info("######### applctnDte here>>>>>>>>>>>>>>>>>>>>>   "+applctnDte);
-           
-        
-        GenericValue emplPosition = null;
-        emplPosition = delegator.makeValue("EmplPositionFulfillment",
-                UtilMisc.toMap("emplPositionId", emplPositionId,
-                        "partyId", partyId,
-                        "emplPositionTypeId", emplPositionTypeId,  
-                        "fromDate", appDate));
-        
-        listUpdates.add(emplPosition);
-        
+		log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "
+				+ emplPositionTypeId);
+		log.info("######### emplPositionId here>>>>>>>>>>>>>>>>>>>>>   "
+				+ emplPositionId);
+		log.info("######### branchId here>>>>>>>>>>>>>>>>>>>>>   " + branchId);
+		log.info("######### departmentId here>>>>>>>>>>>>>>>>>>>>>   "
+				+ departmentId);
+		log.info("######### partyId_upd here>>>>>>>>>>>>>>>>>>>>>   " + partyId);
+		log.info("######### applctnDte here>>>>>>>>>>>>>>>>>>>>>   "
+				+ applctnDte);
 
-        GenericValue emplPosting = null;
-        emplPosting = delegator.makeValue("Employment",
-                UtilMisc.toMap("roleTypeIdFrom", "INTERNAL_ORGANIZATIO",
-		                "roleTypeIdTo", "EMPLOYEE",
-		                "partyIdFrom", "Company",
-		                "partyIdTo", partyId, 
-                        "fromDate", appDate,               		
-                		"branchId", branchId,
-                        "departmentId", departmentId));
-        
-        listUpdates.add(emplPosting);
-        
-        try {
+		GenericValue emplPosition = null;
+		emplPosition = delegator.makeValue("EmplPositionFulfillment", UtilMisc
+				.toMap("emplPositionId", emplPositionId, "partyId", partyId,
+						"emplPositionTypeId", emplPositionTypeId, "fromDate",
+						appDate));
+
+		listUpdates.add(emplPosition);
+
+		GenericValue emplPosting = null;
+		emplPosting = delegator.makeValue("Employment", UtilMisc.toMap(
+				"roleTypeIdFrom", "INTERNAL_ORGANIZATIO", "roleTypeIdTo",
+				"EMPLOYEE", "partyIdFrom", "Company", "partyIdTo", partyId,
+				"fromDate", appDate, "branchId", branchId, "departmentId",
+				departmentId));
+
+		listUpdates.add(emplPosting);
+
+		try {
 			delegator.storeAll(listUpdates);
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-      
-
 		result.put("partyId", partyId);
 		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
 		return result;
 	}
-	
 
 	private static String getempPositionId(Delegator delegator,
 			String emplPositionTypeId) {
-		String emplPositionId=null;
+		String emplPositionId = null;
 		List<GenericValue> epELI = null;
-		
+
 		try {
 			epELI = delegator.findList("EmplPosition", EntityCondition
-					.makeCondition("emplPositionTypeId", emplPositionTypeId), null,
-					null, null, false);
-		
+					.makeCondition("emplPositionTypeId", emplPositionTypeId),
+					null, null, null, false);
+
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
-		if(!(epELI.isEmpty()))
-		{
+
+		if (!(epELI.isEmpty())) {
 			for (GenericValue genericValue : epELI) {
-				emplPositionId=genericValue.getString("emplPositionId");			
+				emplPositionId = genericValue.getString("emplPositionId");
 			}
-		}		
-		
+		}
+
 		return emplPositionId;
 	}
 
@@ -3451,8 +3448,7 @@ public class PartyServices {
 						fieldsToSelect.add("partyId");
 
 						orderBy.add("partyId DESC");
-						
-						
+
 					}
 
 					// ----
@@ -3792,7 +3788,7 @@ public class PartyServices {
 								.findListIteratorByCondition(dynamicView,
 										mainCond, null, fieldsToSelect,
 										orderBy, findOpts);
-						
+
 						// get the partial list for this page
 						partyList = pli.getPartialList(lowIndex, viewSize);
 
@@ -3832,7 +3828,8 @@ public class PartyServices {
 	}
 
 	/***
-	 * @author Japheth Odonya @when Sep 4, 2014 12:21:37 AM Member has Nominees and Referee
+	 * @author Japheth Odonya @when Sep 4, 2014 12:21:37 AM Member has Nominees
+	 *         and Referee
 	 * */
 	public static String memberHasNomineeReferee(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -3843,9 +3840,10 @@ public class PartyServices {
 		List<GenericValue> memberNomineeELI = null; // =
 		memberId = memberId.replaceAll(",", "");
 		try {
-			memberNomineeELI = delegator.findList("MemberNominee",
-					EntityCondition.makeCondition("partyId", Long.valueOf(memberId)), null,
-					null, null, false);
+			memberNomineeELI = delegator.findList(
+					"MemberNominee",
+					EntityCondition.makeCondition("partyId",
+							Long.valueOf(memberId)), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -3859,9 +3857,10 @@ public class PartyServices {
 		List<GenericValue> memberRefereeELI = null; // =
 
 		try {
-			memberRefereeELI = delegator.findList("MemberReferee",
-					EntityCondition.makeCondition("partyId", Long.valueOf(memberId)), null,
-					null, null, false);
+			memberRefereeELI = delegator.findList(
+					"MemberReferee",
+					EntityCondition.makeCondition("partyId",
+							Long.valueOf(memberId)), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -3871,7 +3870,7 @@ public class PartyServices {
 		} else {
 			result.put("refereeavailabe", "Y");
 		}
-		
+
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
 
@@ -3913,16 +3912,17 @@ public class PartyServices {
 	 * 
 	 * */
 	public static String memberHasReferees(GenericValue member) {
-		//Map<String, Object> result = FastMap.newInstance();
+		// Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = member.getDelegator();
 		String memberId = member.getString("partyId");
 
 		List<GenericValue> memberRefereeELI = null; // =
 		memberId = memberId.replaceAll(",", "");
 		try {
-			memberRefereeELI = delegator.findList("MemberReferee",
-					EntityCondition.makeCondition("partyId", Long.valueOf(memberId)), null,
-					null, null, false);
+			memberRefereeELI = delegator.findList(
+					"MemberReferee",
+					EntityCondition.makeCondition("partyId",
+							Long.valueOf(memberId)), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -3935,14 +3935,14 @@ public class PartyServices {
 		}
 		return refereeavailabe;
 	}
-	
+
 	/**
-	 * @author Japheth Odonya  @when Sep 4, 2014 12:45:52 AM
+	 * @author Japheth Odonya @when Sep 4, 2014 12:45:52 AM
 	 * 
-	 * Has Nominees
+	 *         Has Nominees
 	 * **/
 	public static String memberHasNominees(GenericValue member) {
-		//Map<String, Object> result = FastMap.newInstance();
+		// Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = member.getDelegator();
 		Long memberId = member.getLong("partyId");
 
@@ -3963,34 +3963,279 @@ public class PartyServices {
 		}
 		return nomineesavailabe;
 	}
-	
+
 	public static String NextPayrollNumber(Delegator delegator) {
-		String employeeNumber=null;
-		
+		String employeeNumber = null;
+
 		try {
 
-			String helperNam = delegator.getGroupHelperName("org.ofbiz");    // gets the helper (localderby, localmysql, localpostgres, etc.) for your entity group org.ofbiz
-			Connection conn = ConnectionFactory.getConnection(helperNam); 
+			String helperNam = delegator.getGroupHelperName("org.ofbiz"); // gets
+																			// the
+																			// helper
+																			// (localderby,
+																			// localmysql,
+																			// localpostgres,
+																			// etc.)
+																			// for
+																			// your
+																			// entity
+																			// group
+																			// org.ofbiz
+			Connection conn = ConnectionFactory.getConnection(helperNam);
 			Statement statement = conn.createStatement();
-			String sqlw=("SELECT * FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
-			//statement.execute("SELECT party_id,employee_number FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
+			String sqlw = ("SELECT * FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
+			// statement.execute("SELECT party_id,employee_number FROM Person a where a.employee_number!='' and created_stamp=(select max(created_stamp) from Person b where employee_number!='')");
 			ResultSet results = statement.executeQuery(sqlw);
-				String emplNo=results.getString("employee_number");
-				 String trancatemplNo= StringUtils.substring(emplNo, 3);
-				 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
-				 String h=String.valueOf(newEmplNo);
-				/* newPayrollNo="HCS".concat(h);*/
-				 employeeNumber="HCS"+h;
-				
-			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +employeeNumber);
-				
+			String emplNo = results.getString("employee_number");
+			String trancatemplNo = StringUtils.substring(emplNo, 3);
+			int newEmplNo = Integer.parseInt(trancatemplNo) + 1;
+			String h = String.valueOf(newEmplNo);
+			/* newPayrollNo="HCS".concat(h); */
+			employeeNumber = "HCS" + h;
+
+			log.info("++++++++++++++newPayrollNo++++++++++++++++"
+					+ employeeNumber);
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-		
+
 		return employeeNumber;
 
-		
 	}
+
+	/***
+	 * memberHasPhoto
+	 ***/
+	public static Boolean memberHasPhoto(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		// Get Member and confirm that photo has something - its not null
+
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+
+		if ((member != null) && (member.getString("photourl") != null)
+				&& (!member.getString("photourl").equals("")))
+			return true;
+
+		return false;
+	}
+
+	/***
+	 * memberHasIdFront
+	 * */
+	public static Boolean memberHasIdFront(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		// Get Member and confirm that Id Front has something - its not null
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+
+		if ((member != null) && (member.getString("idfronturl") != null)
+				&& (!member.getString("idfronturl").equals("")))
+			return true;
+
+		return false;
+
+	}
+
+	/***
+	 * memberHasIdBack
+	 * */
+	public static Boolean memberHasIdBack(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		// Get Member and confirm that photo has something - its not null
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+
+		if ((member != null) && (member.getString("idbackurl") != null)
+				&& (!member.getString("idbackurl").equals("")))
+			return true;
+
+		return false;
+	}
+
+	/***
+	 * memberHasSignature
+	 * */
+	public static Boolean memberHasSignature(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		// Get Member and confirm that photo has something - its not null
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+
+		if ((member != null) && (member.getString("signatureurl") != null)
+				&& (!member.getString("signatureurl").equals("")))
+			return true;
+
+		return false;
+	}
+
+	/***
+	 * memberHasTermsAndConditions
+	 * */
+	public static Boolean memberHasTermsAndConditions(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		// Get Member and confirm that photo has something - its not null
+
+		List<GenericValue> termsAndConditionsELI = null; // =
+
+		try {
+			termsAndConditionsELI = delegator.findList("TermsAndConditions",
+					EntityCondition.makeCondition("partyId", memberId), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if ((termsAndConditionsELI != null)
+				&& (termsAndConditionsELI.size() > 0)
+				&& (termsAndConditionsELI.get(0).getString(
+						"acceptTermsAndConditions").equals("Y"))){
+			return true;
+		}
+		return false;
+	}
+
+	/***
+	 * memberHasShareCapital
+	 * */
+	public static Boolean memberHasShareCapital(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		// Get Member and confirm that photo has something - its not null
+		
+		//Get accountProductId - the share capital id
+		Long accountProductId = getAccountProductId(SHARECAPITALCODE);
+		
+		//get the share capital account for the member
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId),
+
+				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
+						memberId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (memberAccountELI.size() > 0)
+			return true;
+		
+		return false;
+	}
+
+	private static Long getAccountProductId(String code) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+
+		List<GenericValue> accountProductELI = null; // =
+
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					EntityCondition.makeCondition("code", code), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		Long accountProductId = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProductId = genericValue.getLong("accountProductId");
+		}
+
+		return accountProductId;
+	}
+
+	/***
+	 * memberHasMemberDeposit
+	 * */
+	public static Boolean memberHasMemberDeposit(Long memberId) {
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		// Get Member and confirm that photo has something - its not null
+		
+		//Get accountProductId - the share capital id
+		Long accountProductId = getAccountProductId(MEMBERDEPOSITCODE);
+		
+		//get the share capital account for the member
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId),
+
+				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
+						memberId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (memberAccountELI.size() > 0)
+			return true;
+		
+		return false;
+	}
+	
+	public static Boolean isMemberApproved(Long memberId){
+		Long memberStatusId = SaccoUtility.getMemberStatusID("ACTIVE");
+		
+		Delegator delegator = DelegatorFactory.getDelegator(null);
+		// Get Member and confirm that Id Front has something - its not null
+		GenericValue member = null;
+
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+
+		} catch (GenericEntityException e) {
+			log.error(" Can't get a member !!! ");
+		}
+
+		if ((member != null) && (member.getLong("memberStatusId") != null)
+				&& (member.getLong("memberStatusId") == memberStatusId))
+			return true;
+
+		return false;
+	}
+
 }

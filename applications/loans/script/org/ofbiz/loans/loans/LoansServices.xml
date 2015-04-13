@@ -194,6 +194,7 @@ under the License.
         
         <!-- set field="productType" value="Loan"/ -->
         
+        
         <if-empty field="parameters.loanApplicationId">
 			<call-simple-method method-name="saveLoanApplication" scope="inline"></call-simple-method>
 			<set field="charges" value="${bsh:org.ofbiz.loans.LoanServices.addCharges(newEntity, userLogin);}" type="String"/>
@@ -249,8 +250,39 @@ under the License.
             <!-- Set OrganizationUnit -->
             <set field="partyId" from-field="userLogin.partyId"/>
             <!-- set field="newEntity.organizationUnitId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getUserOrganizationUnit(partyId);}" type="Long"/ -->
-            <create-value value-field="newEntity"/>
-    </simple-method>
+            
+            
+            <!-- Checking the repaymentPeriod -->
+	        <set field="loanProductId" from-field="newEntity.loanProductId" type="Long"/>
+	        <set field="providedRepaymentPeriod" from-field="newEntity.repaymentPeriod" type="Long"/>
+	        
+	        <log message=" RRRRRR Repayment Period " level="info"/>
+	        <log message="providedRepaymentPeriod" level="info"/>
+	        <log message="LLLLLLL Loan Product" level="info"/>
+	        <log message="loanProductId" level="info"/>
+	        <set field="trueStatus" value="true" type="Boolean"/>
+	        <set field="repaymentPeriodValid" value="${bsh:org.ofbiz.loans.LoanServices.repaymentPeriodValid(providedRepaymentPeriod, loanProductId);}" type="Boolean"/>
+            
+            <if> 
+            <condition> 
+                        <if-compare-field to-field="trueStatus" operator="not-equals" field="repaymentPeriodValid"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="LoanUiLabels.xml"  
+                        property="loanApplicationRepaymentPeriodError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="LoanUiLabels.xml" 
+            property="loanApplicationRepaymentPeriodSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+            
+     </simple-method>
     
     <simple-method method-name="updateLoanApplication" short-description="Update Loan Application">
         <entity-one entity-name="LoanApplication" value-field="lookedUpValue"/>
@@ -266,7 +298,25 @@ under the License.
             <set field="lookedUpValue.isActive" from-field="currentApplication.isActive"/>
             <set field="lookedUpValue.loanNo" from-field="currentApplication.loanNo"/>
         
-        <store-value value-field="lookedUpValue"/>
+                   <if> 
+            <condition> 
+                        <if-compare-field to-field="trueStatus" operator="not-equals" field="repaymentPeriodValid"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="LoanUiLabels.xml"  
+                        property="loanApplicationRepaymentPeriodError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<store-value value-field="lookedUpValue"/>
+                <property-to-field resource="LoanUiLabels.xml" 
+            property="loanApplicationRepaymentPeriodSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+        
     </simple-method>
     
     <simple-method method-name="deleteLoanApplication" short-description="Delete Loan Application">

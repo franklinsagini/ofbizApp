@@ -1,7 +1,13 @@
 package org.ofbiz.party.party;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -13,11 +19,31 @@ import org.ofbiz.entity.condition.EntityCondition;
 //org.ofbiz.party.party.getMemberStatusID.SaccoUtility(name)
 public class SaccoUtility {
 	
+	public static Log log = LogFactory.getLog(SaccoUtility.class);
+	
 	public static Long getNextSequenc(String sequenceName){
 		Long nextId = 0L;
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		nextId = delegator.getNextSeqIdLong(sequenceName);
+		
+		return nextId;
+	}
+	
+	public static Long getNextPartySequence(String sequenceName){
+		String nextId = "";
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		nextId = delegator.getNextSeqId(sequenceName);
+		
+		return Long.valueOf(nextId);
+	}
+	
+	public static String getNextStringSequence(String sequenceName){
+		String nextId = "";
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		nextId = delegator.getNextSeqId(sequenceName);
 		
 		return nextId;
 	}
@@ -115,6 +141,149 @@ public class SaccoUtility {
 		name = name.replaceAll(",", "");
 
 		return name;
+	}
+
+	public static Integer getBusinessMemberCount() {
+		Long memberTypeId = getMemberTypeId("BUSINESS");
+		
+		//Get the count of member of type Business
+		
+		List<GenericValue> memberELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberELI = delegator.findList("Member",
+					EntityCondition.makeCondition("memberTypeId",
+							memberTypeId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		return memberELI.size();
+	}
+	
+	
+	public static Long getMemberTypeId(String name) {
+		List<GenericValue> memberTypeELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberTypeELI = delegator.findList("MemberType",
+					EntityCondition.makeCondition("name",
+							name), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		Long memberTypeId = 0L;
+		 for (GenericValue genericValue : memberTypeELI) {
+			 memberTypeId = genericValue.getLong("memberTypeId");
+		 }
+		return memberTypeId;
+	}
+	
+	
+	//value - Mother columnName name, entityName Relationship
+	public static Boolean itemExists(String value, String columnName, String entityName) {
+		List<GenericValue> entityListELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		log.info("##########VVVVVVVVVV Value :: "+value+" Column Name "+columnName+" Entity Name "+entityName);
+		
+		try {
+			entityListELI = delegator.findList(entityName,
+					EntityCondition.makeCondition(columnName,
+							value), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		log.info(" SSSSSSSSSSSS The Size is "+entityListELI.size());
+		
+		if (entityListELI.size() > 0)
+			return true;
+
+		return false;
+	}
+	
+	public static Boolean isInExcess(Long memberNomineeId, BigDecimal percentage, String fieldName, String entityName, Long memberId){
+	
+		//Get the total already saved 
+		BigDecimal bdTotalAssigned = BigDecimal.ZERO;
+		
+		List<GenericValue> memberNomineeELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		//log.info("##########VVVVVVVVVV Value :: "+value+" Column Name "+columnName+" Entity Name "+entityName);
+		
+		try {
+			memberNomineeELI = delegator.findList(entityName,
+					EntityCondition.makeCondition("partyId",
+							memberId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : memberNomineeELI) {
+			bdTotalAssigned = bdTotalAssigned.add(genericValue.getBigDecimal("percentage"));
+		}
+
+		if (memberNomineeId == null){
+			bdTotalAssigned = bdTotalAssigned.add(percentage);
+		} else{
+			BigDecimal currentPercentage = getCurrentNomineePercentage(memberNomineeId);
+			bdTotalAssigned = bdTotalAssigned.add(percentage);
+			bdTotalAssigned = bdTotalAssigned.subtract(currentPercentage);
+		}
+		//total already saved plus percentage assigned must be less or equal to 100
+		
+		if (bdTotalAssigned.compareTo(new BigDecimal(100)) == 1)
+			return true; //In excess
+		
+		return false;
+	}
+
+	private static BigDecimal getCurrentNomineePercentage(Long memberNomineeId) {
+		List<GenericValue> memberNomineeELI = null; // =
+		BigDecimal bdNomineePercentage = BigDecimal.ZERO;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		//log.info("##########VVVVVVVVVV Value :: "+value+" Column Name "+columnName+" Entity Name "+entityName);
+		
+		try {
+			memberNomineeELI = delegator.findList("MemberNominee",
+					EntityCondition.makeCondition("memberNomineeId",
+							memberNomineeId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : memberNomineeELI) {
+			bdNomineePercentage = bdNomineePercentage.add(genericValue.getBigDecimal("percentage"));
+		}
+		
+		
+		return bdNomineePercentage;
+	}
+	
+	public static Date getJoinDate(Long memberId)
+	{
+		Date joinDate = null;
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", memberId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (member != null)
+			joinDate = member.getDate("joinDate");
+		
+		
+		log.info(" The OLD DATE IS IIIIIIIIIIIIIIIIIIIII "+joinDate);
+		return joinDate;
 	}
 
 }

@@ -762,15 +762,36 @@ GenericValue employeeLeaveType = null;
 		
 		Map<String, Object> result = FastMap.newInstance();
 		Date birthDate = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		
 		try {
 			birthDate = (Date)(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthDate")));
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
+		
+		List<GenericValue> prefix = null;
+		GenericValue pre = null;
+		int retireAge = 0;
+		
+		try {
+			
+			prefix = delegator.findList("RetirementAge",null, null, null, null, false);
+			
+		} catch (GenericEntityException e) {
+			return null;
+		}
+		
+		if (prefix.size() > 0){
+			pre = prefix.get(0); 
+			retireAge = Integer.parseInt(pre.getString("retirementAge"));
+		}
+		
+		
+		
 		LocalDate datebirthDate = new LocalDate(birthDate);
 
-		LocalDate bodDate = datebirthDate.plusYears(55);
+		LocalDate bodDate = datebirthDate.plusYears(retireAge);
 		
 	
 		SimpleDateFormat sdfDisplayDate = new SimpleDateFormat("dd/MM/yyyy");
@@ -956,8 +977,8 @@ GenericValue employeeLeaveType = null;
 		
 		String nextEmployeeNumber = null;
 		String PayrollPrefix="HCS";
-		String contractPayrollPrefix="CONT-";
-		String internPayrollPrefix="INT-";
+		String contractPayrollPrefix="CONT";
+		String internPayrollPrefix="INT";
 		
 		
 		List<GenericValue> employeeELI = null;
@@ -1008,7 +1029,7 @@ GenericValue employeeLeaveType = null;
 			
 		} else if(employmentTerms.equalsIgnoreCase("contract")) {
 			
-			 String trancatemplNo= StringUtils.substring(emplNo, 5);
+			 String trancatemplNo= StringUtils.substring(emplNo, 4);
 			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
 			 String h=String.valueOf(newEmplNo);
 			 nextEmployeeNumber=contractPayrollPrefix.concat(h);
@@ -1017,7 +1038,7 @@ GenericValue employeeLeaveType = null;
 
 		}else if(employmentTerms.equalsIgnoreCase("intern")) {
 			
-			 String trancatemplNo= StringUtils.substring(emplNo, 4);
+			 String trancatemplNo= StringUtils.substring(emplNo, 3);
 			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
 			 String h=String.valueOf(newEmplNo);
 			 nextEmployeeNumber=internPayrollPrefix.concat(h);
@@ -1107,8 +1128,8 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String nextEmployeeNumber = null;
 		String PayrollPrefix="HCS";
-		String contractPayrollPrefix="CONT-";
-		String internPayrollPrefix="INT-";
+		String contractPayrollPrefix="CONT";
+		String internPayrollPrefix="INT";
 		
 		
 		List<GenericValue> employeeELI = null;
@@ -1133,7 +1154,7 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		
 		
 		EntityConditionList<EntityExpr> payRollConditions = EntityCondition.makeCondition(UtilMisc.toList(
-				EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
+				/*EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),*/
 				EntityCondition.makeCondition("employmentTerms",EntityOperator.EQUALS, employmentTerms)),
 					EntityOperator.AND);
 		
@@ -1146,9 +1167,9 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		if (employeeELI.size() > 0){
 			lastEmployee = employeeELI.get(0); 
 		String emplNo=lastEmployee.getString("employeeNumber");
-		String emplTerms=lastEmployee.getString("employmentTerms");
+		//String emplTerms=lastEmployee.getString("employmentTerms");
 		
-		if (emplTerms.equalsIgnoreCase("permanent")) {
+		if (employmentTerms.equalsIgnoreCase("permanent")) {
 			
 			 String trancatemplNo= StringUtils.substring(emplNo, 3);
 			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
@@ -1157,18 +1178,18 @@ public static String  NextPayrollNumber(String employmentTerms) {
 			 
 			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
 			
-		} else if(emplTerms.equalsIgnoreCase("contract")) {
+		} else if(employmentTerms.equalsIgnoreCase("contract")) {
 			
-			 String trancatemplNo= StringUtils.substring(emplNo, 5);
+			 String trancatemplNo= StringUtils.substring(emplNo, 4);
 			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
 			 String h=String.valueOf(newEmplNo);
 			 nextEmployeeNumber=contractPayrollPrefix.concat(h);
 			 
 			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
 
-		}else if(emplTerms.equalsIgnoreCase("intern")) {
+		}else if(employmentTerms.equalsIgnoreCase("intern")) {
 			
-			 String trancatemplNo= StringUtils.substring(emplNo, 4);
+			 String trancatemplNo= StringUtils.substring(emplNo, 3);
 			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
 			 String h=String.valueOf(newEmplNo);
 			 nextEmployeeNumber=internPayrollPrefix.concat(h);
@@ -1176,9 +1197,34 @@ public static String  NextPayrollNumber(String employmentTerms) {
 			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
 
 		}
-				
+		}else if(employeeELI.size() == 0){
 			
+			if (employmentTerms.equalsIgnoreCase("permanent")) {
 				
+				 int newEmplNo=1001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=PayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+				
+			} else if(employmentTerms.equalsIgnoreCase("contract")) {
+			
+				 int newEmplNo=1001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=contractPayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+			}else if(employmentTerms.equalsIgnoreCase("intern")) {
+				
+				 int newEmplNo=1001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=internPayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+			}
+		
 		}
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -1863,6 +1909,33 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		}
 
 		return json;
+	}
+	
+	
+	public static String isEntryInteger(String text){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String state = null;
+		try {
+		  Integer.parseInt(text);
+		  state = "VALID";
+		  deleteExistingRetirementAge(delegator);
+		} catch (NumberFormatException e) {
+			state = "INVALID";
+		 }
+		return state; 
+		}
+	
+	private static void deleteExistingRetirementAge(Delegator delegator) {
+		// TODO Auto-generated method stub
+		log.info("######## Tyring to Delete ######## !!!");
+
+		try {
+			delegator.removeAll("RetirementAge");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		log.info("DELETED  ALL RECORDS!" );
+		
 	}
 	
 }
