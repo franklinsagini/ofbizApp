@@ -1167,9 +1167,9 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		if (employeeELI.size() > 0){
 			lastEmployee = employeeELI.get(0); 
 		String emplNo=lastEmployee.getString("employeeNumber");
-		String emplTerms=lastEmployee.getString("employmentTerms");
+		//String emplTerms=lastEmployee.getString("employmentTerms");
 		
-		if (emplTerms.equalsIgnoreCase("permanent")) {
+		if (employmentTerms.equalsIgnoreCase("permanent")) {
 			
 			 String trancatemplNo= StringUtils.substring(emplNo, 3);
 			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
@@ -1178,7 +1178,7 @@ public static String  NextPayrollNumber(String employmentTerms) {
 			 
 			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
 			
-		} else if(emplTerms.equalsIgnoreCase("contract")) {
+		} else if(employmentTerms.equalsIgnoreCase("contract")) {
 			
 			 String trancatemplNo= StringUtils.substring(emplNo, 4);
 			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
@@ -1187,7 +1187,7 @@ public static String  NextPayrollNumber(String employmentTerms) {
 			 
 			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
 
-		}else if(emplTerms.equalsIgnoreCase("intern")) {
+		}else if(employmentTerms.equalsIgnoreCase("intern")) {
 			
 			 String trancatemplNo= StringUtils.substring(emplNo, 3);
 			 int newEmplNo=Integer.parseInt(trancatemplNo)+1;
@@ -1197,9 +1197,34 @@ public static String  NextPayrollNumber(String employmentTerms) {
 			 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
 
 		}
-				
+		}else if(employeeELI.size() == 0){
 			
+			if (employmentTerms.equalsIgnoreCase("permanent")) {
 				
+				 int newEmplNo=1001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=PayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+				
+			} else if(employmentTerms.equalsIgnoreCase("contract")) {
+			
+				 int newEmplNo=1001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=contractPayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+			}else if(employmentTerms.equalsIgnoreCase("intern")) {
+				
+				 int newEmplNo=1001;
+				 String h=String.valueOf(newEmplNo);
+				 nextEmployeeNumber=internPayrollPrefix.concat(h);
+				 
+				 log.info("++++++++++++++newPayrollNo++++++++++++++++" +nextEmployeeNumber);
+
+			}
+		
 		}
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();

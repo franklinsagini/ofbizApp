@@ -335,7 +335,7 @@
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createfileActivity" />
 		<response name="success" type="request-redirect-noparam" value="editFileActivity" />
-		<response name="error" type="view" value="editFileActivity" />
+		<response name="error" type="request-redirect-noparam" value="editFileActivity" />
 	</request-map>
 
 	<request-map uri="updatefileActivity">
@@ -400,6 +400,14 @@
 			<redirect-parameter name="volumeId" />
 		</response>
 		<response name="error" type="view" value="addingFileVolume" />
+	</request-map>
+	
+	                  <!-- Recall FILE -->
+	<request-map uri="recallFile">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="recallFile"/>
+		<response name="success" type="request-redirect-noparam" value="main"/>
+		<response name="error" type="request-redirect-noparam" value="main"/>
 	</request-map>
 
 	<!-- Files -->
