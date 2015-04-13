@@ -3459,7 +3459,12 @@ under the License.
      <entity entity-name="Relationship" package-name="org.ofbiz.party.party" title="Relationship Entity">
      		<field name="relationshipId" type="id-int"></field>
      		<field name="name" type="name"></field>
+     		
      		<prim-key field="relationshipId"/>
+     		<index name="relation_name" unique="true">
+     			<index-field name="name" function="upper"/>
+     		</index>
+     		
      </entity>
 
     <!-- Member Nominee -->

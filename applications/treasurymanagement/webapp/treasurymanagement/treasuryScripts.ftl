@@ -225,5 +225,77 @@
     	return "";
 
     }
+    
+    function amountValidation(){
+    
+    	var transactionAmount = jQuery('#NewTreasuryTransfer input[name="transactionAmount"]').val();
+    	var maxAllowedTransfer = jQuery('#NewTreasuryTransfer input[name="maxAllowedTransfer"]').val();
+    	var availableInSource = jQuery('#NewTreasuryTransfer input[name="availableInSource"]').val();
+    	
+    	//alert('Before ... '+availableInSource);
+    	availableInSource = availableInSource.replace(/,/g, '');
+    	
+    	
+    	//alert('after '+availableInSource);
+    	if ((transactionAmount == ''))
+    		return false;
+
+		if (parseFloat(transactionAmount, 10) > parseFloat(availableInSource, 10)){
+    		alert('You cannot transfer more than available in the source treasury,  reduce the amount!');
+    		return false;
+    	}
+    	
+    	//if bank return true
+    	
+    	var isBank = false;
+    	var destinationTreasury = jQuery('#NewTreasuryTransfer select[name="destinationTreasury"] option:selected').val();
+    	isBank = destinationIsBank(destinationTreasury);
+    	
+    	if (isBank == true)
+    		return true;
+
+
+		if (parseFloat(transactionAmount, 10) > parseFloat(maxAllowedTransfer, 10)){
+    		alert('You cannot transfer more than allowed, treasury has a limt!');
+    		return false;
+    	}
+    	
+    	    	
+    	//alert(transactionAmount);
+    	//alert(maxAllowedTransfer);
+    	
+    	return true;
+    }
+    
+    
+    
+    function destinationIsBank(destinationTreasury){
+		var isBank = false;
+    	//var reqUrl = '/partymgr/control/memberRegistrationFormValidation';
+    	//var reqUrl = '/treasurymanagement/control/accountHasBeenUsed';
+    	
+    	//var reqUrl = '/treasurymanagement/control/employeeHasBeenGivenTreasury';
+    	var reqUrl = '/treasurymanagement/control/destinationIsBank';
+
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'destinationTreasury': destinationTreasury},
+			     success : function(data){
+
+							isBank = data.isBank;
+
+			               },
+			      error : function(errorData){
+			              alert("Some error occurred while validating if bank");
+			              }
+
+
+		});
+
+    	return isBank;
+    }
  
  </script>

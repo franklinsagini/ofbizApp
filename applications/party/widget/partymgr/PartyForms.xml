@@ -2183,6 +2183,10 @@ Gender
 <!-- ReviewMember start -->
 	<form name="ApproveMember" type="single" target="createApproveMemberLog"
         focus-field-name="comment" header-row-style="header-row"  default-table-style="basic-table" default-map-name="memberStatusLogContext">
+        <actions>
+        	<set field="trueStatus" value="true" type="Boolean"/>
+        </actions>
+        
         <field name="memberStatusLogId"><hidden/></field>
 
         <field name="partyId" parameter-name="partyId"><hidden/></field>
@@ -2192,7 +2196,7 @@ Gender
         <field name="comment" title="Comments"><textarea/></field>
      	<!--   use-when="parameters.get(&quot;partyId&quot;)!=null&amp;&amp;sprint==null" -->
 
-        <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;" name="approve" title="Approve" widget-style="buttontext" > <submit/> </field>
+        <field use-when="memberHasNominees==&quot;Y&quot;&amp;&amp;memberHasReferees==&quot;Y&quot;&amp;&amp;memberHasPhoto==trueStatus&amp;&amp;memberHasIdFront==trueStatus&amp;&amp;memberHasIdBack==trueStatus&amp;&amp;memberHasSignature==trueStatus&amp;&amp;memberHasTermsAndConditions==trueStatus&amp;&amp;memberHasShareCapital==trueStatus&amp;&amp;memberHasMemberDeposit==trueStatus&amp;&amp;isMemberApproved!=trueStatus" name="approve" title="Approve" widget-style="buttontext" > <submit/> </field>
     </form>
 
     <form name="listApproveMember" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateApproveMemberLog" paginate-target="approveMemberLog"
