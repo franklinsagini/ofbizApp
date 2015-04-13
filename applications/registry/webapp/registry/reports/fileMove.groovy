@@ -1,6 +1,11 @@
 import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.entity.Delegator;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 partyId = parameters.partyId
 
@@ -31,11 +36,15 @@ class FileMovement{
 	def timeOut
 }
 
+List<String> orderByList = new ArrayList<String>();
+		orderByList.add("timeOut");
+
+
 //activityList = delegator.findList("fileMovementActivityView", null, null, null, null, false);
 activityList = delegator.findByAnd("fileMovementActivityView", [partyId : partyId], null, false);
  
  activityList.eachWithIndex { activityItem, index ->
- activities = delegator.findByAnd("RegistryFileMovement", [partyId : partyId, activityCode : activityItem.activityCode], null, false);
+ activities = delegator.findByAnd("RegistryFileMovement", [partyId : partyId, activityCode : activityItem.activityCode], orderByList, false);
 
  duration = delegator.findByAnd("RegistryFileActivity", [activityId : activityItem.activityCode], null, false);
  
