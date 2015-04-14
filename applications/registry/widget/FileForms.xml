@@ -93,6 +93,7 @@
        <!--  <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/> -->
 		<field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		
@@ -198,6 +199,7 @@
 		<field name="DocumentTypeId" title="Document Type"><display-entity entity-name="RegistryDocumentType" description="${DocumentType}"></display-entity></field>
 		<field name="documentFolio" title="Document Folio Number"><display /></field>
 		<field name="volumeIdentifier"><display /></field>
+		 <field name="creator" title="Document Added By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="receiptDate" title="Date Recieved"><display /></field>
 		 <field name="addSubDocument" title="-" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Add Sub-Document" target="goAddSubDocument">
@@ -291,6 +293,7 @@
        <!--  <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/> -->
 		<field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		
@@ -343,6 +346,12 @@
 				<parameter param-name="stageStatus" /> 
 			</hyperlink>
 		</field>  
+		<field name="recall" title="-" widget-style="buttontext" use-when="${recieptStatus == 'NOTRECEIVED'}">
+			<hyperlink also-hidden="false" description="Recall File" target="recallFile" request-confirmation="true" confirmation-message="Recall This File As It Has Not Been Recieved?">
+				<parameter param-name="partyId" />
+				<parameter param-name="status" /> 
+			</hyperlink>
+		</field>
 		
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
@@ -358,6 +367,7 @@
        <!--  <auto-fields-entity entity-name="RegistryFiles" default-field-type="find"/> -->
 		<field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		
@@ -539,6 +549,7 @@
         </actions>
        <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		<field name="status"><hidden value="REQUESTED"/></field>
@@ -587,7 +598,7 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		<field name="carriedBy" title="File Carried By" required-field="true">
+		<field name="carriedBy" title="File Carried By" required-field="true" widget-style="required">
 		 <drop-down allow-empty="true">
              <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
             </drop-down>
@@ -649,6 +660,7 @@
         </actions>
         <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		<field name="status"><hidden value="ISSUED"/></field>
@@ -800,6 +812,7 @@
         </actions>
         <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		<field name="status"><hidden value="ISSUED"/></field>
@@ -905,6 +918,7 @@
         </actions>
         <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		<field name="recieptStatus"><hidden value="RECEIVED"/></field>
@@ -1169,6 +1183,7 @@
         </actions>
        <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1263,6 +1278,7 @@
         </actions>
         <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
             
@@ -1324,6 +1340,7 @@
         </actions>
        <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1385,6 +1402,7 @@
         </actions>
         <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1446,6 +1464,7 @@
         </actions>
         <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1505,6 +1524,7 @@
         </actions>
         <field name="payrollNumber"><text-find/></field>
 		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1642,6 +1662,7 @@
         <field name="documentId"><hidden/></field>
       <field name="DocumentTypeId" title="Document Type"><display-entity entity-name="RegistryDocumentType" description="${DocumentType}"></display-entity></field>
 	  <field name="documentValue"><display/></field>
+	   <field name="creator" title="Document Added By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 	  <field name="receiptDate" encode-output="false"><display/></field>
 	   <field name="documentOverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Document Overview" target="documentOverviewURL">
@@ -2062,8 +2083,8 @@
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><hidden/></field>
-		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
-		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
+		<field name="fileBox" title="Box short Description" widget-style="required" required-field="true"><text size="45"></text></field>
+		<field name="fileBoxCode" title="Box Code" widget-style="required" required-field="true"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
 		<field name="status"><hidden/></field>
 		
@@ -2080,8 +2101,8 @@
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><hidden/></field>
-		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
-		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
+		<field name="fileBox" title="Box short Description" widget-style="required" required-field="true"><text size="45"></text></field>
+		<field name="fileBoxCode" title="Box Code" widget-style="required" required-field="true"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
 		
 		 <field name="submitButton" title="Set File Member Deceased" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -2097,8 +2118,8 @@
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><hidden/></field>
-		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
-		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
+		<field name="fileBox" title="Box short Description" widget-style="required" required-field="true"><text size="45"></text></field>
+		<field name="fileBoxCode" title="Box Code" widget-style="required" required-field="true"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
 		
 		 <field name="submitButton" title="Save File" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -2114,8 +2135,8 @@
         </actions>
 			<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><hidden/></field>
-		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
-		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
+		<field name="fileBox" title="Box short Description" widget-style="required" required-field="true"><text size="45"></text></field>
+		<field name="fileBoxCode" title="Box Code" widget-style="required" required-field="true"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
 		
 		 <field name="submitButton" title="Save File" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -2131,8 +2152,8 @@
         </actions>
 		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
 		<field name="folioNo" title="File Folio Number:"><hidden/></field>
-		<field name="fileBox" title="Box short Description"><text size="45"></text></field>
-		<field name="fileBoxCode" title="Box Code"><text size="45"></text></field>
+		<field name="fileBox" title="Box short Description" widget-style="required" required-field="true"><text size="45"></text></field>
+		<field name="fileBoxCode" title="Box Code" widget-style="required" required-field="true"><text size="45"></text></field>
 		<field name="stageStatus"><hidden/></field>
 		
 		 <field name="submitButton" title="Save File" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -2163,18 +2184,27 @@
 	
 	<!-- ========================= MAX NUMBER OF FILES ALLOWED PER USER ================================ -->
 	
-
-	<form name="MaxNumberOfFilesPerUserForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMaxNoOfFiles"
-		paginate-target="RegistryFileSettingMaxNumberOfFilesPerUser" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-		<actions>
-			<entity-condition entity-name="RegistryFileSettingMaxNumberOfFilesPerUser">
+	<form name="EditMaxNumberOfFilesPerUserForm" type="single" target="updateMaxNoOfFiles"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="retirementAgeContext">
+        
+        <field name="maxId"><hidden/></field>
+        <field name="maxNumber" title="New Maximum Number Of File Per User At Single Time:" tooltip="Only Numbers are allowed" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="CurrentMaxNumberOfFilesPerUserForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankDetails" paginate-target="NewRetirementAge"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="RegistryFileSettingMaxNumberOfFilesPerUser">
             </entity-condition>
-		</actions>
-		
-		
-		<field name="maxNumber" title="Maximum Number Of Files Allowed Per User" tooltip="(In Months)"><text/></field>
-		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
-	</form>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateBankDetails"/>
+        <field name="maxId"><hidden/></field>
+        <field name="maxNumber" title="New Maximum Number Of File Per User At Single Time"><display/></field>
+    </form>
+	
+	
 	
 	<!-- ================================================ ADD SUB DOCUMENT TO DOCUMENTS ========================================================= -->
     

@@ -266,6 +266,8 @@
 		</iterate>
 		
         </simple-method>
+		
+		
         
 	
 	  <!-- ==============================MOVE FILE TO SEMI-ACTIVE================================== -->
@@ -276,18 +278,44 @@
         
         <now-timestamp field="nowTimestamp" />
 		<set from-field="nowTimestamp" field="lookedUpValue.SemiActiveStartDate" />
+		
+		<entity-one entity-name="RegistryFiles" value-field="req">
+		 	<field-map field-name="partyId" from-field="parameters.partyId"/>
+		 </entity-one>
         
         <set field="lookedUpValue.stageStatus" value="SEMIACTIVE"/>
          <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
         <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
-        <call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
-        <store-value value-field="lookedUpValue" />
-        <property-to-field resource="HumanResUiLabels"
+        
+		
+		<set field="inactiveStartDate" from-field="req.inactiveStartDate"/>
+		<set field="userMove" value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToSemiActiveState(inactiveStartDate);}"/>
+		<set field="valid" value="NOT-YET"/>
+		 <if>
+			<condition>
+					<if-compare-field field="userMove"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="EarlyMoveError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			<call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+			<store-value value-field="lookedUpValue" />
+            <property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
         </simple-method>
         
           <!-- ==============================MOVE FILE TO ARCHIVE================================== -->
-     <simple-method method-name="moveToArchive"
+        <simple-method method-name="moveToArchive"
         short-description="Change staff confirmation date">
         <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
         <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
@@ -298,10 +326,35 @@
          <set field="lookedUpValue.stageStatus" value="ARCHIVED"/>
           <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
         <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
-        <call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
-        <store-value value-field="lookedUpValue" />
-        <property-to-field resource="HumanResUiLabels"
+        
+		
+		<entity-one entity-name="RegistryFiles" value-field="req">
+		 	<field-map field-name="partyId" from-field="parameters.partyId"/>
+		 </entity-one>
+		
+		<set field="inactiveStartDate" from-field="req.SemiActiveStartDate"/>
+		<set field="userMove" value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToArchiveState(inactiveStartDate);}"/>
+		<set field="valid" value="NOT-YET"/>
+		 <if>
+			<condition>
+					<if-compare-field field="userMove"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="EarlyMoveError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			<call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+			<store-value value-field="lookedUpValue" />
+            <property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
+			</else>
+		</if>
         </simple-method>
           <!-- ==============================MOVE FILE FOR DISPOSAL================================== -->
      <simple-method method-name="moveToDisposal"
@@ -315,10 +368,36 @@
         <set field="lookedUpValue.stageStatus" value="DISPOSAL"/>
          <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
         <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
-        <call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
-        <store-value value-field="lookedUpValue" />
-        <property-to-field resource="HumanResUiLabels"
+        
+		
+		<entity-one entity-name="RegistryFiles" value-field="req">
+		 	<field-map field-name="partyId" from-field="parameters.partyId"/>
+		 </entity-one>
+		
+		<set field="inactiveStartDate" from-field="req.ArchiveStartDate"/>
+		<set field="userMove" value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToDisposalState(inactiveStartDate);}"/>
+		<set field="valid" value="NOT-YET"/>
+		 <if>
+			<condition>
+					<if-compare-field field="userMove"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="EarlyMoveError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			<call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+			<store-value value-field="lookedUpValue" />
+            <property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
         </simple-method>
         
          <!-- ==============================MOVE FILE TO DECEASED================================== -->
@@ -364,13 +443,46 @@
 			property="UpdateSuccess" field="successMessage" />
 	</simple-method>
 	
-	 <simple-method method-name="updateMaxNoOfFiles" short-description="Update status periods">
+	<!--  <simple-method method-name="updateMaxNoOfFiles" short-description="Update status periods">
 		<entity-one entity-name="RegistryFileSettingMaxNumberOfFilesPerUser" value-field="lookedUpValue" />
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<store-value value-field="lookedUpValue" />
 		<property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
-	</simple-method>
+	</simple-method> -->
+	
+	 <simple-method method-name="updateMaxNoOfFiles" short-description="Add Bank Details">
+        <make-value entity-name="RegistryFileSettingMaxNumberOfFilesPerUser" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="RegistryFileSettingMaxNumberOfFilesPerUser" field="maxId"/>
+        <set field="newEntity.maxId" from-field="maxId"/>
+        
+         <set field="valid" value="INVALID"/>
+         <set field="text" from-field="newEntity.maxNumber"/>
+        <set field="userInput" value="${bsh:org.ofbiz.registry.FileServices.isMaxEntryInteger(text);}" type="String" /> 
+        
+        <log message=">>>>>>>>>>>>>>>>********************************>>>>>>>ISVALID === ${userInput}" level="info"/>
+        <if>
+			<condition>
+					<if-compare-field field="userInput"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="IntegerInputError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			    <create-value value-field="newEntity"/>
+				<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+    </simple-method>
         
         
         
@@ -429,10 +541,52 @@
 	<!-- ==========================FILE REQUEST================================== -->
 	
 	<simple-method method-name="requestfiles" short-description="request File ">
-		 <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
-		  <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method>
+	
+		 <set field="partyId" value="${parameters.partyId}"/>
 		 
-		 <set field="partyId" value="${newEntity.partyId}"/>
+		 <entity-one entity-name="RegistryFiles" value-field="req">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		 
+		 
+		 
+         <set field="valid" value="INVALID"/>
+		 <set field="userReq" value="REQUESTED"/>
+		 <set field="request" from-field="req.status"/>
+         <set field="text" value="${userLogin.partyId}"/>
+        <set field="userInput" value="${bsh:org.ofbiz.registry.FileServices.findnoOfOfFileperUser(text) ;}" type="String" /> 
+        
+        <log message=">>>>>>>>>>>>>>>>********************************>>>>>>>ISVALID === ${userInput}" level="info"/>
+        <if>
+			<condition>
+					<if-compare-field field="userReq"
+						to-field="request" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="AlreadyRequestedError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+			<if>
+			<condition>
+					<if-compare-field field="userInput"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="MaxFilesError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			
+			<else>
+			 
+		 
 		 
 		 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
@@ -444,23 +598,29 @@
 		 <set field="registryFile.status" value="REQUESTED"/>
 		 <set field="registryFile.selectedToBeMoved" value="REQUESTED"/>
 		 <set field="registryFile.Reason" from-field="parameters.Reason"/>
-		<store-value value-field="registryFile" />
 		
 		
-		  <entity-condition list="personList" entity-name="Person">
+		   <entity-condition list="personList" entity-name="Person">
 				<condition-expr field-name="departmentId" value="2"/>
 		</entity-condition>
 		
 		<iterate entry="email" list="personList">
         
         <set field="emailparty" value="${email.partyId}"/>
-        <call-simple-method method-name="fileRequestEmailInformation" scope="inline"></call-simple-method>
+		 <call-simple-method method-name="fileRequestEmailInformation" scope="inline"></call-simple-method>
+		</iterate>
+			    <store-value value-field="registryFile" />
+			    <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
+		        <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method>
+                
         
-        </iterate>
-		
-		
+				<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
 		
 	</simple-method>
+	
 	
 	<simple-method method-name="saveRequestAction">
 		<now-timestamp field="nowTimestamp"/>
@@ -664,7 +824,33 @@
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<set field="lookedUpValue.selectedToBeMoved" value="SELECTED_FOR_ISSUE"/>
 		<set field="lookedUpValue.carriedBy" from-field="parameters.carriedBy" />
-		<store-value value-field="lookedUpValue" />
+		
+		 
+         <set field="valid" value=""/>
+         <set field="text" from-field="parameters.carriedBy"/>
+		
+		<if>
+			<condition>
+					<if-compare-field field="text"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="BlankError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			 
+		 <store-value value-field="lookedUpValue" />
+        
+			<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
 	</simple-method>
 	
 	 <!-- SELECT FILES TO DIVERT -->
@@ -675,7 +861,63 @@
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<set field="lookedUpValue.selectedToBeMoved" value="SELECTED_FOR_DIVERT"/>
 		<set field="lookedUpValue.carriedBy" from-field="parameters.carriedBy" />
-		<store-value value-field="lookedUpValue" />
+		<set field="lookedUpValue.currentPossesser" from-field="parameters.currentPossesser" />
+		
+		<set field="valid" value=""/>
+         <set field="text" from-field="parameters.carriedBy"/>
+		 <set field="text2" from-field="parameters.currentPossesser"/>
+		<set field="text3" value="${userLogin.partyId}"/>
+		
+		<if>
+			<condition>
+					<if-compare-field field="text2"
+						to-field="text3" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="ToOneselfError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+			
+		    <if>
+			<condition>
+					<if-compare-field field="text"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="BlankError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+			
+			<if>
+			<condition>
+					<if-compare-field field="text2"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="BlankError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			 
+		 <store-value value-field="lookedUpValue" />
+        
+			<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
 	</simple-method>
 	
 	 <!-- SELECT FILES TO RETURN TO REGISTRY -->
@@ -686,7 +928,32 @@
 		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
 		<set field="lookedUpValue.selectedToBeMoved" value="SELECTED_FOR_RETURN_TO_REGISTRY"/>
 		<set field="lookedUpValue.carriedBy" from-field="parameters.carriedBy" />
-		<store-value value-field="lookedUpValue" />
+		
+		<set field="valid" value=""/>
+         <set field="text" from-field="parameters.carriedBy"/>
+		
+		<if>
+			<condition>
+					<if-compare-field field="text"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="BlankError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			 
+		 <store-value value-field="lookedUpValue" />
+        
+			<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
 	</simple-method>
 	
 	 <!-- SELECT FILES TO SEND TO ANOTHER STAFF -->
@@ -698,7 +965,62 @@
 		<set field="lookedUpValue.selectedToBeMoved" value="SELECTED_FOR_ANOTHER_STAFF"/>
 		<set field="lookedUpValue.carriedBy" from-field="parameters.carriedBy" />
 		<set field="lookedUpValue.intendedPossesser" from-field="parameters.intendedPossesser" />
-		<store-value value-field="lookedUpValue" />
+		
+		
+		<set field="valid" value=""/>
+         <set field="text" from-field="parameters.carriedBy"/>
+		 <set field="text2" from-field="parameters.intendedPossesser"/>
+		 <set field="text3" value="${userLogin.partyId}"/>
+		
+		<if>
+			<condition>
+					<if-compare-field field="text2"
+						to-field="text3" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="ToOneselfError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+			
+			<if>
+			<condition>
+					<if-compare-field field="text"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="BlankError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+			
+			<if>
+			<condition>
+					<if-compare-field field="text2"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="BlankError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			 
+		 <store-value value-field="lookedUpValue" />
+        
+			<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
 	</simple-method>
 					
 	
@@ -706,21 +1028,41 @@
 	<!-- ==========================FILE ISSUE================================== -->
 	
 	<simple-method method-name="issuefiles" short-description="request File ">
-		 <call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
-		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
-		  <call-simple-method method-name="saveIssueActionToFileMovement" scope="inline"></call-simple-method>
-		  <call-simple-method method-name="saveIssueEmailInformation" scope="inline"></call-simple-method>
+	   
+			   
 		  
-		  <now-timestamp field="nowTimestamp"/>
+		  
 		 
-		 <set field="partyId" value="${newEntity.partyId}"/>
+		 <set field="partyId" value="${parameters.partyId}"/>
 		 
 		 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 		 
-		 <entity-one entity-name="RegistryFileActivity" value-field="activity">
+		 
+		
+		
+	
+		 
+		 <set field="userReq" value="ISSUED"/>
+		 <set field="iss" from-field="registryFile.status"/>
+		 
+        <if>
+			<condition>
+					<if-compare-field field="userReq"
+						to-field="iss" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="AlreadyIssuedError" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+            <now-timestamp field="nowTimestamp"/>
+           <entity-one entity-name="RegistryFileActivity" value-field="activity">
 		 	<field-map field-name="activityId" from-field="registryFile.Reason"/>
 		 </entity-one>
 		 
@@ -731,20 +1073,30 @@
 		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
 		 
 		  <set field="start" from-field="nowTimestamp"/>
-		  <set field="duration" from-field="activity.activityDuration" />
+		  <set field="duration" from-field="activity.activityDuration"/>
 		 
 		 
 		 <set field="registryFile.activityDuration" from-field="activity.activityDuration" />
-		 <set field="registryFile.issuedReturnDate" value="${bsh:org.ofbiz.registry.FileServices.calculateEndWorkingDay(start, duration);}" type="Timestamp"/>
+		 
 		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
 		 
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
-		<store-value value-field="registryFile" />
+		 <set field="email_party" from-field="parameters.actionBy"/>
 		
-		<set field="email_party" from-field="parameters.actionBy"/>
-		<call-simple-method method-name="saveIssueEmailInformation" scope="inline"></call-simple-method>
-		
+
+			
+			<call-simple-method method-name="saveIssueAction" scope="inline"></call-simple-method>
+		  <call-simple-method method-name="saveIssueActionToLogs" scope="inline"></call-simple-method>
+		  <call-simple-method method-name="saveIssueActionToFileMovement" scope="inline"></call-simple-method>
+		  <call-simple-method method-name="saveIssueEmailInformation" scope="inline"></call-simple-method>
+		  <store-value value-field="registryFile" />
+			</else>
+			</if>
+	
+	
+	
+		 
 	</simple-method>
 	
 	<simple-method method-name="deletefileFromRequested"
@@ -1424,6 +1776,7 @@
 		<log message=">>>>>>>>>>>>>>>>>>>>>>> PARAMETERS ${memberNumber}" level="info"/>
 		 <set field="DocumentTypeId" from-field="parameters.DocumentTypeId"/>
 		 <set from-field="nowTimestamp" field="newEntity.receiptDate"/>
+		 <set value="${userLogin.partyId}" field="newEntity.creator"/>
 		
 		
 		
@@ -1482,6 +1835,24 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
 	</simple-method>
+	
+	<!-- ========================== RECALL FILE ================================== -->
+	
+	<simple-method method-name="recallFile" short-description="request File">
+	<log message="=====================PLEASE SHOW ${parameters}" level="info"/>
+	<set field="party" from-field="parameters.partyId"/>
+		
+		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 	<field-map field-name="partyId" from-field="party"/>
+		 </entity-one>
+
+		 <set value="${userLogin.partyId}" field="registryFile.actionBy"/>
+		 <set field="registryFile.status" value="AVAILABLE"/>
+		 <set field="registryFile.currentPossesser" value="REGISTRY"/>
+		 <set field="registryFile.recieptStatus" value="RECALLED_TO_REGISTRY"/>
+		<store-value value-field="registryFile"/>
+	</simple-method>
+	
 
 
 

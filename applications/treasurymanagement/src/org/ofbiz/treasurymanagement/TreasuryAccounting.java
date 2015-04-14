@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,9 @@ import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.loans.LoanAccounting;
 import org.ofbiz.webapp.event.EventHandlerException;
 
@@ -94,20 +98,10 @@ public class TreasuryAccounting {
 			return "Cannot Get Treasury ID";
 		}
 		
-		//Get TreasuryType from Treasury
-		String treasuryTypeId = treasury.getString("treasuryTypeId");
 		
-		GenericValue treasuryType = null;
-		try {
-			treasuryType = delegator.findOne("TreasuryType",
-					UtilMisc.toMap("treasuryTypeId", treasuryTypeId), false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-			return "Cannot Get Treasury Type ID";
-		}
 		
 		//Get glAccountId from Treasury Type
-		String accountId = treasuryType.getString("glAccountId");
+		String accountId = treasury.getString("glAccountId");
 		return accountId;
 	}
 	
@@ -269,9 +263,15 @@ public class TreasuryAccounting {
 		//Get Treasury type limit
 		BigDecimal bdLimitAmount = getTreasuryTypeLimit(destinationTreasury);
 		
-		BigDecimal bdTreasuryAvailable = TreasuryReconciliation.getNetAllocation(destinationTreasury);
+		BigDecimal bdTreasuryAvailable = null;
 		
-		BigDecimal bdMaxAllowedTransfer = bdLimitAmount.subtract(bdTreasuryAvailable);
+		//if (bdLimitAmount != null)
+			bdTreasuryAvailable = TreasuryReconciliation.getNetAllocation(destinationTreasury);
+		
+		BigDecimal bdMaxAllowedTransfer = null;
+		
+		if (bdLimitAmount != null)
+			bdMaxAllowedTransfer = bdLimitAmount.subtract(bdTreasuryAvailable);
 		
 		result.put("bdLimitAmount", bdLimitAmount);
 		result.put("bdTreasuryAvailable", bdTreasuryAvailable);
@@ -392,6 +392,139 @@ public class TreasuryAccounting {
 		
 		
 		return employee;
+	}
+	
+	
+	public static BigDecimal getAccountBalance(String glAccountId) {
+		// TODO Check if acctgTransId has correct entries (Debits and Credits
+		// are equal)
+		BigDecimal bdTotalDebits = getTotalEntries(glAccountId, "D");
+		BigDecimal bdTotalCredits = getTotalEntries(glAccountId, "C");
+		
+		BigDecimal bdTotalBalance = bdTotalDebits.subtract(bdTotalCredits);
+		
+		
+		return bdTotalBalance;
+	}
+
+	private static BigDecimal getTotalEntries(String glAccountId, String debitCreditFlag) {
+		BigDecimal bdTotalEntryAmt = BigDecimal.ZERO;
+		List<GenericValue> listEntries = null;
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> entriesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("glAccountId", EntityOperator.EQUALS,
+								glAccountId),
+						EntityCondition
+								.makeCondition("debitCreditFlag", EntityOperator.EQUALS,
+										debitCreditFlag)
+								
+
+				), EntityOperator.AND);
+
+		try {
+			listEntries = delegator.findList("AcctgTransEntry", entriesConditions, null,
+					null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : listEntries) {
+			bdTotalEntryAmt = bdTotalEntryAmt.add(genericValue.getBigDecimal("amount"));
+		}
+		
+		//bdTotalEntryAmt = bdTotalEntryAmt.
+		return bdTotalEntryAmt.setScale(4, RoundingMode.HALF_UP);
+	}
+	
+	//destinationIsBank
+	public static String destinationIsBank(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+
+		String destinationTreasury = (String) request.getParameter("destinationTreasury");
+		
+		Boolean isBank = false;
+		isBank = destinationIsBank(destinationTreasury);
+
+		result.put("isBank", isBank);
+		
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+
+
+	private static Boolean destinationIsBank(String destinationTreasury) {
+		//Get the treasury type
+		List<GenericValue> treasuryELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury",
+					EntityCondition.makeCondition("treasuryId",
+							destinationTreasury), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String treasuryTypeId = "";
+		for (GenericValue genericValue : treasuryELI) {
+			treasuryTypeId = genericValue.getString("treasuryTypeId");
+		}
+		
+		//get the limit for the treasury type
+		List<GenericValue> treasuryTypeELI = null; // =
+		try {
+			treasuryTypeELI = delegator.findList("TreasuryType",
+					EntityCondition.makeCondition("treasuryTypeId",
+							treasuryTypeId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String name = "";
+		for (GenericValue genericValue : treasuryTypeELI) {
+			name = genericValue.getString("name");
+		}
+		
+		name = name.toUpperCase();
+		
+		if (name.equals("BANK"))
+			return true;
+		
+		return false;
 	}
 	
 }

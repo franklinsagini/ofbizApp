@@ -292,18 +292,18 @@
        		</drop-down>
         </field>
         
-        <field name="destinationLimit" title="Destination Limit" widget-style="required" required-field="true" >
+        <field name="destinationLimit" title="Destination Limit" >
        		<text disabled="true" default-value=""></text>
         </field>
         
-        <field name="availableInDestination" title="Availabe In Destination" widget-style="required" required-field="true" >
+        <field name="availableInDestination" title="Availabe In Destination" >
        		<!-- drop-down allow-empty="true" >
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}" />
        		</drop-down -->
        		<text disabled="true" default-value=""></text>
         </field>
         
-         <field name="maxAllowedTransfer" title="Max Allowed Transfer" widget-style="required" required-field="true" >
+         <field name="maxAllowedTransfer" title="Max Allowed Transfer">
        		<!-- drop-down allow-empty="true" >
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}" />
        		</drop-down -->
@@ -313,14 +313,14 @@
         
         
         
-        <field name="employeeResponsible" title="Employee Responsible" widget-style="required" required-field="true" >
+        <field name="employeeResponsible" title="Employee Responsible" >
        		<!-- drop-down allow-empty="true" >
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}" />
        		</drop-down -->
        		<hidden/>
         </field>
         
-        <field name="employeeResponsibleVisible" title="Employee Responsible" widget-style="required" required-field="true" >
+        <field name="employeeResponsibleVisible" title="Employee Responsible" >
        		<!-- drop-down allow-empty="true" >
        			<list-options key-name="partyId" list-name="employeesList" description="${firstName} ${lastName}" />
        		</drop-down -->
@@ -332,14 +332,14 @@
         
         
         <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"> <text></text> </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return amountValidation();"><submit button-type="button"/></field>
        </form>
         
       <form name="listTreasuryTransfer" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasuryTransfer" paginate-target="treasuryTransfer"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="TreasuryTransfer">
-            	<order-by field-name="-treasuryTransferId"/>
+            	<order-by field-name="-createdStamp"/>
             </entity-condition>
             
             <entity-condition entity-name="Treasury" list="treasuryFromList">

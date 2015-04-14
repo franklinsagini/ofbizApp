@@ -267,8 +267,8 @@ under the License.
         <field name="currentStationId" title="Current Station">
         	 <display-entity entity-name="Station" key-field-name="stationId"  description="${name}" also-hidden="false"/>
         </field>
-        <field name="guaranteedPercentage" title="Guaranteed %"><text size="20" maxlength="60"/></field>
-		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field> 
+        <field name="guaranteedPercentage" title="Guaranteed %"> <display></display> </field>
+		<field name="guaranteedValue" title="Guaranteed Amount"> <display></display> </field> 
 		<field name="myLoans" title="My Loans" widget-style="buttontext">
             <hyperlink target="myLoans" description="My Loans" also-hidden="false">
                 <parameter param-name="guarantorId"/>
@@ -281,11 +281,11 @@ under the License.
             </hyperlink>
         </field>
 		
-		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanApplicationGuarantor" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanGuarantorId"/>
             </hyperlink>
-        </field>
+        </field -->
     </form>
     
     <!-- Loan Application - the opening balance are entered here -->
@@ -1426,19 +1426,21 @@ under the License.
             <display-entity entity-name="ProductCharge" description="${name}" key-field-name="productChargeId"></display-entity>
         </field>
         <field name="isFixed" title="Fixed"  widget-style="required" required-field="true">
-        	 <drop-down allow-empty="true">
+        	 <!-- drop-down allow-empty="true">
                 <option key="Y" description="Yes"/>
                 <option key="N" description="No"/>
-            </drop-down>
+            </drop-down -->
+            <display></display>
         </field>
         <field name="chargedUpfront" title="Charged Upfront"  widget-style="required" required-field="true">
-        	 <drop-down allow-empty="true">
+        	 <!-- drop-down allow-empty="true">
                 <option key="Y" description="Yes"/>
                 <option key="N" description="No"/>
-            </drop-down>
+            </drop-down -->
+            <display></display>
         </field>
-        <field name="rateAmount" title="Rate (%)"  widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
-        <field name="fixedAmount" title="Amount (Total Charge)"><text size="30" maxlength="60"/></field>
+        <field name="rateAmount" title="Rate (%)"  widget-style="required" required-field="true"> <display></display> </field>
+        <field name="fixedAmount" title="Amount (Total Charge)"> <display></display> </field>
 		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanApplicationChargee" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanApplicationChargeId"/>

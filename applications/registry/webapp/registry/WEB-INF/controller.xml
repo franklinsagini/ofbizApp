@@ -335,7 +335,7 @@
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createfileActivity" />
 		<response name="success" type="request-redirect-noparam" value="editFileActivity" />
-		<response name="error" type="view" value="editFileActivity" />
+		<response name="error" type="request-redirect-noparam" value="editFileActivity" />
 	</request-map>
 
 	<request-map uri="updatefileActivity">
@@ -401,6 +401,14 @@
 		</response>
 		<response name="error" type="view" value="addingFileVolume" />
 	</request-map>
+	
+	                  <!-- Recall FILE -->
+	<request-map uri="recallFile">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="recallFile"/>
+		<response name="success" type="request-redirect-noparam" value="main"/>
+		<response name="error" type="request-redirect-noparam" value="main"/>
+	</request-map>
 
 	<!-- Files -->
 
@@ -434,14 +442,14 @@
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="selectFilesToIssue" />
 		<response name="success" type="request-redirect-noparam" value="regFileIssue" />
-		<response name="error" type="view" value="regFileIssue" />
+		<response name="error" type="request-redirect-noparam" value="regFileIssue" />
 	</request-map>
 	
 	 <request-map uri="selectFilesToDivert">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="selectFilesToDivert" />
 		<response name="success" type="request-redirect-noparam" value="regFileDivert" />
-		<response name="error" type="view" value="regFileDivert" />
+		<response name="error" type="request-redirect-noparam" value="regFileDivert" />
 	</request-map>
 	
 	<!-- <request-map uri="issuefiles">
@@ -455,6 +463,7 @@
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="issuefiles"/>
         <response name="success" type="request-redirect-noparam" value="regFileIssue"/>
+		<response name="error" type="request-redirect-noparam" value="regFileIssue"/>
     </request-map>
 
 	
@@ -665,7 +674,7 @@
      <request-map uri="updateMaxNoOfFiles">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateMaxNoOfFiles"/>
-        <response name="success" type="view" value="maxnumberRequested"/>
+        <response name="success" type="request-redirect" value="maxnumberRequested"/>
         <response name="error" type="view-last"/>
     </request-map>
 

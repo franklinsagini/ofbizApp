@@ -100,6 +100,16 @@
 		<auto-attributes mode="IN" include="nonpk" optional="true" />
 	</service>
 	
+	<!-- ====================== RECALL FILE  =================================== -->
+	
+	<service name="recallFile" engine="simple" default-entity-name="RegistryFiles"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml"
+		invoke="recallFile" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+	
 	<!-- ====================== FILE VOLUME =================================== -->
 	
 	<service name="createfileVolume" engine="simple" default-entity-name="RegistryFileVolume"
@@ -160,10 +170,18 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
-     <service name="updateMaxNoOfFiles" engine="simple" default-entity-name="RegistryFileSettingMaxNumberOfFilesPerUser"
+    <!--  <service name="updateMaxNoOfFiles" engine="simple" default-entity-name="RegistryFileSettingMaxNumberOfFilesPerUser"
              location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="updateMaxNoOfFiles" auth="true">
         <description>Update Blood Group</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service> -->
+    
+    <service name="updateMaxNoOfFiles" engine="simple" default-entity-name="RegistryFileSettingMaxNumberOfFilesPerUser"
+             location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="updateMaxNoOfFiles" auth="true">
+        <description>New Bank</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 	

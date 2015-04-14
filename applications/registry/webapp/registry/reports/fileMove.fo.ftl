@@ -48,7 +48,7 @@ under the License.
             </fo:list-item>
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">Activity Duration (In Days) : ${activity.activityDuration}</fo:block>
+                    <fo:block font-weight="bold">Max Activity Duration (In Days) : ${activity.activityDuration}</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
                     <fo:block></fo:block>
