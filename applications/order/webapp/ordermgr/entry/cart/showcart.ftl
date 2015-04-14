@@ -32,6 +32,45 @@ under the License.
   <#assign target="getProductInventoryAvailable">
 </#if>
 <div class="screenlet">
+<div class="screenlet-title-bar">
+ <ul>
+      <li class="h3">
+        ${uiLabelMap.CommonCreate}&nbsp;
+        <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+            ${uiLabelMap.OrderPurchaseOrder}
+        <#else>
+            ${uiLabelMap.OrderSalesOrder}
+        </#if>
+      </li>
+      <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+        <#if shoppingCart.getOrderPartyId() == "_NA_" || (shoppingCart.size() = 0)>
+          <li class="disabled">${uiLabelMap.OrderFinalizeOrder}</li>
+        <#else>
+          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=purchase&amp;finalizeReqCustInfo=false&amp;finalizeReqShipInfo=false&amp;finalizeReqOptions=false&amp;finalizeReqPayInfo=false</@ofbizUrl>">${uiLabelMap.OrderFinalizeOrder}</a></li>
+        </#if>
+      <#else>
+        <#if shoppingCart.size() = 0>
+          <li class="disabled">${uiLabelMap.OrderQuickFinalizeOrder}</li>
+          <li class="disabled">${uiLabelMap.OrderFinalizeOrderDefault}</li>
+          <li class="disabled">${uiLabelMap.OrderFinalizeOrder}</li>
+        <#else>
+          <li><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>">${uiLabelMap.OrderQuickFinalizeOrder}</a></li>
+          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=default</@ofbizUrl>">${uiLabelMap.OrderFinalizeOrderDefault}</a></li>
+          <li><a href="<@ofbizUrl>finalizeOrder?finalizeMode=init</@ofbizUrl>">${uiLabelMap.OrderFinalizeOrder}</a></li>
+        </#if>
+      </#if>
+
+      <#if (shoppingCart.size() > 0)>
+        <li><a href="javascript:document.cartform.submit()">${uiLabelMap.OrderRecalculateOrder}</a></li>
+        <li><a href="javascript:removeSelected();">${uiLabelMap.OrderRemoveSelected}</a></li>
+      <#else>
+        <li class="disabled">${uiLabelMap.OrderRecalculateOrder}</li>
+        <li class="disabled">${uiLabelMap.OrderRemoveSelected}</li>
+      </#if>
+      <li><a href="<@ofbizUrl>emptycart</@ofbizUrl>">${uiLabelMap.OrderClearOrder}</a></li>
+    </ul>
+    <br class="clear" />
+</div>
     <div class="screenlet-body">
       <#if shoppingCart.getOrderType() == "SALES_ORDER">
         <div>
@@ -80,8 +119,8 @@ under the License.
                   <td align="right"><div>${uiLabelMap.ProductProductId} :</div></td>
                   <td>
                     <span class='tabletext'>
-                      <#if orderType=="PURCHASE_ORDER">                        
-                        <#if partyId?has_content>                                               
+                      <#if orderType=="PURCHASE_ORDER">
+                        <#if partyId?has_content>
                           <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
                         <#else>
                           <#assign fieldFormName="LookupSupplierProduct">
@@ -90,10 +129,10 @@ under the License.
                         <#assign fieldFormName="LookupProduct">
                       </#if>
                       <@htmlTemplate.lookupField formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName="${fieldFormName}"/>
-                      <a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="buttontext">${uiLabelMap.OrderQuickLookup}</a>
-                      <a href="javascript:quicklookupGiftCertificate()" class="buttontext">${uiLabelMap.OrderAddGiftCertificate}</a>
+                      <#-- <a href="javascript:quicklookup(document.quickaddform.add_product_id)" class="buttontext">${uiLabelMap.OrderQuickLookup}</a> -->
+                      <#-- <a href="javascript:quicklookupGiftCertificate()" class="buttontext">${uiLabelMap.OrderAddGiftCertificate}</a> -->
                       <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
-                        <a href="javascript:showQohAtp()" class="buttontext">${uiLabelMap.ProductAtpQoh}</a>
+                        <#-- <a href="javascript:showQohAtp()" class="buttontext">${uiLabelMap.ProductAtpQoh}</a> -->
                       </#if>
                     </span>
                   </td>
@@ -106,7 +145,7 @@ under the License.
                   <td align="right"><div>${uiLabelMap.OrderDesiredDeliveryDate} :</div></td>
                   <td>
                     <div>
-                      <#if useAsDefaultDesiredDeliveryDate?exists> 
+                      <#if useAsDefaultDesiredDeliveryDate?exists>
                         <#assign value = defaultDesiredDeliveryDate>
                       </#if>
                       <@htmlTemplate.renderDateTimeField name="itemDesiredDeliveryDate" value="${value!''}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="item1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
