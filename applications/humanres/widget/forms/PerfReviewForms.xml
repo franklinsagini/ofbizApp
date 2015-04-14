@@ -501,12 +501,12 @@ under the License.
         		<option key="Qualitative Goals" description="Qualitative Goals"/>
         	</drop-down>
         </field>
-        <field name="percentage" title="Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+      <!--  <field name="percentage" title="Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field> -->
         <field name="description" title="Description"><textarea/> </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
      </form>
         
-        <form name="listNewPerfGoalDef" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerfGoalsDef" paginate-target="perfGoalsDef"
+        <form name="listNewPerfGoalDef34" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerfGoalsDef" paginate-target="perfGoalsDef"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PerfGoalsDef"> 
@@ -533,6 +533,29 @@ under the License.
          <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="button"> <submit button-type="text-link"/></field>
         
     </form>
+	
+	 <form name="listNewPerfGoalDef" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="perfGoalsDef"
+                 target="updatePerfGoalsDef"   default-table-style="basic-table hover-bar">
+               <actions>
+            <entity-condition entity-name="PerfGoalsDef"> 
+            	<order-by field-name="-percentage"/>
+            </entity-condition>
+        </actions>
+        <field name="perfGoalsDefId"><hidden/></field>
+        <field name="goalDef" title="Goal Category"> <display/> </field>
+        <field name="description" title="Description"> <display/> </field>
+        <field name="percentage" title="Percentage"> <text/> </field>
+        <field name="goals" title="Goals/Indicators">
+        	<hyperlink target="perfGoals" description="Goals" also-hidden="false">
+            	<parameter param-name="goalDef"/>
+            	<parameter param-name="perfGoalsDefId"/>
+            </hyperlink>
+        </field>
+               
+       <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
+       <field name="submitButton" title="Update Goals" widget-style="smallSubmit"><submit/></field>
+     
+        </form>
     
      <!-- New Perf Goals-->
     <form name="PerfGoal" type="single" target="createPerfGoals"
@@ -543,12 +566,12 @@ under the License.
         <field name="goal" title="Goal" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
         	<text size="30" maxlength="100"/>
         </field>
-        <field name="percentage" title="Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
-        	<text size="30" maxlength="60"/></field>
+        <!-- <field name="percentage" title="Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+        	<text size="30" maxlength="60"/></field> -->
        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
      </form>
         
-        <form name="listNewPerfGoal" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerfGoals" paginate-target="perfGoals"
+        <form name="listNewPerfGoal34" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerfGoals" paginate-target="perfGoals"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="">
         <actions>
             <entity-condition entity-name="PerfGoals"> 
@@ -569,6 +592,25 @@ under the License.
         </field -->        
          <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="button"> <submit button-type="text-link"/></field>        
     </form>
+	
+	<form name="listNewPerfGoal" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="perfGoals"
+                 target="updatePerfGoals"   default-table-style="basic-table hover-bar">
+              <actions>
+            <entity-condition entity-name="PerfGoals"> 
+            	<condition-expr field-name="perfGoalsDefId" operator="equals" value="${parameters.perfGoalsDefId}"/>
+            	<order-by field-name="-percentage"/>
+            	<order-by field-name="perfGoalsId"/>
+            </entity-condition>
+        </actions>
+        <field name="perfGoalsId"><hidden/></field>
+        <field name="perfGoalsDefId"><hidden/></field>
+        <field name="goal" title="Goal"> <text/> </field>
+        <field name="percentage" title="Percentage"> <text/> </field>
+               
+       <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
+       <field name="submitButton" title="Update Performance Goals" widget-style="smallSubmit"><submit/></field>
+     
+        </form>
     
      <form name="listQNTGoals" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePerfGoals" paginate-target="ManagePerfObjectives"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="">

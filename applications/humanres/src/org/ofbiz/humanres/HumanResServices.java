@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +37,8 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.datasource.GenericHelperInfo;
+import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -1937,6 +1940,56 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		log.info("DELETED  ALL RECORDS!" );
 		
 	}
+	
+	public static String getTotal() {
+		BigDecimal totalpercentage =BigDecimal.ZERO;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> holidaysELI = null; 
+		String state = null;
+		ResultSet rs1;
+		
+		try {
+			holidaysELI = delegator.findList("PerfGoalsDef",
+					null, null, null, null, false);
+				
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : holidaysELI) {
+			totalpercentage = totalpercentage.add(genericValue.getBigDecimal("percentage"));
+			
+			
+		}
+		
+		/*try {
+			SQLProcessor sqlproc = new SQLProcessor(<datasource-name="localpostgres">); 
+			SQLProcessor sqlproc = new SQLProcessor(delegator.getGroupHelperInfo("org.ofbiz"));
+			sqlproc.prepareStatement("select * from perf_goals_def");  
+			 rs1 = sqlproc.executeQuery(); 
+			 totalpercentage=rs1.getBigDecimal(1);
+			 
+			 while (rs1.next()) {
+				 totalpercentage = totalpercentage.add(rs1.getBigDecimal(5));
+				}
+			 
+		} catch (Exception e) {
+			// TODO: handle exception
+		}*/
+		
+		String f=String.valueOf(totalpercentage);
+		log.info("++++++++++++++totalpercentage++++++++++++++++" +f);
+		int j=Integer.parseInt(f);
+		if (j != 100) {
+			state="INVALID";
+		} else if(j == 100){
+			state="VALID";
+
+		}
+		
+		return state;
+	}
+	
 	
 }
 
