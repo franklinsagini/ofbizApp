@@ -48,7 +48,7 @@ public class LoanServices {
 
 	public static String getLoanDetails(HttpServletRequest request,
 			HttpServletResponse response) {
-
+		
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 
