@@ -493,11 +493,38 @@
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
+	
     <simple-method method-name="updatePerfGoalsDef" short-description="Update PerfGoalsDef">
         <entity-one entity-name="PerfGoalsDef" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
+		<set field="total" value="${bsh:org.ofbiz.humanres.HumanResServices.getTotal();}"/>
+		<set field="valid" value="INVALID"/>
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${total}" level="info"/>
+		
+	<!--	<if>
+			<condition>
+					<if-compare-field field="total"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="EarlyMoveError" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+            <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+			</else>
+		</if> -->
+		
     </simple-method>
+	
+	
+
+		
     
     <simple-method method-name="deletePerfGoalsDef" short-description="Delete PerfGoalsDef">
         <entity-one entity-name="PerfGoalsDef" value-field="lookedUpValue"/>

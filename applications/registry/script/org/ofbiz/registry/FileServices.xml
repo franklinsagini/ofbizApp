@@ -612,6 +612,7 @@
 			    <store-value value-field="registryFile" />
 			    <call-simple-method method-name="saveRequestAction" scope="inline"></call-simple-method>
 		        <call-simple-method method-name="saveRequestActionToLogs" scope="inline"></call-simple-method>
+				 <call-simple-method method-name="setFileMovementGrouper" scope="inline"></call-simple-method>
                 
         
 				<property-to-field resource="HumanResUiLabels"
@@ -1174,7 +1175,19 @@
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
+		 
+		 <entity-condition list="grouper" entity-name="RegistryFileMovementGrouping">
+				<condition-expr field-name="partyId" from-field="partyId"/>
+		</entity-condition>
 		
+		<iterate entry="singleOpenVol" list="grouper">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${singleOpenVol.volumeId}" level="info"/>
+		<entity-one value-field="openVol" entity-name="RegistryFileMovementGrouping">
+			<field-map field-name="groupId" from-field="singleOpenVol.groupId"/>
+		</entity-one>
+		
+		<set field="newEntity.grouper" from-field="openVol.groupId" />
+		</iterate>
 		
 		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
 		<create-value value-field="newEntity" />
@@ -1281,6 +1294,20 @@
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
+		 
+		  <entity-condition list="grouper" entity-name="RegistryFileMovementGrouping">
+				<condition-expr field-name="partyId" from-field="partyId"/>
+		</entity-condition>
+		
+		<iterate entry="singleOpenVol" list="grouper">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${singleOpenVol.volumeId}" level="info"/>
+		<entity-one value-field="openVol" entity-name="RegistryFileMovementGrouping">
+			<field-map field-name="groupId" from-field="singleOpenVol.groupId"/>
+		</entity-one>
+		
+		
+		<set field="newEntity.grouper" from-field="openVol.groupId" />
+		</iterate>
 		
 		<set field="newEntity.activityCode" from-field="reg.Reason"/>
 		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
@@ -1500,6 +1527,19 @@
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
+		 
+		  <entity-condition list="grouper" entity-name="RegistryFileMovementGrouping">
+				<condition-expr field-name="partyId" from-field="partyId"/>
+		</entity-condition>
+		
+		<iterate entry="singleOpenVol" list="grouper">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${singleOpenVol.volumeId}" level="info"/>
+		<entity-one value-field="openVol" entity-name="RegistryFileMovementGrouping">
+			<field-map field-name="groupId" from-field="singleOpenVol.groupId"/>
+		</entity-one>
+		
+		<set field="newEntity.grouper" from-field="openVol.groupId" />
+		</iterate>
 		
 		<set field="newEntity.activityCode" from-field="reg.Reason"/>
 		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
@@ -1618,6 +1658,19 @@
 		<entity-one entity-name="RegistryFiles" value-field="reg">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
+		 
+		  <entity-condition list="grouper" entity-name="RegistryFileMovementGrouping">
+				<condition-expr field-name="partyId" from-field="partyId"/>
+		</entity-condition>
+		
+		<iterate entry="singleOpenVol" list="grouper">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${singleOpenVol.volumeId}" level="info"/>
+		<entity-one value-field="openVol" entity-name="RegistryFileMovementGrouping">
+			<field-map field-name="groupId" from-field="singleOpenVol.groupId"/>
+		</entity-one>
+		
+		<set field="newEntity.grouper" from-field="openVol.groupId" />
+		</iterate>
 		
 		<set field="newEntity.activityCode" from-field="reg.Reason"/>
 		<set field="newEntity.memberNumber" from-field="reg.memberNumber" />
@@ -1639,7 +1692,6 @@
 	</simple-method>
 	
 	<!-- ==========================FILE RETURN================================== -->
-	
 	<simple-method method-name="returnfiles" short-description="request File ">
 	<call-simple-method method-name="saveReturnAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveReturnActionToLogs" scope="inline"></call-simple-method>
@@ -1660,6 +1712,7 @@
 		  <set field="registryFile.currentPossesser" value="REGISTRY"/>
 		 <set field="registryFile.recieptStatus" value="RELEASEDANDRECIEVED"/>
 		<store-value value-field="registryFile"/>
+		<call-simple-method method-name="RemoveFileMovementGrouper" scope="inline"></call-simple-method>
 	</simple-method>
 	
 	<simple-method method-name="saveReturnAction">
@@ -1851,6 +1904,30 @@
 		 <set field="registryFile.currentPossesser" value="REGISTRY"/>
 		 <set field="registryFile.recieptStatus" value="RECALLED_TO_REGISTRY"/>
 		<store-value value-field="registryFile"/>
+	</simple-method>
+	
+	<simple-method method-name="setFileMovementGrouper"	short-description="Create File Actions">
+		<make-value entity-name="RegistryFileMovementGrouping" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileMovementGrouping" field="groupId" />
+		<set from-field="groupId" field="newEntity.groupId" />
+		<set from-field="partyId" field="newEntity.partyId"/>
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	<simple-method method-name="RemoveFileMovementGrouper"	short-description="Create File Actions">
+		<entity-condition list="grouper" entity-name="RegistryFileMovementGrouping">
+				<condition-expr field-name="partyId" from-field="partyId"/>
+		</entity-condition>
+		
+		<iterate entry="singleOpenVol" list="grouper">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${singleOpenVol.volumeId}" level="info"/>
+		<entity-one value-field="openVol" entity-name="RegistryFileMovementGrouping">
+			<field-map field-name="groupId" from-field="singleOpenVol.groupId"/>
+		</entity-one>
+		 <remove-value value-field="openVol" />
+		</iterate>
 	</simple-method>
 	
 
