@@ -22,7 +22,7 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
         <!-- Supplier -->
-    <simple-method method-name="createBranch" short-description="Create Branch">
+    <simple-method method-name="createChaiSupplier" short-description="Create Branch">
         <entity-one value-field="party" entity-name="Party">
             <field-map field-name="partyId" from-field="parameters.partyId"/>
         </entity-one>
@@ -34,7 +34,7 @@
                 <set field="createParty.partyTypeId" value="PARTY_GROUP"/>
                 <set field="createParty.preferredCurrencyUomId" value="KES"/>
                 <set field="createParty.statusId" value="PARTY_ENABLED"/>
-                <set field="createParty.description" value="Chai Sacco Branch"/>
+                <set field="createParty.description" value="Chai Sacco Prequalified Supplier"/>
                 <call-service service-name="createCustomParty" in-map-name="createParty"/>
                 <check-errors/>
             </if-empty>
@@ -50,24 +50,12 @@
             <!-- Only Create a role of internal organization if partyGroup was saved successfully -->
             <if-not-empty field="newEntity.partyId">
                 <set field="branchMap.partyId" from-field="newEntity.partyId"/>
-                <set field="branchMap.roleTypeId" value="INTERNAL_ORGANIZATIO" />
+                <set field="branchMap.roleTypeId" value="SUPPLIER" />
                 <set-service-fields service-name="createPartyRole" map="branchMap" to-map="partyRole"/>
                 <call-service service-name="createPartyRole" in-map-name="partyRole" break-on-error="false"/>
             </if-not-empty>
 
             <!-- Create a relationship from branch to HQ -ChaiSacco -->
-
-            <if-not-empty field="newEntity.partyId">
-                <set field="relaBranchMap.partyId" from-field="newEntity.partyId"/>
-                <set field="relaBranchMap.roleTypeId" value="_NA_" />
-                <set-service-fields service-name="createPartyRole" map="relaBranchMap" to-map="relaPartyRole"/>
-                <call-service service-name="createPartyRole" in-map-name="relaPartyRole" break-on-error="false"/>
-                <set field="relationshipMap.partyIdTo" from-field="newEntity.partyId"/>
-                <set field="relationshipMap.partyRelationshipTypeId" value="GROUP_ROLLUP" />
-                <set field="relationshipMap.partyIdFrom" value="Company" />
-                <set-service-fields service-name="createPartyRelationship" map="relationshipMap" to-map="partyRelations"/>
-                <call-service service-name="createPartyRelationship" in-map-name="partyRelations" break-on-error="false"/>
-            </if-not-empty>
 
     </simple-method>
 
