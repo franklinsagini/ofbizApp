@@ -82,7 +82,33 @@ under the License.
      <simple-method method-name="updateLoanClear" short-description="Update LoanClear">
         <entity-one entity-name="LoanClear" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
+        
+        <set field="entityName" value="LoanClear"/>
+		<set field="loanClearId" from-field="lookedUpValue.loanClearId" type="Long"/>
+		<set field="loanApplicationId" from-field="lookedUpValue.loanApplicationId" type="Long"/>
+		<set field="correctAmount" value="${bsh:org.ofbiz.loanclearing.LoanClearingServices.loanAppliedAmountIsCorrect(loanClearId, loanApplicationId);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+               <if-compare-field to-field="trueField" operator="not-equals" field="correctAmount"></if-compare-field>
+            </condition> 
+            <then> 
+               <add-error> 
+                 <fail-property resource="LoanClearingUiLabels.xml"  
+                    property="LoanClearingAmountError" /> 
+               </add-error> 
+               <check-errors /> 
+            </then> 
+            <else>
+               <store-value value-field="lookedUpValue"/>
+               <property-to-field resource="LoanClearingUiLabels.xml" 
+            property="LoanClearingLoanApplicationUpdateSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+        
+        
     </simple-method>
     
     <simple-method method-name="deleteLoanClear" short-description="Delete LoanClear">

@@ -137,6 +137,7 @@
                 <set field="titleProperty" value="Loans To Clear"/>
                 <set field="headerItem" value="loanClear"/>
                 <set field="displayPassword" value="Y"/>
+                <set field="loanClearCtx" from-field="parameters"/>
                 <set field="target" value="createLoanClear"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!--  property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
@@ -148,11 +149,50 @@
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
 
+	                    <screenlet title="Clearings">
+	                             <include-form name="FindClearing" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+	                 	</screenlet>
                         
                         <section name="search-results">
                         	<widgets>
                         		<screenlet title="List">
                         			<include-form name="listLoanClear" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- reverseLoanClearance -->
+    <screen name="reverseLoanClearance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Reverse Loan Clearance"/>
+                <set field="headerItem" value="reverseLoanClearance"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="loanClearCtx" from-field="parameters"/>
+                <set field="target" value="reverseLoanClearance"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!--  property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <set field="name" from-field="parameters.name"/>
+                
+                <entity-one entity-name="LoanClear" value-field="loanClearContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+	                    <screenlet title="Reverse Clearance">
+	                             <include-form name="FindReverseClearing" location="component://loanclearing/widget/LoanClearingForms.xml"/>
+	                 	</screenlet>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="List">
+                        			<include-form name="listReverseLoanClear" location="component://loanclearing/widget/LoanClearingForms.xml"/>
                         		</screenlet>
                         	</widgets>
                         </section>

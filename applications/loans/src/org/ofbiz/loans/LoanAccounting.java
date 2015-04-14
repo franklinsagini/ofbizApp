@@ -40,7 +40,7 @@ public class LoanAccounting {
 
 	public static Logger log = Logger.getLogger(LoanAccounting.class);
 
-	public static String postDisbursement(GenericValue loanApplication,
+	public static synchronized String postDisbursement(GenericValue loanApplication,
 			Map<String, String> userLogin) {
 		Map<String, Object> result = FastMap.newInstance();
 		Long loanApplicationId = loanApplication
@@ -125,8 +125,8 @@ public class LoanAccounting {
 				BigDecimal bdTotalLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(clearedLoanApplicationId);
 				BigDecimal bdInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString());
 				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString());
-		
-				saveLoanRepayment(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount);
+				log.info(" LLLLLLLL Loan Amount to offset AAAAAAAAAA"+bdTotalLoanBalanceAmount);
+				saveLoanRepaymentClearance(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount);
 				//LoansProcessingServices.get
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString()));
@@ -153,8 +153,9 @@ public class LoanAccounting {
 		result.put("disbursementResult", "posted");
 		return "";
 	}
-
-	private static BigDecimal getTotalClearedAmount(Long theLoanApplicationId) {
+	
+	
+	public static BigDecimal getTotalClearedAmount(Long theLoanApplicationId) {
 		// TODO Auto-generated method stub
 		List<GenericValue> loanClearELI = null; // =
 		EntityConditionList<EntityExpr> loanClearConditions = EntityCondition
@@ -869,5 +870,63 @@ public class LoanAccounting {
 		}
 
 	}
+	
+	public static void saveLoanRepaymentClearance(Long loanApplicationId, BigDecimal bdTotalLoanBalanceAmount, BigDecimal bdInterestAmount, BigDecimal bdTotalInsuranceAmount) {
+		BigDecimal loanPrincipal = BigDecimal.ZERO;
+		BigDecimal loanInterest = BigDecimal.ZERO;
+		BigDecimal loanInsurance = BigDecimal.ZERO;
+		
+		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(loanApplicationId);
+		
+		// Loan Principal
+		loanPrincipal = bdTotalLoanBalanceAmount;//LoanRepayments.getTotalPrincipaByLoanDue(String.valueOf(loanApplicationId));
+		// Get This Loan's Interest
+				
+		loanInterest = bdInterestAmount;
+		// Get This Loan's Insurance
+		loanInsurance = bdTotalInsuranceAmount;
+		// Sum Principal, Interest and Insurance
+
+		BigDecimal transactionAmount = loanPrincipal.add(loanInterest).add(
+				loanInsurance);
+
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+
+		BigDecimal totalInterestDue = bdInterestAmount;
+		
+		BigDecimal totalInsuranceDue = bdTotalInsuranceAmount;
+		BigDecimal totalPrincipalDue = bdTotalLoanBalanceAmount;
+		
+		BigDecimal totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(
+				totalPrincipalDue);
+
+		
+		Long partyId = loanApplication.getLong("partyId");
+		GenericValue loanRepayment = null;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", "admin", "partyId", partyId, "loanApplicationId",
+				loanApplicationId,
+
+				"loanNo", loanApplication.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 
 }

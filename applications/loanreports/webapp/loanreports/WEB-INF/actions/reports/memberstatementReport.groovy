@@ -122,7 +122,18 @@ context.combinedList = combinedList;
 
 def memberStatement =  new MemberStatement()
 def memberStatementList = []
-allLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId], null, false);
+
+theDisburseLoanStatusId = 6.toLong();
+theClearedLoanStatusId = 7.toLong();
+
+allDisbursedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theDisburseLoanStatusId], null, false);
+allClearedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theClearedLoanStatusId], null, false);
+
+
+allLoansList = allDisbursedLoansList;
+
+allLoansList = allLoansList + allClearedLoansList;
+//delegator.findByAnd("LoanApplication",  [partyId : lpartyId], null, false);
 allLoansList.eachWithIndex { loanItem, index ->
 	
 	Long loanProductId = loanItem.loanProductId;

@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
+import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -22,12 +25,16 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.loans.LoanAccounting;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
 
 
 public class LoanClearingServices {
+	
+	public static Logger log = Logger.getLogger(LoanAccounting.class);
 	
 		public static BigDecimal getTotalAmountToClear(Long loanClearId){
 			BigDecimal totalToClear = BigDecimal.ZERO;
@@ -149,5 +156,67 @@ public class LoanClearingServices {
 			
 			return false;
 		}
+		
+		
+		public static Boolean loanAppliedAmountIsCorrect(Long loanClearId, Long loanApplicationId){
+			if (loanApplicationId == null)
+				return false;
+			
+			//if (loanApp)
+			
+			//On one side the total loan applied
+			BigDecimal bdTotalLoanApplied = LoanUtilities.getLoanAmount(loanApplicationId);
+					
+			log.info("IIIIIIIIIIIIIIII  Clear ID "+loanClearId);
+			log.info("IIIIIIIIIIIIIIII Loan Application ID "+loanApplicationId);
+			//on the second side - the total loans being cleared, their total accrued interests
+			//and their total accrued insurances and their total charges
+			BigDecimal bdTotalClearanceCost = getTotalClearanceCost(loanClearId, loanApplicationId);
+			
+			
+			log.info(" Amount applied is :: "+bdTotalLoanApplied+" Clearance cost is "+bdTotalClearanceCost);
+			
+			if (bdTotalLoanApplied.compareTo(bdTotalClearanceCost) == 1)
+				return true;
+			
+			return false;
+		}
+
+
+		private static BigDecimal getTotalClearanceCost(Long loanClearId, Long loanApplicationId) {
+			
+			log.info(" Numbers IN Clear ID "+loanClearId+" Loan Application ID "+loanApplicationId);
+			BigDecimal bdTotalClearAmount = getTotalAmountToClear(loanClearId);
+					
+					//LoanAccounting.getTotalClearedAmount(loanApplicationId);
+			log.info(" Numbers IN bdTotalClearAmount "+bdTotalClearAmount);
+				
+			//Get total charges based on rates
+			BigDecimal bdTotalLoanCost = BigDecimal.ZERO;
+			bdTotalLoanCost = bdTotalLoanCost.add(bdTotalClearAmount);
+			
+			List<Long> listLoanApplicationIDs = getLoanApplicationIDsCleared(loanClearId);
+			
+			BigDecimal bdTotalCharge = BigDecimal.ZERO;
+			for (Long clearedLoanApplicationId : listLoanApplicationIDs) {
+				
+				BigDecimal bdTotalLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(clearedLoanApplicationId);
+				BigDecimal bdInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString());
+				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString());
+				log.info(" LLLLLLLL Loan Amount to offset AAAAAAAAAA"+bdTotalLoanBalanceAmount);
+				//LoansProcessingServices.get
+				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
+				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString()));
+			
+				BigDecimal bdTotal = bdTotalLoanBalanceAmount.add(bdInterestAmount).add(bdTotalInsuranceAmount);
+				log.info("BBBBBB Total Balance "+bdTotal);
+				bdTotalCharge = bdTotalCharge.add(org.ofbiz.loans.LoanServices.getLoanClearingCharge(clearedLoanApplicationId, bdTotal));
+				log.info("CCCCCC Total Charge "+bdTotalCharge);
+			
+			}
+			
+			return bdTotalLoanCost;
+		}
+
 
 }

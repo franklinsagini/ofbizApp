@@ -111,6 +111,14 @@
                         save-current-view="true" />
         </request-map>
         
+       <request-map uri="reverseLoanClearance">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="reverseLoanClearance"
+                        save-current-view="true" />
+        </request-map>
+        
+        
+        
         <request-map uri="createLoanClear">
                 <security https="true" auth="true" />
                 <event type="service" invoke="createLoanClear" />
@@ -212,6 +220,15 @@
 		<response name="error" type="view" value="loanClear" />
 	</request-map>
 	
+	<request-map uri="reverseAllClearance">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.loans.LoanServices" invoke="reverseAllClearance" />
+		<response name="success" type="request-redirect" value="reverseLoanClearance">
+		</response>
+		<response name="error" type="view" value="reverseLoanClearance" />
+	</request-map>
+	
+	
 	<request-map uri="hasNewLoan">
 		<event type="java" path="org.ofbiz.loanclearing.LoanClearingServices" invoke="hasNewLoan" />
 		<response name="success" type="none">
@@ -224,6 +241,11 @@
 		<response name="success" type="view" value="printClearance">
 			<redirect-parameter name="loanClearId"/>
 		</response>
+	</request-map>
+	
+	<request-map uri="LookupActiveMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupActiveMember" />
 	</request-map>
 	
     <!-- View Mappings -->
@@ -256,6 +278,13 @@
 	
 	<view-map name="loanClear" type="screen"
                 page="component://loanclearing/widget/LoanClearingScreens.xml#loanClear" />
+                
+                
+    
+    <view-map name="reverseLoanClearance" type="screen"
+                page="component://loanclearing/widget/LoanClearingScreens.xml#reverseLoanClearance" />
+    
+    
 	<view-map name="loanClearItem" type="screen"
                 page="component://loanclearing/widget/LoanClearingScreens.xml#loanClearItem" />
     
@@ -264,4 +293,8 @@
 	<!-- printClearance -->
 	 <view-map name="printClearance" type="screen"
                 page="component://loanclearing/widget/LoanClearingScreens.xml#printClearance" />
+                
+     	<view-map name="LookupActiveMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
+     
 </site-conf>

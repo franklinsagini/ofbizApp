@@ -2469,12 +2469,157 @@ public class LoanServices {
 
 		return "success";
 	}
+	
+	/**
+	 * reverseAllClearance
+	 * 
+	 * Do the opposite of loan clearance
+	 * 
+	 * **/
+	public static String reverseAllClearance(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String loanClearId = (String) request.getParameter("loanClearId");
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session
+				.getAttribute("userLogin");
+		String userLoginId = userLogin.getString("userLoginId");
+
+		GenericValue loanClear = null;
+
+		loanClearId = loanClearId.replaceAll(",", "");
+		try {
+			loanClear = delegator.findOne("LoanClear",
+					UtilMisc.toMap("loanClearId", Long.valueOf(loanClearId)),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (loanClear.getLong("loanApplicationId") == null) {
+			return "error";
+		}
+
+		Map<String, String> userLoginMap = new HashMap<String, String>();
+		userLoginMap.put("userLoginId", userLoginId);
+		userLoginMap.put("partyId",
+				String.valueOf(loanClear.getLong("partyId")));
+		// Get all applications under this clearance and set their status to
+		// cleared
+		Long loanDisbursedStatusId = getLoanStatusId("DISBURSED");
+		List<GenericValue> loanClearItemELI = new ArrayList<GenericValue>();
+		try {
+			loanClearItemELI = delegator
+					.findList(
+							"LoanClearItem",
+							EntityCondition.makeCondition("loanClearId",
+									Long.valueOf(loanClearId)), null, null,
+							null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		BigDecimal bdClearAmount = BigDecimal.ZERO;
+
+		for (GenericValue genericValue : loanClearItemELI) {
+			// genericValue.set(name, value);
+			updateLoanToCleared(genericValue.getLong("loanApplicationId"),
+					loanDisbursedStatusId);
+			bdClearAmount = bdClearAmount.add(genericValue
+					.getBigDecimal("loanAmt"));
+		}
+		// Update the LoanClearance by setting isCleared to 'Y'
+		loanClear.set("isCleared", "N");
+		try {
+			delegator.createOrStore(loanClear);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Post the Loan Clearance
+
+		// Cr Loan Receivable
+		// Dr Loan Clearance
+		// AccHolderTransactionServices.
+		// AccHolderTransactionServices.postTransactionEntry(delegator,
+		// bdLoanAmount, partyId, loanReceivableAccount, postingType,
+		// acctgTransId, acctgTransType, entrySequenceId);
+		// POST Charge
+		String acctgTransType = "LOAN_CLEARANCE";
+
+		// Create the Account Trans Record
+		String acctgTransId = AccHolderTransactionServices
+				.createAccountingTransaction(null, acctgTransType, userLoginMap);
+		// Debit Loan Clearance
+		// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String partyId = String.valueOf(loanClear.getLong("partyId"));
+		String loanClearanceAccountId = AccHolderTransactionServices
+				.getCashAccount(null, "LOANCLEARANCE");
+		String postingType = "C";
+		String entrySequenceId = "00001";
+		AccHolderTransactionServices.postTransactionEntry(delegator,
+				bdClearAmount, partyId, loanClearanceAccountId, postingType,
+				acctgTransId, acctgTransType, entrySequenceId);
+
+		// Credit Loan Receivables
+		String loanReceivablesAccountId = AccHolderTransactionServices
+				.getMemberDepositAccount(null, "LOANCLEARANCE");
+		postingType = "D";
+		entrySequenceId = "00002";
+		AccHolderTransactionServices.postTransactionEntry(delegator,
+				bdClearAmount, partyId, loanReceivablesAccountId, postingType,
+				acctgTransId, acctgTransType, entrySequenceId);
+
+		// Update loan applied, set its amount eligible
+		// loanApplicationId
+
+		Long loanAppliedForId = loanClear.getLong("loanApplicationId");
+		// Get Maximum amount for this loan application
+		GenericValue loanApplication = getLoanApplication(loanAppliedForId);
+		BigDecimal bdTotalSavings = totalSavings(
+				loanApplication.getLong("partyId").toString(), loanApplication
+						.getLong("loanProductId").toString(), delegator);
+		// bdMaximumLoanAmt =
+		// (bdTotalSavings.multiply(savingsMultiplier))
+		// .subtract(bdExistingLoans);
+		GenericValue loanProduct = getLoanProduct(loanApplication
+				.getLong("loanProductId"));
+		Long accountProductId = loanProduct.getLong("accountProductId");
+		BigDecimal bdMaximumLoanAmt = calculateMaximumAmount(
+				loanApplication.getLong("partyId"), accountProductId,
+				loanProduct.getBigDecimal("multipleOfSavingsAmt"),
+				bdTotalSavings);
+
+		BigDecimal bdExistingLoans = calculateExistingLoansTotal(loanApplication
+				.getLong("partyId"));
+		loanApplication.set("maxLoanAmt", bdMaximumLoanAmt);
+		loanApplication.set("existingLoans", bdExistingLoans);
+
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//Update Loan CLear to NO Application
+		loanClear.set("loanApplicationId", null);
+		try {
+			delegator.createOrStore(loanClear);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "success";
+	}
 
 	/***
 	 * Update Loan Application to Cleared
 	 * */
 	private static void updateLoanToCleared(Long loanApplicationId,
-			Long loanClearedStatusId) {
+			Long loanStatusId) {
 		GenericValue loanApplication = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -2484,7 +2629,7 @@ public class LoanServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		loanApplication.set("loanStatusId", loanClearedStatusId);
+		loanApplication.set("loanStatusId", loanStatusId);
 		try {
 			delegator.createOrStore(loanApplication);
 		} catch (GenericEntityException e) {
