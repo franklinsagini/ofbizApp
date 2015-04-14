@@ -87,10 +87,19 @@
 		<field name="releasedTo" type="name"></field>
 		<field name="receivedBy" type="name"></field>
 		<field name="activityCode" type="name"></field>
+		<field name="grouper" type="name"></field>
+		<field name="total" type="name"></field>
 		<field name="total" type="name"></field>
 		<field name="timeIn" type="date-time"></field>
 		<field name="timeOut" type="date-time"></field>
 		<prim-key field="movementId" />
+	</entity>
+	
+	<entity entity-name="RegistryFileMovementGrouping" package-name="org.ofbiz.registry"
+		title="Member File Book">
+		<field name="groupId" type="id"></field>
+		<field name="partyId" type="name"></field>
+		<prim-key field="groupId" />
 	</entity>
 	
 	<entity entity-name="RegistryFileMovementDataImport" package-name="org.ofbiz.registry"
@@ -285,7 +294,7 @@
 	    <member-entity entity-alias="FM" entity-name="RegistryFileMovement"></member-entity>
     	
 		
-    	<alias entity-alias="FM" name="activityCode" group-by="true" />
+    	<alias entity-alias="FM" name="grouper" group-by="true" />
     	<alias entity-alias="FM" name="partyId" group-by="true" />
     	<alias entity-alias="FM" name="total" function="count"/> 
     </view-entity>

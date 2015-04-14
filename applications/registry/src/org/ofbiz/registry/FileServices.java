@@ -1002,4 +1002,17 @@ public class FileServices {
 					}
 			return state; 
 			}
+				
+				public static void deleteFileMovementGrouper(String part) {
+					// TODO Auto-generated method stub
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+					try {
+						delegator.removeByAnd("RegistryFileMovementGrouping", "partyId", part);
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+					log.info("DELETED  ALL RECORDS!" );
+					
+				}
 }

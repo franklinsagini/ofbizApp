@@ -350,7 +350,7 @@
                 <entity-one entity-name="PerfGoals" value-field="perfGoalsContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+               <decorator-screen name="objectivesDecorator" location="component://humanres/widget/PerfReviewScreens.xml">
                     <decorator-section name="body">
                     <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
@@ -629,6 +629,86 @@
             </widgets>
         </section>
     </screen>
+	
+	<screen name="objectivesDecorator">
+		<section>
+			<actions>
+					<entity-one entity-name="KPITargets" value-field="staffObjectivesContext"/>
+					
+					 <entity-one entity-name="Person" value-field="p">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+					
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+								<condition>
+										<not>
+											<if-empty field="parameters.partyId" />
+										</not>
+									</condition>
+									<widgets>
+										<container style="leftclear">
+												<label style="h1"
+												text="Manage Performance Objective(s) For:- ${p.firstName} ${p.lastName}" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="StaffobjectivesDecorator">
+		<section>
+			<actions>
+					<entity-one entity-name="KPITargets" value-field="staffObjectivesContext"/>
+					
+					 <entity-one entity-name="Person" value-field="p">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+			</entity-one>
+			
+			 <entity-one entity-name="PerfGoals" value-field="g">
+		 	<field-map field-name="perfGoalsId" from-field="perfGoalsId"/>
+		 </entity-one>
+					
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+								<condition>
+										<not>
+											<if-empty field="parameters.partyId" />
+										</not>
+									</condition>
+									<widgets>
+										<container style="leftclear">
+												<label style="h1"
+												text="Manage ${g.goal} Objective(s) For:- ${p.firstName} ${p.lastName}" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
     
     
     
@@ -649,16 +729,19 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="isBranch" from-field="parameters.isBranch"/>
                 <set field="isDepartment" from-field="parameters.isDepartment"/>
+				<set field="perfGoalsId" from-field="parameters.perfGoalsId"/>
+				
+				 
                 
                 <entity-one entity-name="KPITargets" value-field="staffObjectivesContext"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="StaffobjectivesDecorator" location="component://humanres/widget/PerfReviewScreens.xml">
                     <decorator-section name="body">
                     <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                    <include-menu name="PerfStaffBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                  <!--  <include-menu name="PerfStaffBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
