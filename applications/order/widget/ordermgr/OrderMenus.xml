@@ -19,7 +19,7 @@ under the License.
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="OrderAppBar" title="${uiLabelMap.OrderManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="request" title="${uiLabelMap.OrderRequests}">
+<!--         <menu-item name="request" title="${uiLabelMap.OrderRequests}">
             <condition>
                 <or>
                     <if-has-permission permission="ORDERMGR" action="_VIEW"/>
@@ -38,7 +38,7 @@ under the License.
             </condition>
             <link target="FindQuote"/>
         </menu-item>
-
+ -->
 <!--         <menu-item name="PurchaseOrders" title="${uiLabelMap.OrderPurchaseOrder}">
             <condition>
                 <or>
@@ -60,6 +60,22 @@ under the License.
             <link target="salesorder" link-type="anchor"/>
         </menu-item> -->
 
+        <menu-item name="create-party-group" title="New Supplier">
+            <link target="editpartygroup">
+                <parameter param-name="create_new" value="Y"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="orderentry" title="${uiLabelMap.OrderOrderEntry}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ORDERMGR" action="_CREATE"/>
+                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_CREATE"/>
+                </or>
+            </condition>
+            <link target="orderentry" link-type="anchor"/>
+        </menu-item>
+
         <menu-item name="orderlist" title="${uiLabelMap.OrderOrderList}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
@@ -72,16 +88,6 @@ under the License.
                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
             </condition>
             <link target="findorders"/>
-        </menu-item>
-
-        <menu-item name="orderentry" title="${uiLabelMap.OrderOrderEntry}">
-            <condition>
-                <or>
-                    <if-has-permission permission="ORDERMGR" action="_CREATE"/>
-                    <if-has-permission permission="ORDERMGR" action="_PURCHASE_CREATE"/>
-                </or>
-            </condition>
-            <link target="orderentry" link-type="anchor"/>
         </menu-item>
 
         <menu-item name="return" title="${uiLabelMap.OrderOrderReturns}">
@@ -101,9 +107,9 @@ under the License.
             <link target="FindRequirements"/>
         </menu-item>
 
-        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+<!--         <menu-item name="reports" title="${uiLabelMap.CommonReports}">
             <link target="OrderPurchaseReportOptions"/>
-        </menu-item>
+        </menu-item> -->
 
         <menu-item name="stats" title="${uiLabelMap.CommonStats}">
             <link target="orderstats"/>

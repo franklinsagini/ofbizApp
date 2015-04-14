@@ -156,4 +156,32 @@ under the License.
         </section>
     </screen>
 
+    <screen name="EditPartyGroup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditGroupInformation" />
+                <set field="tabButtonItem" value="viewprofile" />
+                <set field="headerItem" value="find" />
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation" />
+
+                <set field="donePage" from-field="parameters.DONE_PAGE"
+                    default-value="viewprofile" />
+                <set field="partyId" from-field="parameters.partyId" />
+                <set field="preferredCurrencyUomId" value="KES"/>
+                <entity-one entity-name="PartyAndGroup" value-field="partyGroup" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator"
+                    location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleEditGroupInformation}">
+                            <include-form name="EditPartyGroup"
+                                location="component://order/widget/ordermgr/OrderEntryForms.xml" />
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
