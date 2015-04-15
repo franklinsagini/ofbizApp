@@ -394,7 +394,7 @@
     </form>
     
     
-    	    <form name="listLoanClearItem" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClearLimit" paginate-target="loanClearingLimit"
+    <form name="listLoanClearItem" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClearLimit" paginate-target="loanClearingLimit"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="LoanClearItem">
@@ -596,6 +596,160 @@
         
     </form>
 	
+	<!-- FindClearingCost -->
+    <form name="FindClearingCost" type="single" target="showLoanClearanceCost"
+		default-entity-name="LoanClear">
+
+
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+
+		<field name="loanApplicationId" title="New Loan" >
+        	<!-- display-entity entity-name="LoanApplication" key-field-name="loanApplicationId" description="${loanNo} - ${loanAmt}"></display-entity -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${loanNo} - ${loanAmt}" entity-name="LoanApplication">
+        			<entity-constraint name="loanStatusId" operator="equals" value="8"/>		
+        		</entity-options>
+        	</drop-down>
+         </field>
+
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+		<field name="isCleared">
+			<hidden value="Y"/>
+		</field>
+		<field name="createdBy"><text-find></text-find></field>
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+	
+	<!-- listLoanClearingCost -->
+	<form name="listLoanClearingCost" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClear" paginate-target="reverseLoanClearance"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+			<!-- set field="statusName" value="ACTIVE"/> <set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
+				<entity-condition entity-name="Member"> <condition-expr field-name="memberStatusId" 
+				operator="equals" value="${statusId}"/> <order-by field-name="-partyId"/> 
+				</entity-condition -->
+
+			
+
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="loanClearCtx" />
+				<field-map field-name="entityName" value="LoanClear" />
+				<field-map field-name="orderBy" value="-loanClearId" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+				
+			</service>
+
+		</actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanClearLimit"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="loanClearId" title="Loan Clear No">
+        	<display></display>
+         </field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId">
+        		
+        	</display-entity>
+         </field>
+         
+         <field name="loanApplicationId" title="New Loan" widget-style="required" required-field="true">
+        	<!-- display-entity entity-name="LoanApplication" key-field-name="loanApplicationId" description="${loanNo} - ${loanAmt}"></display-entity -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${loanNo} - ${loanAmt}" entity-name="LoanApplication">
+        			<entity-constraint name="partyId" operator="equals" value="${partyId}"  />
+        			<entity-constraint name="loanStatusId" operator="equals" value="8"/>		
+        		</entity-options>
+        	</drop-down>
+         </field>
+         
+         <!-- field name="loanTotalAmt">
+        	<display ></display>
+         </field -->
+         
+         <field name="amountToClear">
+         	<display default-value="${bsh:org.ofbiz.loanclearing.LoanClearingServices.getTotalAmountToClear(loanClearId)}"></display>
+         </field>
+         
+         <field name="isCleared">
+        	<hidden/>
+         </field>
+         
+         
+         <!-- field name="clearAll" title="Clear All" widget-style="buttontext" event="onclick"
+			action="javascript: return confirmNewLoanApplicationForClearance(${loanClearId});" use-when="isCleared==null||isCleared.equals(&quot;N&quot;)">
+            <hyperlink target="clearAll" description="Clear All" also-hidden="false">
+                <parameter param-name="loanClearId"/>
+            </hyperlink>
+        </field -->
+         <field name="showCosting" title="Show Costing" widget-style="buttontext"  use-when="isCleared.equals(&quot;Y&quot;)">
+            <hyperlink target="showCosting" description="Show Costing" also-hidden="false">
+                <parameter param-name="loanClearId"/>
+            </hyperlink>
+        </field>
+        <field name="loanClearItem" title="Show Items" widget-style="buttontext">
+            <hyperlink target="loanClearItem" description="Show Loans To Clear" also-hidden="false">
+                <parameter param-name="loanClearId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="printClearance" title="Print Clearacnce" widget-style="buttontext">
+            <hyperlink target="printClearance" description="Print Loan Clearance" also-hidden="false">
+                <parameter param-name="loanClearId"/>
+            </hyperlink>
+        </field>
+        <field name="createdStamp" title="Created"><display type="date-time"></display></field>
+        <field name="createdBy" title="Created By"><display></display></field>
+        
+    </form>
     
-		
+    <!-- listLoanClearCosting -->
+    <form name="listLoanClearCosting" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanClearCosting" paginate-target="showCosting"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanClearCosting">
+            	<condition-expr field-name="loanClearId" operator="equals" from-field="loanClearId"/>
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateLoanClearLimit"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="loanClearCostingId"><hidden/></field>
+        <field name="loanClearId"><hidden/></field>
+        
+         <field name="loanApplicationId" title="Loan">
+         	<display-entity entity-name="LoanApplication" description="${loanNo} - ${loanAmt}"></display-entity>
+         </field>
+         <field name="loanTotalAmt" title="Loan Amount">
+        	<display></display>
+         </field>
+         
+         <field name="totalAccruedInterest" title="Accrued Interest">
+        	<display></display>
+         </field>
+         
+         <field name="totalAccruedInsurance" title="Accrued Insurance">
+        	<display></display>
+         </field>
+         
+                  <field name="totalChargeAmount" title="Total Charge Amount">
+        	<display></display>
+         </field>
+         
+                  <field name="chargeRate" title="Charge Rate">
+        	<display></display>
+         </field>
+        
+    </form>
+	
+	
 </forms>

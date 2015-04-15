@@ -37,7 +37,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.loanclearing.LoanClearingServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
+import org.ofbiz.party.party.SaccoUtility;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -2466,10 +2468,96 @@ public class LoanServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+		
+		//Create a Clear Costing
+		updateClearanceCosting(Long.valueOf(loanClearId), userLoginId);
 
 		return "success";
 	}
 	
+	private static void updateClearanceCosting(Long loanClearId, String userLoginId) {
+		GenericValue loanClearCosting = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		/***
+		 * 
+		 * loanTotalAmt
+		 * totalAccruedInterest
+		 * totalAccruedInsurance
+		 * totalChargeAmount
+		 * chargeRate
+		 * */
+		
+		//Do this for each LoanClearItem
+		List<Long> loanClearItemIdList = getLoanClearItemIdList(loanClearId);
+		
+		BigDecimal loanTotalAmt = BigDecimal.ZERO;
+		BigDecimal totalAccruedInterest = BigDecimal.ZERO; 
+		BigDecimal totalAccruedInsurance = BigDecimal.ZERO;
+		BigDecimal totalChargeAmount =  BigDecimal.ZERO;
+		BigDecimal chargeRate =  BigDecimal.ZERO;
+		Long loanClearCostingId = null;
+		Long loanApplicationId = null;
+		//For each of these ID, save a costing record
+		for (Long loanClearItemId : loanClearItemIdList) {
+			
+			loanTotalAmt = LoanClearingServices.getTotalAmountToClearByItemId(loanClearItemId);
+			totalAccruedInterest = LoanClearingServices.getTotalAccruedInterest(loanClearItemId);
+			totalAccruedInsurance = LoanClearingServices.getTotalAccruedInsurance(loanClearItemId);
+			totalChargeAmount = LoanClearingServices.getTotalChargeAmount(loanClearItemId);
+			chargeRate = LoanClearingServices.getChargeRate(loanClearItemId);
+			loanClearCostingId = SaccoUtility.getNextSequenc("LoanClearCosting");
+			loanApplicationId = LoanClearingServices.getLoanApplicationIdGiveLoanClearItemId(loanClearItemId);
+			//Get LoanClear
+			loanClearCosting = delegator.makeValidValue(
+					"LoanClearCosting", UtilMisc.toMap(
+							"loanClearCostingId", loanClearCostingId,
+							"loanClearId", loanClearId,
+							"isActive",	"Y", 
+							"createdBy", userLoginId, 
+							"loanApplicationId", loanApplicationId,
+							"loanTotalAmt", loanTotalAmt,
+							"totalAccruedInterest", totalAccruedInterest, 
+							"totalAccruedInsurance",	totalAccruedInsurance,
+							"totalChargeAmount", totalChargeAmount,
+
+							"chargeRate", chargeRate));
+			
+			try {
+				delegator.createOrStore(loanClearCosting);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		//Get the loanApplicationId
+	}
+
+	/***
+	 * Returns a list of loanClearItemId s these are the IDs that
+	 * will help us get the items being cleared.
+	 * */
+	private static List<Long> getLoanClearItemIdList(Long loanClearId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanClearItemELI = new ArrayList<GenericValue>();
+		try {
+			loanClearItemELI = delegator
+					.findList(
+							"LoanClearItem",
+							EntityCondition.makeCondition("loanClearId",
+									loanClearId), null, null,
+							null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		List<Long> loanClearItemIdList = new ArrayList<Long>();
+
+		for (GenericValue genericValue : loanClearItemELI) {
+			loanClearItemIdList.add(genericValue.getLong("loanClearItemId"));
+		}
+		return loanClearItemIdList;
+	}
+
 	/**
 	 * reverseAllClearance
 	 * 
@@ -2531,6 +2619,8 @@ public class LoanServices {
 		}
 		// Update the LoanClearance by setting isCleared to 'Y'
 		loanClear.set("isCleared", "N");
+		loanClear.set("isCleared", "isReversed");
+		
 		try {
 			delegator.createOrStore(loanClear);
 		} catch (GenericEntityException e) {
@@ -2630,6 +2720,7 @@ public class LoanServices {
 			e.printStackTrace();
 		}
 		loanApplication.set("loanStatusId", loanStatusId);
+		loanApplication.set("isAddedToClear", "N");
 		try {
 			delegator.createOrStore(loanApplication);
 		} catch (GenericEntityException e) {

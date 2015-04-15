@@ -118,6 +118,19 @@
         </request-map>
         
         
+         <request-map uri="showLoanClearanceCost">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="showLoanClearanceCost"
+                        save-current-view="true" />
+        </request-map>
+        
+        <request-map uri="showCosting">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="showCosting"
+                        save-current-view="true">
+                        	<redirect-parameter name="loanClearId"/>
+                        </response>
+        </request-map>
         
         <request-map uri="createLoanClear">
                 <security https="true" auth="true" />
@@ -281,10 +294,6 @@
                 
                 
     
-    <view-map name="reverseLoanClearance" type="screen"
-                page="component://loanclearing/widget/LoanClearingScreens.xml#reverseLoanClearance" />
-    
-    
 	<view-map name="loanClearItem" type="screen"
                 page="component://loanclearing/widget/LoanClearingScreens.xml#loanClearItem" />
     
@@ -294,7 +303,16 @@
 	 <view-map name="printClearance" type="screen"
                 page="component://loanclearing/widget/LoanClearingScreens.xml#printClearance" />
                 
-     	<view-map name="LookupActiveMember" type="screen"
+    <view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
+		
+	<view-map name="reverseLoanClearance" type="screen"
+                page="component://loanclearing/widget/LoanClearingScreens.xml#reverseLoanClearance" />
+ 
+    <view-map name="showLoanClearanceCost" type="screen"
+                page="component://loanclearing/widget/LoanClearingScreens.xml#showLoanClearanceCost" />
+    <view-map name="showCosting" type="screen"
+                page="component://loanclearing/widget/LoanClearingScreens.xml#showCosting" />
+ 
      
 </site-conf>
