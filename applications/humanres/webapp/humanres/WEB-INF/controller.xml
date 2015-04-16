@@ -1022,6 +1022,145 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="PerfReviews">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="PerfReviews"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="setupReviewObjectives">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="setupReviewObjectives"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="setupObjectiveActionPlan">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="setupObjectiveActionPlan"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="setupActionPlanIndicator">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="setupActionPlanIndicator"
+			save-home-view="true" />
+	</request-map>
+	
+	 <!--======================= REVIEWS GROUPS DEFINITION =================================== -->
+
+	<request-map uri="createPerfReviews">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createPerfReviews" />
+		<response name="success" type="request-redirect-noparam" value="PerfReviews" />
+		<response name="error" type="request-redirect-noparam" value="PerfReviews" />
+	</request-map>
+
+	<request-map uri="updatePerfReviews">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updatePerfReviews" />
+		<response name="success" type="request-redirect" value="PerfReviews">
+			<redirect-parameter name="perfReviewDefId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="PerfReviews" />
+	</request-map>
+
+	<request-map uri="deletePerfReviews">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePerfReviews" />
+		<response name="success" type="request-redirect-noparam" value="PerfReviews"/>
+		<response name="error" type="request-redirect-noparam" value="PerfReviews" />
+	</request-map>
+	
+	 <!--======================= REVIEWS OBJECTIVES SETUP DEFINITION =================================== -->
+
+	<request-map uri="createPerfReviewObjective">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createPerfReviewObjective" />
+		<response name="success" type="request-redirect-noparam" value="setupReviewObjectives">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
+	</request-map>
+
+	<request-map uri="updatePerfReviewObjective">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updatePerfReviewObjective" />
+		<response name="success" type="request-redirect-noparam" value="setupReviewObjectives">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
+	</request-map>
+
+	<request-map uri="deletePerfReviewObjective">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePerfReviewObjective" />
+		<response name="success" type="request-redirect-noparam" value="setupReviewObjectives">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
+	</request-map>
+	
+	
+	 <!--======================= OBJECTIVES ACTION PLANS SETUP DEFINITION =================================== -->
+
+	<request-map uri="createPerfObjectiveActionPlan">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createPerfObjectiveActionPlan" />
+		<response name="success" type="request-redirect-noparam" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
+	</request-map>
+
+	<request-map uri="updatePerfObjectiveActionPlan">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updatePerfObjectiveActionPlan" />
+		<response name="success" type="request-redirect-noparam" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
+	</request-map>
+
+	<request-map uri="deletePerfObjectiveActionPlan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePerfObjectiveActionPlan" />
+		<response name="success" type="request-redirect-noparam" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
+	</request-map>
+	
+	
+	 <!--======================= ACTION PLAN INDICATORS SETUP DEFINITION =================================== -->
+
+	<request-map uri="createPerfActionPlanIndicator">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createPerfActionPlanIndicator" />
+		<response name="success" type="request-redirect-noparam" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfActionPlanIndicatorId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
+	</request-map>
+
+	<request-map uri="updatePerfActionPlanIndicator">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updatePerfActionPlanIndicator" />
+		<response name="success" type="request-redirect-noparam" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfActionPlanIndicatorId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
+	</request-map>
+
+	<request-map uri="deletePerfActionPlanIndicator">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePerfActionPlanIndicator" />
+		<response name="success" type="request-redirect-noparam" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfActionPlanIndicatorId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
+	</request-map>
+	
+	
 	<request-map uri="ManagePerfObjectives">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="ManagePerfObjectives"
@@ -3422,6 +3561,10 @@ under the License.
     <view-map name="PerfBranches" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceBranches"/>
     <view-map name="PerfDepartments" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceDepartments"/>
     <view-map name="PerfStaff" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceStaff"/>
+    <view-map name="setupReviewObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfReviewsObjectiveScreen"/>
+     <view-map name="setupObjectiveActionPlan" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfObjectiveActionPlansScreen"/>
+      <view-map name="setupActionPlanIndicator" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfActionPlanIndicatorsScreen"/>
+     <view-map name="PerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfReviewScreen"/>
     <view-map name="ManagePerfObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#ManagePerfObjectives"/>
     <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
     <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>
