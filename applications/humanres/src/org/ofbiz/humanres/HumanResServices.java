@@ -1990,6 +1990,32 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		return state;
 	}
 	
+	public static String CheckExistenceOfQualitativeIndicators() {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue lastEmployee = null;
+		List<GenericValue> indicators = null;
+		GenericValue pre = null;
+		String state = null;
+		
+		try {
+			
+			/*indicators = delegator.findList("PerfGoals",null, null, null, null, false);*/
+			indicators = delegator.findList("PerfGoals", EntityCondition.makeCondition("perfGoalsDefId", "QTT_GOALS"), null, null, null, false);
+			
+		} catch (GenericEntityException e) {
+			return null;
+		}
+		
+		if (indicators.size() > 0){
+			/*pre = indicators.get(0);*/ 
+			state = "VALID";
+		}
+		else {
+			state = "INVALID";
+		}
+		return state;
+	}
+	
 	
 }
 
