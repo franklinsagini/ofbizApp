@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
@@ -35,6 +36,9 @@ import com.google.gson.Gson;
 public class LoanClearingServices {
 
 	public static Logger log = Logger.getLogger(LoanAccounting.class);
+
+	public static String MEMBERDEPOSITCODE = "901";
+	public static String FOSASAVINGSCODE = "999";
 
 	public static BigDecimal getTotalAmountToClear(Long loanClearId) {
 		BigDecimal totalToClear = BigDecimal.ZERO;
@@ -309,8 +313,7 @@ public class LoanClearingServices {
 				.add(bdTotalInsuranceAmount);
 		bdTotalCharge = bdTotalCharge.add(org.ofbiz.loans.LoanServices
 				.getLoanClearingCharge(loanApplicationId, bdTotal));
-		bdChargeRate = getLoanClearingChargeRate(
-				loanApplicationId, bdTotal);
+		bdChargeRate = getLoanClearingChargeRate(loanApplicationId, bdTotal);
 
 		return bdChargeRate;
 	}
@@ -399,18 +402,19 @@ public class LoanClearingServices {
 
 		return totalToClear;
 	}
-	
-	public static BigDecimal getLoanClearingChargeRate(Long loanApplicationId, BigDecimal bdAmount){
-		BigDecimal bdPercentagePaid = LoanServices.getLoanPercentageRepaidValue(loanApplicationId);
-		
+
+	public static BigDecimal getLoanClearingChargeRate(Long loanApplicationId,
+			BigDecimal bdAmount) {
+		BigDecimal bdPercentagePaid = LoanServices
+				.getLoanPercentageRepaidValue(loanApplicationId);
+
 		BigDecimal bdChargeRate = BigDecimal.ZERO;
 		EntityConditionList<EntityExpr> loanClearRateConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"lowerLimit", EntityOperator.LESS_THAN_EQUAL_TO, bdPercentagePaid),
-						EntityCondition.makeCondition("upperLimit",
-								EntityOperator.GREATER_THAN_EQUAL_TO,
-								bdPercentagePaid)),
-						EntityOperator.AND);
+						"lowerLimit", EntityOperator.LESS_THAN_EQUAL_TO,
+						bdPercentagePaid), EntityCondition.makeCondition(
+						"upperLimit", EntityOperator.GREATER_THAN_EQUAL_TO,
+						bdPercentagePaid)), EntityOperator.AND);
 
 		List<GenericValue> loanClearRateELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -423,8 +427,150 @@ public class LoanClearingServices {
 		for (GenericValue genericValue : loanClearRateELI) {
 			bdChargeRate = genericValue.getBigDecimal("chargeRate");
 		}
-		
+
 		return bdChargeRate;
+	}
+
+	// Get Account Name given memberId
+	public static String getMemberDepositsAccountNumber(Long memberId) {
+
+		return getAccountNo(memberId, MEMBERDEPOSITCODE);
+
+	}
+
+	public static String getMemberDepositsAccountName(Long memberId) {
+		return getAccountName(memberId, MEMBERDEPOSITCODE);
+	}
+
+	public static String getFosaSavingsAccountNumber(Long memberId) {
+		return getAccountNo(memberId, FOSASAVINGSCODE);
+	}
+
+	public static String getFosaSavingsAccountName(Long memberId) {
+		return getAccountName(memberId, MEMBERDEPOSITCODE);
+	}
+
+	private static String getAccountNo(Long memberId, String code) {
+
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenCodeId(code);
+
+		if (accountProduct == null)
+			return null;
+
+		Long accountProductId = accountProduct.getLong("accountProductId");
+
+		if (accountProductId == null)
+			return null;
+
+		List<GenericValue> memberAccountELI = null; // =
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId),
+
+				EntityCondition.makeCondition("accountProductId",
+						EntityOperator.EQUALS, accountProductId)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String accountNo = "";
+		for (GenericValue genericValue : memberAccountELI) {
+			accountNo = genericValue.getString("accountNo");
+		}
+		return accountNo;
+	}
+
+	private static String getAccountName(Long memberId, String code) {
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenCodeId(code);
+
+		if (accountProduct == null)
+			return null;
+
+		Long accountProductId = accountProduct.getLong("accountProductId");
+
+		if (accountProductId == null)
+			return null;
+
+		List<GenericValue> memberAccountELI = null; // =
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId),
+
+				EntityCondition.makeCondition("accountProductId",
+						EntityOperator.EQUALS, accountProductId)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String accountName = "";
+		for (GenericValue genericValue : memberAccountELI) {
+			accountName = genericValue.getString("accountName");
+		}
+		return accountName;
+	}
+	
+	private static Long getMemberAccountId(Long memberId, String code) {
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenCodeId(code);
+
+		if (accountProduct == null)
+			return null;
+
+		Long accountProductId = accountProduct.getLong("accountProductId");
+
+		if (accountProductId == null)
+			return null;
+
+		List<GenericValue> memberAccountELI = null; // =
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, memberId),
+
+				EntityCondition.makeCondition("accountProductId",
+						EntityOperator.EQUALS, accountProductId)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long memberAccountId = null;
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccountId = genericValue.getLong("memberAccountId");
+		}
+		return memberAccountId;
+	}
+	
+	public static BigDecimal getMemberDepositsAccountBalance(Long memberId){
+		
+		BigDecimal bdAccountBalance = null;
+		Long memberAccountId = getMemberAccountId(memberId, MEMBERDEPOSITCODE);
+		
+		//org.ofbiz.accountholdertransactions
+		bdAccountBalance = AccHolderTransactionServices.getBookBalanceNow(memberAccountId.toString());
+		
+		return bdAccountBalance;
 	}
 
 }
