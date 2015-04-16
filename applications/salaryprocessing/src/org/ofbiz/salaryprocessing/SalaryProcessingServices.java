@@ -31,7 +31,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
 public class SalaryProcessingServices {
 	public static Logger log = Logger.getLogger(SalaryProcessingServices.class);
 
-	public static String processSalaryReceivedNoDeduct(
+	public static synchronized String processSalaryReceivedNoDeduct(
 			HttpServletRequest request, HttpServletResponse response) {
 
 		// salaryMonthYearId
@@ -377,7 +377,7 @@ public class SalaryProcessingServices {
 		return missing;
 	}
 
-	public static String processSalaryReceivedDeduct(
+	public static synchronized String processSalaryReceivedDeduct(
 			HttpServletRequest request, HttpServletResponse response) {
 
 		// salaryMonthYearId
