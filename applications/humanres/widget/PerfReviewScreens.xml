@@ -558,6 +558,87 @@
     </screen>
     
     
+     <!--======================= SHOW ALL REVIEW GROUPS SO AS TO ADD STAFF =================================== -->    
+    <screen name="PerfReviewGroupsViewScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="addStaffToPerfReviewGroup"/>
+                <set field="tabButtonItem" value="addStaffToPerfReviewGroup"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                   <container style="leftclear">
+							<label style="h1" 
+							text="Manage Performance Review Groups" />
+					</container>
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        	<screenlet title="Add Staff To Review Group">
+                        			<include-form name="StaffAdditionToReviewGroupsForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Staff Review Groups Listing">
+                        			<include-form name="listPerfReviewGroupsForStaffAddition" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!--======================= MANAGE REVIEW PERIODS =================================== -->    
+    <screen name="PerfReviewPeriodsScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="reviewPeriod"/>
+                <set field="tabButtonItem" value="reviewPeriod"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                   <container style="leftclear">
+							<label style="h1" 
+							text="Manage Performance Review Periods" />
+					</container>
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        	<screenlet title="Add New Review Period">
+                        			<include-form name="StaffReviewPeriodForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Review Periods Listing">
+                        			<include-form name="listStaffReviewPeriod" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     
+    
+    
+    
     <!-- Manage Perf Objectives -->    
     <screen name="ManagePerfObjectives">
     <section>

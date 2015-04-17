@@ -480,13 +480,14 @@ under the License.
       <prim-key field="perfReviewDefId"/>
     </entity>
     
-     <!-- =============== REVIEWS GROUP OBJECTIVES SETUP=================== -->
+     <!-- =============== REVIEWS GROUP OBJECTIVES SETUP =================== -->
                 
      <entity entity-name="PerfReviewsGroupObjectiveDefinition"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
       <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne"></field>
       <field name="perfReviewDefId" type="id-ne"></field>
       <field name="perfGoalsId" type="id-ne"></field>
+      <field name="perfGoalsDefId" type="id"></field>
       <field name="objectiveDescription" type="description"></field>
        <field name="percentage" type="fixed-point"></field>
       <prim-key field="PerfReviewsGroupObjectiveDefinitionId"/>
@@ -499,6 +500,7 @@ under the License.
       <field name="PerfObjectiveActionPlanId" type="id-ne"></field>
       <field name="perfReviewDefId" type="id-ne"></field>
       <field name="perfGoalsId" type="id-ne"></field>
+      <field name="perfGoalsDefId" type="id"></field>
       <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne"></field>
       <field name="objectiveActionPlanDescription" type="description"></field>
        <field name="percentage" type="fixed-point"></field>
@@ -513,10 +515,55 @@ under the License.
       <field name="PerfObjectiveActionPlanId" type="id-ne"></field>
       <field name="perfReviewDefId" type="id-ne"></field>
       <field name="perfGoalsId" type="id-ne"></field>
+      <field name="perfGoalsDefId" type="id"></field>
       <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne"></field>
       <field name="actionPlanIndicatorDescription" type="description"></field>
        <field name="percentage" type="fixed-point"></field>
       <prim-key field="PerfActionPlanIndicatorId"/>
+    </entity>
+    
+     <!-- =============== STAFF-REVIEW-GROUP DEFINITION =================== -->
+                
+     <entity entity-name="StaffInPerfReviewGroup"  package-name="org.ofbiz.humanres.ability"
+            title="Performance Goals Definition">
+            <field name="partyId" type="id-ne"></field>
+            <field name="hod" type="id-ne"></field>
+            <field name="perfReviewDefId" type="id-ne"></field>
+           <prim-key field="partyId"/>
+    </entity>
+    
+     <!-- =============== STAFF-REVIEW-GROUP DEFINITION =================== -->
+                
+     <entity entity-name="PerfReviewPeriod"  package-name="org.ofbiz.humanres.ability"
+            title="Performance Goals Definition">
+            <field name="PerfReviewPeriodId" type="id-ne"></field>
+            <field name="year" type="id-ne"></field>
+            <field name="quarter" type="name"></field>
+            <field name="status" type="name"></field>
+            <prim-key field="PerfReviewPeriodId"/>
+    </entity>
+    
+     <!-- =============== PARTY REVIEWS =================== -->
+                
+     <entity entity-name="PerfPartyReview"  package-name="org.ofbiz.humanres.ability"
+            title="Performance Goals Definition">
+            <field name="reviewId" type="id-ne"></field>
+            <field name="year" type="id-ne"></field>
+            <field name="quarter" type="name"></field>
+            <field name="partyId" type="id-ne"></field>
+            <field name="perfGoalsDefId" type="id"></field>
+            <field name="perfReviewDefId" type="id-ne"></field>
+            <field name="perfGoalsId" type="id-ne"></field>
+            <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne"></field>
+            <field name="PerfObjectiveActionPlanId" type="id-ne"></field>
+            <field name="PerfActionPlanIndicatorId" type="id-ne"></field>
+             <field name="hod" type="id-ne"></field>
+	        <field name="stage" type="name"></field>
+	        <field name="scoreOne" type="fixed-point"></field>
+	        <field name="scoreTwo" type="fixed-point"></field>
+	        <field name="scoreThree" type="fixed-point"></field>
+	        <field name="scoreFour" type="fixed-point"></field>
+	        <prim-key field="reviewId"/>
     </entity>
     
     

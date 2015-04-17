@@ -1046,6 +1046,17 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
+	<request-map uri="addStaffToPerfReviewGroup">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addStaffToPerfReviewGroup"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="reviewPeriod">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="reviewPeriod"
+			save-home-view="true" />
+	</request-map>
 	 <!--======================= REVIEWS GROUPS DEFINITION =================================== -->
 
 	<request-map uri="createPerfReviews">
@@ -1087,6 +1098,7 @@ under the License.
 		<event type="service-multi" invoke="updatePerfReviewObjective" />
 		<response name="success" type="request-redirect-noparam" value="setupReviewObjectives">
 			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+			<redirect-parameter name="perfReviewDefId"/>
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
 	</request-map>
@@ -1159,6 +1171,64 @@ under the License.
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
 	</request-map>
+	
+	 <!--======================= ADD STAFF TO REVIEW GROUPS =================================== -->
+
+	<request-map uri="addStaffToReviewGroup">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="addStaffToReviewGroup" />
+		<response name="success" type="request-redirect-noparam" value="addStaffToPerfReviewGroup">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="addStaffToPerfReviewGroup" />
+	</request-map>
+
+	
+	<request-map uri="removeStaffToReviewGroup">
+		<security https="true" auth="true" />
+		<event type="service" invoke="removeStaffToReviewGroup" />
+		<response name="success" type="request-redirect-noparam" value="addStaffToPerfReviewGroup">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="addStaffToPerfReviewGroup" />
+	</request-map>
+	
+	
+	 <!--======================= REVIEW PERIODS =================================== -->
+
+	<request-map uri="createReviewPeriod">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createReviewPeriod" />
+		<response name="success" type="request-redirect-noparam" value="reviewPeriod">
+			<redirect-parameter name="PerfReviewPeriodId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="reviewPeriod" />
+	</request-map>
+	
+	
+	 <!--======================= OPEN REVIEW PERIOD =================================== -->
+
+	<request-map uri="openReviewPeriod">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="openReviewPeriod" />
+		<response name="success" type="request-redirect-noparam" value="reviewPeriod">
+			<redirect-parameter name="PerfReviewPeriodId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="reviewPeriod" />
+	</request-map>
+	
+	 <!--======================= CLOSE REVIEW PERIOD =================================== -->
+
+	<request-map uri="closeReviewPeriod">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="closeReviewPeriod" />
+		<response name="success" type="request-redirect-noparam" value="reviewPeriod">
+			<redirect-parameter name="PerfReviewPeriodId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="reviewPeriod" />
+	</request-map>
+	
+	
 	
 	
 	<request-map uri="ManagePerfObjectives">
@@ -3565,6 +3635,8 @@ under the License.
      <view-map name="setupObjectiveActionPlan" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfObjectiveActionPlansScreen"/>
       <view-map name="setupActionPlanIndicator" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfActionPlanIndicatorsScreen"/>
      <view-map name="PerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfReviewScreen"/>
+     <view-map name="reviewPeriod" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerfReviewPeriodsScreen"/>
+       <view-map name="addStaffToPerfReviewGroup" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerfReviewGroupsViewScreen"/>
     <view-map name="ManagePerfObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#ManagePerfObjectives"/>
     <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
     <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>

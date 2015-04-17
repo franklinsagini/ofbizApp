@@ -566,6 +566,12 @@
 		<set from-field="singleindicator.percentage" field="newEntity2.percentage" /> 
 		<set from-field="singleindicator.perfGoalsId" field="newEntity2.perfGoalsId" /> 
 		
+		<entity-one value-field="persGoal" entity-name="PerfGoals">
+			<field-map field-name="perfGoalsId" from-field="singleindicator.perfGoalsId"/>
+		</entity-one>
+		
+		<set from-field="persGoal.perfGoalsDefId" field="newEntity2.perfGoalsDefId" /> 
+		
 		 <create-value value-field="newEntity2" />
 		</iterate>
 		
@@ -607,9 +613,15 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="PerfReviewsGroupObjectiveDefinition" field="PerfReviewsGroupObjectiveDefinitionId" />
 		<set from-field="PerfReviewsGroupObjectiveDefinitionId" field="newEntity.PerfReviewsGroupObjectiveDefinitionId" /> 
-		 <create-value value-field="newEntity" />
-		      <property-to-field resource="HumanResUiLabels"
-			  property="CreateSuccess" field="successMessage" />
+		
+		<entity-one value-field="persGoal" entity-name="PerfGoals">
+			<field-map field-name="perfGoalsId" from-field="newEntity.perfGoalsId"/>
+		</entity-one>
+		
+		<set from-field="persGoal.perfGoalsDefId" field="newEntity.perfGoalsDefId" /> 
+		<create-value value-field="newEntity"/>
+		<property-to-field resource="HumanResUiLabels"
+	    property="CreateSuccess" field="successMessage" />
 			
 			
 			</simple-method>
@@ -649,6 +661,8 @@
 		<entity-one value-field="obj" entity-name="PerfReviewsGroupObjectiveDefinition">
 			<field-map field-name="PerfReviewsGroupObjectiveDefinitionId" from-field="newEntity.PerfReviewsGroupObjectiveDefinitionId"/>
 			</entity-one>
+		
+		<set from-field="obj.perfGoalsDefId" field="newEntity.perfGoalsDefId" /> 
 		
 		<set field="newEntity.perfReviewDefId" from-field="obj.perfReviewDefId"/>
 		<set field="newEntity.perfGoalsId" from-field="obj.perfGoalsId"/>
@@ -693,6 +707,9 @@
 		<entity-one value-field="obj" entity-name="PerfObjectiveActionPlanDefinition">
 			<field-map field-name="PerfObjectiveActionPlanId" from-field="newEntity.PerfObjectiveActionPlanId"/>
 			</entity-one>
+			
+		
+		<set from-field="obj.perfGoalsDefId" field="newEntity.perfGoalsDefId" /> 
 		
 		<set field="newEntity.perfReviewDefId" from-field="obj.perfReviewDefId"/>
 		<set field="newEntity.perfGoalsId" from-field="obj.perfGoalsId"/>
@@ -724,6 +741,222 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+	
+	
+	 <!--======================= ADD STAFF TO REVIEW GROUPS =================================== -->
+                     
+	<simple-method method-name="addStaffToReviewGroup"
+		short-description="Create File location">
+		<make-value entity-name="StaffInPerfReviewGroup" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		
+		<set field="party" value="${newEntity.partyId}"/>
+		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfStaffInReviewGroups(party);}"/>
+		<set field="valid" value="INVALID"/>
+		
+		<if>
+			<condition>
+					<if-compare-field field="exist"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="StaffInReviewGroupError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			   <create-value value-field="newEntity" />
+		      <property-to-field resource="HumanResUiLabels"
+			  property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+			</simple-method>
+			
+			
+			<simple-method method-name="removeStaffToReviewGroup"
+		short-description="Remove an file type">
+		<set field="partyId" from-field="parameters.partyId" />
+		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	
+	 <!--======================= ADD STAFF REVIEW PERIODS =================================== -->
+                     
+	<simple-method method-name="createReviewPeriod"
+		short-description="Create File location">
+		<make-value entity-name="PerfReviewPeriod" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="PerfReviewPeriod" field="PerfReviewPeriodId" />
+		<set from-field="PerfReviewPeriodId" field="newEntity.PerfReviewPeriodId" /> 
+		<set value="${newEntity.year}-Quarter-1" field="newEntity.quarter" /> 
+		<set value="NEW" field="newEntity.status" /> 
+		
+		<make-value entity-name="PerfReviewPeriod" value-field="newEntity2" />
+		<set-pk-fields map="parameters" value-field="newEntity2" />
+		<set-nonpk-fields map="parameters" value-field="newEntity2" />
+		<sequenced-id sequence-name="PerfReviewPeriod" field="PerfReviewPeriodId" />
+		<set from-field="PerfReviewPeriodId" field="newEntity2.PerfReviewPeriodId" /> 
+		<set value="${newEntity2.year}-Quarter-2" field="newEntity2.quarter" /> 
+		<set value="NEW" field="newEntity2.status" />
+		
+		<make-value entity-name="PerfReviewPeriod" value-field="newEntity3" />
+		<set-pk-fields map="parameters" value-field="newEntity3" />
+		<set-nonpk-fields map="parameters" value-field="newEntity3" />
+		<sequenced-id sequence-name="PerfReviewPeriod" field="PerfReviewPeriodId" />
+		<set from-field="PerfReviewPeriodId" field="newEntity3.PerfReviewPeriodId" /> 
+		<set value="${newEntity3.year}-Quarter-3" field="newEntity3.quarter" /> 
+		<set value="NEW" field="newEntity3.status" />
+		
+		<make-value entity-name="PerfReviewPeriod" value-field="newEntity4" />
+		<set-pk-fields map="parameters" value-field="newEntity4" />
+		<set-nonpk-fields map="parameters" value-field="newEntity4" />
+		<sequenced-id sequence-name="PerfReviewPeriod" field="PerfReviewPeriodId" />
+		<set from-field="PerfReviewPeriodId" field="newEntity4.PerfReviewPeriodId" /> 
+		<set value="${newEntity4.year}-Quarter-4" field="newEntity4.quarter" /> 
+		<set value="NEW" field="newEntity4.status" />
+		
+		<set field="party" value="${newEntity.year}"/>
+		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfYear(party);}"/>
+		<set field="valid" value="INVALID"/>
+		
+		<if>
+			<condition>
+					<if-compare-field field="exist"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="yearExistError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			   <create-value value-field="newEntity" />
+			   <create-value value-field="newEntity2" />
+			   <create-value value-field="newEntity3" />
+			   <create-value value-field="newEntity4" />
+		      <property-to-field resource="HumanResUiLabels"
+			  property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+			</simple-method>
+			
+			
+		<!--======================= OPEN REVIEW PERIOD =================================== -->
+			
+		<simple-method method-name="openReviewPeriod" short-description="create KPI Definition">
+		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfOpenPeriod();}"/>
+		<set field="valid" value="INVALID"/>
+		
+		<if>
+			<condition>
+					<if-compare-field field="exist"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="OpenReviewPeriodExistError"/>
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			   
+			   <entity-condition list="staffList" entity-name="StaffInPerfReviewGroup">
+		</entity-condition>
+		
+		<iterate entry="singlestaff" list="staffList">
+		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${singlestaff.perfReviewDefId}" level="info"/>
+		
+		<entity-condition list="indicatorList" entity-name="PerfActionPlanIndicatorDefinition">
+			<condition-expr field-name="perfReviewDefId" from-field="singlestaff.perfReviewDefId"/>
+		</entity-condition>
+		
+		<iterate entry="singleindicate" list="indicatorList">
+		
+		 <make-value entity-name="PerfPartyReview" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <sequenced-id sequence-name="PerfPartyReview" field="reviewId"/>
+        <set from-field="reviewId" field="newEntity.reviewId"/>
+        
+         <entity-one entity-name="PerfReviewPeriod" value-field="per">
+		 	<field-map field-name="PerfReviewPeriodId" from-field="parameters.PerfReviewPeriodId"/>
+		 </entity-one>
+		 
+		 
+		 	
+		<set from-field="per.year" field="newEntity.year"/>
+		<set from-field="per.quarter" field="newEntity.quarter"/>
+		<set from-field="singlestaff.partyId" field="newEntity.partyId"/>
+		<set from-field="singleindicate.perfReviewDefId" field="newEntity.perfReviewDefId"/>
+		<set from-field="singleindicate.perfGoalsDefId" field="newEntity.perfGoalsDefId"/>
+		<set from-field="singleindicate.perfGoalsId" field="newEntity.perfGoalsId"/>
+		<set from-field="singleindicate.PerfReviewsGroupObjectiveDefinitionId" field="newEntity.PerfReviewsGroupObjectiveDefinitionId"/>
+		<set from-field="singleindicate.PerfObjectiveActionPlanId" field="newEntity.PerfObjectiveActionPlanId"/>
+		<set from-field="singleindicate.PerfActionPlanIndicatorId" field="newEntity.PerfActionPlanIndicatorId"/>
+		<set value="STAFF" field="newEntity.stage"/>
+		<set from-field="singleindicate.percentage" field="newEntity.scoreOne"/>
+		<set from-field="singlestaff.hod" field="newEntity.hod"/>
+		<set value="" field="newEntity.scoreTwo"/>
+		<set value="" field="newEntity.scoreThree"/>
+		
+		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+		property="CreateSuccess" field="successMessage" />
+		</iterate>
+		
+		
+		 
+		</iterate>
+        
+			   <call-simple-method method-name="openStatusToReviewPeriod" scope="inline"></call-simple-method>
+			   
+			</else>
+		</if>
+		
+		
+    </simple-method>
+    
+    
+    	<!--=============== CHANGE PERIOD STATUS TO OPEN ==============================-->
+    
+    <simple-method method-name="openStatusToReviewPeriod" short-description="Update PerfGoals">
+        <entity-one entity-name="PerfReviewPeriod" value-field="lookedUpValue">
+        <field-map field-name="PerfReviewPeriodId" from-field="parameters.PerfReviewPeriodId"/>
+        </entity-one>
+        <set field="lookedUpValue.status" value="OPEN"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!--=============== CHANGE PERIOD STATUS TO CLOSED ==============================-->
+    
+    <simple-method method-name="closeReviewPeriod" short-description="Update PerfGoals">
+       <entity-one entity-name="PerfReviewPeriod" value-field="lookedUpValue">
+        <field-map field-name="PerfReviewPeriodId" from-field="parameters.PerfReviewPeriodId"/>
+        </entity-one>
+        <set field="lookedUpValue.status" value="CLOSED"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+			
+			<!--======================= REVIEW MYSELF =================================== -->
+			  <simple-method method-name="reviewMyself" short-description="Update PerfGoals">
+        <entity-one entity-name="PerfPartyReview" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+			
 	
     
      <!-- Perf Goals -->
