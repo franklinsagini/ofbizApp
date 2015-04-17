@@ -2163,11 +2163,11 @@ under the License.
       <alias entity-alias="PER" name="firstName"/>
       <alias entity-alias="PER" name="middleName"/>
       <alias entity-alias="PER" name="lastName"/>
-      
+
      <!--  <alias entity-alias="MBR" name="memberFirstName" field="firstName"/>
       <alias entity-alias="MBR" name="memberLastName" field="lastName"/> -->
-      
-      
+
+
       <alias entity-alias="PER" name="firstNameLocal"/>
       <alias entity-alias="PER" name="lastNameLocal"/>
       <alias entity-alias="PER" name="personalTitle"/>
@@ -2790,7 +2790,7 @@ under the License.
       <field name="branchId" type="name"></field>
       <field name="departmentId" type="name"></field>
       <field name="confirmState" type="name"></field>
-      
+
  	  <!-- field name="stationId" type="id"></field -->
 
       <prim-key field="partyId"/>
@@ -2885,40 +2885,40 @@ under the License.
         <key-map field-name="roleTypeId"/>
       </view-link>
     </view-entity>
-    
-    
-    
-    
-    
-     <view-entity entity-name="RoleTypeAndPersonEmployeeAndBranch" 
-     package-name="org.ofbiz.party.party" 
+
+
+
+
+
+     <view-entity entity-name="RoleTypeAndPersonEmployeeAndBranch"
+     package-name="org.ofbiz.party.party"
      title="Employee View Entity">
-      
-     <member-entity entity-alias="PER" entity-name="Person"/> 
+
+     <member-entity entity-alias="PER" entity-name="Person"/>
       <member-entity entity-alias="PTR" entity-name="PartyRole"/>
-      
+
       <alias entity-alias="PER" name="partyId"/>
       <alias entity-alias="PER" name="firstName"/>
       <alias entity-alias="PER" name="lastName"/>
 	  <alias entity-alias="PER" name="employmentTerms"/>
-      <alias entity-alias="PER" name="nationalIDNumber"/> 
-       <alias entity-alias="PER" name="branchId"/> 
+      <alias entity-alias="PER" name="nationalIDNumber"/>
+       <alias entity-alias="PER" name="branchId"/>
       <alias entity-alias="PTR" name="roleTypeId"/>
        <alias entity-alias="PER" name="createdStamp"/>
        <alias entity-alias="PER" name="employeeNumber"/>
-      
+
        <view-link entity-alias="PER" rel-entity-alias="PTR">
         <key-map field-name="partyId"/>
-      </view-link> 
-      
-   
+      </view-link>
+
+
     </view-entity>
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     <entity entity-name="RoleTypeAttr"
             package-name="org.ofbiz.party.party"
             title="Role Type Attribute Entity">
@@ -3133,7 +3133,7 @@ under the License.
     	<field name="firstName" type="name" enable-audit-log="true"></field>
     	<field name="middleName" type="name" enable-audit-log="true"></field>
     	<field name="lastName" type="name" enable-audit-log="true"></field>
-    	
+
     	<field name="salutationId" type="id-int" enable-audit-log="true"></field>
     	<field name="genderId" type="id-int" enable-audit-log="true"></field>
     	<field name="maritalStatusId" type="id-int" enable-audit-log="true"></field>
@@ -3174,7 +3174,7 @@ under the License.
 
     	<field name="stationId" type="id-int" enable-audit-log="true"></field>
     	<field name="subStationId" type="id-vlong-int" enable-audit-log="true"></field>
-    	
+
     	<field name="stationCode" type="id" enable-audit-log="true"></field>
 
     	<!--
@@ -3203,7 +3203,7 @@ under the License.
     	<field name="recuiterNames" type="name" enable-audit-log="true"></field>
     	<field name="recruiterEmail" type="name" enable-audit-log="true"></field>
     	<field name="recruiterPhone" type="name" enable-audit-log="true"></field>
-		
+
 		<field name="isSelfGuaranteed" type="indicator"></field>
 		<field name="entranceFeePaid" type="indicator"></field>
     	<prim-key field="partyId"/>
@@ -3231,7 +3231,7 @@ under the License.
        <relation type="one" fk-name="MEMBER_STATION" rel-entity-name="Station">
             <key-map field-name="stationId"/>
         </relation>
-        
+
         <relation type="one" fk-name="MEMBER_Status" rel-entity-name="MemberStatus">
             <key-map field-name="memberStatusId"/>
         </relation>
@@ -3239,31 +3239,31 @@ under the License.
         <relation type="one" fk-name="MEMBER_MemberTypeName" rel-entity-name="MemberType">
             <key-map field-name="memberTypeId" rel-field-name="memberTypeId"/>
         </relation>
-        
+
             	 <relation type="one" fk-name="MEMBER_Salutation" rel-entity-name="Salutation">
             <key-map field-name="salutationId"/>
         </relation>
-        
+
          <relation type="one" fk-name="MEMBER_Class" rel-entity-name="MemberClass">
             <key-map field-name="memberClassId"/>
         </relation>
-        
+
         <relation type="one" fk-name="MEMBER_MaritalStatus" rel-entity-name="MaritalStatus">
             <key-map field-name="maritalStatusId"/>
         </relation>
-        
+
          <relation type="one" fk-name="MEMBER_RecruitingAgent" rel-entity-name="RecruitingAgent">
             <key-map field-name="recruitingAgentId"/>
         </relation>
-        
+
          <relation type="one" fk-name="MEMBER_EmploymentType" rel-entity-name="EmploymentType">
             <key-map field-name="employmentTypeId"/>
         </relation>
-        
+
         <relation type="one" fk-name="MEMBER_Gender" rel-entity-name="Gender">
             <key-map field-name="genderId"/>
         </relation>
-        
+
 
         <index unique="true" name="index_idNumber">
     		<index-field name="idNumber"/>
@@ -3293,11 +3293,11 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
     </entity>
-    
+
     <entity entity-name="MemberNetSalary" package-name="org.ofbiz.party.party" title="Member Net Salary">
     	<field name="memberNetSalaryId" type="id-vlong-int"></field>
     	<field name="partyId" type="id-vlong-int"></field>
-    	
+
     	<field name="isActive" type="indicator"></field>
 		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
     	<field name="comment" type="description"></field>
@@ -3397,7 +3397,7 @@ under the License.
      		<field name="name" type="name"></field>
 			<prim-key field="accountStatusId"/>
      </entity>
-     
+
      <!-- Member Status -->
     <entity entity-name="MemberStatus" package-name="org.ofbiz.party.party" title="MemberStatus Entity">
      		<field name="memberStatusId" type="id-int"></field>
@@ -3459,12 +3459,12 @@ under the License.
      <entity entity-name="Relationship" package-name="org.ofbiz.party.party" title="Relationship Entity">
      		<field name="relationshipId" type="id-int"></field>
      		<field name="name" type="name"></field>
-     		
+
      		<prim-key field="relationshipId"/>
      		<index name="relation_name" unique="true">
      			<index-field name="name" function="upper"/>
      		</index>
-     		
+
      </entity>
 
     <!-- Member Nominee -->
@@ -3481,7 +3481,7 @@ under the License.
      		<field name="mobilePhone" type="name" enable-audit-log="true"></field>
      		<field name="relationshipId" type="id-int"></field>
      		<field name="genderId" type="id-int" enable-audit-log="true"></field>
-     		
+
      		<field name="isAdministrator" type="indicator"></field>
      		<field name="percentage" type="fixed-point"></field>
      		<field name="independentwitnessnames" type="name"></field>
@@ -3494,7 +3494,7 @@ under the License.
      		<field name="administratorIdNo" type="name"></field>
      		<field name="administratorMobileNo" type="name"></field>
      		<field name="administratorPostalAddress" type="name"></field>
-     		
+
      		<field name="dateOfBirth" type="date-time"></field>
 
      		<prim-key field="memberNomineeId"/>
@@ -3502,11 +3502,11 @@ under the License.
      		<relation type="one" fk-name="MEMBERNOMINEE_RELATIONSHIP" rel-entity-name="Relationship">
         		<key-map field-name="relationshipId" />
       		</relation>
-      		
+
       		<relation type="one" fk-name="MEMBERNOMINEE_GENDER" rel-entity-name="Gender">
         		<key-map field-name="genderId" />
       		</relation>
-      		
+
      </entity>
 
      <!-- Terms and Conditions -->
@@ -3550,7 +3550,7 @@ under the License.
      		<field name="name" type="name"></field>
 		  <prim-key field="memberTypeId"/>
     </entity>
-    
+
     <!-- MemberClass -->
     <entity entity-name="MemberClass" package-name="org.ofbiz.party.party" title="MemberClass Entity">
         <field name="memberClassId" type="id-int"></field>
@@ -3558,11 +3558,6 @@ under the License.
 		  <prim-key field="memberClassId"/>
     </entity>
      <!-- MemberStatus  -->
-    <entity entity-name="MemberStatus" package-name="org.ofbiz.party.party" title="MemberStatus Entity">
-        <field name="memberStatusId" type="id-int"></field>
-     		<field name="name" type="name"></field>
-		  <prim-key field="memberStatusId"/>
-    </entity>
      <!-- Salutation  -->
     <entity entity-name="Salutation" package-name="org.ofbiz.party.party" title="Salutation Entity">
         <field name="salutationId" type="id-int"></field>
@@ -3575,7 +3570,7 @@ under the License.
      		<field name="name" type="name"></field>
 		  <prim-key field="maritalStatusId"/>
     </entity>
-    
+
     <!-- RecruitingAgent -->
     <entity entity-name="RecruitingAgent" package-name="org.ofbiz.party.party" title="RecruitingAgent Entity">
         <field name="recruitingAgentId" type="id-int"></field>
@@ -3734,13 +3729,13 @@ under the License.
 
     	<prim-key field="id"/>
     </entity>
-    
-    <view-entity entity-name="PersonActiveAndPartyGroup" package-name="org.ofbiz.party.party" 
-    	title="Person And Party Group">  
-        <member-entity entity-alias="PER" entity-name="Person" />     
+
+    <view-entity entity-name="PersonActiveAndPartyGroup" package-name="org.ofbiz.party.party"
+    	title="Person And Party Group">
+        <member-entity entity-alias="PER" entity-name="Person" />
     	<member-entity entity-alias="PG" entity-name="PartyGroup" />
         <alias-all entity-alias="PER"/>
-        <alias-all entity-alias="PG" />  
+        <alias-all entity-alias="PG" />
          <view-link entity-alias="PER" rel-entity-alias="PG">
             <key-map field-name="branchId" rel-field-name="partyId"/>
             <entity-condition>
@@ -3748,11 +3743,11 @@ under the License.
             		<condition-expr entity-alias="PER" field-name="employeeNumber" operator="not-equals" value=""/>
             		<condition-expr entity-alias="PER" field-name="isSeparated" operator="equals" value="N"/>
             		<condition-expr entity-alias="PG" field-name="isBranch" operator="equals" value="Y"/>
-            	</condition-list>  
-            	<order-by field-name="employeeNumber"/>      		
+            	</condition-list>
+            	<order-by field-name="employeeNumber"/>
     		</entity-condition>
         </view-link>
     </view-entity>
-    
-    
+
+
 </entitymodel>
