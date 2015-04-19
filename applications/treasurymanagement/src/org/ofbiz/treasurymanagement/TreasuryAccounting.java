@@ -50,6 +50,8 @@ public class TreasuryAccounting {
 		
 		String employeePartyId = userLogin.get("partyId");
 		
+		
+		
 		//Get Source Account
 		String sourceAccountId = getTansferAccount(sourceTreasury);
 		
@@ -61,20 +63,138 @@ public class TreasuryAccounting {
 //		String acctgTransId = createAccountingTransaction(treasuryTransfer,
 //				acctgTransType, userLogin);
 		// TODO -  Associate Employees with a branch
-		String partyId = "Company";
+		//String partyId = "Company";
+		String partyId = employeePartyId;
+	
+		String organizationPartyId = getEmployeeOrganizationPartyId(partyId);
+		
 		String acctgTransId = 	AccHolderTransactionServices.createAccountingTransaction(treasuryTransfer, acctgTransType, userLogin);
 		Delegator delegator = treasuryTransfer.getDelegator();
 		
 		//Credit Source
 		String postingType = "C";
 		String entrySequenceId = "00001";
-		LoanAccounting.postTransactionEntry(delegator, transactionAmount, partyId, sourceAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
-		
+		//LoanAccounting.postTransactionEntry(delegator, transactionAmount, partyId, sourceAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
+		//LoanAccounting.postTransactionEntryParty(delegator, bdLoanAmount, partyId, organizationPartyId, loanReceivableAccount, postingType, acctgTransId, acctgTransType, entrySequenceId);
+		LoanAccounting.postTransactionEntryParty(delegator, transactionAmount, partyId, organizationPartyId, sourceAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
+
 		//Debit Destination
 		postingType = "D";
 		entrySequenceId = "00002";
-		LoanAccounting.postTransactionEntry(delegator, transactionAmount, partyId, destinationAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
+		//LoanAccounting.postTransactionEntry(delegator, transactionAmount, partyId, destinationAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
+		LoanAccounting.postTransactionEntryParty(delegator, transactionAmount, partyId, organizationPartyId,  destinationAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
 		return "posted";
+	}
+
+
+	/***
+	 * Get an employee's Organization/Branch ID
+	 * */
+	private static String getEmployeeOrganizationPartyId(String partyId) {
+		List<GenericValue> personELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			personELI = delegator.findList("Person",
+					EntityCondition.makeCondition("partyId",
+							partyId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		GenericValue person = null;
+		for (GenericValue genericValue : personELI) {
+			person = genericValue;
+		}
+		
+		if (person == null)
+			return null;
+		
+		String branchId = person.getString("branchId");
+		
+		if (branchId != null)
+			branchId = branchId.trim();
+		
+		log.info("MMMMMMMMMMMMMMMMMMMMM The Branch ID is MMMMMMMMMMMMMMMMM <<<<<<<<<<< "+branchId);
+		
+		
+		return branchId;
+	}
+	
+	/****
+	 * Check that the Employee Has an Organization/Branch
+	 * */
+	public static Boolean hasEmployeeOrganizationPartyId(Map<String, String> userLogin){
+		String branchId = null;
+		
+		String partyId = userLogin.get("userLoginId");
+		branchId = getEmployeeOrganizationPartyId(partyId);
+		
+		if ((branchId != null) && (!branchId.equals("")))
+			return true;
+		
+		return false;
+	}
+
+	
+	/****
+	 * Check that the Employee Has an Organization/Branch
+	 * */
+	public static Boolean accountsMappedToEmployeeOrganizationPartyId(GenericValue treasuryTransfer, Map<String, String> userLogin){
+		String branchId = null;
+		
+		String partyId = userLogin.get("userLoginId");
+		branchId = getEmployeeOrganizationPartyId(partyId);
+		
+		if ((branchId == null) || (branchId.equals("")))
+			return false;
+		
+		String sourceTreasury = treasuryTransfer.getString("sourceTreasury");
+		String destinationTreasury = treasuryTransfer.getString("destinationTreasury");
+		
+		String sourceTreasuryAccountId = getTansferAccount(sourceTreasury);
+		String destinationTreasuryId = getTansferAccount(destinationTreasury);
+		
+		if (!organizationAccountMapped(sourceTreasuryAccountId, branchId))
+			return false;
+
+		if (!organizationAccountMapped(destinationTreasuryId, branchId))
+			return false;
+
+		
+		return true;
+	}
+
+
+	/**
+	 * Check that the account specified is mapped to the branch specified
+	 * **/
+	public static boolean organizationAccountMapped(
+			String treasuryAccountId, String branchId) {
+		
+		List<GenericValue> glAccountOrganizationELI = null;
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> glAccountOrganizationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("glAccountId", EntityOperator.EQUALS,
+								treasuryAccountId),
+						EntityCondition
+								.makeCondition("organizationPartyId", EntityOperator.EQUALS,
+										branchId)
+								
+
+				), EntityOperator.AND);
+
+		try {
+			glAccountOrganizationELI = delegator.findList("GlAccountOrganization", glAccountOrganizationConditions, null,
+					null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((glAccountOrganizationELI == null) || (!(glAccountOrganizationELI.size() > 0)))
+			return false;
+		
+		return true;
 	}
 
 

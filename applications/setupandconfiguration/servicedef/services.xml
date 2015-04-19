@@ -9,6 +9,52 @@
         <description>
             Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
         </description>
-    </service> 
+    </service>
+    
+        <!-- CommissionCharge -->
+    <service name="createCommissionCharge" engine="simple" default-entity-name="CommissionCharge"
+             location="component://setupandconfiguration/script/org/ofbiz/setupandconfiguration/SetupAndConfigurationServices.xml" invoke="createCommissionCharge" auth="true">
+        <description>Create CommissionCharge</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateCommissionCharge" engine="simple" default-entity-name="CommissionCharge"
+             location="component://setupandconfiguration/script/org/ofbiz/setupandconfiguration/SetupAndConfigurationServices.xml" invoke="updateCommissionCharge" auth="true">
+        <description>Update a CommissionCharge</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <service name="deleteCommissionCharge" engine="simple" default-entity-name="CommissionCharge"
+             location="component://setupandconfiguration/script/org/ofbiz/setupandconfiguration/SetupAndConfigurationServices.xml" invoke="deleteCommissionCharge" auth="true">
+        <description>Delete Loan Application</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+    <!-- memberStatusTransition -->
+    <service name="createMemberStatusTransition" engine="simple" default-entity-name="MemberStatusTransition"
+             location="component://setupandconfiguration/script/org/ofbiz/setupandconfiguration/SetupAndConfigurationServices.xml" invoke="createMemberStatusTransition" auth="true">
+        <description>Create MemberStatusTransition</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateMemberStatusTransition" engine="simple" default-entity-name="MemberStatusTransition"
+             location="component://setupandconfiguration/script/org/ofbiz/setupandconfiguration/SetupAndConfigurationServices.xml" invoke="updateMemberStatusTransition" auth="true">
+        <description>Update a MemberStatusTransition</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+     <service name="deleteMemberStatusTransition" engine="simple" default-entity-name="MemberStatusTransition"
+             location="component://setupandconfiguration/script/org/ofbiz/setupandconfiguration/SetupAndConfigurationServices.xml" invoke="deleteMemberStatusTransition" auth="true">
+        <description>Delete Loan Application</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
     
 </services>
