@@ -2016,6 +2016,82 @@ public static String  NextPayrollNumber(String employmentTerms) {
 		return state;
 	}
 	
+	//================================ CHECK EXISTANCE OF A STAFF IN A GROUP ====================================================
+	
+			public static String findExistanceOfStaffInReviewGroups(String partyId) {
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				String state = null;
+				List<GenericValue> FileLI = null;
+				try {
+					FileLI = delegator.findList("StaffInPerfReviewGroup", EntityCondition.makeCondition("partyId", partyId), null, null, null, false);
+					
+				} catch (GenericEntityException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				if (FileLI.size() > 0){
+				state = "INVALID";
+				}
+				else {
+					state = "VALID";
+				}
+			
+				return state;
+				
+			}
+			
+			//================================ CHECK EXISTANCE OF A YEAR IN REVIEW GROUPS ====================================================
+			
+			public static String findExistanceOfYear(String party) {
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				String state = null;
+				List<GenericValue> FileLI = null;
+				try {
+					FileLI = delegator.findList("PerfReviewPeriod", EntityCondition.makeCondition("year", party), null, null, null, false);
+					
+				} catch (GenericEntityException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				if (FileLI.size() > 0){
+				state = "INVALID";
+				}
+				else {
+					state = "VALID";
+				}
+			
+				return state;
+				
+			}
+			
+			
+//================================ CHECK EXISTANCE OF AN OPEN REVIEW PERIOD ====================================================
+			
+			public static String findExistanceOfOpenPeriod() {
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				String state = null;
+				List<GenericValue> FileLI = null;
+				try {
+					FileLI = delegator.findList("PerfReviewPeriod", EntityCondition.makeCondition("status", "OPEN"), null, null, null, false);
+					
+				} catch (GenericEntityException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				if (FileLI.size() > 0){
+				state = "INVALID";
+				}
+				else {
+					state = "VALID";
+				}
+			
+				return state;
+				
+			}
+	
 	
 }
 

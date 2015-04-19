@@ -2070,5 +2070,202 @@
 
 	</form>
 	
+	<!--======================= SHOW ALL REVIEW GROUPS SO AS TO ADD STAFF =================================== -->   
+	
+	
+	<form name="StaffAdditionToReviewGroupsForm" type="single"
+		target="addStaffToReviewGroup" focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="perfReviewsDefContext">
+		<actions>
+		<entity-condition entity-name="PerfReviewsDefinition" list="PerfReviewsGroupsList">
+			</entity-condition>
+		</actions>
+		
+		<field name="partyId" title="Employee" widget-style="required" required-field="true"><lookup target-form-name="LookupEmployee"/></field>
+        <field name="hod" title="Employee Review Appraiser/HOD" widget-style="required" required-field="true"><lookup target-form-name="LookupEmployee"/></field>
+		<field name="perfReviewDefId" title=" Select Performance Review Group" widget-style="required" required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="perfReviewDefId" list-name="PerfReviewsGroupsList"
+					description="${perfReviewName}" />
+			</drop-down>
+		</field>
+		
+		<field name="submitButton" title="Add Staff"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+	
+		<form name="listPerfReviewGroupsForStaffAddition" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewsDefinition"
+		target="updatePerfReviews" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="StaffInPerfReviewGroup">
+				<order-by field-name="partyId" />
+			</entity-condition>
+		</actions>
+		<field name="partyId" title="Staff">
+			<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}" />
+		</field>
+		<field name="hod" title="Staff Review Appraiser/HOD">
+			<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}" />
+		</field>
+		<field name="perfReviewDefId" title="Performance Review Group">
+			<display-entity entity-name="PerfReviewsDefinition" key-field-name="perfReviewDefId" description="${perfReviewName}" />
+		</field>
+
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="removeStaffToReviewGroup" description="Remove Staff"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Remove Staff From this group?">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+
+
+	</form>
+	
+	<!--================================= MANAGE REVIEW PERIODS =================================== -->   
+	
+	
+	<form name="StaffReviewPeriodForm" type="single"
+		target="createReviewPeriod" focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="perfReviewsDefContext">
+		<actions>
+		</actions>
+		
+		<field name="PerfReviewPeriodId"><hidden/>
+		</field>
+		<field name="year" title="Enter Financial Year" widget-style="required" required-field="true"><text/>
+		</field>
+		
+		<field name="submitButton" title="Add Year" widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+	
+		<form name="listStaffReviewPeriod" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
+		target="updatePerfReviews" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="PerfReviewPeriod">
+				<order-by field-name="-year" />
+			</entity-condition>
+		</actions>
+		<field name="PerfReviewPeriodId"><hidden/>
+		</field>
+		<field name="year" title="Financial Year"><display/>
+		</field>
+		<field name="quarter" title="Period"><display/>
+		</field>
+		<field name="status" title="Period Status"><display/>
+		</field>
+		
+		<field name="openReviewPeriod" title="Open Review Period" use-when="${status == 'NEW'}">
+			<hyperlink target="openReviewPeriod" description="Open Review Period" confirmation-message="You sure you want to Open ${quarter} Review Period?" request-confirmation="true"
+				also-hidden="false">
+				<parameter param-name="PerfReviewPeriodId" />
+			</hyperlink>
+		</field>
+		<field name="closeReviewPeriod" title="Close Review Period" use-when="${status == 'OPEN'}">
+			<hyperlink target="closeReviewPeriod" description="Close Review Period" confirmation-message="You sure you want to Close ${quarter} Review Period?" request-confirmation="true"
+				also-hidden="false">
+				<parameter param-name="PerfReviewPeriodId" />
+			</hyperlink>
+		</field>
+
+	</form>
+	
+	
+	<!--================================= PERSONAL REVIEWS =================================== -->   
+	
+	
+	   <form name="StaffPersonalReviewQuantitativeForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
+		target="reviewMyself" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
+		<actions>
+		<entity-condition entity-name="PerfPartyReview">
+				<condition-list>
+				<condition-expr field-name="partyId" value="${userLogin.partyId}" operator="equals"/>
+				<condition-expr field-name="stage" value="STAFF" operator="equals"/>
+				<condition-expr field-name="perfGoalsDefId" value="QNT_GOALS" operator="equals"/>
+				</condition-list>
+			</entity-condition>
+		</actions>
+		<field name="reviewId"><hidden/>
+		</field>
+		<field name="year" title="Financial Year"><display/>
+		</field>
+		<field name="quarter" title="Review Period"><display/>
+		</field>
+		<field name="perfGoalsId" title="Goal Perspective"><display-entity entity-name="PerfGoals" description="${goal}"></display-entity>
+		</field>
+		<field name="PerfReviewsGroupObjectiveDefinitionId" title="Strategic Objective"><display-entity entity-name="PerfReviewsGroupObjectiveDefinition" description="${objectiveDescription}"></display-entity>
+		</field>
+		<field name="PerfObjectiveActionPlanId" title="Objective Action Plan"><display-entity entity-name="PerfObjectiveActionPlanDefinition" description="${objectiveActionPlanDescription}"></display-entity>
+		</field>
+		<field name="PerfActionPlanIndicatorId" title="Action Plan Indicator"><display-entity entity-name="PerfActionPlanIndicatorDefinition" description="${actionPlanIndicatorDescription}"></display-entity>
+		</field>
+		<field name="scoreOne" title="Maximum Score"><display/>
+		</field>
+		
+		<field name="scoreTwo" title="Performance">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PerfRatingType" key-field-name="points" description="${description}">
+                </entity-options>
+            </drop-down>
+        </field>
+		
+		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
+			<hidden value="Y" />
+		</field>
+		<field name="submitButton" title="Review Myself" widget-style="smallSubmit">
+			<submit />
+		</field>
+	</form>
+	
+	
+	 <form name="StaffPersonalReviewQualitativeForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
+		target="reviewMyself" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
+		<actions>
+		<entity-condition entity-name="PerfPartyReview">
+				<condition-list>
+				<condition-expr field-name="partyId" value="${userLogin.partyId}" operator="equals"/>
+				<condition-expr field-name="stage" value="STAFF" operator="equals"/>
+				<condition-expr field-name="perfGoalsDefId" value="QTT_GOALS" operator="equals"/>
+				</condition-list>
+			</entity-condition>
+		</actions>
+		
+		<field name="reviewId"><hidden/>
+		</field>
+		<field name="year" title="Financial Year"><display/>
+		</field>
+		<field name="quarter" title="Review Period"><display/>
+		</field>
+		<field name="PerfActionPlanIndicatorId" title="Objective Indicator"><display-entity entity-name="PerfActionPlanIndicatorDefinition" description="${actionPlanIndicatorDescription}"></display-entity>
+		</field>
+		<field name="scoreOne" title="Maximum Score"><display/>
+		</field>
+		
+		<field name="scoreTwo" title="Performance">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PerfRatingType_QTT" key-field-name="points" description="${description}">
+                </entity-options>
+            </drop-down>
+        </field>
+		
+		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
+			<hidden value="Y" />
+		</field>
+		<field name="submitButton" title="Review Myself" widget-style="smallSubmit">
+			<submit />
+		</field>
+	</form>
+	
+	
+	
 
 </forms>

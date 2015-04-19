@@ -198,6 +198,22 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="MyProfile" save-home-view="true"/>
     </request-map>
+    
+     <request-map uri="PersonalReview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PersonalReview" save-home-view="true"/>
+    </request-map>
+    
+     <!--======================= REVIEW MYSELF =================================== -->
+
+	<request-map uri="reviewMyself">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="reviewMyself" />
+		<response name="success" type="request-redirect-noparam" value="PersonalReview">
+			<redirect-parameter name="reviewId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="PersonalReview" />
+	</request-map>
 	
 	
     
@@ -210,6 +226,7 @@
 	  <view-map name="fileReceiveScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRecieve" />
 	   <view-map name="fileReleaseScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRelease" />
 	   <view-map name="fileReleaseToAnotherStaffScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileReleaseToAnotherStaff" />
+	   <view-map name="PersonalReview" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfPersonalReviewScreen"/>
 	   <view-map name="leaveCalender" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#StaffLeaveCalender"/>
 	   <view-map name="FindEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindEmplLeaves"/>
 	   <!-- File Overview  -->
@@ -221,5 +238,6 @@
 	<view-map name="releasingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#releasingFiles" />
 	<view-map name="releaseFileToAnotherStaff" type="screen"	page="component://registry/widget/FileScreens.xml#releaseFileToAnotherStaff" />
 	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
+	<!-- <view-map name="PersonalReview" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerfPersonalReviewScreen"/> -->
 	
 </site-conf>

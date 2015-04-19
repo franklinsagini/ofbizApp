@@ -419,6 +419,51 @@
             </widgets>
         </section>
     </screen>
+    
+     <!--======================= PERSONAL REVIEW =================================== -->    
+    <screen name="PerfPersonalReviewScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="PersonalReview"/>
+                <set field="tabButtonItem" value="PersonalReview"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="partyId" value="${userLogin.partyId}"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                   
+                    <include-menu name="personalReviewMenuBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <container style="leftclear">
+							<label style="h1" 
+							text="My Personal Performance Review" />
+					</container>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        	<screenlet title="Quantitative Goals Scores">
+                        			<include-form name="StaffPersonalReviewQuantitativeForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Qualitative Goals Scores">
+                        			<include-form name="StaffPersonalReviewQualitativeForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Submit Review Scores">
+                        			 <link target="forwardApplication" style="buttontext create" text="Submit Review Scores"  height="500" width="500">
+                		              <parameter param-name="partyId"/>
+            			         </link>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 	
 
 </screens>
