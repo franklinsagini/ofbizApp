@@ -3243,5 +3243,77 @@ public class AccHolderTransactionServices {
 		
 		return false;
 	}
+	
+	/***
+	 * Check that the ledger account has been specified 
+	 * */
+	public static Boolean legerAccountSetUp(GenericValue accountTransaction){
+		
+		//Get the member account ID
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		
+		GenericValue accountProduct =	getAccountProductEntity(memberAccountId);
+		
+		if (accountProduct == null)
+			return false;
+		
+		String glAccountId = accountProduct.getString("glAccountId");
+		
+		if ((glAccountId != null) && (!glAccountId.equals("")))
+			return true;
+		
+		return false;
+	}
+	
+	
+	public static Boolean commissionAccountSetUp(GenericValue accountTransaction){
+		
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		
+		GenericValue accountProduct =	getAccountProductEntity(memberAccountId);
+		
+		if (accountProduct == null)
+			return false;
+		
+		String commissionAccountId = accountProduct.getString("commissionAccountId");
+		
+		if ((commissionAccountId != null) && (!commissionAccountId.equals("")))
+			return true;
+		
+		return false;
+	}
+	
+	public static Boolean exciseDutyAccountSetUp(GenericValue accountTransaction){
+		
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		
+		GenericValue accountProduct =	getAccountProductEntity(memberAccountId);
+		
+		if (accountProduct == null)
+			return false;
+		
+		String exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
+		
+		if ((exciseDutyAccountId != null) && (!exciseDutyAccountId.equals("")))
+			return true;
+		
+		return false;
+	}
+	
+	
+	public static Boolean legerAccountMappedToMemberBranch(GenericValue accountTransaction){
+		
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		
+		GenericValue accountProduct =	getAccountProductEntity(memberAccountId);
+		
+		if (accountProduct == null)
+			return false;
+
+		
+		return false;
+	}
+	
+	
 
 }
