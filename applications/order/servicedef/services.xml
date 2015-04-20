@@ -849,7 +849,7 @@ under the License.
 
         <!-- ship to country fields -->
         <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="includeCountry" type="String" mode="IN" optional="true"/>        
+        <attribute name="includeCountry" type="String" mode="IN" optional="true"/>
 
         <!-- view and page fields -->
         <attribute name="viewIndex" type="Integer" mode="INOUT" optional="false"/>
@@ -1010,7 +1010,7 @@ under the License.
         <description>Cancels those back orders from suppliers whose cancel back order date (cancelBackOrderDate) has passed the current date</description>
     </service>
 
-    <service name="updateShippingMethodAndCharges" engine="simple" 
+    <service name="updateShippingMethodAndCharges" engine="simple"
             location="component://order/script/org/ofbiz/order/order/OrderServices.xml" invoke="updateShippingMethodAndCharges">
         <description>Compare order's shipping amount and new shipping amount(based on weight and dimension of packages).If new shipping amount is more then or less than default percentage (defined in shipment.properties) of Order's shipping amount, then shipping method and shipping charges are updated. And if new shipping amount is not more then or less than default percentage (defined in shipment.properties)% of Order's shipping amount then only shipping method is updated.Also updates record in ShipmentRouteSegment entity</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -1038,13 +1038,13 @@ under the License.
         <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="giftMessage" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="createAlsoBoughtProductAssocs" engine="java" auth="true" 
+    <service name="createAlsoBoughtProductAssocs" engine="java" auth="true"
             location="org.ofbiz.order.order.OrderServices" invoke="createAlsoBoughtProductAssocs">
         <description>
-            Cycles through all newly created sales orders and creates ProductAssoc records (of type ALSO_BOUGHT) for products 
+            Cycles through all newly created sales orders and creates ProductAssoc records (of type ALSO_BOUGHT) for products
             that were purchased together.  If a ProductAssoc record already exists then the quantity field is incremented by one.
             Newly created orders are determined by looking for orders that were created after the JobSandbox.startDateTime of the
-            previous async execution of this service, alternatively the service can be supplied with a orderEntryFromDateTime 
+            previous async execution of this service, alternatively the service can be supplied with a orderEntryFromDateTime
             parameter which will process all orders placed after that date/time or as a final option processAllOrders can be set
             to true to force a calculation of all orders ever placed with orderEntryFromDateTime being ignored.
         </description>
@@ -1068,14 +1068,14 @@ under the License.
         <attribute name="ownerPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="availabalityList" type="List" mode="OUT"/>
     </service>
-    
+
     <!-- Order Facts -->
     <service name="loadSalesOrderFact" auth="true" engine="simple"
         location="component://order/script/org/ofbiz/order/olap/FactServices.xml" invoke="loadSalesOrderFact">
         <description>Calls the loadSalesOrderItemFact service for all the order items.</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="loadSalesOrderItemFact" auth="true" engine="simple"
         location="component://order/script/org/ofbiz/order/olap/FactServices.xml" invoke="loadSalesOrderItemFact">
         <description>
@@ -1112,19 +1112,19 @@ under the License.
         </description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
     <!-- Use for link the payment and the invoice When Received Payment -->
     <service name="createOrderPaymentApplication" engine="simple" auth="true"
             location="component://order/script/org/ofbiz/order/order/OrderServices.xml" invoke="createOrderPaymentApplication">
         <description>Create Order Payment Application</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="createTestOrderRentalProduct" engine="simple" auth="true"
          location="component://order/script/org/ofbiz/order/test/ShoppingCartTests.xml" invoke="testCreateOrderRentalProduct">
          <description>Create Test Order Rental of an asset which is shipped from and returned to inventory</description>
     </service>
-    
+
     <!-- Order Item Attribute -->
     <service name="createOrderItemAttribute" engine="entity-auto" default-entity-name="OrderItemAttribute" invoke="create" auth="true">
         <description>Create Order Item Attribute</description>
@@ -1140,11 +1140,20 @@ under the License.
         <description>Delete Order Item Attribute</description>
         <auto-attributes mode="IN" entity-name="OrderItemAttribute" include="pk" optional="false"/>
     </service>
-    
+
     <!-- Order Item Group Order -->
     <service name="createOrderItemGroupOrder" engine="entity-auto" default-entity-name="OrderItemGroupOrder" invoke="create" auth="true">
         <description>Create Order Item Group Order</description>
         <auto-attributes mode="IN" entity-name="OrderItemGroupOrder" include="pk" optional="false"/>
     </service>
-    
+
+    <service name="createLPOProduct" default-entity-name="Product" engine="simple"
+                location="component://order/script/org/ofbiz/order/supplier/SupplierServices.xml" invoke="createLPOProduct" auth="true">
+        <description>Create a Product</description>
+        <implements service="interfaceProduct"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <override name="productTypeId" optional="false"/>
+        <override name="internalName" optional="false"/>
+    </service>
+
 </services>
