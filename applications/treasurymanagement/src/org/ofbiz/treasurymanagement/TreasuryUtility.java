@@ -320,6 +320,16 @@ public class TreasuryUtility {
 		
 		return tellerAssignee;
 	}
+	
+	public static String getTellerAccountId(Map<String, String> userLogin){
+		String glAccountId = "";
+		
+		//Get the teller assigned to this partyId (name for Treasury where employeeResponsible is the guy logged in)
+		String partyId = userLogin.get("partyId"); 
+		glAccountId = getTeller(partyId).getString("glAccountId");
+		
+		return glAccountId;
+	}
 
 	private static String getPersonNames(String partyId) {
 		// TODO Auto-generated method stub
@@ -357,6 +367,31 @@ public class TreasuryUtility {
 		localTransferDate = localTransferDate.plusDays(1);
 
 		return new Timestamp(localTransferDate.toDate().getTime());
+	}
+	
+	public static String getFinAccountName(String finAccountId){
+		String finAccountName = "";
+		
+		List<GenericValue> finAccountELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			finAccountELI = delegator.findList("FinAccount",
+					EntityCondition.makeCondition("finAccountId", finAccountId), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (finAccountELI.size() < 1) {
+			return null;
+		}
+
+
+		for (GenericValue genericValue : finAccountELI) {
+			finAccountName =genericValue.getString("finAccountName")+" - "+genericValue.getString("finAccountCode");
+		}
+		
+		return finAccountName;
 	}
 	
 	
