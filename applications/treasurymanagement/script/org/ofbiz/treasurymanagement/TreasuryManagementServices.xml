@@ -112,9 +112,33 @@ under the License.
         <entity-one entity-name="Person" value-field="person"/>
         
         <set field="newEntity.branchId" from-field="person.branchId"/>
-       <call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
         
-        <set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/>
+        <!-- set field="hasBranch" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.hasEmployeeOrganizationPartyId(userLogin);}" type="Boolean" / -->
+		<set field="isMapped" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.accountsMappedToEmployeeOrganizationPartyId(newEntity, userLogin);}" type="Boolean"/>
+		<set field="falseField" value="false" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                   <if-compare-field to-field="falseField" operator="equals" field="isMapped"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="treasurymanagementUiLabels.xml"  
+                        property="transferError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/>
+
+                <property-to-field resource="treasurymanagementUiLabels.xml" 
+            	property="transferSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+        
     </simple-method>
  	<simple-method method-name="saveTreasuryTransfer" >
         <create-value value-field="newEntity"/>

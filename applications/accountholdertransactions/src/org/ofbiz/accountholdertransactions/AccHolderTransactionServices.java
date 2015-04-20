@@ -42,6 +42,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.treasurymanagement.TreasuryUtility;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -2261,6 +2262,7 @@ public class AccHolderTransactionServices {
 		String transactionType = "CASHWITHDRAWAL";
 		String memberAccountId = accountTransaction
 				.getString("memberAccountId");
+		
 		BigDecimal transactionAmount = accountTransaction
 				.getBigDecimal("transactionAmount");
 		accountTransaction.set("accountTransactionParentId",
@@ -2286,8 +2288,12 @@ public class AccHolderTransactionServices {
 		// TODO Auto-generated method stub
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
 				userLogin);
-		createMemberDepositEntry(accountTransaction, acctgTransId);
-		createMemberCashEntry(accountTransaction, acctgTransId);
+//		createMemberDepositEntry(accountTransaction, acctgTransId);
+//		createMemberCashEntry(accountTransaction, acctgTransId);
+		
+		createMemberDepositEntryAccount(accountTransaction, acctgTransId);
+		createMemberCashEntryTeller(accountTransaction, acctgTransId, userLogin);
+
 
 	}
 
@@ -2321,6 +2327,7 @@ public class AccHolderTransactionServices {
 
 	private static void createMemberDepositEntry(
 			GenericValue accountTransaction, String acctgTransId) {
+		
 		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 
 		GenericValue acctgTransEntry = null;
@@ -2346,7 +2353,74 @@ public class AccHolderTransactionServices {
 		}
 
 	}
+	
+	
+	private static void createMemberDepositEntryAccount(
+			GenericValue accountTransaction, String acctgTransId) {
+		
+		//Get the account to deposit from the account product setup
+		String glAccountId = "";
+		
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		//GenericValue memberAccount = AccHolderTransactionServices.getMemberAccount(memberAccountId);
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+		
+		glAccountId = accountProduct.getString("glAccountId");
+		
+		//GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 
+		GenericValue acctgTransEntry = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
+				.toMap("acctgTransId", acctgTransId,
+
+				"acctgTransEntrySeqId", "1", "partyId", "Company",
+						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
+						glAccountId,
+						"organizationPartyId", "Company", "amount",
+						accountTransaction.getBigDecimal("transactionAmount"),
+						"currencyUomId", "KES", "origAmount",
+						accountTransaction.getBigDecimal("transactionAmount"),
+						"origCurrencyUomId", "KES", "debitCreditFlag", "D",
+						"reconcileStatusId", "AES_NOT_RECONCILED"));
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create acctgTransEntry");
+		}
+
+	}
+
+	private static void createMemberCashEntryTeller(GenericValue accountTransaction,
+			String acctgTransId, Map<String, String> userLogin) {
+
+		String glAccountId = "";
+		glAccountId = TreasuryUtility.getTellerAccountId(userLogin);
+		
+		//GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
+
+		GenericValue acctgTransEntry = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
+				.toMap("acctgTransId", acctgTransId,
+
+				"acctgTransEntrySeqId", "2", "partyId", "Company",
+						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
+						glAccountId,
+						"organizationPartyId", "Company", "amount",
+						accountTransaction.getBigDecimal("transactionAmount"),
+						"currencyUomId", "KES", "origAmount",
+						accountTransaction.getBigDecimal("transactionAmount"),
+						"origCurrencyUomId", "KES", "debitCreditFlag", "C",
+						"reconcileStatusId", "AES_NOT_RECONCILED"));
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create acctgTransEntry");
+		}
+	}
 	private static void createMemberDepositEntry(BigDecimal amount,
 			String acctgTransId, String postingType) {
 		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
@@ -3148,6 +3222,26 @@ public class AccHolderTransactionServices {
 			e.printStackTrace();
 			log.error("Could not create acctgTransEntry");
 		}
+	}
+	
+	/***
+	 * CommissionCharge
+	 * */
+	
+	public static Boolean commissionChargeIsSetup(){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> commissionChargeELI = null;
+		try {
+			commissionChargeELI = delegator.findList("CommissionCharge", null, null, null,
+					null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((commissionChargeELI != null) && (commissionChargeELI.size() > 0))
+			return true;
+		
+		return false;
 	}
 
 }

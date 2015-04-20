@@ -702,6 +702,30 @@ public class LoanAccounting {
 			log.error("Could post an entry");
 		}
 	}
+	
+	public static void postTransactionEntryParty(Delegator delegator,
+			BigDecimal bdLoanAmount, String partyId, String organizationPartyId,
+			String loanReceivableAccount, String postingType,
+			String acctgTransId, String acctgTransType, String entrySequenceId) {
+		GenericValue acctgTransEntry;
+		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
+				.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId",
+						entrySequenceId, "partyId", partyId, "glAccountTypeId",
+						acctgTransType, "glAccountId", loanReceivableAccount,
+
+						"organizationPartyId", organizationPartyId, "amount",
+						bdLoanAmount, "currencyUomId", "KES", "origAmount",
+						bdLoanAmount, "origCurrencyUomId", "KES",
+						"debitCreditFlag", postingType, "reconcileStatusId",
+						"AES_NOT_RECONCILED"));
+
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could post an entry");
+		}
+	}
 
 	/***
 	 * @author Japheth Odonya @when Aug 22, 2014 2:59:02 PM Creates a record in

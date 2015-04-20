@@ -130,12 +130,19 @@
        		<display-entity entity-name="TreasuryType" description="${name}" key-field-name="treasuryTypeId"></display-entity>
         </field>
         
-        <field name="finAccountId" title="Financial/Bank Account" >
-       		<!-- drop-down allow-empty="true">
+                <field name="finAccountId" title="Financial/Bank Account" >
+       
+       		<display  default-value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getFinAccountName(finAccountId);}"  description="${finAccountName}"> </display>
+       		<!-- display-entity entity-name="FinAccount" description="${finAccountName}" ></display-entity -->
+        </field>
+        
+        <!-- field name="finAccountId" title="Financial/Bank Account" >
+       		
+       		<display-entity entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId"></display-entity>
+        </field -->
+        <!-- drop-down allow-empty="true">
        			<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
        		</drop-down -->
-       		<display-entity entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId"></display-entity>
-        </field>
         
         <field name="employeeResponsible" title="Employee Responsible" >
        		<!-- drop-down allow-empty="true">
@@ -759,11 +766,13 @@
         </field>
         
         <field name="finAccountId" title="Financial/Bank Account" >
-       		<!-- drop-down allow-empty="true">
+       
+       		<display  default-value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getFinAccountName(finAccountId);}"  description="${finAccountName}"> </display>
+       		<!-- display-entity entity-name="FinAccount" description="${finAccountName}" ></display-entity -->
+        </field>
+        <!-- drop-down allow-empty="true">
        			<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
        		</drop-down -->
-       		<display-entity entity-name="FinAccount" description="${finAccountName}"></display-entity>
-        </field>
         
         <field name="employeeResponsible" title="Employee Responsible" >
        		<!-- drop-down allow-empty="true">
