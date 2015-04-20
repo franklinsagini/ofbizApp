@@ -3223,5 +3223,25 @@ public class AccHolderTransactionServices {
 			log.error("Could not create acctgTransEntry");
 		}
 	}
+	
+	/***
+	 * CommissionCharge
+	 * */
+	
+	public static Boolean commissionChargeIsSetup(){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> commissionChargeELI = null;
+		try {
+			commissionChargeELI = delegator.findList("CommissionCharge", null, null, null,
+					null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((commissionChargeELI != null) && (commissionChargeELI.size() > 0))
+			return true;
+		
+		return false;
+	}
 
 }

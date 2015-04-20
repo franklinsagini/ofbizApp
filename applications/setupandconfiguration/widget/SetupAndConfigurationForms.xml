@@ -79,4 +79,37 @@
             </hyperlink>
         </field  -->
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-    </form></forms>
+    </form>
+    
+    <!-- NewExciseDuty -->
+        <form name="NewExciseDuty" type="single" target="createExciseDuty"
+        focus-field-name="dutyPercentage" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanStatusContext">
+        
+       
+        <field name="dutyPercentage" title="Duty Percentage" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- listExciseDuty -->
+     <form name="listExciseDuty" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateExciseDuty" paginate-target="exciseDuty"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ExciseDuty">
+            	<order-by field-name="-exciseDutyId"/>
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateCommissionCharge"/ -->
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+        <field name="dutyPercentage" title="Duty Percentage"> <display></display> </field>
+        <field name="createdStamp" title="When"><display type="date-time"></display></field>
+        <field name="createdBy"><display></display></field>
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteLoanClearLimit" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanClearLimitId"/>
+            </hyperlink>
+        </field  -->
+    </form>
+    
+    </forms>

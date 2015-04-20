@@ -142,8 +142,11 @@ public class TreasuryAccounting {
 	public static Boolean accountsMappedToEmployeeOrganizationPartyId(GenericValue treasuryTransfer, Map<String, String> userLogin){
 		String branchId = null;
 		
-		String partyId = userLogin.get("userLoginId");
+		String partyId = userLogin.get("partyId");
+		log.info("PPPPPPPPPPPPPPPPPP Party ID is "+partyId);
 		branchId = getEmployeeOrganizationPartyId(partyId);
+		
+		log.info("BBBBBBBBBBBBBBBBBBBB Branch ID is "+branchId);
 		
 		if ((branchId == null) || (branchId.equals("")))
 			return false;
@@ -151,14 +154,30 @@ public class TreasuryAccounting {
 		String sourceTreasury = treasuryTransfer.getString("sourceTreasury");
 		String destinationTreasury = treasuryTransfer.getString("destinationTreasury");
 		
+		log.info("SSSSSSSSSSSSSSSS Source Treasury is "+sourceTreasury);
+		log.info("DDDDDDDDDDDDDDDD Destination Treasury is "+destinationTreasury);
+
+		
 		String sourceTreasuryAccountId = getTansferAccount(sourceTreasury);
 		String destinationTreasuryId = getTansferAccount(destinationTreasury);
 		
+		log.info("SSSSSSSSSSSSSSSS Source ACC ID is "+sourceTreasuryAccountId);
+		log.info("DDDDDDDDDDDDDDDD Destination ACC ID is "+destinationTreasuryId);
+
+		
 		if (!organizationAccountMapped(sourceTreasuryAccountId, branchId))
+		{
+			log.info("DDDDDDDDDDDDDDDD Destination Not mapped "+destinationTreasuryId);
 			return false;
+		}
 
 		if (!organizationAccountMapped(destinationTreasuryId, branchId))
+		{
+			log.info("SSSSSSSSSSSSSSSS Source Not mapped "+destinationTreasuryId);
 			return false;
+		}
+		
+		log.info("AAAAAAAAAAAAAAAAAA The two accounts are mapped "+destinationTreasuryId);
 
 		
 		return true;
