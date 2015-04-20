@@ -115,4 +115,92 @@
             </widgets>
         </section>       
        </screen>
+       
+       <!-- =================== PERFORMANCE REPORTS ====================== -->
+        <screen name="employeePerformanceScoresReport">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="StaffperfScoresReport"/>
+                <set field="tabButtonItem" value="StaffperfScoresReport"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeRelationDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                           <include-menu name="PerfReportsBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                           <section name="search-results">
+                        	<widgets>
+                        	
+                        		 <container style="lefthalf">
+                            <screenlet title="Single Employee Performance Scores">
+                                <include-form name="singleStaffPerformance" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="righthalf">
+                            <screenlet title="All Employees Performance Scores For Full Year">
+                                <include-form name="AllStaffPerformance" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                            <screenlet></screenlet><screenlet></screenlet><screenlet></screenlet>
+                            
+                             <container style="lefthalf">
+                            <screenlet title="Employees Per Score bracket">
+                                <include-form name="StaffPerScoreBracket" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             
+                              <container style="righthalf">
+                            <screenlet title="All Employees Performance Scores For One Quarter">
+                                <include-form name="StaffPerScoreQuarter" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                             </container>
+
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- =================== ALL STAFF PERFORMANCE SCORES REPORTS ====================== -->
+    
+     <screen name="allStaffPerformanceScoresPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/AllStaffPerformanceScore.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/AllStaffPerformanceScore.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

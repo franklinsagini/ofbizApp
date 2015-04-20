@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -37,8 +38,6 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.datasource.GenericHelperInfo;
-import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -2091,7 +2090,343 @@ public static String  NextPayrollNumber(String employmentTerms) {
 				return state;
 				
 			}
+			
+			
+			public static String getTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String state = null;
+				ResultSet rs1;
+				String quarter = year+"-Quarter-1";
+				int count=0;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				String f=String.valueOf(totalpercentage);
+				
+				
+				return f+"%";
+			}
+			
+			public static BigDecimal getFirstQuarterTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				BigDecimal maxtotalpercentage =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String quarter = year+"-Quarter-1";
+				int count=0;
+				BigDecimal QuarterScore =BigDecimal.ZERO;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreFour").stripTrailingZeros());
+					maxtotalpercentage = maxtotalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				String f=String.valueOf(totalpercentage);
+				log.info("++++++++++++++q1party++++++++++++++++" +party);
+				log.info("++++++++++++++q1totalpercentage++++++++++++++++" +f);
+				log.info("++++++++++++++q1maxtotalpercentage++++++++++++++++" +maxtotalpercentage);
+				log.info("++++++++++++++q1count++++++++++++++++" +count);
+				
+				
+				
+				
+				if (count == 0) {
+					QuarterScore =BigDecimal.ZERO;
+				} else {
+					/*int totalpercentageINT = totalpercentage.intValue();
+					int maxtotalpercentageINT = maxtotalpercentage.intValue();
+					
+					int staffScoreDivideCount = (totalpercentageINT/count);
+					int staffScoreDivideCountBy5 = (staffScoreDivideCount/5);
+					int staffScoreDivideCountBy5MultiplyMaxScore = (staffScoreDivideCountBy5*maxtotalpercentageINT);
+					int QuarterScoreINT = (staffScoreDivideCountBy5MultiplyMaxScore/4);
+							
+							
+					QuarterScore = new BigDecimal(QuarterScoreINT);*/
+					
+					BigDecimal newCount = new BigDecimal(count);
+					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP);
+				}
+
+				
+				
+				
+				return QuarterScore;
+			}
+			
+			public static BigDecimal getSecondQuarterTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				BigDecimal maxtotalpercentage =BigDecimal.ZERO;
+				BigDecimal QuarterScore =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String quarter = year+"-Quarter-2";
+				int count=0;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreFour").stripTrailingZeros());
+					maxtotalpercentage = maxtotalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				
+				String f=String.valueOf(totalpercentage);
+				log.info("++++++++++++++q2party++++++++++++++++" +party);
+				log.info("++++++++++++++q2totalpercentage++++++++++++++++" +f);
+				log.info("++++++++++++++q2maxtotalpercentage++++++++++++++++" +maxtotalpercentage);
+				log.info("++++++++++++++q2count++++++++++++++++" +count);
+				if (count == 0) {
+					QuarterScore =BigDecimal.ZERO;
+				} else {
+					BigDecimal newCount = new BigDecimal(count);
+					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP);
+				}
+						
+						
+				
+				
+				
+				return QuarterScore;
+			}
+			
+			public static BigDecimal getThirdQuarterTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				BigDecimal maxtotalpercentage =BigDecimal.ZERO;
+				BigDecimal QuarterScore =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String quarter = year+"-Quarter-3";
+				int count=0;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreFour").stripTrailingZeros());
+					maxtotalpercentage = maxtotalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				String f=String.valueOf(totalpercentage);
+				log.info("++++++++++++++q3party++++++++++++++++" +party);
+				log.info("++++++++++++++q3totalpercentage++++++++++++++++" +f);
+				log.info("++++++++++++++q3maxtotalpercentage++++++++++++++++" +maxtotalpercentage);
+				log.info("++++++++++++++q3count++++++++++++++++" +count);
+				if (count == 0) {
+					QuarterScore =BigDecimal.ZERO;
+				} else {
+					BigDecimal newCount = new BigDecimal(count);
+					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP);
+				}
+						
+						
+				
+				
+				
+				return QuarterScore;
+			}
+			
+			public static BigDecimal getFourthQuarterTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				BigDecimal maxtotalpercentage =BigDecimal.ZERO;
+				BigDecimal QuarterScore =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String quarter = year+"-Quarter-4";
+				int count=0;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreFour").stripTrailingZeros());
+					maxtotalpercentage = maxtotalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				String f=String.valueOf(totalpercentage);
+				log.info("++++++++++++++q4party++++++++++++++++" +party);
+				log.info("++++++++++++++q4totalpercentage++++++++++++++++" +f);
+				log.info("++++++++++++++q4maxtotalpercentage++++++++++++++++" +maxtotalpercentage);
+				log.info("++++++++++++++q4count++++++++++++++++" +count);
+				
+				if (count == 0) {
+					QuarterScore =BigDecimal.ZERO;
+				} else {
+					BigDecimal newCount = new BigDecimal(count);
+					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP);
+
+					
+				}
+				
+						
+						
+				
+				
+				
+				return QuarterScore;
+			}
 	
+			
+			public static BigDecimal getFourQuartersTotalPartyPerformance(String party, String year) {
+				BigDecimal q1 =getFirstQuarterTotalPartyPerformance(party, year);
+				BigDecimal q2 =getSecondQuarterTotalPartyPerformance(party, year);
+				BigDecimal q3 =getThirdQuarterTotalPartyPerformance(party, year);
+				BigDecimal q4 =getFourthQuarterTotalPartyPerformance(party, year);
+				BigDecimal q12 = q1.add(q2);
+				BigDecimal q123 =q12.add(q3);
+				BigDecimal q1234 =q123.add(q4);
+				
+				return q1234;
+			}
+	
+	
+			public static String Q1String(String party, String year) {
+				String qString = null;
+				BigDecimal score = getFirstQuarterTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			
+			public static String Q2String(String party, String year) {
+				String qString = null;
+				BigDecimal score = getSecondQuarterTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			public static String Q3String(String party, String year) {
+				String qString = null;
+				BigDecimal score = getThirdQuarterTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			public static String Q4String(String party, String year) {
+				String qString = null;
+				BigDecimal score = getFourthQuarterTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			public static String TotalScoreString(String party, String year) {
+				String qString = null;
+				BigDecimal score = getFourQuartersTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
 	
 }
 

@@ -204,6 +204,32 @@
         <response name="success" type="view" value="PersonalReview" save-home-view="true"/>
     </request-map>
     
+     <request-map uri="HODReview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="HODReview" save-home-view="true"/>
+    </request-map>
+    
+     <request-map uri="HarmonizedReview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="HarmonizedReview" save-home-view="true"/>
+    </request-map>
+    
+    <request-map uri="HarmonizedReviewStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="HarmonizedReviewStaff"
+			save-home-view="true">
+				<redirect-parameter name="partyId"/>
+			</response>
+	</request-map>
+	
+	 <request-map uri="HODreviewStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="HODreviewStaff"
+			save-home-view="true">
+				<redirect-parameter name="partyId"/>
+			</response>
+	</request-map>
+    
      <!--======================= REVIEW MYSELF =================================== -->
 
 	<request-map uri="reviewMyself">
@@ -213,6 +239,61 @@
 			<redirect-parameter name="reviewId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="PersonalReview" />
+	</request-map>
+	
+	
+	<!--======================= SUBMIT PERSONAL REVIEW SCORES =================================== -->
+	<request-map uri="submitPersonalReviewScores">
+		<security https="true" auth="true" />
+		<event type="service" invoke="submitPersonalReviewScores" />
+		<response name="success" type="request-redirect" value="PersonalReview">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="PersonalReview" />
+	</request-map>
+	
+	 <!--======================= HOD REVIEW =================================== -->
+
+	<request-map uri="HODreviews">
+		<security https="true" auth="true" />
+		<event type="service" invoke="HODreviews" />
+		<response name="success" type="request-redirect" value="HODreviewStaff">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="HODreviewStaff" />
+	</request-map>
+	
+	
+	<!--======================= SUBMIT HOD REVIEW SCORES =================================== -->
+	<request-map uri="submitHODReviewScores">
+		<security https="true" auth="true" />
+		<event type="service" invoke="submitHODReviewScores" />
+		<response name="success" type="request-redirect" value="PersonalReview">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="PersonalReview" />
+	</request-map>
+	
+	 <!--======================= HARMONIZED REVIEW  =================================== -->
+
+	<request-map uri="HarmonizedHODReview">
+		<security https="true" auth="true" />
+		<event type="service" invoke="HarmonizedHODReview" />
+		<response name="success" type="request-redirect-noparam" value="HarmonizedReviewStaff">
+			<redirect-parameter name="reviewId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="HarmonizedReviewStaff" />
+	</request-map>
+	
+	
+	<!--======================= SUBMIT HARMONIZED REVIEW SCORES =================================== -->
+	<request-map uri="submitHarmonizedReviewScores">
+		<security https="true" auth="true" />
+		<event type="service" invoke="submitHarmonizedReviewScores" />
+		<response name="success" type="request-redirect" value="HarmonizedReviewStaff">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="HarmonizedReviewStaff" />
 	</request-map>
 	
 	
@@ -227,6 +308,12 @@
 	   <view-map name="fileReleaseScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileRelease" />
 	   <view-map name="fileReleaseToAnotherStaffScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileReleaseToAnotherStaff" />
 	   <view-map name="PersonalReview" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfPersonalReviewScreen"/>
+	   <view-map name="HarmonizedReview" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHarmonizedReviewScreen"/>
+	   
+	   <view-map name="HarmonizedReviewStaff" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHarmonizedReviewingsScreen"/>
+	   <view-map name="HODreviewStaff" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHODReviewingsScreen"/>
+	   
+	   <view-map name="HODReview" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHODReviewScreen"/>
 	   <view-map name="leaveCalender" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#StaffLeaveCalender"/>
 	   <view-map name="FindEmplLeaves" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindEmplLeaves"/>
 	   <!-- File Overview  -->
